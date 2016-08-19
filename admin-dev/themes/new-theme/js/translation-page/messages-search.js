@@ -3,14 +3,29 @@ import $ from 'jquery';
 
 export default function() {
     $(() => {
-        $('.search-translation form').submit(function () {
+        const searchSelector = '.search-translation';
+        $(searchSelector + ' form').submit(function (event) {
             $('#jetsContent form').addClass('hide');
 
             const keywords = $('#jetsSearch').val().toLowerCase();
-            $('#jetsContent > [data-jets*="' + keywords + '"]').removeClass('hide');
+            const jetsSelector = '#jetsContent > [data-jets*="' + keywords + '"]';
+
+            if (0 === $(jetsSelector).length) {
+                var notificationElement = $(searchSelector + '> .alert')[0];
+                $(notificationElement).removeClass('hide');
+                setTimeout(function () {
+                    $(notificationElement).addClass('hide');
+                }, 2000);
+            } else {
+                $(jetsSelector).removeClass('hide');
+            }
+
+            event.preventDefault();
+
+            return false;
         });
 
-        $('.search-translation input[type=reset]').click(function () {
+        $(searchSelector + ' input[type=reset]').click(function () {
             $('#jetsSearch').val('');
             $('#jetsContent form').addClass('hide');
         })
