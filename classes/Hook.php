@@ -692,7 +692,7 @@ class HookCore extends ObjectModel
                 }
             } elseif (Hook::isDisplayHookName($hook_name)) {
                 if ($moduleInstance instanceof WidgetInterface) {
-                    $display = $moduleInstance->renderWidget($hook_name, $hook_args);
+                    $display = Hook::coreRenderWidget($moduleInstance, $hook_name, $hook_args);
 
                     if ($array_return) {
                         $output[$moduleInstance->name] = $display;
@@ -714,6 +714,11 @@ class HookCore extends ObjectModel
     public static function coreCallHook($module, $method, $params)
     {
         return $module->{$method}($params);
+    }
+    
+    public static function coreRenderWidget($module, $hook_name, $params)
+    {
+        return $module->renderWidget($hook_name, $params);
     }
 
     /**
