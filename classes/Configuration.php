@@ -130,6 +130,7 @@ class ConfigurationCore extends ObjectModel
         self::$_new_cache_shop = null;
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
+        self::$_initialized = false;
     }
 
     /**
@@ -497,6 +498,7 @@ class ConfigurationCore extends ObjectModel
         self::$_new_cache_shop = null;
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
+        self::$_initialized = false;
 
         return ($result && $result2);
     }
@@ -530,6 +532,7 @@ class ConfigurationCore extends ObjectModel
         self::$_new_cache_shop = null;
         self::$_new_cache_group = null;
         self::$_new_cache_global = null;
+        self::$_initialized = false;
     }
 
     /**
