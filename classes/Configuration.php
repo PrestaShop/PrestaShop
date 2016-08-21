@@ -173,8 +173,8 @@ class ConfigurationCore extends ObjectModel
                     self::$_new_cache_global[$row['name']][$lang]                            = $row['value'];
                 }
             }
+            self::$_initialized = true;
         }
-        self::$_initialized = true;
     }
 
     /**
@@ -200,12 +200,20 @@ class ConfigurationCore extends ObjectModel
             $id_lang = 0;
         }
 
-        if ($id_shop === null || !Shop::isFeatureActive()) {
-            $id_shop = Shop::getContextShopID(true);
+        if (self::$_new_cache_shop === null) {
+            $id_shop = 0;
+        } else {
+            if ($id_shop === null || !Shop::isFeatureActive()) {
+                $id_shop = Shop::getContextShopID(true);
+            }
         }
 
-        if ($id_shop_group === null || !Shop::isFeatureActive()) {
-            $id_shop_group = Shop::getContextShopGroupID(true);
+        if (self::$_new_cache_group === null) {
+            $id_shop_group = 0;
+        } else {
+            if ($id_shop_group === null || !Shop::isFeatureActive()) {
+                $id_shop_group = Shop::getContextShopGroupID(true);
+            }
         }
 
         if ($id_shop && Configuration::hasKey($key, $id_lang, null, $id_shop)) {
