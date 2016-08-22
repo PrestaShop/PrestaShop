@@ -54,22 +54,8 @@
             <div class="clearfix"></div>
           </div>
           <div class="col-xs-12">
-              {if $need_confirmation}
-                <span class="custom-checkbox">
-                  <input type="checkbox" name="confirm-optin" value="1" required>
-                  <span><i class="material-icons checkbox-checked"></i></span>
-                  <label>
-                    {* [1][/1] is for a HTML tag. *}
-                    {l
-                      s='I want to receive the free newsletter and have read and accepted the [1]conditions[/1].'
-                      sprintf=[
-                        '[1]' => '<a data-toggle="modal" data-target="#ps_emailsubscription-modal">',
-                        '[/1]' => '</a>'
-                      ]
-                      d='Shop.Theme'
-                    }
-                  </label>
-                </span>
+              {if $conditions}
+                <p>{$conditions}</p>
               {/if}
               {if $msg}
                 <p class="text-warning notification {if $nw_error}notification-error{else}notification-success{/if}">
