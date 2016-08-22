@@ -51,18 +51,21 @@ class ThemeExtractor
         $this->catalog = new MessageCatalogue('en-US');
     }
 
-    public function extract(Theme $theme, $format = 'array')
+    public function extract(Theme $theme, $format = 'xliff')
     {
-        $themeDirectory = $theme->getDirectory().'templates';
-        $options = array('path' => $themeDirectory);
+        // remove the last "/"
+        $themeDirectory = substr($theme->getDirectory(), 0, -1);
 
+        $options = array('path' => $themeDirectory);
         $this->smartyExtractor->extract($themeDirectory, $this->catalog);
 
         switch ($format) {
             case 'xliff':
                 $extractor = new XliffFileDumper();
+                $options['path'] .= '/translations';
                 break;
             case 'array':
+                // legacy way to do, you should not use it.
                 $extractor = new PhpDumper();
                 break;
             default:

@@ -26,13 +26,20 @@
 
 namespace PrestaShopBundle\Tests\Translation\Extractor;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 
 class ThemeExtractorTest extends KernelTestCase
 {
+    const THEME_ROOT_DIR = __DIR__.'/../../resources/themes/fake-theme';
+    const LEGACY_FOLDER = self::THEME_ROOT_DIR.'/lang';
+    const XLIFF_FOLDER = self::THEME_ROOT_DIR.'/translations';
+    
     private $container;
+    private $filesystem;
     private $themeExtractor;
 
     public function setUp()
@@ -40,17 +47,44 @@ class ThemeExtractorTest extends KernelTestCase
         self::bootKernel();
 
         $this->container = self::$kernel->getContainer();
+        $this->filesystem = new Filesystem();
         $this->themeExtractor = $this->container->get('prestashop.translations.theme_extractor');
     }
 
-    public function testExtract()
+    public function tearDown()
+    {
+        if (file_exists(self::LEGACY_FOLDER)) {
+            $this->filesystem->remove(self::LEGACY_FOLDER);
+        }
+
+        if (is_dir(self::THEME_ROOT_DIR)) {
+            $this->filesystem->remove(self::XLIFF_FOLDER);
+        }
+    }
+
+    public function testExtractWithLegacyFormat()
+    {
+        $translations = $this->themeExtractor->extract($this->getFakeTheme(), 'array');
+        $legacyTranslationFile = self::LEGACY_FOLDER.'/en-US.php';
+        $this->assertTrue($this->filesystem->exists($legacyTranslationFile));
+    }
+
+    public function testExtractWithXliffFormat()
     {
         $translations = $this->themeExtractor->extract($this->getFakeTheme());
+        $isFilesExists = $this->filesystem->exists(array(
+            self::XLIFF_FOLDER.'/en-US/Shop/Theme/Actions.xlf',
+            self::XLIFF_FOLDER.'/en-US/Shop/Theme/Cart.xlf',
+            self::XLIFF_FOLDER.'/en-US/Shop/Theme/Product.xlf',
+            self::XLIFF_FOLDER.'/en-US/Shop/Foo/Bar.xlf',
+        ));
+
+        $this->assertTrue($isFilesExists);
     }
 
     private function getFakeTheme()
     {
-        $rootThemeDir = __DIR__.'/../../resources/fake-theme';
+        $rootThemeDir = self::THEME_ROOT_DIR;
         $configFile = $rootThemeDir.'/config/theme.yml';
         $config = Yaml::parse(file_get_contents($configFile));
 
