@@ -39,6 +39,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /** @var Category */
     protected $category;
 
+    /**
+     * @var array
+     */
+    protected $combinations;
+
     private $quantity_discounts;
     private $adminNotifications = array();
 
@@ -317,7 +322,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function displayAjaxRefresh()
     {
-        $product_for_template = $this->getTemplateVarProduct();
+        $product = $this->getTemplateVarProduct();
+        $minimalProductQuantity = $this->getMinimalProductOrDeclinationQuantity($product);
+
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode(array(
@@ -326,7 +333,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_customization' => $this->render(
                 'catalog/_partials/product-customization',
                 array(
-                    'customizations' => $product_for_template['customizations'],
+                    'customizations' => $product['customizations'],
                 )
             ),
             'product_details' => $this->render('catalog/_partials/product-details'),
@@ -334,19 +341,44 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_discounts' => $this->render('catalog/_partials/product-discounts'),
             'product_add_to_cart' => $this->render('catalog/_partials/product-add-to-cart'),
             'product_url' => $this->context->link->getProductLink(
-                $product_for_template['id_product'],
+                $product['id_product'],
                 null,
                 null,
                 null,
                 $this->context->language->id,
                 null,
-                $product_for_template['id_product_attribute'],
+                $product['id_product_attribute'],
                 false,
                 false,
                 true
             ),
-            'id_product_attribute' => $product_for_template['id_product_attribute'],
+            'product_minimal_quantity' => $minimalProductQuantity,
+            'product_has_combinations' => !empty($this->combinations),
+            'id_product_attribute' => $product['id_product_attribute'],
         )));
+    }
+
+    /**
+     * Get minimal product quantity or minimal product combination quantity
+     *
+     * @param $product
+     * @return int
+     */
+    protected function getMinimalProductOrDeclinationQuantity($product)
+    {
+        $productAttributeId = $product['id_product_attribute'];
+        $minimalProductQuantity = 1;
+
+        if ($this->combinations) {
+            $minimalCombinationProductQuantity = (int) ($this->combinations[$productAttributeId]['minimal_quantity']);
+            if ($minimalCombinationProductQuantity) { // Ensure the minimal product combination quantity is not 0;
+                $minimalProductQuantity = $minimalCombinationProductQuantity;
+            }
+        } elseif (array_key_exists('minimal_quantity', $product)) {
+            $minimalProductQuantity = $product['minimal_quantity'];
+        }
+
+        return $minimalProductQuantity;
     }
 
     /**
@@ -404,7 +436,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $colors = array();
         $groups = array();
-        $combinations = array();
+        $this->combinations = array();
 
         // @todo (RM) should only get groups and not all declination ?
         $attributes_groups = $this->product->getAttributesGroups($this->context->language->id);
@@ -446,34 +478,34 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
                 $groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] += (int) $row['quantity'];
 
-                $combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
-                $combinations[$row['id_product_attribute']]['attributes'][] = (int) $row['id_attribute'];
-                $combinations[$row['id_product_attribute']]['price'] = (float) $row['price'];
+                $this->combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
+                $this->combinations[$row['id_product_attribute']]['attributes'][] = (int) $row['id_attribute'];
+                $this->combinations[$row['id_product_attribute']]['price'] = (float) $row['price'];
 
                 // Call getPriceStatic in order to set $combination_specific_price
                 if (!isset($combination_prices_set[(int) $row['id_product_attribute']])) {
                     $combination_specific_price = null;
                     Product::getPriceStatic((int) $this->product->id, false, $row['id_product_attribute'], 6, null, false, true, 1, false, null, null, null, $combination_specific_price);
                     $combination_prices_set[(int) $row['id_product_attribute']] = true;
-                    $combinations[$row['id_product_attribute']]['specific_price'] = $combination_specific_price;
+                    $this->combinations[$row['id_product_attribute']]['specific_price'] = $combination_specific_price;
                 }
-                $combinations[$row['id_product_attribute']]['ecotax'] = (float) $row['ecotax'];
-                $combinations[$row['id_product_attribute']]['weight'] = (float) $row['weight'];
-                $combinations[$row['id_product_attribute']]['quantity'] = (int) $row['quantity'];
-                $combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
-                $combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
-                $combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
+                $this->combinations[$row['id_product_attribute']]['ecotax'] = (float) $row['ecotax'];
+                $this->combinations[$row['id_product_attribute']]['weight'] = (float) $row['weight'];
+                $this->combinations[$row['id_product_attribute']]['quantity'] = (int) $row['quantity'];
+                $this->combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
+                $this->combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
+                $this->combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
                 if ($row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
-                    $combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
-                    $combinations[$row['id_product_attribute']]['date_formatted'] = Tools::displayDate($row['available_date']);
+                    $this->combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
+                    $this->combinations[$row['id_product_attribute']]['date_formatted'] = Tools::displayDate($row['available_date']);
                 } else {
-                    $combinations[$row['id_product_attribute']]['available_date'] = $combinations[$row['id_product_attribute']]['date_formatted'] = '';
+                    $this->combinations[$row['id_product_attribute']]['available_date'] = $this->combinations[$row['id_product_attribute']]['date_formatted'] = '';
                 }
 
                 if (!isset($combination_images[$row['id_product_attribute']][0]['id_image'])) {
-                    $combinations[$row['id_product_attribute']]['id_image'] = -1;
+                    $this->combinations[$row['id_product_attribute']]['id_image'] = -1;
                 } else {
-                    $combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int) $combination_images[$row['id_product_attribute']][0]['id_image'];
+                    $this->combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int) $combination_images[$row['id_product_attribute']][0]['id_image'];
                     if ($row['default_on']) {
                         foreach ($this->context->smarty->tpl_vars['product']->value['images'] as $image) {
                             if ($image['cover'] == 1) {
@@ -487,7 +519,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         if (is_array($combination_images[$row['id_product_attribute']])) {
                             foreach ($combination_images[$row['id_product_attribute']] as $tmp) {
                                 if ($tmp['id_image'] == $current_cover['id_image']) {
-                                    $combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int) $tmp['id_image'];
+                                    $this->combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int) $tmp['id_image'];
                                     break;
                                 }
                             }
@@ -537,19 +569,19 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                 }
             }
-            foreach ($combinations as $id_product_attribute => $comb) {
+            foreach ($this->combinations as $id_product_attribute => $comb) {
                 $attribute_list = '';
                 foreach ($comb['attributes'] as $id_attribute) {
                     $attribute_list .= '\''.(int) $id_attribute.'\',';
                 }
                 $attribute_list = rtrim($attribute_list, ',');
-                $combinations[$id_product_attribute]['list'] = $attribute_list;
+                $this->combinations[$id_product_attribute]['list'] = $attribute_list;
             }
 
             $this->context->smarty->assign(array(
                 'groups' => $groups,
                 'colors' => (count($colors)) ? $colors : false,
-                'combinations' => $combinations,
+                'combinations' => $this->combinations,
                 'combinationImages' => $combination_images,
             ));
         } else {
@@ -778,9 +810,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['new'] = (int) $this->product->new;
-        $product['quantity_wanted'] = (int) Tools::getValue('quantity_wanted', $this->product->minimal_quantity);
-        $product['minimal_quantity'] = $this->product->minimal_quantity;
         $product['id_product_attribute'] = (int) Tools::getValue('id_product_attribute');
+        $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
+        $product['quantity_wanted'] = $this->getRequiredQuantity($product);
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
@@ -814,6 +846,59 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $product_full,
             $this->context->language
         );
+    }
+
+    /**
+     * @param $product
+     * @return int
+     */
+    protected function getProductMinimalQuantity($product)
+    {
+        $minimal_quantity = 1;
+
+        if ($product['id_product_attribute']) {
+            $combination = $this->findProductCombinationById($product['id_product_attribute']);
+            if ($combination['minimal_quantity']) {
+                $minimal_quantity = $combination['minimal_quantity'];
+            }
+        } else {
+            $minimal_quantity = $this->product->minimal_quantity;
+        }
+
+        return $minimal_quantity;
+    }
+
+    /**
+     * @param $combinationId
+     * @return null|ProductController
+     */
+    public function findProductCombinationById($combinationId)
+    {
+        $foundCombination = null;
+        $combinations = $this->product->getAttributesGroups($this->context->language->id);
+        foreach ($combinations as $combination) {
+            if ((int) ($combination['id_product_attribute']) === $combinationId) {
+                $foundCombination = $combination;
+
+                break;
+            }
+        }
+
+        return $foundCombination;
+    }
+
+    /**
+     * @param $product
+     * @return int
+     */
+    protected function getRequiredQuantity($product)
+    {
+        $requiredQuantity = (int) Tools::getValue('quantity_wanted', $this->getProductMinimalQuantity($product));
+        if ($requiredQuantity < $product['minimal_quantity']) {
+            $requiredQuantity = $product['minimal_quantity'];
+        }
+
+        return $requiredQuantity;
     }
 
     public function getBreadcrumbLinks()
