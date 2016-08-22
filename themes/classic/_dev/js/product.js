@@ -5,16 +5,17 @@ $(document).ready(function () {
   createInputFile();
   coverImage();
 
-  $('body').on('click', '.product-quantity .js-touchspin', function () {
-    $("input[name$='refresh']").click();
-  });
-
   $('body').on(
     'click',
-    'input.product-refresh',
-    function(event) {
-      var that = $(this);
+    '.product-refresh',
+    function (event, extraParameters) {
+      var $productRefresh = $(this);
       event.preventDefault();
+
+      let eventType = 'combination updated';
+      if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
+        eventType = extraParameters.eventType;
+      }
 
       var query = $(event.target.form).serialize() + '&ajax=1&action=productrefresh';
       var actionURL = $(event.target.form).attr('action');
@@ -22,18 +23,28 @@ $(document).ready(function () {
       $.post(actionURL, query, null, 'json').then(function(resp) {
         prestashop.emit('product updated', {
           reason: {
-           productUrl: resp.productUrl,
+           productUrl: resp.productUrl
           },
-          refreshUrl: that.data('url-update')
+          refreshUrl: $productRefresh.data('url-update'),
+          eventType: eventType
         });
       });
     }
   );
 
   prestashop.on('product dom updated', function(event) {
-    createProductSpin();
     createInputFile();
     coverImage();
+
+    if (event && event.product_minimal_quantity) {
+      const minimalProductQuantity = parseInt(event.product_minimal_quantity, 10);
+      const quantityInputSelector = '#quantity_wanted';
+      let quantityInput = $(quantityInputSelector);
+
+      // @see http://www.virtuosoft.eu/code/bootstrap-touchspin/ about Bootstrap TouchSpin
+      quantityInput.trigger('touchspin.updatesettings', {min: minimalProductQuantity});
+    }
+
     $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
   });
 
@@ -67,6 +78,14 @@ $(document).ready(function () {
       min: parseInt(quantityInput.attr('min'), 10),
       max: 1000000
     });
-  }
 
+    quantityInput.on('change', function (event) {
+      let $productRefresh = $('.product-refresh');
+      $(event.currentTarget).trigger('touchspin.stopspin');
+      $productRefresh.trigger('click', {eventType: 'product quantity updated'});
+      event.preventDefault();
+
+      return false;
+    });
+  }
 });

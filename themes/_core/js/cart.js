@@ -34,6 +34,34 @@ $(document).ready(() => {
       var query = $form.serialize() + '&add=1&action=update';
       var actionURL = $form.attr('action');
 
+      let isQuantityInputValid = ($input) => {
+        var validInput = true;
+
+        $input.each((index, input) => {
+          let $input = $(input);
+          let minimalValue = parseInt($input.attr('min'), 10);
+          if (minimalValue && $input.val() < minimalValue) {
+              onInvalidQuantity($input);
+              validInput = false;
+          }
+        });
+
+        return validInput;
+      };
+
+      let onInvalidQuantity = ($input) => {
+        $($input.parents('.product-add-to-cart')[0]).find('.product-minimal-quantity')
+            .addClass('error');
+        $input.parent().find('label').addClass('error');
+      };
+
+      let $quantityInput = $form.find('input[min]' );
+      if (!isQuantityInputValid($quantityInput)) {
+        onInvalidQuantity($quantityInput);
+
+        return;
+      }
+
       $.post(actionURL, query, null, 'json').then(function(resp) {
         prestashop.emit('cart updated', {
           reason: {
