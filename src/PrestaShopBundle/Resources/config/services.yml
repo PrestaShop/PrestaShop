@@ -254,6 +254,11 @@ services:
         tags:
             - {name: translation.loader, alias: db}
 
+    prestashop.translations.theme_extractor:
+        class: PrestaShopBundle\Translation\Extractor\ThemeExtractor
+        arguments:
+          - "@prestashop.translation.extractor.smarty"
+
 # Addons API Client
     prestashop.addons.client_api:
         class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
