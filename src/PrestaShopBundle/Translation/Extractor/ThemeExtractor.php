@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Translation\Extractor;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\PhpDumper;
+use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -58,13 +59,17 @@ class ThemeExtractor
         $this->smartyExtractor->extract($themeDirectory, $this->catalog);
 
         switch ($format) {
-            case 'xliff': return;
+            case 'xliff':
+                $extractor = new XliffFileDumper();
                 break;
-            case 'array': return (new PhpDumper())->dump($this->catalog, $options);
+            case 'array':
+                $extractor = new PhpDumper();
                 break;
             default:
                 throw new \LogicException(sprintf('The format %s is not supported', $format));
         }
+        
+        return $extractor->dump($this->catalog, $options);
     }
 
     public function getCatalog()
