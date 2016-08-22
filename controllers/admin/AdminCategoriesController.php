@@ -451,13 +451,13 @@ class AdminCategoriesControllerCore extends AdminController
         $images_types = ImageType::getImagesTypes('categories');
         $format = array();
         $thumb = $thumb_url = '';
-        $formated_category= ImageType::getFormattedName('category');
-        $formated_medium = ImageType::getFormattedName('medium');
+        $formatted_category= ImageType::getFormattedName('category');
+        $formatted_small = ImageType::getFormattedName('small');
         foreach ($images_types as $k => $image_type) {
-            if ($formated_category == $image_type['name']) {
+            if ($formatted_category == $image_type['name']) {
                 $format['category'] = $image_type;
-            } elseif ($formated_medium == $image_type['name']) {
-                $format['medium'] = $image_type;
+            } elseif ($formatted_small == $image_type['name']) {
+                $format['small'] = $image_type;
                 $thumb = _PS_CAT_IMG_DIR_.$obj->id.'-'.$image_type['name'].'.'.$this->imageType;
                 if (is_file($thumb)) {
                     $thumb_url = ImageManager::thumbnail($thumb, $this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, (int)$image_type['width'], $this->imageType, true, true);
@@ -554,7 +554,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'display_image' => true,
                     'image' => $thumb_url ? $thumb_url : false,
                     'size' => $thumb_size,
-                    'format' => isset($format['medium']) ?: $format['category']
+                    'format' => isset($format['small']) ? $format['small'] : $format['category']
                 ),
                 array(
                     'type' => 'file',
@@ -738,9 +738,9 @@ class AdminCategoriesControllerCore extends AdminController
             }
 
             $images_types = ImageType::getImagesTypes('categories');
-            $formated_medium = ImageType::getFormattedName('medium');
+            $formatted_small = ImageType::getFormattedName('small');
             foreach ($images_types as $k => $image_type) {
-                if ($formated_medium == $image_type['name'] &&
+                if ($formatted_small == $image_type['name'] &&
                     file_exists(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType) &&
                     !unlink(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType)
                 ) {
@@ -908,9 +908,9 @@ class AdminCategoriesControllerCore extends AdminController
                 if (!isset($images_types)) {
                     $images_types = ImageType::getImagesTypes('categories');
                 }
-                $formated_medium = ImageType::getFormattedName('medium');
+                $formatted_small = ImageType::getFormattedName('small');
                 foreach ($images_types as $k => $image_type) {
-                    if ($formated_medium == $image_type['name']) {
+                    if ($formatted_small == $image_type['name']) {
                         if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize())) {
                             $this->errors[] = $error;
                         } elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmpName)) {

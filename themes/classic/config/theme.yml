@@ -79,7 +79,7 @@ global_settings:
     small_default:
       width: 98
       height: 98
-      scope: [products, manufacturers, suppliers]
+      scope: [products, categories, manufacturers, suppliers]
     medium_default:
       width: 452
       height: 452
