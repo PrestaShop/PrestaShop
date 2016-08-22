@@ -451,12 +451,12 @@ class AdminCategoriesControllerCore extends AdminController
         $images_types = ImageType::getImagesTypes('categories');
         $format = array();
         $thumb = $thumb_url = '';
-        $formated_category= ImageType::getFormattedName('category');
-        $formated_small = ImageType::getFormattedName('small');
+        $formatted_category= ImageType::getFormattedName('category');
+        $formatted_small = ImageType::getFormattedName('small');
         foreach ($images_types as $k => $image_type) {
-            if ($formated_category == $image_type['name']) {
+            if ($formatted_category == $image_type['name']) {
                 $format['category'] = $image_type;
-            } elseif ($formated_small == $image_type['name']) {
+            } elseif ($formatted_small == $image_type['name']) {
                 $format['small'] = $image_type;
                 $thumb = _PS_CAT_IMG_DIR_.$obj->id.'-'.$image_type['name'].'.'.$this->imageType;
                 if (is_file($thumb)) {
@@ -738,9 +738,9 @@ class AdminCategoriesControllerCore extends AdminController
             }
 
             $images_types = ImageType::getImagesTypes('categories');
-            $formated_small = ImageType::getFormattedName('small');
+            $formatted_small = ImageType::getFormattedName('small');
             foreach ($images_types as $k => $image_type) {
-                if ($formated_small == $image_type['name'] &&
+                if ($formatted_small == $image_type['name'] &&
                     file_exists(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType) &&
                     !unlink(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType)
                 ) {
@@ -908,9 +908,9 @@ class AdminCategoriesControllerCore extends AdminController
                 if (!isset($images_types)) {
                     $images_types = ImageType::getImagesTypes('categories');
                 }
-                $formated_small = ImageType::getFormattedName('small');
+                $formatted_small = ImageType::getFormattedName('small');
                 foreach ($images_types as $k => $image_type) {
-                    if ($formated_small == $image_type['name']) {
+                    if ($formatted_small == $image_type['name']) {
                         if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize())) {
                             $this->errors[] = $error;
                         } elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmpName)) {
