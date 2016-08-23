@@ -162,7 +162,7 @@ class ProductPresenter
         return $presentedProduct;
     }
 
-    private function shouldShowAddToCartButton(
+    private function shouldEnableAddToCartButton(
         ProductPresentationSettings $settings,
         array $product
     ) {
@@ -426,7 +426,7 @@ class ProductPresenter
             $language
         );
 
-        if ($this->shouldShowAddToCartButton($settings, $product)) {
+        if ($this->shouldEnableAddToCartButton($settings, $product)) {
             $presentedProduct['add_to_cart_url'] = $this->getAddToCartURL($product);
         } else {
             $presentedProduct['add_to_cart_url'] = null;
