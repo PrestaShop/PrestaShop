@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Filesystem\Filesystem;
 
 $container_builder = new ContainerBuilder();
 $container = $container_builder->build();
@@ -45,15 +46,17 @@ $configDirectory = __DIR__. '/../app/config';
 $phpParametersFilepath = $configDirectory . '/parameters.php';
 $yamlParametersFilepath = $configDirectory . '/parameters.yml';
 
-function exportPhpConfigFile($config, $destination) {
-    return file_put_contents($destination, '<?php return ' . var_export($config, true). ';' . "\n");
-}
+$filesystem = new Filesystem();
+
+$exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
+    return $filesystem->dumpFile($destination, '<?php return ' . var_export($config, true). ';' . "\n");
+};
 
 // Bootstrap an application with parameters.yml, which has been installed before PHP parameters file support
 if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
     $parameters = Yaml::parse($yamlParametersFilepath);
-    if (exportPhpConfigFile($parameters, $phpParametersFilepath)) {
-        file_put_contents($yamlParametersFilepath, 'parameters:' . "\n");
+    if ($exportPhpConfigFile($parameters, $phpParametersFilepath)) {
+        $filesystem->dumpFile($yamlParametersFilepath, 'parameters:' . "\n");
     }
 }
 
@@ -65,7 +68,7 @@ if ($lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {
             $config = require($phpParametersFilepath);
-            exportPhpConfigFile($config, _PS_CACHE_DIR_ .'appParameters.php');
+            $exportPhpConfigFile($config, _PS_CACHE_DIR_ .'appParameters.php');
         }
     }
 
