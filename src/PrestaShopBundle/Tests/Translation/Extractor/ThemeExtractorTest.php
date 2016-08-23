@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Tests\Translation\Extractor;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 
 class ThemeExtractorTest extends KernelTestCase
