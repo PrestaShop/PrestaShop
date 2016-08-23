@@ -209,7 +209,7 @@
 }
 /*** My account landing page ***/
 .page-my-account {
-  .links {
+  #wrapper .links {
     margin: 0 rem(-15px);
     a {
       @include customer-area-base-box;
