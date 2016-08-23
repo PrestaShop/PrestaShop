@@ -63,6 +63,12 @@ class CountryCore extends ObjectModel
 
     protected static $_idZones = array();
 
+    const GEOLOC_ALLOWED = 0;
+
+    const GEOLOC_CATALOG_MODE = 1;
+
+    const GEOLOC_FORBIDDEN = 2;
+
     /**
      * @see ObjectModel::$definition
      */
