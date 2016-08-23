@@ -601,6 +601,19 @@ class ConfigurationCore extends ObjectModel
         return (isset(self::$types[$key]) && self::$types[$key] == 'lang') ? true : false;
     }
 
+    public static function isCatalogMode()
+    {
+        return
+            Configuration::get('PS_CATALOG_MODE') ||
+            !Configuration::showPrices() ||
+            (Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE);
+    }
+
+    public static function showPrices()
+    {
+        return Group::isFeatureActive() ? (bool) Group::getCurrent()->show_prices : true;
+    }
+
     /**
      * Add SQL restriction on shops for configuration table
      *
