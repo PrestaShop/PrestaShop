@@ -25,7 +25,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\Classes;
+namespace PrestaShop\PrestaShop\tests\Integration\classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
@@ -39,6 +39,7 @@ use Configuration;
 use Context;
 use Currency;
 use Db;
+use Group;
 use Order;
 use Product;
 use Tools;
@@ -369,6 +370,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     public function setUp()
     {
+        Group::clearCachedValues();
         self::setRoundingType('line');
         self::setRoundingMode('half_up');
         self::setRoundingDecimals(2);
@@ -376,6 +378,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         self::deactivateCurrentCartRules();
         // Something might have disabled CartRules :)
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
+        Configuration::set('PS_GROUP_FEATURE_ACTIVE', true);
         Configuration::set('PS_ATCP_SHIPWRAP', false);
     }
 

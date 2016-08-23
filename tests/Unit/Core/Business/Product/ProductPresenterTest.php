@@ -38,9 +38,9 @@ class ProductPresenterTest extends UnitTestCase
 
         $this->settings->catalog_mode = false;
         $this->settings->restricted_country_mode = false;
+        $this->settings->showPrices = true;
 
         $this->product = [];
-        $this->product['show_price'] = true;
         $this->product['available_for_order'] = true;
         $this->product['id_product'] = 1;
         $this->product['id_product_attribute'] = 0;
@@ -104,23 +104,20 @@ class ProductPresenterTest extends UnitTestCase
     }
 
 
-    public function test_price_should_not_be_shown_in_catalog_mode()
+    public function test_price_should_be_shown_in_catalog_mode()
     {
-        $this->product['show_price'] = true;
         $this->settings->catalog_mode = true;
-        $this->assertFalse($this->getPresentedProduct('show_price'));
+        $this->assertTrue($this->getPresentedProduct('show_price'));
     }
 
-    public function test_price_should_not_be_shown_in_restricted_country_mode()
+    public function test_price_should_shown_in_restricted_country_mode()
     {
-        $this->product['show_price'] = true;
         $this->settings->restricted_country_mode = true;
-        $this->assertFalse($this->getPresentedProduct('show_price'));
+        $this->assertTrue($this->getPresentedProduct('show_price'));
     }
 
     public function test_price_should_not_be_shown_if_product_not_available_for_order()
     {
-        $this->product['show_price'] = true;
         $this->product['available_for_order'] = false;
         $this->assertFalse($this->getPresentedProduct('show_price'));
     }
