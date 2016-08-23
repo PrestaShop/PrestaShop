@@ -31,13 +31,15 @@ export default function() {
         })
     });
 
-    return new Jets({
-        searchTag: '#jetsSearch',
-        contentTag: '#jetsContent',
-        callSearchManually: true,
-        manualContentHandling: function (tag) {
-            // Search for translation keys and translation values
-            return $(tag).find('verbatim')[0].innerText + $(tag).find('textarea')[0].value;
-        }
-    });
+    if ($('#jetsSearch').length > 0) {
+        return new Jets({
+            searchTag: '#jetsSearch',
+            contentTag: '#jetsContent',
+            callSearchManually: true,
+            manualContentHandling: function (tag) {
+                // Search for translation keys and translation values
+                return $(tag).find('verbatim')[0].innerText + $(tag).find('textarea')[0].value;
+            }
+        });
+    }
 }
