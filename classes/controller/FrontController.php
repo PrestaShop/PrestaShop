@@ -110,8 +110,7 @@ class FrontControllerCore extends Controller
     public $ssl = false;
 
     /** @var bool If true, switches display to restricted country page during init. */
-    protected $restrictedCountry = false;
-    protected $restricted_country_mode = false;
+    protected $restrictedCountry = Country::GEOLOC_ALLOWED;
 
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
@@ -442,7 +441,7 @@ class FrontControllerCore extends Controller
 
         $this->displayMaintenancePage();
 
-        if ($this->restrictedCountry) {
+        if (Country::GEOLOC_FORBIDDEN == $this->restrictedCountry) {
             $this->displayRestrictedCountryPage();
         }
 
@@ -778,8 +777,9 @@ class FrontControllerCore extends Controller
                     if (is_object($record)) {
                         if (!in_array(strtoupper($record->country_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
-                                $this->restrictedCountry = true;
+                                $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
+                                $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
                                 $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), $record->country_name);
                             }
                         } else {
@@ -804,8 +804,9 @@ class FrontControllerCore extends Controller
 
                     return $default_country;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation()) {
-                    $this->restrictedCountry = true;
+                    $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
+                    $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
                     $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), (isset($record->country_name) && $record->country_name) ? $record->country_name : $this->l('Undefined'));
                 }
             }
@@ -1340,9 +1341,8 @@ class FrontControllerCore extends Controller
             'display_taxes_label' => $this->getDisplayTaxesLabel(),
             'low_quantity_threshold' => (int) Configuration::get('PS_LAST_QTIES'),
             'is_b2b' => (bool) Configuration::get('PS_B2B_ENABLE'),
-            'is_catalog' => (bool) Configuration::get('PS_CATALOG_MODE'),
-            'show_prices' => (Configuration::get('PS_CATALOG_MODE')
-                            || (Group::isFeatureActive() && !(bool) Group::getCurrent()->show_prices)),
+            'is_catalog' => (bool) Configuration::isCatalogMode(),
+            'show_prices' => (bool) Configuration::showPrices(),
             'opt_in' => array(
                 'partner' => (bool) Configuration::get('PS_CUSTOMER_OPTIN'),
             ),
@@ -1747,5 +1747,10 @@ class FrontControllerCore extends Controller
     public function getTemplateFinder()
     {
         return $this->templateFinder;
+    }
+
+    public function getRestrictedCountry()
+    {
+        return $this->restrictedCountry;
     }
 }
