@@ -42,7 +42,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
         $this->initTabModuleList();
         $this->addToolBarModulesListButton();
-        $this->toolbar_title = $this->l('Stats', 'AdminStatsTab');
+        $this->toolbar_title = $this->trans('Stats', array(), 'Admin.Stats.Feature');
         $this->initPageHeaderToolbar();
         if ($this->display == 'view') {
             // Some controllers use the view action without an object
@@ -75,13 +75,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
     public function displayCalendar()
     {
         return AdminStatsTabController::displayCalendarForm(array(
-            'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
-            'Day' => $this->l('Day', 'AdminStatsTab'),
-            'Month' => $this->l('Month', 'AdminStatsTab'),
-            'Year' => $this->l('Year', 'AdminStatsTab'),
-            'From' => $this->l('From:', 'AdminStatsTab'),
-            'To' => $this->l('To:', 'AdminStatsTab'),
-            'Save' => $this->l('Save', 'AdminStatsTab')
+            'Calendar' => $this->trans('Calendar', array(), 'Admin.Global'),
+            'Day' => $this->trans('Day', array(), 'Admin.Global'),
+            'Month' => $this->trans('Month', array(), 'Admin.Global'),
+            'Year' => $this->trans('Year', array(), 'Admin.Global'),
+            'From' => $this->trans('From:', array(), 'Admin.Global'),
+            'To' => $this->trans('To:', array(), 'Admin.Global'),
+            'Save' => $this->trans('Save', array(), 'Admin.Global')
         ), $this->token);
     }
 
@@ -125,10 +125,10 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         $tpl = $this->createTemplate('engines.tpl');
 
         $autoclean_period = array(
-            'never' =>    $this->l('Never', 'AdminStatsTab'),
-            'week' =>    $this->l('Week', 'AdminStatsTab'),
-            'month' =>    $this->l('Month', 'AdminStatsTab'),
-            'year' =>    $this->l('Year', 'AdminStatsTab')
+            'never' =>    $this->trans('Never', array(), 'Admin.Global'),
+            'week' =>    $this->trans('Week', array(), 'Admin.Global'),
+            'month' =>    $this->trans('Month', array(), 'Admin.Global'),
+            'year' =>    $this->trans('Year', array(), 'Admin.Global')
         );
 
         $tpl->assign(array(
