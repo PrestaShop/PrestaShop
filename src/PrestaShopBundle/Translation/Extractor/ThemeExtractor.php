@@ -49,12 +49,12 @@ class ThemeExtractor
     public function __construct(SmartyExtractor $smartyExtractor)
     {
         $this->smartyExtractor = $smartyExtractor;
-        $this->catalog = new MessageCatalogue('en-US');
         $this->dumpers[] = new XliffFileDumper();
     }
 
-    public function extract(Theme $theme)
+    public function extract(Theme $theme, $locale = 'en-US')
     {
+        $this->catalog = new MessageCatalogue($locale);
         // remove the last "/"
         $themeDirectory = substr($theme->getDirectory(), 0, -1);
 
