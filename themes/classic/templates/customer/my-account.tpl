@@ -30,21 +30,25 @@
       </div>
     {/if}
 
-    <div class="col-lg-4 col-md-6 col-sm-6">
-      <a id="history-link" href="{$urls.pages.history}">
-        <i class="material-icons">&#xE916;</i>
-        {l s='Order history and details' d='Shop.Theme.CustomerAccount'}
-      </a>
-    </div>
+    {if !$configuration.is_catalog}
+      <div class="col-lg-4 col-md-6 col-sm-6">
+        <a id="history-link" href="{$urls.pages.history}">
+          <i class="material-icons">&#xE916;</i>
+          {l s='Order history and details' d='Shop.Theme.CustomerAccount'}
+        </a>
+      </div>
+    {/if}
 
-    <div class="col-lg-4 col-md-6 col-sm-6">
-      <a id="order-slips-link" href="{$urls.pages.order_slip}">
-        <i class="material-icons">&#xE8B0;</i>
-        {l s='Credit slips' d='Shop.Theme.CustomerAccount'}
-      </a>
-    </div>
+    {if !$configuration.is_catalog}
+      <div class="col-lg-4 col-md-6 col-sm-6">
+        <a id="order-slips-link" href="{$urls.pages.order_slip}">
+          <i class="material-icons">&#xE8B0;</i>
+          {l s='Credit slips' d='Shop.Theme.CustomerAccount'}
+        </a>
+      </div>
+    {/if}
 
-    {if $configuration.voucher_enabled}
+    {if $configuration.voucher_enabled && !$configuration.is_catalog}
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="discounts-link" href="{$urls.pages.discount}">
           <i class="material-icons">&#xE54E;</i>
@@ -53,7 +57,7 @@
       </div>
     {/if}
 
-    {if $configuration.return_enabled}
+    {if $configuration.return_enabled && !$configuration.is_catalog}
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="returns-link" href="{$urls.pages.order_follow}">
           <i class="material-icons">&#xE860;</i>
