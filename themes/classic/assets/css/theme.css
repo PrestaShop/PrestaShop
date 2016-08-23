@@ -5875,9 +5875,9 @@ body#checkout {
   color: #414141; }
 
 /*** My account landing page ***/
-.page-my-account .links {
+.page-my-account #wrapper .links {
   margin: 0 -0.9375rem; }
-  .page-my-account .links a {
+  .page-my-account #wrapper .links a {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     background: white;
     padding: 1rem;
@@ -5890,15 +5890,15 @@ body#checkout {
     width: 100%;
     margin-bottom: 1.875rem;
     padding: 1.6rem; }
-    .page-my-account .links a i {
+    .page-my-account #wrapper .links a i {
       display: block;
       font-size: 2.6rem;
       width: 100%;
       color: #414141;
       padding-bottom: 3.4rem; }
-    .page-my-account .links a:hover {
+    .page-my-account #wrapper .links a:hover {
       color: #414141; }
-      .page-my-account .links a:hover i {
+      .page-my-account #wrapper .links a:hover i {
         color: #2fb5d2; }
 
 /*** FOOTER ***/
