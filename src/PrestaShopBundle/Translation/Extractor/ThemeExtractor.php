@@ -29,29 +29,31 @@ namespace PrestaShopBundle\Translation\Extractor;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
-use PrestaShop\TranslationToolsBundle\Translation\Dumper\PhpDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
+use Symfony\Component\Translation\Dumper\FileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Class ThemeExtractor.
+ * Extract all theme translations from Theme templates.
  *
- * Extract all theme translations from Theme templates
- *
- * @todo: Smarty plugins need to be translated, too.
+ * xliff is the default file format, you can add custom File dumpers.
  */
 class ThemeExtractor
 {
     private $catalog;
+    private $dumpers = array();
+    private $format = 'xlf';
+    private $outputPath;
     private $smartyExtractor;
 
     public function __construct(SmartyExtractor $smartyExtractor)
     {
         $this->smartyExtractor = $smartyExtractor;
         $this->catalog = new MessageCatalogue('en-US');
+        $this->dumpers[] = new XliffFileDumper();
     }
 
-    public function extract(Theme $theme, $format = 'xliff')
+    public function extract(Theme $theme)
     {
         // remove the last "/"
         $themeDirectory = substr($theme->getDirectory(), 0, -1);
@@ -59,20 +61,53 @@ class ThemeExtractor
         $options = array('path' => $themeDirectory);
         $this->smartyExtractor->extract($themeDirectory, $this->catalog);
 
-        switch ($format) {
-            case 'xliff':
-                $extractor = new XliffFileDumper();
-                $options['path'] .= '/translations';
-                break;
-            case 'array':
-                // legacy way to do, you should not use it.
-                $extractor = new PhpDumper();
-                break;
-            default:
-                throw new \LogicException(sprintf('The format %s is not supported', $format));
+        foreach ($this->dumpers as $dumper) {
+            if ($this->format === $dumper->getExtension()) {
+                if (null !== $this->outputPath) {
+                    $options['path'] = $this->outputPath;
+                }
+
+                return $dumper->dump($this->catalog, $options);
+            }
         }
-        
-        return $extractor->dump($this->catalog, $options);
+
+        throw new \LogicException(sprintf('The format %s is not supported.', $this->format));
+    }
+
+    public function addDumper(FileDumper $dumper)
+    {
+        $this->dumpers[] = $dumper;
+
+        return $this;
+    }
+
+    public function getDumpers()
+    {
+        return $this->dumpers;
+    }
+
+    public function setFormat($format)
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    public function setOutputPath($outputPath)
+    {
+        $this->outputPath = $outputPath;
+
+        return $this;
+    }
+
+    public function getOutputPath()
+    {
+        return $this->outputPath;
     }
 
     public function getCatalog()

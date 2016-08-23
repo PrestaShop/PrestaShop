@@ -30,6 +30,7 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\TranslationToolsBundle\Translation\Dumper\PhpDumper;
 
 class ThemeExtractorTest extends KernelTestCase
 {
@@ -66,18 +67,29 @@ class ThemeExtractorTest extends KernelTestCase
         if (is_dir(self::$xliffFolder)) {
             $this->filesystem->remove(self::$xliffFolder);
         }
+
+        $this->themeExtractor = null;
     }
 
     public function testExtractWithLegacyFormat()
     {
-        $this->themeExtractor->extract($this->getFakeTheme(), 'array');
+        $this->themeExtractor
+            ->addDumper(new PhpDumper())
+            ->setFormat('php')
+            ->extract($this->getFakeTheme())
+        ;
+
         $legacyTranslationFile = self::$legacyFolder.'/en-US.php';
         $this->assertTrue($this->filesystem->exists($legacyTranslationFile));
     }
 
     public function testExtractWithXliffFormat()
     {
-        $this->themeExtractor->extract($this->getFakeTheme());
+        $this->themeExtractor
+            ->setOutputPath(self::$xliffFolder)
+            ->extract($this->getFakeTheme())
+        ;
+
         $isFilesExists = $this->filesystem->exists(array(
             self::$xliffFolder.'/en-US/Shop/Theme/Actions.xlf',
             self::$xliffFolder.'/en-US/Shop/Theme/Cart.xlf',
