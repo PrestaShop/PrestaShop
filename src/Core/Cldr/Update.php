@@ -162,7 +162,7 @@ class Update extends Repository
         $files = @scandir($rootPath.'supplemental');
 
         foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
+            if (is_file($file)) {
                 $newFileName = 'supplemental--'.pathinfo($file)['filename'];
                 if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName)) {
                     copy(
@@ -188,7 +188,7 @@ class Update extends Repository
             return;
         }
         foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
+            if (is_file($file)) {
                 $newFileName = 'main--'.$locale.'--'.pathinfo($file)['filename'];
                 if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName)) {
                     copy(
