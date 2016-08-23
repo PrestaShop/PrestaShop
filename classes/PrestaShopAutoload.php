@@ -155,11 +155,35 @@ class PrestaShopAutoload
         $filename = PrestaShopAutoload::getCacheFileIndex();
         @mkdir(_PS_CACHE_DIR_);
 
-        if (!file_put_contents($filename, $content) !== false) {
+        if (!$this->dumpFile($filename, $content)) {
             Tools::error_log('Cannot write temporary file '.$filename);
         }
 
         $this->index = $classes;
+    }
+
+    /**
+     * @param $filename
+     * @param $content
+     * @return bool
+     *
+     * @see http://api.symfony.com/3.0/Symfony/Component/Filesystem/Filesystem.html#method_dumpFile
+     */
+    public function dumpFile($filename, $content)
+    {
+        $dir = dirname($filename);
+
+        // Will create a temp file with 0600 access rights
+        // when the filesystem supports chmod.
+        $tmpFile = tempnam($dir, basename($filename));
+        if (false === @file_put_contents($tmpFile, $content)) {
+            return false;
+        }
+        // Ignore for filesystems that do not support umask
+        @chmod($tmpFile, 0666);
+        rename($tmpFile, $filename);
+
+        return true;
     }
 
     /**
