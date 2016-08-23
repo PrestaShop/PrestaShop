@@ -603,10 +603,18 @@ class ConfigurationCore extends ObjectModel
 
     public static function isCatalogMode()
     {
-        return
-            Configuration::get('PS_CATALOG_MODE') ||
-            !Configuration::showPrices() ||
-            (Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE);
+        if (is_a(Context::getContext()->controller, 'FrontController')) {
+            $isCatalogMode =
+                Configuration::get('PS_CATALOG_MODE') ||
+                !Configuration::showPrices() ||
+                (Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE);
+        } else {
+            $isCatalogMode =
+                Configuration::get('PS_CATALOG_MODE') ||
+                !Configuration::showPrices();
+        }
+
+        return $isCatalogMode;
     }
 
     public static function showPrices()
