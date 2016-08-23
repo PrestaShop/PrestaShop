@@ -34,13 +34,20 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 
 class ThemeExtractorTest extends KernelTestCase
 {
-    const THEME_ROOT_DIR = __DIR__.'/../../resources/themes/fake-theme';
-    const LEGACY_FOLDER = self::THEME_ROOT_DIR.'/lang';
-    const XLIFF_FOLDER = self::THEME_ROOT_DIR.'/translations';
-    
     private $container;
     private $filesystem;
     private $themeExtractor;
+
+    private static $rootDir;
+    private static $legacyFolder;
+    private static $xliffFolder;
+
+    public static function setUpBeforeClass()
+    {
+        self::$rootDir = __DIR__.'/../../resources/themes/fake-theme';
+        self::$legacyFolder = self::$rootDir.'/lang';
+        self::$xliffFolder = self::$rootDir.'/translations';
+    }
 
     public function setUp()
     {
@@ -53,30 +60,30 @@ class ThemeExtractorTest extends KernelTestCase
 
     public function tearDown()
     {
-        if (file_exists(self::LEGACY_FOLDER)) {
-            $this->filesystem->remove(self::LEGACY_FOLDER);
+        if (file_exists(self::$legacyFolder)) {
+            $this->filesystem->remove(self::$legacyFolder);
         }
 
-        if (is_dir(self::THEME_ROOT_DIR)) {
-            $this->filesystem->remove(self::XLIFF_FOLDER);
+        if (is_dir(self::$xliffFolder)) {
+            $this->filesystem->remove(self::$xliffFolder);
         }
     }
 
     public function testExtractWithLegacyFormat()
     {
-        $translations = $this->themeExtractor->extract($this->getFakeTheme(), 'array');
-        $legacyTranslationFile = self::LEGACY_FOLDER.'/en-US.php';
+        $this->themeExtractor->extract($this->getFakeTheme(), 'array');
+        $legacyTranslationFile = self::$legacyFolder.'/en-US.php';
         $this->assertTrue($this->filesystem->exists($legacyTranslationFile));
     }
 
     public function testExtractWithXliffFormat()
     {
-        $translations = $this->themeExtractor->extract($this->getFakeTheme());
+        $this->themeExtractor->extract($this->getFakeTheme());
         $isFilesExists = $this->filesystem->exists(array(
-            self::XLIFF_FOLDER.'/en-US/Shop/Theme/Actions.xlf',
-            self::XLIFF_FOLDER.'/en-US/Shop/Theme/Cart.xlf',
-            self::XLIFF_FOLDER.'/en-US/Shop/Theme/Product.xlf',
-            self::XLIFF_FOLDER.'/en-US/Shop/Foo/Bar.xlf',
+            self::$xliffFolder.'/en-US/Shop/Theme/Actions.xlf',
+            self::$xliffFolder.'/en-US/Shop/Theme/Cart.xlf',
+            self::$xliffFolder.'/en-US/Shop/Theme/Product.xlf',
+            self::$xliffFolder.'/en-US/Shop/Foo/Bar.xlf',
         ));
 
         $this->assertTrue($isFilesExists);
@@ -84,11 +91,10 @@ class ThemeExtractorTest extends KernelTestCase
 
     private function getFakeTheme()
     {
-        $rootThemeDir = self::THEME_ROOT_DIR;
-        $configFile = $rootThemeDir.'/config/theme.yml';
+        $configFile = self::$rootDir.'/config/theme.yml';
         $config = Yaml::parse(file_get_contents($configFile));
 
-        $config['directory'] = $rootThemeDir;
+        $config['directory'] = self::$rootDir;
         $config['physical_uri'] = 'http://my-wonderful-shop.com';
 
         return new Theme($config);
