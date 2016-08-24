@@ -369,6 +369,10 @@ var featuresCollection = (function() {
               $selector.prop('disabled', response.length === 0);
               $selector.empty();
               $.each(response, function(key, val) {
+                // the placeholder shouldn't be posted.
+                if ('0' == key) {
+                  key = '';
+                }
                 $selector.append($('<option></option>').attr('value', key).text(val));
               });
             }
