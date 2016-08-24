@@ -149,7 +149,7 @@
                            <h4><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">{$attachment.name}</a></h4>
                            <p>{$attachment.description}</p>
                            <a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">
-                             {l s='Download' d='Shop.Theme.Actions'} ({Tools::formatBytes($attachment.file_size, 2)})
+                             {l s='Download' d='Shop.Theme.Actions'} ({$attachment.file_size_formatted})
                            </a>
                          </div>
                        {/foreach}
