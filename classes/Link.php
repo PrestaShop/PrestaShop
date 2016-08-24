@@ -551,7 +551,7 @@ class LinkCore
     public function getImageLink($name, $ids, $type = null)
     {
         $not_default = false;
-        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
 

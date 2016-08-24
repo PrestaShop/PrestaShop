@@ -57,33 +57,17 @@ class ModuleManagerBuilder
     public static $translator = null;
     public static $addonsDataProvider = null;
     public static $categoriesProvider = null;
+    public static $instance = null;
 
-    public function __construct()
-    {
-        $marketPlaceClient = new ApiClient(
-            new Client(array()),
-            $this->getLanguageIso(),
-            $this->getCountryIso(),
-            _PS_VERSION_)
-        ;
-
-        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient);
-        self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
-
-        if (is_null(self::$adminModuleDataProvider)) {
-            self::$adminModuleDataProvider = new AdminModuleDataProvider(
-                $this->getLanguageIso(),
-                $this->getSymfonyRouter(),
-                self::$addonsDataProvider,
-                self::$categoriesProvider
-            );
-
-            self::$translator = Context::getContext()->getTranslator();
-            self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
-            self::$legacyLogger = new LegacyLogger();
-            self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
-            self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
+    /**
+     * @return ModuleManagerBuilder
+     */
+    static public function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new self();
         }
+
+        return self::$instance;
     }
 
     /**
@@ -136,6 +120,34 @@ class ModuleManagerBuilder
         }
 
         return self::$modulesRepository;
+    }
+
+    private function __construct()
+    {
+        $marketPlaceClient = new ApiClient(
+            new Client(array()),
+            $this->getLanguageIso(),
+            $this->getCountryIso(),
+            _PS_VERSION_)
+        ;
+
+        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient);
+        self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
+
+        if (is_null(self::$adminModuleDataProvider)) {
+            self::$adminModuleDataProvider = new AdminModuleDataProvider(
+                $this->getLanguageIso(),
+                $this->getSymfonyRouter(),
+                self::$addonsDataProvider,
+                self::$categoriesProvider
+            );
+
+            self::$translator = Context::getContext()->getTranslator();
+            self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
+            self::$legacyLogger = new LegacyLogger();
+            self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
+            self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
+        }
     }
 
     /**

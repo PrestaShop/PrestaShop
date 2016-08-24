@@ -302,7 +302,7 @@ class AdminCurrenciesControllerCore extends AdminController
 
     public function ajaxProcessCronjobLiveExchangeRate()
     {
-        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
         if (!$moduleManager->isInstalled('cronjobs')) {

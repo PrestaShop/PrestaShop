@@ -163,7 +163,7 @@ class CommonController extends FrameworkBundleAdminController
 
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         /* @var $modulesProvider AdminModuleDataProvider */
-        $modulesRepository = (new ModuleManagerBuilder())->buildRepository();
+        $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
         $modules = array();
         foreach ($moduleIdList as $id) {

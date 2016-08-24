@@ -64,7 +64,10 @@ class ConfigurationCore extends ObjectModel
     protected static $_cache = null;
 
     /** @var array Configuration cache with optimised key order */
-    protected static $_new_cache = null;
+    protected static $_new_cache_shop = null;
+    protected static $_new_cache_group = null;
+    protected static $_new_cache_global = null;
+    protected static $_initialized = false;
 
     /** @var array Vars types */
     protected static $types = array();
@@ -113,18 +116,7 @@ class ConfigurationCore extends ObjectModel
 
     public static function configurationIsLoaded()
     {
-        static $loaded = null;
-
-        if ($loaded !== null) {
-            return $loaded;
-        }
-
-        if (self::$_new_cache !== null) {
-            $loaded = true;
-            return $loaded;
-        }
-
-        return false;
+        return self::$_initialized;
     }
 
     /**
@@ -135,7 +127,10 @@ class ConfigurationCore extends ObjectModel
     public static function clearConfigurationCacheForTesting()
     {
         self::$_cache = null;
-        self::$_new_cache = null;
+        self::$_new_cache_shop = null;
+        self::$_new_cache_group = null;
+        self::$_new_cache_global = null;
+        self::$_initialized = false;
     }
 
     /**
@@ -143,10 +138,12 @@ class ConfigurationCore extends ObjectModel
      */
     public static function loadConfiguration()
     {
-        $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
+        $sql     = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
                 FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` c
-                LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang` cl ON (c.`'.bqSQL(self::$definition['primary']).'` = cl.`'.bqSQL(self::$definition['primary']).'`)';
-        $db = Db::getInstance();
+                LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang` cl ON (c.`'.bqSQL(
+                self::$definition['primary']
+            ).'` = cl.`'.bqSQL(self::$definition['primary']).'`)';
+        $db      = Db::getInstance();
         $results = $db->executeS($sql);
         if ($results) {
             foreach ($results as $row) {
@@ -165,18 +162,18 @@ class ConfigurationCore extends ObjectModel
                     $row['value'] = '';
                 }
 
-
                 if ($row['id_shop']) {
                     self::$_cache[self::$definition['table']][$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
-                    self::$_new_cache[$row['name']][$lang]['shop'][$row['id_shop']]                         = $row['value'];
+                    self::$_new_cache_shop[$row['name']][$lang][$row['id_shop']]                            = $row['value'];
                 } elseif ($row['id_shop_group']) {
                     self::$_cache[self::$definition['table']][$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
-                    self::$_new_cache[$row['name']][$lang]['group'][$row['id_shop_group']]                         = $row['value'];
+                    self::$_new_cache_group[$row['name']][$lang][$row['id_shop_group']]                            = $row['value'];
                 } else {
                     self::$_cache[self::$definition['table']][$lang]['global'][$row['name']] = $row['value'];
-                    self::$_new_cache[$row['name']][$lang]['global']                         = $row['value'];
+                    self::$_new_cache_global[$row['name']][$lang]                            = $row['value'];
                 }
             }
+            self::$_initialized = true;
         }
     }
 
@@ -193,33 +190,38 @@ class ConfigurationCore extends ObjectModel
             return false;
         }
 
-        // If conf if not initialized, try manual query
-        if (self::$_new_cache === null || !isset(self::$_cache[self::$definition['table']])) {
+        // Init the cache on demand
+        if (!self::$_initialized) {
             Configuration::loadConfiguration();
-            if (self::$_new_cache === array()) {
-                return Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` WHERE `name` = "'.pSQL($key).'"');
-            }
         }
         $id_lang = (int)$id_lang;
 
-        if (!isset(self::$_new_cache[$key][$id_lang])) {
+        if (!self::isLangKey($key)) {
             $id_lang = 0;
         }
 
-        if ($id_shop === null || !Shop::isFeatureActive()) {
-            $id_shop = Shop::getContextShopID(true);
+        if (self::$_new_cache_shop === null) {
+            $id_shop = 0;
+        } else {
+            if ($id_shop === null || !Shop::isFeatureActive()) {
+                $id_shop = Shop::getContextShopID(true);
+            }
         }
 
-        if ($id_shop_group === null || !Shop::isFeatureActive()) {
-            $id_shop_group = Shop::getContextShopGroupID(true);
+        if (self::$_new_cache_group === null) {
+            $id_shop_group = 0;
+        } else {
+            if ($id_shop_group === null || !Shop::isFeatureActive()) {
+                $id_shop_group = Shop::getContextShopGroupID(true);
+            }
         }
 
         if ($id_shop && Configuration::hasKey($key, $id_lang, null, $id_shop)) {
-            return self::$_new_cache[$key][$id_lang]['shop'][$id_shop];
+            return self::$_new_cache_shop[$key][$id_lang][$id_shop];
         } elseif ($id_shop_group && Configuration::hasKey($key, $id_lang, $id_shop_group)) {
-            return self::$_new_cache[$key][$id_lang]['group'][$id_shop_group];
+            return self::$_new_cache_group[$key][$id_lang][$id_shop_group];
         } elseif (Configuration::hasKey($key, $id_lang)) {
-            return self::$_new_cache[$key][$id_lang]['global'];
+            return self::$_new_cache_global[$key][$id_lang];
         }
 
         return $default;
@@ -315,12 +317,12 @@ class ConfigurationCore extends ObjectModel
         $id_lang = (int)$id_lang;
 
         if ($id_shop) {
-            return isset(self::$_new_cache[$key][$id_lang]['shop'][$id_shop]);
+            return isset(self::$_new_cache_shop[$key][$id_lang][$id_shop]);
         } elseif ($id_shop_group) {
-            return isset(self::$_new_cache[$key][$id_lang]['group'][$id_shop_group]);
+            return isset(self::$_new_cache_group[$key][$id_lang][$id_shop_group]);
         }
 
-        return isset(self::$_new_cache[$key][$id_lang]['global']);
+        return isset(self::$_new_cache_global[$key][$id_lang]);
     }
 
     /**
@@ -350,13 +352,13 @@ class ConfigurationCore extends ObjectModel
 
         foreach ($values as $lang => $value) {
             if ($id_shop) {
-                self::$_new_cache[$key][$lang]['shop'][$id_shop] = $value;
+                self::$_new_cache_shop[$key][$lang][$id_shop] = $value;
                 self::$_cache[self::$definition['table']][$lang]['shop'][$id_shop][$key] = $value;
             } elseif ($id_shop_group) {
-                self::$_new_cache[$key][$lang]['group'][$id_shop_group] = $value;
+                self::$_new_cache_group[$key][$lang][$id_shop_group] = $value;
                 self::$_cache[self::$definition['table']][$lang]['group'][$id_shop_group][$key] = $value;
             } else {
-                self::$_new_cache[$key][$lang]['global'] = $value;
+                self::$_new_cache_global[$key][$lang] = $value;
                 self::$_cache[self::$definition['table']][$lang]['global'][$key] = $value;
             }
         }
@@ -501,7 +503,10 @@ class ConfigurationCore extends ObjectModel
         WHERE `name` = "'.pSQL($key).'"');
 
         self::$_cache = null;
-        self::$_new_cache = null;
+        self::$_new_cache_shop = null;
+        self::$_new_cache_group = null;
+        self::$_new_cache_global = null;
+        self::$_initialized = false;
 
         return ($result && $result2);
     }
@@ -532,7 +537,10 @@ class ConfigurationCore extends ObjectModel
         WHERE `'.bqSQL(self::$definition['primary']).'` = '.(int)$id);
 
         self::$_cache = null;
-        self::$_new_cache = null;
+        self::$_new_cache_shop = null;
+        self::$_new_cache_group = null;
+        self::$_new_cache_global = null;
+        self::$_initialized = false;
     }
 
     /**

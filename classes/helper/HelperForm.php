@@ -235,7 +235,7 @@ class HelperFormCore extends Helper
             }
         }
 
-        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
     
 
