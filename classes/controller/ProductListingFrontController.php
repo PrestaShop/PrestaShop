@@ -138,6 +138,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'js_enabled' => $this->ajax,
             'activeFilters' => $activeFilters,
             'sort_order' => $result->getCurrentSortOrder()->toString(),
+            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null))
         ));
     }
 
@@ -172,6 +173,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         return $this->render('catalog/_partials/active_filters', array(
             'activeFilters' => $activeFilters,
+            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null))
         ));
     }
 
