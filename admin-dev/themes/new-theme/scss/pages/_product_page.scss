@@ -886,26 +886,13 @@
     }
     .combination-form {
       padding: 0 rem(20px);
-      .col-md-2 {
-        width: 30%;
-      }
-      .col-md-3 {
-        width: 50%;
-      }
     }
     #form-nav[style*="display:none"] {
       ~ .arrow {
         display: none;
       }
     }
-    #features {
-      .col-md-4 {
-        width: 100%;
-      }
-      .col-md-3 {
-        width: 90%;
-      }
-    }
+
     #accordion_combinations {
       .attribute-finalprice,
       .attribute-price {
@@ -920,44 +907,12 @@
     }
     #bulk-combinations-container {
       width: 95%;
-      .col-md-2,
-      .col-md-4 {
-        width: 50%;
-        margin-bottom: rem(20px);
-      }
-      .col-md-3 {
-        clear: both;
-        width: 50%;
-      }
-      .col-md-offset-1,
-      .col-md-offset-4 {
-        margin-left: 0;
-      }
-      .col-md-offset-5 {
-        margin-left: 0;
-        width: 82%;
-        + .col-md-2 {
-          width: 18%;
-        }
-      }
       #delete-combinations {
         float: right;
       }
       .btn-block {
         width: auto;
         float: right;
-      }
-    }
-    #step2 {
-      .col-md-2 {
-        width: 25%;
-      }
-      .col-md-4,
-      .col-md-8 {
-        width: 50%;
-      }
-      .col-md-offset-1 {
-        margin-left: 0;
       }
     }
     .product-footer {
