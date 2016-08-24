@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class PdfOrderReturnControllerCore extends FrontController
+class PdfOrderReturnControllerCore extends PdfFrontController
 {
     public $php_self = 'pdf-order-return';
     protected $display_header = false;

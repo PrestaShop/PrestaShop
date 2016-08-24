@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class PdfOrderSlipControllerCore extends FrontController
+class PdfOrderSlipControllerCore extends PdfFrontController
 {
     public $php_self = 'pdf-order-slip';
     protected $display_header = false;

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class PdfInvoiceControllerCore extends FrontController
+class PdfInvoiceControllerCore extends PdfFrontController
 {
     public $php_self = 'pdf-invoice';
     protected $display_header = false;
