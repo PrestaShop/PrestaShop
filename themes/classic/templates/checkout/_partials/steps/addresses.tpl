@@ -5,7 +5,7 @@
     <form
       method="POST"
       action="{$urls.pages.order}"
-      data-link-update="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
+      data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
     >
 
       {if !$use_same_address}

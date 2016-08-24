@@ -13,7 +13,7 @@ function handleCountryChange (selectors) {
       id_country: $(selectors.country).val(),
       id_address: $(selectors.address + ' form').data('id-address'),
     };
-    var getFormViewUrl = $(selectors.address + ' form').data('link-update');
+    var getFormViewUrl = $(selectors.address + ' form').data('refresh-url');
     var formFieldsSelector = selectors.address + ' input';
 
     $.post(getFormViewUrl, requestParameters).then(function (resp) {
