@@ -2154,37 +2154,49 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	(0, _jquery2['default'])(document).ready(function () {
-	  _prestashop2['default'].on('address form updated', function (event) {
-	    changeCountry();
-	  });
-	
-	  changeCountry();
-	});
-	
-	function changeCountry() {
-	  (0, _jquery2['default'])('.js-country').change(function () {
+	/**
+	 * Update address form on country change
+	 * Emit "addressFormUpdated" event
+	 *
+	 * @param selectors
+	 */
+	function handleCountryChange(selectors) {
+	  (0, _jquery2['default'])('body').on('change', selectors.country, function () {
 	    var requestData = {
-	      id_country: (0, _jquery2['default'])('.js-country').val(),
-	      id_address: (0, _jquery2['default'])('.js-address-form form').data('id-address')
+	      id_country: (0, _jquery2['default'])(selectors.country).val(),
+	      id_address: (0, _jquery2['default'])(selectors.address + ' form').data('id-address')
 	    };
+	    var getFormViewUrl = (0, _jquery2['default'])(selectors.address + ' form').data('refresh-url');
+	    var formFieldsSelector = selectors.address + ' input';
 	
-	    _jquery2['default'].post((0, _jquery2['default'])('.js-address-form form').data('link-update'), requestData).then(function (resp) {
+	    _jquery2['default'].post(getFormViewUrl, requestData).then(function (resp) {
 	      var inputs = [];
-	      (0, _jquery2['default'])('.js-address-form input').each(function () {
+	
+	      // Store fields values before updating form
+	      (0, _jquery2['default'])(formFieldsSelector).each(function () {
 	        inputs[(0, _jquery2['default'])(this).prop('name')] = (0, _jquery2['default'])(this).val();
 	      });
 	
-	      (0, _jquery2['default'])('.js-address-form').replaceWith(resp.address_form);
+	      (0, _jquery2['default'])(selectors.address).replaceWith(resp.address_form);
 	
-	      (0, _jquery2['default'])('.js-address-form input').each(function () {
+	      // Restore fields values
+	      (0, _jquery2['default'])(formFieldsSelector).each(function () {
 	        (0, _jquery2['default'])(this).val(inputs[(0, _jquery2['default'])(this).prop('name')]);
 	      });
 	
-	      _prestashop2['default'].emit('address form updated');
+	      _prestashop2['default'].emit('updatedAddressForm', { target: (0, _jquery2['default'])(selectors.address) });
+	    }).fail(function (resp) {
+	      _prestashop2['default'].emit('handleError', { eventType: 'updateAddressForm', resp: resp });
 	    });
 	  });
 	}
+	
+	(0, _jquery2['default'])(document).ready(function () {
+	  handleCountryChange({
+	    'country': '.js-country',
+	    'address': '.js-address-form'
+	  });
+	});
 
 /***/ },
 /* 11 */
