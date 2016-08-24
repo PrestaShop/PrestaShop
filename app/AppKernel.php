@@ -17,6 +17,8 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             // PrestaShop Core bundle
             new PrestaShopBundle\PrestaShopBundle(),
+            // PrestaShop Translation parser
+            new PrestaShop\TranslationToolsBundle\TranslationToolsBundle(),
             // Api consumer
             new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
         );
