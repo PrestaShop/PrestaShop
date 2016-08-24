@@ -155,4 +155,6 @@ ALTER TABLE `PREFIX_cart_rule` ADD  `reduction_exclude_special` TINYINT(1) UNSIG
 ALTER TABLE `PREFIX_product` ADD state INT UNSIGNED NOT NULL DEFAULT '1';
 ALTER TABLE `PREFIX_product` ADD KEY state (state, date_upd);
 
+INSERT INTO  `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`) VALUES (NULL , NULL , NULL ,  'PS_ORDER_RECALCULATE_SHIPPING',  '1',  '0000-00-00 00:00:00',  '0000-00-00 00:00:00');
+
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_STORES_DISPLAY_FOOTER', 'PS_STORES_SIMPLIFIED', 'PS_STORES_CENTER_LAT', 'PS_STORES_CENTER_LONG', 'PS_STORES_DISPLAY_SITEMAP');

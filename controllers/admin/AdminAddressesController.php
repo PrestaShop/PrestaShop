@@ -415,6 +415,9 @@ class AdminAddressesControllerCore extends AdminController
             if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.bqSQL($address_type).'` = '.(int)$this->object->id.' WHERE `id_order` = '.(int)$id_order)) {
                 $this->errors[] = $this->trans('An error occurred while linking this address to its order.', array(), 'Admin.OrdersCustomers.Notification');
             } else {
+                //update order shipping cost
+                $order = new Order($id_order);
+                $order->refreshShippingCost();
                 Tools::redirectAdmin(urldecode(Tools::getValue('back')).'&conf=4');
             }
         }
