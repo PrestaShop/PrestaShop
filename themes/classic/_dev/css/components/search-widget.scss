@@ -12,6 +12,11 @@
     }
   }
 }
+#checkout {
+  #search_widget {
+    display: none; /* Not ideal solution by allows to reuse same hooks/templates */
+  }
+}
 
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {

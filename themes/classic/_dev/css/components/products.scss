@@ -1,3 +1,10 @@
+#product {
+  #content {
+    position: relative;
+    max-width: 452px;
+    margin: 0 auto;
+  }
+}
 .product-price {
   color: $brand-primary;
   display: inline-block;
@@ -13,6 +20,8 @@
   position: absolute;
   opacity: 0;
   cursor: pointer;
+  height: rem(20px);
+  width: rem(20px);
 }
 .input-container {
   position: relative;
@@ -78,7 +87,7 @@
   }
   .input-group-btn-vertical {
     .btn {
-      padding: rem(11px) rem(10px) rem(10px) rem(10px);
+      padding: rem(8px) rem(11px);
       i {
         font-size: rem(16px);
         top: rem(2px);
@@ -91,7 +100,7 @@
   }
 }
 .product-discounts {
-  margin: $extra-large-space 0;
+  margin-bottom: rem(24px);
   > .product-discounts-title {
     font-weight: normal;
     font-size: $font-size-sm;
@@ -350,6 +359,37 @@
     }
   }
 }
+#main {
+  .images-container {
+    .js-qv-mask {
+      white-space: nowrap;
+      overflow: hidden;
+      &.scroll {
+        width: calc(100% - 60px);
+        margin: 0 auto;
+      }
+    }
+  }  
+}
+.scroll-box-arrows {
+  display: none;
+  &.scroll {
+    display: block;
+  }
+  i {
+    position: absolute;
+    bottom: rem(26px);
+    height: 100px;
+    line-height: 100px;
+    cursor: pointer;
+  }
+  .left {
+    left: 0;
+  }
+  .right {
+    right: 0;
+  }
+}
 #product-availability {
   display: inline-block;
   font-weight: 700;
@@ -540,6 +580,11 @@ li.product-flag {
     color: $gray-dark;
   }
 }
+#blockcart-modal .cart-content {
+  .btn {
+    margin-bottom: $small-space;
+  }
+}
 @include media-breakpoint-down(md) {
   .product-cover {
     img {
@@ -558,5 +603,24 @@ li.product-flag {
   }
   #product-modal .modal-content .modal-body .image-caption {
     width: 100%;
+  }
+  #blockcart-modal {
+    .modal-dialog {
+      width: calc(100% - 20px);
+    }
+    .modal-body {
+      padding: rem(30px);
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  #blockcart-modal {
+    .divide-right {
+      border-right: none;
+    }
+    .modal-body {
+      padding: rem(16px);
+    }
   }
 }

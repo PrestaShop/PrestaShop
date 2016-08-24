@@ -56,6 +56,10 @@ $(document).ready(function () {
         makeQuery(event.target.dataset.searchUrl);
     });
 
+    $('body').on('click', '.js-search-filters-clear-all', function (event) {
+        makeQuery(event.target.dataset.searchUrl);
+    });
+
     $('body').on('click', '.js-search-link', function (event) {
         event.preventDefault();
         makeQuery($(event.target).closest('a').get(0).href);

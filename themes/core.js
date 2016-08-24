@@ -2009,6 +2009,10 @@
 	        makeQuery(event.target.dataset.searchUrl);
 	    });
 	
+	    (0, _jquery2['default'])('body').on('click', '.js-search-filters-clear-all', function (event) {
+	        makeQuery(event.target.dataset.searchUrl);
+	    });
+	
 	    (0, _jquery2['default'])('body').on('click', '.js-search-link', function (event) {
 	        event.preventDefault();
 	        makeQuery((0, _jquery2['default'])(event.target).closest('a').get(0).href);

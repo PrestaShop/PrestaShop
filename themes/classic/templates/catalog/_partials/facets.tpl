@@ -1,18 +1,31 @@
   <div id="search_filters">
     <h4 class="text-uppercase h6 hidden-sm-down">{l s='Filter By' d='Shop.Theme.Actions'}</h4>
+    <div id="_desktop_search_filters_clear_all" class="hidden-sm-down clear-all-wrapper">
+      <button data-search-url="{$clear_all_link}" class="btn btn-secondary js-search-filters-clear-all">
+        <i class="material-icons">&#xE14C;</i>
+        {l s='Clear all' d='Shop.Theme.Actions'}
+      </button>
+    </div>
     {foreach from=$facets item="facet"}
       {if $facet.displayed}
         <section class="facet">
-          <h1 class="h6 facet-title">{$facet.label}</h1>
-          <span class="pull-xs-right hidden-md-up">
-            {assign var=_expand_id value=10|mt_rand:100000}
-            <span data-target="#facet_{$_expand_id}" data-toggle="collapse" class="navbar-toggler collapse-icons">
-              <i class="material-icons add">&#xE313;</i>
-              <i class="material-icons remove">&#xE316;</i>
+          <h1 class="h6 facet-title hidden-sm-down">{$facet.label}</h1>
+          {assign var=_expand_id value=10|mt_rand:100000}
+          {assign var=_collapse value=true}
+          {foreach from=$facet.filters item="filter"}
+            {if $filter.active}{assign var=_collapse value=false}{/if}
+          {/foreach}
+          <div class="title hidden-md-up" data-target="#facet_{$_expand_id}" data-toggle="collapse"{if !$_collapse} aria-expanded="true"{/if}>
+            <h1 class="h6 facet-title">{$facet.label}</h1>
+            <span class="pull-xs-right">
+              <span class="navbar-toggler collapse-icons">
+                <i class="material-icons add">&#xE313;</i>
+                <i class="material-icons remove">&#xE316;</i>
+              </span>
             </span>
-          </span>
+          </div>
           {if $facet.widgetType !== 'dropdown'}
-            <ul id="facet_{$_expand_id}" class="collapse">
+            <ul id="facet_{$_expand_id}" class="collapse{if !$_collapse} in{/if}">
               {foreach from=$facet.filters item="filter"}
                 {if $filter.displayed}
                   <li>

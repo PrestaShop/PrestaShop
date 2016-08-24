@@ -4,9 +4,9 @@
   {hook h='displayCrossSellingShoppingCart'}
 {/block}
 
-{block name='cart_overview' append}
-  <a class="p-l-2" href="{$urls.pages.index}">
-    {l s='Continue shopping' d='Shop.Theme.Actions'}<i class="material-icons">chevron_right</i>
+{block name='continue_shopping' append}
+  <a class="label" href="{$urls.pages.index}">
+    <i class="material-icons">chevron_left</i>{l s='Continue shopping' d='Shop.Theme.Actions'}
   </a>
 {/block}
 

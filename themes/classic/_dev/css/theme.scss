@@ -310,12 +310,12 @@
   }
   #blockcart-modal .product-image {
     width: 100%;
+    display: block;
+    max-width: 250px;
+    margin: 0 auto rem(15px);
   }
   #blockcart-modal .cart-content {
     padding-left: 0;
-    button {
-      margin-bottom: $small-space;
-    }
   }
   #blockcart-modal .product-name,
   #product-availability {
@@ -332,3 +332,11 @@
     padding-bottom: 0;
   }
 }
+
+@include media-breakpoint-down(xs) {
+  #left-column, #content-wrapper {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+

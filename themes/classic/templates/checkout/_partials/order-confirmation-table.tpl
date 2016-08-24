@@ -5,17 +5,18 @@
   <div class="order-confirmation-table">
     <table class="table">
       {foreach from=$products item=product}
-        <tr>
-          <td>
+
+        <div class="row">
+          <div class="col-sm-2 col-xs-3">
             <span class="thumb-mask product-image media-middle">
               <div class="mask">
                 <img class="" src="{$product.cover.medium.url}">
               </div>
             </span>
-          </td>
-          <td>
+          </div>
+          <div class="col-sm-4 col-xs-9 details">
             {if $add_product_link}<a href="{$product.url}" target="_blank">{/if}
-              {$product.name}
+              <span class="bold">{$product.name}</span>
             {if $add_product_link}</a>{/if}
             {foreach from=$product.attributes key="attribute" item="value"}
               - <span class="value">{$value}</span>
@@ -48,13 +49,17 @@
               </div>
             {/if}
             {hook h='displayProductPriceBlock' product=$product type="unit_price"}
-          </td>
-          <td>{$product.price}</td>
-          <td>{$product.quantity}</td>
-          <td>{$product.total}</td>
-        </tr>
+          </div>
+          <div class="col-sm-6 col-xs-12">
+            <div class="row">
+              <div class="col-xs-4 text-xs-left">{$product.price}</div>
+              <div class="col-xs-4">{$product.quantity}</div>
+              <div class="col-xs-4 text-xs-right bold">{$product.total}</div>
+            </div>
+          </div>
+        </div>
       {/foreach}
-    </table>
+
 
     <hr>
 

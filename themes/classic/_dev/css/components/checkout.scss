@@ -1,16 +1,17 @@
 body#checkout {
-  background-color: $gray-light;
   color: $gray-darker;
   #header .header-nav {
     max-height: none;
     padding: rem(80px) 0 rem(15px);
     border: none;
+    margin-bottom: 0;
     @include box-shadow;
     .logo {
       max-height: rem(70px);
       width: auto;
     }
   }
+
   [data-action="show-password"]{
     background: $gray-dark;
   }
@@ -25,7 +26,7 @@ body#checkout {
     color: #1a8196;
   }
   section#content {
-    margin-top: rem(25px);
+    margin-bottom: rem(25px);
   }
   .container {
     min-height: 100%;
@@ -126,13 +127,18 @@ body#checkout {
       text-align: center;
     }
     #conditions-to-approve {
-      padding-top: rem(30px);
+      padding-top: rem(16px);
     }
-    .payment-option label {
-      display: table-cell;
-    }
-    .payment-options .custom-radio {
-      margin-right: $medium-space;
+    .payment-options {
+      label {
+        display: table-cell;
+      }
+      .custom-radio {
+        margin-right: $medium-space;
+      }
+      .payment-option {
+        margin-bottom: rem(8px);
+      }
     }
     .step-number {
       display: inline-block;
@@ -168,6 +174,10 @@ body#checkout {
     }
     .custom-radio {
       margin-right: 0;
+      input[type="radio"] {
+        height: rem(20px);
+        width: rem(20px);
+      }
     }
     .delete-address,
     .edit-address {
@@ -201,13 +211,15 @@ body#checkout {
     }
     .delivery-option {
       background: $gray-lighter;
-      padding: rem(15px);
+      padding: rem(15px) 0;
       margin-bottom: rem(15px);
+      label {
+        text-align: inherit;
+      }
     }
     .carrier-delay,
     .carrier-name {
       display: inline-block;
-      margin: 0 rem(20px);
       word-break: break-word;
       text-align: left;
     }
@@ -297,15 +309,15 @@ body#checkout {
       margin-bottom: 2rem;
       background-color: #fff;
       border: 3px solid #e5e5e5;
-      border-radius: 0;      
+      border-radius: 0;
     }
     .summary-selected-carrier {
       margin-bottom: 0.75rem;
       background-color: #fff;
       border: 1px solid #e5e5e5;
       border-radius: 0;
-      padding: 1rem;      
-    }    
+      padding: 1rem;
+    }
     .step-edit {
       display: inline;
       color: $gray;
@@ -325,7 +337,6 @@ body#checkout {
   }
   #footer {
     @include box-shadow;
-    margin-top: rem(90px);
     padding: rem(15px);
     background: white;
     color: $gray;
@@ -360,6 +371,9 @@ body#checkout {
       }
     }
   }
+  .details {
+    margin-bottom: rem(16px);
+  }
 }
 #order-confirmation {
   #registration-form {
@@ -371,16 +385,6 @@ body#checkout {
   .done {
     margin: 0;
     padding: 0;
-  }
-  .cart-grid-body {
-    width: 100%;
-  }
-  .cart-grid-right {
-    width: 100%;
-  }
-  body#checkout section.checkout-step.-reachable.-complete h1 .step-edit {
-    float: none;
-    margin-left: $medium-space;
   }
   body#checkout section.checkout-step .address-item {
     @include flex-grow(1);
@@ -401,12 +405,74 @@ body#checkout {
     }
   }
 }
+
+@include media-breakpoint-down(sm) {
+  body#checkout section.checkout-step.-reachable.-complete h1 .step-edit {
+    float: none;
+    margin-top: rem(4px);
+    margin-left: $medium-space;
+  }
+  body#checkout {
+    #header .header-nav {
+      max-height: none;
+      padding: 0;
+    }
+    section.checkout-step {
+      .content {
+        padding: rem(15px);
+      }
+    }
+    .form-group {
+      margin-bottom: rem(8px);
+    }
+  }
+  #order-items {
+    border-right: 0;
+    margin-bottom: rem(40px);
+    .card-title {
+      border-bottom: 1px solid $gray-light;
+      margin-bottom: rem(16px);
+      padding-bottom: rem(16px);
+    }
+    hr {
+      border-top-color: $gray-light;
+    }
+  }
+  .bold {
+    font-weight: bold;
+  }
+  #order-details {
+    padding-left: rem(15px);
+    .card-title {
+      border-bottom: 1px solid $gray-light;
+      margin-bottom: rem(16px);
+      padding-bottom: rem(16px);
+    }
+  }
+
+}
+
+@include media-breakpoint-down(xs) {
+  body#checkout {
+    section.checkout-step {
+      .content {
+        padding: rem(15px) 0;
+      }
+    }
+  }
+  #payment-confirmation {
+    button {
+      font-size: rem(14px);
+      &.btn {
+        white-space: normal;
+      }
+    }
+  }
+}
+
+
 .cart-empty {
   .cart-summary {
-    opacity: 0.7;
-  }
-  .cart-container {
-    min-height: rem(371px);
   }
 }
 .js-payment-atos {

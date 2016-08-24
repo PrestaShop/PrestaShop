@@ -4,6 +4,7 @@ $(document).ready(function () {
   createProductSpin();
   createInputFile();
   coverImage();
+  imageScrollBox();
 
   $('body').on(
     'click',
@@ -35,7 +36,6 @@ $(document).ready(function () {
   prestashop.on('updatedProduct', function (event) {
     createInputFile();
     coverImage();
-
     if (event && event.product_minimal_quantity) {
       const minimalProductQuantity = parseInt(event.product_minimal_quantity, 10);
       const quantityInputSelector = '#quantity_wanted';
@@ -44,7 +44,7 @@ $(document).ready(function () {
       // @see http://www.virtuosoft.eu/code/bootstrap-touchspin/ about Bootstrap TouchSpin
       quantityInput.trigger('touchspin.updatesettings', {min: minimalProductQuantity});
     }
-
+    imageScrollBox();
     $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
   });
 
@@ -57,6 +57,28 @@ $(document).ready(function () {
         $('.js-qv-product-cover').prop('src', $(event.currentTarget).data('image-large-src'));
       }
     );
+  }
+
+  function imageScrollBox()
+  {
+    if ($('#main .js-qv-product-images li').length > 2) {
+      $('#main .js-qv-mask').addClass('scroll');
+      $('.scroll-box-arrows').addClass('scroll');
+        $('#main .js-qv-mask').scrollbox({
+          direction: 'h',
+          distance: 113,
+          autoPlay: false
+        });
+        $('.scroll-box-arrows .left').click(function () {
+          $('#main .js-qv-mask').trigger('backward');
+        });
+        $('.scroll-box-arrows .right').click(function () {
+          $('#main .js-qv-mask').trigger('forward');
+        });
+    } else {
+      $('#main .js-qv-mask').removeClass('scroll');
+      $('.scroll-box-arrows').removeClass('scroll');
+    }
   }
 
   function createInputFile()

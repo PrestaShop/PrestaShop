@@ -113,6 +113,8 @@
 	
 	__webpack_require__(80);
 	
+	__webpack_require__(81);
+	
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
 	  _prestashop2['default'][i] = _events2['default'].prototype[i];
@@ -16706,6 +16708,7 @@
 	  createProductSpin();
 	  createInputFile();
 	  coverImage();
+	  imageScrollBox();
 	
 	  (0, _jquery2['default'])('body').on('click', '.product-refresh', function (event, extraParameters) {
 	    var $productRefresh = (0, _jquery2['default'])(this);
@@ -16733,7 +16736,6 @@
 	  prestashop.on('updatedProduct', function (event) {
 	    createInputFile();
 	    coverImage();
-	
 	    if (event && event.product_minimal_quantity) {
 	      var minimalProductQuantity = parseInt(event.product_minimal_quantity, 10);
 	      var quantityInputSelector = '#quantity_wanted';
@@ -16742,7 +16744,7 @@
 	      // @see http://www.virtuosoft.eu/code/bootstrap-touchspin/ about Bootstrap TouchSpin
 	      quantityInput.trigger('touchspin.updatesettings', { min: minimalProductQuantity });
 	    }
-	
+	    imageScrollBox();
 	    (0, _jquery2['default'])((0, _jquery2['default'])('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
 	  });
 	
@@ -16752,6 +16754,27 @@
 	      (0, _jquery2['default'])(event.target).addClass('selected');
 	      (0, _jquery2['default'])('.js-qv-product-cover').prop('src', (0, _jquery2['default'])(event.currentTarget).data('image-large-src'));
 	    });
+	  }
+	
+	  function imageScrollBox() {
+	    if ((0, _jquery2['default'])('#main .js-qv-product-images li').length > 2) {
+	      (0, _jquery2['default'])('#main .js-qv-mask').addClass('scroll');
+	      (0, _jquery2['default'])('.scroll-box-arrows').addClass('scroll');
+	      (0, _jquery2['default'])('#main .js-qv-mask').scrollbox({
+	        direction: 'h',
+	        distance: 113,
+	        autoPlay: false
+	      });
+	      (0, _jquery2['default'])('.scroll-box-arrows .left').click(function () {
+	        (0, _jquery2['default'])('#main .js-qv-mask').trigger('backward');
+	      });
+	      (0, _jquery2['default'])('.scroll-box-arrows .right').click(function () {
+	        (0, _jquery2['default'])('#main .js-qv-mask').trigger('forward');
+	      });
+	    } else {
+	      (0, _jquery2['default'])('#main .js-qv-mask').removeClass('scroll');
+	      (0, _jquery2['default'])('.scroll-box-arrows').removeClass('scroll');
+	    }
 	  }
 	
 	  function createInputFile() {
@@ -17758,6 +17781,146 @@
 
 /***/ },
 /* 80 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	(function ($) {
+	  $.fn.scrollbox = function (config) {
+	    var defConfig = { linear: false, startDelay: 2, delay: 3, step: 5, speed: 32, switchItems: 1, direction: "vertical", distance: "auto", autoPlay: true, onMouseOverPause: true, paused: false, queue: null, listElement: "ul", listItemElement: "li", infiniteLoop: true, switchAmount: 0, afterForward: null, afterBackward: null, triggerStackable: false };config = $.extend(defConfig, config);config.scrollOffset = config.direction === "vertical" ? "scrollTop" : "scrollLeft";if (config.queue) {
+	      config.queue = $("#" + config.queue);
+	    }return this.each(function () {
+	      var container = $(this),
+	          containerUL,
+	          scrollingId = null,
+	          nextScrollId = null,
+	          paused = false,
+	          releaseStack,
+	          backward,
+	          forward,
+	          resetClock,
+	          scrollForward,
+	          scrollBackward,
+	          forwardHover,
+	          pauseHover,
+	          switchCount = 0,
+	          stackedTriggerIndex = 0;if (config.onMouseOverPause) {
+	        container.bind("mouseover", function () {
+	          paused = true;
+	        });container.bind("mouseout", function () {
+	          paused = false;
+	        });
+	      }containerUL = container.children(config.listElement + ":first-child");if (config.infiniteLoop === false && config.switchAmount === 0) {
+	        config.switchAmount = containerUL.children().length;
+	      }scrollForward = function () {
+	        if (paused) {
+	          return;
+	        }var curLi, i, newScrollOffset, scrollDistance, theStep;curLi = containerUL.children(config.listItemElement + ":first-child");scrollDistance = config.distance !== "auto" ? config.distance : config.direction === "vertical" ? curLi.outerHeight(true) : curLi.outerWidth(true);if (!config.linear) {
+	          theStep = Math.max(3, parseInt((scrollDistance - container[0][config.scrollOffset]) * .3, 10));newScrollOffset = Math.min(container[0][config.scrollOffset] + theStep, scrollDistance);
+	        } else {
+	          newScrollOffset = Math.min(container[0][config.scrollOffset] + config.step, scrollDistance);
+	        }container[0][config.scrollOffset] = newScrollOffset;if (newScrollOffset >= scrollDistance) {
+	          for (i = 0; i < config.switchItems; i++) {
+	            if (config.queue && config.queue.find(config.listItemElement).length > 0) {
+	              containerUL.append(config.queue.find(config.listItemElement)[0]);containerUL.children(config.listItemElement + ":first-child").remove();
+	            } else {
+	              containerUL.append(containerUL.children(config.listItemElement + ":first-child"));
+	            }++switchCount;
+	          }container[0][config.scrollOffset] = 0;clearInterval(scrollingId);scrollingId = null;if ($.isFunction(config.afterForward)) {
+	            config.afterForward.call(container, { switchCount: switchCount, currentFirstChild: containerUL.children(config.listItemElement + ":first-child") });
+	          }if (config.triggerStackable && stackedTriggerIndex !== 0) {
+	            releaseStack();return;
+	          }if (config.infiniteLoop === false && switchCount >= config.switchAmount) {
+	            return;
+	          }if (config.autoPlay) {
+	            nextScrollId = setTimeout(forward, config.delay * 1e3);
+	          }
+	        }
+	      };scrollBackward = function () {
+	        if (paused) {
+	          return;
+	        }var curLi, i, newScrollOffset, scrollDistance, theStep;if (container[0][config.scrollOffset] === 0) {
+	          for (i = 0; i < config.switchItems; i++) {
+	            containerUL.children(config.listItemElement + ":last-child").insertBefore(containerUL.children(config.listItemElement + ":first-child"));
+	          }curLi = containerUL.children(config.listItemElement + ":first-child");scrollDistance = config.distance !== "auto" ? config.distance : config.direction === "vertical" ? curLi.height() : curLi.width();container[0][config.scrollOffset] = scrollDistance;
+	        }if (!config.linear) {
+	          theStep = Math.max(3, parseInt(container[0][config.scrollOffset] * .3, 10));newScrollOffset = Math.max(container[0][config.scrollOffset] - theStep, 0);
+	        } else {
+	          newScrollOffset = Math.max(container[0][config.scrollOffset] - config.step, 0);
+	        }container[0][config.scrollOffset] = newScrollOffset;if (newScrollOffset === 0) {
+	          --switchCount;clearInterval(scrollingId);scrollingId = null;if ($.isFunction(config.afterBackward)) {
+	            config.afterBackward.call(container, { switchCount: switchCount, currentFirstChild: containerUL.children(config.listItemElement + ":first-child") });
+	          }if (config.triggerStackable && stackedTriggerIndex !== 0) {
+	            releaseStack();return;
+	          }if (config.autoPlay) {
+	            nextScrollId = setTimeout(forward, config.delay * 1e3);
+	          }
+	        }
+	      };releaseStack = function () {
+	        if (stackedTriggerIndex === 0) {
+	          return;
+	        }if (stackedTriggerIndex > 0) {
+	          stackedTriggerIndex--;nextScrollId = setTimeout(forward, 0);
+	        } else {
+	          stackedTriggerIndex++;nextScrollId = setTimeout(backward, 0);
+	        }
+	      };forward = function () {
+	        clearInterval(scrollingId);scrollingId = setInterval(scrollForward, config.speed);
+	      };backward = function () {
+	        clearInterval(scrollingId);scrollingId = setInterval(scrollBackward, config.speed);
+	      };forwardHover = function () {
+	        config.autoPlay = true;paused = false;clearInterval(scrollingId);scrollingId = setInterval(scrollForward, config.speed);
+	      };pauseHover = function () {
+	        paused = true;
+	      };resetClock = function (delay) {
+	        config.delay = delay || config.delay;clearTimeout(nextScrollId);if (config.autoPlay) {
+	          nextScrollId = setTimeout(forward, config.delay * 1e3);
+	        }
+	      };if (config.autoPlay) {
+	        nextScrollId = setTimeout(forward, config.startDelay * 1e3);
+	      }container.bind("resetClock", function (delay) {
+	        resetClock(delay);
+	      });container.bind("forward", function () {
+	        if (config.triggerStackable) {
+	          if (scrollingId !== null) {
+	            stackedTriggerIndex++;
+	          } else {
+	            forward();
+	          }
+	        } else {
+	          clearTimeout(nextScrollId);forward();
+	        }
+	      });container.bind("backward", function () {
+	        if (config.triggerStackable) {
+	          if (scrollingId !== null) {
+	            stackedTriggerIndex--;
+	          } else {
+	            backward();
+	          }
+	        } else {
+	          clearTimeout(nextScrollId);backward();
+	        }
+	      });container.bind("pauseHover", function () {
+	        pauseHover();
+	      });container.bind("forwardHover", function () {
+	        forwardHover();
+	      });container.bind("speedUp", function (event, speed) {
+	        if (speed === "undefined") {
+	          speed = Math.max(1, parseInt(config.speed / 2, 10));
+	        }config.speed = speed;
+	      });container.bind("speedDown", function (event, speed) {
+	        if (speed === "undefined") {
+	          speed = config.speed * 2;
+	        }config.speed = speed;
+	      });container.bind("updateConfig", function (event, options) {
+	        config = $.extend(config, options);
+	      });
+	    });
+	  };
+	})(jQuery);
+
+/***/ },
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
