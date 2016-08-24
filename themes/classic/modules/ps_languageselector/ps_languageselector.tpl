@@ -33,13 +33,13 @@
       <ul class="dropdown-menu hidden-sm-down">
         {foreach from=$languages item=language}
           <li {if $language.id_lang == $current_language.id_lang} class="current" {/if}>
-            <a href="{$link->getLanguageLink($language.id_lang)}" class="dropdown-item">{$language.name_simple}</a>
+            <a href="{url entity='language' id=$language.id_lang}" class="dropdown-item">{$language.name_simple}</a>
           </li>
         {/foreach}
       </ul>
       <select class="link hidden-md-up">
         {foreach from=$languages item=language}
-          <option value="{$link->getLanguageLink($language.id_lang)}"{if $language.id_lang == $current_language.id_lang} selected="selected"{/if}>{$language.name_simple}</option>
+          <option value="{url entity='language' id=$language.id_lang}"{if $language.id_lang == $current_language.id_lang} selected="selected"{/if}>{$language.name_simple}</option>
         {/foreach}
       </select>
     </div>

@@ -886,6 +886,9 @@ class LinkCore
         $url_parameters = http_build_query($params['params']);
 
         switch ($params['entity']) {
+            case "language":
+                $link = $context->link->getLanguageLink($params['id']);
+                break;
             case "category":
                 $params = array_merge(['selected_filters' => null], $params);
                 $link = $context->link->getCategoryLink(
