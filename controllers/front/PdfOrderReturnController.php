@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class PdfOrderReturnControllerCore extends PdfFrontController
 {
     public $php_self = 'pdf-order-return';
@@ -32,7 +31,7 @@ class PdfOrderReturnControllerCore extends PdfFrontController
 
     public function postProcess()
     {
-        $from_admin = (Tools::getValue('adtoken') == Tools::getAdminToken('AdminReturn'.(int)Tab::getIdFromClassName('AdminReturn').(int)Tools::getValue('id_employee')));
+        $from_admin = (Tools::getValue('adtoken') == Tools::getAdminToken('AdminReturn'.(int) Tab::getIdFromClassName('AdminReturn').(int) Tools::getValue('id_employee')));
 
         if (!$from_admin && !$this->context->customer->isLogged()) {
             Tools::redirect('index.php?controller=authentication&back=order-follow');
