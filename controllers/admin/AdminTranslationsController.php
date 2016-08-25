@@ -1327,55 +1327,25 @@ class AdminTranslationsControllerCore extends AdminController
     public function getTranslationsInformations()
     {
         $this->translations_informations = array(
-            'front' => array(
-                'name' => $this->l('Front office translations'),
-                'var' => '_LANG',
-                'dir' => defined('_PS_THEME_SELECTED_DIR_') ? _PS_THEME_SELECTED_DIR_.'lang/' : '',
-                'file' => $this->lang_selected->iso_code.'.php'
-            ),
             'back' => array(
                 'name' => $this->l('Back office translations'),
                 'var' => '_LANGADM',
                 'dir' => _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.'/',
                 'file' => 'admin.php'
             ),
-            'errors' => array(
-                'name' => $this->l('Error message translations'),
-                'var' => '_ERRORS',
-                'dir' => _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.'/',
-                'file' => 'errors.php'
-            ),
-            'fields' => array(
-                'name' => $this->l('Field name translations'),
-                'var' => '_FIELDS',
-                'dir' => _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.'/',
-                'file' => 'fields.php'
-            ),
-            'modules' => array(
-                'name' => $this->l('Installed modules translations'),
-                'var' => '_MODULES',
-                'dir' => _PS_MODULE_DIR_,
+            'themes' => array(
+                'name' => $this->l('Themes translations'),
+                'var' => '_THEMES',
+                'dir' => '',
                 'file' => ''
             ),
-            'pdf' => array(
-                'name' => $this->l('PDF translations'),
-                'var' => '_LANGPDF',
-                'dir' => _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.'/',
-                'file' => 'pdf.php'
-            ),
-            'mails' => array(
-                'name' => $this->l('Email templates translations'),
-                'var' => '_LANGMAIL',
-                'dir' => _PS_MAIL_DIR_.$this->lang_selected->iso_code.'/',
-                'file' => 'lang.php'
+            'others' => array(
+                'name' => $this->l('Others translations'),
+                'var' => '_OTHERS',
+                'dir' => '',
+                'file' => ''
             )
         );
-
-        if (defined('_PS_THEME_SELECTED_DIR_')) {
-            $this->translations_informations['modules']['override'] = array('dir' => _PS_THEME_SELECTED_DIR_.'modules/', 'file' => '');
-            $this->translations_informations['pdf']['override'] = array('dir' => _PS_THEME_SELECTED_DIR_.'pdf/lang/', 'file' => $this->lang_selected->iso_code.'.php');
-            $this->translations_informations['mails']['override'] = array('dir' => _PS_THEME_SELECTED_DIR_.'mails/'.$this->lang_selected->iso_code.'/', 'file' => 'lang.php');
-        }
     }
 
     /**

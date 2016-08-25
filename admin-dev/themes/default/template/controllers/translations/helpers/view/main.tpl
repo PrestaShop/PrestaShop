@@ -31,30 +31,20 @@
 			document.getElementById('typeTranslationForm').submit();
 		}
 
-		function addThemeSelect()
-		{
-			var list_type_for_theme = ['front', 'modules', 'pdf', 'mails'];
-			var type = $('select[name=type]').val();
+		$(document).ready(function() {
+      var themeSelector = $('#ps_theme_selector');
 
-			$('select[name=theme]').hide();
-			for (i=0; i < list_type_for_theme.length; i++)
-				if (list_type_for_theme[i] == type)
-				{
-					$('select[name=theme]').show();
-					if (type == 'front')
-						$('select[name=theme]').children('option[value=""]').attr('disabled', true)
-					else
-						$('select[name=theme]').children('option[value=""]').attr('disabled', false)
-				}
-				else
-					$('select[name=theme]').val('{$theme_default}');
-		}
+      themeSelector.hide();
 
-		$(document).ready(function(){
-			addThemeSelect();
-			$('select[name=type]').change(function() {
-				addThemeSelect();
-			});
+      $('#type').on('change', function (event) {
+        var selectedValue = $(this).val();
+        var themeSelector = $('#ps_theme_selector')
+        if ('themes' === selectedValue) {
+          themeSelector.show();
+        }else {
+          themeSelector.hide();
+        }
+      });
 
 			$('#modify-translations').click(function(e) {
 				var languages = $('#translations-languages option');
@@ -79,37 +69,58 @@
 			});
 		});
 	</script>
-	<form method="post" action="index.php/international/translations/list" id="typeTranslationForm" class="form-horizontal">
-		<div class="panel">
-			<h3>
-				<i class="icon-file-text"></i>
-				{l s='Modify translations'}
-			</h3>
-			<p class="alert alert-info">
-				{l s='Here you can modify translations for every line of text inside PrestaShop.'}<br />
-				{l s='First, select a type of translation (such as "Back office" or "Installed modules"), and then select the language you want to translate strings in.'}
-			</p>
-            <input type="hidden" name="controller" value="AdminTranslations" />
-            <input type="hidden" name="lang" id="translation_lang" value="0" />
-			<div class="form-group">
-				<label class="control-label col-lg-3" for="translations-languages">{l s='Select your language'}</label>
-				<div class="col-lg-4">
-					<select name="locale" id="translations-languages">
-						<option value="">{l s='Language'}</option>
-						{foreach $languages as $language}
-						<option value="{$language['iso_code']}">{$language['name']}</option>
-						{/foreach}
-					</select>
-				</div>
-				<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
-			</div>
-			<div class="panel-footer">
-				<button type="button" class="btn btn-default pull-right" id="modify-translations">
-					<i class="process-icon-edit"></i> {l s='Modify'}
-				</button>
-			</div>
-		</div>
-	</form>
+  <form method="post" action="index.php/international/translations/list" id="typeTranslationForm" class="form-horizontal">
+    <div class="panel">
+      <h3>
+        <i class="icon-file-text"></i>
+        {l s='Modify translations'}
+      </h3>
+      <p class="alert alert-info">
+        {l s='Here you can modify translations for every line of text inside PrestaShop.'}<br />
+        {l s='First, select a type of translation (such as "Back office" or "Installed modules"), and then select the language you want to translate strings in.'}
+      </p>
+      <div class="form-group">
+        <input type="hidden" name="controller" value="AdminTranslations" />
+        <input type="hidden" name="lang" id="translation_lang" value="0" />
+        <label class="control-label col-lg-3" for="type">{l s='Type of translation'}</label>
+        <div class="col-lg-4">
+          <select name="type" id="type">
+            {foreach $translations_type as $type => $array}
+              <option value="{$type}">{$array.name}</option>
+            {/foreach}
+          </select>
+        </div>
+      </div>
+      <div class="form-group" id="ps_theme_selector">
+        <label class="control-label col-lg-3" for="selected-theme">{l s='Select your theme'}</label>
+        <div class="col-lg-4">
+          <select name="selected-theme">
+              <option value="">{l s='Core (no theme selected)'}</option>
+            {foreach $themes as $theme}
+              <option value="{$theme->getName()}" {if $current_theme_name == $theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
+            {/foreach}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-lg-3" for="translations-languages">{l s='Select your language'}</label>
+        <div class="col-lg-4">
+          <select name="locale" id="translations-languages">
+            <option value="">{l s='Language'}</option>
+            {foreach $languages as $language}
+              <option value="{$language['iso_code']}">{$language['name']}</option>
+            {/foreach}
+          </select>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <button type="button" class="btn btn-default pull-right" id="modify-translations">
+          <i class="process-icon-edit"></i> {l s='Modify'}
+        </button>
+      </div>
+    </div>
+  </form>
+
 	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
