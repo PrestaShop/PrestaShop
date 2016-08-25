@@ -16707,31 +16707,42 @@
 	  createInputFile();
 	  coverImage();
 	
-	  (0, _jquery2['default'])('body').on('click', '.product-quantity .js-touchspin', function () {
-	    (0, _jquery2['default'])("input[name$='refresh']").click();
-	  });
-	
-	  (0, _jquery2['default'])('body').on('click', 'input.product-refresh', function (event) {
-	    var that = (0, _jquery2['default'])(this);
+	  (0, _jquery2['default'])('body').on('click', '.product-refresh', function (event, extraParameters) {
+	    var $productRefresh = (0, _jquery2['default'])(this);
 	    event.preventDefault();
+	
+	    var eventType = 'updatedProductCombination';
+	    if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
+	      eventType = extraParameters.eventType;
+	    }
 	
 	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh';
 	    var actionURL = (0, _jquery2['default'])(event.target.form).attr('action');
 	
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      prestashop.emit('product updated', {
+	      prestashop.emit('updateProduct', {
 	        reason: {
 	          productUrl: resp.productUrl
 	        },
-	        refreshUrl: that.data('url-update')
+	        refreshUrl: $productRefresh.data('url-update'),
+	        eventType: eventType
 	      });
 	    });
 	  });
 	
-	  prestashop.on('product dom updated', function (event) {
-	    createProductSpin();
+	  prestashop.on('updatedProduct', function (event) {
 	    createInputFile();
 	    coverImage();
+	
+	    if (event && event.product_minimal_quantity) {
+	      var minimalProductQuantity = parseInt(event.product_minimal_quantity, 10);
+	      var quantityInputSelector = '#quantity_wanted';
+	      var quantityInput = (0, _jquery2['default'])(quantityInputSelector);
+	
+	      // @see http://www.virtuosoft.eu/code/bootstrap-touchspin/ about Bootstrap TouchSpin
+	      quantityInput.trigger('touchspin.updatesettings', { min: minimalProductQuantity });
+	    }
+	
 	    (0, _jquery2['default'])((0, _jquery2['default'])('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
 	  });
 	
@@ -16750,14 +16761,24 @@
 	  }
 	
 	  function createProductSpin() {
-	    (0, _jquery2['default'])('#quantity_wanted').TouchSpin({
+	    var quantityInput = (0, _jquery2['default'])('#quantity_wanted');
+	    quantityInput.TouchSpin({
 	      verticalbuttons: true,
 	      verticalupclass: 'material-icons touchspin-up',
 	      verticaldownclass: 'material-icons touchspin-down',
 	      buttondown_class: 'btn btn-touchspin js-touchspin',
 	      buttonup_class: 'btn btn-touchspin js-touchspin',
-	      min: 1,
+	      min: parseInt(quantityInput.attr('min'), 10),
 	      max: 1000000
+	    });
+	
+	    quantityInput.on('change', function (event) {
+	      var $productRefresh = (0, _jquery2['default'])('.product-refresh');
+	      (0, _jquery2['default'])(event.currentTarget).trigger('touchspin.stopspin');
+	      $productRefresh.trigger('click', { eventType: 'updatedProductQuantity' });
+	      event.preventDefault();
+	
+	      return false;
 	    });
 	  }
 	});

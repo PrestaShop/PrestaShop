@@ -1720,6 +1720,33 @@
 	    var query = $form.serialize() + '&add=1&action=update';
 	    var actionURL = $form.attr('action');
 	
+	    var isQuantityInputValid = function isQuantityInputValid($input) {
+	      var validInput = true;
+	
+	      $input.each(function (index, input) {
+	        var $input = (0, _jquery2['default'])(input);
+	        var minimalValue = parseInt($input.attr('min'), 10);
+	        if (minimalValue && $input.val() < minimalValue) {
+	          onInvalidQuantity($input);
+	          validInput = false;
+	        }
+	      });
+	
+	      return validInput;
+	    };
+	
+	    var onInvalidQuantity = function onInvalidQuantity($input) {
+	      (0, _jquery2['default'])($input.parents('.product-add-to-cart')[0]).find('.product-minimal-quantity').addClass('error');
+	      $input.parent().find('label').addClass('error');
+	    };
+	
+	    var $quantityInput = $form.find('input[min]');
+	    if (!isQuantityInputValid($quantityInput)) {
+	      onInvalidQuantity($quantityInput);
+	
+	      return;
+	    }
+	
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
 	      _prestashop2['default'].emit('cart updated', {
 	        reason: {
@@ -2039,10 +2066,43 @@
 	    (0, _jquery2['default'])("input[name$='refresh']").click();
 	  });
 	
-	  _prestashop2['default'].on('product updated', function (event) {
+	  _prestashop2['default'].on('updateProduct', function (event) {
 	    if (typeof event.refreshUrl == "undefined") {
 	      event.refreshUrl = true;
 	    }
+	
+	    var eventType = event.eventType;
+	
+	    var replaceAddToCartSections = function replaceAddToCartSections(addCartHtml) {
+	      var $addToCartSnippet = (0, _jquery2['default'])(addCartHtml);
+	      var $addProductToCart = (0, _jquery2['default'])('.product-add-to-cart');
+	
+	      function replaceAddToCartSection(replacement) {
+	        var replace = replacement.$addToCartSnippet.find(replacement.targetSelector);
+	
+	        if ((0, _jquery2['default'])(replacement.$targetParent.find(replacement.targetSelector)).length > 0) {
+	          if (replace.length > 0) {
+	            (0, _jquery2['default'])(replacement.$targetParent.find(replacement.targetSelector)).replaceWith(replace[0].outerHTML);
+	          } else {
+	            (0, _jquery2['default'])(replacement.$targetParent.find(replacement.targetSelector)).html('');
+	          }
+	        }
+	      }
+	
+	      var productAvailabilitySelector = '.add';
+	      replaceAddToCartSection({
+	        $addToCartSnippet: $addToCartSnippet,
+	        $targetParent: $addProductToCart,
+	        targetSelector: productAvailabilitySelector
+	      });
+	
+	      var productMinimalQuantitySelector = '.product-minimal-quantity';
+	      replaceAddToCartSection({
+	        $addToCartSnippet: $addToCartSnippet,
+	        $targetParent: $addProductToCart,
+	        targetSelector: productMinimalQuantitySelector
+	      });
+	    };
 	
 	    _jquery2['default'].post(event.reason.productUrl, { ajax: '1', action: 'refresh' }, null, 'json').then(function (resp) {
 	      (0, _jquery2['default'])('.product-prices').replaceWith(resp.product_prices);
@@ -2051,13 +2111,25 @@
 	      (0, _jquery2['default'])('.product-discounts').replaceWith(resp.product_discounts);
 	      (0, _jquery2['default'])('.images-container').replaceWith(resp.product_cover_thumbnails);
 	      (0, _jquery2['default'])('#product-details').replaceWith(resp.product_details);
-	      (0, _jquery2['default'])('.product-add-to-cart').replaceWith(resp.product_add_to_cart);
 	
-	      if (true == event.refreshUrl) {
+	      // Replace all "add to cart" sections but the quantity input in order to keep quantity field intact i.e.
+	      // Prevent quantity input from blinking with classic theme.
+	      replaceAddToCartSections((0, _jquery2['default'])(resp.product_add_to_cart)[2]);
+	
+	      var minimalProductQuantity = parseInt(resp.product_minimal_quantity, 10);
+	      var quantityInputSelector = '#quantity_wanted';
+	      var quantityInput = (0, _jquery2['default'])(quantityInputSelector);
+	
+	      if (!isNaN(minimalProductQuantity) && resp.product_has_combinations && eventType !== 'updatedProductQuantity') {
+	        quantityInput.attr('min', minimalProductQuantity);
+	        quantityInput.val(minimalProductQuantity);
+	      }
+	
+	      if (event.refreshUrl) {
 	        window.history.pushState({ id_product_attribute: resp.id_product_attribute }, undefined, resp.product_url);
 	      }
 	
-	      _prestashop2['default'].emit('product dom updated');
+	      _prestashop2['default'].emit('updatedProduct', resp);
 	    });
 	  });
 	});
@@ -2172,8 +2244,12 @@
 	      er = arguments[1];
 	      if (er instanceof Error) {
 	        throw er; // Unhandled 'error' event
-	      }
-	      throw TypeError('Uncaught, unspecified "error" event.');
+	      } else {
+	          // At least give some kind of context to the user
+	          var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
+	          err.context = er;
+	          throw err;
+	        }
 	    }
 	  }
 	
