@@ -668,6 +668,8 @@ class LanguageCore extends ObjectModel
 
     public static function getLangDetails($iso)
     {
+        $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
+
         $allLanguages = file_get_contents(_PS_ROOT_DIR_.self::ALL_LANGUAGES_FILE);
         $allLanguages = json_decode($allLanguages, true);
 
@@ -929,7 +931,8 @@ class LanguageCore extends ObjectModel
 
     public static function downloadLanguagePack($iso, $version, &$errors = array())
     {
-        $file = _PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip';
+        $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
+        $file = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
 
         $lang_pack = self::getLangDetails($iso);
         if (!$lang_pack) {

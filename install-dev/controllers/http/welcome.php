@@ -48,6 +48,11 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
             Language::downloadAndInstallLanguagePack($this->session->lang);
             $this->redirect('welcome');
         }
+
+        if (!is_file(_PS_ROOT_DIR_.'/translations/'.$this->session->lang.'.gzip')) {
+            Language::downloadAndInstallLanguagePack($this->session->lang);
+            $this->redirect('welcome');
+        }
     }
 
     /**
