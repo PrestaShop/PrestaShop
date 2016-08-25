@@ -163,34 +163,22 @@
       </div>
     </div>
 
-    {block name='product_extra_right'}
-      <div class="product-extra-right">
-        {hook h='displayRightColumnProduct'}
-      </div>
+    {block name='product_accessories'}
+      {if $accessories}
+        <section class="product-accessories clearfix">
+          <h3 class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</h3>
+          {foreach from=$accessories item="product_accessory"}
+            {block name='product_miniature'}
+              {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory}
+            {/block}
+          {/foreach}
+        </section>
+      {/if}
     {/block}
 
-    {block name='product_extra_left'}
-      <div class="product-extra-left">
-        {hook h='displayLeftColumnProduct'}
-      </div>
+    {block name='product_footer'}
+      {hook h='displayFooterProduct' product=$product category=$category}
     {/block}
-
-      {block name='product_accessories'}
-        {if $accessories}
-          <section class="product-accessories clearfix">
-            <h3 class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</h3>
-            {foreach from=$accessories item="product_accessory"}
-              {block name='product_miniature'}
-                {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory}
-              {/block}
-            {/foreach}
-          </section>
-        {/if}
-      {/block}
-
-      {block name='product_footer'}
-        {hook h='displayFooterProduct' product=$product category=$category}
-      {/block}
 
     <div class="modal fade" id="product-modal">
       <div class="modal-dialog" role="document">
