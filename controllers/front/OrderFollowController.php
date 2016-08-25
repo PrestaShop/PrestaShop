@@ -93,6 +93,10 @@ class OrderFollowControllerCore extends FrontController
      */
     public function initContent()
     {
+        if (Configuration::isCatalogMode()) {
+            Tools::redirect('index.php');
+        }
+
         parent::initContent();
 
         $ordersReturn = $this->getTemplateVarOrdersReturns();

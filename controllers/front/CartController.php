@@ -70,6 +70,10 @@ class CartControllerCore extends FrontController
      */
     public function initContent()
     {
+        if (Configuration::isCatalogMode()) {
+            Tools::redirect('index.php');
+        }
+
         parent::initContent();
 
         $presenter = new CartPresenter();
@@ -92,6 +96,10 @@ class CartControllerCore extends FrontController
 
     public function displayAjaxUpdate()
     {
+        if (Configuration::isCatalogMode()) {
+            return;
+        }
+
         if (!$this->errors) {
             $this->ajaxDie(Tools::jsonEncode([
                 'success' => true,
@@ -109,6 +117,10 @@ class CartControllerCore extends FrontController
 
     public function displayAjaxRefresh()
     {
+        if (Configuration::isCatalogMode()) {
+            return;
+        }
+
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode([
@@ -123,6 +135,9 @@ class CartControllerCore extends FrontController
 
     public function displayAjaxProductRefresh()
     {
+        if (Configuration::isCatalogMode()) {
+            return;
+        }
         $url = $this->context->link->getProductLink(
             $this->id_product,
             null,
