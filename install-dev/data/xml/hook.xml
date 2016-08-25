@@ -350,6 +350,9 @@
     </hook>
     <hook id="displayCustomerLoginFormAfter">
       <name>displayCustomerLoginFormAfter</name><title>Display elements after login form</title><description>This hook displays new elements after the login form</description>
+	</hook>
+    <hook id="actionClearCache" live_edit="0">
+      <name>actionClearCache</name><title>Clear cache</title><description>This hook is called when the cache of the theme is cleared</description>
     </hook>
     <hook id="actionValidateCustomerAddressForm">
       <name>actionValidateCustomerAddressForm</name><title>Customer address form validation</title><description>This hook is called when a customer submit its address form</description>
