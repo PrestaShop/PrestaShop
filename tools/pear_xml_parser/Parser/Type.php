@@ -333,10 +333,10 @@ abstract class XML_Feed_Parser_Type
      */
     function processEntitiesForNodeValue($node) 
     {
+        $current_encoding = $node->ownerDocument->encoding;
         if (function_exists('iconv')) {
-          $current_encoding = $node->ownerDocument->encoding;
           $value = iconv($current_encoding, 'UTF-8', $node->nodeValue);
-        } elseif ($current_encoding == 'iso-8859-1') {
+        } elseif (strtolower($current_encoding) == 'iso-8859-1') {
           $value = utf8_encode($node->nodeValue);
         } else {
           $value = $node->nodeValue;
