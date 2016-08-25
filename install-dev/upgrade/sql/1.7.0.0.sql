@@ -188,3 +188,5 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_LOGO_MOBILE', 'SHOP_LOGO_MOBILE_HEIGHT', 'SHOP_LOGO_MOBILE_WIDTH');
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayNavFullWidth', 'Navigation', 'This hook displays full width navigation menu at the top of your pages', '1');
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('actionDispatcherBefore', 'Before dispatch', 'This hook is called at the beginning of the dispatch method of the Dispatcher', '1');
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('actionDispatcherAfter', 'After dispatch', 'This hook is called at the end of the dispatch method of the Dispatcher', '1');
