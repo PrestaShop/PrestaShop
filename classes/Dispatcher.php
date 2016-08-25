@@ -261,6 +261,9 @@ class DispatcherCore
         if (!$this->controller) {
             $this->controller = $this->useDefaultController();
         }
+        // Execute hook dispatcher before
+        Hook::exec('actionDispatcherBefore', array ('controller_type' => $this->front_controller));
+
         // Dispatch with right front controller
         switch ($this->front_controller) {
             // Dispatch front office controller
@@ -364,6 +367,11 @@ class DispatcherCore
 
             // Running controller
             $controller->run();
+
+            // Execute hook dispatcher after
+            if (isset($params_hook_action_dispatcher)) {
+                Hook::exec('actionDispatcherAfter', $params_hook_action_dispatcher);
+            }
         } catch (PrestaShopException $e) {
             $e->displayMessage();
         }
