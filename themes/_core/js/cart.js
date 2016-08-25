@@ -27,11 +27,14 @@ $(document).ready(() => {
     });
   });
 
-  $('body').on(
+  var $body = $('body');
+
+  $body.on(
     'click',
     '[data-button-action="add-to-cart"]',
-    function(event) {
+    (event) => {
       event.preventDefault();
+
       var $form = $($(event.target).closest('form'));
       var query = $form.serialize() + '&add=1&action=update';
       var actionURL = $form.attr('action');
@@ -64,14 +67,16 @@ $(document).ready(() => {
         return;
       }
 
-      $.post(actionURL, query, null, 'json').then(function(resp) {
-        prestashop.emit('cart updated', {
+      $.post(actionURL, query, null, 'json').then((resp) => {
+        prestashop.emit('updateCart', {
           reason: {
             idProduct: resp.id_product,
             idProductAttribute: resp.id_product_attribute,
             linkAction: 'add-to-cart'
           }
         });
+      }).fail((resp) => {
+        prestashop.emit('handleError', {eventType: 'addProductToCart', resp: resp});
       });
     }
   );
