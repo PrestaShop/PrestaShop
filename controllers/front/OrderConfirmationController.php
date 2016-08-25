@@ -75,6 +75,10 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function initContent()
     {
+        if (Configuration::isCatalogMode()) {
+            Tools::redirect('index.php');
+        }
+
         parent::initContent();
         $order = new Order(Order::getOrderByCartId((int) ($this->id_cart)));
         $presentedOrder = $this->order_presenter->present($order);

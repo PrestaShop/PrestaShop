@@ -790,7 +790,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             && Configuration::get('PS_STOCK_MANAGEMENT')
             && $this->product->quantity > 0
             && $this->product->available_for_order
-            && !Configuration::get('PS_CATALOG_MODE')
+            && !Configuration::isCatalogMode()
         );
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', array(), 'Shop.Theme.Catalog') : $this->trans('Item', array(), 'Shop.Theme.Catalog');
         $product_full['quantity_discounts'] = $this->quantity_discounts;

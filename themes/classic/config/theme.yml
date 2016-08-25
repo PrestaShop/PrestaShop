@@ -33,8 +33,6 @@ global_settings:
      - ps_linklist
   hooks:
     modules_to_hook:
-      displayAfterBodyOpeningTag:
-        - ps_emailsubscription
       displayNav1:
         - ps_contactinfo
       displayNav2:

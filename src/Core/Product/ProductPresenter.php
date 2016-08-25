@@ -36,10 +36,7 @@ class ProductPresenter
         ProductPresentationSettings $settings,
         array $product
     ) {
-        return  !$settings->catalog_mode &&
-                !$settings->restricted_country_mode &&
-                $product['available_for_order']
-        ;
+        return  $settings->showPrices && $product['available_for_order'];
     }
 
     private function fillImages(
@@ -162,7 +159,7 @@ class ProductPresenter
         return $presentedProduct;
     }
 
-    private function shouldShowAddToCartButton(
+    private function shouldEnableAddToCartButton(
         ProductPresentationSettings $settings,
         array $product
     ) {
@@ -330,10 +327,7 @@ class ProductPresenter
         ProductPresentationSettings $settings,
         array $product
     ) {
-        $show_price = $this->shouldShowPrice(
-            $settings,
-            $product
-        );
+        $show_price = $this->shouldShowPrice($settings, $product);
 
         $show_availability = $show_price && $settings->stock_management_enabled;
 
@@ -400,10 +394,7 @@ class ProductPresenter
             $presentedProduct['attributes'] = array();
         }
 
-        $show_price = $this->shouldShowPrice(
-            $settings,
-            $product
-        );
+        $show_price = $this->shouldShowPrice($settings, $product);
 
         $presentedProduct['show_price'] = $show_price;
 
@@ -426,7 +417,7 @@ class ProductPresenter
             $language
         );
 
-        if ($this->shouldShowAddToCartButton($settings, $product)) {
+        if ($this->shouldEnableAddToCartButton($settings, $product)) {
             $presentedProduct['add_to_cart_url'] = $this->getAddToCartURL($product);
         } else {
             $presentedProduct['add_to_cart_url'] = null;

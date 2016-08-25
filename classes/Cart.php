@@ -1126,7 +1126,7 @@ class CartCore extends ObjectModel
 
         if ((int)$quantity <= 0) {
             return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
-        } elseif (!$product->available_for_order || (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_'))) {
+        } elseif (!$product->available_for_order || (Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_'))) {
             return false;
         } else {
             /* Check if the product is already in the cart */
@@ -3501,7 +3501,7 @@ class CartCore extends ObjectModel
      */
     public function checkQuantities($return_product = false)
     {
-        if (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_')) {
+        if (Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_')) {
             return false;
         }
 
@@ -3526,7 +3526,7 @@ class CartCore extends ObjectModel
      */
     public function checkProductsAccess()
     {
-        if (Configuration::get('PS_CATALOG_MODE')) {
+        if (Configuration::isCatalogMode()) {
             return true;
         }
 

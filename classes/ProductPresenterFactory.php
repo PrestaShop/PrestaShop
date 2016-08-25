@@ -22,11 +22,11 @@ class ProductPresenterFactoryCore
     {
         $settings = new ProductPresentationSettings();
 
-        $settings->catalog_mode = Configuration::get('PS_CATALOG_MODE');
-        // TODO StarterTheme : $settings->restricted_country_mode = "???";
+        $settings->catalog_mode = Configuration::isCatalogMode();
         $settings->include_taxes = $this->taxConfiguration->includeTaxes();
         $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
         $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
+        $settings->showPrices = Configuration::showPrices();
 
         return $settings;
     }

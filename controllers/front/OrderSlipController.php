@@ -37,6 +37,10 @@ class OrderSlipControllerCore extends FrontController
      */
     public function initContent()
     {
+        if (Configuration::isCatalogMode()) {
+            Tools::redirect('index.php');
+        }
+
         parent::initContent();
 
         $credit_slips = $this->getTemplateVarCreditSlips();

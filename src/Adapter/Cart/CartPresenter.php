@@ -52,7 +52,7 @@ class CartPresenter implements PresenterInterface
 
         $settings = new ProductPresentationSettings();
 
-        $settings->catalog_mode = Configuration::get('PS_CATALOG_MODE');
+        $settings->catalog_mode = Configuration::isCatalogMode();
         $settings->include_taxes = $this->includeTaxes();
         $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
         $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
@@ -128,7 +128,6 @@ class CartPresenter implements PresenterInterface
     public function addCustomizedData(array $products, Cart $cart)
     {
         return array_map(function (array $product) use ($cart) {
-
             $product['customizations'] = array();
 
             $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int) $product['id_customization']);

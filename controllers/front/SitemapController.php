@@ -46,7 +46,7 @@ class SitemapControllerCore extends FrontController
     public function getTemplateVarSitemap()
     {
         $pages = [];
-        $catalog_mode = Configuration::get('PS_CATALOG_MODE');
+        $catalog_mode = Configuration::isCatalogMode();
 
         $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
         foreach ($cms['cms'] as $p) {
