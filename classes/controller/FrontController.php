@@ -774,7 +774,7 @@ class FrontControllerCore extends Controller
                     $gi = geoip_open(realpath(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_), GEOIP_STANDARD);
                     $record = geoip_record_by_addr($gi, Tools::getRemoteAddr());
 
-                    if (is_object($record)) {
+                    if (is_object($record) && (int)Country::getByIso(strtoupper($record->country_code)) != 0) {
                         if (!in_array(strtoupper($record->country_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
                                 $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
