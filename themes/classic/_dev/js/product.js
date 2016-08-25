@@ -12,7 +12,7 @@ $(document).ready(function () {
       var $productRefresh = $(this);
       event.preventDefault();
 
-      let eventType = 'combination updated';
+      let eventType = 'updatedProductCombination';
       if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
         eventType = extraParameters.eventType;
       }
@@ -21,7 +21,7 @@ $(document).ready(function () {
       var actionURL = $(event.target.form).attr('action');
 
       $.post(actionURL, query, null, 'json').then(function(resp) {
-        prestashop.emit('product updated', {
+        prestashop.emit('updateProduct', {
           reason: {
            productUrl: resp.productUrl
           },
@@ -32,7 +32,7 @@ $(document).ready(function () {
     }
   );
 
-  prestashop.on('product dom updated', function(event) {
+  prestashop.on('updatedProduct', function (event) {
     createInputFile();
     coverImage();
 
@@ -82,7 +82,7 @@ $(document).ready(function () {
     quantityInput.on('change', function (event) {
       let $productRefresh = $('.product-refresh');
       $(event.currentTarget).trigger('touchspin.stopspin');
-      $productRefresh.trigger('click', {eventType: 'product quantity updated'});
+      $productRefresh.trigger('click', {eventType: 'updatedProductQuantity'});
       event.preventDefault();
 
       return false;

@@ -6,7 +6,7 @@ $(document).ready(function () {
     $("input[name$='refresh']").click();
   });
 
-  prestashop.on('product updated', function (event) {
+  prestashop.on('updateProduct', function (event) {
     if (typeof event.refreshUrl == "undefined") {
         event.refreshUrl = true;
     }
@@ -60,7 +60,7 @@ $(document).ready(function () {
       const quantityInputSelector = '#quantity_wanted';
       let quantityInput = $(quantityInputSelector);
 
-      if (!isNaN(minimalProductQuantity) && resp.product_has_combinations && eventType !== 'product quantity updated') {
+      if (!isNaN(minimalProductQuantity) && resp.product_has_combinations && eventType !== 'updatedProductQuantity') {
         quantityInput.attr('min', minimalProductQuantity);
         quantityInput.val(minimalProductQuantity);
       }
@@ -69,7 +69,7 @@ $(document).ready(function () {
         window.history.pushState({id_product_attribute: resp.id_product_attribute}, undefined, resp.product_url);
       }
 
-      prestashop.emit('product dom updated', resp);
+      prestashop.emit('updatedProduct', resp);
     });
   });
 });
