@@ -111,9 +111,9 @@
 	
 	__webpack_require__(79);
 	
-	__webpack_require__(81);
-	
 	__webpack_require__(80);
+	
+	__webpack_require__(81);
 	
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
@@ -16826,52 +16826,9 @@
 	
 	_prestashop2['default'].cart.active_inputs = null;
 	
-	(0, _jquery2['default'])(document).ready(function () {
-	  _prestashop2['default'].on('cart dom updated', function (event) {
-	    createSpin();
-	  });
-	  _prestashop2['default'].on('cart updated', function (event) {
-	    (0, _jquery2['default'])('.quickview').modal('hide');
-	  });
-	
-	  (0, _jquery2['default'])('body').on('click', '.-js-cart .js-touchspin, [data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', function (event) {
-	    event.preventDefault();
-	    var el = (0, _jquery2['default'])(event.currentTarget);
-	    // First perform the action using AJAX
-	    var actionURL = null;
-	    if (el.hasClass('bootstrap-touchspin-up') || el.hasClass('bootstrap-touchspin-down')) {
-	      var input = el.parents('.bootstrap-touchspin').find('input.cart-line-product-quantity');
-	      if (input.is(':focus')) {
-	        return;
-	      }
-	      actionURL = el.hasClass('bootstrap-touchspin-up') ? input.data('up-url') : input.data('down-url');
-	    } else {
-	      actionURL = (0, _jquery2['default'])(event.currentTarget).attr('href');
-	    }
-	    _jquery2['default'].post(actionURL, {
-	      ajax: '1',
-	      action: 'update'
-	    }, null, 'json').then(function () {
-	      // If succesful, refresh cart preview
-	      _prestashop2['default'].emit('cart updated', {
-	        reason: el.dataset
-	      });
-	    });
-	  });
-	
-	  (0, _jquery2['default'])('body').on('focusout', 'input.cart-line-product-quantity', function (event) {
-	    updateQty(event);
-	  });
-	
-	  (0, _jquery2['default'])('body').on('keyup', 'input.cart-line-product-quantity', function (event) {
-	    if (event.keyCode == 13) {
-	      updateQty(event);
-	    }
-	  });
-	
-	  createSpin();
-	});
-	
+	/**
+	 * Attach Bootstrap TouchSpin event handlers
+	 */
 	function createSpin() {
 	  (0, _jquery2['default'])('input[name="product-quantity-spin"]').TouchSpin({
 	    verticalbuttons: true,
@@ -16884,31 +16841,157 @@
 	  });
 	}
 	
-	function updateQty(event) {
-	  var el = (0, _jquery2['default'])(event.currentTarget);
-	  var actionURL = el.data('update-url');
-	  var baseValue = el.attr('value');
-	  var targetValue = el.val();
-	  if (targetValue != parseInt(targetValue) || targetValue < 0) {
-	    return;
+	(0, _jquery2['default'])(document).ready(function () {
+	  var productLineInCartSelector = '.js-cart-line-product-quantity';
+	
+	  _prestashop2['default'].on('updateCart', function () {
+	    (0, _jquery2['default'])('.quickview').modal('hide');
+	  });
+	
+	  createSpin();
+	
+	  _prestashop2['default'].on('updatedCart', function () {
+	    createSpin();
+	  });
+	
+	  var $body = (0, _jquery2['default'])('body');
+	
+	  function isTouchSpin($target) {
+	    return $target.hasClass('bootstrap-touchspin-up') || $target.hasClass('bootstrap-touchspin-down');
 	  }
-	  var qty = targetValue - baseValue;
-	  if (qty == 0) {
-	    return;
+	
+	  function shouldIncreaseProductQuantity($target) {
+	    return $target.hasClass('bootstrap-touchspin-up');
 	  }
-	  var dir = qty > 0 ? 'up' : 'down';
-	  _jquery2['default'].post(actionURL, {
-	    ajax: '1',
-	    qty: Math.abs(qty),
-	    action: 'update',
-	    op: dir
-	  }, null, 'json').then(function () {
-	    // If succesful, refresh cart preview
-	    _prestashop2['default'].emit('cart updated', {
-	      reason: el.dataset
+	
+	  function findCartLineProductQuantityInput($target) {
+	    var $input = $target.parents('.bootstrap-touchspin').find(productLineInCartSelector);
+	
+	    if ($input.is(':focus')) {
+	      return null;
+	    } else {
+	      return $input;
+	    }
+	  }
+	
+	  function camelize(subject) {
+	    var actionTypeParts = subject.split('-');
+	    var i = undefined;
+	    var part = undefined;
+	    var camelizedSubject = '';
+	
+	    for (i = 0; i < actionTypeParts.length; i++) {
+	      part = actionTypeParts[i];
+	
+	      if (0 !== i) {
+	        part = part.substring(0, 1).toUpperCase() + part.substring(1);
+	      }
+	
+	      camelizedSubject = camelizedSubject + part;
+	    }
+	
+	    return camelizedSubject;
+	  }
+	
+	  function parseCartAction($target) {
+	    if (!isTouchSpin($target)) {
+	      return {
+	        url: $target.attr('href'),
+	        type: camelize($target.data('link-action'))
+	      };
+	    }
+	
+	    var $input = findCartLineProductQuantityInput($target);
+	    if (!$input) {
+	      return;
+	    }
+	
+	    var cartAction = {};
+	    if (shouldIncreaseProductQuantity($target)) {
+	      cartAction = {
+	        url: $input.data('up-url'),
+	        type: 'increaseProductQuantity'
+	      };
+	    } else {
+	      cartAction = {
+	        url: $input.data('down-url'),
+	        type: 'decreaseProductQuantity'
+	      };
+	    }
+	
+	    return cartAction;
+	  }
+	
+	  $body.on('click', '.js-cart .js-touchspin, [data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', function (event) {
+	    event.preventDefault();
+	
+	    var $target = (0, _jquery2['default'])(event.currentTarget);
+	    var cartAction = parseCartAction($target);
+	    var requestData = {
+	      ajax: '1',
+	      action: 'update'
+	    };
+	
+	    _jquery2['default'].post(cartAction.url, requestData, null, 'json').then(function () {
+	      // Refresh cart preview
+	      _prestashop2['default'].emit('updateCart', {
+	        reason: $target.dataset
+	      });
+	    }).fail(function (resp) {
+	      _prestashop2['default'].emit('handleError', {
+	        eventType: 'updateProductInCart',
+	        resp: resp,
+	        cartAction: cartAction.type
+	      });
 	    });
 	  });
-	}
+	
+	  function updateProductQuantityInCart(event) {
+	    var $target = (0, _jquery2['default'])(event.currentTarget);
+	    var updateQuantityInCartUrl = $target.data('update-url');
+	    var baseValue = $target.attr('value');
+	
+	    // There should be a valid product quantity in cart
+	    var targetValue = $target.val();
+	    if (targetValue != parseInt(targetValue) || targetValue < 0) {
+	      return;
+	    }
+	
+	    // There should be a new product quantity in cart
+	    var qty = targetValue - baseValue;
+	    if (qty == 0) {
+	      return;
+	    }
+	
+	    var dir = qty > 0 ? 'up' : 'down';
+	
+	    var requestData = {
+	      ajax: '1',
+	      qty: Math.abs(qty),
+	      action: 'update',
+	      op: dir
+	    };
+	
+	    _jquery2['default'].post(updateQuantityInCartUrl, requestData, null, 'json').then(function () {
+	      // Refresh cart preview
+	      _prestashop2['default'].emit('updateCart', {
+	        reason: $target.dataset
+	      });
+	    }).fail(function (resp) {
+	      _prestashop2['default'].emit('handleError', { eventType: 'updateProductQuantityInCart', resp: resp });
+	    });
+	  }
+	
+	  $body.on('focusout', productLineInCartSelector, function (event) {
+	    updateProductQuantityInCart(event);
+	  });
+	
+	  $body.on('keyup', productLineInCartSelector, function (event) {
+	    if (event.keyCode == 13) {
+	      updateProductQuantityInCart(event);
+	    }
+	  });
+	});
 
 /***/ },
 /* 73 */
@@ -17781,36 +17864,6 @@
 
 /***/ },
 /* 80 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _prestashop = __webpack_require__(66);
-	
-	var _prestashop2 = _interopRequireDefault(_prestashop);
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	_prestashop2['default'].blockcart = _prestashop2['default'].blockcart || {};
-	_prestashop2['default'].blockcart.showModal = function (html) {
-	  var $modal = (0, _jquery2['default'])('#blockcart-modal');
-	  if ($modal.length) {
-	    $modal.remove();
-	  }
-	  (0, _jquery2['default'])('body').append(html);
-	  (0, _jquery2['default'])('#blockcart-modal').modal('show').on('hidden.bs.modal', function (e) {
-	    _prestashop2['default'].emit('product updated', {
-	      reason: e.currentTarget.dataset
-	    });
-	  });
-	};
-
-/***/ },
-/* 81 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -17948,6 +18001,44 @@
 	    });
 	  };
 	})(jQuery);
+
+/***/ },
+/* 81 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _prestashop = __webpack_require__(66);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	_prestashop2['default'].blockcart = _prestashop2['default'].blockcart || {};
+	
+	_prestashop2['default'].blockcart.showModal = function (html) {
+	  function getBlockCartModal() {
+	    return (0, _jquery2['default'])('#blockcart-modal');
+	  }
+	
+	  var $blockCartModal = getBlockCartModal();
+	  if ($blockCartModal.length) {
+	    $blockCartModal.remove();
+	  }
+	
+	  (0, _jquery2['default'])('body').append(html);
+	
+	  $blockCartModal = getBlockCartModal();
+	  $blockCartModal.modal('show').on('hidden.bs.modal', function (event) {
+	    _prestashop2['default'].emit('updateProduct', {
+	      reason: event.currentTarget.dataset
+	    });
+	  });
+	};
 
 /***/ }
 /******/ ]);

@@ -1691,8 +1691,8 @@
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
 	(0, _jquery2['default'])(document).ready(function () {
-	  _prestashop2['default'].on('cart updated', function (event) {
-	    var refreshURL = (0, _jquery2['default'])('.-js-cart').data('refresh-url');
+	  _prestashop2['default'].on('updateCart', function (event) {
+	    var getCartViewUrl = (0, _jquery2['default'])('.js-cart').data('refresh-url');
 	    var requestData = {};
 	
 	    if (event && event.reason) {
@@ -1702,7 +1702,7 @@
 	      };
 	    }
 	
-	    _jquery2['default'].post(refreshURL, requestData).then(function (resp) {
+	    _jquery2['default'].post(getCartViewUrl, requestData).then(function (resp) {
 	      (0, _jquery2['default'])('.cart-overview').replaceWith(resp.cart_detailed);
 	      (0, _jquery2['default'])('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
 	      (0, _jquery2['default'])('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
@@ -1710,12 +1710,17 @@
 	      (0, _jquery2['default'])('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
 	      (0, _jquery2['default'])('.cart-voucher').replaceWith(resp.cart_voucher);
 	
-	      _prestashop2['default'].emit('cart dom updated');
+	      _prestashop2['default'].emit('updatedCart');
+	    }).fail(function (resp) {
+	      _prestashop2['default'].emit('handleError', { eventType: 'updateCart', resp: resp });
 	    });
 	  });
 	
-	  (0, _jquery2['default'])('body').on('click', '[data-button-action="add-to-cart"]', function (event) {
+	  var $body = (0, _jquery2['default'])('body');
+	
+	  $body.on('click', '[data-button-action="add-to-cart"]', function (event) {
 	    event.preventDefault();
+	
 	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
 	    var query = $form.serialize() + '&add=1&action=update';
 	    var actionURL = $form.attr('action');
@@ -1748,33 +1753,42 @@
 	    }
 	
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      _prestashop2['default'].emit('cart updated', {
+	      _prestashop2['default'].emit('updateCart', {
 	        reason: {
 	          idProduct: resp.id_product,
 	          idProductAttribute: resp.id_product_attribute,
 	          linkAction: 'add-to-cart'
 	        }
 	      });
+	    }).fail(function (resp) {
+	      _prestashop2['default'].emit('handleError', { eventType: 'addProductToCart', resp: resp });
 	    });
 	  });
 	
-	  (0, _jquery2['default'])('body').on('submit', '[data-link-action="add-voucher"]', function (event) {
+	  $body.on('submit', '[data-link-action="add-voucher"]', function (event) {
 	    event.preventDefault();
 	
-	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'ajax').val('1'));
-	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'action').val('update'));
+	    var $addVoucherForm = (0, _jquery2['default'])(event.currentTarget);
+	    var getCartViewUrl = $addVoucherForm.attr('action');
 	
-	    // First perform the action using AJAX
-	    var actionURL = (0, _jquery2['default'])(this).attr('action');
+	    if (0 === $addVoucherForm.find('[name=action]').length) {
+	      $addVoucherForm.append((0, _jquery2['default'])('<input>', { 'type': 'hidden', 'name': 'ajax', "value": 1 }));
+	    }
+	    if (0 === $addVoucherForm.find('[name=action]').length) {
+	      $addVoucherForm.append((0, _jquery2['default'])('<input>', { 'type': 'hidden', 'name': 'action', "value": "update" }));
+	    }
 	
-	    _jquery2['default'].post(actionURL, (0, _jquery2['default'])(this).serialize(), null, 'json').then(function (res) {
-	      if (res.hasError) {
-	        return (0, _jquery2['default'])('.js-error').show().find('.js-error-text').text(res.errors[0]);
+	    _jquery2['default'].post(getCartViewUrl, $addVoucherForm.serialize(), null, 'json').then(function (resp) {
+	      if (resp.hasError) {
+	        (0, _jquery2['default'])('.js-error').show().find('.js-error-text').text(resp.errors[0]);
+	
+	        return;
 	      }
-	      // If succesful, refresh cart preview
-	      _prestashop2['default'].emit('cart updated', {
-	        reason: event.target.dataset
-	      });
+	
+	      // Refresh cart preview
+	      _prestashop2['default'].emit('updateCart', { reason: event.target.dataset });
+	    }).fail(function (resp) {
+	      _prestashop2['default'].emit('handleError', { eventType: 'addVoucher', resp: resp });
 	    });
 	  });
 	});
