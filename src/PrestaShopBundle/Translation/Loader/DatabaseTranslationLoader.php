@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,29 +35,40 @@ class DatabaseTranslationLoader implements LoaderInterface
 {
     /** @var EntityManagerInterface */
     protected $em;
-    
+
     /**
-     * 
      * @param EntityManagerInterface $em
      */
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function load($resource, $locale, $domain = 'messages')
     {
         $lang = $this->em->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
-        $translations = $this->em->getRepository('PrestaShopBundle:Translation')->findBy(['lang' => $lang, 'domain' => $domain]);
+        $translationRepository = $this->em->getRepository('PrestaShopBundle:Translation');
+
+        $translations = $translationRepository->createNamedQuery('t')
+            ->where('t.lang =:lang')
+            ->andWhere('t.domain LIKE :domain')
+            ->setParameters(array(
+                'lang' => $lang,
+                'domain' => $domain,
+            ))
+            ->getQuery()
+            ->getResult()
+        ;
+
         $catalogue = new MessageCatalogue($locale);
-        
+
         foreach ($translations as $translation) {
             $catalogue->set($translation->getKey(), $translation->getTranslation(), $translation->getDomain());
         }
-        
+
         return $catalogue;
     }
 }
