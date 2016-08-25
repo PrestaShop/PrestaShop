@@ -63,6 +63,7 @@
     </div>
   </section>
 
+  {if ! empty($HOOK_PAYMENT_RETURN)}
   <section id="content-hook_payment_return" class="card definition-list">
     <div class="card-block">
       <div class="row">
@@ -72,6 +73,7 @@
       </div>
     </div>
   </section>
+  {/if}
 
   {if $customer.is_guest}
     <div id="registration-form" class="card">
