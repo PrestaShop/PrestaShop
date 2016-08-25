@@ -81,33 +81,34 @@ $(document).ready(() => {
     }
   );
 
-  $('body').on(
+  $body.on(
     'submit',
     '[data-link-action="add-voucher"]',
-    function(event) {
+    (event) => {
       event.preventDefault();
 
-      $(this).append($('<input>')
-        .attr('type', 'hidden')
-        .attr('name', 'ajax').val('1')
-      );
-      $(this).append($('<input>')
-        .attr('type', 'hidden')
-        .attr('name', 'action').val('update')
-      );
+      let $addVoucherForm = $(event.currentTarget);
+      let getCartViewUrl = $addVoucherForm.attr('action');
 
-      // First perform the action using AJAX
-      var actionURL = $(this).attr('action');
+      if (0 === $addVoucherForm.find('[name=action]').length) {
+        $addVoucherForm.append($('<input>', {'type': 'hidden', 'name': 'ajax', "value": 1}));
+      }
+      if (0 === $addVoucherForm.find('[name=action]').length) {
+        $addVoucherForm.append($('<input>', {'type': 'hidden', 'name': 'action', "value": "update"}));
+      }
 
-      $.post(actionURL, $(this).serialize(), null, 'json').then(function(res) {
-        if(res.hasError){
-          return $('.js-error').show().find('.js-error-text').text(res.errors[0]);
+      $.post(getCartViewUrl, $addVoucherForm.serialize(), null, 'json').then((resp) => {
+        if (resp.hasError) {
+          $('.js-error').show().find('.js-error-text').text(resp.errors[0]);
+
+          return;
         }
-        // If succesful, refresh cart preview
-        prestashop.emit('cart updated', {
-          reason: event.target.dataset
-        });
-      });
+
+        // Refresh cart preview
+        prestashop.emit('updateCart', {reason: event.target.dataset});
+      }).fail((resp) => {
+        prestashop.emit('handleError', {eventType: 'addVoucher', resp: resp});
+      })
     }
   );
 });
