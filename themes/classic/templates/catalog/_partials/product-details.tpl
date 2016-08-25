@@ -3,17 +3,7 @@
     {if $product.reference}
       <div class="product-reference">
         <label class="label">{l s='Reference' d='Shop.Theme.Catalog'} </label>
-        <span itemprop="sku">
-          {foreach from=$product.attributes item=att name=reference}
-            {if $smarty.foreach.reference.first}
-              {if $att['reference'] != null}
-                {$att['reference']}
-              {else}
-                {$product.reference}
-              {/if}
-            {/if}
-          {/foreach}
-        </span>
+        <span itemprop="sku">{$product.reference_to_display}</span>
       </div>
     {/if}
     {/block}
@@ -48,25 +38,23 @@
               <dt class="name">{$feature.name}</dt>
               <dd class="value">{$feature.value}</dd>
             {/foreach}
-      {/if}
-
-      {foreach from=$product.attributes item=att name=reference}
-        {if $smarty.foreach.reference.first}
-          {foreach from=$att key=key item=a name=test}
-            {if ($smarty.foreach.test.index) >= 5}
-              {if null != $a}
-                  <dt class="name">{l s=$key|ucfirst d='Shop.Theme.Catalog'}</dt>
-                  <dd class="value">{$a}</dd>
-              {elseif null != $product[$key]}
-                  <dt class="name">{l s=$key|ucfirst d='Shop.Theme.Catalog'}</dt>
-                  <dd class="value">{$product[$key]}</dd>
-              {/if}
-            {/if}
-          {/foreach}
-        {/if}
-      {/foreach}
           </dl>
         </section>
+      {/if}
+    {/block}
+
+    {block name='product_specific_references'}
+      {if isset($product.specific_references)}
+        <section class="product-features">
+          <h3 class="h6">{l s='Sepcific References' d='Shop.Theme.Catalog'}</h3>
+            <dl class="data-sheet">
+              {foreach from=$product.specific_references item=reference key=key}
+                <dt class="name">{l s=$key|ucfirst d='Shop.Theme.Catalog'}</dt>
+                <dd class="value">{$reference}</dd>
+              {/foreach}
+            </dl>
+        </section>
+      {/if}
     {/block}
 
     {block name='product_condition'}
