@@ -2,8 +2,8 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 
 $(document).ready(() => {
-  prestashop.on('cart updated', function (event) {
-    var refreshURL = $('.-js-cart').data('refresh-url');
+  prestashop.on('updateCart', (event) => {
+    var getCartViewUrl = $('.js-cart').data('refresh-url');
     var requestData = {};
 
     if (event && event.reason) {
@@ -13,7 +13,7 @@ $(document).ready(() => {
       };
     }
 
-    $.post(refreshURL, requestData).then(function (resp) {
+    $.post(getCartViewUrl, requestData).then((resp) => {
       $('.cart-overview').replaceWith(resp.cart_detailed);
       $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
       $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
@@ -21,7 +21,9 @@ $(document).ready(() => {
       $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
       $('.cart-voucher').replaceWith(resp.cart_voucher);
 
-      prestashop.emit('cart dom updated');
+      prestashop.emit('updatedCart');
+    }).fail((resp) => {
+      prestashop.emit('handleError', {eventType: 'updateCart', resp: resp})
     });
   });
 
