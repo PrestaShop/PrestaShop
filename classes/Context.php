@@ -78,7 +78,7 @@ class ContextCore
     /** @var Smarty */
     public $smarty;
 
-    /** @var Mobile_Detect */
+    /** @var \Mobile_Detect */
     public $mobile_detect;
 
     /** @var int */
@@ -124,14 +124,14 @@ class ContextCore
     /**
      * Sets Mobile_Detect tool object
      *
-     * @return Mobile_Detect
+     * @return \Mobile_Detect
      */
     public function getMobileDetect()
     {
         if ($this->mobile_detect === null) {
-            require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
-            $this->mobile_detect = new Mobile_Detect();
+            $this->mobile_detect = new \Mobile_Detect();
         }
+
         return $this->mobile_detect;
     }
 
