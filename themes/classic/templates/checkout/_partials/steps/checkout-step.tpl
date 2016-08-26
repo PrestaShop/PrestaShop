@@ -1,9 +1,10 @@
 <section  id    = "{$identifier}"
           class = "{[
-                      'checkout-step' => true,
-                      '-js-current'   => $step_is_current,
-                      '-reachable'    => $step_is_reachable,
-                      '-complete'     => $step_is_complete
+                      'checkout-step'   => true,
+                      '-current'        => $step_is_current,
+                      '-reachable'      => $step_is_reachable,
+                      '-complete'       => $step_is_complete,
+                      'js-current-step' => $step_is_current
                   ]|classnames}"
 >
   <h1 class="step-title h3">

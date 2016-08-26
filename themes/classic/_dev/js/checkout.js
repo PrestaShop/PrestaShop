@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 function setupMyCheckoutScripts() {
   if ($('.js-cancel-address').length !== 0) {
-    $('.checkout-step:not(.-js-current) .step-title').addClass('not-allowed');
+    $('.checkout-step:not(.js-current-step) .step-title').addClass('not-allowed');
   }
 
   $('.js-terms a').on('click', (event) => {

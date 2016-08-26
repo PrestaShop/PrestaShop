@@ -95,31 +95,38 @@ function setupCheckoutScripts () {
     $('#checkout-delivery-step').trigger('click');
   });
 
-  changeCurrentCheckoutStep();
+  changeCheckoutStep();
   collapsePaymentOptions();
 }
 
-function changeCurrentCheckoutStep() {
+function changeCheckoutStep() {
   $('.checkout-step').off('click');
 
-  $('.-js-current').prevAll().add($('#checkout-personal-information-step.-js-current').nextAll()).on('click', function(event) {
-    $('.-js-current, .-current').removeClass('-js-current -current');
-    $(event.target).closest('.checkout-step').toggleClass('-js-current');
-    prestashop.emit('change current checkout step');
-  });
+  let currentStepClass = 'js-current-step';
+  let currentStepSelector = '.' + currentStepClass;
+  let stepsAfterPersonalInformation = $('#checkout-personal-information-step' + currentStepSelector).nextAll();
 
-  $('.-js-current:not(#checkout-personal-information-step)').nextAll().on('click', function(event) {
-    $('.-js-current button.continue').click();
-    prestashop.emit('change current checkout step');
-  });
+  $(currentStepSelector).prevAll().add(stepsAfterPersonalInformation).on(
+    'click',
+    (event) => {
+      $(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
+      $(event.target).closest('.checkout-step').toggleClass('-current');
+      $(event.target).closest('.checkout-step').toggleClass(currentStepClass);
+      prestashop.emit('changedCheckoutStep');
+    }
+  );
+
+  $(currentStepSelector + ':not(#checkout-personal-information-step)').nextAll().on(
+    'click',
+    () => {
+      $(currentStepSelector + ' button.continue').click();
+      prestashop.emit('changedCheckoutStep');
+    }
+  );
 }
 
 $(document).ready(() => {
-  if ($('body#checkout').length === 1) {
+  if ($('#checkout').length === 1) {
     setupCheckoutScripts();
   }
-
-  prestashop.on('change current checkout step', function(event) {
-    changeCurrentCheckoutStep();
-  });
 });
