@@ -1,19 +1,16 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import setUpAddress from './checkout-payment'
 import setUpDelivery from './checkout-delivery'
 import setUpPayment from './checkout-payment'
 
 function setupCheckoutScripts () {
+  setUpAddress();
   setUpDelivery();
   let payment = setUpPayment();
 
-  $('.js-edit-addresses').on('click', (event) => {
-  payment.collapseOptions();
-    event.stopPropagation();
-    $('#checkout-addresses-step').trigger('click');
-  });
-
   changeCheckoutStep();
+  payment.collapseOptions();
 }
 
 function changeCheckoutStep() {
