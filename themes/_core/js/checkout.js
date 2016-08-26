@@ -45,9 +45,9 @@ function enableOrDisableOrderButton() {
     $('#payment-confirmation').show();
     $('#payment-confirmation button').attr('disabled', !show);
     if (show) {
-      $('.js-alert-payment-condtions').hide();
+      $('.js-alert-payment-conditions').hide();
     } else {
-      $('.js-alert-payment-condtions').show();
+      $('.js-alert-payment-conditions').show();
     }
   }
 }
