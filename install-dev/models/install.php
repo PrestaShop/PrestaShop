@@ -230,7 +230,7 @@ class InstallModelInstall extends InstallAbstractModel
 
         if ($errors = $sql_loader->getErrors()) {
             foreach ($errors as $error) {
-                $this->setError($this->translator->trans('SQL error on query <i>%error%</i>', array('%error%' => $error['error']), 'Install'));
+                $this->setError($this->translator->trans('SQL error on query <i>%query%</i>', array('%query%' => $error['error']), 'Install'));
             }
             return false;
         }
