@@ -11,6 +11,7 @@
     "ext-zip": "*",
     "doctrine/doctrine-bundle": "1.5.2",
     "mrclay/minify": "~2.3.0",
+    "jakeasmith/http_build_url": "^1",
     "symfony/swiftmailer-bundle": "2.3.11",
     "swiftmailer/swiftmailer": "~5.4.3",
     "symfony/monolog-bundle": "2.8.2",
