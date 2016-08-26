@@ -76,7 +76,7 @@
          because it makes ensuring they were checked very tricky and overcomplicates
          the template. Might change later.
       *}
-      {l s='By confirming your order, I certify that I have read and agree with all of the conditions below:' d='Shop.Theme.Checkout'}
+      {l s='By confirming the order, you certify that you have read and agree with all of the conditions below:' d='Shop.Theme.Checkout'}
     </p>
 
     <form id="conditions-to-approve" method="GET">

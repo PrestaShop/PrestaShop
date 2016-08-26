@@ -6,7 +6,7 @@
           {if $listing.products|count > 1}
             <p>{l s='There are %product_count% products.' d='Shop.Theme.Catalog' sprintf=['%product_count%' => $listing.products|count]}</p>
           {else}
-            <p>{l s='There is %products_count% products.' d='Shop.Theme.Catalog' sprintf=['%products_count%' => $listing.products|count]}</p>
+            <p>{l s='There is %product_count% product.' d='Shop.Theme.Catalog' sprintf=['%products_count%' => $listing.products|count]}</p>
           {/if}
         </div>
         <div class="col-lg-5 col-md-6">
