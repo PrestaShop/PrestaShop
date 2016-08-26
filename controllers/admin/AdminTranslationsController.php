@@ -1331,20 +1331,20 @@ class AdminTranslationsControllerCore extends AdminController
                 'name' => $this->l('Back office translations'),
                 'var' => '_LANGADM',
                 'dir' => _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.'/',
-                'file' => 'admin.php'
+                'file' => 'admin.php',
             ),
             'themes' => array(
                 'name' => $this->l('Themes translations'),
                 'var' => '_THEMES',
                 'dir' => '',
-                'file' => ''
+                'file' => '',
             ),
             'others' => array(
                 'name' => $this->l('Others translations'),
                 'var' => '_OTHERS',
                 'dir' => '',
-                'file' => ''
-            )
+                'file' => '',
+            ),
         );
     }
 

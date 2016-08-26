@@ -26,19 +26,38 @@
 
 namespace PrestaShopBundle\Tests\Translation\Provider;
 
+use PrestaShopBundle\Translation\Provider\BackOfficeProvider;
+
 class BackOfficeProviderTest extends \PHPUnit_Framework_TestCase
 {
+    // @see /resources/translations/en-US/AdminActions.en-US.xlf
+    const DOMAIN = 'AdminActions.en-US';
+
     private $provider;
+    private static $resourcesDir;
 
     public function setUp()
     {
-        // Mock the world
+        $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')
+            ->getMock()
+        ;
+
+        self::$resourcesDir = __DIR__.'/../../resources/translations';
+        $this->provider = new BackOfficeProvider($loader, self::$resourcesDir);
     }
 
     public function testGetMessageCatalogue()
     {
-        $this->markTestSkipped(
-            'I need to mock the world before.'
-        );
+        // The xliff file contains 38 keys
+        $expectedReturn = $this->provider->getMessageCatalogue();
+        $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
+
+        // Check integrity of translations
+        $this->assertArrayHasKey('AdminActions.en-US', $expectedReturn->all());
+        $translations = $expectedReturn->all('AdminActions.en-US');
+
+        $this->assertCount(38, $translations);
+        $this->assertArrayHasKey('Download file', $translations);
+        $this->assertSame('Download file', $translations['Download file']);
     }
 }

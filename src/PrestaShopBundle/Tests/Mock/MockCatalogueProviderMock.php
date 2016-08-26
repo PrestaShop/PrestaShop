@@ -32,6 +32,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 class MockCatalogueProviderMock implements ProviderInterface
 {
     const DEFAULT_LOCALE = 'en-US';
+
     /**
      * {@inheritdoc}
      */

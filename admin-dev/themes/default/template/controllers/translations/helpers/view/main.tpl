@@ -38,12 +38,8 @@
 
       $('#type').on('change', function (event) {
         var selectedValue = $(this).val();
-        var themeSelector = $('#ps_theme_selector')
-        if ('themes' === selectedValue) {
-          themeSelector.show();
-        }else {
-          themeSelector.hide();
-        }
+
+        themeSelector.toggle('themes' === selectedValue);
       });
 
 			$('#modify-translations').click(function(e) {

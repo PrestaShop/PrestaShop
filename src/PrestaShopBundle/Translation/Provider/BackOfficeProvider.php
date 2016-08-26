@@ -30,17 +30,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class BackOfficeProvider extends AbstractProvider
 {
-    use TranslationFinderTrait;
-
-    private $locale;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDirectories()
-    {
-        return array($this->getResourceDirectory().'Admin');
-    }
+    const FILE_PATTERN = 'Admin*';
 
     /**
      * {@inheritdoc}
@@ -53,35 +43,26 @@ class BackOfficeProvider extends AbstractProvider
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getMessageCatalogue()
     {
-        $xliffCatalogue = $this->getCatalogueFromPaths($this->getDirectories(), $this->locale);
+        $locale = $this->getPrestaShopLocale();
 
-        $databaseCatalogue = new MessageCatalogue($this->locale);
+        $xlfCatalogue = $this->getCatalogueFromPaths($this->getResourceDirectory(), $locale, self::FILE_PATTERN);
+
+        $databaseCatalogue = new MessageCatalogue($locale);
 
         foreach ($this->getTranslationDomains() as $translationDomain) {
-            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain);
-            $databaseCatalogue->addCatalogue($domainCatalogue);
+            $domainCatalogue = $this->getDatabaseLoader()->load(null, $locale, $translationDomain);
+
+            if ($domainCatalogue instanceof MessageCatalogue) {
+                $databaseCatalogue->addCatalogue($domainCatalogue);
+            }
         }
 
-        // merge database catalogue to xliff catalogue
-        $xliffCatalogue->addCatalogue($databaseCatalogue);
+        // Merge database catalogue to xliff catalogue
+        $xlfCatalogue->addCatalogue($databaseCatalogue);
 
-        return $xliffCatalogue;
+        return $xlfCatalogue;
     }
+
 }

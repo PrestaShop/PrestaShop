@@ -32,17 +32,17 @@ use Symfony\Component\Translation\MessageCatalogue;
 interface ProviderInterface
 {
     /**
-     * @return string[] a list of directories to parse
+     * @return string[] List of directories to parse
      */
     public function getDirectories();
 
     /**
-     * @return string[] a list of translation domain to get in Database
+     * @return string[] List of translation domains to get in database
      */
     public function getTranslationDomains();
 
     /**
-     * @return string the locale used to build the MessageCatalogue
+     * @return string Locale used to build the MessageCatalogue
      */
     public function getLocale();
 

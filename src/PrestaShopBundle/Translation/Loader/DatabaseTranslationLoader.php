@@ -34,14 +34,14 @@ use Doctrine\ORM\EntityManagerInterface;
 class DatabaseTranslationLoader implements LoaderInterface
 {
     /** @var EntityManagerInterface */
-    protected $em;
+    protected $entityManager;
 
     /**
      * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->em = $em;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -49,10 +49,17 @@ class DatabaseTranslationLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages')
     {
-        $lang = $this->em->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
-        $translationRepository = $this->em->getRepository('PrestaShopBundle:Translation');
+        $lang = $this->entityManager
+            ->getRepository('PrestaShopBundle:Lang')
+            ->findOneByLocale($locale)
+        ;
 
-        $translations = $translationRepository->createNamedQuery('t')
+        $translationRepository = $this->entityManager
+            ->getRepository('PrestaShopBundle:Translation')
+        ;
+
+        $translations = $translationRepository
+            ->createNamedQuery('t')
             ->where('t.lang =:lang')
             ->andWhere('t.domain LIKE :domain')
             ->setParameters(array(

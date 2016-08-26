@@ -29,9 +29,11 @@ namespace PrestaShopBundle\Translation\Provider;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 
-class AbstractProvider implements ProviderInterface
+abstract class AbstractProvider implements ProviderInterface
 {
     use TranslationFinderTrait;
+
+    const DEFAULT_LOCALE = 'en-US';
 
     private $databaseLoader;
     private $resourceDirectory;
@@ -41,6 +43,7 @@ class AbstractProvider implements ProviderInterface
     {
         $this->databaseLoader = $databaseLoader;
         $this->resourceDirectory = $resourceDirectory;
+        $this->locale = self::DEFAULT_LOCALE;
     }
 
     /**
@@ -48,7 +51,7 @@ class AbstractProvider implements ProviderInterface
      */
     public function getDirectories()
     {
-        return array('');
+        return array($this->resourceDirectory);
     }
 
     /**
@@ -75,16 +78,43 @@ class AbstractProvider implements ProviderInterface
     }
 
     /**
+     * Get the PrestaShop locale from real locale.
+     *
+     * @return string  The PrestaShop locale
+     */
+    public function getPrestaShopLocale()
+    {
+        return str_replace('-', '_', $this->locale);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getMessageCatalogue()
     {
-        return new MessageCatalogue();
+        $xlfCatalogue = $this->getCatalogueFromPaths($this->getDirectories(), $this->locale);
+
+        $databaseCatalogue = new MessageCatalogue($this->locale);
+
+        foreach ($this->getTranslationDomains() as $translationDomain) {
+            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain);
+            $databaseCatalogue->addCatalogue($domainCatalogue);
+        }
+
+        // Merge database catalogue to xliff catalogue
+        $xlfCatalogue->addCatalogue($databaseCatalogue);
+
+        return $xlfCatalogue;
     }
 
+    /**
+     * Helper function
+     *
+     * @return string Path to app/Resources/translations/{locale}
+     */
     public function getResourceDirectory()
     {
-        return $this->resourceDirectory.'/'.$this->locale.'/';
+        return $this->resourceDirectory.'/'.$this->locale;
     }
 
     public function getDatabaseLoader()

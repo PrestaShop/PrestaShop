@@ -32,20 +32,25 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 trait TranslationFinderTrait
 {
-    public function getCatalogueFromPaths($paths, $locale)
+    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
+        $locale = str_replace('-', '_', $locale);
+
         $messageCatalogue = new MessageCatalogue($locale);
         $xliffFileLoader = new XliffFileLoader();
         $finder = new Finder();
+
+        if (null !== $pattern) {
+            $finder->name($pattern);
+        }
         $translationFiles = $finder->files()->in($paths);
 
         if (count($translationFiles) === 0) {
             throw new \Exception('There is no translation file available.');
         }
 
-        $translationLocale = str_replace('-', '_', $locale);
         foreach ($translationFiles as $file) {
-            $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $translationLocale, $file->getBasename('.xlf'));
+            $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $file->getBasename('.xlf'));
             $messageCatalogue->addCatalogue($fileCatalogue);
         }
 
