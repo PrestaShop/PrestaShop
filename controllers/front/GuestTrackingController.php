@@ -95,7 +95,7 @@ class GuestTrackingControllerCore extends FrontController
                 $this->errors[] = $this->trans(
                     'Your password must be at least %min% characters long.',
                     array('%min%' => Validate::PASSWORD_LENGTH),
-                    'Shop.Form.Help'
+                    'Shop.Forms.Help'
                 );
             } elseif ($customer->transformToCustomer($this->context->language->id, $password)) {
                 $this->success[] = $this->trans(
@@ -148,7 +148,7 @@ class GuestTrackingControllerCore extends FrontController
         $breadcrumbLinks = parent::getBreadcrumbLinks();
 
         $breadcrumbLinks['links'][] = array(
-            'title' => $this->getTranslator()->trans('Guest order tracking', array(), 'Front.Theme.Checkout'),
+            'title' => $this->getTranslator()->trans('Guest order tracking', array(), 'Shop.Theme.Checkout'),
             'url' => '#',
         );
 

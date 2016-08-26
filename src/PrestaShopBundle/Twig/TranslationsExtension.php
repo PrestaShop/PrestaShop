@@ -182,12 +182,12 @@ class TranslationsExtension extends \Twig_Extension
     protected function getSharedEditFormViewProperties()
     {
         return array(
-            'label_edit' => $this->translator->trans('Edit', array(), 'AdminActions'),
-            'label_reset' => $this->translator->trans('Reset', array(), 'AdminActions'),
+            'label_edit' => $this->translator->trans('Edit', array(), 'Admin.Actions'),
+            'label_reset' => $this->translator->trans('Reset', array(), 'Admin.Actions'),
             'notification_success' => $this->translator->trans('Translation successfully edited', array(),
-                'AdminNotificationsSuccess'),
+                'Admin.International.Notification'),
             'notification_error' => $this->translator->trans('Translation unsuccessfully edited', array(),
-                'AdminNotificationsError'),
+                'Admin.International.Notification'),
         );
     }
 
@@ -290,8 +290,8 @@ class TranslationsExtension extends \Twig_Extension
 
         if ($hasMessagesSubtree) {
             $output .= $this->render('button-toggle-messages-visibility.html.twig', array(
-                'label_show_messages' => $this->translator->trans('Show messages', array(), 'AdminActions'),
-                'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'AdminActions')
+                'label_show_messages' => $this->translator->trans('Show messages', array(), 'Admin.International.Feature'),
+                'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'Admin.International.Feature')
             ));
 
             $output .= $this->getNavigation($this->parseDomain($subtree));
@@ -304,7 +304,7 @@ class TranslationsExtension extends \Twig_Extension
         if ($hasMessagesSubtree) {
             $output .= $this->render('button-go-to-pagination-bar.html.twig', array(
                 'domain' => $id,
-                'label' => $this->translator->trans('Go to previous navigation menu', array(), 'AdminActions'),
+                'label' => $this->translator->trans('Go to previous navigation menu', array(), 'Admin.International.Feature'),
             ));
 
             // Close div with translation-domain class

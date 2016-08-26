@@ -255,16 +255,16 @@ class AdminStoresControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Whether or not to display this store.', array(), 'Admin.ShopParemeters.Help')
+                    'hint' => $this->trans('Whether or not to display this store.', array(), 'Admin.ShopParameters.Help')
                 ),
                 array(
                     'type' => 'file',
-                    'label' => $this->trans('Picture', array(), 'Admin.ShopParemeters.Feature'),
+                    'label' => $this->trans('Picture', array(), 'Admin.ShopParameters.Feature'),
                     'name' => 'image',
                     'display_image' => true,
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
-                    'hint' => $this->trans('Storefront picture.', array(), 'Admin.ShopParemeters.Help')
+                    'hint' => $this->trans('Storefront picture.', array(), 'Admin.ShopParameters.Help')
                 )
             ),
             'hours' => array(
@@ -283,13 +283,13 @@ class AdminStoresControllerCore extends AdminController
         }
 
         $days = array();
-        $days[1] = $this->trans('Monday', array(), 'Admin.ShopParemeters.Feature');
-        $days[2] = $this->trans('Tuesday', array(), 'Admin.ShopParemeters.Feature');
-        $days[3] = $this->trans('Wednesday', array(), 'Admin.ShopParemeters.Feature');
-        $days[4] = $this->trans('Thursday', array(), 'Admin.ShopParemeters.Feature');
-        $days[5] = $this->trans('Friday', array(), 'Admin.ShopParemeters.Feature');
-        $days[6] = $this->trans('Saturday', array(), 'Admin.ShopParemeters.Feature');
-        $days[7] = $this->trans('Sunday', array(), 'Admin.ShopParemeters.Feature');
+        $days[1] = $this->trans('Monday', array(), 'Admin.ShopParameters.Feature');
+        $days[2] = $this->trans('Tuesday', array(), 'Admin.ShopParameters.Feature');
+        $days[3] = $this->trans('Wednesday', array(), 'Admin.ShopParameters.Feature');
+        $days[4] = $this->trans('Thursday', array(), 'Admin.ShopParameters.Feature');
+        $days[5] = $this->trans('Friday', array(), 'Admin.ShopParameters.Feature');
+        $days[6] = $this->trans('Saturday', array(), 'Admin.ShopParameters.Feature');
+        $days[7] = $this->trans('Sunday', array(), 'Admin.ShopParameters.Feature');
 
         $hours_temp = json_decode($this->getFieldValue($obj, 'hours'));
         $hours = [];
@@ -395,46 +395,46 @@ class AdminStoresControllerCore extends AdminController
     {
         $this->context = Context::getContext();
         $countryList = array();
-        $countryList[] = array('id' => '0', 'name' => $this->trans('Choose your country', array(), 'Admin.ShopParemeters.Feature'));
+        $countryList[] = array('id' => '0', 'name' => $this->trans('Choose your country', array(), 'Admin.ShopParameters.Feature'));
         foreach (Country::getCountries($this->context->language->id) as $country) {
             $countryList[] = array('id' => $country['id_country'], 'name' => $country['name']);
         }
         $stateList = array();
-        $stateList[] = array('id' => '0', 'name' => $this->trans('Choose your state (if applicable)', array(), 'Admin.ShopParemeters.Feature'));
+        $stateList[] = array('id' => '0', 'name' => $this->trans('Choose your state (if applicable)', array(), 'Admin.ShopParameters.Feature'));
         foreach (State::getStates($this->context->language->id) as $state) {
             $stateList[] = array('id' => $state['id_state'], 'name' => $state['name']);
         }
 
         $formFields = array(
             'PS_SHOP_NAME' => array(
-                'title' => $this->trans('Shop name', array(), 'Admin.ShopParemeters.Feature'),
-                'hint' => $this->trans('Displayed in emails and page titles.', array(), 'Admin.ShopParemeters.Feature'),
+                'title' => $this->trans('Shop name', array(), 'Admin.ShopParameters.Feature'),
+                'hint' => $this->trans('Displayed in emails and page titles.', array(), 'Admin.ShopParameters.Feature'),
                 'validation' => 'isGenericName',
                 'required' => true,
                 'type' => 'text',
                 'no_escape' => true,
             ),
-            'PS_SHOP_EMAIL' => array('title' => $this->trans('Shop email', array(), 'Admin.ShopParemeters.Feature'),
-                'hint' => $this->trans('Displayed in emails sent to customers.', array(), 'Admin.ShopParemeters.Help'),
+            'PS_SHOP_EMAIL' => array('title' => $this->trans('Shop email', array(), 'Admin.ShopParameters.Feature'),
+                'hint' => $this->trans('Displayed in emails sent to customers.', array(), 'Admin.ShopParameters.Help'),
                 'validation' => 'isEmail',
                 'required' => true,
                 'type' => 'text'
             ),
             'PS_SHOP_DETAILS' => array(
-                'title' => $this->trans('Registration number', array(), 'Admin.ShopParemeters.Feature'),
-                'hint' => $this->trans('Shop registration information (e.g. SIRET or RCS).', array(), 'Admin.ShopParemeters.Help'),
+                'title' => $this->trans('Registration number', array(), 'Admin.ShopParameters.Feature'),
+                'hint' => $this->trans('Shop registration information (e.g. SIRET or RCS).', array(), 'Admin.ShopParameters.Help'),
                 'validation' => 'isGenericName',
                 'type' => 'textarea',
                 'cols' => 30,
                 'rows' => 5
             ),
             'PS_SHOP_ADDR1' => array(
-                'title' => $this->trans('Shop address line 1', array(), 'Admin.ShopParemeters.Feature'),
+                'title' => $this->trans('Shop address line 1', array(), 'Admin.ShopParameters.Feature'),
                 'validation' => 'isAddress',
                 'type' => 'text'
             ),
             'PS_SHOP_ADDR2' => array(
-                'title' => $this->trans('Shop address line 2', array(), 'Admin.ShopParemeters.Feature'),
+                'title' => $this->trans('Shop address line 2', array(), 'Admin.ShopParameters.Feature'),
                 'validation' => 'isAddress',
                 'type' => 'text'
             ),
