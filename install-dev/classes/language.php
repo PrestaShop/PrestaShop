@@ -26,91 +26,106 @@
 
 class InstallLanguage
 {
-    /**
-     * @var string Current language folder
-     */
-    protected $path;
-
-    /**
-     * @var string Current language iso
-     */
-    protected $iso;
-
-    /**
-     * @var array Cache list of installer translations for this language
-     */
-    protected $data;
-
-    protected $fixtures_data;
-
-    /**
-     * @var array Cache list of informations in language.xml file
-     */
-    protected $meta;
-
-    /**
-     * @var array Cache list of countries for this language
-     */
-    protected $countries;
+    public $id;
+    public $name;
+    public $locale;
+    public $language_code;
+    public $is_rtl;
+    public $date_format_lite;
+    public $date_format_full;
+    public $countries;
 
     public function __construct($iso)
     {
-        $this->path = _PS_INSTALL_LANGS_PATH_.$iso.'/';
-        $this->iso = $iso;
+        $xmlPath = _PS_INSTALL_LANGS_PATH_.$iso.'/';
+        $this->setPropertiesFromXml($xmlPath);
+        $this->is_rtl = ($this->is_rtl === 'true') ? true : false;
     }
 
-    /**
-     * Get iso for current language
-     *
-     * @return string
-     */
-    public function getIso()
+    public function setPropertiesFromXml($xmlPath)
     {
-        return $this->iso;
-    }
-
-    /**
-     * Get an information from language.xml file (E.g. $this->getMetaInformation('name'))
-     *
-     * @param string $key
-     * @return string
-     */
-    public function getMetaInformation($key)
-    {
-        if (!is_array($this->meta)) {
-            $this->meta = array();
-            $xml = @simplexml_load_file($this->path.'language.xml');
-            if ($xml) {
-                foreach ($xml->children() as $node) {
-                    $this->meta[$node->getName()] = (string)$node;
-                }
+        $xml = @simplexml_load_file($xmlPath.'/language.xml');
+        if ($xml) {
+            foreach ($xml->children() as $node) {
+                $this->{$node->getName()} = (string)$node;
             }
         }
-
-        return isset($this->meta[$key]) ? $this->meta[$key] : null;
     }
 
-    public function getTranslation($key, $type = 'translations')
+    /**
+     * Get name
+     *
+     * @return mixed
+     */
+    public function getName()
     {
-        if (!is_array($this->data)) {
-            $this->data = file_exists($this->path.'install.php') ? include($this->path.'install.php') : array();
-        }
+        return $this->name;
+    }
 
-        return isset($this->data[$type][$key]) ? $this->data[$type][$key] : null;
+    /**
+     * Get locale
+     *
+     * @return mixed
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Get language_code
+     *
+     * @return mixed
+     */
+    public function getLanguageCode()
+    {
+        return $this->language_code;
+    }
+
+    /**
+     * Get is_rtl
+     *
+     * @return mixed
+     */
+    public function isRtl()
+    {
+        return $this->is_rtl;
+    }
+
+    /**
+     * Get date_format_lite
+     *
+     * @return mixed
+     */
+    public function getDateFormatLite()
+    {
+        return $this->date_format_lite;
+    }
+
+    /**
+     * Get date_format_full
+     *
+     * @return mixed
+     */
+    public function getDateFormatFull()
+    {
+        return $this->date_format_full;
     }
 
     public function getCountries()
     {
         if (!is_array($this->countries)) {
             $this->countries = array();
-            if (file_exists($this->path.'data/country.xml')) {
-                if ($xml = @simplexml_load_file($this->path.'data/country.xml')) {
+            $filename = _PS_INSTALL_LANGS_PATH_.$this->language_code.'/data/country.xml';
+            if (file_exists($filename)) {
+                if ($xml = @simplexml_load_file($filename)) {
                     foreach ($xml->country as $country) {
                         $this->countries[strtolower((string)$country['id'])] = (string)$country->name;
                     }
                 }
             }
         }
+
         return $this->countries;
     }
 }

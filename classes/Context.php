@@ -356,7 +356,9 @@ class ContextCore
                 list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
 
                 $this->translator->addResource($format, $file, $locale, $domain);
-                $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
+                if (!is_a($this->language, 'InstallLanguage')) {
+                    $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
+                }
             }
         }
 

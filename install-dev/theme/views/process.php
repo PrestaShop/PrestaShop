@@ -39,7 +39,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 		<p><?php echo $this->translator->trans('Please remember your login information:', array(), 'Install'); ?></p>
 		<table cellpadding="0" cellspacing="0" border="0" id="resultInstall" width="620">
 			<tr class="odd">
-				<td class="label"><?php echo $this->translator->trans('E-mail') ?></td>
+				<td class="label"><?php echo $this->translator->trans('E-mail', array(), 'Install') ?></td>
 				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_email) ?></td>
 				<td rowspan="2" class="print" onclick="$('#password_content').html('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); window.print();">
 					<img src="theme/img/print.png" alt="" style="vertical-align:top">
@@ -59,7 +59,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 
 		<h3 class="infosBlock">
 			<?php echo $this->translator->trans('For security purposes, you must delete the "install" folder.', array(), 'Install'); ?>
-			<a href="<?php echo $this->translator->trans('http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation') ?>" target="_blank"><img src="theme/img/help.png" /></a>
+			<a href="<?php echo $this->translator->trans('http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation', array(), 'Install') ?>" target="_blank"><img src="theme/img/help.png" /></a>
 		</h3>
 
 		<div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open(admin)">
@@ -72,10 +72,10 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 		</div>
 		<div id="foBlock" class="blockInfoEnd last clearfix" onclick="window.open('../')" />
 			<img src="theme/img/visu_foBlock.png" alt="" />
-			<h3><?php echo $this->translator->trans('Front Office'); ?></h3>
-			<p class="description"><?php echo $this->translator->trans('Discover your store as your future customers will see it!') ?></p>
+			<h3><?php echo $this->translator->trans('Front Office', array(), 'Install'); ?></h3>
+			<p class="description"><?php echo $this->translator->trans('Discover your store as your future customers will see it!', array(), 'Install') ?></p>
 			<p>
-				<a class="FO" target="_blank"><span><?php echo $this->translator->trans('Discover your store') ?></span></a>
+				<a class="FO" target="_blank"><span><?php echo $this->translator->trans('Discover your store', array(), 'Install') ?></span></a>
 			</p>
 		</div>
 	</div>

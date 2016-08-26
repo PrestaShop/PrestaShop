@@ -11,7 +11,7 @@
 	<link rel="shortcut icon" href="theme/img/favicon.ico" />
 	<link rel="stylesheet" type="text/css" media="all" href="theme/view.css" />
 
-	<?php if (($this->language->getLanguage()->getMetaInformation('is_rtl')) == 'true'): ?>
+	<?php if ($this->language->getLanguage()->isRtl() == 'true'): ?>
 		<link rel="stylesheet" type="text/css" media="all" href="theme/rtl.css" />
 	<?php endif; ?>
 

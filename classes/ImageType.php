@@ -181,4 +181,14 @@ class ImageTypeCore extends ObjectModel
             return $name_without_theme_name.'_default';
         }
     }
+
+    public static function getAll()
+    {
+        $context = Context::getContext();
+        if (isset($context->shop->theme)) {
+            return $context->shop->theme->get('image_types');
+        }
+
+        return array();
+    }
 }

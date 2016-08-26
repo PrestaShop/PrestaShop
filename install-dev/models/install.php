@@ -116,7 +116,7 @@ class InstallModelInstall extends InstallAbstractModel
                     'cookie_iv' =>  $cookie_iv,
                     'ps_creation_date' => date('Y-m-d'),
                     'secret' => $secret,
-                    'locale' => $this->language->getLanguage()->getMetaInformation('locale')
+                    'locale' => $this->language->getLanguage()->getLocale(),
                 )
             )
         );

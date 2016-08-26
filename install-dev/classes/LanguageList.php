@@ -72,10 +72,16 @@ class LanguageList
 
         // Load other languages
         foreach ((new Finder)->files()->name('language.xml')->in(_PS_INSTALL_LANGS_PATH_) as $langFile) {
-            $language = simplexml_load_file($langFile->getRealPath());
             $this->languages[$langFile->getRelativePath()] = new InstallLanguage($langFile->getRelativePath());
         }
-        uasort($this->languages, 'ps_usort_languages');
+        uasort($this->languages, function ($a, $b) {
+            $aname = $a->getName();
+            $bname = $b->getName();
+            if ($aname == $bname) {
+                return 0;
+            }
+            return ($aname < $bname) ? -1 : 1;
+        });
     }
 
     /**
@@ -130,20 +136,6 @@ class LanguageList
     }
 
     /**
-     * Get an information from language (phone, links, etc.)
-     *
-     * @param string $key Information identifier
-     */
-    public function getInformation($key, $with_default = true)
-    {
-        $information = $this->getLanguage()->getTranslation($key, 'informations');
-        if (is_null($information) && $with_default) {
-            return $this->getLanguage(self::DEFAULT_ISO)->getTranslation($key, 'informations');
-        }
-        return $information;
-    }
-
-    /**
      * Get list of countries for current language
      *
      * @return array
@@ -194,14 +186,4 @@ class LanguageList
         }
         return false;
     }
-}
-
-function ps_usort_languages($a, $b)
-{
-    $aname = $a->getMetaInformation('name');
-    $bname = $b->getMetaInformation('name');
-    if ($aname == $bname) {
-        return 0;
-    }
-    return ($aname < $bname) ? -1 : 1;
 }
