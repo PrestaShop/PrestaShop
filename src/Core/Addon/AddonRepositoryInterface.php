@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Addon;
 interface AddonRepositoryInterface
 {
     /**
-     * @param $name theme name
+     * @param string $name theme name
      * @return AddonInterface the theme or module
      */
     public function getInstanceByName($name);

@@ -621,6 +621,9 @@ class LanguageCore extends ObjectModel
 
     public static function getLanguage($id_lang)
     {
+        if (!self::$_LANGUAGES) {
+            Language::loadLanguages();
+        }
         if (!array_key_exists((int) $id_lang, self::$_LANGUAGES)) {
             return false;
         }
@@ -637,6 +640,9 @@ class LanguageCore extends ObjectModel
      */
     public static function getIsoById($id_lang)
     {
+        if (!self::$_LANGUAGES) {
+            Language::loadLanguages();
+        }
         if (isset(self::$_LANGUAGES[(int) $id_lang]['iso_code'])) {
             return self::$_LANGUAGES[(int) $id_lang]['iso_code'];
         }

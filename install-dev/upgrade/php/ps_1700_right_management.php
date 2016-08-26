@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-function ps_1702_right_management()
+function ps_1700_right_management()
 {
     $actions = array('CREATE', 'READ', 'UPDATE', 'DELETE');
     
@@ -48,7 +48,7 @@ function ps_1702_right_management()
     $accessObject = new Access;
     
     // Tabs
-    $oldAccess = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'access_old`');
+    $oldAccess = Db::getInstance()->executeS('SELECT a.* FROM `'._DB_PREFIX_.'access_old` a JOIN `'._DB_PREFIX_.'tab` USING (id_tab)');
     foreach ($oldAccess as $currOldAccess) {
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
             if (array_key_exists($action, $currOldAccess) && $currOldAccess[$action] == '1') {
@@ -63,13 +63,13 @@ function ps_1702_right_management()
     }
     
     // Modules
-    $oldAccess = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module_access_old`');
+    $oldAccess = Db::getInstance()->executeS('SELECT m.* FROM `'._DB_PREFIX_.'module_access_old` m JOIN  `'._DB_PREFIX_.'module` USING (id_module)');
     foreach ($oldAccess as $currOldAccess) {
         foreach (array('configure', 'view', 'uninstall') as $action) {
             if (array_key_exists($action, $currOldAccess) && $currOldAccess[$action] == '1') {
-                $accessObject->updateLgcAccess(
+                $accessObject->updateLgcModuleAccess(
                     $currOldAccess['id_profile'],
-                    $currOldAccess['id_tab'],
+                    $currOldAccess['id_module'],
                     $action,
                     true
                 );

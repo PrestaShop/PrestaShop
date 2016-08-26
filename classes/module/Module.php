@@ -783,6 +783,29 @@ abstract class ModuleCore
     }
 
     /**
+     * This function disable all module $name. If an $name is an array,
+     * this will disable all of them
+     *
+     * @param array|string $name
+     * @return true if succeed
+     * @since 1.7
+     */
+    public static function disableAllByName($name)
+    {
+        // If $name is not an array, we set it as an array
+        if (!is_array($name)) {
+            $name = array($name);
+        }
+        $res = true;
+        // Disable each module
+        foreach ($name as $n) {
+            $sql = 'DELETE `'._DB_PREFIX_.'module_shop` FROM `'._DB_PREFIX_.'module_shop` JOIN `'._DB_PREFIX_.'module` USING (id_module) WHERE `name` = "'.pSQL($n).'"';
+            $res &= Db::getInstance()->execute($sql);
+        }
+        return $res;
+    }
+
+    /**
      * This function disable module $name. If an $name is an array,
      * this will disable all of them
      *

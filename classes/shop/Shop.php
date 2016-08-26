@@ -488,7 +488,9 @@ class ShopCore extends ObjectModel
         $context = Context::getContext();
         $db = Db::getInstance();
         $themeRepository = (new PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder($context, $db))->buildRepository($this);
-
+        if (empty($this->theme_name)) {
+            $this->theme_name = 'classic';
+        }
         $this->theme = $themeRepository->getInstanceByName($this->theme_name);
     }
 

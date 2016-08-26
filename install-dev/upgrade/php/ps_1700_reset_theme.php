@@ -1,4 +1,5 @@
 <?php
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 /**
  * 2007-2015 PrestaShop
  *
@@ -24,21 +25,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Cldr\Composer\Hook;
-
-/* Redefine REQUEST_URI */
-$_SERVER['REQUEST_URI'] = '/install/index_cli.php';
-require_once dirname(__FILE__).'/init.php';
-require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
-require_once _PS_INSTALL_PATH_.'classes/datas.php';
-ini_set('memory_limit', '128M');
-try {
-    require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
-    InstallControllerConsole::execute($argc, $argv);
-    echo '-- Installation successful! --'."\n";
-    Hook::init(null);
-    exit(0);
-} catch (PrestashopInstallerException $e) {
-    $e->displayMessage();
+function ps_1700_reset_theme()
+{
+    $theme = (new ThemeManagerBuilder(Context::getContext(), Db::getInstance()))->build();
+    $theme->reset('classic');
 }
-exit(1);
