@@ -357,17 +357,42 @@ var featuresCollection = (function() {
       });
 
       /** On feature selector event change, refresh possible values list */
-      $(document).on('change', '.feature-collection select.feature-selector', function() {
-        var selector = $(this).parent().parent().parent().find('.feature-value-selector');
-        $.ajax({
-          url: $(this).attr('data-action') + '/' + $(this).val(),
-          success: function(response) {
-            selector.empty();
-            $.each(response, function(key, val) {
-              selector.append($('<option></option>').attr('value', key).text(val));
-            });
-          }
-        });
+      $(document).on('change', '.feature-collection select.feature-selector', function(event) {
+        var that = event.currentTarget;
+        var $row = $($(that).parents('.row')[0]);
+        var $selector = $row.find('.feature-value-selector');
+
+        if('' !== $(this).val()) {
+          $.ajax({
+            url: $(this).attr('data-action') + '/' + $(this).val(),
+            success: function(response) {
+              $selector.prop('disabled', response.length === 0);
+              $selector.empty();
+              $.each(response, function(key, val) {
+                // the placeholder shouldn't be posted.
+                if ('0' == key) {
+                  key = '';
+                }
+                $selector.append($('<option></option>').attr('value', key).text(val));
+              });
+            }
+          });
+        }
+      });
+
+      var $featuresContainer = $('#features-content');
+
+      $featuresContainer.on('change', '.row select, .row input[type="text"]', (event) => {
+        var that = event.currentTarget;
+        var $row = $($(that).parents('.row')[0]);
+        var $definedValueSelector = $row.find('.feature-value-selector');
+        var $customValueSelector = $row.find('input[type=text]');
+
+        // if feature has changed we need to reset values
+        if ($(that).hasClass('feature-selector')) {
+          $customValueSelector.val('');
+          $definedValueSelector.val('');
+        }
       });
     }
   };
@@ -613,7 +638,7 @@ var specificPrices = (function() {
       }
     });
   }
-  
+
   /**
    * Because all "forms" are encapsulated in a global form, we just can't use reset button
    * Reset all subform inputs values
