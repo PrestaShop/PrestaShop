@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-class PdfInvoiceControllerCore extends FrontController
+class PdfInvoiceControllerCore extends PdfFrontController
 {
     public $php_self = 'pdf-invoice';
     protected $display_header = false;
@@ -41,13 +40,13 @@ class PdfInvoiceControllerCore extends FrontController
             Tools::redirect('index.php?controller=authentication&back=pdf-invoice');
         }
 
-        if (!(int)Configuration::get('PS_INVOICE')) {
+        if (!(int) Configuration::get('PS_INVOICE')) {
             die(Tools::displayError('Invoices are disabled in this shop.'));
         }
 
-        $id_order = (int)Tools::getValue('id_order');
+        $id_order = (int) Tools::getValue('id_order');
         if (Validate::isUnsignedId($id_order)) {
-            $order = new Order((int)$id_order);
+            $order = new Order((int) $id_order);
         }
 
         if (!isset($order) || !Validate::isLoadedObject($order)) {
