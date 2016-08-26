@@ -89,8 +89,8 @@ class InstallModelInstall extends InstallAbstractModel
         }
 
         $secret = Tools::passwdGen(56);
-        $cookie_key = Tools::passwdGen(8);
-        $cookie_iv = Tools::passwdGen(56);
+        $cookie_key = Tools::passwdGen(56);
+        $cookie_iv = Tools::passwdGen(8);
         $database_port = null;
 
         $splits = preg_split('#:#', $database_host);

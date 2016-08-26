@@ -22,6 +22,4 @@ parameters:
     ps_caching: CacheMemcache
     ps_cache_enable: false
     ps_creation_date: ~
-    cookie_key: ThisTokenIsNotSoSecretChangeIt
-    cookie_iv: ThisTokenIsNotSoSecretChangeIt
     locale: en-US

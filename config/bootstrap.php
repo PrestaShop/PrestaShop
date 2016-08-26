@@ -63,16 +63,21 @@ if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)
 $lastParametersModificationTime = (int)@filemtime($phpParametersFilepath);
 
 if ($lastParametersModificationTime) {
-    $lastParametersCacheModificationTime = (int)@filemtime(_PS_CACHE_DIR_. 'appParameters.php');
+    $cachedParameters = _PS_CACHE_DIR_. 'appParameters.php';
+
+    $lastParametersCacheModificationTime = (int)@filemtime($cachedParameters);
     if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {
             $config = require($phpParametersFilepath);
-            $exportPhpConfigFile($config, _PS_CACHE_DIR_ .'appParameters.php');
+            $exportPhpConfigFile($config, $cachedParameters);
+        } elseif (file_exists($yamlParametersFilepath)) {
+            $config = Yaml::parse($yamlParametersFilepath);
+            $exportPhpConfigFile($config, $cachedParameters);
         }
     }
 
-    $config = require_once _PS_CACHE_DIR_ .'appParameters.php';
+    $config = require_once _PS_CACHE_DIR_ . 'appParameters.php';
 
     $database_host = $config['parameters']['database_host'];
 
@@ -88,8 +93,21 @@ if ($lastParametersModificationTime) {
     define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
     define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
     define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
-    define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
-    define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
+
+    if (array_key_exists('cookie_key', $config['parameters'])) {
+        define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
+    } else {
+        // Define cookie key if missing to prevent failure in composer post-install script
+        define('_COOKIE_KEY_', Tools::passwdGen(56));
+    }
+
+    if (array_key_exists('cookie_iv', $config['parameters'])) {
+        define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
+    } else {
+        // Define cookie IV if missing to prevent failure in composer post-install script
+        define('_COOKIE_IV_', Tools::passwdGen(8));
+    }
+
     define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
 
     if (isset($config['parameters']['_rijndael_key']) && isset($config['parameters']['_rijndael_iv'])) {
