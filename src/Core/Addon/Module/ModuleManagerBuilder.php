@@ -190,8 +190,15 @@ class ModuleManagerBuilder
                 self::$cacheProvider
             );
 
+            self::$translator = Context::getContext()->getTranslator();
             self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
             self::$legacyLogger = new LegacyLogger();
+            self::$moduleDataUpdater = new ModuleDataUpdater(
+                self::$addonsDataProvider,
+                self::$adminModuleDataProvider,
+                Context::getContext(),
+                self::$legacyLogger,
+                self::$translator);
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
         }
     }
