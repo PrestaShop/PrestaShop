@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import setUpDelivery from './checkout-delivery'
 
 function collapsePaymentOptions() {
   $('.js-additional-information, .js-payment-option-form').hide();
@@ -57,31 +58,16 @@ function confirmPayment () {
   }
 }
 
-function refreshDeliveryOptions (event) {
-  let params = $('#delivery-method').serialize();
-  $.post($('#delivery-method').data('url-update'), params).then(function (resp) {
-    $('#checkout-cart-summary').replaceWith(resp.preview);
-  });
-}
-
-
-}
-
 function setupCheckoutScripts () {
   $('#payment-confirmation button').on('click', confirmPayment);
   $('#payment-section input[type="checkbox"][disabled]').attr('disabled', false);
-  $('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
+  setUpDelivery();
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
 
   $('.js-edit-addresses').on('click', (event) => {
     event.stopPropagation();
     $('#checkout-addresses-step').trigger('click');
-  });
-
-  $('.js-edit-delivery').on('click', (event) => {
-    event.stopPropagation();
-    $('#checkout-delivery-step').trigger('click');
   });
 
   changeCheckoutStep();
