@@ -111,9 +111,9 @@
 	
 	__webpack_require__(79);
 	
-	__webpack_require__(80);
-	
 	__webpack_require__(81);
+	
+	__webpack_require__(80);
 	
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
@@ -17781,6 +17781,36 @@
 
 /***/ },
 /* 80 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _prestashop = __webpack_require__(66);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	_prestashop2['default'].blockcart = _prestashop2['default'].blockcart || {};
+	_prestashop2['default'].blockcart.showModal = function (html) {
+	  var $modal = (0, _jquery2['default'])('#blockcart-modal');
+	  if ($modal.length) {
+	    $modal.remove();
+	  }
+	  (0, _jquery2['default'])('body').append(html);
+	  (0, _jquery2['default'])('#blockcart-modal').modal('show').on('hidden.bs.modal', function (e) {
+	    _prestashop2['default'].emit('product updated', {
+	      reason: e.currentTarget.dataset
+	    });
+	  });
+	};
+
+/***/ },
+/* 81 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -17918,36 +17948,6 @@
 	    });
 	  };
 	})(jQuery);
-
-/***/ },
-/* 81 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _prestashop = __webpack_require__(66);
-	
-	var _prestashop2 = _interopRequireDefault(_prestashop);
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	_prestashop2['default'].blockcart = _prestashop2['default'].blockcart || {};
-	_prestashop2['default'].blockcart.showModal = function (html) {
-	  var $modal = (0, _jquery2['default'])('#blockcart-modal');
-	  if ($modal.length) {
-	    $modal.remove();
-	  }
-	  (0, _jquery2['default'])('body').append(html);
-	  (0, _jquery2['default'])('#blockcart-modal').modal('show').on('hidden.bs.modal', function (e) {
-	    _prestashop2['default'].emit('product updated', {
-	      reason: e.currentTarget.dataset
-	    });
-	  });
-	};
 
 /***/ }
 /******/ ]);

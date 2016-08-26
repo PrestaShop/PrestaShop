@@ -59,6 +59,9 @@ class TemplateFinderCore
                 if (is_file($dir.$tpl.$this->extension)) {
                     return $tpl.$this->extension;
                 }
+                if (is_file($dir.$tpl) && false !== strpos($tpl, $this->extension)) {
+                    return $tpl;
+                }
             }
         }
 
