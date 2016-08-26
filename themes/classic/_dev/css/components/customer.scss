@@ -88,7 +88,6 @@
 }
 /*** Addresses page ***/
 .page-addresses {
-  margin: 0 rem(-15px);
   .address {
     @include box-shadow;
     background: white;
@@ -209,30 +208,32 @@
 }
 /*** My account landing page ***/
 .page-my-account {
-  #wrapper .links {
-    margin: 0 rem(-15px);
-    a {
-      @include customer-area-base-box;
-      text-align: center;
-      display: inline-block;
-      font-size: $base-font-size;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: $gray-dark;
-      width: 100%;
-      margin-bottom: rem(30px);
-      padding: 1.6rem;
-      i {
-        display: block;
-        font-size: 2.6rem;
+  #content {
+    .links {
+      margin: 0 rem(-15px);
+      a {
+        @include customer-area-base-box;
+        text-align: center;
+        display: inline-block;
+        font-size: $base-font-size;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: $gray-dark;
         width: 100%;
-        color: $gray-darker;
-        padding-bottom: 3.4rem;
-      }
-      &:hover {
-        color: $gray-darker;
+        margin-bottom: rem(30px);
+        padding: 1.6rem;
         i {
-          color: $brand-primary;
+          display: block;
+          font-size: 2.6rem;
+          width: 100%;
+          color: $gray-darker;
+          padding-bottom: 3.4rem;
+        }
+        &:hover {
+          color: $gray-darker;
+          i {
+            color: $brand-primary;
+          }
         }
       }
     }

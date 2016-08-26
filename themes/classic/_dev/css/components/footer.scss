@@ -185,12 +185,11 @@
         padding: rem(10px);
         border-bottom: 1px solid $gray-lighter;
         cursor: pointer;
+        .collapse-icons .remove {
+          display: none;
+        }
       }
-      .navbar-toggler {
-        display: inline-block;
-        padding: 0;
-      }
-      .collapse-icons[aria-expanded="true"] {
+      .title[aria-expanded="true"] .collapse-icons {
         .add {
           display: none;
         }
@@ -198,8 +197,9 @@
           display: block;
         }
       }
-      .collapse-icons .remove {
-        display: none;
+      .navbar-toggler {
+        display: inline-block;
+        padding: 0;
       }
       .collapse {
         display: none;

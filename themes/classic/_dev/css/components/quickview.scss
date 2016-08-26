@@ -1,6 +1,7 @@
 .quickview {
   .modal-dialog {
-    width: rem(1024px);
+    width: calc(100% - 30px);
+    max-width: rem(1024px);
   }
   .modal-content {
     background: $gray-light;

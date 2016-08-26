@@ -22,6 +22,7 @@ import prestashop from 'prestashop';
 import EventEmitter from 'events';
 
 import './lib/bootstrap-filestyle.min';
+import './lib/jquery.scrollbox.min';
 
 import './components/block-cart';
 
