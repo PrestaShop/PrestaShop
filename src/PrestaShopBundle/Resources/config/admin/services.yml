@@ -85,3 +85,7 @@ services:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:
             - "@prestashop.adapter.legacy.context"
+
+    #UTILS
+    prestashop.utils.zip_manager:
+        class: PrestaShopBundle\Utils\ZipManager

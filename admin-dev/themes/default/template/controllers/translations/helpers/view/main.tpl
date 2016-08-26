@@ -197,7 +197,7 @@
 			</div>
 		</div>
 	</form>
-	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="index.php/international/translations/extract" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-upload"></i>
@@ -220,7 +220,7 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="export-theme">{l s='Select your theme'}</label>
 				<div class="col-lg-4">
-					<select name="theme" id="export-theme">
+					<select name="theme-name" id="export-theme">
 						{foreach $themes as $theme}
 							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}

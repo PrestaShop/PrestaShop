@@ -18,3 +18,9 @@ admin_international_translations_edit:
         translation_key: \w+
         translation_value: \w+
 
+admin_international_translations_extract_theme:
+    path: /translations/extract
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:extractTheme
+        _legacy_controller: AdminTranslations
