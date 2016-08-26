@@ -93,6 +93,22 @@ class CustomerFormatterCore implements FormFormatterInterface
             ->setRequired(true)
         ;
 
+        if (Configuration::get('PS_B2B_ENABLE')) {
+            $format['company'] = (new FormField)
+                ->setName('company')
+                ->setType('text')
+                ->setLabel($this->translator->trans(
+                    'Company', [], 'Shop.Forms.Labels'
+                ));
+            $format['siret'] = (new FormField)
+                ->setName('siret')
+                ->setType('text')
+                ->setLabel($this->translator->trans(
+                    // Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.
+                    'Identification number', [], 'Shop.Forms.Labels'
+                ));
+        }
+
         $format['email'] = (new FormField)
             ->setName('email')
             ->setType('email')
