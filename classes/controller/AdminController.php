@@ -1910,7 +1910,7 @@ class AdminControllerCore extends Controller
     {
         $tips = array(
             'order' => array(
-                $this->l('Your next order could be hidding there!'),
+                $this->l('Your next order could be hiding there!'),
                 $this->l('Did you check your conversion rate lately?'),
                 $this->l('How about some seasonal discounts?'),
             ),

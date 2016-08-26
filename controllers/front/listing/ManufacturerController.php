@@ -145,7 +145,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['text'] = $manufacturer['short_description'];
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['image'] = _THEME_MANU_DIR_.$manufacturer['id_manufacturer'].'-medium_default.jpg';
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = $this->context->link->getmanufacturerLink($manufacturer['id_manufacturer']);
-            $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? sprintf($this->trans('%s products', array(), 'Shop.Theme.Catalog'), $manufacturer['nb_products']) : sprintf($this->trans('% product', array(), 'Shop.Theme.Catalog'), $manufacturer['nb_products']);
+            $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? ($this->trans('%number% products', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog')) : sprintf($this->trans('%number% product', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog'));
         }
 
         return $manufacturers_for_display;

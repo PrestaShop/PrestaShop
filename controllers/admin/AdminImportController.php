@@ -696,8 +696,7 @@ class AdminImportControllerCore extends AdminController
                     $_FILES['file']['error'] = $this->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.', array(), 'Admin.Design.Notification');
                     break;
                 case UPLOAD_ERR_FORM_SIZE:
-                    $_FILES['file']['error'] = $this->trans('The uploaded file exceeds the post_max_size directive in php.ini.
-						If your server configuration allows it, you may add a directive in your .htaccess, for example:', array(), 'Admin.Design.Notification')
+                    $_FILES['file']['error'] = $this->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', array(), 'Admin.Design.Notification')
                     .'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
 					<code>php_value post_max_size 20M</code> '.
                     $this->trans('(click to open "Generators" page)', array(), 'Admin.Parameters.Notification').'</a>';
@@ -2204,9 +2203,9 @@ class AdminImportControllerCore extends AdminController
             // stock available
             if (isset($product->depends_on_stock)) {
                 if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
-                    $this->warnings[] = sprintf($this->trans('Incorrect value for "depends on stock" for product %1$s ', array(), 'Admin.Parameters.Notification'), $product->name[$default_language_id]);
+                    $this->warnings[] = sprintf($this->trans('Incorrect value for "Depends on stock" for product %1$s ', array(), 'Admin.Parameters.Notification'), $product->name[$default_language_id]);
                 } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management not enabled, cannot set "depends on stock" for product %1$s ', array(), 'Admin.Parameters.Notification'), $product->name[$default_language_id]);
+                    $this->warnings[] = sprintf($this->trans('Advanced stock management is not enabled, cannot set "Depends on stock" for product %1$s ', array(), 'Admin.Parameters.Notification'), $product->name[$default_language_id]);
                 } elseif (!$validateOnly) {
                     StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
                 }
@@ -2727,9 +2726,9 @@ class AdminImportControllerCore extends AdminController
             // stock available
             if (isset($info['depends_on_stock'])) {
                 if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1) {
-                    $this->warnings[] = sprintf($this->trans('Incorrect value for depends on stock for product %1$s ', array(), 'Admin.Notifications.Error'), $product->name[$default_language]);
+                    $this->warnings[] = sprintf($this->trans('Incorrect value for "Depends on stock" for product %1$s ', array(), 'Admin.Notifications.Error'), $product->name[$default_language]);
                 } elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management is not enabled, cannot set depends on stock %1$s ', array(), 'Admin.Parameters.Notification'), $product->name[$default_language]);
+                    $this->warnings[] = sprintf($this->trans('Advanced stock management is not enabled, cannot set "Depends on stock" for product %1$s ', array(), 'Admin.Parameters.Notification'), $product->name[$default_language]);
                 } elseif (!$validateOnly) {
                     StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
                 }
