@@ -78,9 +78,9 @@
 
 		<h4>{l s='What Should I Do?'}</h4>
 		
-		<p>{l s="If you trust or find the author of this module to be an active community member, you can proceed with the installation."}
+		<p>{l s="If you trust or find the author of this module to be an active community member, you can proceed with the installation."}</p>
 
-		<p>{l s="Otherwise you can look for similar modules on the official marketplace. [1]Click here to browse PrestaShop Addons[/1]." tags=['<a class="catalog-link" href="#">']}
+		<p>{l s="Otherwise you can look for similar modules on the official marketplace. [1]Click here to browse PrestaShop Addons[/1]." tags=['<a class="catalog-link" href="#">']}</p>
 
 	</div>
 
