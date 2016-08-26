@@ -1,8 +1,6 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
 
-import {psShowHide} from './common';
-
 function collapsePaymentOptions() {
   $('.js-additional-information, .js-payment-option-form').hide();
 }
@@ -66,15 +64,7 @@ function refreshDeliveryOptions (event) {
   });
 }
 
-function hideOrShow () {
-  var elm = this.getAttribute('data-action-target');
-  var show = this.checked;
 
-  if (show) {
-    $('body #'+elm).show();
-  } else {
-    $('body #'+elm).hide();
-  }
 }
 
 function setupCheckoutScripts () {
@@ -83,7 +73,6 @@ function setupCheckoutScripts () {
   $('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
-  $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
 
   $('.js-edit-addresses').on('click', (event) => {
     event.stopPropagation();
