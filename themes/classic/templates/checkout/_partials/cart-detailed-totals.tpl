@@ -12,6 +12,9 @@
             {/if}
           </span>
           <span class="value">{$subtotal.value}</span>
+          {if $subtotal.type === 'shipping'}
+              <div><small class="value">{hook h='displayCheckoutSubtotalDetails' subtotal=$subtotal}</small></div>
+          {/if}
         </div>
       {/if}
     {/foreach}
