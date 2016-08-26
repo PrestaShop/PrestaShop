@@ -148,7 +148,7 @@ function runScenario (scenario) {
           } else {
             it("should have an existing address pre-selected", function () {
               return browser
-                .waitForVisible('#checkout-addresses-step.-js-current')
+                .waitForVisible('#checkout-addresses-step.-current')
                 .isSelected('[name="id_address_delivery"]')
                 .should.become.true
               ;
@@ -188,7 +188,7 @@ function runScenario (scenario) {
             });
 
             it('should have gone to the next step after clicking on the button in the invoice address form', function () {
-              return browser.waitForVisible('#checkout-delivery-step.-js-current');
+              return browser.waitForVisible('#checkout-delivery-step.-current');
             });
           }
 
