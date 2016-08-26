@@ -43,8 +43,8 @@ class AdminAttachmentsControllerCore extends AdminController
         $this->addRowAction('view');
         $this->addRowAction('delete');
 
-        $this->_select = 'IFNULL(virtual.products, 0) as products';
-        $this->_join = 'LEFT JOIN (SELECT id_attachment, COUNT(*) as products FROM '._DB_PREFIX_.'product_attachment GROUP BY id_attachment) virtual ON a.id_attachment = virtual.id_attachment';
+        $this->_select = 'IFNULL(virtual_product_attachment.products, 0) as products';
+        $this->_join = 'LEFT JOIN (SELECT id_attachment, COUNT(*) as products FROM '._DB_PREFIX_.'product_attachment GROUP BY id_attachment) virtual_product_attachment ON a.id_attachment = virtual_product_attachment.id_attachment';
         $this->_use_found_rows = false;
 
         parent::__construct();
@@ -70,7 +70,7 @@ class AdminAttachmentsControllerCore extends AdminController
             'products' => array(
                 'title' => $this->trans('Associated with', array(), 'Admin.Catalog.Feature'),
                 'suffix' => $this->trans('product(s)', array(), 'Admin.Catalog.Feature'),
-                'filter_key' => 'virtual!products',
+                'filter_key' => 'virtual_product_attachment!products',
             ),
         );
 
