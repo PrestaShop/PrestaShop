@@ -30,7 +30,6 @@ class ConfigurationTestCore
         '/classes/log/index.php',
         '/classes/cache/index.php',
         '/config/index.php',
-        '/tools/tar/Archive_Tar.php',
         '/tools/pear/PEAR.php',
         '/controllers/admin/AdminLoginController.php',
         '/download/index.php',
@@ -44,7 +43,8 @@ class ConfigurationTestCore
         '/translations/export/index.php',
         '/webservice/dispatcher.php',
         '/upload/index.php',
-        '/index.php'
+        '/index.php',
+        '/vendor/autoload.php',
     );
 
     /**
