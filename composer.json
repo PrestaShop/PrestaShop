@@ -11,7 +11,7 @@
     "ext-zip": "*",
     "doctrine/doctrine-bundle": "1.5.2",
     "symfony/swiftmailer-bundle": "2.3.11",
-    "swiftmailer/swiftmailer": "5.4.1",
+    "swiftmailer/swiftmailer": "~5.4.3",
     "symfony/monolog-bundle": "2.8.2",
     "sensio/distribution-bundle": "4.0.6",
     "sensio/framework-extra-bundle": "3.0.10",
