@@ -105,9 +105,8 @@ class MediaCore
             // $html_content,
             // Media::getBackTrackLimit());
 
-            require_once(_PS_TOOL_DIR_.'minify_html/minify_html.class.php');
             $html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);
-            if (trim($minified_content = Minify_HTML::minify($html_content, array('cssMinifier', 'jsMinifier'))) != '') {
+            if (trim($minified_content = \Minify_HTML::minify($html_content, array('cssMinifier', 'jsMinifier'))) != '') {
                 $html_content = $minified_content;
             }
 
@@ -172,48 +171,43 @@ class MediaCore
     public static function packJS($js_content)
     {
         if (!empty($js_content)) {
-            require_once(_PS_TOOL_DIR_.'js_minify/jsmin.php');
             try {
-                $js_content = JSMin::minify($js_content);
+                $js_content = \JSMin::minify($js_content);
             } catch (Exception $e) {
                 if (_PS_MODE_DEV_) {
                     echo $e->getMessage();
                 }
+
                 return ';'.trim($js_content, ';').';';
             }
         }
+
         return ';'.trim($js_content, ';').';';
     }
 
-    public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
+    public static function minifyCSS($cssContent, $fileUri = false, &$importUrl = array())
     {
-        Media::$current_css_file = $fileuri;
+        Media::$current_css_file = $fileUri;
 
-        if (strlen($css_content) > 0) {
+        if (strlen($cssContent) > 0) {
+            $cssContent = \Minify_CSSmin::minify($cssContent);
             $limit  = Media::getBackTrackLimit();
-            $css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
-            $css_content = preg_replace_callback(Media::$pattern_callback, array('Media', 'replaceByAbsoluteURL'), $css_content, $limit);
-            $css_content = preg_replace('#\s+#', ' ', $css_content, $limit);
-            $css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
-            $css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
-            $css_content = str_replace(array(' {', '{ '), '{', $css_content);
-            $css_content = str_replace(', ', ',', $css_content);
-            $css_content = str_replace(array('} ', ' }', ';}'), '}', $css_content);
-            $css_content = str_replace(array(':0px', ':0em', ':0pt', ':0%'), ':0', $css_content);
-            $css_content = str_replace(array(' 0px', ' 0em', ' 0pt', ' 0%'), ' 0', $css_content);
-            $css_content = str_replace('\'images_ie/', '\'images/', $css_content);
-            $css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
+            $cssContent = preg_replace_callback(Media::$pattern_callback, array('Media', 'replaceByAbsoluteURL'), $cssContent, $limit);
+            $cssContent = str_replace('\'images_ie/', '\'images/', $cssContent);
+            $cssContent = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $cssContent);
+
             // Store all import url
-            preg_match_all('#@(import|charset) .*?;#i', $css_content, $m);
+            preg_match_all('#@(import|charset) .*?;#i', $cssContent, $m);
             for ($i = 0, $total = count($m[0]); $i < $total; $i++) {
                 if (isset($m[1][$i]) && $m[1][$i] == 'import') {
-                    $import_url[] = $m[0][$i];
+                    $importUrl[] = $m[0][$i];
                 }
-                $css_content = str_replace($m[0][$i], '', $css_content);
+                $cssContent = str_replace($m[0][$i], '', $cssContent);
             }
 
-            return trim($css_content);
+            return trim($cssContent);
         }
+
         return false;
     }
 

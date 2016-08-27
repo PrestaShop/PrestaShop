@@ -10,6 +10,7 @@
     "doctrine/orm": "~2.5.3",
     "ext-zip": "*",
     "doctrine/doctrine-bundle": "1.5.2",
+    "mrclay/minify": "~2.3.0",
     "symfony/swiftmailer-bundle": "2.3.11",
     "swiftmailer/swiftmailer": "5.4.1",
     "symfony/monolog-bundle": "2.8.2",
