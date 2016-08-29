@@ -971,7 +971,7 @@ class CartCore extends ObjectModel
         ));
 
         if ((int)$quantity <= 0) {
-            return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
+            return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization, 0, $auto_add_cart_rule);
         } elseif (!$product->available_for_order || (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_'))) {
             return false;
         } else {
@@ -1012,7 +1012,7 @@ class CartCore extends ObjectModel
 
                 /* Delete product from cart */
                 if ($new_qty <= 0) {
-                    return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
+                    return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization, 0, $auto_add_cart_rule);
                 } elseif ($new_qty < $minimal_quantity) {
                     return -1;
                 } else {
@@ -1249,7 +1249,7 @@ class CartCore extends ObjectModel
      * @param int $id_customization Customization id
      * @return bool result
      */
-    public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
+    public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0, $auto_add_cart_rule = true)
     {
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
@@ -1320,7 +1320,9 @@ class CartCore extends ObjectModel
             // refresh cache of self::_products
             $this->_products = $this->getProducts(true);
             CartRule::autoRemoveFromCart();
-            CartRule::autoAddToCart();
+            if ($auto_add_cart_rule) {
+                CartRule::autoAddToCart();
+            }
 
             return $return;
         }
