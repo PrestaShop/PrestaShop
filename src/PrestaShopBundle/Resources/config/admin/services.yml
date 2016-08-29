@@ -94,11 +94,11 @@ services:
         class: PrestaShopBundle\Utils\ZipManager
 
     #TRANSLATIONS
-    prestashop.translation.catalogue_factory:
-        class: PrestaShopBundle\Translation\CatalogueFactory
+    prestashop.translation.translations_factory:
+        class: PrestaShopBundle\Translation\TranslationsFactory
 
-    ps.catalogue_factory:
-        alias: "prestashop.translation.catalogue_factory"
+    ps.translations_factory:
+        alias: "prestashop.translation.translations_factory"
 
     prestashop.translation.backoffice_provider:
         class: PrestaShopBundle\Translation\Provider\BackOfficeProvider

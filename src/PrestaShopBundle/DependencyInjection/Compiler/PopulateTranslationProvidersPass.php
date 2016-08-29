@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class PopulateTranslationProvidersPass implements CompilerPassInterface
 {
-    const DEFINITION = 'prestashop.translation.catalogue_factory';
+    const DEFINITION = 'prestashop.translation.translations_factory';
     /**
      * {@inheritdoc}
      */

@@ -29,15 +29,57 @@ namespace PrestaShopBundle\Translation;
 
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 
-class CatalogueFactory
+/**
+ * This class returns a collection of translations, using locale and identifier.
+ * 
+ * Returns MessageCatalogue object or Translation tree array.
+ */
+class TranslationsFactory
 {
     private $providers = array();
 
+    /**
+     * Generates extract of global Catalogue, using domain's identifiers.
+     * 
+     * @return MessageCatalogue A MessageCatalogue instance.
+     */
     public function createCatalogue($identifier, $locale = 'en_US')
     {
         foreach ($this->providers as $provider) {
             if ($identifier === $provider->getIdentifier()) {
                 return $provider->setLocale($locale)->getMessageCatalogue();
+            }
+        }
+    }
+
+    /**
+     * Used to generate Translation tree in Back Office
+     * 
+     * @return array Translation tree structure.
+     */
+    public function createTree($identifier, $locale = 'en_US')
+    {
+        foreach ($this->providers as $provider) {
+            if ($identifier === $provider->getIdentifier()) {
+                // set locale
+                $provider->setLocale($locale);
+
+                $tree = $provider->getXliffCatalogue()->all();
+                $databaseTranslations = $provider->getDatabaseCatalogue()->all();
+
+                foreach ($databaseTranslations as $domain => $messages) {
+                    foreach ($messages as $translationKey => $translationValue) {
+                        $tree[$domain][$translationKey] = array(
+                            // Xliff-based translation stored for reset action
+                            'xlf' => $tree[$domain][$translationKey],
+                            'db' => $translationValue,
+                        );
+                    }
+                }
+
+                ksort($tree);
+
+                return $tree;
             }
         }
     }

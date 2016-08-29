@@ -92,8 +92,33 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getMessageCatalogue()
     {
-        $xlfCatalogue = $this->getCatalogueFromPaths($this->getDirectories(), $this->locale);
+        $xlfCatalogue = $this->getXliffCatalogue();
 
+        $databaseCatalogue = $this->getDatabaseCatalogue();
+
+        // Merge database catalogue to xliff catalogue
+        $xlfCatalogue->addCatalogue($databaseCatalogue);
+
+        return $xlfCatalogue;
+    }
+
+    /**
+     * Get the Catalogue from xliff files only.
+     * 
+     * @return MessageCatalogue A MessageCatalogue instance.
+     */
+    public function getXliffCatalogue()
+    {
+        return $this->getCatalogueFromPaths($this->getDirectories(), $this->locale);
+    }
+
+    /**
+     * Get the Catalogue from database only.
+     * 
+     * @return MessageCatalogue A MessageCatalogue instance.
+     */
+    public function getDatabaseCatalogue()
+    {
         $databaseCatalogue = new MessageCatalogue($this->locale);
 
         foreach ($this->getTranslationDomains() as $translationDomain) {
@@ -101,10 +126,7 @@ abstract class AbstractProvider implements ProviderInterface
             $databaseCatalogue->addCatalogue($domainCatalogue);
         }
 
-        // Merge database catalogue to xliff catalogue
-        $xlfCatalogue->addCatalogue($databaseCatalogue);
-
-        return $xlfCatalogue;
+        return $databaseCatalogue;
     }
 
     /**
