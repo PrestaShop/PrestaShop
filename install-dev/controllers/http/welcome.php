@@ -46,11 +46,13 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
         if (Tools::getValue('language')) {
             $this->session->lang = Tools::getValue('language');
             Language::downloadAndInstallLanguagePack($this->session->lang);
+            $this->clearCache();
             $this->redirect('welcome');
         }
 
-        if (!is_file(_PS_ROOT_DIR_.'/translations/'.$this->session->lang.'.gzip')) {
+        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_.'/translations/'.$this->session->lang.'.gzip')) {
             Language::downloadAndInstallLanguagePack($this->session->lang);
+            $this->clearCache();
             $this->redirect('welcome');
         }
     }
@@ -69,5 +71,12 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
         }
 
         $this->displayTemplate('welcome');
+    }
+
+    private function clearCache()
+    {
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+        $sf2Refresh->addCacheClear();
+        $sf2Refresh->execute();
     }
 }
