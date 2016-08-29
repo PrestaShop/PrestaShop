@@ -47,7 +47,7 @@ class NotificationCore
         $employee_infos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT id_last_order, id_last_customer_message, id_last_customer
 		FROM `'._DB_PREFIX_.'employee`
-		WHERE `id_employee` = '.(int)$cookie->id_employee);
+		WHERE `id_employee` = '.(int)$cookie->id_employee, false);
 
         foreach ($this->types as $type) {
             $notifications[$type] = Notification::getLastElementsIdsByType($type, $employee_infos['id_last_'.$type]);
