@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
 
-function setupMyCheckoutScripts() {
+function setUpCheckout() {
   if ($('.js-cancel-address').length !== 0) {
     $('.checkout-step:not(.js-current-step) .step-title').addClass('not-allowed');
   }
@@ -29,6 +29,6 @@ function setupMyCheckoutScripts() {
 
 $(document).ready(() => {
   if ($('body#checkout').length === 1) {
-    setupMyCheckoutScripts();
+    setUpCheckout();
   }
 });
