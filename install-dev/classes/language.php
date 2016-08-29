@@ -116,12 +116,15 @@ class InstallLanguage
     {
         if (!is_array($this->countries)) {
             $this->countries = array();
-            $filename = _PS_INSTALL_LANGS_PATH_.$this->language_code.'/data/country.xml';
-            if (file_exists($filename)) {
-                if ($xml = @simplexml_load_file($filename)) {
-                    foreach ($xml->country as $country) {
-                        $this->countries[strtolower((string)$country['id'])] = (string)$country->name;
-                    }
+            $filename = _PS_INSTALL_LANGS_PATH_.substr($this->language_code, 0, 2).'/data/country.xml';
+
+            if (!file_exists($filename)) {
+                $filename = _PS_INSTALL_LANGS_PATH_.'en/data/country.xml';
+            }
+
+            if ($xml = @simplexml_load_file($filename)) {
+                foreach ($xml->country as $country) {
+                    $this->countries[strtolower((string)$country['id'])] = (string)$country->name;
                 }
             }
         }
