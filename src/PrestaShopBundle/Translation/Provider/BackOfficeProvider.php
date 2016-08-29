@@ -65,4 +65,12 @@ class BackOfficeProvider extends AbstractProvider
         return $xlfCatalogue;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifier()
+    {
+        return 'back-office';
+    }
+
 }

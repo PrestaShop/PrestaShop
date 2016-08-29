@@ -19,40 +19,29 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @author    PrestaSho6 SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\Provider;
+namespace PrestaShopBundle\Translation;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
-interface ProviderInterface
+class CatalogueFactory
 {
-    /**
-     * @return string[] List of directories to parse
-     */
-    public function getDirectories();
+    private $providers = array();
 
-    /**
-     * @return string[] List of translation domains to get in database
-     */
-    public function getTranslationDomains();
+    public static function createCatalogue($identifier)
+    {
+        foreach ($this->providers as $provider) {
+            if ($identifier === $provider->getIdentifier()) {
+                return $provider->getMessageCatalogue();
+            }
+        }
+    }
 
-    /**
-     * @return string Locale used to build the MessageCatalogue
-     */
-    public function getLocale();
-
-    /**
-     * @return MessageCatalogue A provider must return a MessageCatalogue
-     */
-    public function getMessageCatalogue();
-    
-    /**
-     * @return string Unique identifier
-     */
-    public function getIdentifier();
+   public function addProvider(ProviderInterface $provider)
+   {
+       $this->providers[] = $provider;
+   }
 }

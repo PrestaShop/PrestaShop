@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2016 PrestaShop.
  *
@@ -24,35 +23,32 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShopBundle\DependencyInjection\Compiler;
 
-namespace PrestaShopBundle\Translation\Provider;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
-interface ProviderInterface
+/**
+ * Load every flagged Translation providers
+ */
+class PopulateTranslationProvidersPass implements CompilerPassInterface
 {
+    const DEFINITION = 'prestashop.translation.catalogue_factory';
     /**
-     * @return string[] List of directories to parse
+     * {@inheritdoc}
      */
-    public function getDirectories();
+    public function process(ContainerBuilder $container)
+    {
+        if (!$container->has(self::DEFINITION)) {
+            return;
+        }
 
-    /**
-     * @return string[] List of translation domains to get in database
-     */
-    public function getTranslationDomains();
+        $definition = $container->findDefinition(self::DEFINITION);
+        $taggedServices = $container->findTaggedServiceIds('ps.translation_provider');
 
-    /**
-     * @return string Locale used to build the MessageCatalogue
-     */
-    public function getLocale();
-
-    /**
-     * @return MessageCatalogue A provider must return a MessageCatalogue
-     */
-    public function getMessageCatalogue();
-    
-    /**
-     * @return string Unique identifier
-     */
-    public function getIdentifier();
+        foreach ($taggedServices as $id => $tags) {
+            $definition->addMethodCall('addProvider', array(new Reference($id)));
+        }
+    }
 }

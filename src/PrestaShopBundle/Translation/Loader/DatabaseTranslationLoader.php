@@ -59,7 +59,7 @@ class DatabaseTranslationLoader implements LoaderInterface
         ;
 
         $translations = $translationRepository
-            ->createNamedQuery('t')
+            ->createQueryBuilder('t')
             ->where('t.lang =:lang')
             ->andWhere('t.domain LIKE :domain')
             ->setParameters(array(
