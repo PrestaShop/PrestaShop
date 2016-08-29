@@ -17,8 +17,11 @@ $(document).ready(() => {
       productModal.on('hidden.bs.modal', function () {
         productModal.remove();
       });
+    }).fail((resp) => {
+      prestashop.emit('handleError', {eventType: 'clickQuickView', resp: resp});
     });
   });
+
   var productConfig = (qv) => {
     const MAX_THUMBS = 4;
     var $arrows = $('.js-arrows');
