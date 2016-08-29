@@ -12719,7 +12719,7 @@
 	__webpack_require__(70);
 	
 	(0, _jquery2['default'])(document).ready(function () {
-	  _prestashop2['default'].on('quickview clicked', function (elm) {
+	  _prestashop2['default'].on('clickQuickView', function (elm) {
 	    var data = {
 	      'action': 'quickview',
 	      'id_product': elm.dataset.idProduct,
@@ -12733,8 +12733,11 @@
 	      productModal.on('hidden.bs.modal', function () {
 	        productModal.remove();
 	      });
+	    }).fail(function (resp) {
+	      _prestashop2['default'].emit('handleError', { eventType: 'clickQuickView', resp: resp });
 	    });
 	  });
+	
 	  var productConfig = function productConfig(qv) {
 	    var MAX_THUMBS = 4;
 	    var $arrows = (0, _jquery2['default'])('.js-arrows');
