@@ -9,6 +9,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Configuration;
 use Language;
 use Link;
+use Tools;
 
 class ProductPresenter
 {
@@ -322,6 +323,18 @@ class ProductPresenter
         return $presentedProduct;
     }
 
+    private function addAttachmentsInformation($presentedProduct)
+    {
+        if (!isset($presentedProduct['attachments'])) {
+            return $presentedProduct;
+        }
+        foreach ($presentedProduct['attachments'] as &$attachment) {
+            $attachment['file_size_formatted'] = Tools::formatBytes($attachment['file_size'], 2);
+        }
+
+        return $presentedProduct;
+    }
+
     public function addQuantityInformation(
         array $presentedProduct,
         ProductPresentationSettings $settings,
@@ -422,6 +435,8 @@ class ProductPresenter
         } else {
             $presentedProduct['add_to_cart_url'] = null;
         }
+
+        $presentedProduct = $this->addAttachmentsInformation($presentedProduct);
 
         $presentedProduct = $this->addMainVariantsInformation(
             $presentedProduct,
