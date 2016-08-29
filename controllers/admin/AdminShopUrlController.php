@@ -455,7 +455,7 @@ class AdminShopUrlControllerCore extends AdminController
         $unallowed = str_replace('/', '', Tools::getValue('virtual_uri'));
         if ($unallowed == 'c' || $unallowed == 'img' || is_numeric($unallowed)) {
             $this->errors[] = $this->trans(
-                'A shop virtual URL can not be "%URL%"',
+                'A shop virtual URL cannot be "%URL%"',
                 array(
                     '%URL%' => $unallowed,
                 ),

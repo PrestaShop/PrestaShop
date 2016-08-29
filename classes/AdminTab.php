@@ -1055,7 +1055,7 @@ abstract class AdminTabCore
                                     if (Validate::isCleanHtml($val)) {
                                         $list[$id_lang] = $val;
                                     } else {
-                                        $this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$id_lang));
+                                        $this->_errors[] = Tools::displayError('Cannot add configuration '.$key.' for lang '.Language::getIsoById((int)$id_lang));
                                     }
                                 }
                             }
@@ -1066,7 +1066,7 @@ abstract class AdminTabCore
                                 if (Validate::isCleanHtml($val)) {
                                     Configuration::updateValue($key, $val);
                                 } else {
-                                    $this->_errors[] = Tools::displayError('Can not add configuration '.$key);
+                                    $this->_errors[] = Tools::displayError('Cannot add configuration '.$key);
                                 }
                             }
                         }

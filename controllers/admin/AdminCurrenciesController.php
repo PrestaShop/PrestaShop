@@ -282,7 +282,7 @@ class AdminCurrenciesControllerCore extends AdminController
             $this->errors[] = $this->trans('This currency already exists.', array(), 'Admin.International.Notification');
         }
         if (Tools::isSubmit('submitAddcurrency') && (float)Tools::getValue('conversion_rate') <= 0) {
-            $this->errors[] = $this->trans('The currency conversion rate can not be equal to 0.', array(), 'Admin.International.Notification');
+            $this->errors[] = $this->trans('The currency conversion rate cannot be equal to 0.', array(), 'Admin.International.Notification');
         }
         parent::initProcess();
     }
