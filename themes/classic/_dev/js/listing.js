@@ -3,7 +3,7 @@ import prestashop from 'prestashop';
 import 'velocity-animate';
 
 $(document).ready(() => {
-  prestashop.on('quickview clicked', function(elm) {
+  prestashop.on('clickQuickView', function(elm) {
     let data = {
       'action': 'quickview',
       'id_product': elm.dataset.idProduct,
