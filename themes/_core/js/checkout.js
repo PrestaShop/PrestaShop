@@ -26,15 +26,15 @@ function changeCheckoutStep() {
       $(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
       $(event.target).closest('.checkout-step').toggleClass('-current');
       $(event.target).closest('.checkout-step').toggleClass(currentStepClass);
-      prestashop.emit('changedCheckoutStep');
+      prestashop.emit('changedCheckoutStep', {event: event});
     }
   );
 
   $(currentStepSelector + ':not(#checkout-personal-information-step)').nextAll().on(
     'click',
-    () => {
+    (event) => {
       $(currentStepSelector + ' button.continue').click();
-      prestashop.emit('changedCheckoutStep');
+      prestashop.emit('changedCheckoutStep', {event: event});
     }
   );
 }
