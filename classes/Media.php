@@ -601,7 +601,8 @@ class MediaCore
         $compiled_css = array_merge($external_css_files, $css_files);
 
         //If browser not IE <= 9, bypass ieCssSplitter
-        if (!preg_match('/(?i)msie [1-9]/', $_SERVER['HTTP_USER_AGENT'])) {
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+        if (!preg_match('/(?i)msie [1-9]/', $user_agent)) {
             return $compiled_css;
         }
         $splitted_css = self::ieCssSplitter($compiled_css, $cache_path.'ie9', $css_split_need_refresh);
