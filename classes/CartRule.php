@@ -989,7 +989,9 @@ class CartRuleCore extends ObjectModel
                             || in_array($product['id_product'].'-0', $selected_products)) {
                             $price = $product['price'];
                             if ($use_tax) {
-                                $price *= (1 + $context->cart->getAverageProductsTaxRate());
+                                $infos = Product::getTaxesInformations($product, $context);
+                                $tax_rate = $infos['rate'] / 100;
+                                $price *= (1 + $tax_rate);
                             }
 
                             $selected_products_reduction += $price * $product['cart_quantity'];
