@@ -9,10 +9,10 @@ function setupCheckout() {
   setUpDelivery();
   setUpPayment();
 
-  changeCheckoutStep();
+  handleCheckoutStepChange();
 }
 
-function changeCheckoutStep() {
+function handleCheckoutStepChange() {
   $('.checkout-step').off('click');
 
   let currentStepClass = 'js-current-step';
