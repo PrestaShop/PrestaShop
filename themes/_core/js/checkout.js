@@ -4,7 +4,7 @@ import setUpAddress from './checkout-payment'
 import setUpDelivery from './checkout-delivery'
 import setUpPayment from './checkout-payment'
 
-function setupCheckoutScripts () {
+function setupCheckout() {
   setUpAddress();
   setUpDelivery();
   let payment = setUpPayment();
@@ -41,6 +41,6 @@ function changeCheckoutStep() {
 
 $(document).ready(() => {
   if ($('#checkout').length === 1) {
-    setupCheckoutScripts();
+    setupCheckout();
   }
 });
