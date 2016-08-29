@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class ConfigurationTestCore
 {
     public static $test_files = array(
@@ -49,7 +48,7 @@ class ConfigurationTestCore
     /**
      * getDefaultTests return an array of tests to executes.
      * key are method name, value are parameters (false for no parameter)
-     * all path are _PS_ROOT_DIR_ related
+     * all path are _PS_ROOT_DIR_ related.
      *
      * @return array
      */
@@ -75,7 +74,7 @@ class ConfigurationTestCore
                 'system' => array(
                     'fopen', 'fclose', 'fread', 'fwrite',
                     'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
-                    'getcwd', 'chdir', 'chmod'
+                    'getcwd', 'chdir', 'chmod',
                 ),
                 'phpversion' => false,
                 'apache_mod_rewrite' => false,
@@ -93,7 +92,7 @@ class ConfigurationTestCore
 
     /**
      * getDefaultTestsOp return an array of tests to executes.
-     * key are method name, value are parameters (false for no parameter)
+     * key are method name, value are parameters (false for no parameter).
      *
      * @return array
      */
@@ -111,9 +110,10 @@ class ConfigurationTestCore
     }
 
     /**
-     * run all test defined in $tests
+     * run all test defined in $tests.
      *
      * @param array $tests
+     *
      * @return array results of tests
      */
     public static function check($tests)
@@ -122,6 +122,7 @@ class ConfigurationTestCore
         foreach ($tests as $key => $test) {
             $res[$key] = ConfigurationTest::run($key, $test);
         }
+
         return $res;
     }
 
@@ -130,6 +131,7 @@ class ConfigurationTestCore
         if (call_user_func(array('ConfigurationTest', 'test_'.$ptr), $arg)) {
             return 'ok';
         }
+
         return 'fail';
     }
 
@@ -140,9 +142,10 @@ class ConfigurationTestCore
 
     public static function test_apache_mod_rewrite()
     {
-        if (strpos(strtolower($_SERVER["SERVER_SOFTWARE"]), 'apache') === false || !function_exists('apache_get_modules')) {
+        if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
             return true;
         }
+
         return in_array('mod_rewrite', apache_get_modules());
     }
 
@@ -178,6 +181,7 @@ class ConfigurationTestCore
                 return false;
             }
         }
+
         return true;
     }
 
@@ -191,6 +195,7 @@ class ConfigurationTestCore
         if (function_exists('gzencode')) {
             return @gzencode('dd') !== false;
         }
+
         return false;
     }
 
@@ -211,6 +216,7 @@ class ConfigurationTestCore
             @unlink($dummy);
             if (!$recursive) {
                 closedir($dh);
+
                 return true;
             }
         } elseif (!is_writable($dir)) {
@@ -229,13 +235,15 @@ class ConfigurationTestCore
         }
 
         closedir($dh);
+
         return true;
     }
 
     public static function test_file($file_relative)
     {
         $file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file_relative;
-        return (file_exists($file) && is_writable($file));
+
+        return file_exists($file) && is_writable($file);
     }
 
     public static function test_config_dir($dir)
@@ -314,6 +322,7 @@ class ConfigurationTestCore
         if (!file_exists($absoluteDir)) {
             return true;
         }
+
         return ConfigurationTest::test_dir($dir, true);
     }
 
@@ -323,6 +332,7 @@ class ConfigurationTestCore
         if (!file_exists($absoluteDir)) {
             return true;
         }
+
         return ConfigurationTest::test_dir($dir, true);
     }
 
@@ -332,6 +342,7 @@ class ConfigurationTestCore
         if (!file_exists($absoluteDir)) {
             return true;
         }
+
         return ConfigurationTest::test_dir($dir, true);
     }
 
@@ -384,6 +395,7 @@ class ConfigurationTestCore
         if ($full) {
             return $return;
         }
+
         return true;
     }
 }
