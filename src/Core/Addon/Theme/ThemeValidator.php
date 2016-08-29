@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use Shudrum\Component\ArrayFinder\ArrayFinder;
@@ -49,7 +50,7 @@ class ThemeValidator
 
     public function getRequiredProperties()
     {
-        return [
+        return array(
             'name',
             'display_name',
             'version',
@@ -62,7 +63,7 @@ class ThemeValidator
             'global_settings.image_types.large_default',
             'global_settings.image_types.home_default',
             'global_settings.image_types.category_default',
-        ];
+        );
     }
 
     private function hasRequiredFiles($theme)
@@ -78,7 +79,7 @@ class ThemeValidator
 
     public function getRequiredFiles()
     {
-        return [
+        return array(
             'preview.png',
             'config/theme.yml',
             'assets/js/theme.js',
@@ -91,6 +92,6 @@ class ThemeValidator
             'templates/_partials/header.tpl',
             'templates/_partials/notifications.tpl',
             'templates/_partials/footer.tpl',
-        ];
+        );
     }
 }
