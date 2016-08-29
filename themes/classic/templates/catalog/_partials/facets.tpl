@@ -1,7 +1,7 @@
   <div id="search_filters">
     <h4 class="text-uppercase h6 hidden-sm-down">{l s='Filter By' d='Shop.Theme.Actions'}</h4>
     <div id="_desktop_search_filters_clear_all" class="hidden-sm-down clear-all-wrapper">
-      <button data-search-url="{$clear_all_link}" class="btn btn-secondary js-search-filters-clear-all">
+      <button data-search-url="{$clear_all_link}" class="btn btn-tertiary js-search-filters-clear-all">
         <i class="material-icons">&#xE14C;</i>
         {l s='Clear all' d='Shop.Theme.Actions'}
       </button>

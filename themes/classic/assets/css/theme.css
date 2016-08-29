@@ -1741,35 +1741,39 @@ fieldset[disabled] a.btn {
     background-color: #2fb5d2;
     border-color: transparent; }
 
-.btn-secondary {
+.btn-secondary, .btn-tertiary {
   color: #414141;
   background-color: #f6f6f6;
   border-color: transparent; }
-  .btn-secondary:hover {
+  .btn-secondary:hover, .btn-tertiary:hover {
     color: #414141;
     background-color: #dddddd;
     border-color: transparent; }
-  .btn-secondary:focus, .btn-secondary.focus {
+  .btn-secondary:focus, .btn-tertiary:focus, .btn-secondary.focus, .focus.btn-tertiary {
     color: #414141;
     background-color: #dddddd;
     border-color: transparent; }
-  .btn-secondary:active, .btn-secondary.active,
-  .open > .btn-secondary.dropdown-toggle {
+  .btn-secondary:active, .btn-tertiary:active, .btn-secondary.active, .active.btn-tertiary,
+  .open > .btn-secondary.dropdown-toggle,
+  .open > .dropdown-toggle.btn-tertiary {
     color: #414141;
     background-color: #dddddd;
     border-color: transparent;
     background-image: none; }
-    .btn-secondary:active:hover, .btn-secondary:active:focus, .btn-secondary:active.focus, .btn-secondary.active:hover, .btn-secondary.active:focus, .btn-secondary.active.focus,
+    .btn-secondary:active:hover, .btn-tertiary:active:hover, .btn-secondary:active:focus, .btn-tertiary:active:focus, .btn-secondary:active.focus, .btn-tertiary:active.focus, .btn-secondary.active:hover, .active.btn-tertiary:hover, .btn-secondary.active:focus, .active.btn-tertiary:focus, .btn-secondary.active.focus, .active.focus.btn-tertiary,
     .open > .btn-secondary.dropdown-toggle:hover,
+    .open > .dropdown-toggle.btn-tertiary:hover,
     .open > .btn-secondary.dropdown-toggle:focus,
-    .open > .btn-secondary.dropdown-toggle.focus {
+    .open > .dropdown-toggle.btn-tertiary:focus,
+    .open > .btn-secondary.dropdown-toggle.focus,
+    .open > .dropdown-toggle.focus.btn-tertiary {
       color: #414141;
       background-color: #cbcbcb;
       border-color: transparent; }
-  .btn-secondary.disabled:focus, .btn-secondary.disabled.focus, .btn-secondary:disabled:focus, .btn-secondary:disabled.focus {
+  .btn-secondary.disabled:focus, .disabled.btn-tertiary:focus, .btn-secondary.disabled.focus, .disabled.focus.btn-tertiary, .btn-secondary:disabled:focus, .btn-tertiary:disabled:focus, .btn-secondary:disabled.focus, .btn-tertiary:disabled.focus {
     background-color: #f6f6f6;
     border-color: transparent; }
-  .btn-secondary.disabled:hover, .btn-secondary:disabled:hover {
+  .btn-secondary.disabled:hover, .disabled.btn-tertiary:hover, .btn-secondary:disabled:hover, .btn-tertiary:disabled:hover {
     background-color: #f6f6f6;
     border-color: transparent; }
 
@@ -4856,14 +4860,26 @@ p {
   color: #414141; }
 
 .btn-primary,
-.btn-secondary {
+.btn-secondary,
+.btn-tertiary {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
   font-weight: 600;
   padding: 0.5rem 1.25rem; }
   .btn-primary .material-icons,
-  .btn-secondary .material-icons {
+  .btn-secondary .material-icons, .btn-tertiary .material-icons {
     margin-right: 0.625rem; }
+
+.btn-tertiary {
+  text-transform: lowercase;
+  color: #acaaa6;
+  box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.1);
+  padding: 0.25rem;
+  margin: 0.25rem 0;
+  font-weight: 400;
+  font-size: 0.875rem; }
+  .btn-tertiary .material-icons {
+    font-size: 1rem; }
 
 .card {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
@@ -6206,10 +6222,10 @@ body#checkout {
     -ms-flex-pack: justify; }
   #products .up {
     margin-bottom: 1rem; }
-    #products .up .btn-secondary {
+    #products .up .btn-secondary, #products .up .btn-tertiary {
       color: #acaaa6;
       text-transform: inherit; }
-      #products .up .btn-secondary .material-icons {
+      #products .up .btn-secondary .material-icons, #products .up .btn-tertiary .material-icons {
         margin-right: 0; }
 
 .block-category {
@@ -6398,16 +6414,8 @@ body#checkout {
 .facets-title {
   color: #414141; }
 
-.products-selection .filter-button .btn-secondary {
+.products-selection .filter-button .btn-secondary, .products-selection .filter-button .btn-tertiary {
   padding: 0.75rem 0.5rem 0.6875rem; }
-
-.clear-all-wrapper .btn-secondary {
-  text-transform: lowercase;
-  padding: 0.25rem;
-  margin: 0.25rem 0;
-  color: #acaaa6; }
-  .clear-all-wrapper .btn-secondary .material-icons {
-    margin-right: 0; }
 
 /*** Responsive part ***/
 @media (max-width: 767px) {
