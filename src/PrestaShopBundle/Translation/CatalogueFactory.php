@@ -19,23 +19,25 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    PrestaSho6 SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Translation;
 
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
+
 class CatalogueFactory
 {
     private $providers = array();
 
-    public static function createCatalogue($identifier)
+    public function createCatalogue($identifier, $locale = 'en_US')
     {
         foreach ($this->providers as $provider) {
             if ($identifier === $provider->getIdentifier()) {
-                return $provider->getMessageCatalogue();
+                return $provider->setLocale($locale)->getMessageCatalogue();
             }
         }
     }

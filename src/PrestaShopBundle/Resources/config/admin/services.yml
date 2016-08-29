@@ -1,5 +1,5 @@
 parameters:
-    translations_dir: "%kernel.root_dir%/resources/translations/"
+    translations_dir: "%kernel.root_dir%/Resources/translations"
 
 services:
 # CORE ADMIN (prestashop.core.admin.*)
