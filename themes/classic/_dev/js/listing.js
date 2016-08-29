@@ -3,13 +3,13 @@ import prestashop from 'prestashop';
 import 'velocity-animate';
 
 $(document).ready(() => {
-  prestashop.on('clickQuickView', function(elm) {
+  prestashop.on('clickQuickView', function (elm) {
     let data = {
       'action': 'quickview',
       'id_product': elm.dataset.idProduct,
       'id_product_attribute': elm.dataset.idProductAttribute,
     };
-    $.post(prestashop.urls.pages.product, data, null, 'json').then(function(resp) {
+    $.post(prestashop.urls.pages.product, data, null, 'json').then(function (resp) {
       $('body').append(resp.quickview_html);
       let productModal = $(`#quickview-modal-${resp.product.id}-${resp.product.id_product_attribute}`);
       productModal.modal('show');
@@ -60,7 +60,7 @@ $(document).ready(() => {
     var currentPosition = $thumbnails.position().top;
     $thumbnails.velocity({
       translateY: (direction === 'up') ? currentPosition + thumbHeight : currentPosition - thumbHeight
-    }, function() {
+    }, function () {
       if ($thumbnails.position().top >= 0) {
         $('.arrow-up').css('opacity', '.2');
       } else if ($thumbnails.position().top + $thumbnails.height() <= $('.js-qv-mask').height()) {
@@ -68,7 +68,7 @@ $(document).ready(() => {
       }
     });
   };
-  $('body').on('click', '#search_filter_toggler', function() {
+  $('body').on('click', '#search_filter_toggler', function () {
     $('#search_filters_wrapper').removeClass('hidden-sm-down');
     $('#content-wrapper').addClass('hidden-sm-down');
     $('#footer').addClass('hidden-sm-down');
