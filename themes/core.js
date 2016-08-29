@@ -65,23 +65,23 @@
 	
 	__webpack_require__(5);
 	
-	__webpack_require__(7);
-	
 	__webpack_require__(8);
 	
 	__webpack_require__(9);
 	
 	__webpack_require__(10);
 	
+	__webpack_require__(11);
+	
 	var _prestashop = __webpack_require__(4);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(11);
+	var _events = __webpack_require__(12);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _common = __webpack_require__(6);
+	var _common = __webpack_require__(13);
 	
 	// "inherit" EventEmitter
 	window.$ = _jquery2['default'];
@@ -1815,127 +1815,48 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _common = __webpack_require__(6);
+	var _checkoutPayment = __webpack_require__(6);
 	
-	function collapsePaymentOptions() {
-	  (0, _jquery2['default'])('.js-additional-information, .js-payment-option-form').hide();
+	var _checkoutPayment2 = _interopRequireDefault(_checkoutPayment);
+	
+	var _checkoutDelivery = __webpack_require__(7);
+	
+	var _checkoutDelivery2 = _interopRequireDefault(_checkoutDelivery);
+	
+	var _checkoutPayment3 = _interopRequireDefault(_checkoutPayment);
+	
+	function setUpCheckout() {
+	  (0, _checkoutPayment2['default'])();
+	  (0, _checkoutDelivery2['default'])();
+	  (0, _checkoutPayment3['default'])();
+	
+	  handleCheckoutStepChange();
 	}
 	
-	function getSelectedPaymentOption() {
-	  return (0, _jquery2['default'])('input[name="payment-option"]:checked').attr('id');
-	}
-	
-	function enableOrDisableOrderButton() {
-	  var show = true;
-	  (0, _jquery2['default'])('#conditions-to-approve input[type="checkbox"]').each(function (_, checkbox) {
-	    if (!checkbox.checked) {
-	      show = false;
-	    }
-	  });
-	
-	  collapsePaymentOptions();
-	
-	  var option = getSelectedPaymentOption();
-	  if (!option) {
-	    show = false;
-	  }
-	
-	  (0, _jquery2['default'])('#' + option + '-additional-information').show();
-	  (0, _jquery2['default'])('#pay-with-' + option + '-form').show();
-	
-	  var module_name = (0, _jquery2['default'])('#' + option).data('module-name');
-	
-	  if ((0, _jquery2['default'])('#' + option).hasClass('binary')) {
-	    var payment_option = '.js-payment-' + module_name;
-	    (0, _jquery2['default'])('#payment-confirmation').hide();
-	    (0, _jquery2['default'])(payment_option).show();
-	    if (show) {
-	      (0, _jquery2['default'])(payment_option).removeClass('disabled');
-	    } else {
-	      (0, _jquery2['default'])(payment_option).addClass('disabled');
-	    }
-	  } else {
-	    (0, _jquery2['default'])('.js-payment-binary').hide();
-	    (0, _jquery2['default'])('#payment-confirmation').show();
-	    (0, _jquery2['default'])('#payment-confirmation button').attr('disabled', !show);
-	    if (show) {
-	      (0, _jquery2['default'])('.js-alert-payment-condtions').hide();
-	    } else {
-	      (0, _jquery2['default'])('.js-alert-payment-condtions').show();
-	    }
-	  }
-	}
-	
-	function confirmPayment() {
-	  var option = getSelectedPaymentOption();
-	  if (option) {
-	    (0, _jquery2['default'])('#pay-with-' + option + '-form form').submit();
-	  }
-	}
-	
-	function refreshDeliveryOptions(event) {
-	  var params = (0, _jquery2['default'])('#delivery-method').serialize();
-	  _jquery2['default'].post((0, _jquery2['default'])('#delivery-method').data('url-update'), params).then(function (resp) {
-	    (0, _jquery2['default'])('#checkout-cart-summary').replaceWith(resp.preview);
-	  });
-	}
-	
-	function hideOrShow() {
-	  var elm = this.getAttribute('data-action-target');
-	  var show = this.checked;
-	
-	  if (show) {
-	    (0, _jquery2['default'])('body #' + elm).show();
-	  } else {
-	    (0, _jquery2['default'])('body #' + elm).hide();
-	  }
-	}
-	
-	function setupCheckoutScripts() {
-	  (0, _jquery2['default'])('#payment-confirmation button').on('click', confirmPayment);
-	  (0, _jquery2['default'])('#payment-section input[type="checkbox"][disabled]').attr('disabled', false);
-	  (0, _jquery2['default'])('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
-	  (0, _jquery2['default'])('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
-	  (0, _jquery2['default'])('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
-	  (0, _jquery2['default'])('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
-	
-	  (0, _jquery2['default'])('.js-edit-addresses').on('click', function (event) {
-	    event.stopPropagation();
-	    (0, _jquery2['default'])('#checkout-addresses-step').trigger('click');
-	  });
-	
-	  (0, _jquery2['default'])('.js-edit-delivery').on('click', function (event) {
-	    event.stopPropagation();
-	    (0, _jquery2['default'])('#checkout-delivery-step').trigger('click');
-	  });
-	
-	  changeCurrentCheckoutStep();
-	  collapsePaymentOptions();
-	}
-	
-	function changeCurrentCheckoutStep() {
+	function handleCheckoutStepChange() {
 	  (0, _jquery2['default'])('.checkout-step').off('click');
 	
-	  (0, _jquery2['default'])('.-js-current').prevAll().add((0, _jquery2['default'])('#checkout-personal-information-step.-js-current').nextAll()).on('click', function (event) {
-	    (0, _jquery2['default'])('.-js-current, .-current').removeClass('-js-current -current');
-	    (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass('-js-current');
-	    _prestashop2['default'].emit('change current checkout step');
+	  var currentStepClass = 'js-current-step';
+	  var currentStepSelector = '.' + currentStepClass;
+	  var stepsAfterPersonalInformation = (0, _jquery2['default'])('#checkout-personal-information-step' + currentStepSelector).nextAll();
+	
+	  (0, _jquery2['default'])(currentStepSelector).prevAll().add(stepsAfterPersonalInformation).on('click', function (event) {
+	    (0, _jquery2['default'])(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
+	    (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass('-current');
+	    (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass(currentStepClass);
+	    _prestashop2['default'].emit('changedCheckoutStep', { event: event });
 	  });
 	
-	  (0, _jquery2['default'])('.-js-current:not(#checkout-personal-information-step)').nextAll().on('click', function (event) {
-	    (0, _jquery2['default'])('.-js-current button.continue').click();
-	    _prestashop2['default'].emit('change current checkout step');
+	  (0, _jquery2['default'])(currentStepSelector + ':not(#checkout-personal-information-step)').nextAll().on('click', function (event) {
+	    (0, _jquery2['default'])(currentStepSelector + ' button.continue').click();
+	    _prestashop2['default'].emit('changedCheckoutStep', { event: event });
 	  });
 	}
 	
 	(0, _jquery2['default'])(document).ready(function () {
-	  if ((0, _jquery2['default'])('body#checkout').length === 1) {
-	    setupCheckoutScripts();
+	  if ((0, _jquery2['default'])('#checkout').length === 1) {
+	    setUpCheckout();
 	  }
-	
-	  _prestashop2['default'].on('change current checkout step', function (event) {
-	    changeCurrentCheckoutStep();
-	  });
 	});
 
 /***/ },
@@ -1947,7 +1868,143 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports.psShowHide = psShowHide;
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var _jquery = __webpack_require__(2);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var Payment = (function () {
+	  function Payment() {
+	    _classCallCheck(this, Payment);
+	
+	    this.confirmationSelector = '#payment-confirmation';
+	    this.paymentSelector = '#payment-section';
+	    this.conditionsSelector = '#conditions-to-approve';
+	    this.conditionAlertSelector = '#js-alert-payment-conditions';
+	    this.additionalInformatonSelector = '.js-additional-information';
+	    this.optionsForm = '.js-payment-option-form';
+	  }
+	
+	  _createClass(Payment, [{
+	    key: 'init',
+	    value: function init() {
+	      (0, _jquery2['default'])(this.paymentSelector + ' input[type="checkbox"][disabled]').attr('disabled', false);
+	
+	      var $body = (0, _jquery2['default'])('body');
+	
+	      $body.on('change', this.conditionsSelector + ' input[type="checkbox"]', _jquery2['default'].proxy(this.toggleOrderButton, this));
+	      $body.on('change', 'input[name="payment-option"]', _jquery2['default'].proxy(this.toggleOrderButton, this));
+	      $body.on('click', this.confirmationSelector + ' button', _jquery2['default'].proxy(this.confirm, this));
+	
+	      this.collapseOptions();
+	    }
+	  }, {
+	    key: 'collapseOptions',
+	    value: function collapseOptions() {
+	      (0, _jquery2['default'])(this.additionalInformatonSelector + ', ' + this.optionsForm).hide();
+	    }
+	  }, {
+	    key: 'getSelectedOption',
+	    value: function getSelectedOption() {
+	      return (0, _jquery2['default'])('input[name="payment-option"]:checked').attr('id');
+	    }
+	  }, {
+	    key: 'hideConfirmation',
+	    value: function hideConfirmation() {
+	      (0, _jquery2['default'])(this.confirmationSelector).hide();
+	    }
+	  }, {
+	    key: 'showConfirmation',
+	    value: function showConfirmation() {
+	      (0, _jquery2['default'])(this.confirmationSelector).show();
+	    }
+	  }, {
+	    key: 'toggleOrderButton',
+	    value: function toggleOrderButton() {
+	      var show = true;
+	      (0, _jquery2['default'])(this.conditionsSelector + ' input[type="checkbox"]').each(function (_, checkbox) {
+	        if (!checkbox.checked) {
+	          show = false;
+	        }
+	      });
+	
+	      this.collapseOptions();
+	
+	      var selectedOption = this.getSelectedOption();
+	      if (!selectedOption) {
+	        show = false;
+	      }
+	
+	      (0, _jquery2['default'])('#' + selectedOption + '-additional-information').show();
+	      (0, _jquery2['default'])('#pay-with-' + selectedOption + '-form').show();
+	
+	      if ((0, _jquery2['default'])('#' + selectedOption).hasClass('binary')) {
+	        var paymentOption = this.getPaymentOptionSelector(selectedOption);
+	        this.hideConfirmation();
+	        (0, _jquery2['default'])(paymentOption).show();
+	
+	        if (show) {
+	          (0, _jquery2['default'])(paymentOption).removeClass('disabled');
+	        } else {
+	          (0, _jquery2['default'])(paymentOption).addClass('disabled');
+	        }
+	      } else {
+	        (0, _jquery2['default'])('.js-payment-binary').hide();
+	
+	        this.showConfirmation();
+	        (0, _jquery2['default'])(this.confirmationSelector + ' button').attr('disabled', !show);
+	
+	        if (show) {
+	          (0, _jquery2['default'])(this.conditionAlertSelector).hide();
+	        } else {
+	          (0, _jquery2['default'])(this.conditionAlertSelector).show();
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'getPaymentOptionSelector',
+	    value: function getPaymentOptionSelector(option) {
+	      var moduleName = (0, _jquery2['default'])('#' + option).data('module-name');
+	
+	      return '.js-payment-' + moduleName;
+	    }
+	  }, {
+	    key: 'confirm',
+	    value: function confirm() {
+	      var option = this.getSelectedOption();
+	      if (option) {
+	        (0, _jquery2['default'])('#pay-with-' + option + '-form form').submit();
+	      }
+	    }
+	  }]);
+	
+	  return Payment;
+	})();
+	
+	exports['default'] = function () {
+	  var payment = new Payment();
+	  payment.init();
+	
+	  return payment;
+	};
+	
+	module.exports = exports['default'];
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
@@ -1955,13 +2012,42 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	function psShowHide() {
-	  (0, _jquery2['default'])('.ps-shown-by-js').show();
-	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
-	}
+	var _prestashop = __webpack_require__(4);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	var $body = (0, _jquery2['default'])('body');
+	var deliveryFormSelector = '#js-delivery';
+	var summarySelector = '#js-checkout-summary';
+	var deliveryStepSelector = '#checkout-delivery-step';
+	var editDeliveryButtonSelector = '.js-edit-delivery';
+	
+	exports['default'] = function () {
+	  var updateDeliveryForm = function updateDeliveryForm() {
+	    var $deliveryMethodForm = (0, _jquery2['default'])(deliveryFormSelector);
+	    var requestData = $deliveryMethodForm.serialize();
+	
+	    _jquery2['default'].post($deliveryMethodForm.data('url-update'), requestData).then(function (resp) {
+	      (0, _jquery2['default'])(summarySelector).replaceWith(resp.preview);
+	      _prestashop2['default'].emit('updatedDeliveryForm');
+	    }).fail(function (resp) {
+	      _prestashop2['default'].trigger('handleError', { eventType: 'updateDeliveryOptions', resp: resp });
+	    });
+	  };
+	
+	  $body.on('change', deliveryFormSelector + ' input[type="radio"]', updateDeliveryForm);
+	
+	  $body.on('click', editDeliveryButtonSelector, function (event) {
+	    event.stopPropagation();
+	    (0, _jquery2['default'])(deliveryStepSelector).trigger('click');
+	    _prestashop2['default'].emit('editDelivery');
+	  });
+	};
+	
+	module.exports = exports['default'];
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2039,7 +2125,7 @@
 	});
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2064,7 +2150,7 @@
 	});
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2153,7 +2239,7 @@
 	});
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2213,7 +2299,7 @@
 	});
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -2482,6 +2568,28 @@
 	
 	function isUndefined(arg) {
 	  return arg === void 0;
+	}
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.psShowHide = psShowHide;
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(2);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function psShowHide() {
+	  (0, _jquery2['default'])('.ps-shown-by-js').show();
+	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
 	}
 
 /***/ }

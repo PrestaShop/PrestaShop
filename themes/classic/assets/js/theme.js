@@ -12641,9 +12641,13 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	function setupMyCheckoutScripts() {
+	var _prestashop = __webpack_require__(66);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	function setUpCheckout() {
 	  if ((0, _jquery2['default'])('.js-cancel-address').length !== 0) {
-	    (0, _jquery2['default'])('.checkout-step:not(.-js-current) .step-title').addClass('not-allowed');
+	    (0, _jquery2['default'])('.checkout-step:not(.js-current-step) .step-title').addClass('not-allowed');
 	  }
 	
 	  (0, _jquery2['default'])('.js-terms a').on('click', function (event) {
@@ -12654,6 +12658,8 @@
 	      url += '?content_only=1';
 	      _jquery2['default'].get(url, function (content) {
 	        (0, _jquery2['default'])('#modal').find('.modal-content').html((0, _jquery2['default'])(content).find('.page-cms').contents());
+	      }).fail(function (resp) {
+	        _prestashop2['default'].emit('handleError', { eventType: 'clickTerms', resp: resp });
 	      });
 	    }
 	
@@ -12667,7 +12673,7 @@
 	
 	(0, _jquery2['default'])(document).ready(function () {
 	  if ((0, _jquery2['default'])('body#checkout').length === 1) {
-	    setupMyCheckoutScripts();
+	    setUpCheckout();
 	  }
 	});
 

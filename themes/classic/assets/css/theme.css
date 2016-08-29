@@ -5413,14 +5413,14 @@ body#checkout {
     body#checkout section.checkout-step .done,
     body#checkout section.checkout-step .step-edit {
       display: none; }
-    body#checkout section.checkout-step.-js-current .content {
+    body#checkout section.checkout-step.-current .content {
       display: block; }
-    body#checkout section.checkout-step.-js-current.-reachable.-complete .done,
-    body#checkout section.checkout-step.-js-current.-reachable.-complete .step-edit {
+    body#checkout section.checkout-step.-current.-reachable.-complete .done,
+    body#checkout section.checkout-step.-current.-reachable.-complete .step-edit {
       display: none; }
-    body#checkout section.checkout-step.-js-current.-reachable.-complete .step-number {
+    body#checkout section.checkout-step.-current.-reachable.-complete .step-number {
       display: inline-block; }
-    body#checkout section.checkout-step.-js-current.-reachable.-complete .content {
+    body#checkout section.checkout-step.-current.-reachable.-complete .content {
       display: block; }
     body#checkout section.checkout-step.-reachable.-complete h1 .done {
       display: inline-block; }
