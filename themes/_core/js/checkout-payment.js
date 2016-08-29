@@ -18,6 +18,8 @@ class Payment {
     $body.on('change', this.conditionsSelector + ' input[type="checkbox"]', $.proxy(this.toggleOrderButton, this));
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
     $body.on('click', this.confirmationSelector + ' button', $.proxy(this.confirm, this));
+
+    this.collapseOptions();
   }
 
   collapseOptions() {

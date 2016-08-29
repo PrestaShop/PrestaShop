@@ -7,10 +7,9 @@ import setUpPayment from './checkout-payment'
 function setupCheckout() {
   setUpAddress();
   setUpDelivery();
-  let payment = setUpPayment();
+  setUpPayment();
 
   changeCheckoutStep();
-  payment.collapseOptions();
 }
 
 function changeCheckoutStep() {
