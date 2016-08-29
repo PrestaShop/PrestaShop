@@ -2,13 +2,13 @@
 
 {% block content %}
 <div class="search-translation">
-    <h2>Search</h2>
-    <div class="hide alert alert-info">{{ '0 results found'|trans({}, 'AdminNotificationsError') }}</div>
-    <label>Translation key or value (2 characters at least):</label>
+    <h2>{{ 'Search'|trans({}, 'Admin.Actions') }}</h2>
+    <div class="hide alert alert-info">{{ '0 result found'|trans({}, 'Admin.Notifications.Error') }}</div>
+    <label>{{ 'Translation key or value (2 characters at least):'|trans({}, 'Admin.International.Feature') }}</label>
     <form>
         <input pattern=".{2,}" type="search" id="jetsSearch">
-        <input class="btn btn-default btn-sm search-button" type="submit" value="{{ 'search'|trans({}, 'AdmninActions') }}">
-        <input class="btn btn-default btn-sm" type="reset" value="{{ 'reset'|trans({}, 'AdminActions') }}">
+        <input class="btn btn-default btn-sm search-button" type="submit" value="{{ 'Search'|trans({}, 'Admin.Actions') }}">
+        <input class="btn btn-default btn-sm" type="reset" value="{{ 'Reset'|trans({}, 'Admin.Actions') }}">
     </form>
     <div id="jetsContent">
         {{ getTranslationsForms(translationsTree)|raw }}

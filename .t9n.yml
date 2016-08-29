@@ -10,6 +10,7 @@ paths:
   - themes
   - pdf
 exclude_files:
+  - src/PrestaShopBundle/Tests
   - classes/PrestaShopAutoload.php
   - app/cache/
   - app/logs
