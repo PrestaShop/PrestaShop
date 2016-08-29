@@ -38,7 +38,7 @@
 
     if ($('#css_disabled_color_picker').length < 1) $('head').prepend('<style id="css_disabled_color_picker" type="text/css">.mColorPicker[disabled] + span, .mColorPicker[disabled="disabled"] + span, .mColorPicker[disabled="true"] + span {filter:alpha(opacity=50);-moz-opacity:0.5;-webkit-opacity:0.5;-khtml-opacity: 0.5;opacity: 0.5;}</style>');
 
-    $('.mColorPicker').live('keyup', function () {
+    $('.mColorPicker').on('keyup', function () {
   
       try {
   
@@ -50,7 +50,7 @@
       } catch (r) {}
     });
 
-    $('.mColorPickerTrigger').live('click', function () {
+    $('.mColorPickerTrigger').on('click', function () {
 
       $.fn.mColorPicker.colorShow($(this).attr('id').replace('icp_', ''));
     });
