@@ -201,14 +201,12 @@ class TranslationsController extends FrameworkBundleAdminController
         $translator = $this->container->get('translator');
 
         $locale = $this->langToLocale($lang);
+        $translationLocale = str_replace('-', '_', $locale);
         
-        $catalogue = $this->get('ps.catalogue_factory')->createCatalogue($type, $locale);
+        $tree = $this->get('ps.translations_factory')->createTree($type, $translationLocale);
         
-        if ($catalogue instanceof MessageCatalogue) {
-            $translations = $catalogue->all();
-            ksort($translations);
-
-            return $translations;
+        if (!is_null($tree)) {
+            return $tree;
         }
 
         // if type is not found, return all keys

@@ -30,14 +30,20 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class BackOfficeProvider extends AbstractProvider
 {
-    const FILE_PATTERN = 'Admin*';
-
     /**
      * {@inheritdoc}
      */
     public function getTranslationDomains()
     {
         return array('Admin.%');
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilters()
+    {
+        return array('Admin*');
     }
 
     /**
@@ -46,8 +52,9 @@ class BackOfficeProvider extends AbstractProvider
     public function getMessageCatalogue()
     {
         $locale = $this->getPrestaShopLocale();
+        $filter = $this->getFilters()[0];
 
-        $xlfCatalogue = $this->getCatalogueFromPaths($this->getResourceDirectory(), $locale, self::FILE_PATTERN);
+        $xlfCatalogue = $this->getCatalogueFromPaths($this->getResourceDirectory(), $locale, $filter);
 
         $databaseCatalogue = new MessageCatalogue($locale);
 

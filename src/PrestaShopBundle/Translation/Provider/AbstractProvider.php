@@ -57,6 +57,14 @@ abstract class AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function getFilters()
+    {
+        return array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getTranslationDomains()
     {
         return array('');
@@ -109,7 +117,17 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getXliffCatalogue()
     {
-        return $this->getCatalogueFromPaths($this->getDirectories(), $this->locale);
+        $xlfCatalogue = new MessageCatalogue($this->locale);
+
+        foreach ($this->getFilters() as $filter) {
+            $filteredCatalogue = $this->getCatalogueFromPaths(
+                $this->getDirectories(),
+                $this->locale,
+                $filter
+            );
+            $xlfCatalogue->addCatalogue($filteredCatalogue);
+        }
+        return $xlfCatalogue;
     }
 
     /**

@@ -35,6 +35,11 @@ interface ProviderInterface
      * @return string[] List of directories to parse
      */
     public function getDirectories();
+    
+    /**
+     * @return string[] List of patterns for Database filtering
+     */
+    public function getFilters();
 
     /**
      * @return string[] List of translation domains to get in database
