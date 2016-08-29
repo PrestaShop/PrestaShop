@@ -1,8 +1,9 @@
 import $ from 'jquery';
+import prestashop from 'prestashop';
 
-function setupMyCheckoutScripts() {
+function setUpCheckout() {
   if ($('.js-cancel-address').length !== 0) {
-    $('.checkout-step:not(.-js-current) .step-title').addClass('not-allowed');
+    $('.checkout-step:not(.js-current-step) .step-title').addClass('not-allowed');
   }
 
   $('.js-terms a').on('click', (event) => {
@@ -13,6 +14,8 @@ function setupMyCheckoutScripts() {
       url += `?content_only=1`;
       $.get(url, (content) => {
         $('#modal').find('.modal-content').html($(content).find('.page-cms').contents());
+      }).fail((resp) => {
+        prestashop.emit('handleError', {eventType: 'clickTerms', resp: resp});
       });
     }
 
@@ -26,6 +29,6 @@ function setupMyCheckoutScripts() {
 
 $(document).ready(() => {
   if ($('body#checkout').length === 1) {
-    setupMyCheckoutScripts();
+    setUpCheckout();
   }
 });

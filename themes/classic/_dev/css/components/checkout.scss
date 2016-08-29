@@ -60,12 +60,12 @@ body#checkout {
     .step-edit {
       display: none;
     }
-    &.-js-current {
+    &.-current {
       .content {
         display: block;
       }
     }
-    &.-js-current.-reachable.-complete {
+    &.-current.-reachable.-complete {
       .done,
       .step-edit {
         display: none;
