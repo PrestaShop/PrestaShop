@@ -264,17 +264,6 @@
     }
   }
 }
-.clear-all-wrapper {
-  .btn-secondary {
-    text-transform: lowercase;
-    padding: rem(4px);
-    margin: rem(4px) 0;
-    color: $gray;
-    .material-icons {
-      margin-right: 0;
-    }
-  }
-}
 
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {

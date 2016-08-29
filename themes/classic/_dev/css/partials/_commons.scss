@@ -78,6 +78,19 @@ p {
     margin-right: $small-space;
   }
 }
+.btn-tertiary {
+  @extend .btn-secondary;
+  text-transform: lowercase;
+  color: $gray;
+  box-shadow: rem(1px) rem(1px) rem(1px) 0 rgba(0, 0, 0, 0.1);
+  padding: rem(4px);
+  margin: rem(4px) 0;
+  font-weight: 400;
+  font-size: $font-size-sm;
+  .material-icons {
+    font-size: $base-font-size;
+  }
+}
 .card {
   @include box-shadow;
 }
