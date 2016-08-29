@@ -30,7 +30,6 @@ class ConfigurationTestCore
         '/classes/log/index.php',
         '/classes/cache/index.php',
         '/config/index.php',
-        '/tools/pear/PEAR.php',
         '/controllers/admin/AdminLoginController.php',
         '/download/index.php',
         '/js/tools.js',
