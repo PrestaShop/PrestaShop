@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f2d1c5443636295e9720caac90ea8d93">
+        <source>Your internal name for this attribute.</source>
+        <target>Your internal name for this attribute.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:197</note>
+      </trans-unit>
+      <trans-unit id="b5e6921c2d093fbcb0088c9466ee9983">
+        <source>The public name for this attribute, displayed to the customers.</source>
+        <target>The public name for this attribute, displayed to the customers.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:206</note>
+      </trans-unit>
+      <trans-unit id="580de47d3bc3e99a0b6aba55066a983a">
+        <source>The way the attribute's values will be presented to the customers in the product's page.</source>
+        <target>The way the attribute's values will be presented to the customers in the product's page.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:219</note>
+      </trans-unit>
+      <trans-unit id="71c476c94d0a0e3dfc0826afd03d2dda">
+        <source>Choose the attribute group for this value.</source>
+        <target>Choose the attribute group for this value.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:267</note>
+      </trans-unit>
+      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
+        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
+        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:305</note>
+      </trans-unit>
+      <trans-unit id="dd24a1142c1070a0efbdf43b4f0167cc">
+        <source>Upload an image file containing the color texture from your computer.</source>
+        <target>Upload an image file containing the color texture from your computer.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:313</note>
+      </trans-unit>
+      <trans-unit id="ba353198430b2004efeb1ac6d1f410d0">
+        <source>This will override the HTML color!</source>
+        <target>This will override the HTML color!</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:314</note>
+      </trans-unit>
+      <trans-unit id="7d5672f569de406c85249db6f1c99ec0">
+        <source>Save then add another value</source>
+        <target>Save then add another value</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:549</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7db5022f86dda7b39e31e754afd5c6a0">
+        <source>Allow customers to upload files using the contact page.</source>
+        <target>Allow customers to upload files using the contact page.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:151</note>
+      </trans-unit>
+      <trans-unit id="1f2b974152999d549b89994879e452a3">
+        <source>Please fill out the message fields that appear by default when you answer a thread on the customer service page.</source>
+        <target>Please fill out the message fields that appear by default when you answer a thread on the customer service page.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:156</note>
+      </trans-unit>
+      <trans-unit id="61b7dba4b2704903e5a2434e1f3ab878">
+        <source>URL for your IMAP server (ie.: mail.server.com).</source>
+        <target>URL for your IMAP server (ie.: mail.server.com).</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:168</note>
+      </trans-unit>
+      <trans-unit id="d60419d8fec86275eb0752ce43556e6f">
+        <source>Port to use to connect to your IMAP server.</source>
+        <target>Port to use to connect to your IMAP server.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:173</note>
+      </trans-unit>
+      <trans-unit id="b8453d9982fb11c704dca368e5107677">
+        <source>User to use to connect to your IMAP server.</source>
+        <target>User to use to connect to your IMAP server.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:179</note>
+      </trans-unit>
+      <trans-unit id="849dafe04c2f54cb0dc079da9ca15a8f">
+        <source>Password to use to connect your IMAP server.</source>
+        <target>Password to use to connect your IMAP server.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:184</note>
+      </trans-unit>
+      <trans-unit id="e9d5cadd20f10058a5bb0823aed17584">
+        <source>Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.</source>
+        <target>Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:189</note>
+      </trans-unit>
+      <trans-unit id="eca83facb7294ab0f66e1dec9fc66efd">
+        <source>Create new threads for unrecognized emails.</source>
+        <target>Create new threads for unrecognized emails.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:194</note>
+      </trans-unit>
+      <trans-unit id="38033ed4d12ca354e503266bd9a59105">
+        <source>Use POP3 instead of IMAP.</source>
+        <target>Use POP3 instead of IMAP.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:199</note>
+      </trans-unit>
+      <trans-unit id="3abb33532b4b4e0201dbdde08eced7ee">
+        <source>Do not use RSH or SSH to establish a preauthenticated IMAP sessions.</source>
+        <target>Do not use RSH or SSH to establish a preauthenticated IMAP sessions.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:205</note>
+      </trans-unit>
+      <trans-unit id="89884c64df4330255f1fc07dadfb5dd4">
+        <source>Use the Secure Socket Layer (TLS/SSL) to encrypt the session.</source>
+        <target>Use the Secure Socket Layer (TLS/SSL) to encrypt the session.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:210</note>
+      </trans-unit>
+      <trans-unit id="f5c4e8df7daa8f49d8f68ae25deab8c7">
+        <source>Validate certificates from the TLS/SSL server.</source>
+        <target>Validate certificates from the TLS/SSL server.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:215</note>
+      </trans-unit>
+      <trans-unit id="244789498d5c439efc7a4a05975dc391">
+        <source>Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.</source>
+        <target>Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:220</note>
+      </trans-unit>
+      <trans-unit id="eabd6d4298e21426642606fe653585c9">
+        <source>Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.</source>
+        <target>Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:225</note>
+      </trans-unit>
+      <trans-unit id="5b035ec3dccf9e9d875e0b830062a9ff">
+        <source>Do not use start-TLS to encrypt the session, even with servers that support it.</source>
+        <target>Do not use start-TLS to encrypt the session, even with servers that support it.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:230</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminManufacturersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0205bdbccc495138a109bd8710053565">
+        <source>Upload a brand logo from your computer.</source>
+        <target>Upload a brand logo from your computer.</target>
+        <note>Context:
+File: controllers/admin/AdminManufacturersController.php:352</note>
+      </trans-unit>
+      <trans-unit id="643544fd7876fa0f017ba6233f46b4c3">
+        <source>To add "tags," click inside the field, write something, and then press "Enter."</source>
+        <target>To add "tags," click inside the field, write something, and then press "Enter."</target>
+        <note>Context:
+File: controllers/admin/AdminManufacturersController.php:378</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dd0479e67d24cd2c2868d4c6b2dcba9a">
+        <source>Company name for this supplier</source>
+        <target>Company name for this supplier</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:138</note>
+      </trans-unit>
+      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
+        <source>Will appear in the list of suppliers.</source>
+        <target>Will appear in the list of suppliers.</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:149</note>
+      </trans-unit>
+      <trans-unit id="b51bea4eee9d9ef6bd9a6849337013d5">
+        <source>Phone number for this supplier</source>
+        <target>Phone number for this supplier</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:160</note>
+      </trans-unit>
+      <trans-unit id="c24c0c9cd7bdb34eaff67028b0cb8349">
+        <source>Mobile phone number for this supplier.</source>
+        <target>Mobile phone number for this supplier.</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:169</note>
+      </trans-unit>
+      <trans-unit id="e865605842d16d0d11c266c731e00507">
+        <source>Upload a supplier logo from your computer.</source>
+        <target>Upload a supplier logo from your computer.</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:234</note>
+      </trans-unit>
+      <trans-unit id="3ef61077e04c24d0b712a1b0ea036255">
+        <source>To add "tags" click in the field, write something and then press "Enter".</source>
+        <target>To add "tags" click in the field, write something and then press "Enter".</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:259</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminFeaturesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
+        <source>Add new feature value</source>
+        <target>Add new feature value</target>
+        <note>Context:
+File: controllers/admin/AdminFeaturesController.php:210</note>
+      </trans-unit>
+      <trans-unit id="21d883f3177ec09a845d9963eca239b1">
+        <source>Save and add another value</source>
+        <target>Save and add another value</target>
+        <note>Context:
+File: controllers/admin/AdminFeaturesController.php:237</note>
+      </trans-unit>
+      <trans-unit id="07fc7dc79c8046bb36d97b4332dab1ca">
+        <source>Back to the list</source>
+        <target>Back to the list</target>
+        <note>Context:
+File: controllers/admin/AdminFeaturesController.php:260</note>
+      </trans-unit>
+      <trans-unit id="d8aac6665c79faf4f411fe0da93ab23c">
+        <source>Add new feature values</source>
+        <target>Add new feature values</target>
+        <note>Context:
+File: controllers/admin/AdminFeaturesController.php:256</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="42f9ee5026d32792987af851a2ea0343">
+        <source>This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.</source>
+        <target>This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:547</note>
+      </trans-unit>
+      <trans-unit id="7e35726fb991605ab3d0e6406599e6ef">
+        <source>To add "tags," click in the field, write something, and then press "Enter."</source>
+        <target>To add "tags," click in the field, write something, and then press "Enter."</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:596</note>
+      </trans-unit>
+      <trans-unit id="09e2683b6b92b326691cd992f6e5684b">
+        <source>Only letters, numbers, underscore (_) and the minus (-) character are allowed.</source>
+        <target>Only letters, numbers, underscore (_) and the minus (-) character are allowed.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:604</note>
+      </trans-unit>
+      <trans-unit id="53d98bd116f47fdfe15c8eb4525c5e99">
+        <source>You now have three default customer groups.</source>
+        <target>You now have three default customer groups.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:611</note>
+      </trans-unit>
+      <trans-unit id="463848257c086c4816d9f4c020a8d19e">
+        <source>Mark all of the customer groups which you would like to have access to this category.</source>
+        <target>Mark all of the customer groups which you would like to have access to this category.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:615</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="af809f35e40bd6f644509ad566ecf38c">
+        <source>To have a different title from the product name, enter it here.</source>
+        <target>To have a different title from the product name, enter it here.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php:63</note>
+      </trans-unit>
+      <trans-unit id="5f99bb8ecd940f311cb66fadfc467a2b">
+        <source>To have a different description than your product summary in search results pages, write it here.</source>
+        <target>To have a different description than your product summary in search results pages, write it here.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php:74</note>
+      </trans-unit>
+      <trans-unit id="26511e4120f7b4f3135a21b9f35efed8">
+        <source>To which product the page should redirect?</source>
+        <target>To which product the page should redirect?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php:103</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductPrice.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="420f46a170eef476454fa134085a85a2">
+        <source>Per kilo, per litre</source>
+        <target>Per kilo, per litre</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductPrice.php:141</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c1e7664e79e964f18625f2752dc77ea3">
+        <source>Use a comma to create seperate tags. E.g.: dress, cotton, party dresses.</source>
+        <target>Use a comma to create seperate tags. E.g.: dress, cotton, party dresses.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php:103</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e63e2ba42470a41ba75e0d7ea35a410f">
+        <source>Combine several attributes, e.g.: "Size: all", "Color: red".</source>
+        <target>Combine several attributes, e.g.: "Size: all", "Color: red".</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php:71</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
+        <source>Search for a product</source>
+        <target>Search for a product</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php:107</note>
+      </trans-unit>
+      <trans-unit id="9242ed633bcac07574f63fba6e184fd8">
+        <source>Enter your product name</source>
+        <target>Enter your product name</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php:127</note>
+      </trans-unit>
+      <trans-unit id="7f6c27a96363effdda77216cf1251400">
+        <source><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></source>
+        <target><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php:149</note>
+      </trans-unit>
+      <trans-unit id="1fbfcc9642d39544207c67f66ec3bc00">
+        <source>Search and add a related product</source>
+        <target>Search and add a related product</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php:243</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="268bf51f15b2210472b2d42dd883214a">
+        <source><![CDATA[Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Attributes & Features for this!]]></source>
+        <target><![CDATA[Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Attributes & Features for this!]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_combinations.html.twig:8</note>
+      </trans-unit>
+      <trans-unit id="cf201b003ec140ca70ae5b842def159f">
+        <source><![CDATA[To add combinations, enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or select it in the right column. Then click on "Generate": it will automatically create all the combinations for you! <br> If you haven’t got any attributes yet, you should first create some in [1]Attributes & Features[/1].]]></source>
+        <target><![CDATA[To add combinations, enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or select it in the right column. Then click on "Generate": it will automatically create all the combinations for you! <br> If you haven’t got any attributes yet, you should first create some in [1]Attributes & Features[/1].]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_combinations.html.twig:15</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e3e5475e756a5faa16b7c97ca591c5d9">
+        <source>This interface allows you to specify the warehouse in which the product is stocked.</source>
+        <target>This interface allows you to specify the warehouse in which the product is stocked.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-combination.html.twig:5</note>
+      </trans-unit>
+      <trans-unit id="d96fc45d9d293e923893a37d598ee960">
+        <source>It is also possible to specify the location within the warehouse for each product or combination.</source>
+        <target>It is also possible to specify the location within the warehouse for each product or combination.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-combination.html.twig:6</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f70a77d0ea45b06cdb9596a2c3667505">
+        <source>If a carrier has a tax, it will be added to the shipping fees.</source>
+        <target>If a carrier has a tax, it will be added to the shipping fees.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_shipping.html.twig:54</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b0ea2bd9df4b8ee746b4e5fd28503851">
+        <source>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</source>
+        <target>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:12</note>
+      </trans-unit>
+      <trans-unit id="352ceee04b365bba230157c960b1412d">
+        <source>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces).</source>
+        <target>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:26</note>
+      </trans-unit>
+      <trans-unit id="c533675166b567256cae22139534b713">
+        <source>This is the human-readable URL, as generated from the product's name. You can change it if you want.</source>
+        <target>This is the human-readable URL, as generated from the product's name. You can change it if you want.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:37</note>
+      </trans-unit>
+      <trans-unit id="d64803e21cb98e1df4ad4a96705d0153">
+        <source>When your product is disabled, choose to which page you’d like to redirect the customers visiting its page.</source>
+        <target>When your product is disabled, choose to which page you’d like to redirect the customers visiting its page.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:77</note>
+      </trans-unit>
+      <trans-unit id="40464c1dbd8778600fba3f37d36e79dd">
+        <source>No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.</source>
+        <target>No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:104</note>
+      </trans-unit>
+      <trans-unit id="47346298629d9893a528bb9fbe128e07">
+        <source>Permanent redirection (301) = Permanently display another product instead.</source>
+        <target>Permanent redirection (301) = Permanently display another product instead.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:105</note>
+      </trans-unit>
+      <trans-unit id="526f69cb1a278c0db2a0e333d1b08083">
+        <source>Temporary redirection (302) = Temporarily display another product instead.</source>
+        <target>Temporary redirection (302) = Temporarily display another product instead.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:106</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d1714e1e7a3d13ed88b04efdeb00f71d">
+        <source>Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL.</source>
+        <target>Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:3</note>
+      </trans-unit>
+      <trans-unit id="c5abe76b24973299661ce389d1a092e1">
+        <source>Search categories</source>
+        <target>Search categories</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:8</note>
+      </trans-unit>
+      <trans-unit id="100bb7cad626946820dbc0b8b3a621a8">
+        <source>If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).</source>
+        <target>If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
+        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
+        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:346</note>
+      </trans-unit>
+      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
+        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
+        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:775</note>
+      </trans-unit>
+      <trans-unit id="bb03c14d14caa07e21f97cbe5eab022d">
+        <source>Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?</source>
+        <target>Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:25</note>
+      </trans-unit>
+      <trans-unit id="0745d3d4082ad910137e24fd2901ca63">
+        <source>Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?</source>
+        <target>Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:220</note>
+      </trans-unit>
+      <trans-unit id="0a4595dd800cb3338d233a177f422758">
+        <source>Advanced settings in [1][2]Combinations[/1]</source>
+        <target>Advanced settings in [1][2]Combinations[/1]</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:236</note>
+      </trans-unit>
+      <trans-unit id="00331f284aa5a3fe252b610df78cf50d">
+        <source>Your internal reference code for this product. Allowed special characters: .-_#.</source>
+        <target>Your internal reference code for this product. Allowed special characters: .-_#.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:246</note>
+      </trans-unit>
+      <trans-unit id="e2c7ed083cb894812fb5d2539f5e7ecb">
+        <source>How many products should be available for sale?</source>
+        <target>How many products should be available for sale?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:260</note>
+      </trans-unit>
+      <trans-unit id="5e8b5ad38b1c0a76d41c2ebaa74c11f5">
+        <source>Advanced settings in [1][2]Quantities[/1]</source>
+        <target>Advanced settings in [1][2]Quantities[/1]</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:270</note>
+      </trans-unit>
+      <trans-unit id="1423e14cddc8aa38062c77d9b8fe8910">
+        <source>This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</source>
+        <target>This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:278</note>
+      </trans-unit>
+      <trans-unit id="143cb6dd5281d68859217704ad9c9f60">
+        <source>Advanced settings in [1][2]Pricing[/1]</source>
+        <target>Advanced settings in [1][2]Pricing[/1]</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:298</note>
+      </trans-unit>
+      <trans-unit id="a4a8ceb87fae812bfac552e0169bb0f9">
+        <source>This is the price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</source>
+        <target>This is the price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:483</note>
+      </trans-unit>
+      <trans-unit id="b9c6e3712398e2df7d3ebd7ccc7d5132">
+        <source>Some products can be purchased by unit (per bottle, per pound, etc.),  and this is the price for one unit. For instance, if you’re selling fabrics, it would be the price per meter.</source>
+        <target>Some products can be purchased by unit (per bottle, per pound, etc.),  and this is the price for one unit. For instance, if you’re selling fabrics, it would be the price per meter.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:505</note>
+      </trans-unit>
+      <trans-unit id="eee67d763dcf287ca5d096650341f387">
+        <source>The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.</source>
+        <target>The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:563</note>
+      </trans-unit>
+      <trans-unit id="959f5f13ee3cc4199a335d1738351596">
+        <source>You can set specific prices for customers belonging to different groups, different countries, etc.</source>
+        <target>You can set specific prices for customers belonging to different groups, different countries, etc.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:580</note>
+      </trans-unit>
+      <trans-unit id="fbade15b99b07c58fab7be777c0f4c0c">
+        <source>Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.</source>
+        <target>Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:621</note>
+      </trans-unit>
+      <trans-unit id="6fcccfb9dbed970c59c18752f6372703">
+        <source>Tags are meant to help your customers find your products via the search bar.</source>
+        <target>Tags are meant to help your customers find your products via the search bar.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:726</note>
+      </trans-unit>
+      <trans-unit id="cfd69f4f64142b71ff1ddd21b0053026">
+        <source>Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.</source>
+        <target>Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:732</note>
+      </trans-unit>
+      <trans-unit id="524ab9a5fc9a1c19a3ce32e9b06526c3">
+        <source>You can manage tag aliases in the Alias section.</source>
+        <target>You can manage tag aliases in the Alias section.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:733</note>
+      </trans-unit>
+      <trans-unit id="19f31a842add8b13595ddb3a41a1ff27">
+        <source>Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.</source>
+        <target>Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:751</note>
+      </trans-unit>
+      <trans-unit id="633bf9436b67e19cd61db84ccab7fee2">
+        <source>ISBN is used internationally to identify books and their various editions.</source>
+        <target>ISBN is used internationally to identify books and their various editions.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:766</note>
+      </trans-unit>
+      <trans-unit id="39bd7eba8aa2033579b5ae60bf0c774d">
+        <source>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</source>
+        <target>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:786</note>
+      </trans-unit>
+      <trans-unit id="aa25978d6b02e4e469c205afa9de0c46">
+        <source>This interface allows you to specify the suppliers of the current product and its combinations, if any.</source>
+        <target>This interface allows you to specify the suppliers of the current product and its combinations, if any.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:846</note>
+      </trans-unit>
+      <trans-unit id="5f5641c7f2d62db16c4d12ce2bcf5898">
+        <source>You can specify supplier references according to previously associated suppliers.</source>
+        <target>You can specify supplier references according to previously associated suppliers.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:847</note>
+      </trans-unit>
+      <trans-unit id="d57ad4a0ab142c03bb1ced551f66ce9b">
+        <source><![CDATA[When using the advanced stock management tool (see Shop Parameters > Products settings), the values you define (price, references) will be used in supply orders.]]></source>
+        <target><![CDATA[When using the advanced stock management tool (see Shop Parameters > Products settings), the values you define (price, references) will be used in supply orders.]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:853</note>
+      </trans-unit>
+      <trans-unit id="548f88021c5b960f7eccd9ee81871aad">
+        <source>Permanently delete this product.</source>
+        <target>Permanently delete this product.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:944</note>
+      </trans-unit>
+      <trans-unit id="9b425cee36266ffe1f0923b99683a911">
+        <source>See how the product will look online.</source>
+        <target>See how the product will look online.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:955</note>
+      </trans-unit>
+      <trans-unit id="8cfaff6242df6f99e64faa3ef58d2809">
+        <source>Save and duplicate this product, then go to the new product: CTRL+D</source>
+        <target>Save and duplicate this product, then go to the new product: CTRL+D</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:979</note>
+      </trans-unit>
+      <trans-unit id="28d6a75312eb3341efdb095fd1dd9083">
+        <source>Save and go back to the catalog: CTRL+Q</source>
+        <target>Save and go back to the catalog: CTRL+Q</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:989</note>
+      </trans-unit>
+      <trans-unit id="86e4b2daaa59e55dd9eef1fa68740ccf">
+        <source>Save and create a new product: CTRL+P</source>
+        <target>Save and create a new product: CTRL+P</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:999</note>
+      </trans-unit>
+      <trans-unit id="a80733808ab68c4dc8d67a23d23726c4">
+        <source>Save the product and stay on the current page: CTRL+S</source>
+        <target>Save the product and stay on the current page: CTRL+S</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1009</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53f3eb21de0c7a8c909a86be984996f6">
+        <source>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</source>
+        <target>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_combination.html.twig:86</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-supplier-combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="214396125ea99914d7f6faef5d612b85">
+        <source>You can specify product reference(s) for each associated supplier. Click "Save" after changing selected suppliers to display the associated product references.</source>
+        <target>You can specify product reference(s) for each associated supplier. Click "Save" after changing selected suppliers to display the associated product references.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-supplier-combination.html.twig:8</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="542f59279cd5d73dfbdb069ce0833b0a">
+        <source>Search name</source>
+        <target>Search name</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:273</note>
+      </trans-unit>
+      <trans-unit id="3ce14776b1408d0dc406766fd0c6a45d">
+        <source>Search ref.</source>
+        <target>Search ref.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:282</note>
+      </trans-unit>
+      <trans-unit id="84645920bd0fb266cb4acdbc00003e62">
+        <source>Search category</source>
+        <target>Search category</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:291</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

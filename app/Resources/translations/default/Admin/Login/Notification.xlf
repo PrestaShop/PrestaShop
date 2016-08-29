@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminLoginController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="eed80aefc5a34c94db6274505d68d151">
+        <source>Some identification information is missing.</source>
+        <target>Some identification information is missing.</target>
+        <note>Context:
+File: controllers/admin/AdminLoginController.php:310</note>
+      </trans-unit>
+      <trans-unit id="375dee52ced3330cd3496340b32098ca">
+        <source>The password is missing: please enter your new password.</source>
+        <target>The password is missing: please enter your new password.</target>
+        <note>Context:
+File: controllers/admin/AdminLoginController.php:313
+ Comment: password (twice)</note>
+      </trans-unit>
+      <trans-unit id="f01fb987f60542e0bff1bf7bed42d142">
+        <source>The password is not in a valid format.</source>
+        <target>The password is not in a valid format.</target>
+        <note>Context:
+File: controllers/admin/AdminLoginController.php:315</note>
+      </trans-unit>
+      <trans-unit id="76e08a16ce116959f282955d33c51aa0">
+        <source>The confirmation is empty: please fill in the password confirmation as well.</source>
+        <target>The confirmation is empty: please fill in the password confirmation as well.</target>
+        <note>Context:
+File: controllers/admin/AdminLoginController.php:317</note>
+      </trans-unit>
+      <trans-unit id="3b065e732222a25050ced52f7fca85c0">
+        <source>The password and its confirmation do not match. Please double check both passwords.</source>
+        <target>The password and its confirmation do not match. Please double check both passwords.</target>
+        <note>Context:
+File: controllers/admin/AdminLoginController.php:319</note>
+      </trans-unit>
+      <trans-unit id="f197511588fa1467e957bf6c48539e88">
+        <source>This account does not exist.</source>
+        <target>This account does not exist.</target>
+        <note>Context:
+File: controllers/admin/AdminLoginController.php:323
+ Comment: check matching employee id with its email</note>
+      </trans-unit>
+      <trans-unit id="5bb331e97ecfa6918e8716c595d1b2b4">
+        <source>You can reset your password every %d minute(s) only. Please try again later.</source>
+        <target>You can reset your password every %d minute(s) only. Please try again later.</target>
+        <note>Context:
+File: controllers/admin/AdminLoginController.php:326</note>
+      </trans-unit>
+      <trans-unit id="56f5aa17fc3a9c5d9827bb148f072cd2">
+        <source>Your password reset request expired. Please start again.</source>
+        <target>Your password reset request expired. Please start again.</target>
+        <note>Context:
+File: controllers/admin/AdminLoginController.php:331
+ Comment: To update password, we must have the temporary reset token that matches.</note>
+      </trans-unit>
+      <trans-unit id="2a8fac0ed3799588798c1b531a2b65ef">
+        <source>An error occurred while attempting to change your password.</source>
+        <target>An error occurred while attempting to change your password.</target>
+        <note>Context:
+File: controllers/admin/AdminLoginController.php:363</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

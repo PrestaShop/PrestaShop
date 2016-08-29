@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fe7ff4ed0a66abe86361ba0f8d6e919a">
+        <source>The backup file does not exist</source>
+        <target>The backup file does not exist</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:158</note>
+      </trans-unit>
+      <trans-unit id="2c7338ad06a6bb0747b0d432c33464ce">
+        <source>The "Backups" directory located in the admin directory must be writable (CHMOD 755 / 777).</source>
+        <target>The "Backups" directory located in the admin directory must be writable (CHMOD 755 / 777).</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:174</note>
+      </trans-unit>
+      <trans-unit id="f36c9a20c2ce51f491c944e41fde5ace">
+        <source>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</source>
+        <target>It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:181</note>
+      </trans-unit>
+      <trans-unit id="d07e52a27b56cb0bb153bf214b3953d4">
+        <source>Unable to open your backup directory</source>
+        <target>Unable to open your backup directory</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:249</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c3ecc0e8b4dc11a1d2c66d81439b4a42">
+        <source>The limit chosen is larger than the server's maximum upload limit. Please increase the limits of your server.</source>
+        <target>The limit chosen is larger than the server's maximum upload limit. Please increase the limits of your server.</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:164</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="89d371deca1b2b50a933fabc8005ccfb">
+        <source>%module% did not return a valid response on installation.</source>
+        <target>%module% did not return a valid response on installation.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:467</note>
+      </trans-unit>
+      <trans-unit id="9ec45e5e45fd270a3077c7260f96f121">
+        <source>Installation of module %module% succeeded</source>
+        <target>Installation of module %module% succeeded</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:472</note>
+      </trans-unit>
+      <trans-unit id="0a1b50ce381cdf42b80dfb248d5373d5">
+        <source>Installation of module %module% failed.</source>
+        <target>Installation of module %module% failed.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:478</note>
+      </trans-unit>
+      <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
+        <source>Synchronized with Addons marketplace!</source>
+        <target>Synchronized with Addons marketplace!</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:602</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Module/ModuleZipManager.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="08859ef1a837ae429ff2e4decc952cbe">
+        <source>Unable to find uploaded module at the following path: %file%</source>
+        <target>Unable to find uploaded module at the following path: %file%</target>
+        <note>Context:
+File: src/Adapter/Module/ModuleZipManager.php:81</note>
+      </trans-unit>
+      <trans-unit id="66ac45df3773a11286d3e1751b757b57">
+        <source>Cannot extract module in %path% to get its name.</source>
+        <target>Cannot extract module in %path% to get its name.</target>
+        <note>Context:
+File: src/Adapter/Module/ModuleZipManager.php:90</note>
+      </trans-unit>
+      <trans-unit id="a85499f3d020141df9b6203b7585a9bf">
+        <source>This file does not seem to be a valid module zip</source>
+        <target>This file does not seem to be a valid module zip</target>
+        <note>Context:
+File: src/Adapter/Module/ModuleZipManager.php:125</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Module/ModuleDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="429cc2fb9f1cb16782b0af5ba748096d">
+        <source>Parse error detected in main class of module %module%!</source>
+        <target>Parse error detected in main class of module %module%!</target>
+        <note>Context:
+File: src/Adapter/Module/ModuleDataProvider.php:191</note>
+      </trans-unit>
+      <trans-unit id="e03545a6c414502e72d232b4c30d9fdd">
+        <source>Error while loading file of module %module%. %error_message%</source>
+        <target>Error while loading file of module %module%. %error_message%</target>
+        <note>Context:
+File: src/Adapter/Module/ModuleDataProvider.php:209</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Module/ModuleManager.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f2715f72988009e4f50e94d88b3df89f">
+        <source>You are not allowed to install modules.</source>
+        <target>You are not allowed to install modules.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:109</note>
+      </trans-unit>
+      <trans-unit id="69ae13c289241714dfa0bd4e2f5bbcca">
+        <source>You are not allowed to uninstall this module.</source>
+        <target>You are not allowed to uninstall this module.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:154</note>
+      </trans-unit>
+      <trans-unit id="1a263755e673bdbfc6ec6739a32e2fac">
+        <source>You are not allowed to upgrade this module.</source>
+        <target>You are not allowed to upgrade this module.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:190</note>
+      </trans-unit>
+      <trans-unit id="83a812de8784135990c57d25d0f9b34b">
+        <source>The module %module% must be installed first</source>
+        <target>The module %module% must be installed first</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:198</note>
+      </trans-unit>
+      <trans-unit id="ceb04ec3e143ec849005533a507b81b7">
+        <source>You are not allowed to disable this module.</source>
+        <target>You are not allowed to disable this module.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:236</note>
+      </trans-unit>
+      <trans-unit id="b58f4b4f4f870b40e52c42c161df0d60">
+        <source>Error when disabling module %module%. %error_details%.</source>
+        <target>Error when disabling module %module%. %error_details%.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:247</note>
+      </trans-unit>
+      <trans-unit id="a2825f14a9e0bf0b004b2a255317d6dd">
+        <source>You are not allowed to enable this module.</source>
+        <target>You are not allowed to enable this module.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:270</note>
+      </trans-unit>
+      <trans-unit id="fbaf1c9434442c780f3eddff4406603c">
+        <source>Error when enabling module %module%. %error_details%.</source>
+        <target>Error when enabling module %module%. %error_details%.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:281</note>
+      </trans-unit>
+      <trans-unit id="974a1527e3b406ebb7c772ddd2a7aa41">
+        <source>You are not allowed to disable this module on mobile.</source>
+        <target>You are not allowed to disable this module on mobile.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:304</note>
+      </trans-unit>
+      <trans-unit id="976dc5c6fc2fe73b2c43c7776847e593">
+        <source>Error when disabling module %module% on mobile. %error_details%</source>
+        <target>Error when disabling module %module% on mobile. %error_details%</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:315</note>
+      </trans-unit>
+      <trans-unit id="8459337c91608e117589881cc560b0e6">
+        <source>You are not allowed to enable this module on mobile.</source>
+        <target>You are not allowed to enable this module on mobile.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:338</note>
+      </trans-unit>
+      <trans-unit id="416bc5074d9b9944a51797b081492442">
+        <source>Error when enabling module %module% on mobile. %error_details%</source>
+        <target>Error when enabling module %module% on mobile. %error_details%</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:349</note>
+      </trans-unit>
+      <trans-unit id="a608a854a4091bd1f92cff310ba09b25">
+        <source>You are not allowed to reset this module.</source>
+        <target>You are not allowed to reset this module.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:370</note>
+      </trans-unit>
+      <trans-unit id="387aeee114093679248f936ba36ee416">
+        <source>Error when resetting module %module%. %error_details%</source>
+        <target>Error when resetting module %module%. %error_details%</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleManager.php:386</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Module/ModuleRepository.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a3214c22fd9d21c988d9bb06748d6d9f">
+        <source>Parse error on module %module%. %error_details%</source>
+        <target>Parse error on module %module%. %error_details%</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleRepository.php:318</note>
+      </trans-unit>
+      <trans-unit id="bcc1e7daae2727b6d7a32567086cd84f">
+        <source>Unexpected exception on module %module%. %error_details%</source>
+        <target>Unexpected exception on module %module%. %error_details%</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleRepository.php:326</note>
+      </trans-unit>
+      <trans-unit id="9fcc3446d55e632b5f3ca13fc810c83b">
+        <source>Loading data from Addons failed. %error_details%</source>
+        <target>Loading data from Addons failed. %error_details%</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleRepository.php:367</note>
+      </trans-unit>
+      <trans-unit id="0554e4a4ddb313c3962088dc32647e90">
+        <source>Parse error detected in module %module%. %error_details%.</source>
+        <target>Parse error detected in module %module%. %error_details%.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleRepository.php:456</note>
+      </trans-unit>
+      <trans-unit id="40e7db035e09d8f198b96a7d5d9e821f">
+        <source>Exception detected while loading module %module%. %error_details%.</source>
+        <target>Exception detected while loading module %module%. %error_details%.</target>
+        <note>Context:
+File: src/Core/Addon/Module/ModuleRepository.php:464</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_notification_update.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fca2f02b01daced572256506d1054f4a">
+        <source>No changelog provided</source>
+        <target>No changelog provided</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_notification_update.html.twig:23</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c3dbf8925ec4c77ef5317e1e27317b70">
+        <source>Installing module...</source>
+        <target>Installing module...</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:26</note>
+      </trans-unit>
+      <trans-unit id="a26f56145fea2d3af35bf0d6ac83c28a">
+        <source>It will close as soon as the module is installed. It won't be long!</source>
+        <target>It will close as soon as the module is installed. It won't be long!</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:28</note>
+      </trans-unit>
+      <trans-unit id="f48a5ae14fa2b0c85442d1199a08b3b4">
+        <source>Module installed!</source>
+        <target>Module installed!</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:33</note>
+      </trans-unit>
+      <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1">
+        <source>Oops... Upload failed.</source>
+        <target>Oops... Upload failed.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1e88146575de2fc7264f3760e5f07bee">
+        <source>You're about to log out your Addons account. You might miss important updates of Addons you've bought.</source>
+        <target>You're about to log out your Addons account. You might miss important updates of Addons you've bought.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:54</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="87ad4793c12c9f9e5d56cc81386f77b8">
+        <source>No description found for this module :(</source>
+        <target>No description found for this module :(</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig:97</note>
+      </trans-unit>
+      <trans-unit id="9c98e191731b12d95aa5d86b9a495188">
+        <source>No Additional description provided for this module :(</source>
+        <target>No Additional description provided for this module :(</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig:107</note>
+      </trans-unit>
+      <trans-unit id="1ed02f805424aac96756b590d51e2038">
+        <source>No feature list provided for this module :(</source>
+        <target>No feature list provided for this module :(</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig:117</note>
+      </trans-unit>
+      <trans-unit id="f2a854a84903f5f29c0b7a40ccbf4ee5">
+        <source>No customer benefits notes found for this module :(</source>
+        <target>No customer benefits notes found for this module :(</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig:127</note>
+      </trans-unit>
+      <trans-unit id="94d27c2e2294ddfe66621b814f2ac3e0">
+        <source>No demonstration video found for this module :(</source>
+        <target>No demonstration video found for this module :(</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig:137</note>
+      </trans-unit>
+      <trans-unit id="3072d199d2a0269893376e8c7d0049d6">
+        <source>No changelog provided for this module :(</source>
+        <target>No changelog provided for this module :(</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig:155</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_bulk_action.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d75392eccc8439e1c299aedecad71086">
+        <source>You're about to 'bulk [1]' the following modules:</source>
+        <target>You're about to 'bulk [1]' the following modules:</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_bulk_action.html.twig:13</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d64173400a913708ed3beb9d0bab8d71">
+        <source>You're about to disable %moduleName% module.</source>
+        <target>You're about to disable %moduleName% module.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm.html.twig:26</note>
+      </trans-unit>
+      <trans-unit id="c5209889e18199fb2a2c50958d3212b8">
+        <source>Your current settings will be saved, but the module will no longer be active.</source>
+        <target>Your current settings will be saved, but the module will no longer be active.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm.html.twig:29</note>
+      </trans-unit>
+      <trans-unit id="12b0709d3148d74fe0fa4efd0d09a00d">
+        <source>You're about to uninstall %moduleName% module.</source>
+        <target>You're about to uninstall %moduleName% module.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm.html.twig:32</note>
+      </trans-unit>
+      <trans-unit id="db0769970bbd476188bfc1c5d9d6a2bd">
+        <source>This will disable the module and delete all its files. For good.</source>
+        <target>This will disable the module and delete all its files. For good.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm.html.twig:35</note>
+      </trans-unit>
+      <trans-unit id="36fbfc01d63e4b57d18991077535c6e0">
+        <source>This action cannot be undone.</source>
+        <target>This action cannot be undone.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm.html.twig:52</note>
+      </trans-unit>
+      <trans-unit id="634b5d0d5ec8e481321b1d776f312388">
+        <source>You're about to reset %moduleName% module.</source>
+        <target>You're about to reset %moduleName% module.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm.html.twig:46</note>
+      </trans-unit>
+      <trans-unit id="58ce7123c3789e3c51cb3ffd42883df1">
+        <source>This will restore the defaults settings.</source>
+        <target>This will restore the defaults settings.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm.html.twig:49</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

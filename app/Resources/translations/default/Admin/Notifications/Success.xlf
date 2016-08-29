@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f38f5974cdc23279ffe6d203641a8bdf">
+        <source>Settings updated.</source>
+        <target>Settings updated.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1098</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_banner/ps_banner.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="efc226b17e0532afff43be870bff0de7">
+        <source>The settings have been updated.</source>
+        <target>The settings have been updated.</target>
+        <note>Context:
+File: modules/ps_banner/ps_banner.php:163</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_imageslider/ps_imageslider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20015706a8cbd457cbb6ea3e7d5dc9b3">
+        <source>Configuration updated</source>
+        <target>Configuration updated</target>
+        <note>Context:
+File: modules/ps_imageslider/ps_imageslider.php:431</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
+        <source>Settings updated</source>
+        <target>Settings updated</target>
+        <note>Context:
+File: modules/ps_emailsubscription/ps_emailsubscription.php:190</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="de360c8b5dd9a9fdd592b1c08b3b4a62">
+        <source>The status has been updated successfully</source>
+        <target>The status has been updated successfully</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:995</note>
+      </trans-unit>
+      <trans-unit id="f86f7b91afe27e79305a6b07bdb0d3c0">
+        <source>Failed to update the status</source>
+        <target>Failed to update the status</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:996</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9dca2e42fe7a0db763b8737e9a8f9133">
+        <source>%action% action on module %module% succeeded.</source>
+        <target>%action% action on module %module% succeeded.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:223</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="740b879fdd48f184f798b8018134f630">
+        <source>Show messages</source>
+        <target>Show messages</target>
+        <note>Context:
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:293</note>
+      </trans-unit>
+      <trans-unit id="67b6092e7137b245b034286819367669">
+        <source>Hide messages</source>
+        <target>Hide messages</target>
+        <note>Context:
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:294</note>
+      </trans-unit>
+      <trans-unit id="6127337eb7be6461a404fd90e5af264a">
+        <source>Go to previous navigation menu</source>
+        <target>Go to previous navigation menu</target>
+        <note>Context:
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:307</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Translations/list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="06f552cf8691de6f3a4aa66cb12bb7a0">
+        <source>Translation key or value (2 characters at least):</source>
+        <target>Translation key or value (2 characters at least):</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Translations/list.html.twig:7</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

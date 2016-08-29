@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
+        <source>Age</source>
+        <target>Age</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:46</note>
+      </trans-unit>
+      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
+        <source>File size</source>
+        <target>File size</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:48</note>
+      </trans-unit>
+      <trans-unit id="30c210e0173f2ff607cc84dc01ffc1f0">
+        <source>Backup options</source>
+        <target>Backup options</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:58</note>
+      </trans-unit>
+      <trans-unit id="6afc2b40f9acff2a4d1e67f2dfcd8a30">
+        <source>Ignore statistics tables</source>
+        <target>Ignore statistics tables</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:61</note>
+      </trans-unit>
+      <trans-unit id="8859ec81a77f2f2b165bf5ea9858ecfc">
+        <source>Drop existing tables during import</source>
+        <target>Drop existing tables during import</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="46f18d3960afc01e5a1a5a0e0e9d571b">
+        <source>Automatically check for module updates</source>
+        <target>Automatically check for module updates</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:52</note>
+      </trans-unit>
+      <trans-unit id="967db4d257af07feced01d6633f575f7">
+        <source>Check the cookie's IP address</source>
+        <target>Check the cookie's IP address</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:60</note>
+      </trans-unit>
+      <trans-unit id="dcfba1534995899d2ca36cda978da215">
+        <source>Lifetime of front office cookies</source>
+        <target>Lifetime of front office cookies</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:69</note>
+      </trans-unit>
+      <trans-unit id="20d6b6498eab9f749d55c9b53151e00a">
+        <source>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</source>
+        <target>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:70</note>
+      </trans-unit>
+      <trans-unit id="73cdddd7730abfc13a55efb9f5685a3b">
+        <source>hours</source>
+        <target>hours</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:84</note>
+      </trans-unit>
+      <trans-unit id="e62d77475fe6318731b4411ba1181dca">
+        <source>Lifetime of back office cookies</source>
+        <target>Lifetime of back office cookies</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:79</note>
+      </trans-unit>
+      <trans-unit id="ade28d54bcdbc7c4cfd45d84ad517f7b">
+        <source>Upload quota</source>
+        <target>Upload quota</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:92</note>
+      </trans-unit>
+      <trans-unit id="e7fe6b70f4558e23f0254d80f52ae6d8">
+        <source>Maximum size for attachment</source>
+        <target>Maximum size for attachment</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:96</note>
+      </trans-unit>
+      <trans-unit id="2c111a587b8e6a65856ac7933d76bdce">
+        <source>megabytes</source>
+        <target>megabytes</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:119</note>
+      </trans-unit>
+      <trans-unit id="4ae386b852a3ee22324e8922e50c9aec">
+        <source>Maximum size for a downloadable product</source>
+        <target>Maximum size for a downloadable product</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:105</note>
+      </trans-unit>
+      <trans-unit id="a1652ab7a761fa7bb3726fe28b97d1f3">
+        <source>Maximum size for a product's image</source>
+        <target>Maximum size for a product's image</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:114</note>
+      </trans-unit>
+      <trans-unit id="a274f4d4670213a9045ce258c6c56b80">
+        <source>Notifications</source>
+        <target>Notifications</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:126</note>
+      </trans-unit>
+      <trans-unit id="1b1befcb86d487715da458117710dfeb">
+        <source>Show notifications for new orders</source>
+        <target>Show notifications for new orders</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:131</note>
+      </trans-unit>
+      <trans-unit id="8004e61ca76ff500d1e6ee92f7cb7f93">
+        <source>Show notifications for new customers</source>
+        <target>Show notifications for new customers</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:138</note>
+      </trans-unit>
+      <trans-unit id="4e7ff7ca556a7ac8329ab27834e9631b">
+        <source>Show notifications for new messages</source>
+        <target>Show notifications for new messages</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:145</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

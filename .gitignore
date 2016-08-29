@@ -73,6 +73,7 @@ themes/default-bootstrap/modules/*/mails/*
 /app/cache/*
 !app/cache/.gitkeep
 /app/Resources/translations/*
+!/app/Resources/translations/default
 /app/test/cache/*
 !app/test/cache/.gitkeep
 /app/config/parameters.yml

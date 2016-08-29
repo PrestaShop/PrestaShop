@@ -1,0 +1,1241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="57d056ed0984166336b7879c2af3657f">
+        <source>City</source>
+        <target>City</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:197</note>
+      </trans-unit>
+      <trans-unit id="46a2a41cc6e552044816a2d04634545d">
+        <source>State</source>
+        <target>State</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:218</note>
+      </trans-unit>
+      <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
+        <source>Address</source>
+        <target>Address</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:173</note>
+      </trans-unit>
+      <trans-unit id="c6e2a9b2d1979c244d18c7e9fbf9a86f">
+        <source>Zip/postal code</source>
+        <target>Zip/postal code</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:189</note>
+      </trans-unit>
+      <trans-unit id="bcc254b55c4a1babdf1dcb82c207506b">
+        <source>Phone</source>
+        <target>Phone</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:155</note>
+      </trans-unit>
+      <trans-unit id="783cb853aae6984e51583b3bb80c09d2">
+        <source>Address (2)</source>
+        <target>Address (2)</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:181</note>
+      </trans-unit>
+      <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
+        <source>Meta title</source>
+        <target>Meta title</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:238</note>
+      </trans-unit>
+      <trans-unit id="41c2fff4867cc204120f001e7af20f7a">
+        <source>Mobile phone</source>
+        <target>Mobile phone</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:164</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
+        <source>Country</source>
+        <target>Country</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:609</note>
+      </trans-unit>
+      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
+        <source>Company</source>
+        <target>Company</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:606</note>
+      </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:607</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/referrers/form_settings.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
+        <source>Settings</source>
+        <target>Settings</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:60</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_categorytree/ps_categorytree.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="54e4f98fb34254a6678f0795476811ed">
+        <source>By name</source>
+        <target>By name</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:211</note>
+      </trans-unit>
+      <trans-unit id="883f0bd41a4fcee55680446ce7bec0d9">
+        <source>By position</source>
+        <target>By position</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:216</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShippingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e3cf5ac19407b1a62c6fccaff675a53b">
+        <source>Descending</source>
+        <target>Descending</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:51</note>
+      </trans-unit>
+      <trans-unit id="cf3fb1ff52ea1eed3347ac5401ee7f0c">
+        <source>Ascending</source>
+        <target>Ascending</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
+        <source>Yes</source>
+        <target>Yes</target>
+        <note>Context:
+File: admin-dev/themes/default/template/helpers/list/list_header.tpl:319</note>
+      </trans-unit>
+      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
+        <source>No</source>
+        <target>No</target>
+        <note>Context:
+File: admin-dev/themes/default/template/helpers/list/list_header.tpl:320</note>
+      </trans-unit>
+      <trans-unit id="9f82518d468b9fee614fcc92f76bb163">
+        <source>Shop</source>
+        <target>Shop</target>
+        <note>Context:
+File: admin-dev/themes/default/template/helpers/list/list_header.tpl:292</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_linklist/controllers/admin/AdminLinkWidgetController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b9b371458ab7c314f88b81c553f6ce51">
+        <source>Hook</source>
+        <target>Hook</target>
+        <note>Context:
+File: modules/ps_linklist/controllers/admin/AdminLinkWidgetController.php:138</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_shoppingcart/ps_shoppingcart.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f38f5974cdc23279ffe6d203641a8bdf">
+        <source>Settings updated.</source>
+        <target>Settings updated.</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:122</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/views/templates/admin/list_action_enable.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
+        <source>Enabled</source>
+        <target>Enabled</target>
+        <note>Context:
+File: modules/ps_emailsubscription/views/templates/admin/list_action_enable.tpl:25</note>
+      </trans-unit>
+      <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
+        <source>Disabled</source>
+        <target>Disabled</target>
+        <note>Context:
+File: modules/ps_emailsubscription/views/templates/admin/list_action_enable.tpl:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="be53a0541a6d36f6ecb879fa2c584b08">
+        <source>Image</source>
+        <target>Image</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:209</note>
+      </trans-unit>
+      <trans-unit id="ec53a8c4f07baed5d8825072c89799be">
+        <source>Status</source>
+        <target>Status</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:242</note>
+      </trans-unit>
+      <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
+        <source>Position</source>
+        <target>Position</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:249</note>
+      </trans-unit>
+      <trans-unit id="78d811e98514cd165dda532286610fd2">
+        <source>Min</source>
+        <target>Min</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:312</note>
+      </trans-unit>
+      <trans-unit id="6a061313d22e51e0f25b7cd4dc065233">
+        <source>Max</source>
+        <target>Max</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:313</note>
+      </trans-unit>
+      <trans-unit id="dddc702fcffceb2ac77291954897d747">
+        <source>SQL query</source>
+        <target>SQL query</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:424</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductCustomField.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9dffbf69ffba8bc38bc4e01abf4b1675">
+        <source>Text</source>
+        <target>Text</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductCustomField.php:73</note>
+      </trans-unit>
+      <trans-unit id="b021df6aac4654c454f46c77646e745f">
+        <source>Label</source>
+        <target>Label</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductCustomField.php:68</note>
+      </trans-unit>
+      <trans-unit id="b651efdb98a5d6bd2b3935d0c3f4a5e2">
+        <source>Required</source>
+        <target>Required</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductCustomField.php:82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/helpers/form/form_group.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
+        <source>ID</source>
+        <target>ID</target>
+        <note>Context:
+File: admin-dev/themes/default/template/helpers/form/form_group.tpl:37</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9d55fc80bbb875322aa67fd22fc98469">
+        <source>Shop association</source>
+        <target>Shop association</target>
+        <note>Context:
+File: controllers/admin/AdminCarrierWizardController.php:240</note>
+      </trans-unit>
+      <trans-unit id="8c2857a9ad1d8f31659e35e904e20fa6">
+        <source>Logo</source>
+        <target>Logo</target>
+        <note>Context:
+File: controllers/admin/AdminCarrierWizardController.php:212</note>
+      </trans-unit>
+      <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
+        <source>Tax</source>
+        <target>Tax</target>
+        <note>Context:
+File: controllers/admin/AdminCarrierWizardController.php:319</note>
+      </trans-unit>
+      <trans-unit id="290612199861c31d1036b185b4e69b75">
+        <source>Summary</source>
+        <target>Summary</target>
+        <note>Context:
+File: controllers/admin/AdminCarrierWizardController.php:82</note>
+      </trans-unit>
+      <trans-unit id="1778e0e8555dc044231c1d615b41ddea">
+        <source>MultiStore</source>
+        <target>MultiStore</target>
+        <note>Context:
+File: controllers/admin/AdminCarrierWizardController.php:89</note>
+      </trans-unit>
+      <trans-unit id="dd1f775e443ff3b9a89270713580a51b">
+        <source>Previous</source>
+        <target>Previous</target>
+        <note>Context:
+File: controllers/admin/AdminCarrierWizardController.php:131</note>
+      </trans-unit>
+      <trans-unit id="6f3455d187a23443796efdcbe044096b">
+        <source>No tax</source>
+        <target>No tax</target>
+        <note>Context:
+File: controllers/admin/AdminCarrierWizardController.php:326</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_imageslider/ps_imageslider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b112d8dc41120e6d28639b7eb825f491">
+        <source>Maximum image size: %s.</source>
+        <target>Maximum image size: %s.</target>
+        <note>Context:
+File: modules/ps_imageslider/ps_imageslider.php:733</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_3_layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b78a3223503896721cca1303f776159b">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_3_layout.html.twig:236</note>
+      </trans-unit>
+      <trans-unit id="34082694d21dbdcfc31e6e32d9fb2b9f">
+        <source>File name</source>
+        <target>File name</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_3_layout.html.twig:237</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/themes/configurelayouts.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
+        <source>Description</source>
+        <target>Description</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/themes/configurelayouts.tpl:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/ps_wirepayment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
+        <source>Settings updated</source>
+        <target>Settings updated</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:152</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatsTabController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:84</note>
+      </trans-unit>
+      <trans-unit id="8ff922bbcd8ad41cdfc48d3c5163b2ab">
+        <source>Calendar</source>
+        <target>Calendar</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:78</note>
+      </trans-unit>
+      <trans-unit id="7cbb885aa1164b390a0bc050a64e1812">
+        <source>Month</source>
+        <target>Month</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:130</note>
+      </trans-unit>
+      <trans-unit id="537c66b24ef5c83b7382cdc3f34885f2">
+        <source>Year</source>
+        <target>Year</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:131</note>
+      </trans-unit>
+      <trans-unit id="1e6d57e813355689e9c77e947d73ad8f">
+        <source>From:</source>
+        <target>From:</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:82</note>
+      </trans-unit>
+      <trans-unit id="33caa076f23f453dd4061726f3706325">
+        <source>To:</source>
+        <target>To:</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:83</note>
+      </trans-unit>
+      <trans-unit id="6e7b34fa59e1bd229b207892956dc41c">
+        <source>Never</source>
+        <target>Never</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:128</note>
+      </trans-unit>
+      <trans-unit id="d2ce009594dcc60befa6a4e6cbeb71fc">
+        <source>Week</source>
+        <target>Week</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:129</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Product/AdminProductWrapper.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c3987e4cac14a8456515f0d200da04ee">
+        <source>All countries</source>
+        <target>All countries</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:369</note>
+      </trans-unit>
+      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
+        <source>From</source>
+        <target>From</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:328</note>
+      </trans-unit>
+      <trans-unit id="9c7f56d70e922a61254366964c01c64a">
+        <source>All currencies</source>
+        <target>All currencies</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:368</note>
+      </trans-unit>
+      <trans-unit id="e4c4c68c7515704a91d90207067dcbbe">
+        <source>All groups</source>
+        <target>All groups</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:370</note>
+      </trans-unit>
+      <trans-unit id="804ccd6219996d12eda865d1c0707423">
+        <source>All shops</source>
+        <target>All shops</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:367</note>
+      </trans-unit>
+      <trans-unit id="7e3a51a56ddd2846e21c33f05e0aea6f">
+        <source>All customers</source>
+        <target>All customers</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:371</note>
+      </trans-unit>
+      <trans-unit id="94dfb2009644e42ef41f47aece4c0350">
+        <source>Tax incl.</source>
+        <target>Tax incl.</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:317</note>
+      </trans-unit>
+      <trans-unit id="58ef6750a23ba432fc1377b7de085d9f">
+        <source>Tax excl.</source>
+        <target>Tax excl.</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:319</note>
+      </trans-unit>
+      <trans-unit id="545f6c2f382c04810103b3e5e6f7d841">
+        <source>Unlimited</source>
+        <target>Unlimited</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:326</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="019ec3132cdf8ee0f2e2a75cf5d3e459">
+        <source>Gender</source>
+        <target>Gender</target>
+        <note>Context:
+File: modules/ps_emailsubscription/ps_emailsubscription.php:233</note>
+      </trans-unit>
+      <trans-unit id="dff4bf10409100d989495c6d5486035e">
+        <source>Lastname</source>
+        <target>Lastname</target>
+        <note>Context:
+File: modules/ps_emailsubscription/ps_emailsubscription.php:237</note>
+      </trans-unit>
+      <trans-unit id="04176f095283bc729f1e3926967e7034">
+        <source>Firstname</source>
+        <target>Firstname</target>
+        <note>Context:
+File: modules/ps_emailsubscription/ps_emailsubscription.php:241</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
+        <source>Email</source>
+        <target>Email</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:604</note>
+      </trans-unit>
+      <trans-unit id="ce26601dac0dea138b7295f02b7620a7">
+        <source>Customer</source>
+        <target>Customer</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:574</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="03937134cedab9078be39a77ee3a48a0">
+        <source>Group</source>
+        <target>Group</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:596</note>
+      </trans-unit>
+      <trans-unit id="386c339d37e737a436499d423a77df0c">
+        <source>Currency</source>
+        <target>Currency</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:594</note>
+      </trans-unit>
+      <trans-unit id="11ff9f68afb6b8b5b8eda218d7c83a65">
+        <source>Sales</source>
+        <target>Sales</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:38</note>
+      </trans-unit>
+      <trans-unit id="54f664c70c22054ea0d8d26fc3997ce7">
+        <source>Online</source>
+        <target>Online</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:960</note>
+      </trans-unit>
+      <trans-unit id="2251caec60313460694521b2a0fa593f">
+        <source>Quick navigation</source>
+        <target>Quick navigation</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:44</note>
+      </trans-unit>
+      <trans-unit id="6a26f548831e6a8c26bfbbd9f6ec61e0">
+        <source>Help</source>
+        <target>Help</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:62</note>
+      </trans-unit>
+      <trans-unit id="1901606ea069a83dc7beea17881ef95a">
+        <source>Period</source>
+        <target>Period</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:600</note>
+      </trans-unit>
+      <trans-unit id="8d9da4bc0e49a50e09ac9f7e56789d39">
+        <source>Offline</source>
+        <target>Offline</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:961</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e12167aa0a7698e6ebc92b4ce3909b53">
+        <source>To</source>
+        <target>To</target>
+        <note>Context:
+File: controllers/admin/AdminSlipController.php:121</note>
+      </trans-unit>
+      <trans-unit id="bcd1b68617759b1dfcff0403a6b5a8d1">
+        <source>PDF</source>
+        <target>PDF</target>
+        <note>Context:
+File: controllers/admin/AdminSlipController.php:63</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl:120</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9810aa2b9f44401be4bf73188ef2b67d">
+        <source>Fax</source>
+        <target>Fax</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:474</note>
+      </trans-unit>
+      <trans-unit id="0c934059abacd879f27da22c927695a6">
+        <source>Zip/postal Code</source>
+        <target>Zip/postal Code</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:177</note>
+      </trans-unit>
+      <trans-unit id="3b0649c72650c313a357338dcdfb64ec">
+        <source>Note</source>
+        <target>Note</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:235</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
+        <source>Email address</source>
+        <target>Email address</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:18</note>
+      </trans-unit>
+      <trans-unit id="dc647eb65e6711e155375218212b3964">
+        <source>Password</source>
+        <target>Password</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:22</note>
+      </trans-unit>
+      <trans-unit id="878530871f0db73f004f5bd6591eeb76">
+        <source>Remember me</source>
+        <target>Remember me</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:27</note>
+      </trans-unit>
+      <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
+        <source>Forgot your password?</source>
+        <target>Forgot your password?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0db377921f4ce762c62526131097968f">
+        <source>General</source>
+        <target>General</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5204077231fc7164e2269e96b584dd95">
+        <source>Drop-down list</source>
+        <target>Drop-down list</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:172</note>
+      </trans-unit>
+      <trans-unit id="8bd90a6d76a77fe0b160e8abd85c8590">
+        <source>Radio buttons</source>
+        <target>Radio buttons</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:176</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminFeaturesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c82a6100dace2b41087ba6cf99a5976a">
+        <source>Values</source>
+        <target>Values</target>
+        <note>Context:
+File: controllers/admin/AdminFeaturesController.php:58</note>
+      </trans-unit>
+      <trans-unit id="689202409e48743b914713f96d93947c">
+        <source>Value</source>
+        <target>Value</target>
+        <note>Context:
+File: controllers/admin/AdminFeaturesController.php:341</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttributeGeneratorController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9446a98ad14416153cc4d45ab8b531bf">
+        <source>Performance</source>
+        <target>Performance</target>
+        <note>Context:
+File: controllers/admin/AdminAttributeGeneratorController.php:233</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:78</note>
+      </trans-unit>
+      <trans-unit id="44749712dbec183e983dcd78a7736c41">
+        <source>Date</source>
+        <target>Date</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:92</note>
+      </trans-unit>
+      <trans-unit id="e4c3da18c66c0147144767efeb59198f">
+        <source>Conversion Rate</source>
+        <target>Conversion Rate</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:142</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c453a4b8e8d98e82f35b67f433e3b4da">
+        <source>Payment</source>
+        <target>Payment</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:128</note>
+      </trans-unit>
+      <trans-unit id="065ab3a28ca4f16f55f103adc7d0226f">
+        <source>Delivery</source>
+        <target>Delivery</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:173</note>
+      </trans-unit>
+      <trans-unit id="54e85d70ea67acdcc86963b14d6223a8">
+        <source>Abandoned Carts</source>
+        <target>Abandoned Carts</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:1605</note>
+      </trans-unit>
+      <trans-unit id="1dd1c5fb7f25cd41b291d43a89e3aefd">
+        <source>Today</source>
+        <target>Today</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:1606</note>
+      </trans-unit>
+      <trans-unit id="ffbb5322a3702b0d8d9c7f506209c540">
+        <source>Average Order Value</source>
+        <target>Average Order Value</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:1619</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="947d8520f04473da621f2718138f3bc6">
+        <source>30 days</source>
+        <target>30 days</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:401</note>
+      </trans-unit>
+      <trans-unit id="86754577897acfb25deb69039d49d9a7">
+        <source>Displayed</source>
+        <target>Displayed</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:503</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSpecificPriceRuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="37be07209f53a5d636d5c904ca9ae64c">
+        <source>Percentage</source>
+        <target>Percentage</target>
+        <note>Context:
+File: controllers/admin/AdminSpecificPriceRuleController.php:275</note>
+      </trans-unit>
+      <trans-unit id="b2f40690858b404ed10e62bdf422c704">
+        <source>Amount</source>
+        <target>Amount</target>
+        <note>Context:
+File: controllers/admin/AdminSpecificPriceRuleController.php:275</note>
+      </trans-unit>
+      <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
+        <source>Tax included</source>
+        <target>Tax included</target>
+        <note>Context:
+File: controllers/admin/AdminSpecificPriceRuleController.php:287</note>
+      </trans-unit>
+      <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
+        <source>Tax excluded</source>
+        <target>Tax excluded</target>
+        <note>Context:
+File: controllers/admin/AdminSpecificPriceRuleController.php:288</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/helpers/options/options.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dae8ace18bdcbcc6ae5aece263e14fe8">
+        <source>Options</source>
+        <target>Options</target>
+        <note>Context:
+File: admin-dev/themes/default/template/helpers/options/options.tpl:45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4994a8ffeba4ac3140beb89e8d41f174">
+        <source>Language</source>
+        <target>Language</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:90</note>
+      </trans-unit>
+      <trans-unit id="f8c8b903cb2e4f297e4b96d4b9c1e98a">
+        <source>Employee</source>
+        <target>Employee</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:106</note>
+      </trans-unit>
+      <trans-unit id="003bf65ada43328a6164e2c681516a0e">
+        <source>30 day</source>
+        <target>30 day</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:549</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a240fa27925a635b08dc28c9e4f9216d">
+        <source>Order</source>
+        <target>Order</target>
+        <note>Context:
+File: controllers/admin/AdminReturnController.php:107</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/configuration_bar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="254f642527b45bc260048e30704edb39">
+        <source>Configuration</source>
+        <target>Configuration</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/configuration_bar.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminOrderMessageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
+        <source>Message</source>
+        <target>Message</target>
+        <note>Context:
+File: controllers/admin/AdminOrderMessageController.php:89</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/countries/helpers/list/list_footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b3ff996fe5c77610359114835baf9b38">
+        <source>Zone</source>
+        <target>Zone</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/countries/helpers/list/list_footer.tpl:141</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminPPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="068f80c7519d0528fb08e82137a72131">
+        <source>Products</source>
+        <target>Products</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:92</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminManufacturersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
+        <source>Brand</source>
+        <target>Brand</target>
+        <note>Context:
+File: controllers/admin/AdminManufacturersController.php:474</note>
+      </trans-unit>
+      <trans-unit id="5d9eca48241c03f20f27586c1f24a4b0">
+        <source>Zip/Postal code</source>
+        <target>Zip/Postal code</target>
+        <note>Context:
+File: controllers/admin/AdminManufacturersController.php:187</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="03727ac48595a24daed975559c944a44">
+        <source>Day</source>
+        <target>Day</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:267</note>
+      </trans-unit>
+      <trans-unit id="b55e509c697e4cca0e1d160a7806698f">
+        <source>Hour</source>
+        <target>Hour</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:263</note>
+      </trans-unit>
+      <trans-unit id="6a7e73161603d87b26a8eac49dab0a9c">
+        <source>Hours</source>
+        <target>Hours</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:264</note>
+      </trans-unit>
+      <trans-unit id="e807d3ccf8d24c8c1a3d86db5da78da8">
+        <source>Days</source>
+        <target>Days</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:267</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminOrderPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
+        <source>First name</source>
+        <target>First name</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:368</note>
+      </trans-unit>
+      <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
+        <source>Last name</source>
+        <target>Last name</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:376</note>
+      </trans-unit>
+      <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
+        <source>Social title</source>
+        <target>Social title</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:360</note>
+      </trans-unit>
+      <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
+        <source>Newsletter</source>
+        <target>Newsletter</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:127</note>
+      </trans-unit>
+      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:618</note>
+      </trans-unit>
+      <trans-unit id="85fb1a46f605ba9e7738df38315e6513">
+        <source>All Time</source>
+        <target>All Time</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:658</note>
+      </trans-unit>
+      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
+        <source>Name:</source>
+        <target>Name:</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:1032</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminMetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3f64b2beede1082fd32ddb0bf11a641f">
+        <source>Meta description</source>
+        <target>Meta description</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:348</note>
+      </trans-unit>
+      <trans-unit id="7d7559ccac6bc30a4d985db11cb34a3a">
+        <source>Meta keywords</source>
+        <target>Meta keywords</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:358</note>
+      </trans-unit>
+      <trans-unit id="1dec4f55522b828fe5dacf8478021a9e">
+        <source>Friendly URL</source>
+        <target>Friendly URL</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:78</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fe66abce284ec8589e7d791185b5c442">
+        <source>Home phone</source>
+        <target>Home phone</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:315</note>
+      </trans-unit>
+      <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
+        <source>Other</source>
+        <target>Other</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:144</note>
+      </trans-unit>
+      <trans-unit id="bc910f8bdf70f29374f496f05be0330c">
+        <source>First Name</source>
+        <target>First Name</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:247</note>
+      </trans-unit>
+      <trans-unit id="77587239bf4c54ea493c7033e1dbf636">
+        <source>Last Name</source>
+        <target>Last Name</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:228</note>
+      </trans-unit>
+      <trans-unit id="e4eb5dadb6ee84c5c55a8edf53f6e554">
+        <source>Zip/Postal Code</source>
+        <target>Zip/Postal Code</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:273</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductVirtual.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1351017ac6423911223bc19a8cb7c653">
+        <source>Filename</source>
+        <target>Filename</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductVirtual.php:83</note>
+      </trans-unit>
+      <trans-unit id="0b27918290ff5323bea1e3b78a9cf04e">
+        <source>File</source>
+        <target>File</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductVirtual.php:77</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="502996d9790340c5fd7b86a5b93b1c9f">
+        <source>Priority</source>
+        <target>Priority</target>
+        <note>Context:
+File: controllers/admin/AdminCartRulesController.php:49</note>
+      </trans-unit>
+      <trans-unit id="ca0dbad92a874b2f69b549293387925e">
+        <source>Code</source>
+        <target>Code</target>
+        <note>Context:
+File: controllers/admin/AdminCartRulesController.php:50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
+        <source>URL</source>
+        <target>URL</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:202</note>
+      </trans-unit>
+      <trans-unit id="7475ec0d41372a307c497acb7eeea8c4">
+        <source>No Tax</source>
+        <target>No Tax</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:274</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
+        <source>Price</source>
+        <target>Price</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1259</note>
+      </trans-unit>
+      <trans-unit id="a6105c0a611b41b08f1209506350279e">
+        <source>yes</source>
+        <target>yes</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1427</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttachmentsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6f6cb72d544962fa333e2e34ce64f719">
+        <source>Size</source>
+        <target>Size</target>
+        <note>Context:
+File: controllers/admin/AdminAttachmentsController.php:67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1814d65a76028fdfbadab64a5a8076df">
+        <source>Suppliers</source>
+        <target>Suppliers</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php:167</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/themes/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="10ac3d04253ef7e1ddc73e6091c0cd55">
+        <source>Next</source>
+        <target>Next</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/themes/helpers/form/form.tpl:74</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-specific-price.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="01b6e20344b68835c5ed1ddedf20d531">
+        <source>to</source>
+        <target>to</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-specific-price.html.twig:67</note>
+      </trans-unit>
+      <trans-unit id="39e61d57e9209611edd4f884e9e47c11">
+        <source>For</source>
+        <target>For</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-specific-price.html.twig:22</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductSpecificPrice.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
+        <source>%</source>
+        <target>%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductSpecificPrice.php:172</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7a1920d61156abc05a60135aefe8bc67">
+        <source>Default</source>
+        <target>Default</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php:160</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/AttributeController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680">
+        <source>All</source>
+        <target>All</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/AttributeController.php:55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8524de963f07201e5c086830d370797f">
+        <source>Loading...</source>
+        <target>Loading...</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/layout.html.twig:71</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="382b0f5185773fa0f67a8ed8056c7759">
+        <source>N/A</source>
+        <target>N/A</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/list.html.twig:36</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/helpers/list/list_footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9ffa4765d2da990741800bbe1ad4e7f8">
+        <source>Bulk actions</source>
+        <target>Bulk actions</target>
+        <note>Context:
+File: admin-dev/themes/default/template/helpers/list/list_footer.tpl:32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Helpers/range_slider.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f4554d31351189a4a1749eafc9662640">
+        <source>Not filtered</source>
+        <target>Not filtered</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Helpers/range_slider.html.twig:28</note>
+      </trans-unit>
+      <trans-unit id="0ccb67e7eaae09d9e4078d161eeca100">
+        <source>Equals</source>
+        <target>Equals</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Helpers/range_slider.html.twig:32</note>
+      </trans-unit>
+      <trans-unit id="e59dd8d25c0b6bb6697eac0617ccd412">
+        <source>Below</source>
+        <target>Below</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Helpers/range_slider.html.twig:36</note>
+      </trans-unit>
+      <trans-unit id="5b469fd01889ec12f1e84c6e66829fc1">
+        <source>Above</source>
+        <target>Above</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Helpers/range_slider.html.twig:40</note>
+      </trans-unit>
+      <trans-unit id="71b23c9e2f071ea3f73e35796f671f3b">
+        <source>Inside range</source>
+        <target>Inside range</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Helpers/range_slider.html.twig:43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Helpers/bootstrap_popup.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="21d104a54fc71a19a325c7305327f1d2">
+        <source>Processing...</source>
+        <target>Processing...</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Helpers/bootstrap_popup.html.twig:19</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bfab8bcc21a91d9a7e346bbe1143c3ea">
+        <source>Bulk Actions</source>
+        <target>Bulk Actions</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e6a9c6138fcc79bb6c762f24dc5156df">
+        <source>bulk actions</source>
+        <target>bulk actions</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/list.tpl:189</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
