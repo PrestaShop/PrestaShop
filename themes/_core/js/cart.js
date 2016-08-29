@@ -2,8 +2,8 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 
 $(document).ready(() => {
-  prestashop.on('cart updated', function (event) {
-    var refreshURL = $('.-js-cart').data('refresh-url');
+  prestashop.on('updateCart', (event) => {
+    var getCartViewUrl = $('.js-cart').data('refresh-url');
     var requestData = {};
 
     if (event && event.reason) {
@@ -13,7 +13,7 @@ $(document).ready(() => {
       };
     }
 
-    $.post(refreshURL, requestData).then(function (resp) {
+    $.post(getCartViewUrl, requestData).then((resp) => {
       $('.cart-overview').replaceWith(resp.cart_detailed);
       $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
       $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
@@ -21,15 +21,20 @@ $(document).ready(() => {
       $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
       $('.cart-voucher').replaceWith(resp.cart_voucher);
 
-      prestashop.emit('cart dom updated');
+      prestashop.emit('updatedCart');
+    }).fail((resp) => {
+      prestashop.emit('handleError', {eventType: 'updateCart', resp: resp})
     });
   });
 
-  $('body').on(
+  var $body = $('body');
+
+  $body.on(
     'click',
     '[data-button-action="add-to-cart"]',
-    function(event) {
+    (event) => {
       event.preventDefault();
+
       var $form = $($(event.target).closest('form'));
       var query = $form.serialize() + '&add=1&action=update';
       var actionURL = $form.attr('action');
@@ -62,45 +67,48 @@ $(document).ready(() => {
         return;
       }
 
-      $.post(actionURL, query, null, 'json').then(function(resp) {
-        prestashop.emit('cart updated', {
+      $.post(actionURL, query, null, 'json').then((resp) => {
+        prestashop.emit('updateCart', {
           reason: {
             idProduct: resp.id_product,
             idProductAttribute: resp.id_product_attribute,
             linkAction: 'add-to-cart'
           }
         });
+      }).fail((resp) => {
+        prestashop.emit('handleError', {eventType: 'addProductToCart', resp: resp});
       });
     }
   );
 
-  $('body').on(
+  $body.on(
     'submit',
     '[data-link-action="add-voucher"]',
-    function(event) {
+    (event) => {
       event.preventDefault();
 
-      $(this).append($('<input>')
-        .attr('type', 'hidden')
-        .attr('name', 'ajax').val('1')
-      );
-      $(this).append($('<input>')
-        .attr('type', 'hidden')
-        .attr('name', 'action').val('update')
-      );
+      let $addVoucherForm = $(event.currentTarget);
+      let getCartViewUrl = $addVoucherForm.attr('action');
 
-      // First perform the action using AJAX
-      var actionURL = $(this).attr('action');
+      if (0 === $addVoucherForm.find('[name=action]').length) {
+        $addVoucherForm.append($('<input>', {'type': 'hidden', 'name': 'ajax', "value": 1}));
+      }
+      if (0 === $addVoucherForm.find('[name=action]').length) {
+        $addVoucherForm.append($('<input>', {'type': 'hidden', 'name': 'action', "value": "update"}));
+      }
 
-      $.post(actionURL, $(this).serialize(), null, 'json').then(function(res) {
-        if(res.hasError){
-          return $('.js-error').show().find('.js-error-text').text(res.errors[0]);
+      $.post(getCartViewUrl, $addVoucherForm.serialize(), null, 'json').then((resp) => {
+        if (resp.hasError) {
+          $('.js-error').show().find('.js-error-text').text(resp.errors[0]);
+
+          return;
         }
-        // If succesful, refresh cart preview
-        prestashop.emit('cart updated', {
-          reason: event.target.dataset
-        });
-      });
+
+        // Refresh cart preview
+        prestashop.emit('updateCart', {reason: event.target.dataset});
+      }).fail((resp) => {
+        prestashop.emit('handleError', {eventType: 'addVoucher', resp: resp});
+      })
     }
   );
 });
