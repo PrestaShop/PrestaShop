@@ -229,6 +229,50 @@ class CartPresenter implements PresenterInterface
         }, $products);
     }
 
+    protected function determineRealShippingStatusAndText($cart)
+    {
+        $configuration = Configuration::getMultiple(array(
+            'PS_SHIPPING_FREE_PRICE',
+            'PS_SHIPPING_FREE_WEIGHT'
+        ));
+
+        // Check if is real free shiping based on current cart
+        $shippingCost = $cart->getTotalShippingCost(null, $this->includeTaxes());
+        $orderTotalwithDiscounts = $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
+        $freeShippingFromPrice = (float) $configuration['PS_SHIPPING_FREE_PRICE'] > 0 && $orderTotalwithDiscounts >= (float) $configuration['PS_SHIPPING_FREE_PRICE']
+                                ? true
+                                : false
+        ;
+
+        $freeShippingFromWeight = (float) $configuration['PS_SHIPPING_FREE_WEIGHT'] > 0 && $cart->getTotalWeight() >= (float) $configuration['PS_SHIPPING_FREE_WEIGHT']
+                                ? true
+                                : false
+        ;
+
+        $freeShippingByVoucher = false;
+        $cartRules = $cart->getCartRules();
+
+        if (count($cartRules) > 0) {
+            foreach ($cartRules as $cartRule) {
+                if (1 == $cartRule['free_shipping']) {
+                    $freeShippingByVoucher = true;
+                }
+            }
+        }
+
+        if ($freeShippingFromWeight
+            || $freeShippingFromPrice
+            || $freeShippingByVoucher
+            || ($cart->id_carrier && 0 == $shippingCost)
+            || $cart->isVirtualCart()) {
+            return $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
+        } elseif (!$cart->id_carrier) {
+            return $this->translator->trans('To be determined', array(), 'Shop.Theme.Checkout');
+        } else {
+            return $this->priceFormatter->format($shippingCost);
+        }
+    }
+
     public function present($cart)
     {
         if (!is_a($cart, 'Cart')) {
@@ -283,13 +327,14 @@ class CartPresenter implements PresenterInterface
         } else {
             $shippingCost = 0;
         }
+
+        $shippingText = $this->determineRealShippingStatusAndText($cart);
+
         $subtotals['shipping'] = array(
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
             'amount' => $shippingCost,
-            'value' => $shippingCost != 0
-                ? $this->priceFormatter->format($shippingCost)
-                : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
+            'value' => $shippingText,
         );
 
         $subtotals['tax'] = null;
