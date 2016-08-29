@@ -969,7 +969,7 @@
         />
 
       </div>
-      <div class="col-lg-7 text-lg-right">
+      <div class="col-lg-6 text-lg-right">
         <button
           type="button"
           class="btn btn-tertiary-outline btn-submit hidden-xs uppercase duplicate"
@@ -1009,35 +1009,42 @@
           title="{{ 'Save the product and stay on the current page: CTRL+S'|trans({}, 'Admin.Catalog.Help') }}"
           />
 
-          <div class="dropdown hide pull-right">
-           <button
-            class="btn btn-primary dropdown-toggle save"
-            type="submit"
-            id="dropdownMenu"
-            data-toggle="dropdown"
-            aria-expanded="false"
-            >
-             {{ 'Save'|trans({}, 'Admin.Actions') }}
-           </button>
-           <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-             <button
-               class="dropdown-item duplicate"
-               data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+          <div class="btn-group hide dropdown pull-right">
+            <div class="js-spinner spinner hide btn-primary-reverse onclick pull-left m-r-1"></div>
+            <button
+             class="btn btn-primary js-btn-save"
+             type="submit"
              >
-             {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
-             </button>
-             <button
-                class="dropdown-item go-catalog"
-                data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
+              <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
+            </button>
+            <button
+              class="btn btn-primary dropdown-toggle"
+              type="button"
+              id="dropdownMenu"
+              data-toggle="dropdown"
+              aria-expanded="false"
+            >
+
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+              <a
+               class="dropdown-item duplicate js-btn-save"
+               href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+              >
+              {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
+              </a>
+             <a
+              class="dropdown-item go-catalog js-btn-save"
+              href="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
               >
               {{ 'Go to catalog'|trans({}, 'Admin.Catalog.Feature')|raw }}
-            </button>
-             <button
-                class="dropdown-item new-product"
-                data-redirect="{{ path('admin_product_new') }}"
+             </a>
+             <a
+              class="dropdown-item new-product js-btn-save"
+              href="{{ path('admin_product_new') }}"
               >
               {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
-            </button>
+            </a>
           </div>
         </div>
       </div>

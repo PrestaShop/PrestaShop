@@ -923,11 +923,12 @@
       button.save {
         background: $brand-primary;
       }
-      .col-lg-7 {
-        width: 50%;
+      .spinner{
+        margin-top: rem(-5px);
       }
       .dropdown {
         display: block;
+        margin-top: rem(10px);
         .dropdown-menu {
           top: rem(-120px);
         }
