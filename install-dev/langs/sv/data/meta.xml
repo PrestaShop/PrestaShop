@@ -2,7 +2,7 @@
 <entity_meta>
   <meta id="404" id_shop="1">
     <title>404 fel</title>
-    <description>Denna sida kan inte hittas/description>
+    <description>Denna sida kan inte hittas</description>
     <keywords/>
     <url_rewrite>page-not-found</url_rewrite>
   </meta>
@@ -43,7 +43,7 @@
     <url_rewrite>password-recovery</url_rewrite>
   </meta>
   <meta id="prices-drop" id_shop="1">
-    <title>Kampanjpris/title>
+    <title>Kampanjpris</title>
     <description>Våra kampanjpriser</description>
     <keywords/>
     <url_rewrite>prices-drop</url_rewrite>
