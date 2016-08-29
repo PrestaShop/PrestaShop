@@ -26,4 +26,11 @@ export default function() {
       });
     }
   });
+
+  $('.js-btn-save').on('click', () =>{
+    $('.js-spinner').show();
+    $( document ).ajaxComplete(()=> {
+      $('.js-spinner').hide();
+    });
+  });
 }
