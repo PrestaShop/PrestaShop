@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import prestashop from 'prestashop';
 
 function setupMyCheckoutScripts() {
   if ($('.js-cancel-address').length !== 0) {
@@ -13,6 +14,8 @@ function setupMyCheckoutScripts() {
       url += `?content_only=1`;
       $.get(url, (content) => {
         $('#modal').find('.modal-content').html($(content).find('.page-cms').contents());
+      }).fail((resp) => {
+        prestashop.emit('handleError', {eventType: 'clickTerms', resp: resp});
       });
     }
 
