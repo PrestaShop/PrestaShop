@@ -33,7 +33,7 @@ class BackOfficeProvider extends AbstractProvider
      */
     public function getTranslationDomains()
     {
-        return array('Admin.%');
+        return array('Admin%');
     }
 
     /**

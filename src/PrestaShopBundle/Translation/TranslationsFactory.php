@@ -68,15 +68,20 @@ class TranslationsFactory
                 $provider->setLocale($locale);
 
                 $tree = $provider->getXliffCatalogue()->all();
+                $databaseCatalogue = $provider->getDatabaseCatalogue()->all();
 
                 foreach ($tree as $domain => $messages) {
-                    $databaseCatalogue = $provider->getDatabaseCatalogue()->all($domain);
+                    $databaseDomain = str_replace('.'.$locale, '', $domain);
+
                     foreach ($messages as $translationKey => $translationValue) {
-                        $keyExists = array_key_exists($translationKey, $databaseCatalogue);
+                        $keyExists =
+                            array_key_exists($databaseDomain, $databaseCatalogue) &&
+                            array_key_exists($translationKey, $databaseCatalogue[$databaseDomain])
+                        ;
 
                         $tree[$domain][$translationKey] = array(
                             'xlf' => $tree[$domain][$translationKey],
-                            'db' => $keyExists ? $databaseCatalogue[$translationKey] : '',
+                            'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
                         );
                     }
                 }

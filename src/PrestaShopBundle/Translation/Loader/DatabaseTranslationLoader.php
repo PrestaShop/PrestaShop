@@ -49,12 +49,9 @@ class DatabaseTranslationLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages')
     {
-        // if needed, convert real locale to PrestaShop locale
-        $prestaShopLocale = str_replace('-', '_', $locale);
-
         $lang = $this->entityManager
             ->getRepository('PrestaShopBundle:Lang')
-            ->findOneByLocale($prestaShopLocale)
+            ->findOneByLocale($locale)
         ;
 
         $translationRepository = $this->entityManager
