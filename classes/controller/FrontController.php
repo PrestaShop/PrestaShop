@@ -759,32 +759,30 @@ class FrontControllerCore extends Controller
     /**
      * Geolocation management.
      *
-     * @param Country $default_country
+     * @param Country $defaultCountry
      *
      * @return Country|false
      */
-    protected function geolocationManagement($default_country)
+    protected function geolocationManagement($defaultCountry)
     {
         if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1'))) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
-                    include_once _PS_GEOIP_DIR_.'geoipcity.inc';
-
-                    $gi = geoip_open(realpath(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_), GEOIP_STANDARD);
-                    $record = geoip_record_by_addr($gi, Tools::getRemoteAddr());
+                    $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_);
+                    $record = $reader->city(Tools::getRemoteAddr());
 
                     if (is_object($record)) {
-                        if (!in_array(strtoupper($record->country_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
+                        if (!in_array(strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
                                 $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
                                 $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                                $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), $record->country_name);
+                                $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), $record->country->name);
                             }
                         } else {
-                            $has_been_set = !isset($this->context->cookie->iso_code_country);
-                            $this->context->cookie->iso_code_country = strtoupper($record->country_code);
+                            $hasBeenSet = !isset($this->context->cookie->iso_code_country);
+                            $this->context->cookie->iso_code_country = strtoupper($record->country->isoCode);
                         }
                     }
                 }
@@ -793,21 +791,21 @@ class FrontControllerCore extends Controller
                     $this->context->cookie->iso_code_country = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
                 }
 
-                if (isset($this->context->cookie->iso_code_country) && ($id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)))) {
+                if (isset($this->context->cookie->iso_code_country) && ($idCountry = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)))) {
                     /* Update defaultCountry */
-                    if ($default_country->iso_code != $this->context->cookie->iso_code_country) {
-                        $default_country = new Country($id_country);
+                    if ($defaultCountry->iso_code != $this->context->cookie->iso_code_country) {
+                        $defaultCountry = new Country($idCountry);
                     }
-                    if (isset($has_been_set) && $has_been_set) {
-                        $this->context->cookie->id_currency = (int) ($default_country->id_currency ? (int) $default_country->id_currency : (int) Configuration::get('PS_CURRENCY_DEFAULT'));
+                    if (isset($hasBeenSet) && $hasBeenSet) {
+                        $this->context->cookie->id_currency = (int) ($defaultCountry->id_currency ? (int) $defaultCountry->id_currency : (int) Configuration::get('PS_CURRENCY_DEFAULT'));
                     }
 
-                    return $default_country;
+                    return $defaultCountry;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                    $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), (isset($record->country_name) && $record->country_name) ? $record->country_name : $this->l('Undefined'));
+                    $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), (isset($record->country->name) && $record->country->name) ? $record->country->name : $this->l('Undefined'));
                 }
             }
         }
