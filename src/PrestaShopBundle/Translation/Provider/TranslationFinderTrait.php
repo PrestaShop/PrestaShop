@@ -34,8 +34,6 @@ trait TranslationFinderTrait
 {
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
-        $locale = str_replace('-', '_', $locale);
-
         $messageCatalogue = new MessageCatalogue($locale);
         $xliffFileLoader = new XliffFileLoader();
         $finder = new Finder();

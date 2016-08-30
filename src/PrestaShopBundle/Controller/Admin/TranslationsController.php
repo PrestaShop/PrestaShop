@@ -201,10 +201,9 @@ class TranslationsController extends FrameworkBundleAdminController
         $translator = $this->container->get('translator');
 
         $locale = $this->langToLocale($lang);
-        $translationLocale = str_replace('-', '_', $locale);
-        
-        $tree = $this->get('ps.translations_factory')->createTree($type, $translationLocale);
-        
+
+        $tree = $this->get('ps.translations_factory')->createTree($type, $locale);
+
         if (!is_null($tree)) {
             return $tree;
         }

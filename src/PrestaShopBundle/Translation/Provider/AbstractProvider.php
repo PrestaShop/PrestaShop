@@ -51,7 +51,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getDirectories()
     {
-        return array($this->resourceDirectory);
+        return array($this->getResourceDirectory());
     }
 
     /**
