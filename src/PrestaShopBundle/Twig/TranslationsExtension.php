@@ -212,8 +212,14 @@ class TranslationsExtension extends \Twig_Extension
                 'notification_error' => $properties['notification_error'],
                 'notification_success' => $properties['notification_success'],
                 'translation_key' => htmlspecialchars($properties['translation_key'], ENT_QUOTES),
+                'hash' => $this->getTranslationHash($domain, $properties['translation_key']),
             )
         );
+    }
+
+    protected function getTranslationHash($domain, $translationKey)
+    {
+        return md5($domain . $translationKey);
     }
 
     /**
