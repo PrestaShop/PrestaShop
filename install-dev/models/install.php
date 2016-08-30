@@ -911,27 +911,6 @@ class InstallModelInstall extends InstallAbstractModel
         $zip_file = _PS_ROOT_DIR_.'/download/fixtures.zip';
         $temp_dir = _PS_ROOT_DIR_.'/download/fixtures/';
 
-        // try to download fixtures if no low memory mode
-        if ($entity === null) {
-            if (Tools::copy('http://api.prestashop.com/fixtures/'.$data['shop_country'].'/'.$data['shop_activity'].'/fixtures.zip', $zip_file)) {
-                Tools::deleteDirectory($temp_dir, true);
-                if (Tools::ZipTest($zip_file)) {
-                    if (Tools::ZipExtract($zip_file, $temp_dir)) {
-                        $files = scandir($temp_dir);
-                        if (count($files)) {
-                            foreach ($files as $file) {
-                                if (!preg_match('/^\./', $file) && is_dir($temp_dir.$file.'/')) {
-                                    $fixtures_path = $temp_dir.$file.'/';
-                                    $fixtures_name = $file;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         // Load class (use fixture class if one exists, or use InstallXmlLoader)
         if (file_exists($fixtures_path.'/install.php')) {
             require_once $fixtures_path.'/install.php';
