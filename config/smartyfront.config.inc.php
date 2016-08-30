@@ -179,8 +179,11 @@ function smartyTranslate($params, &$smarty)
     if (!isset($params['sprintf'])) {
         $params['sprintf'] = array();
     }
+    if (!isset($params['d'])) {
+        $params['d'] = null;
+    }
 
-    if (!empty($params['d'])) {
+    if (!is_null($params['d'])) {
         if (isset($params['tags'])) {
             $backTrace = debug_backtrace();
 
@@ -213,8 +216,10 @@ function smartyTranslate($params, &$smarty)
                 return $params['s'];
             }
         }
+    }
 
-        return Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d']);
+    if (($translation = Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d'])) !== $params['s']) {
+        return $translation;
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
