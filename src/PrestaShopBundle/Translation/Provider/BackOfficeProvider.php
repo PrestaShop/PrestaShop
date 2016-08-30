@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
 class BackOfficeProvider extends AbstractProvider
 {
     /**
@@ -37,7 +35,7 @@ class BackOfficeProvider extends AbstractProvider
     {
         return array('Admin.%');
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -49,35 +47,8 @@ class BackOfficeProvider extends AbstractProvider
     /**
      * {@inheritdoc}
      */
-    public function getMessageCatalogue()
-    {
-        $locale = $this->getPrestaShopLocale();
-        $filter = $this->getFilters()[0];
-
-        $xlfCatalogue = $this->getCatalogueFromPaths($this->getResourceDirectory(), $locale, $filter);
-
-        $databaseCatalogue = new MessageCatalogue($locale);
-
-        foreach ($this->getTranslationDomains() as $translationDomain) {
-            $domainCatalogue = $this->getDatabaseLoader()->load(null, $locale, $translationDomain);
-
-            if ($domainCatalogue instanceof MessageCatalogue) {
-                $databaseCatalogue->addCatalogue($domainCatalogue);
-            }
-        }
-
-        // Merge database catalogue to xliff catalogue
-        $xlfCatalogue->addCatalogue($databaseCatalogue);
-
-        return $xlfCatalogue;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getIdentifier()
     {
         return 'back';
     }
-
 }

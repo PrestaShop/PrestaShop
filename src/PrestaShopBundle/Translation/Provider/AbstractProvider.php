@@ -88,7 +88,7 @@ abstract class AbstractProvider implements ProviderInterface
     /**
      * Get the PrestaShop locale from real locale.
      *
-     * @return string  The PrestaShop locale
+     * @return string The PrestaShop locale
      */
     public function getPrestaShopLocale()
     {
@@ -100,7 +100,10 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getMessageCatalogue()
     {
+        $defaultCatalogue = $this->getDefaultCatalogue();
+
         $xlfCatalogue = $this->getXliffCatalogue();
+        $xlfCatalogue = array_merge($defaultCatalogue, $xlfCatalogue);
 
         $databaseCatalogue = $this->getDatabaseCatalogue();
 
@@ -112,8 +115,8 @@ abstract class AbstractProvider implements ProviderInterface
 
     /**
      * Get the Catalogue from xliff files only.
-     * 
-     * @return MessageCatalogue A MessageCatalogue instance.
+     *
+     * @return MessageCatalogue A MessageCatalogue instance
      */
     public function getXliffCatalogue()
     {
@@ -127,13 +130,41 @@ abstract class AbstractProvider implements ProviderInterface
             );
             $xlfCatalogue->addCatalogue($filteredCatalogue);
         }
+
         return $xlfCatalogue;
     }
 
     /**
+     * Get the default catalogue from xliff files.
+     *
+     * @param bool $empty if true, empty the catalogue
+     *
+     * @return MessageCatalogue A MessageCatalogue instance
+     */
+    public function getDefaultCatalogue($empty = true)
+    {
+        $defaultCatalogue = new MessageCatalogue($this->locale);
+
+        foreach ($this->getFilters() as $filter) {
+            $filteredCatalogue = $this->getCatalogueFromPaths(
+                array($this->getDefaultResourceDirectory()),
+                $this->locale,
+                $filter
+            );
+            $defaultCatalogue->addCatalogue($filteredCatalogue);
+        }
+
+        if ($empty) {
+            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
+        }
+
+        return $defaultCatalogue;
+    }
+
+    /**
      * Get the Catalogue from database only.
-     * 
-     * @return MessageCatalogue A MessageCatalogue instance.
+     *
+     * @return MessageCatalogue A MessageCatalogue instance
      */
     public function getDatabaseCatalogue()
     {
@@ -141,15 +172,15 @@ abstract class AbstractProvider implements ProviderInterface
 
         foreach ($this->getTranslationDomains() as $translationDomain) {
             $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain);
-            $databaseCatalogue->addCatalogue($domainCatalogue);
+            if ($domainCatalogue instanceof MessageCatalogue) {
+                $databaseCatalogue->addCatalogue($domainCatalogue);
+            }
         }
 
         return $databaseCatalogue;
     }
 
     /**
-     * Helper function
-     *
      * @return string Path to app/Resources/translations/{locale}
      */
     public function getResourceDirectory()
@@ -157,8 +188,35 @@ abstract class AbstractProvider implements ProviderInterface
         return $this->resourceDirectory.'/'.$this->locale;
     }
 
+    /**
+     * @return string Path to app/Resources/translations/default/{locale}
+     */
+    public function getDefaultResourceDirectory()
+    {
+        return $this->resourceDirectory.'/default/'.$this->locale;
+    }
+
+    /**
+     * @return LoaderInterface The database loader
+     */
     public function getDatabaseLoader()
     {
         return $this->databaseLoader;
+    }
+
+    /**
+     * @param MessageCatalogue $messageCatalogue
+     *
+     * @return MessageCatalogue Empty the catalogue
+     */
+    public function emptyCatalogue(MessageCatalogue $messageCatalogue)
+    {
+        foreach ($messageCatalogue as $domain => $messages) {
+            foreach ($messages as $translationKey => $translationValue) {
+                $messageCatalogue[$domain][$translationKey] = '';
+            }
+        }
+
+        return $messageCatalogue;
     }
 }
