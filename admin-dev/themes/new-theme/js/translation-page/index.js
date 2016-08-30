@@ -5,8 +5,8 @@ import initMessagesPagination from './messages-pagination'
 import initSearch from './messages-search'
 
 $(() => {
-    initMessagesVisibilityToggling();
-    initMessagesEdition();
-    initMessagesPagination();
-    initSearch();
+  initMessagesVisibilityToggling();
+  initSearch();
+  initMessagesEdition();
+  initMessagesPagination();
 });
