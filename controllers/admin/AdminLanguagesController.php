@@ -78,6 +78,11 @@ class AdminLanguagesControllerCore extends AdminController
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
+            'locale' => array(
+                'title' => $this->l('Locale'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs'
+            ),
             'date_format_lite' => array(
                 'title' => $this->l('Date format')
             ),
@@ -164,6 +169,14 @@ class AdminLanguagesControllerCore extends AdminController
                     'hint' => $this->l('IETF language tag (e.g. en-US, pt-BR).')
                     /* TO DO - ajouter les liens dans le hint ? */
                     /*'desc' => $this->l('IETF language tag (e.g. en-US, pt-BR).').' '.sprintf('<a href="http://en.wikipedia.org/wiki/IETF_language_tag" target="_blank">%s <img src="../img/admin/external_link.png" class="icon-top" /></a>', $this->l('IETF on Wikipedia'))*/
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Language locale'),
+                    'name' => 'locale',
+                    'required' => true,
+                    'maxlength' => 5,
+                    'hint' => $this->l('Five-letter ISO code (e.g. fr-FR, en-EN, de-DE).')
                 ),
                 array(
                     'type' => 'text',
