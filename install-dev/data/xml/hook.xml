@@ -354,5 +354,8 @@
     <hook id="displayCustomerLoginFormAfter">
       <name>displayCustomerLoginFormAfter</name><title>Display elements after login form</title><description>This hook displays new elements after the login form</description>
     </hook>
+    <hook id="actionValidateCustomerAddressForm">
+      <name>actionValidateCustomerAddressForm</name><title>Customer address form validation</title><description>This hook is called when a customer submit its address form</description>
+    </hook>
   </entities>
 </entity_hook>
