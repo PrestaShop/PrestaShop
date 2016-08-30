@@ -28,6 +28,7 @@
 namespace PrestaShopBundle\Translation;
 
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
+use PrestaShopBundle\Translation\Provider\UseDefaultCatalogueInterface;
 
 /**
  * This class returns a collection of translations, using locale and identifier.
@@ -68,6 +69,16 @@ class TranslationsFactory
                 $provider->setLocale($locale);
 
                 $tree = $provider->getXliffCatalogue()->all();
+
+                if ($provider instanceof UseDefaultCatalogueInterface) {
+                    $defaultCatalogue = $provider->getDefaultCatalogue();
+                    $xlfCatalogue = $provider->getXliffCatalogue();
+
+                    $defaultCatalogue->addCatalogue($xlfCatalogue);
+
+                    $tree = $defaultCatalogue->all();
+                }
+
                 $databaseCatalogue = $provider->getDatabaseCatalogue()->all();
 
                 foreach ($tree as $domain => $messages) {
