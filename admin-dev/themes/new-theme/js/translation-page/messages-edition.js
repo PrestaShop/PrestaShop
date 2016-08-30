@@ -2,12 +2,12 @@ import $ from 'jquery';
 
 export default function (search) {
   $('.reset-translation-value').each((buttonIndex, button) => {
-    let editTranslationForm = $(button).parents('form');
-    let defaultTranslationValue = editTranslationForm.find('*[name=default]').val();
+    let $editTranslationForm = $(button).parents('form');
+    let defaultTranslationValue = $editTranslationForm.find('*[name=default]').val();
 
     $(button).click(() => {
-      editTranslationForm.find('*[name=translation_value]').val(defaultTranslationValue);
-      editTranslationForm.submit();
+      $editTranslationForm.find('*[name=translation_value]').val(defaultTranslationValue);
+      $editTranslationForm.submit();
     });
   });
 
@@ -26,7 +26,7 @@ export default function (search) {
           let $editTranslationForms = $('[data-hash=' + hash + ']');
           let $translationValueFields = $($editTranslationForms.find('textarea'));
           $translationValueFields.val($editTranslationForm.find('textarea').val());
-      
+
           // Refresh search index
           $editTranslationForms.removeAttr('data-jets');
           search.update();
