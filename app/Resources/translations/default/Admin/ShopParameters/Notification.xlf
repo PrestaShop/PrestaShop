@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminOrderPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="85a1ca0031f114f8409d15c6790856f5">
+        <source>Assign a valid page if you want it to be read.</source>
+        <target>Assign a valid page if you want it to be read.</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:182</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminMetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="73ca86c0d6a5d58e868c54c3a1524c6c">
+        <source>Before you can use this tool, you need to:</source>
+        <target>Before you can use this tool, you need to:</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:137</note>
+      </trans-unit>
+      <trans-unit id="636fc324804393cc1d3306a541cc871f">
+        <source>1) Create a blank .htaccess file in your root directory.</source>
+        <target>1) Create a blank .htaccess file in your root directory.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:126</note>
+      </trans-unit>
+      <trans-unit id="1a53c64bc79e181125e94976211eb401">
+        <source>2) Give it write permissions (CHMOD 666 on Unix system).</source>
+        <target>2) Give it write permissions (CHMOD 666 on Unix system).</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:139</note>
+      </trans-unit>
+      <trans-unit id="10ebcb160107c452a2fc3c51804fc780">
+        <source>Your robots.txt file MUST be in your website's root directory and nowhere else (e.g. http://www.example.com/robots.txt).</source>
+        <target>Your robots.txt file MUST be in your website's root directory and nowhere else (e.g. http://www.example.com/robots.txt).</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:132
+ Comment: Options to generate robot.txt</note>
+      </trans-unit>
+      <trans-unit id="54a81582e2ea2a98cebaabab9c454957">
+        <source>Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)</source>
+        <target>Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:134</note>
+      </trans-unit>
+      <trans-unit id="d999a32b68fd420ce389f774c231c637">
+        <source>1) Create a blank robots.txt file in your root directory.</source>
+        <target>1) Create a blank robots.txt file in your root directory.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:138</note>
+      </trans-unit>
+      <trans-unit id="4836c0b3d56db59ba29844b8bcec084d">
+        <source>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</source>
+        <target>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:161</note>
+      </trans-unit>
+      <trans-unit id="117fb47c0109ce0c9415a7f60f084c39">
+        <source>The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.</source>
+        <target>The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:185</note>
+      </trans-unit>
+      <trans-unit id="488acc51322abb701f50f1e753f7c19e">
+        <source>This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop's "Friendly URL" option must be enabled, and Apache's URL rewriting module (mod_rewrite) must be activated on your web server.</source>
+        <target>This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop's "Friendly URL" option must be enabled, and Apache's URL rewriting module (mod_rewrite) must be activated on your web server.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:222</note>
+      </trans-unit>
+      <trans-unit id="3ecf3d1a434ba446f75b21deb67826c6">
+        <source>There are several available keywords for each route listed below; note that keywords with * are required!</source>
+        <target>There are several available keywords for each route listed below; note that keywords with * are required!</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:222</note>
+      </trans-unit>
+      <trans-unit id="e3fc732382d81895d218614e841ea222">
+        <source>To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.</source>
+        <target>To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:222</note>
+      </trans-unit>
+      <trans-unit id="843afaeb1d84245d7cf7d0877a7258dd">
+        <source>You can only display the page list in a shop context.</source>
+        <target>You can only display the page list in a shop context.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:523</note>
+      </trans-unit>
+      <trans-unit id="b8a27e47e64caa3e36c8894c3745357b">
+        <source>Before being able to use this tool, you need to:</source>
+        <target>Before being able to use this tool, you need to:</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:582
+ Comment: Message copied/pasted from the information tip</note>
+      </trans-unit>
+      <trans-unit id="d7faa8eb2f73f2c764e387d3d7c57556">
+        <source>Create a blank .htaccess in your root directory.</source>
+        <target>Create a blank .htaccess in your root directory.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:583</note>
+      </trans-unit>
+      <trans-unit id="5dab5160dfb25b3a4d6c51416dac5c87">
+        <source>Give it write permissions (CHMOD 666 on Unix system).</source>
+        <target>Give it write permissions (CHMOD 666 on Unix system).</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:584</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

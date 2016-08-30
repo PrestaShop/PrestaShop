@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_shoppingcart/ps_shoppingcart.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f373b403975d367491574fb2c739fef7">
+        <source>Shopping cart</source>
+        <target>Shopping cart</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:47</note>
+      </trans-unit>
+      <trans-unit id="32114c6d4529db62a4703c4b04a3f214">
+        <source>Adds a block containing the customer's shopping cart.</source>
+        <target>Adds a block containing the customer's shopping cart.</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:48</note>
+      </trans-unit>
+      <trans-unit id="a21e5718d2a196280b729438933501c7">
+        <source>Ajax: Invalid choice.</source>
+        <target>Ajax: Invalid choice.</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:113</note>
+      </trans-unit>
+      <trans-unit id="02c793e3df4632db20e4d6e146095d62">
+        <source>Please complete the "Products to display" field.</source>
+        <target>Please complete the "Products to display" field.</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:118</note>
+      </trans-unit>
+      <trans-unit id="614a8820aa4ac08ce2ee398a41b10778">
+        <source>Ajax cart</source>
+        <target>Ajax cart</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:153</note>
+      </trans-unit>
+      <trans-unit id="eefd19ecf1f6d94a308dcfc95981bbf9">
+        <source>Activate Ajax mode for the cart (compatible with the default theme).</source>
+        <target>Activate Ajax mode for the cart (compatible with the default theme).</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:156</note>
+      </trans-unit>
+      <trans-unit id="a87a2d4a45b5a7e682089167c1d5232a">
+        <source>Show cross-selling</source>
+        <target>Show cross-selling</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:172</note>
+      </trans-unit>
+      <trans-unit id="89e535251f4749df29ad3a288deaa017">
+        <source>Activate cross-selling display for the cart.</source>
+        <target>Activate cross-selling display for the cart.</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:175</note>
+      </trans-unit>
+      <trans-unit id="ce8bd2479bb85218eb304a9a2903a157">
+        <source>Products to display in cross-selling</source>
+        <target>Products to display in cross-selling</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:191</note>
+      </trans-unit>
+      <trans-unit id="5f2effb52d25d197793288dfa94c27ce">
+        <source>Define the number of products to be displayed in the cross-selling block.</source>
+        <target>Define the number of products to be displayed in the cross-selling block.</target>
+        <note>Context:
+File: modules/ps_shoppingcart/ps_shoppingcart.php:194</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

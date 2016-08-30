@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d5f0ba6e06dd63bcb2b101779a024f97">
+        <source><![CDATA[Modules & Services]]></source>
+        <target><![CDATA[Modules & Services]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:30</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

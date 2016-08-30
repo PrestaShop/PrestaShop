@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
+        <source>Quick Access</source>
+        <target>Quick Access</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:125</note>
+      </trans-unit>
+      <trans-unit id="f84b4e2770ec98e3db2926cd49864d2f">
+        <source>My preferences</source>
+        <target>My preferences</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:234</note>
+      </trans-unit>
+      <trans-unit id="65e81c540f5af5f5c59901a076f9b024">
+        <source>My PrestaShop account</source>
+        <target>My PrestaShop account</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:236</note>
+      </trans-unit>
+      <trans-unit id="c87aacf5673fada1108c9f809d354311">
+        <source>Sign out</source>
+        <target>Sign out</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:239</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

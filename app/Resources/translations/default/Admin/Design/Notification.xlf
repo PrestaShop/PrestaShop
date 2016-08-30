@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
+        <source>The uploaded file is too large.</source>
+        <target>The uploaded file is too large.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:288</note>
+      </trans-unit>
+      <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
+        <source>Invalid file format.</source>
+        <target>Invalid file format.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:304</note>
+      </trans-unit>
+      <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
+        <source>Failed to move uploaded file.</source>
+        <target>Failed to move uploaded file.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:316</note>
+      </trans-unit>
+      <trans-unit id="3cb5c48f468125102a98fe83a277029d">
+        <source>Warning: if no email logo is available, the main logo will be used instead.</source>
+        <target>Warning: if no email logo is available, the main logo will be used instead.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:362</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCmsCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="29dae1d163226f90bb206b333bbffe1d">
+        <source>The page Category cannot be moved here.</source>
+        <target>The page Category cannot be moved here.</target>
+        <note>Context:
+File: controllers/admin/AdminCmsCategoriesController.php:105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="68e8d36b17584f88614fb3201925a7ac">
+        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</source>
+        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:696</note>
+      </trans-unit>
+      <trans-unit id="0bedafc96db94da3f85caa7101944eb5">
+        <source>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</source>
+        <target>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:699</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5b8cb2aa659c7d6a98b740d2d788c69d">
+        <source>Incorrect value for the selected JPEG image compression.</source>
+        <target>Incorrect value for the selected JPEG image compression.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:361</note>
+      </trans-unit>
+      <trans-unit id="8357fadc46ff52546c4c69965de0d653">
+        <source>Incorrect value for the selected PNG image compression.</source>
+        <target>Incorrect value for the selected PNG image compression.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:364</note>
+      </trans-unit>
+      <trans-unit id="e8be55bf3a30501aef09d2e74de97976">
+        <source>This name already exists.</source>
+        <target>This name already exists.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:389</note>
+      </trans-unit>
+      <trans-unit id="b88862891dbf9c20a73bc59258407d0b">
+        <source>Source file does not exist or is empty (%filepath%)</source>
+        <target>Source file does not exist or is empty (%filepath%)</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:500</note>
+      </trans-unit>
+      <trans-unit id="985b5b995c4574ae5eba2062a13ef168">
+        <source>Failed to resize image file (%filepath%)</source>
+        <target>Failed to resize image file (%filepath%)</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:502</note>
+      </trans-unit>
+      <trans-unit id="c5e7d0c13104eed0a195c175f2edfdd2">
+        <source>Failed to resize image file to high resolution (%filepath%)</source>
+        <target>Failed to resize image file to high resolution (%filepath%)</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:507</note>
+      </trans-unit>
+      <trans-unit id="103d86044b78fa59e02ff8480a3a2f46">
+        <source>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</source>
+        <target>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:539</note>
+      </trans-unit>
+      <trans-unit id="2934958a3f658892ee502aaf8258a6f7">
+        <source>Original image is missing or empty (%filename%) for product ID %id%</source>
+        <target>Original image is missing or empty (%filename%) for product ID %id%</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:552</note>
+      </trans-unit>
+      <trans-unit id="d4f225ec09e4b0eba6558753f4bd8edd">
+        <source>Only part of the images have been regenerated. The server timed out before finishing.</source>
+        <target>Only part of the images have been regenerated. The server timed out before finishing.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:675</note>
+      </trans-unit>
+      <trans-unit id="f2febdafe25d3517afc3c6dd3d815562">
+        <source>Server timed out. The watermark may not have been applied to all images.</source>
+        <target>Server timed out. The watermark may not have been applied to all images.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:679</note>
+      </trans-unit>
+      <trans-unit id="4004c7590c68a8cbbe499736c56bc33c">
+        <source>Error: Your server configuration is not compatible with the new image system. No images were moved.</source>
+        <target>Error: Your server configuration is not compatible with the new image system. No images were moved.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:711</note>
+      </trans-unit>
+      <trans-unit id="4c9f49243d6dc02028801d9767abe3c1">
+        <source>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</source>
+        <target>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:717</note>
+      </trans-unit>
+      <trans-unit id="95871efade00fbd0243355ce7937c40a">
+        <source>Error: Some -- or all -- images cannot be moved.</source>
+        <target>Error: Some -- or all -- images cannot be moved.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:719</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bc27dd5e1ea3b9ff33ff2871f2224bd2">
+        <source>These are all the modules you’ve added to your shop, either by buying it from PrestaShop Addons, or by uploading it directly.</source>
+        <target>These are all the modules you’ve added to your shop, either by buying it from PrestaShop Addons, or by uploading it directly.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:59</note>
+      </trans-unit>
+      <trans-unit id="0a57c51c7d767e1ac542a2b662f982a6">
+        <source>These modules from PrestaShop are preinstalled when you set-up your shop. They cover the basics of e-commerce and comes for free.</source>
+        <target>These modules from PrestaShop are preinstalled when you set-up your shop. They cover the basics of e-commerce and comes for free.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:70</note>
+      </trans-unit>
+      <trans-unit id="ae365d76ad3437cb427c557496ef470d">
+        <source>Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme.</source>
+        <target>Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5117b40edade2ab3a4f738db0542ca03">
+        <source>These modules require your attention: you need to take some action to ensure they are fully operational.</source>
+        <target>These modules require your attention: you need to take some action to ensure they are fully operational.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:32</note>
+      </trans-unit>
+      <trans-unit id="94fcfae9285e19b611afe17a8565a394">
+        <source>Update these modules to enjoy their latest versions.</source>
+        <target>Update these modules to enjoy their latest versions.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
+        <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
+        <target>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:19</note>
+      </trans-unit>
+      <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
+        <source>Your module will be installed right after that.</source>
+        <target>Your module will be installed right after that.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:20</note>
+      </trans-unit>
+      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
+        <source>What happened?</source>
+        <target>What happened?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="677b5abd7f9265257543a0f7258bc477">
+        <source>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</source>
+        <target>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:8</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

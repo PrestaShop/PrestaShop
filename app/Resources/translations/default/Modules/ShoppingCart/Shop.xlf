@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_shoppingcart/crossselling.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ef2b66b0b65479e08ff0cce29e19d006">
+        <source>Customers who bought this product also bought:</source>
+        <target>Customers who bought this product also bought:</target>
+        <note>Context:
+File: modules/ps_shoppingcart/crossselling.tpl:26</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

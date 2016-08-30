@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1589ac76f2f88749f51028f09b23f9d4">
+        <source>Drop existing tables during import.</source>
+        <target>Drop existing tables during import.</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:62</note>
+      </trans-unit>
+      <trans-unit id="b07ccf1ffff29007509d45dbcc13f923">
+        <source>If enabled, the backup script will drop your tables prior to restoring data.</source>
+        <target>If enabled, the backup script will drop your tables prior to restoring data.</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:71</note>
+      </trans-unit>
+      <trans-unit id="2e25562aa49c13b17e979d826fecc25f">
+        <source>(ie. "DROP TABLE IF EXISTS")</source>
+        <target>(ie. "DROP TABLE IF EXISTS")</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:72</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="99059a2047f475cdc6428076e3360134">
+        <source>New modules and updates are displayed on the modules page.</source>
+        <target>New modules and updates are displayed on the modules page.</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:53</note>
+      </trans-unit>
+      <trans-unit id="0f81567617bb8ebc23f48e74d8ae8acf">
+        <source>Check the IP address of the cookie in order to prevent your cookie from being stolen.</source>
+        <target>Check the IP address of the cookie in order to prevent your cookie from being stolen.</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:61</note>
+      </trans-unit>
+      <trans-unit id="a676520f8296be0319ad6268657471ea">
+        <source>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</source>
+        <target>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:80</note>
+      </trans-unit>
+      <trans-unit id="e78f32f514dbd49e570066db36343d13">
+        <source>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</source>
+        <target>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:97</note>
+      </trans-unit>
+      <trans-unit id="cabcb35221054c8ad296eb4e406e2cd7">
+        <source>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</source>
+        <target>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:106</note>
+      </trans-unit>
+      <trans-unit id="694c63d4a2b60499f7ba524fb639811f">
+        <source>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</source>
+        <target>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:115</note>
+      </trans-unit>
+      <trans-unit id="2566fed9ede40ae26636b773594094cf">
+        <source>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</source>
+        <target>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:128</note>
+      </trans-unit>
+      <trans-unit id="e0853b619fbd24fdabc3ae78beb81193">
+        <source>This will display notifications when new orders are made in your shop.</source>
+        <target>This will display notifications when new orders are made in your shop.</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:132</note>
+      </trans-unit>
+      <trans-unit id="11b3df1e92b11e2d899494d3cdf4dd13">
+        <source>This will display notifications every time a new customer registers in your shop.</source>
+        <target>This will display notifications every time a new customer registers in your shop.</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:139</note>
+      </trans-unit>
+      <trans-unit id="b8a8fa662505e278031049e4990e428a">
+        <source>This will display notifications when new messages are posted in your shop.</source>
+        <target>This will display notifications when new messages are posted in your shop.</target>
+        <note>Context:
+File: controllers/admin/AdminAdminPreferencesController.php:146</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
