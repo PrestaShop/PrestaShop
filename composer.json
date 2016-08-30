@@ -12,6 +12,7 @@
     "geoip2/geoip2": "~2.4.2",
     "doctrine/doctrine-bundle": "1.5.2",
     "mrclay/minify": "~2.3.0",
+    "jakeasmith/http_build_url": "^1",
     "symfony/swiftmailer-bundle": "2.3.11",
     "pear/archive_tar": "~1.4.2",
     "swiftmailer/swiftmailer": "~5.4.3",
