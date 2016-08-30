@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-class BackOfficeProvider extends AbstractProvider
+use Symfony\Component\Translation\MessageCatalogue;
+
+class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**
      * {@inheritdoc}
@@ -50,5 +52,35 @@ class BackOfficeProvider extends AbstractProvider
     public function getIdentifier()
     {
         return 'back';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultCatalogue($empty = true)
+    {
+        $defaultCatalogue = new MessageCatalogue($this->getLocale());
+
+        foreach ($this->getFilters() as $filter) {
+            $filteredCatalogue = $this->getCatalogueFromPaths(
+                array($this->getDefaultResourceDirectory()),
+                $this->getLocale(),
+                $filter
+            );
+            $defaultCatalogue->addCatalogue($filteredCatalogue);
+        }
+
+        if ($empty) {
+            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
+        }
+
+        return $defaultCatalogue;
+    }
+
+    /**{@inheritdoc}
+     */
+    public function getDefaultResourceDirectory()
+    {
+        return $this->resourceDirectory.'/default/'.$this->getLocale();
     }
 }

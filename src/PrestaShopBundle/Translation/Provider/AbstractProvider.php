@@ -36,7 +36,7 @@ abstract class AbstractProvider implements ProviderInterface
     const DEFAULT_LOCALE = 'en-US';
 
     private $databaseLoader;
-    private $resourceDirectory;
+    protected $resourceDirectory;
     private $locale;
 
     public function __construct(LoaderInterface $databaseLoader, $resourceDirectory)
@@ -135,33 +135,6 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Get the default catalogue from xliff files.
-     *
-     * @param bool $empty if true, empty the catalogue
-     *
-     * @return MessageCatalogue A MessageCatalogue instance
-     */
-    public function getDefaultCatalogue($empty = true)
-    {
-        $defaultCatalogue = new MessageCatalogue($this->locale);
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->locale,
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
-    }
-
-    /**
      * Get the Catalogue from database only.
      *
      * @return MessageCatalogue A MessageCatalogue instance
@@ -186,14 +159,6 @@ abstract class AbstractProvider implements ProviderInterface
     public function getResourceDirectory()
     {
         return $this->resourceDirectory.'/'.$this->locale;
-    }
-
-    /**
-     * @return string Path to app/Resources/translations/default/{locale}
-     */
-    public function getDefaultResourceDirectory()
-    {
-        return $this->resourceDirectory.'/default/'.$this->locale;
     }
 
     /**
