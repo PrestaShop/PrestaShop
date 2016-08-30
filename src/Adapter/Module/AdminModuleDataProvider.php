@@ -261,6 +261,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $addon->categoryParent = $this->categoriesProvider
                             ->getParentCategory($addon->categoryName)
                         ;
+                        $addon->productType = $addon->product_type;
                         $listAddons[$addon->name] = $addon;
                     }
                 }

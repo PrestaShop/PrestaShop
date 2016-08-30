@@ -101,41 +101,38 @@
 
     .module-item-wrapper-list {
 
-        .module-item-heading-list {
+        @media (max-width: 33.9em) {
+            text-align: center;
+        }
 
+        > .module-logo-thumb-list {
+            height:64px;
+            max-width:64px;
+            margin: 0 auto;
             @media (max-width: 33.9em) {
-                text-align: center;
+                height: auto;
+                max-height: 64px;
             }
-
-            > .module-logo-thumb-list {
-                height:64px;
-                max-width:64px;
-                margin: 0 auto;
-                @media (max-width: 33.9em) {
-                    height: auto;
-                    max-height: 64px;
-                }
-                img {
-                    width: 100%;
-                    max-width: 64px;
-                    margin-bottom: 0.5em;
-                }
+            img {
+                width: 100%;
+                max-width: 64px;
+                margin-bottom: 0.5em;
             }
-            > .module-name-list {
-                font-weight: bolder;
-                color: $gray;
-                margin: 0;
-            }
-            > .module-version-author-list {
+        }
+        .module-name-list {
+            font-weight: bolder;
+            color: $gray;
+            margin: 0;
+        }
+        > .module-version-author-list {
+            font-weight: bold;
+            color: $gray-medium;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            b {
                 font-weight: bold;
-                color: $gray-medium;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                b {
-                    font-weight: bold;
-                    color: $gray-dark;
-                }
+                color: $gray-dark;
             }
         }
 

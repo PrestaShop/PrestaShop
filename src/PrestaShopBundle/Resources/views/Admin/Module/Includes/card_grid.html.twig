@@ -1,5 +1,4 @@
 {% set isModuleActive = module.database.active|default('0') %}
-{% set productType = module.attributes.serviceUrl is defined and module.attributes.serviceUrl|length > 0 ? 'service' : 'module' %}
 
 <div
   class="module-item module-item-grid col-md-12 col-lg-6 col-xl-4 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
@@ -13,7 +12,7 @@
   data-tech-name="{{ module.attributes.name }}"
   data-child-categories="{{ module.attributes.categoryName }}"
   data-categories="{{ module.attributes.categoryParent }}"
-  data-type="{{ productType }}"
+  data-type="{{ module.attributes.productType }}"
   data-price="{{ module.attributes.price.raw }}"
   data-active="{{ isModuleActive }}"
 >
@@ -36,7 +35,7 @@
       </h3>
       <div class="text-ellipsis xsmall module-version-author-grid">
         {% block addon_version %}
-          {% if productType == "service" %}
+          {% if module.attributes.productType == "service" %}
             {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
             <b>{{ module.attributes.author }}</b>
           {% else %}
