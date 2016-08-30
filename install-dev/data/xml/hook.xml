@@ -48,6 +48,12 @@
     <hook id="actionProductUpdate">
       <name>actionProductUpdate</name><title>Product update</title><description>This hook is displayed after a product has been updated</description>
     </hook>
+    <hook id="displayAfterBodyOpeningTag">
+      <name>displayAfterBodyOpeningTag</name><title>Very top of pages</title><description>Use this hook for advertisement or modals you want to load first.</description>
+    </hook>
+    <hook id="displayBeforeBodyClosingTag">
+      <name>displayBeforeBodyClosingTag</name><title>Very bottom of pages</title><description>Use this hook for your modals or any content you want to load at the very end.</description>
+    </hook>
     <hook id="displayTop">
       <name>displayTop</name><title>Top of pages</title><description>This hook displays additional elements at the top of your pages</description>
     </hook>
