@@ -124,8 +124,8 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
-    "git-hook-install": "php tools/contrib/install.php",
-    "git-hook-uninstall": "php tools/contrib/uninstall.php",
+    "git-hook-install": "php .github/contrib/install.php",
+    "git-hook-uninstall": "php .github/contrib/uninstall.php",
     "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
     "phpunit-sf": "php bin/phpunit -c admin-dev/"
   },
