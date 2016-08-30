@@ -81,6 +81,6 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.'/default/'.$this->getLocale();
+        return $this->resourceDirectory.'/default';
     }
 }

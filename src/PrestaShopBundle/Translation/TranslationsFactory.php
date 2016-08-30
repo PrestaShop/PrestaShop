@@ -56,19 +56,19 @@ class TranslationsFactory
     /**
      * Used to generate Translation tree in Back Office.
      *
-     * @param string $identifier Domain identifier
+     * @param string $domainIdentifier Domain identifier
      * @param string $locale     Locale identifier
      *
      * @return array Translation tree structure
      */
-    public function createTree($identifier, $locale = 'en_US')
+    public function createTranslationsArray($domainIdentifier, $locale = 'en_US')
     {
         foreach ($this->providers as $provider) {
-            if ($identifier === $provider->getIdentifier()) {
+            if ($domainIdentifier === $provider->getIdentifier()) {
                 // set locale
                 $provider->setLocale($locale);
 
-                $tree = $provider->getXliffCatalogue()->all();
+                $translations = $provider->getXliffCatalogue()->all();
 
                 if ($provider instanceof UseDefaultCatalogueInterface) {
                     $defaultCatalogue = $provider->getDefaultCatalogue();
@@ -76,12 +76,12 @@ class TranslationsFactory
 
                     $defaultCatalogue->addCatalogue($xlfCatalogue);
 
-                    $tree = $defaultCatalogue->all();
+                    $translations = $defaultCatalogue->all();
                 }
 
                 $databaseCatalogue = $provider->getDatabaseCatalogue()->all();
 
-                foreach ($tree as $domain => $messages) {
+                foreach ($translations as $domain => $messages) {
                     $databaseDomain = str_replace('.'.$locale, '', $domain);
 
                     foreach ($messages as $translationKey => $translationValue) {
@@ -91,15 +91,15 @@ class TranslationsFactory
                         ;
 
                         $tree[$domain][$translationKey] = array(
-                            'xlf' => $tree[$domain][$translationKey],
+                            'xlf' => $translations[$domain][$translationKey],
                             'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
                         );
                     }
                 }
 
-                ksort($tree);
+                ksort($translations);
 
-                return $tree;
+                return $translations;
             }
         }
     }
