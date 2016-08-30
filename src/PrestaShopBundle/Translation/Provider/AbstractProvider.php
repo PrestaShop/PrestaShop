@@ -100,17 +100,17 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getMessageCatalogue()
     {
-        $defaultCatalogue = $this->getDefaultCatalogue();
+        $messageCatalogue = $this->getDefaultCatalogue();
 
         $xlfCatalogue = $this->getXliffCatalogue();
-        $xlfCatalogue = array_merge($defaultCatalogue, $xlfCatalogue);
+        $messageCatalogue->addCatalogue($xlfCatalogue);
 
         $databaseCatalogue = $this->getDatabaseCatalogue();
 
         // Merge database catalogue to xliff catalogue
-        $xlfCatalogue->addCatalogue($databaseCatalogue);
+        $messageCatalogue->addCatalogue($databaseCatalogue);
 
-        return $xlfCatalogue;
+        return $messageCatalogue;
     }
 
     /**
