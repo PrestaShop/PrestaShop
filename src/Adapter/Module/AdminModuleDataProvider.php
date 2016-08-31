@@ -255,13 +255,17 @@ class AdminModuleDataProvider implements ModuleInterface
                     // so we know whether is bought
 
                     $addons = $this->addonsDataProvider->request($action, $params);
-                    foreach ($addons as $addon) {
+                    foreach ($addons as $addonsType => $addon) {
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
                         $addon->categoryParent = $this->categoriesProvider
                             ->getParentCategory($addon->categoryName)
                         ;
-                        $addon->productType = $addon->product_type;
+                        if (! isset($addon->product_type)) {
+                            $addon->productType = isset($addonsType)?rtrim($addonsType, 's'):'module';
+                        } else {
+                            $addon->productType = $addon->product_type;
+                        }
                         $listAddons[$addon->name] = $addon;
                     }
                 }
@@ -320,7 +324,8 @@ class AdminModuleDataProvider implements ModuleInterface
     private function registerModuleCache($file, $data)
     {
         try {
-            $cache = (new ConfigCacheFactory(true))->cache($this->cache_dir.$file, function () {});
+            $cache = (new ConfigCacheFactory(true))->cache($this->cache_dir.$file, function () {
+            });
             $cache->write(json_encode($data));
 
             return $cache->getPath();
