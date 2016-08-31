@@ -107,3 +107,11 @@ services:
             - "%translations_dir%"
         tags:
             - { name: "ps.translation_provider" }
+
+    prestashop.translation.frontoffice_provider:
+        class: PrestaShopBundle\Translation\Provider\FrontOfficeProvider
+        arguments:
+            - "@prestashop.translations.database_loader"
+            - "%translations_dir%"
+        tags:
+            - { name: "ps.translation_provider" }
