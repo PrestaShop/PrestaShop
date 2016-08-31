@@ -36,8 +36,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
 /**
  * Admin controller for the International pages.
  */
