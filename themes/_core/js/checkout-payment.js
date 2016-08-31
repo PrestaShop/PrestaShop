@@ -5,7 +5,7 @@ class Payment {
     this.confirmationSelector = '#payment-confirmation';
     this.paymentSelector = '#payment-section';
     this.conditionsSelector = '#conditions-to-approve';
-    this.conditionAlertSelector = '#js-alert-payment-conditions';
+    this.conditionAlertSelector = '.js-alert-payment-conditions';
     this.additionalInformatonSelector = '.js-additional-information';
     this.optionsForm = '.js-payment-option-form';
   }
