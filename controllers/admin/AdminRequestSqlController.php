@@ -366,7 +366,7 @@ class AdminRequestSqlControllerCore extends AdminController
                         readfile($export_dir.$file);
                         die();
                     } else {
-                        $this->errors[] = Tools::DisplayError('The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.');
+                        $this->errors[] = Tools::DisplayError('The file is too large and can not be downloaded. Please use the LIMIT clause in this query.');
                     }
                 }
             }
