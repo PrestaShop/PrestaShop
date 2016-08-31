@@ -36,6 +36,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
+use Symfony\Component\Translation\MessageCatalogue;
+
 /**
  * Admin controller for the International pages.
  */
@@ -194,11 +196,19 @@ class TranslationsController extends FrameworkBundleAdminController
     protected function getTranslationsCatalogue(Request $request)
     {
         $lang = $request->request->get('lang');
+        $type = $request->request->get('type');
 
         $translator = $this->container->get('translator');
 
         $locale = $this->langToLocale($lang);
 
+        $translations = $this->get('ps.translations_factory')->createTranslationsArray($type, $locale);
+
+        if (!is_null($translations)) {
+            return $translations;
+        }
+
+        // if type is not found, return all keys
         $finder = new Finder();
         $translationFiles = $finder->files()->in($this->getResourcesDirectory().'/translations/'.$locale);
 

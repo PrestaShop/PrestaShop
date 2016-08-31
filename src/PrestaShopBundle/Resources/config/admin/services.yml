@@ -1,3 +1,6 @@
+parameters:
+    translations_dir: "%kernel.root_dir%/Resources/translations"
+
 services:
 # CORE ADMIN (prestashop.core.admin.*)
     # URL generation
@@ -89,3 +92,18 @@ services:
     #UTILS
     prestashop.utils.zip_manager:
         class: PrestaShopBundle\Utils\ZipManager
+
+    #TRANSLATIONS
+    prestashop.translation.translations_factory:
+        class: PrestaShopBundle\Translation\TranslationsFactory
+
+    ps.translations_factory:
+        alias: "prestashop.translation.translations_factory"
+
+    prestashop.translation.backoffice_provider:
+        class: PrestaShopBundle\Translation\Provider\BackOfficeProvider
+        arguments:
+            - "@prestashop.translations.database_loader"
+            - "%translations_dir%"
+        tags:
+            - { name: "ps.translation_provider" }
