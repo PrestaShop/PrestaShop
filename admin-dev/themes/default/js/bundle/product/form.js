@@ -1458,7 +1458,7 @@ var formImagesProduct = (function() {
       $.ajax({
         type: 'POST',
         url: dropZoneElem.attr('url-update') + '/' + id,
-        data: formZoneElem.find('textarea').serialize(),
+        data: formZoneElem.find('textarea, input').serialize(),
         beforeSend: function() {
           formZoneElem.find('.actions button').prop('disabled', 'disabled');
           formZoneElem.find('ul.text-danger').remove();
