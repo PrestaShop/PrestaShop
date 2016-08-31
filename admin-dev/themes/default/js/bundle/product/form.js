@@ -39,7 +39,7 @@ $(document).ready(function() {
   imagesProduct.init();
   priceCalculation.init();
   displayFieldsManager.refresh();
-  displayFieldsManager.init();
+  displayFieldsManager.init(virtualProduct);
   seo.init();
   tags.init();
   rightSidebar.init();
@@ -79,9 +79,12 @@ var displayFieldsManager = (function() {
   var typeProduct = $('#form_step1_type_product');
   var showVariationsSelector = $('#show_variations_selector');
   var combinationsBlock = $('#combinations');
+  var managedVirtualProduct;
 
   return {
-    'init': function() {
+    'init': function (virtualProduct) {
+      managedVirtualProduct = virtualProduct;
+
       /** Type product fields display management */
       $('#form_step1_type_product').change(function() {
         displayFieldsManager.refresh();
@@ -137,6 +140,13 @@ var displayFieldsManager = (function() {
           showVariationsSelector.show();
           $('#form-nav a[href="#step3"]').text(translate_javascripts['Quantities']);
         }
+      }
+
+      // Switching from a product type to another which is not "Virtual product",
+      // triggers the destruction of pre-existing virtual product
+      var shouldDestroyVirtualProduct = typeProduct.val() !== '2';
+      if (shouldDestroyVirtualProduct && managedVirtualProduct !== undefined) {
+        managedVirtualProduct.destroy();
       }
 
       /** check quantity / combinations display */
@@ -1045,6 +1055,17 @@ var customFieldCollection = (function() {
 var virtualProduct = (function() {
   var id_product = $('#form_id_product').val();
 
+  var getOnDeleteVirtualProductFileHandler = function ($deleteButton) {
+    return $.ajax({
+      type: 'GET',
+      url: $deleteButton.attr('href') + '/' + id_product,
+      success: function () {
+        $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
+        $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
+      }
+    })
+  };
+
   return {
     'init': function() {
       $(document).on('change', 'input[name="form[step3][virtual_product][is_virtual_file]"]', function() {
@@ -1095,18 +1116,11 @@ var virtualProduct = (function() {
       /** delete attached file */
       $('#form_step3_virtual_product_file_details .delete').click(function(e) {
         e.preventDefault();
-        var _this = $(this);
+        var $deleteButton = $(this);
 
         modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
           onContinue: function() {
-            $.ajax({
-              type: 'GET',
-              url: _this.attr('href') + '/' + id_product,
-              success: function() {
-                $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
-                $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
-              }
-            });
+            getOnDeleteVirtualProductFileHandler($deleteButton);
           }
         }).show();
       });
@@ -1161,8 +1175,23 @@ var virtualProduct = (function() {
           }
         });
       });
+    },
+    'destroy': function () {
+      var fileDetailsSelector = '#form_step3_virtual_product_file_details';
+      var fileAssociationExists = !$(fileDetailsSelector).hasClass('hide');
+
+      if (fileAssociationExists) {
+        var $deleteButton = $(fileDetailsSelector + ' .delete');
+        getOnDeleteVirtualProductFileHandler($deleteButton);
+      }
+
+      var associatedFileCheckboxSelectorPrefix = '#form_step3_virtual_product_is_virtual_file_';
+      $(associatedFileCheckboxSelectorPrefix + '0').prop('checked', false);
+      $(associatedFileCheckboxSelectorPrefix + '1').prop('checked', true);
+
+      $('#virtual_product_content input').val('');
     }
-  };
+  }
 })();
 
 /**
