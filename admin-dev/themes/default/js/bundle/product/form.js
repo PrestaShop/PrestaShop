@@ -86,25 +86,25 @@ var displayFieldsManager = (function() {
       managedVirtualProduct = virtualProduct;
 
       /** Type product fields display management */
-      $('#form_step1_type_product').change(function() {
+      $('#form_step1_type_product').change(function () {
         displayFieldsManager.refresh();
       });
 
-      $('#form .form-input-title input').on('focus', function() {
+      $('#form .form-input-title input').on('focus', function () {
         $(this).select();
       });
 
       /** Tax rule dropdown shortcut */
-      $('a#tax_rule_shortcut_opener').on('click', function() {
+      $('a#tax_rule_shortcut_opener').on('click', function () {
         // lazy instantiated
         var duplicate = $('#form_step2_id_tax_rules_group_shortcut');
         if (duplicate.length == 0) {
           var origin = $('select#form_step2_id_tax_rules_group');
           duplicate = origin.clone(false).attr('id', 'form_step2_id_tax_rules_group_shortcut');
-          origin.on('change', function() {
+          origin.on('change', function () {
             duplicate.val(origin.val()); // no change() here to avoid infinite loop.
           });
-          duplicate.on('change', function() {
+          duplicate.on('change', function () {
             origin.val(duplicate.val()).change();
           });
           duplicate.appendTo($('#tax_rule_shortcut'));
@@ -114,7 +114,7 @@ var displayFieldsManager = (function() {
         return false;
       });
     },
-    'refresh': function() {
+    'refresh': function () {
       this.checkAccessVariations();
       $('#virtual_product').hide();
       $('#form-nav a[href="#step3"]').text(translate_javascripts['Quantities']);
@@ -166,11 +166,10 @@ var displayFieldsManager = (function() {
       if ($('input[name="show_variations"][value="1"]:checked').length >= 1) {
         $('#product_type_combinations_shortcut').show();
       } else {
-
         $('#product_type_combinations_shortcut').hide();
       }
     },
-    'getProductType': function() {
+    'getProductType': function () {
       switch (typeProduct.val()) {
         case '0':
           return 'standard';
@@ -190,25 +189,25 @@ var displayFieldsManager = (function() {
      * Warn e-merchant.
      * @param errorMessage
      */
-    'checkAccessVariations': function() {
+    'checkAccessVariations': function () {
       if ((showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) && (typeProduct.val() === '1' || typeProduct.val() === '2')) {
         var typeOfProduct = this.getProductType();
         var errorMessage = "You can't create " + typeOfProduct + " product with variations. Are you sure to disable variations ? they will all be deleted.";
         modalConfirmation.create(translate_javascripts[errorMessage], null, {
-          onCancel: function() {
+          onCancel: function () {
             typeProduct.val(0).change();
             /* else the radio bouton is not display even if checked attribute is true */
             $('#show_variations_selector input[value="1"]').click();
           },
-          onContinue: function() {
+          onContinue: function () {
             $.ajax({
               type: 'GET',
               url: $('#accordion_combinations').attr('data-action-delete-all') + '/' + $('#form_id_product').val(),
-              success: function() {
+              success: function () {
                 $('#accordion_combinations .combination').remove();
                 displayFieldsManager.refresh();
               },
-              error: function(response) {
+              error: function (response) {
                 showErrorMessage(jQuery.parseJSON(response.responseText).message);
               },
             });
@@ -216,7 +215,7 @@ var displayFieldsManager = (function() {
         }).show();
       }
     }
-  };
+  }
 })();
 
 /**
