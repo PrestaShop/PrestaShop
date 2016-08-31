@@ -36,8 +36,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
 /**
  * Admin controller for the International pages.
  */
@@ -114,6 +112,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $this->get('prestashop.utils.zip_manager')->createArchive($zipFile, $folderPath);
 
         $response = new BinaryFileResponse($zipFile);
+        $response->deleteFileAfterSend(true);
 
         return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
     }
