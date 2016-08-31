@@ -70,7 +70,7 @@
     height: rem(50px);
     padding-top: rem(5px);
     box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
-    @include transition(bottom .7s $ease-out-expo);
+    transition: bottom .3s;
     .quick-view {
       color: $gray-dark;
       font-size: $base-font-size;
@@ -79,11 +79,7 @@
       }
     }
   }
-  .highlighted-informations::after {
-    box-shadow: 1px 1px 16px 2px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    @include transition(bottom .7s $ease-out-expo);
-  }
+
   .product-description {
     position: absolute;
     z-index: 1;
@@ -95,25 +91,50 @@
   img {
     margin-left: 4px;
   }
+
   .product-miniature {
     margin: 0 rem(10px);
+    .discount {
+      display: none;
+    }
     .product-flags .new,
+    .online-only,
+    .on-sale,
     .discount-percentage {
       display: block;
       position: absolute;
-      top: rem(-242px);
       left: rem(-7px);
+      top:rem(7px);
       padding: rem(5px) rem(7px);
       color: white;
       background: $brand-primary;
       text-transform: uppercase;
-      width: 50px;
+      min-width: rem(50px);
+      min-height: rem(30px);
       font-size: $base-font-size;
       font-weight: 600;
       @include box-shadow;
       &.discount-percentage {
         z-index: 2;
         background: $brand-secondary;
+      }
+      &.on-sale{
+        background: $brand-secondary;
+        width: 100%;
+        text-align: center;
+        left:0;
+        top:0;
+      }
+      &.online-only {
+        font-size: $font-size-xs;
+        margin-top: rem(208px);
+        margin-left: rem(139px);
+        &::before{
+          content:"\E30A";
+          font-family: 'Material Icons';
+          vertical-align: middle;
+          margin: rem(5px);
+        }
       }
     }
   }

@@ -4,8 +4,11 @@ import 'velocity-animate';
 export default class ProductSelect {
   init() {
     const MAX_THUMBS = 5;
-    var $arrows =   $('.js-modal-arrows');
-    var $thumbnails = $('.js-modal-product-images');
+    const FLAG_MARGIN = 10;
+    let $arrows =   $('.js-modal-arrows');
+    let $thumbnails = $('.js-modal-product-images');
+    let $onsale =  $('.on-sale');
+
     $('.js-modal-thumb').on('click', (event) => {
       if($('.js-modal-thumb').hasClass('selected')){
         $('.js-modal-thumb').removeClass('selected');
@@ -15,7 +18,9 @@ export default class ProductSelect {
       $('.js-modal-product-cover').attr('title', $(event.target).attr('title'));
       $('.js-modal-product-cover').attr('alt', $(event.target).attr('alt'));
     });
-
+    if($onsale.length && $('#product').length){
+      $('.new').css('top',$onsale.height() + FLAG_MARGIN);
+    }
     if ($('.js-modal-product-images li').length <= MAX_THUMBS) {
       $arrows.css('opacity', '.2');
     } else {

@@ -369,7 +369,7 @@
         margin: 0 auto;
       }
     }
-  }  
+  }
 }
 .scroll-box-arrows {
   display: none;
@@ -451,11 +451,11 @@
   }
 }
 .product-flags {
-  margin-bottom: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 li.product-flag {
-  display: none;
-  &:last-child {
     display: block;
     position: absolute;
     background: $brand-primary;
@@ -466,8 +466,30 @@ li.product-flag {
     margin-top: $small-space;
     margin-left: rem(-5px);
     z-index: 2;
-  }
+    &.online-only{
+      top: rem(400px);
+      right: 0;
+      font-size: $font-size-xs;
+      &::before{
+        content:"\E30A";
+        font-family: 'Material Icons';
+        vertical-align: middle;
+        margin: rem(5px);
+      }
+    }
+    &.discount {
+      display: none;
+    }
+    &.on-sale {
+      background: $brand-secondary;
+      width: 100%;
+      text-align: center;
+      margin: 0;
+      left:0;
+      top:0;
+    }
 }
+
 .product-customization {
   @include box-shadow;
   margin: $extra-large-space 0;
