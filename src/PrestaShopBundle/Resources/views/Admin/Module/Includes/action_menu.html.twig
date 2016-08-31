@@ -14,9 +14,7 @@
       {% else %}{{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}{% endif %}
     </a>
   {% else %}
-  <div class="module-quick-action-grid">
     <a class="btn btn-primary-reverse btn-primary-outline light-button module_action_menu_{{ url_active }}" href="{{ urls[url_active] }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">{{ url_active|capitalize|replace({'_': " "}) }}</a>
-  </div>
     {% if urls|length > 1 %}
       <button type="button" class="btn btn-primary-outline  dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>

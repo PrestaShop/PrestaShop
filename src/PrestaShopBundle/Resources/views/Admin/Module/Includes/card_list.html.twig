@@ -1,5 +1,4 @@
 {% set isModuleActive = module.database.active|default('0') %}
-{% set productType = module.attributes.serviceUrl is defined and module.attributes.serviceUrl|length > 0 ? 'service' : 'module' %}
 
 <div
   class="module-item module-item-list col-md-12 {% if origin == 'manage' and isModuleActive == '0' %}module-item-list-isNotActive{% endif %}"
@@ -13,14 +12,14 @@
   data-tech-name="{{ module.attributes.name }}"
   data-child-categories="{{ module.attributes.categoryName }}"
   data-categories="{{ module.attributes.categoryParent }}"
-  data-type="{{ productType }}"
+  data-type="{{ module.attributes.productType }}"
   data-price="{{ module.attributes.price.raw }}"
   data-active="{{ isModuleActive }}"
 >
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-12 col-md-2 col-lg-1 text-sm-center" style="min-height: 100%;">
-        <img src="{{ module.attributes.img }}" class="text-md-center" style="max-width: 100%" alt="{{ module.attributes.displayName }}"/>
+    <div class="module-item-wrapper-list row">
+      <div class="module-logo-thumb-list col-sm-12 col-md-12 col-lg-1 text-sm-center">
+        <img src="{{ module.attributes.img }}" class="text-md-center" alt="{{ module.attributes.displayName }}"/>
       </div>
       <div class="col-sm-12 col-md-10 col-lg-11">
         <h3
@@ -39,7 +38,7 @@
       <div class="col-sm-12 col-md-2">
         <span class="text-ellipsis xsmall">
           {% block addon_version %}
-            {% if productType == "service" %}
+            {% if module.attributes.productType == "service" %}
               {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
               <b>{{ module.attributes.author }}</b>
             {% else %}
