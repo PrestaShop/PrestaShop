@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Tests\Translation\Provider;
 
-use PrestaShopBundle\Translation\Provider\BackOfficeProvider;
+use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
 
-class BackOfficeProviderTest extends \PHPUnit_Framework_TestCase
+class FrontOfficeProviderTest extends \PHPUnit_Framework_TestCase
 {
-    // @see /resources/translations/en-US/AdminActions.en-US.xlf
+    // @see /resources/translations/en-US/ShopNotificationsWarning.en-US.xlf
     private $provider;
     private static $resourcesDir;
 
@@ -41,21 +41,24 @@ class BackOfficeProviderTest extends \PHPUnit_Framework_TestCase
         ;
 
         self::$resourcesDir = __DIR__.'/../../resources/translations';
-        $this->provider = new BackOfficeProvider($loader, self::$resourcesDir);
+        $this->provider = new FrontOfficeProvider($loader, self::$resourcesDir);
     }
 
     public function testGetMessageCatalogue()
     {
-        // The xliff file contains 38 keys
+        // The xliff file contains 6 keys
         $expectedReturn = $this->provider->getMessageCatalogue();
         $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
 
         // Check integrity of translations
-        $this->assertArrayHasKey('AdminActions.en-US', $expectedReturn->all());
-        $translations = $expectedReturn->all('AdminActions.en-US');
+        $this->assertArrayHasKey('ShopNotificationsWarning.en-US', $expectedReturn->all());
 
-        $this->assertCount(38, $translations);
-        $this->assertArrayHasKey('Download file', $translations);
-        $this->assertSame('Download file', $translations['Download file']);
+        // we retrieve only the ShopNotificationsWarning domain, not others
+        $this->assertCount(1, $expectedReturn->all());
+        $translations = $expectedReturn->all('ShopNotificationsWarning.en-US');
+
+        $this->assertCount(6, $translations);
+        $this->assertArrayHasKey('You do not have any vouchers.', $translations);
+        $this->assertSame('You do not have any vouchers.', $translations['You do not have any vouchers.']);
     }
 }

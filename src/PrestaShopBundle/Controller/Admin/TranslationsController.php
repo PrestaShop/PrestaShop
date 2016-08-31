@@ -196,10 +196,17 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         $lang = $request->request->get('lang');
         $type = $request->request->get('type');
+        $theme = $request->request->get('selected-theme');
 
         $translator = $this->container->get('translator');
 
         $locale = $this->langToLocale($lang);
+
+        if (!is_null($theme)) {
+            if ('classic' === $theme) {
+                $type = 'front';
+            }
+        }
 
         $translations = $this->get('ps.translations_factory')->createTranslationsArray($type, $locale);
 
