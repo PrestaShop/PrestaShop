@@ -149,6 +149,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         if (!$avoidPersistence) {
             $this->persistFilterParameters($paramsOut);
         }
+
         // return new values
         return $paramsOut;
     }
@@ -162,6 +163,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             $post,
             ['last_offset' => $offset, 'last_limit' => $limit, 'last_orderBy' => $orderBy, 'last_sortOrder' => $sortOrder]
         ), $avoidPersistence);
+        $filterParams = AdminFilter::sanitizeFilterParameters($filterParams);
 
         $showPositionColumn = $this->isCategoryFiltered();
         if ($orderBy == 'position_ordering' && $showPositionColumn) {
