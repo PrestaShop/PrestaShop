@@ -27,7 +27,7 @@
 /**
  * @property OrderInvoice $object
  */
-class AdminOutstandingControllerCore  extends AdminController
+class AdminOutstandingControllerCore extends AdminController
 {
     public function __construct()
     {
@@ -36,7 +36,7 @@ class AdminOutstandingControllerCore  extends AdminController
         $this->className = 'OrderInvoice';
         $this->addRowAction('view');
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         $this->_select = '`id_order_invoice` AS `id_invoice`,
 		`id_order_invoice` AS `outstanding`,
@@ -108,8 +108,6 @@ class AdminOutstandingControllerCore  extends AdminController
                 'search' => false
             )
         );
-
-        parent::__construct();
     }
 
     /**
