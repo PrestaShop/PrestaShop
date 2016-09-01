@@ -1544,7 +1544,7 @@ class AdminTranslationsControllerCore extends AdminController
                 } else {
                     $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 }
-            }elseif (Tools::isSubmit('submitSelectModules')){
+            } elseif (Tools::isSubmit('submitSelectModules')){
                 $this->redirect(false,false,true);
             }
         } catch (PrestaShopException $e) {
@@ -1563,7 +1563,7 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $conf = !$conf ? 4 : $conf;
         $url_base = self::$currentIndex.'&token='.$this->token.'&conf='.$conf;
-        if($modify_translation){
+        if($modify_translation) {
             Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&lang='.$_REQUEST['langue'].'&type='.$this->type_selected.'&module='.$_REQUEST['module'].'&theme='.$this->theme_selected);
         } elseif ($save_and_stay) {
             Tools::redirectAdmin($url_base.'&lang='.$this->lang_selected->iso_code.'&type='.$this->type_selected.'&module='.$_REQUEST['module'].'&theme='.$this->theme_selected);
