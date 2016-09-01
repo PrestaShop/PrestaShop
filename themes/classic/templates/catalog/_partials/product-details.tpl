@@ -1,6 +1,6 @@
 <div class="tab-pane fade{if !$product.description} in active{/if}" id="product-details">
   {block name='product_reference'}
-    {if $product.reference}
+    {if isset($product.reference_to_display)}
       <div class="product-reference">
         <label class="label">{l s='Reference' d='Shop.Theme.Catalog'} </label>
         <span itemprop="sku">{$product.reference_to_display}</span>

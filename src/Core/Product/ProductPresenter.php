@@ -400,16 +400,16 @@ class ProductPresenter
      * @param array $presentedProduct
      * @return array
      */
-    public function addReferenceToDisplay(array $product, array $presentedProduct){
-        if(isset($product['attributes'])){
-            foreach ($product['attributes'] as $attribute){
-                if($attribute['reference'] != null){
-                    $presentedProduct['reference_to_display'] = $attribute['reference'];
-                }else{
-                    $presentedProduct['reference_to_display'] = $product['reference'];
-                }
+    public function addReferenceToDisplay(array $product, array $presentedProduct)
+    {
+        foreach ($product['attributes'] as $attribute) {
+            if (isset($attribute['reference']) && $attribute['reference'] != null) {
+                $presentedProduct['reference_to_display'] = $attribute['reference'];
+            } else {
+                $presentedProduct['reference_to_display'] = $product['reference'];
             }
         }
+
         return $presentedProduct;
     }
 
@@ -418,29 +418,29 @@ class ProductPresenter
      * @param array $presentedProduct
      * @return array
      */
-    public function addAttributesSpecificReferences(array $product, array $presentedProduct){
-        if(isset($product['attributes'])) {
-            $presentedProduct['specific_references'] = array_slice($product['attributes'], 0)[0];
-            //this attributes should not be displayed in FO
-            unset(
-                $presentedProduct['specific_references']['id_attribute'],
-                $presentedProduct['specific_references']['id_attribute_group'],
-                $presentedProduct['specific_references']['name'],
-                $presentedProduct['specific_references']['group'],
-                $presentedProduct['specific_references']['reference']
-            );
+    public function addAttributesSpecificReferences(array $product, array $presentedProduct)
+    {
+        $presentedProduct['specific_references'] = array_slice($product['attributes'], 0)[0];
+        //this attributes should not be displayed in FO
+        unset(
+            $presentedProduct['specific_references']['id_attribute'],
+            $presentedProduct['specific_references']['id_attribute_group'],
+            $presentedProduct['specific_references']['name'],
+            $presentedProduct['specific_references']['group'],
+            $presentedProduct['specific_references']['reference']
+        );
 
-            //if the attribute's references doesn't exist then get the product's references or unset it
-            foreach ($presentedProduct['specific_references'] as $key => $value){
-                if(null == $value){
-                    if(null != $product[$key]){
-                        $presentedProduct['specific_references'][$key] = $product[$key];
-                    }else{
-                        unset($presentedProduct['specific_references'][$key]);
-                    }
+        //if the attribute's references doesn't exist then get the product's references or unset it
+        foreach ($presentedProduct['specific_references'] as $key => $value) {
+            if (null == $value) {
+                if (null != $product[$key]) {
+                    $presentedProduct['specific_references'][$key] = $product[$key];
+                } else {
+                    unset($presentedProduct['specific_references'][$key]);
                 }
             }
         }
+
         return $presentedProduct;
     }
 
@@ -533,15 +533,17 @@ class ProductPresenter
             $product
         );
 
-        $presentedProduct = $this->addReferenceToDisplay(
-            $product,
-            $presentedProduct
-        );
+        if (isset($product['attributes']) && !isset($product['cart_quantity'])) {
+            $presentedProduct = $this->addReferenceToDisplay(
+                $product,
+                $presentedProduct
+            );
 
-        $presentedProduct = $this->addAttributesSpecificReferences(
-            $product,
-            $presentedProduct
-        );
+            $presentedProduct = $this->addAttributesSpecificReferences(
+                $product,
+                $presentedProduct
+            );
+        }
         return $presentedProduct;
     }
 }
