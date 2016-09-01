@@ -5,7 +5,7 @@ imports:
 services:
     finder:
         class: Symfony\Component\Finder\Finder
-        public: false
+        shared: false
 
     main.warmer.cache_warmer:
         class: PrestaShopBundle\Cache\CacheWarmer

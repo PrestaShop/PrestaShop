@@ -208,9 +208,9 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     protected function getTranslationsCatalogue(Request $request)
     {
-        $lang = $request->request->get('lang');
-        $type = $request->request->get('type');
-        $theme = $request->request->get('selected-theme');
+        $lang = $request->get('lang');
+        $type = $request->get('type');
+        $theme = $request->get('selected-theme');
 
         $translator = $this->container->get('translator');
 
@@ -222,6 +222,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $locale = $this->langToLocale($lang);
 
         if (!is_null($theme)) {
+            $this->synchronizeTheme($theme, $locale);
             if ('classic' === $theme) {
                 $type = 'front';
             } else {
@@ -379,5 +380,29 @@ class TranslationsController extends FrameworkBundleAdminController
         }, $translations);
 
         return $translationsMap;
+    }
+
+    private function synchronizeTheme($themeName, $locale)
+    {
+        $theme = $this
+            ->get('prestashop.core.admin.theme.repository')
+            ->getInstanceByName($themeName)
+        ;
+
+        $path = $this->getParameter('themes_dir').'/'.$themeName.'/translations';
+        $this->get('filesystem')->remove($path);
+        $this->get('filesystem')->mkdir($path);
+
+        $this->get('prestashop.translations.theme_extractor')
+            ->setOutputPath($path)
+            ->extract($theme, $locale)
+        ;
+
+        $translationFilesPath = $path.'/'.$locale;
+        Flattenizer::flatten($translationFilesPath, $translationFilesPath, $locale, false);
+
+        foreach ($this->get('finder')->directories()->depth('== 0')->in($translationFilesPath) as $folder) {
+            $this->get('filesystem')->remove($folder);
+        }
     }
 }
