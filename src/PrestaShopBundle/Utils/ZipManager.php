@@ -12,12 +12,13 @@ class ZipManager
         $zip = new \ZipArchive();
 
         $zip->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
         $files = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($folder),
             RecursiveIteratorIterator::LEAVES_ONLY
         );
 
-        foreach ($files as $name => $file) {
+        foreach ($files as $filename => $file) {
             if (!$file->isDir()) {
                 $filePath = $file->getRealPath();
                 $relativePath = substr($filename, strlen($folder) + 1);

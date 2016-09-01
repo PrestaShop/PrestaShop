@@ -59,7 +59,7 @@ if (defined('_PS_ADMIN_DIR_')) {
     require_once dirname(__FILE__).'/smartyfront.config.inc.php';
 }
 
-smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
+smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_truncate');
 smartyRegisterFunction($smarty, 'function', 'dump', 'smartyDump'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
@@ -77,7 +77,7 @@ function smartyDump($params, &$smarty)
     return Tools::dump($params['var']);
 }
 
-function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_words = false, $middle = false, $charset = 'UTF-8')
+function smarty_truncate($string, $length = 80, $etc = '...', $break_words = false, $middle = false, $charset = 'UTF-8')
 {
     if (!$length) {
         return '';

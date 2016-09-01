@@ -25,7 +25,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation;
+namespace PrestaShopBundle\Translation\Factory;
 
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\UseDefaultCatalogueInterface;
@@ -35,29 +35,34 @@ use PrestaShopBundle\Translation\Provider\UseDefaultCatalogueInterface;
  *
  * Returns MessageCatalogue object or Translation tree array.
  */
-class TranslationsFactory
+class TranslationsFactory implements TranslationsFactoryInterface
 {
     private $providers = array();
 
     /**
      * Generates extract of global Catalogue, using domain's identifiers.
      *
+     * @param string $domainIdentifier Domain identifier
+     * @param string $locale           Locale identifier
+     *
      * @return MessageCatalogue A MessageCatalogue instance
      */
-    public function createCatalogue($identifier, $locale = 'en_US')
+    public function createCatalogue($domainIdentifier, $locale = 'en_US')
     {
         foreach ($this->providers as $provider) {
-            if ($identifier === $provider->getIdentifier()) {
+            if ($domainIdentifier === $provider->getIdentifier()) {
                 return $provider->setLocale($locale)->getMessageCatalogue();
             }
         }
+
+        // throw an exception
     }
 
     /**
      * Used to generate Translation tree in Back Office.
      *
      * @param string $domainIdentifier Domain identifier
-     * @param string $locale     Locale identifier
+     * @param string $locale           Locale identifier
      *
      * @return array Translation tree structure
      */
@@ -71,12 +76,7 @@ class TranslationsFactory
                 $translations = $provider->getXliffCatalogue()->all();
 
                 if ($provider instanceof UseDefaultCatalogueInterface) {
-                    $defaultCatalogue = $provider->getDefaultCatalogue();
-                    $xlfCatalogue = $provider->getXliffCatalogue();
-
-                    $defaultCatalogue->addCatalogue($xlfCatalogue);
-
-                    $translations = $defaultCatalogue->all();
+                    $translations = $this->getTranslationsWithSources($provider);
                 }
 
                 $databaseCatalogue = $provider->getDatabaseCatalogue()->all();
@@ -102,6 +102,17 @@ class TranslationsFactory
                 return $translations;
             }
         }
+
+        // throw an exception
+    }
+
+    private function getTranslationsWithSources(ProviderInterface $provider)
+    {
+        $defaultCatalogue = $provider->getDefaultCatalogue();
+        $xlfCatalogue = $provider->getXliffCatalogue();
+        $defaultCatalogue->addCatalogue($xlfCatalogue);
+
+        return $defaultCatalogue->all();
     }
 
     public function addProvider(ProviderInterface $provider)
