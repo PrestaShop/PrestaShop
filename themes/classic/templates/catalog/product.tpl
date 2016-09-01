@@ -104,6 +104,7 @@
                     {include file='catalog/_partials/product-add-to-cart.tpl'}
                   {/block}
 
+                  {hook h='displayShareButtons'}
                   {hook h='displayProductButtons' product=$product}
 
                   {block name='product_refresh'}
