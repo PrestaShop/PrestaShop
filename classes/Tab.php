@@ -125,13 +125,13 @@ class TabCore extends ObjectModel
 
         /* Right management */
         $slug = 'ROLE_MOD_TAB_'.strtoupper(self::getClassNameById($id_tab));
-        
+
         foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
             Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'authorization_role` (`slug`) VALUES ("'.$slug.'_'.$action.'")');
         }
-        
+
         $access = new Access;
-        
+
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
             $access->updateLgcAccess('1', $id_tab, $action, true);
             $access->updateLgcAccess($context->employee->id_profile, $id_tab, $action, true);
@@ -142,13 +142,13 @@ class TabCore extends ObjectModel
 
     public function delete()
     {
-        if (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'access WHERE `id_tab` = '.(int)$this->id) && parent::delete()) {
+        if (parent::delete()) {
             $slug = 'ROLE_MOD_TAB_'.strtoupper($this->class_name);
 
             foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
                 Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'authorization_role` WHERE `slug` = "'.$slug.'_'.$action.'"');
             }
-            
+
             if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[strtolower($this->class_name)])) {
                 self::$_getIdFromClassName = null;
             }
