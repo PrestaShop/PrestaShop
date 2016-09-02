@@ -1,0 +1,1 @@
+{l s='Show product' d='Shop.Theme.Product'}

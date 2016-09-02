@@ -55,6 +55,21 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getMessageCatalogue()
+    {
+        $xlfCatalogue = $this->getXliffCatalogue();
+
+        $databaseCatalogue = $this->getDatabaseCatalogue();
+
+        // Merge database catalogue to xliff catalogue
+        $xlfCatalogue->addCatalogue($databaseCatalogue);
+
+        return $xlfCatalogue;
+    }
+
+    /**
      * @return string Path to app/themes/{themeName}/translations/{locale}
      */
     public function getResourceDirectory()
