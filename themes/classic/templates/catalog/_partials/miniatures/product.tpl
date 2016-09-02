@@ -37,16 +37,14 @@
           </div>
         {/if}
       {/block}
-
-      {block name='product_flags'}
-        <ul class="product-flags">
-          {foreach from=$product.flags item=flag}
-            <li class="{$flag.type}">{$flag.label}</li>
-          {/foreach}
-        </ul>
-      {/block}
-
     </div>
+    {block name='product_flags'}
+      <ul class="product-flags">
+        {foreach from=$product.flags item=flag}
+          <li class="{$flag.type}">{$flag.label}</li>
+        {/foreach}
+      </ul>
+    {/block}
     <div class="highlighted-informations{if !$product.main_variants} no-variants{/if} hidden-sm-down">
       <a
         href="#"
