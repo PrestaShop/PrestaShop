@@ -64,14 +64,10 @@ class ThemeTranslationsFactory implements TranslationsFactoryInterface
     {
         $this->themeProvider
             ->setThemeName($themeName)
-            ->setLocale($locale);
+            ->setLocale($locale)
+        ;
 
         $translations = $this->themeProvider->getXliffCatalogue()->all();
-
-        if ($this->themeProvider instanceof UseDefaultCatalogueInterface) {
-            $translations = $this->getTranslationsWithSources($this->themeProvider);
-        }
-
         $databaseCatalogue = $this->themeProvider->getDatabaseCatalogue()->all();
 
         foreach ($translations as $domain => $messages) {
@@ -83,7 +79,7 @@ class ThemeTranslationsFactory implements TranslationsFactoryInterface
                     array_key_exists($translationKey, $databaseCatalogue[$databaseDomain])
                 ;
 
-                $tree[$domain][$translationKey] = array(
+                $translations[$domain][$translationKey] = array(
                     'xlf' => $translations[$domain][$translationKey],
                     'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
                 );

@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Translation\Factory;
 
 use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\Provider\UseDefaultCatalogueInterface;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * This class returns a collection of translations, using locale and identifier.
@@ -73,11 +74,13 @@ class TranslationsFactory implements TranslationsFactoryInterface
                 // set locale
                 $provider->setLocale($locale);
 
-                $translations = $provider->getXliffCatalogue()->all();
+                $catalogue = $provider->getXliffCatalogue();
 
                 if ($provider instanceof UseDefaultCatalogueInterface) {
-                    $translations = $this->getTranslationsWithSources($provider);
+                    $catalogue = $this->getTranslationsWithSources($provider, $catalogue);
                 }
+
+                $translations = $catalogue->all();
 
                 $databaseCatalogue = $provider->getDatabaseCatalogue()->all();
 
@@ -90,7 +93,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
                             array_key_exists($translationKey, $databaseCatalogue[$databaseDomain])
                         ;
 
-                        $tree[$domain][$translationKey] = array(
+                        $translations[$domain][$translationKey] = array(
                             'xlf' => $translations[$domain][$translationKey],
                             'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
                         );
@@ -106,13 +109,12 @@ class TranslationsFactory implements TranslationsFactoryInterface
         // throw an exception
     }
 
-    private function getTranslationsWithSources(ProviderInterface $provider)
+    private function getTranslationsWithSources(ProviderInterface $provider, MessageCatalogue $catalogue)
     {
         $defaultCatalogue = $provider->getDefaultCatalogue();
-        $xlfCatalogue = $provider->getXliffCatalogue();
-        $defaultCatalogue->addCatalogue($xlfCatalogue);
+        $defaultCatalogue->addCatalogue($catalogue);
 
-        return $defaultCatalogue->all();
+        return $defaultCatalogue;
     }
 
     public function addProvider(ProviderInterface $provider)
