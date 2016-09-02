@@ -13,6 +13,7 @@
     "doctrine/doctrine-bundle": "1.5.2",
     "mrclay/minify": "~2.3.0",
     "jakeasmith/http_build_url": "^1",
+    "mobiledetect/mobiledetectlib": "~2.8.22",
     "symfony/swiftmailer-bundle": "2.3.11",
     "pear/archive_tar": "~1.4.2",
     "swiftmailer/swiftmailer": "~5.4.3",
