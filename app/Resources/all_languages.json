@@ -8,8 +8,17 @@
     "language_code": "af-za",
     "locale": "af-ZA"
   },
+  "ag": {
+    "name": "Español AR (Spanish)",
+    "iso_code": "ag",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "es-ar",
+    "locale": "es-AR"
+  },
   "ar": {
-    "name": "\u0627\u0644\u0644\u063a\u0629 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 (Arabic)",
+    "name": "اللغة العربية (Arabic)",
     "iso_code": "ar",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -18,7 +27,7 @@
     "locale": "ar-SA"
   },
   "az": {
-    "name": "Az\u0259rbaycan dili (Azerbaijani)",
+    "name": "Azərbaycan dili (Azerbaijani)",
     "iso_code": "az",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -27,7 +36,7 @@
     "locale": "az-AZ"
   },
   "bg": {
-    "name": "\u0431\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438 \u0435\u0437\u0438\u043a (Bulgarian)",
+    "name": "български език (Bulgarian)",
     "iso_code": "bg",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -36,7 +45,7 @@
     "locale": "bg-BG"
   },
   "bn": {
-    "name": "\u09ac\u09be\u0982\u09b2\u09be (Bengali)",
+    "name": "বাংলা (Bengali)",
     "iso_code": "bn",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -44,17 +53,44 @@
     "language_code": "bn-bd",
     "locale": "bn-BD"
   },
+  "br": {
+    "name": "Português BR (Portuguese)",
+    "iso_code": "br",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "pt-br",
+    "locale": "pt-BR"
+  },
+  "bz": {
+    "name": "Brezhoneg (Breton)",
+    "iso_code": "bz",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "bz",
+    "locale": "br-FR"
+  },
   "ca": {
-    "name": "Catal\u00e0 (Catalan)",
+    "name": "Català (Catalan)",
     "iso_code": "ca",
-    "date_format_lite": "d\/m\/Y",
+    "date_format_lite": "d/m/Y",
     "date_format_full": "Y-m-d H:i:s",
     "is_rtl": "0",
     "language_code": "ca-es",
     "locale": "ca-ES"
   },
+  "cb": {
+    "name": "Español CO ( Spanish)",
+    "iso_code": "cb",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "es-co",
+    "locale": "es-CO"
+  },
   "cs": {
-    "name": "\u010ce\u0161tina (Czech)",
+    "name": "Čeština (Czech)",
     "iso_code": "cs",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -80,8 +116,17 @@
     "language_code": "de-de",
     "locale": "de-DE"
   },
+  "dh": {
+    "name": "Deutsch CH (German)",
+    "iso_code": "dh",
+    "date_format_lite": "d.m.Y",
+    "date_format_full": "d.m.Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "de-CH",
+    "locale": "de-CH"
+  },
   "el": {
-    "name": "\u03b5\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac (Greek)",
+    "name": "ελληνικά (Greek)",
     "iso_code": "el",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -90,13 +135,31 @@
     "locale": "el-GR"
   },
   "en": {
-    "name": "English (United States)",
+    "name": "English (English)",
     "iso_code": "en",
-    "date_format_lite": "m\/d\/Y",
-    "date_format_full": "m\/d\/Y H:i:s",
+    "date_format_lite": "m/d/Y",
+    "date_format_full": "m/d/Y H:i:s",
     "is_rtl": "0",
     "language_code": "en-us",
     "locale": "en-US"
+  },
+  "eo": {
+    "name": "Esperanto",
+    "iso_code": "eo",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "eo-eo",
+    "locale": "eo-EO"
+  },
+  "es": {
+    "name": "Español (Spanish)",
+    "iso_code": "es",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "es-es",
+    "locale": "es-ES"
   },
   "et": {
     "name": "Eesti keel (Estonian)",
@@ -108,7 +171,7 @@
     "locale": "et-EE"
   },
   "fa": {
-    "name": "\u0641\u0627\u0631\u0633\u0649 (Persian)",
+    "name": "فارسى (Persian)",
     "iso_code": "fa",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -126,13 +189,31 @@
     "locale": "fi-FI"
   },
   "fr": {
-    "name": "Fran\u00e7ais (French)",
+    "name": "Français (French)",
     "iso_code": "fr",
-    "date_format_lite": "d\/m\/Y",
-    "date_format_full": "d\/m\/Y H:i:s",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
     "is_rtl": "0",
     "language_code": "fr-fr",
     "locale": "fr-FR"
+  },
+  "ga": {
+    "name": "Gaeilge (Gaelic)",
+    "iso_code": "ga",
+    "date_format_lite": "dd/mm/yyyy",
+    "date_format_full": "dd/mm/yyyy HH:mm:ss",
+    "is_rtl": "0",
+    "language_code": "ga-ie",
+    "locale": "ga-IE"
+  },
+  "gb": {
+    "name": "English GB (English)",
+    "iso_code": "gb",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "en-gb",
+    "locale": "en-GB"
   },
   "gl": {
     "name": "Galego (Galician)",
@@ -144,7 +225,7 @@
     "locale": "gl-ES"
   },
   "he": {
-    "name": "\u05e2\u05d1\u05e8\u05d9\u05ea (Hebrew)",
+    "name": "עברית (Hebrew)",
     "iso_code": "he",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -170,6 +251,15 @@
     "language_code": "hu-hu",
     "locale": "hu-HU"
   },
+  "hy": {
+    "name": "Հայերէն (Armenian)",
+    "iso_code": "hy",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "hy",
+    "locale": "hy-AM"
+  },
   "id": {
     "name": "Bahasa Indonesia (Indonesian)",
     "iso_code": "id",
@@ -182,14 +272,14 @@
   "it": {
     "name": "Italiano (Italian)",
     "iso_code": "it",
-    "date_format_lite": "d\/m\/Y",
-    "date_format_full": "d\/m\/Y H:i:s",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
     "is_rtl": "0",
     "language_code": "it-it",
     "locale": "it-IT"
   },
   "ja": {
-    "name": "\u65e5\u672c\u8a9e (Japanese)",
+    "name": "日本語 (Japanese)",
     "iso_code": "ja",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -198,7 +288,7 @@
     "locale": "ja-JP"
   },
   "ka": {
-    "name": "\u10e5\u10d0\u10e0\u10d7\u10e3\u10da\u10d8 (Georgian)",
+    "name": "ქართული (Georgian)",
     "iso_code": "ka",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -207,7 +297,7 @@
     "locale": "ka-GE"
   },
   "ko": {
-    "name": "\ud55c\uad6d\uc5b4 (Korean)",
+    "name": "한국어 (Korean)",
     "iso_code": "ko",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -216,7 +306,7 @@
     "locale": "ko-KR"
   },
   "lo": {
-    "name": "\u0e9e\u0eb2\u0eaa\u0eb2\u0ea5\u0eb2\u0ea7 (Lao)",
+    "name": "ພາສາລາວ (Lao)",
     "iso_code": "lo",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -225,7 +315,7 @@
     "locale": "lo-LA"
   },
   "lt": {
-    "name": "Lietuvi\u0173 kalba (Lithuanian)",
+    "name": "Lietuvių kalba (Lithuanian)",
     "iso_code": "lt",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -234,7 +324,7 @@
     "locale": "lt-LT"
   },
   "lv": {
-    "name": "Latvie\u0161u valoda (Latvian)",
+    "name": "Latviešu valoda (Latvian)",
     "iso_code": "lv",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -243,13 +333,22 @@
     "locale": "lv-LV"
   },
   "mk": {
-    "name": "\u043c\u0430\u043a\u0435\u0434\u043e\u043d\u0441\u043a\u0438 (Macedonian)",
+    "name": "македонски (Macedonian)",
     "iso_code": "mk",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
     "is_rtl": "0",
     "language_code": "mk",
     "locale": "mk-MK"
+  },
+  "ml": {
+    "name": "മലയാളം (Malayalam)",
+    "iso_code": "ml",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "ml-in",
+    "locale": "ml-IN"
   },
   "ms": {
     "name": "Bahasa melayu (Malay)",
@@ -260,6 +359,15 @@
     "language_code": "ms-my",
     "locale": "ms-MY"
   },
+  "mx": {
+    "name": "Español MX (Spanish)",
+    "iso_code": "mx",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "es-mx",
+    "locale": "es-MX"
+  },
   "nl": {
     "name": "Nederlands (Dutch)",
     "iso_code": "nl",
@@ -269,8 +377,17 @@
     "language_code": "nl-nl",
     "locale": "nl-NL"
   },
+  "nn": {
+    "name": "Nynorsk (Norwegian)",
+    "iso_code": "nn",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "nn-no",
+    "locale": "nn-NO"
+  },
   "no": {
-    "name": "Bokm\u00e5l (Norwegian)",
+    "name": "Bokmål (Norwegian)",
     "iso_code": "no",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -287,8 +404,26 @@
     "language_code": "pl-pl",
     "locale": "pl-PL"
   },
+  "pt": {
+    "name": "Português PT (Portuguese)",
+    "iso_code": "pt",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "pt-pt",
+    "locale": "pt-PT"
+  },
+  "qc": {
+    "name": "Français CA (French)",
+    "iso_code": "qc",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "fr-ca",
+    "locale": "fr-CA"
+  },
   "ro": {
-    "name": "Rom\u00e2n\u0103 (Romanian)",
+    "name": "Română (Romanian)",
     "iso_code": "ro",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -297,7 +432,7 @@
     "locale": "ro-RO"
   },
   "ru": {
-    "name": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439 (Russian)",
+    "name": "Русский (Russian)",
     "iso_code": "ru",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -305,8 +440,26 @@
     "language_code": "ru-ru",
     "locale": "ru-RU"
   },
+  "sh": {
+    "name": "سنڌي (Sinhala)",
+    "iso_code": "sh",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "si-lk",
+    "locale": "si-LK"
+  },
+  "si": {
+    "name": "Slovenščina (Slovene)",
+    "iso_code": "si",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "sl-si",
+    "locale": "sl-SI"
+  },
   "sk": {
-    "name": "Sloven\u010dina (Slovak)",
+    "name": "Slovenčina (Slovak)",
     "iso_code": "sk",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -323,8 +476,26 @@
     "language_code": "sq-al",
     "locale": "sq-AL"
   },
+  "sr": {
+    "name": "српски (Serbian)",
+    "iso_code": "sr",
+    "date_format_lite": "d. m. Y.",
+    "date_format_full": "d. m. Y. H:i:s",
+    "is_rtl": "0",
+    "language_code": "sr-cs",
+    "locale": "sr-CS"
+  },
+  "sv": {
+    "name": "Svenska (Swedish)",
+    "iso_code": "sv",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "sv-se",
+    "locale": "sv-SE"
+  },
   "th": {
-    "name": "\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22 (Thai)",
+    "name": "ภาษาไทย (Thai)",
     "iso_code": "th",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -333,7 +504,7 @@
     "locale": "th-TH"
   },
   "tr": {
-    "name": "T\u00fcrk\u00e7e (Turkish)",
+    "name": "Türkçe (Turkish)",
     "iso_code": "tr",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -341,8 +512,17 @@
     "language_code": "tr-tr",
     "locale": "tr-TR"
   },
+  "tw": {
+    "name": "繁體中文 (Traditional Chinese)",
+    "iso_code": "tw",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "zh-tw",
+    "locale": "zh-TW"
+  },
   "ug": {
-    "name": "\u0626\u06c7\u064a\u063a\u06c7\u0631 (Uyghur)",
+    "name": "ئۇيغۇر (Uyghur)",
     "iso_code": "ug",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -351,7 +531,7 @@
     "locale": "ug-CN"
   },
   "uk": {
-    "name": "\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430 (Ukrainian)",
+    "name": "Українська (Ukrainian)",
     "iso_code": "uk",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
@@ -359,13 +539,31 @@
     "language_code": "uk-ua",
     "locale": "uk-UA"
   },
-  "eo": {
-    "name": "Esperanto",
-    "iso_code": "eo",
+  "ur": {
+    "name": "اردو (Urdu)",
+    "iso_code": "ur",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "1",
+    "language_code": "ur",
+    "locale": "ur-PK"
+  },
+  "vn": {
+    "name": "Tiếng Việt (Vietnamese)",
+    "iso_code": "vn",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "H:i:s d/m/Y",
+    "is_rtl": "0",
+    "language_code": "vi-vn",
+    "locale": "vi-VN"
+  },
+  "zh": {
+    "name": "中文 (Simplified Chinese)",
+    "iso_code": "zh",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
     "is_rtl": "0",
-    "language_code": "eo-eo",
-    "locale": "eo-EO"
+    "language_code": "zh-cn",
+    "locale": "zh-CN"
   }
 }
