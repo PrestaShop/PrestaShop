@@ -235,6 +235,7 @@ var AdminModuleController = function() {
           type: $this.attr('data-type'),
           price: parseFloat($this.attr('data-price')),
           active: parseInt($this.attr('data-active')),
+          access: $this.attr('data-last-access'),
           display: $this.hasClass('module-item-list') ? 'list' : 'grid',
           container: container
         });
@@ -247,8 +248,8 @@ var AdminModuleController = function() {
   this.updateModuleVisibility = function() {
     var self = this;
 
-    // Modules ordering
-    if (self.currentSorting !== null) {
+    if (self.currentSorting) {
+      // Modules sorting
       var order = 'asc';
       var key = self.currentSorting;
       if (key.split('-').length > 1) {
@@ -625,6 +626,8 @@ var AdminModuleController = function() {
 
   this.initSortingDropdown = function () {
     var self = this;
+
+    self.currentSorting = $(this.moduleSortingDropdownSelector).find(':checked').attr('value');
 
     $('body').on('change', this.moduleSortingDropdownSelector, function() {
       self.currentSorting = $(this).find(':checked').attr('value');
