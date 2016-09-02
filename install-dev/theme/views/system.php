@@ -2,7 +2,7 @@
 
 <h2><?php echo $this->translator->trans('We are currently checking PrestaShop compatibility with your system environment', array(), 'Install') ?></h2>
 
-<p><?php echo $this->translator->trans('If you have any questions, please visit our <a href="%doc%" target="_blank">documentation</a> and <a href="%forum%" target="_blank">community forum</a>.', array('%doc%' => $this->getDocumentationLink(), '%forum%' => $this->getForumLink(), 'Install')); ?></p>
+<p><?php echo $this->translator->trans('If you have any questions, please visit our <a href="%doc%" target="_blank">documentation</a> and <a href="%forum%" target="_blank">community forum</a>.', array('%doc%' => $this->getDocumentationLink(), '%forum%' => $this->getForumLink()), 'Install'); ?></p>
 
 <?php if ($this->tests['required']['success']): ?>
 	<h3 class="okBlock"><?php echo $this->translator->trans('PrestaShop compatibility with your system environment has been verified!', array(), 'Install'); ?></h3>
