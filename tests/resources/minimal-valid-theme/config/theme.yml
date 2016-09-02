@@ -7,6 +7,7 @@ author:
 meta:
   compatibility:
       from: 1.7.0.0
+      to: ~
 
   available_layouts: []
 
@@ -36,3 +37,6 @@ global_settings:
       width: 960
       height: 350
       scope: [categories]
+
+theme_settings:
+  default_layout: layout-full-width
