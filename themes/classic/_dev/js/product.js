@@ -46,12 +46,14 @@ $(document).ready(function () {
     }
     imageScrollBox();
     $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
+    $('.js-product-images-modal').replaceWith(event.product_images_modal);
   });
 
   function coverImage() {
     $('.js-thumb').on(
       'click',
       (event) => {
+        $('.js-modal-product-cover').attr('src',$(event.target).data('image-large-src'));
         $('.selected').removeClass('selected');
         $(event.target).addClass('selected');
         $('.js-qv-product-cover').prop('src', $(event.currentTarget).data('image-large-src'));
