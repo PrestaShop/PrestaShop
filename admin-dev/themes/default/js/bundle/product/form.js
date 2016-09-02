@@ -39,7 +39,7 @@ $(document).ready(function() {
   imagesProduct.init();
   priceCalculation.init();
   displayFieldsManager.refresh();
-  displayFieldsManager.init();
+  displayFieldsManager.init(virtualProduct);
   seo.init();
   tags.init();
   rightSidebar.init();
@@ -79,29 +79,32 @@ var displayFieldsManager = (function() {
   var typeProduct = $('#form_step1_type_product');
   var showVariationsSelector = $('#show_variations_selector');
   var combinationsBlock = $('#combinations');
+  var managedVirtualProduct;
 
   return {
-    'init': function() {
+    'init': function (virtualProduct) {
+      managedVirtualProduct = virtualProduct;
+
       /** Type product fields display management */
-      $('#form_step1_type_product').change(function() {
+      $('#form_step1_type_product').change(function () {
         displayFieldsManager.refresh();
       });
 
-      $('#form .form-input-title input').on('focus', function() {
+      $('#form .form-input-title input').on('focus', function () {
         $(this).select();
       });
 
       /** Tax rule dropdown shortcut */
-      $('a#tax_rule_shortcut_opener').on('click', function() {
+      $('a#tax_rule_shortcut_opener').on('click', function () {
         // lazy instantiated
         var duplicate = $('#form_step2_id_tax_rules_group_shortcut');
         if (duplicate.length == 0) {
           var origin = $('select#form_step2_id_tax_rules_group');
           duplicate = origin.clone(false).attr('id', 'form_step2_id_tax_rules_group_shortcut');
-          origin.on('change', function() {
+          origin.on('change', function () {
             duplicate.val(origin.val()); // no change() here to avoid infinite loop.
           });
-          duplicate.on('change', function() {
+          duplicate.on('change', function () {
             origin.val(duplicate.val()).change();
           });
           duplicate.appendTo($('#tax_rule_shortcut'));
@@ -111,7 +114,7 @@ var displayFieldsManager = (function() {
         return false;
       });
     },
-    'refresh': function() {
+    'refresh': function () {
       this.checkAccessVariations();
       $('#virtual_product').hide();
       $('#form-nav a[href="#step3"]').text(translate_javascripts['Quantities']);
@@ -139,6 +142,13 @@ var displayFieldsManager = (function() {
         }
       }
 
+      // Switching from a product type to another which is not "Virtual product",
+      // triggers the destruction of pre-existing virtual product
+      var shouldDestroyVirtualProduct = typeProduct.val() !== '2';
+      if (shouldDestroyVirtualProduct && managedVirtualProduct !== undefined) {
+        managedVirtualProduct.destroy();
+      }
+
       /** check quantity / combinations display */
       if (showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) {
         combinationsBlock.show();
@@ -156,11 +166,10 @@ var displayFieldsManager = (function() {
       if ($('input[name="show_variations"][value="1"]:checked').length >= 1) {
         $('#product_type_combinations_shortcut').show();
       } else {
-
         $('#product_type_combinations_shortcut').hide();
       }
     },
-    'getProductType': function() {
+    'getProductType': function () {
       switch (typeProduct.val()) {
         case '0':
           return 'standard';
@@ -180,25 +189,25 @@ var displayFieldsManager = (function() {
      * Warn e-merchant.
      * @param errorMessage
      */
-    'checkAccessVariations': function() {
+    'checkAccessVariations': function () {
       if ((showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) && (typeProduct.val() === '1' || typeProduct.val() === '2')) {
         var typeOfProduct = this.getProductType();
         var errorMessage = "You can't create " + typeOfProduct + " product with variations. Are you sure to disable variations ? they will all be deleted.";
         modalConfirmation.create(translate_javascripts[errorMessage], null, {
-          onCancel: function() {
+          onCancel: function () {
             typeProduct.val(0).change();
             /* else the radio bouton is not display even if checked attribute is true */
             $('#show_variations_selector input[value="1"]').click();
           },
-          onContinue: function() {
+          onContinue: function () {
             $.ajax({
               type: 'GET',
               url: $('#accordion_combinations').attr('data-action-delete-all') + '/' + $('#form_id_product').val(),
-              success: function() {
+              success: function () {
                 $('#accordion_combinations .combination').remove();
                 displayFieldsManager.refresh();
               },
-              error: function(response) {
+              error: function (response) {
                 showErrorMessage(jQuery.parseJSON(response.responseText).message);
               },
             });
@@ -206,7 +215,7 @@ var displayFieldsManager = (function() {
         }).show();
       }
     }
-  };
+  }
 })();
 
 /**
@@ -1045,6 +1054,17 @@ var customFieldCollection = (function() {
 var virtualProduct = (function() {
   var id_product = $('#form_id_product').val();
 
+  var getOnDeleteVirtualProductFileHandler = function ($deleteButton) {
+    return $.ajax({
+      type: 'GET',
+      url: $deleteButton.attr('href') + '/' + id_product,
+      success: function () {
+        $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
+        $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
+      }
+    })
+  };
+
   return {
     'init': function() {
       $(document).on('change', 'input[name="form[step3][virtual_product][is_virtual_file]"]', function() {
@@ -1095,18 +1115,11 @@ var virtualProduct = (function() {
       /** delete attached file */
       $('#form_step3_virtual_product_file_details .delete').click(function(e) {
         e.preventDefault();
-        var _this = $(this);
+        var $deleteButton = $(this);
 
         modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
           onContinue: function() {
-            $.ajax({
-              type: 'GET',
-              url: _this.attr('href') + '/' + id_product,
-              success: function() {
-                $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
-                $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
-              }
-            });
+            getOnDeleteVirtualProductFileHandler($deleteButton);
           }
         }).show();
       });
@@ -1161,8 +1174,23 @@ var virtualProduct = (function() {
           }
         });
       });
+    },
+    'destroy': function () {
+      var fileDetailsSelector = '#form_step3_virtual_product_file_details';
+      var fileAssociationExists = !$(fileDetailsSelector).hasClass('hide');
+
+      if (fileAssociationExists) {
+        var $deleteButton = $(fileDetailsSelector + ' .delete');
+        getOnDeleteVirtualProductFileHandler($deleteButton);
+      }
+
+      var associatedFileCheckboxSelectorPrefix = '#form_step3_virtual_product_is_virtual_file_';
+      $(associatedFileCheckboxSelectorPrefix + '0').prop('checked', false);
+      $(associatedFileCheckboxSelectorPrefix + '1').prop('checked', true);
+
+      $('#virtual_product_content input').val('');
     }
-  };
+  }
 })();
 
 /**
