@@ -38,7 +38,15 @@ class MockCatalogueProviderMock implements ProviderInterface
      */
     public function getDirectories()
     {
-        return array('to-be-defined');
+        return array('');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilters()
+    {
+        return array();
     }
 
     /**
@@ -63,5 +71,13 @@ class MockCatalogueProviderMock implements ProviderInterface
     public function getMessageCatalogue()
     {
         return new MessageCatalogue(self::DEFAULT_LOCALE);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifier()
+    {
+        return 'mock';
     }
 }
