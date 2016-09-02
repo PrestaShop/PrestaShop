@@ -1,5 +1,6 @@
 parameters:
     translations_dir: "%kernel.root_dir%/Resources/translations"
+    themes_dir: "%kernel.root_dir%/../themes"
 
 services:
 # CORE ADMIN (prestashop.core.admin.*)
@@ -93,13 +94,21 @@ services:
     prestashop.utils.zip_manager:
         class: PrestaShopBundle\Utils\ZipManager
 
-    #TRANSLATIONS
+    #TRANSLATIONS FACTORIES
     prestashop.translation.translations_factory:
-        class: PrestaShopBundle\Translation\TranslationsFactory
+        class: PrestaShopBundle\Translation\Factory\TranslationsFactory
 
     ps.translations_factory:
         alias: "prestashop.translation.translations_factory"
 
+    prestashop.translation.theme_translations_factory:
+        class: PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory
+        arguments: ['@prestashop.translation.theme_provider']
+
+    ps.theme_translations_factory:
+        alias: "prestashop.translation.theme_translations_factory"
+
+    #TRANSLATIONS PROVIDERS
     prestashop.translation.backoffice_provider:
         class: PrestaShopBundle\Translation\Provider\BackOfficeProvider
         arguments:
@@ -115,3 +124,9 @@ services:
             - "%translations_dir%"
         tags:
             - { name: "ps.translation_provider" }
+
+    prestashop.translation.theme_provider:
+        class: PrestaShopBundle\Translation\Provider\ThemeProvider
+        arguments:
+            - "@prestashop.translations.database_loader"
+            - "%themes_dir%"

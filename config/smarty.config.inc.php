@@ -59,6 +59,8 @@ if (defined('_PS_ADMIN_DIR_')) {
     require_once dirname(__FILE__).'/smartyfront.config.inc.php';
 }
 
+require_once _PS_SMARTY_DIR_ .'plugins/modifier.truncate.php';
+
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'function', 'dump', 'smartyDump'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
@@ -77,25 +79,7 @@ function smartyDump($params, &$smarty)
     return Tools::dump($params['var']);
 }
 
-function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_words = false, $middle = false, $charset = 'UTF-8')
-{
-    if (!$length) {
-        return '';
-    }
 
-    $string = trim($string);
-
-    if (Tools::strlen($string) > $length) {
-        $length -= min($length, Tools::strlen($etc));
-        if (!$break_words && !$middle) {
-            $string = preg_replace('/\s+?(\S+)?$/u', '', Tools::substr($string, 0, $length + 1, $charset));
-        }
-
-        return !$middle ? Tools::substr($string, 0, $length, $charset).$etc : Tools::substr($string, 0, $length / 2, $charset).$etc.Tools::substr($string, -$length / 2, $length, $charset);
-    } else {
-        return $string;
-    }
-}
 
 function smarty_modifier_htmlentitiesUTF8($string)
 {
