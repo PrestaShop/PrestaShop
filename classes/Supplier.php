@@ -179,6 +179,43 @@ class SupplierCore extends ObjectModel
     }
 
     /**
+     * List of suppliers
+     *
+     * @param int $id_lang Specify the id of the language used
+     *
+     * @return array Suppliers lite tree
+     */
+    public static function getLiteSuppliersList($id_lang = null, $format = 'default')
+    {
+        $id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
+
+        $suppliers_list = array();
+        $suppliers = Supplier::getSuppliers(false, $id_lang, true);
+        if ($suppliers && count($suppliers)) {
+            foreach ($suppliers as $supplier) {
+                if ($format === 'sitemap') {
+                    $suppliers_list[] = array(
+                        'id' => 'supplier-page-'.(int)$supplier['id_supplier'],
+                        'label' => $supplier['name'],
+                        'url' => Context::getContext()->link->getSupplierLink($supplier['id_supplier'], $supplier['link_rewrite']),
+                        'children' => Array()
+                    );
+                } else {
+                    $suppliers_list[] = array(
+                        'id' => (int)$supplier['id_supplier'],
+                        'link' => Context::getContext()->link->getSupplierLink($supplier['id_supplier'], $supplier['link_rewrite']),
+                        'name' => $supplier['name'],
+                        'desc'=> $supplier['description'],
+                        'children' => Array()
+                    );
+                }
+            }
+        }
+
+        return $suppliers_list;
+    }
+
+    /**
      * Return name from id
      *
      * @param int $id_supplier Supplier ID

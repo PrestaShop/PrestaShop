@@ -231,6 +231,43 @@ class ManufacturerCore extends ObjectModel
     }
 
     /**
+     * List of manufacturers
+     *
+     * @param int $id_lang Specify the id of the language used
+     *
+     * @return array Manufacturers lite tree
+     */
+    public static function getLiteManufacturersList($id_lang = null, $format = 'default')
+    {
+        $id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
+
+        $manufacturers_list = array();
+        $manufacturers = Manufacturer::getManufacturers($id_lang, true);
+        if ($manufacturers && count($manufacturers)) {
+            foreach ($manufacturers as $manufacturer) {
+                if ($format === 'sitemap') {
+                    $manufacturers_list[] = array(
+                        'id' => 'manufacturer-page-'.(int)$manufacturer['id_manufacturer'],
+                        'label' => $manufacturer['name'],
+                        'url' => Context::getContext()->link->getManufacturerLink($manufacturer['id_manufacturer'], $manufacturer['link_rewrite']),
+                        'children' => Array()
+                    );
+                } else {
+                    $manufacturers_list[] = array(
+                        'id' => (int)$manufacturer['id_manufacturer'],
+                        'link' => Context::getContext()->link->getManufacturerLink($manufacturer['id_manufacturer'], $manufacturer['link_rewrite']),
+                        'name' => $manufacturer['name'],
+                        'desc'=> $manufacturer['description'],
+                        'children' => Array()
+                    );
+                }
+            }
+        }
+
+        return $manufacturers_list;
+    }
+
+    /**
      * Return name from id
      *
      * @param int $id_manufacturer Manufacturer ID
