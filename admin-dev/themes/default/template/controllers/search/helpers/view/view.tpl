@@ -24,9 +24,13 @@
 *}
 
 <script type="text/javascript">
-$(function() {
-	$('#content .panel').highlight('{$query}');
-});
+$(function () {
+	var query = '{$query}';
+	var search_items = query.split(' ');
+	$.each(search_items, function (index, value) {
+		$('#content .panel').highlight(value);
+	});
+ });
 </script>
 
 {if $query}
