@@ -39,6 +39,7 @@ class ThemeValidator
     private function hasRequiredProperties($theme)
     {
         $attributes = new ArrayFinder($theme->get(null));
+
         foreach ($this->getRequiredProperties() as $prop) {
             if (!$attributes->offsetExists($prop)) {
                 return false;
@@ -56,7 +57,6 @@ class ThemeValidator
             'version',
             'author.name',
             'meta.compatibility.from',
-            'meta.compatibility.to',
             'meta.available_layouts',
             'global_settings.image_types.cart_default',
             'global_settings.image_types.small_default',
