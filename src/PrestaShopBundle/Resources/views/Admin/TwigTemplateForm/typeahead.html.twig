@@ -38,7 +38,7 @@
     <ul id="{{ form.vars.id }}-data" class="typeahead-list pack nostyle row">
         {% if collection is defined and collection|length > 0 %}
             {% for item in collection %}
-                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}" class="col-md-3 m-b-1">
+                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}" class="col-xl-3 col-lg-6 m-b-1">
                     <div class="pack-product">
                         <img class="cover" src="{{ item.image }}" /> {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
                         <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
@@ -95,7 +95,7 @@
                         var data = $(this).data('currentItem');
                         var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
 
-                        var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '" class="col-md-3 m-b-1">';
+                        var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '" class="col-xl-3 col-lg-6 m-b-1">';
                         html += '<div class="pack-product">';
                         html += '<img class="cover" src="' + data.image +'" />';
                         html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', data.{{ mapping_name }}, data.ref, number);

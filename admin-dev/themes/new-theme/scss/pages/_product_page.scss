@@ -436,9 +436,29 @@
       right: rem(1px);
     }
     &:hover {
+      border: 2px $brand-primary solid;
       > .btn-danger {
         opacity: 1;
         visibility: visible;
+      }
+    }
+    h4,.ref {
+      padding: rem(10px);
+    }
+    h4 {
+      color: black;
+      font-weight: normal;
+      margin: 0;
+      line-height: rem(20px);
+    }
+    .ref {
+      color: $gray-medium;
+    }
+    .delete {
+      background: white;
+      border: none;
+      .material-icons {
+        color: $gray-light;
       }
     }
   }
