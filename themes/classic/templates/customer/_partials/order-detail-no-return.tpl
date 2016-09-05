@@ -14,30 +14,34 @@
   {foreach from=$order.products item=product}
     <tr>
       <td>{$product.reference}</td>
-      <td>{$product.name}</td>
-      <td>{$product.quantity}</td>
+      <td>{$product.name}
+        {if $product.customizations}
+          <br />
+          {foreach $product.customizations  as $customization}
+            <ul>
+            {foreach from=$customization.fields item=field}
+              {if $field.type == 'image'}
+                <li><img src="{$field.image.small.url}" alt=""></li>
+              {elseif $field.type == 'text'}
+                <li>{$field.label} : {if (int)$field.id_module}{$field.text nofilter}{else}{$field.text}{/if}</li>
+              {/if}
+            {/foreach}
+            </ul>
+          {/foreach}
+        {/if}
+      </td>
+      <td>
+        {if $product.customizations}
+          {foreach $product.customizations  as $customization}
+            {$customization.quantity}
+          {/foreach}
+        {else}
+          {$product.quantity}
+        {/if}
+      </td>
       <td>{$product.price}</td>
       <td class="text-xs-right">{$product.total}</td>
     </tr>
-    {if $product.customizations}
-      {foreach $product.customizations  as $customization}
-        <tr>
-          <td colspan="2">
-            <ul>
-              {foreach from=$customization.fields item=field}
-                {if $field.type == 'image'}
-                  <li><img src="{$field.image.small.url}" alt=""></li>
-                {elseif $field.type == 'text'}
-                  <li>{$field.label} : {if (int)$field.id_module}{$field.text nofilter}{else}{$field.text}{/if}</li>
-                {/if}
-              {/foreach}
-            </ul>
-          </td>
-          <td>{$customization.quantity}</td>
-          <td colspan="2"></td>
-        </tr>
-      {/foreach}
-    {/if}
   {/foreach}
 
   <tfoot>

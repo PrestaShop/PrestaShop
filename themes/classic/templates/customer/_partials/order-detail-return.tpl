@@ -20,60 +20,64 @@
         <td>
           {if !$product.customizations}
             <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}">
+          {else}
+            {foreach $product.customizations  as $customization}
+              <input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}">
+            {/foreach}
           {/if}
         </td>
         <td>{$product.reference}</td>
-        <td>{$product.name}</td>
+        <td>{$product.name}
+          {if $product.customizations}
+            <br />
+            {foreach $product.customizations  as $customization}
+            <ul>
+              {foreach from=$customization.fields item=field}
+                {if $field.type == 'image'}
+                  <li><img src="{$field.image.small.url}" alt=""></li>
+                {elseif $field.type == 'text'}
+                  <li>{$field.label} : {if (int)$field.id_module}{$field.text nofilter}{else}{$field.text}{/if}</li>
+                {/if}
+              {/foreach}
+            </ul>
+            {/foreach}
+          {/if}
+        </td>
         <td class="qty">
-          <div class="current">
-            {$product.quantity}
-          </div>
-          <div class="select">
-            {if !$product.customizations}
+          {if !$product.customizations}
+            <div class="current">
+              {$product.quantity}
+            </div>
+            <div class="select">
               <select name="order_qte_input[{$product.id_order_detail}]" class="form-control form-control-select">
-            {else}
-              <select name="order_qte_input[{$smarty.foreach.products.index}]" class="form-control form-control-select">
-            {/if}
                 {section name=quantity start=1 loop=$product.quantity+1-$product.qty_returned}
                   <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
                 {/section}
               </select>
-          </div>
-          <div class="clearfix"></div>
+            </div>
+          {else}
+            {foreach $product.customizations  as $customization}
+               <div class="current">
+                {$customization.quantity}
+              </div>
+              <div class="select">
+                <select
+                  name="customization_qty_input[{$customization.id_customization}]"
+                  class="form-control form-control-select"
+                >
+                  {section name=quantity start=1 loop=$customization.quantity+1}
+                    <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
+                  {/section}
+                </select>
+              </div>
+            {/foreach}
+            <div class="clearfix"></div>
+          {/if}
         </td>
         <td class="text-xs-right">{$product.qty_returned}</td>
         <td class="text-xs-right">{$product.price}</td>
         <td class="text-xs-right">{$product.total}</td>
       </tr>
-      {if $product.customizations}
-        {foreach $product.customizations  as $customization}
-          <tr>
-            <td><input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}"></td>
-            <td colspan="2">
-              <ul>
-                {foreach from=$customization.fields item=field}
-                  {if $field.type == 'image'}
-                    <li><img src="{$field.image.small.url}" alt=""></li>
-                  {elseif $field.type == 'text'}
-                    <li>{$field.label} : {if (int)$field.id_module}{$field.text nofilter}{else}{$field.text}{/if}</li>
-                  {/if}
-                {/foreach}
-              </ul>
-            </td>
-            <td>
-              {$customization.quantity}
-              <span>
-                <select name="customization_qty_input[{$customization.id_customization}]" class="form-control">
-                  {section name=quantity start=1 loop=$customization.quantity+1}
-                    <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
-                  {/section}
-                </select>
-              </span>
-            </td>
-            <td colspan="3"></td>
-          </tr>
-        {/foreach}
-      {/if}
     {/foreach}
 
     <tfoot>
