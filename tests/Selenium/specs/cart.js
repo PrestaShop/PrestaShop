@@ -11,11 +11,11 @@ function runScenario () {
   describe('Add product to cart as a guest', function () {
 
     let cartSelector = '.js-cart';
-    let cartProductCountSelector = '.cart-products-count';
-    let increaseProductQuantitySelector = '.bootstrap-touchspin-up';
-    let decreaseProductQuantitySelector = '.bootstrap-touchspin-down';
-    let removeProductFromCartSelector = '.remove-from-cart';
+    let cartProductCountSelector = '.js-subtotal';
+    let increaseProductQuantitySelector = '.js-increase-product-quantity';
+    let decreaseProductQuantitySelector = '.js-decrease-product-quantity';
     let cartItemSelector = '.cart-item';
+    let removeProductFromCartSelector = cartItemSelector + ' .remove-from-cart';
 
     before(function () {
       return Promise.all([
@@ -33,30 +33,23 @@ function runScenario () {
       });
 
       it('should display the product quantity', function () {
-        return browser.getText(cartProductCountSelector).then(function (text) {
-          return text === '(1)';
-        });
+        return browser
+          .getText(cartProductCountSelector).should.become('1 item');
       });
 
       describe('The quantity input spinner', function () {
         it('should increase the product quantity', function () {
           return browser
             .click(increaseProductQuantitySelector)
-            .waitUntil(function async () {
-              return browser.getText(cartProductCountSelector).then(function (text) {
-                return text === '(2)';
-              });
-            }, 5000, 'The cart product quantity should have been increased.');
+            .pause(2000)
+            .getText(cartProductCountSelector).should.become('2 items');
         });
 
         it('should decrease the product quantity', function () {
           return browser
             .click(decreaseProductQuantitySelector)
-            .waitUntil(function async () {
-              return browser.getText(cartProductCountSelector).then(function (text) {
-                return text === '(1)';
-              })
-            }, 5000, 'The cart product quantity should have been decreased.');
+            .pause(2000)
+            .getText(cartProductCountSelector).should.become('1 item');
         });
       });
 
@@ -64,12 +57,9 @@ function runScenario () {
         it('should remove a product from the cart', function () {
           return browser
             .click(removeProductFromCartSelector)
-            .waitForVisible(cartItemSelector, 2000, true) // Wait for cart item to be invisible
-            .waitUntil(function async () {
-              return browser.getText(cartProductCountSelector).then(function (text) {
-                return text === '(0)';
-              });
-            }, 5000, 'The cart product quantity should have been zeroed.');
+            .isExisting(cartItemSelector).then(function (isExisting) {
+              return isExisting === false;
+            });
         });
       })
     });
