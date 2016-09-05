@@ -357,5 +357,8 @@
     <hook id="actionValidateCustomerAddressForm">
       <name>actionValidateCustomerAddressForm</name><title>Customer address form validation</title><description>This hook is called when a customer submit its address form</description>
     </hook>
+    <hook id="actionUpdateStoresAfter">
+      <name>actionUpdateStoresAfter</name><title>Stores update</title><description>This hook is called after the stores update</description>
+    </hook>
   </entities>
 </entity_hook>
