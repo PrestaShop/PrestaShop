@@ -889,7 +889,7 @@
       height: rem(50px);
       width: rem(2000px);
       position: relative;
-      .nav-link.active {
+      .nav-link.active:not(.description-tab) {
         border-top: transparent;
         border-bottom: 3px solid $brand-primary;
       }
