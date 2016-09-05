@@ -344,12 +344,18 @@ class ContextCore
             $this->translator->addLoader('xlf', new XliffFileLoader);
             $this->translator->addLoader('db', new SqlTranslationLoader);
 
+            $locations = array(_PS_ROOT_DIR_.'/app/Resources/translations');
+            $activeThemeLocation = _PS_ROOT_DIR_.'/themes/'.$this->shop->theme_name.'/translations';
+            if (is_dir($activeThemeLocation)) {
+                $locations[] = $activeThemeLocation;
+            }
+
             $finder = Finder::create()
                 ->files()
                 ->filter(function (\SplFileInfo $file) {
                     return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
                 })
-                ->in(_PS_ROOT_DIR_.'/app/Resources/translations')
+                ->in($locations)
             ;
 
             foreach ($finder as $file) {
