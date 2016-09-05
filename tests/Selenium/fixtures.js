@@ -29,7 +29,8 @@ module.exports = {
       aCategoryWithProducts: '/en/3-women',
       identity: '/en/identity',
       adminLogin: '/admin-dev',
-      guestTracking: '/en/guest-tracking'
+      guestTracking: '/en/guest-tracking',
+      cart: '/en/cart'
     },
     customer: {
       email: 'pub@prestashop.com',
