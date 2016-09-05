@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Translation\Extractor;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
+use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Translation\Dumper\FileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -45,10 +46,17 @@ class ThemeExtractor
     private $format = 'xlf';
     private $outputPath;
     private $smartyExtractor;
+    private $themeProvider;
 
-    public function __construct(SmartyExtractor $smartyExtractor)
+    private $overrideFromDatabase = false;
+
+    public function __construct(
+        SmartyExtractor $smartyExtractor,
+        ThemeProvider $themeProvider
+    )
     {
         $this->smartyExtractor = $smartyExtractor;
+        $this->themeProvider = $themeProvider;
         $this->dumpers[] = new XliffFileDumper();
     }
 
@@ -60,6 +68,10 @@ class ThemeExtractor
 
         $options = array('path' => $themeDirectory);
         $this->smartyExtractor->extract($themeDirectory, $this->catalog);
+        
+        if ($this->overrideFromDatabase) {
+            $this->overrideFromDatabase($theme->getName(), $locale, $this->catalog);
+        }
 
         foreach ($this->dumpers as $dumper) {
             if ($this->format === $dumper->getExtension()) {
@@ -72,6 +84,17 @@ class ThemeExtractor
         }
 
         throw new \LogicException(sprintf('The format %s is not supported.', $this->format));
+    }
+    
+    private function overrideFromDatabase($themeName, $locale, &$catalogue)
+    {
+        $databaseCatalogue = $this->themeProvider
+            ->setLocale($locale)
+            ->setThemeName($themeName)
+            ->getDatabaseCatalogue()
+        ;
+
+        $catalogue->addCatalogue($databaseCatalogue);
     }
 
     public function addDumper(FileDumper $dumper)
@@ -113,5 +136,19 @@ class ThemeExtractor
     public function getCatalog()
     {
         return $this->catalog;
+    }
+
+    public function disableOverridingFromDatabase()
+    {
+        $this->overrideFromDatabase = false;
+
+        return $this;
+    }
+
+    public function enableOverridingFromDatabase()
+    {
+        $this->overrideFromDatabase = true;
+
+        return $this;
     }
 }

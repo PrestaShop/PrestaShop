@@ -107,7 +107,7 @@ class TranslationsController extends FrameworkBundleAdminController
 
         $zipFile = $folderPath.'.'.$locale.'.zip';
 
-        // create the directory
+        // create the directories
         $fs = new Filesystem();
         $fs->mkdir($folderPath);
         $fs->mkdir($tmpFolderPath);
@@ -115,6 +115,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $themeExtractor = $this->get('prestashop.translations.theme_extractor');
         $themeExtractor
             ->setOutputPath($tmpFolderPath)
+            ->enableOverridingFromDatabase()
             ->extract($theme, $locale)
         ;
 
@@ -222,11 +223,11 @@ class TranslationsController extends FrameworkBundleAdminController
         $locale = $this->langToLocale($lang);
 
         if (!is_null($theme)) {
-            $this->synchronizeTheme($theme, $locale);
             if ('classic' === $theme) {
                 $type = 'front';
             } else {
                 $type = $theme;
+                $this->synchronizeTheme($theme, $locale);
             }
         }
 
