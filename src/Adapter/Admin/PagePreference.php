@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 /**
  * Adapter to know which page's version to display.
@@ -43,7 +44,12 @@ class PagePreference implements AdminPagePreferenceInterface
 
     public function __construct(SessionInterface $session)
     {
-        $this->session = $session;
+        if ($session->isStarted()) {
+            $this->session = $session;
+        } else {
+            $sessionClass = get_class($session);
+            $this->session = new $sessionClass(new PhpBridgeSessionStorage());
+        }
     }
 
     /* (non-PHPdoc)
