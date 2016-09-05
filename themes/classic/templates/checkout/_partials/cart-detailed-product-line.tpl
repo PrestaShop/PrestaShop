@@ -57,7 +57,7 @@
       <div class="col-md-10 col-xs-6">
         <div class="row">
           <div class="col-md-6 col-xs-6 qty">
-            <input class="cart-line-product-quantity" data-down-url="{$product.down_quantity_url}" data-up-url="{$product.up_quantity_url}" data-update-url="{$product.update_quantity_url}" data-product-id="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
+            <input class="js-cart-line-product-quantity" data-down-url="{$product.down_quantity_url}" data-up-url="{$product.up_quantity_url}" data-update-url="{$product.update_quantity_url}" data-product-id="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
           </div>
           <div class="col-md-6 col-xs-2 price">
             <span class="product-price"><strong>{$product.total}</strong></span>
