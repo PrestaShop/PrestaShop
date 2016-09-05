@@ -139,7 +139,7 @@ class LogoUploader
 
         if (isset($files[$name]['tmp_name']) && !empty($files[$name]['tmp_name'])) {
             if ($error = ImageManager::validateIconUpload($files[$name])) {
-                throw new PrestaShopException(self::NOTICE.$error);
+                throw new PrestaShopException($error);
             } elseif (!copy($_FILES[$name]['tmp_name'], $destination)) {
                 throw new PrestaShopException(sprintf(Tools::displayError('An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".'), $files[$name]['tmp_name'], $destination));
             }
