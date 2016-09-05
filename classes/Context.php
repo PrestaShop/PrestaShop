@@ -345,9 +345,12 @@ class ContextCore
             $this->translator->addLoader('db', new SqlTranslationLoader);
 
             $locations = array(_PS_ROOT_DIR_.'/app/Resources/translations');
-            $activeThemeLocation = _PS_ROOT_DIR_.'/themes/'.$this->shop->theme_name.'/translations';
-            if (is_dir($activeThemeLocation)) {
-                $locations[] = $activeThemeLocation;
+            
+            if (!is_null($this->shop)) {
+                $activeThemeLocation = _PS_ROOT_DIR_.'/themes/'.$this->shop->theme_name.'/translations';
+                if (is_dir($activeThemeLocation)) {
+                    $locations[] = $activeThemeLocation;
+                }
             }
 
             $finder = Finder::create()
