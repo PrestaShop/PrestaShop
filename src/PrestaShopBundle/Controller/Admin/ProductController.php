@@ -412,7 +412,7 @@ class ProductController extends FrameworkBundleAdminController
                 $formData['step3']['combinations'] = $combinations;
 
                 //define POST values for keeping legacy adminController skills
-                $_POST = $modelMapper->getModelData($formData, $isMultiShopContext);
+                $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
                 $_POST['state'] = \Product::STATE_SAVED;
 
                 $adminProductController = $adminProductWrapper->getInstance();
