@@ -396,6 +396,7 @@ class ProductPresenter
     }
 
     /**
+     * Add new attribute reference_to_display if the product reference or the selected combinations reference is set
      * @param array $product
      * @param array $presentedProduct
      * @return array
@@ -414,6 +415,7 @@ class ProductPresenter
     }
 
     /**
+     * Add all specific references to product
      * @param array $product
      * @param array $presentedProduct
      * @return array
@@ -432,8 +434,8 @@ class ProductPresenter
 
         //if the attribute's references doesn't exist then get the product's references or unset it
         foreach ($presentedProduct['specific_references'] as $key => $value) {
-            if (null == $value) {
-                if (null != $product[$key]) {
+            if (null === $value) {
+                if (null !== $product[$key]) {
                     $presentedProduct['specific_references'][$key] = $product[$key];
                 } else {
                     unset($presentedProduct['specific_references'][$key]);
@@ -533,6 +535,7 @@ class ProductPresenter
             $product
         );
 
+        // If product has attributes and it's no added to card
         if (isset($product['attributes']) && !isset($product['cart_quantity'])) {
             $presentedProduct = $this->addReferenceToDisplay(
                 $product,

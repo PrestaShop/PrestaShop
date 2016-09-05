@@ -43,10 +43,11 @@
       {/if}
     {/block}
 
+    {* if product have specific references, a table will be added to product details section *}
     {block name='product_specific_references'}
       {if isset($product.specific_references)}
         <section class="product-features">
-          <h3 class="h6">{l s='Sepcific References' d='Shop.Theme.Catalog'}</h3>
+          <h3 class="h6">{l s='Specific References' d='Shop.Theme.Catalog'}</h3>
             <dl class="data-sheet">
               {foreach from=$product.specific_references item=reference key=key}
                 <dt class="name">{l s=$key|ucfirst d='Shop.Theme.Catalog'}</dt>
