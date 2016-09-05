@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use Shudrum\Component\ArrayFinder\ArrayFinder;
@@ -38,6 +39,7 @@ class ThemeValidator
     private function hasRequiredProperties($theme)
     {
         $attributes = new ArrayFinder($theme->get(null));
+
         foreach ($this->getRequiredProperties() as $prop) {
             if (!$attributes->offsetExists($prop)) {
                 return false;
@@ -49,7 +51,7 @@ class ThemeValidator
 
     public function getRequiredProperties()
     {
-        return [
+        return array(
             'name',
             'display_name',
             'version',
@@ -62,7 +64,8 @@ class ThemeValidator
             'global_settings.image_types.large_default',
             'global_settings.image_types.home_default',
             'global_settings.image_types.category_default',
-        ];
+            'theme_settings.default_layout',
+        );
     }
 
     private function hasRequiredFiles($theme)
@@ -78,19 +81,39 @@ class ThemeValidator
 
     public function getRequiredFiles()
     {
-        return [
+        return array(
             'preview.png',
             'config/theme.yml',
             'assets/js/theme.js',
             'assets/css/theme.css',
-            'templates/page.tpl',
+            // Templates
             'templates/catalog/product.tpl',
+            'templates/catalog/listing/product-list.tpl',
             'templates/checkout/cart.tpl',
             'templates/checkout/checkout.tpl',
-            'templates/_partials/head.tpl',
-            'templates/_partials/header.tpl',
-            'templates/_partials/notifications.tpl',
-            'templates/_partials/footer.tpl',
-        ];
+            'templates/cms/category.tpl',
+            'templates/cms/page.tpl',
+            'templates/customer/address.tpl',
+            'templates/customer/addresses.tpl',
+            'templates/customer/guest-tracking.tpl',
+            'templates/customer/guest-login.tpl',
+            'templates/customer/history.tpl',
+            'templates/customer/identity.tpl',
+            'templates/index.tpl',
+            'templates/customer/my-account.tpl',
+            'templates/checkout/order-confirmation.tpl',
+            'templates/customer/order-detail.tpl',
+            'templates/customer/order-follow.tpl',
+            'templates/customer/order-return.tpl',
+            'templates/customer/order-slip.tpl',
+            'templates/errors/404.tpl',
+            'templates/errors/forbidden.tpl',
+            'templates/checkout/cart-empty.tpl',
+            'templates/cms/sitemap.tpl',
+            'templates/cms/stores.tpl',
+            'templates/customer/authentication.tpl',
+            'templates/customer/registration.tpl',
+            'templates/contact.tpl',
+        );
     }
 }

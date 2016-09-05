@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
@@ -34,7 +35,7 @@ class Theme implements AddonInterface
 
     public function __construct(array $attributes)
     {
-        $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
+        $attributes['directory'] = rtrim($attributes['directory'], '/').'/';
         $attributes['preview'] = $attributes['physical_uri'].'themes/'.$attributes['name'].'/preview.png';
 
         $this->attributes = new ArrayFinder($attributes);
@@ -57,8 +58,8 @@ class Theme implements AddonInterface
 
     public function getModulesToEnable()
     {
-        $modulesToEnable = $this->get('global_settings.modules.to_enable', []);
-        $modulesToHook = $this->get('global_settings.hooks.modules_to_hook', []);
+        $modulesToEnable = $this->get('global_settings.modules.to_enable', array());
+        $modulesToHook = $this->get('global_settings.hooks.modules_to_hook', array());
 
         foreach ($modulesToHook as $hookName => $modules) {
             foreach (array_values($modules) as $module) {
@@ -82,11 +83,11 @@ class Theme implements AddonInterface
     }
 
     /**
-    * Execute up files. You can update configuration, update sql schema.
-    * No file modification.
-    *
-    * @return bool true for success
-    */
+     * Execute up files. You can update configuration, update sql schema.
+     * No file modification.
+     *
+     * @return bool true for success
+     */
     public function onUpgrade($version)
     {
         return true;
@@ -106,7 +107,7 @@ class Theme implements AddonInterface
     /**
      * Not necessarily the opposite of enable. Use this method if
      * something must be done when switching to another theme (like uninstall
-     * very specific modules for example)
+     * very specific modules for example).
      *
      * @return bool true for success
      */
@@ -153,6 +154,7 @@ class Theme implements AddonInterface
             && $this->attributes['theme_settings']['layouts'][$page]) {
             $layout_name = $this->attributes['theme_settings']['layouts'][$page];
         }
+
         return $layout_name;
     }
 

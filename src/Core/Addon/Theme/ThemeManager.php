@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,22 +23,21 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Parser;
-use \Tools;
-use \Shop;
-use \Employee;
-use \Exception;
+use Tools;
+use Shop;
+use Employee;
+use Exception;
 
 class ThemeManager implements AddonManagerInterface
 {
@@ -79,7 +78,8 @@ class ThemeManager implements AddonManagerInterface
      * A theme can bundle modules, resources, documentation, email templates and so on.
      *
      * @param string $source The source can be a module name (installed from either local disk or addons.prestashop.com).
-     * or a location (url or path to the zip file)
+     *                       or a location (url or path to the zip file)
+     *
      * @return bool true for success
      */
     public function install($source)
@@ -90,14 +90,16 @@ class ThemeManager implements AddonManagerInterface
         if (preg_match('/\.zip$/', $source)) {
             $this->installFromZip($source);
         }
+
         return true;
     }
 
     /**
-     * Remove all theme files, resources, documentation and specific modules
+     * Remove all theme files, resources, documentation and specific modules.
      *
      * @param $name The source can be a module name (installed from either local disk or addons.prestashop.com).
      * or a location (url or path to the zip file)
+     *
      * @return bool true for success
      */
     public function uninstall($name)
@@ -121,7 +123,8 @@ class ThemeManager implements AddonManagerInterface
      *
      * @param string $name
      * @param string $version the version you want to up upgrade to
-     * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
+     * @param string $source  if the upgrade is not coming from addons, you need to specify the path to the zipball
+     *
      * @return bool true for success
      */
     public function upgrade($name, $version, $source = null)
@@ -133,10 +136,11 @@ class ThemeManager implements AddonManagerInterface
      * Actions to perform when switching from another theme to this one.
      * Example:
      * 	- update configuration
-     * 	- enable/disable modules
+     * 	- enable/disable modules.
      *
-     * @param  string $name The theme name to enable
-     * @return bool         True for success
+     * @param string $name The theme name to enable
+     *
+     * @return bool True for success
      */
     public function enable($name)
     {
@@ -145,7 +149,7 @@ class ThemeManager implements AddonManagerInterface
         }
 
         /* if file exits, remove it and use YAML configuration file instead */
-        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name .'/shop'.$this->shop->id.'.json');
+        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         $theme = $this->themeRepository->getInstanceByName($name);
         if (!$this->themeValidator->isValid($theme)) {
@@ -154,9 +158,9 @@ class ThemeManager implements AddonManagerInterface
 
         $this->disable($this->shop->theme_name);
 
-        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
-                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
-                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
+        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', array()))
+                ->doApplyConfiguration($theme->get('global_settings.configuration', array()))
+                ->doDisableModules($theme->get('global_settings.modules.to_disable', array()))
                 ->doEnableModules($theme->getModulesToEnable())
                 ->doApplyImageTypes($theme->get('global_settings.image_types'))
                 ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
@@ -174,8 +178,9 @@ class ThemeManager implements AddonManagerInterface
     /**
      * Actions to perform when switching from this theme to another one.
      *
-     * @param  string $name The theme name to enable
-     * @return bool         True for success
+     * @param string $name The theme name to enable
+     *
+     * @return bool True for success
      */
     public function disable($name)
     {
@@ -183,10 +188,11 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Actions to perform to restore default settings
+     * Actions to perform to restore default settings.
      *
-     * @param  string $theme_name The theme name to reset
-     * @return bool         True for success
+     * @param string $theme_name The theme name to reset
+     *
+     * @return bool True for success
      */
     public function reset($theme_name)
     {
@@ -194,14 +200,15 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Returns the last error, if found
+     * Returns the last error, if found.
      *
      * @param string $name The technical theme name
+     *
      * @return string|null The last error if found
      */
     public function getError($theme_name)
     {
-        return null;
+        return;
     }
 
     private function doCreateCustomHooks(array $hooks)
@@ -213,6 +220,7 @@ class ThemeManager implements AddonManagerInterface
                 $hook['description']
             );
         }
+
         return $this;
     }
 
@@ -221,6 +229,7 @@ class ThemeManager implements AddonManagerInterface
         foreach ($configuration as $key => $value) {
             $this->appConfiguration->set($key, $value);
         }
+
         return $this;
     }
 
@@ -228,7 +237,6 @@ class ThemeManager implements AddonManagerInterface
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
-
 
         foreach ($modules as $key => $moduleName) {
             if ($moduleManager->isInstalled($moduleName) && $moduleManager->isEnabled($moduleName)) {
@@ -243,7 +251,6 @@ class ThemeManager implements AddonManagerInterface
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
-
 
         foreach ($modules as $key => $moduleName) {
             if (!$moduleManager->isInstalled($moduleName)) {
@@ -260,12 +267,14 @@ class ThemeManager implements AddonManagerInterface
     private function doHookModules(array $hooks)
     {
         $this->hookConfigurator->setHooksConfiguration($hooks);
+
         return $this;
     }
 
     private function doApplyImageTypes(array $types)
     {
         $this->imageTypeRepository->setTypes($types);
+
         return $this;
     }
 
@@ -278,12 +287,12 @@ class ThemeManager implements AddonManagerInterface
         $directories = $this->finder->directories()
                                     ->in($sandboxPath)
                                     ->depth('== 0')
-                                    ->exclude(['__MACOSX'])
+                                    ->exclude(array('__MACOSX'))
                                     ->ignoreVCS(true);
 
         if (iterator_count($directories->directories()) > 1) {
             $this->filesystem->remove($sandboxPath);
-            throw new Exception("Invalid theme zip");
+            throw new Exception('Invalid theme zip');
         }
 
         $directories = iterator_to_array($directories);
@@ -293,7 +302,7 @@ class ThemeManager implements AddonManagerInterface
         $theme_data['directory'] = $sandboxPath.$theme_name;
         if (!$this->themeValidator->isValid(new Theme($theme_data))) {
             $this->filesystem->remove($sandboxPath);
-            throw new Exception("This theme is not valid for PrestaShop 1.7");
+            throw new Exception('This theme is not valid for PrestaShop 1.7');
         }
 
         $module_root_dir = $this->appConfiguration->get('_PS_MODULE_DIR_');
@@ -332,6 +341,7 @@ class ThemeManager implements AddonManagerInterface
             $this->sandbox = $this->appConfiguration->get('_PS_CACHE_DIR_').'sandbox/'.uniqid().'/';
             $this->filesystem->mkdir($this->sandbox, 0755);
         }
+
         return $this->sandbox;
     }
 

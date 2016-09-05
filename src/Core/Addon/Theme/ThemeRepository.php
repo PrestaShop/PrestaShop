@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
@@ -105,10 +106,10 @@ class ThemeRepository implements AddonRepositoryInterface
 
     private function getThemesOnDisk()
     {
-        $suffix = 'preview.png';
+        $suffix = 'config/theme.yml';
         $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix);
 
-        $themes = [];
+        $themes = array();
         foreach ($themeDirectories as $directory) {
             $name = basename(substr($directory, 0, -strlen($suffix)));
             $theme = $this->getInstanceByName($name);
