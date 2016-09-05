@@ -27,7 +27,7 @@
 
 namespace PrestaShopBundle\Translation\Factory;
 
-use PrestaShopBundle\Translation\Provider\ProviderInterface;
+use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use PrestaShopBundle\Translation\Provider\UseDefaultCatalogueInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -56,7 +56,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
             }
         }
 
-        // throw an exception
+        throw new ProviderNotFoundException($domainIdentifier);
     }
 
     /**
@@ -71,7 +71,6 @@ class TranslationsFactory implements TranslationsFactoryInterface
     {
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
-                // set locale
                 $provider->setLocale($locale);
 
                 $catalogue = $provider->getXliffCatalogue();
@@ -81,7 +80,6 @@ class TranslationsFactory implements TranslationsFactoryInterface
                 }
 
                 $translations = $catalogue->all();
-
                 $databaseCatalogue = $provider->getDatabaseCatalogue()->all();
 
                 foreach ($translations as $domain => $messages) {
@@ -106,10 +104,10 @@ class TranslationsFactory implements TranslationsFactoryInterface
             }
         }
 
-        // throw an exception
+        throw new ProviderNotFoundException($domainIdentifier);
     }
 
-    private function getTranslationsWithSources(ProviderInterface $provider, MessageCatalogue $catalogue)
+    private function getTranslationsWithSources(AbstractProvider $provider, MessageCatalogue $catalogue)
     {
         $defaultCatalogue = $provider->getDefaultCatalogue();
         $defaultCatalogue->addCatalogue($catalogue);
@@ -117,7 +115,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
         return $defaultCatalogue;
     }
 
-    public function addProvider(ProviderInterface $provider)
+    public function addProvider(AbstractProvider $provider)
     {
         $this->providers[] = $provider;
     }
