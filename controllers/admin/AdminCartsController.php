@@ -104,6 +104,11 @@ class AdminCartsControllerCore extends AdminController
                 'icon' => array(0 => 'icon-', 1 => 'icon-user')
             )
         );
+
+        if (!Configuration::get('PS_GUEST_CHECKOUT_ENABLED')) {
+            unset($this->fields_list['id_guest']);
+        }
+
         $this->shopLinkType = 'shop';
 
         $this->bulk_actions = array(
