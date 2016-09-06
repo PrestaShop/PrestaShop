@@ -89,6 +89,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             $this->processInstallDefaultData();
         } elseif (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase'])) {
             $this->processPopulateDatabase();
+            // download and install language pack
+            Language::downloadAndInstallLanguagePack($this->session->lang);
         } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
             $this->processConfigureShop();
         } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
