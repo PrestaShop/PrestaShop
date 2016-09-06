@@ -339,7 +339,7 @@ var featuresCollection = (function() {
 
   /** Add a feature */
   function add() {
-    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
+    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children('.row').length);
     collectionHolder.append(newForm);
     prestaShopUiKit.initSelects();
   }
