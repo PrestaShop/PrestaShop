@@ -162,3 +162,4 @@ DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_STORES_DISPLAY_FOOTER', 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('actionValidateCustomerAddressForm', 'Customer address form validation', 'This hook is called when a customer submit its address form', '1');
 
 /* PHP:add_quick_access_tab(); */;
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayAfterCarrier', 'After carriers list', 'This hook is displayed after the carrier list in Front Office', '1');

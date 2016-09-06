@@ -210,6 +210,9 @@
     <hook id="displayBeforeCarrier">
       <name>displayBeforeCarrier</name><title>Before carriers list</title><description>This hook is displayed before the carrier list in Front Office</description>
     </hook>
+    <hook id="displayAfterCarrier">
+      <name>displayAfterCarrier</name><title>After carriers list</title><description>This hook is displayed after the carrier list in Front Office</description>
+    </hook>
     <hook id="displayOrderDetail">
       <name>displayOrderDetail</name><title>Order detail</title><description>This hook is displayed within the order's details in Front Office</description>
     </hook>
