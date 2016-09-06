@@ -14,8 +14,8 @@ function createSpin()
     verticalbuttons: true,
     verticalupclass: 'material-icons touchspin-up',
     verticaldownclass: 'material-icons touchspin-down',
-    buttondown_class: 'btn btn-touchspin js-touchspin',
-    buttonup_class: 'btn btn-touchspin js-touchspin',
+    buttondown_class: 'btn btn-touchspin js-touchspin js-increase-product-quantity',
+    buttonup_class: 'btn btn-touchspin js-touchspin js-decrease-product-quantity',
     min: 1,
     max: 1000000
   });
