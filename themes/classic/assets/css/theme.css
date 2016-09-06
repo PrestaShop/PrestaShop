@@ -5753,14 +5753,14 @@ body#checkout {
     #payment-confirmation button.btn {
       white-space: normal; } }
 
-.js-payment-atos {
+.js-payment-binary {
   display: none; }
-  .js-payment-atos .accept-cgv {
+  .js-payment-binary .accept-cgv {
     display: none; }
-  .js-payment-atos.disabled {
+  .js-payment-binary.disabled {
     opacity: 0.6;
     cursor: not-allowed; }
-    .js-payment-atos.disabled::before {
+    .js-payment-binary.disabled::before {
       content: "";
       position: absolute;
       top: 0;
@@ -5768,7 +5768,7 @@ body#checkout {
       bottom: 0;
       left: 0;
       pointer-events: none; }
-    .js-payment-atos.disabled .accept-cgv {
+    .js-payment-binary.disabled .accept-cgv {
       display: block; }
 
 /*** SOME GENERIC STYLES ***/
