@@ -131,7 +131,10 @@ class AdminProductWrapper
             }
         }
 
-        $this->processQuantityUpdate($product, $combinationValues['attribute_quantity'], $id_product_attribute);
+        if(isset($combinationValues['attribute_quantity'])){
+            $this->processQuantityUpdate($product, $combinationValues['attribute_quantity'], $id_product_attribute);
+        }
+
     }
 
     /**

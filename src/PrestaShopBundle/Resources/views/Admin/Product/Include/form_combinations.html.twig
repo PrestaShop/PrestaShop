@@ -63,7 +63,9 @@
             <th>{{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}</th>
             <th>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</th>
             <th>{{ 'Final price'|trans({}, 'Admin.Catalog.Feature') }}</th>
-            <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            {% if is_stock_management %}
+                <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            {% endif %}
             <th colspan="3" class="text-xs-right">{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
           </tr>
         </thead>
@@ -84,9 +86,11 @@
               <td class="attribute-finalprice">
                 <div class="animated-background"></div>
               </td>
-              <td class="attribute-quantity">
-                <div class="animated-background"></div>
-              </td>
+              {% if is_stock_management %}
+                <td class="attribute-quantity">
+                  <div class="animated-background"></div>
+                </td>
+              {% endif %}
               <td colspan="6"></td>
             </tr>
           {%  endif %}
@@ -141,25 +145,30 @@
     <div class="col-md-12">
       <h2>{{ 'Availability preferences'|trans({}, 'Admin.Catalog.Feature') }}</h2>
     </div>
+    {% if is_stock_management %}
+      <div class="col-md-12">
+        <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'Admin.Catalog.Feature') }}</label>
+        {{ form_errors(form.out_of_stock) }}
+        {{ form_widget(form.out_of_stock) }}
+      </div>
 
-    <div class="col-md-12">
-      <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'Admin.Catalog.Feature') }}</label>
-      {{ form_errors(form.out_of_stock) }}
-      {{ form_widget(form.out_of_stock) }}
-    </div>
+      <div class="col-md-4">
+        <label class="form-control-label">{{ form.available_now.vars.label }}</label>
+        {{ form_errors(form.available_now) }}
+        {{ form_widget(form.available_now) }}
+      </div>
 
-    <div class="col-md-4">
-      <label class="form-control-label">{{ form.available_now.vars.label }}</label>
-      {{ form_errors(form.available_now) }}
-      {{ form_widget(form.available_now) }}
-    </div>
+      <div class="col-md-4 ">
+        <label class="form-control-label">{{ form.available_later.vars.label }}</label>
+        {{ form_errors(form.available_later) }}
+        {{ form_widget(form.available_later) }}
+      </div>
+    {% else %}
+      <div class="col-md-12">
+        <h3>{{  'Stock management is disabled'|trans({}, 'Admin.Catalog.Feature') }}</h3>
+      </div>
+    {% endif %}
 
-    <div class="col-md-4 ">
-      <label class="form-control-label">{{ form.available_later.vars.label }}</label>
-      {{ form_errors(form.available_later) }}
-      {{ form_widget(form.available_later) }}
-    </div>
-    
     {% if not has_combinations %}
     <div class="col-md-4 ">
       <label class="form-control-label">{{ form.available_date.vars.label }}</label>

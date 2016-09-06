@@ -64,6 +64,7 @@ class ProductQuantity extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
         $builder->add('attributes', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'attr' => array(
                 'class' => 'tokenfield',
@@ -88,16 +89,18 @@ class ProductQuantity extends CommonAbstractType
                 'expanded' => true,
                 'required' => true,
                 'multiple' => false,
-            ))
-            ->add('qty_0', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-                'required' => true,
-                'label' => $this->translator->trans('Quantity', array(), 'Admin.Catalog.Feature'),
-                'constraints' => array(
-                    new Assert\NotBlank(),
-                    new Assert\Type(array('type' => 'numeric')),
-                ),
-            ))
-            ->add('out_of_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            ));
+            if($is_stock_management){
+                $builder->add('qty_0', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+                    'required' => true,
+                    'label' => $this->translator->trans('Quantity', array(), 'Admin.Catalog.Feature'),
+                    'constraints' => array(
+                        new Assert\NotBlank(),
+                        new Assert\Type(array('type' => 'numeric')),
+                    ),
+                ));
+            }
+            $builder->add('out_of_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices_as_values' => true,
             ))
             ->add('minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
