@@ -409,7 +409,7 @@
       'type': 'button',
       'label': "Delete now"|trans({}, 'Admin.Actions'),
       'value': 'confirm',
-      'class': 'btn btn-warning',
+      'class': 'btn btn-primary btn-lg',
     }],
   }%}
     {% block content %}
@@ -427,13 +427,13 @@
       'type': 'button',
       'label': "Export to SQL Manager"|trans({}, 'Admin.Actions'),
       'value': 'sql_manager',
-      'class': 'btn',
+      'class': 'btn btn-primary btn-lg',
     }],
   } %}
     {% block content %}
       <form method="post" action="{{ sql_manager_add_link }}" id="catalog_sql_query_modal_content">
         <div class="modal-body">
-          <textarea name="sql" rows="20" cols="70"></textarea>
+          <textarea name="sql" rows="20" cols="65"></textarea>
           <input type="hidden" name="name" value="" />
         </div>
       </form>
