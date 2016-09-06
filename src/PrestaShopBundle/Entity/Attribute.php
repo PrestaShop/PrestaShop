@@ -46,7 +46,7 @@ class Attribute
      * @ORM\ManyToMany(targetEntity="PrestaShopBundle\Entity\Shop", cascade={"persist"})
      * @ORM\JoinTable(
      *      joinColumns={@ORM\JoinColumn(name="id_attribute", referencedColumnName="id_attribute")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}
      * )
      */
     private $shops;
