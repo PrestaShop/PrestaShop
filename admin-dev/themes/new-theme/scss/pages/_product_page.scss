@@ -935,6 +935,12 @@
         float: right;
       }
     }
+    .category-hr {
+      width: 100%;
+    }
+    .checkbox label {
+      max-width: 80%;
+    }
     .product-footer {
       .hidden-xs,
       input.save {
