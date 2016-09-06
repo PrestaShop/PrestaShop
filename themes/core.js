@@ -2016,13 +2016,13 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var $body = (0, _jquery2['default'])('body');
-	var deliveryFormSelector = '#js-delivery';
-	var summarySelector = '#js-checkout-summary';
-	var deliveryStepSelector = '#checkout-delivery-step';
-	var editDeliveryButtonSelector = '.js-edit-delivery';
-	
 	exports['default'] = function () {
+	  var $body = (0, _jquery2['default'])('body');
+	  var deliveryFormSelector = '#js-delivery';
+	  var summarySelector = '#js-checkout-summary';
+	  var deliveryStepSelector = '#checkout-delivery-step';
+	  var editDeliveryButtonSelector = '.js-edit-delivery';
+	
 	  var updateDeliveryForm = function updateDeliveryForm() {
 	    var $deliveryMethodForm = (0, _jquery2['default'])(deliveryFormSelector);
 	    var requestData = $deliveryMethodForm.serialize();
@@ -2035,7 +2035,7 @@
 	    });
 	  };
 	
-	  $body.on('change', deliveryFormSelector + ' input[type="radio"]', updateDeliveryForm);
+	  $body.on('change', deliveryFormSelector + ' input', updateDeliveryForm);
 	
 	  $body.on('click', editDeliveryButtonSelector, function (event) {
 	    event.stopPropagation();
