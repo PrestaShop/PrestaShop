@@ -14,10 +14,14 @@
         <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12 product-list">
             {% if collection is defined and collection|length > 0 %}
                 {% for item in collection %}
-                    <li class="card">
-                        <img class="image" src="{{ item.image }}" />
+                    <li class="media">
+                      <div class="media-left">
+                        <img class="media-object image" src="{{ item.image }}" />
+                      </div>
+                      <div class="media-body media-middle">
                         {{ template_collection|format(item.name)|raw }}
-                        <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.id }}" />
+                      </div>
+                      <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.id }}" />
                     </li>
                 {% endfor %}
             {% endif %}
