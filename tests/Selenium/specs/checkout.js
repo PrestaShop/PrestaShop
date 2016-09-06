@@ -206,12 +206,20 @@ function runScenario (scenario) {
             ;
           });
           it("the delivery options have an impact on cart summary display", function () {
-            var cartSummary = browser.getValue('#checkout-cart-summary');
+            var cartSummary = browser.getValue('#js-cart-summary');
             return browser
               .click('#delivery_option_2')
-              .getValue('#checkout-cart-summary')
+              .getValue('#js-cart-summary')
               .should.not.equal(cartSummary)
             ;
+          });
+          it("the gift display check would have an impact on cart summary display", function () {
+            var cartSummary = browser.getValue('#js-cart-summary');
+            return browser
+              .click('input.js-gift-checkbox')
+              .getValue('#js-cart-summary')
+              .should.not.equal(cartSummary)
+              ;
           });
           it('should be marked as complete after user has clicked continue', function () {
             return browser

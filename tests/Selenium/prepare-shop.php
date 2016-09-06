@@ -48,6 +48,17 @@ if (!CartRule::isFeatureActive()) {
 
 echo "- Vouchers enabled\n";
 
+function enableGiftFeature()
+{
+    Configuration::updateValue('PS_GIFT_WRAPPING', 1);
+    Configuration::updateValue('PS_GIFT_WRAPPING_PRICE', 5);
+}
+
+enableGiftFeature();
+
+
+echo "- Gift feature display enabled\n";
+
 // Setup modules
 
 function disableModule($moduleName)
