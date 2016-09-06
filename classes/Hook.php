@@ -78,6 +78,29 @@ class HookCore extends ObjectModel
      * @deprecated 1.5.0
      */
     protected static $_hook_modules_cache_exec = null;
+    
+    /**
+     * List of all deprecated hooks
+     * @var array 
+     */
+    protected static $deprecated_hooks = array(
+        // Back office
+        'backOfficeFooter' => array('from' => '1.7.0.0'),
+        'displayBackOfficeFooter' => array('from' => '1.7.0.0'),
+        
+        // Shipping step
+        'displayCarrierList' => array('from' => '1.7.0.0'),
+        'extraCarrier' => array('from' => '1.7.0.0'),
+        
+        // Payment step
+        'hookBackBeforePayment' => array('from' => '1.7.0.0'),
+        'hookDisplayBeforePayment' => array('from' => '1.7.0.0'),
+        'hookOverrideTOSDisplay' => array('from' => '1.7.0.0'),
+        
+        // Product page
+        'displayProductTabContent' => array('from' => '1.7.0.0'),
+        'displayProductTab' => array('from' => '1.7.0.0'),
+    );
 
     public function add($autodate = true, $null_values = false)
     {
@@ -587,6 +610,13 @@ class HookCore extends ObjectModel
         // Check if hook exists
         if (!$id_hook = Hook::getIdByName($hook_name)) {
             return false;
+        }
+
+        if (array_key_exists($hook_name, self::$deprecated_hooks)) {
+            $deprecVersion = isset(self::$deprecated_hooks[$hook_name]['from'])?
+                    self::$deprecated_hooks[$hook_name]['from']:
+                    _PS_VERSION_;
+            Tools::displayAsDeprecated('The hook '. $hook_name .' is deprecated in PrestaShop v.'. $deprecVersion);
         }
 
         // Store list of executed hooks on this page
