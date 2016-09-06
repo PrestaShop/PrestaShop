@@ -535,6 +535,7 @@ class AdminStoresControllerCore extends AdminController
                 Configuration::updateValue('PS_SHOP_COUNTRY_ID', $value);
                 Configuration::updateValue('PS_SHOP_COUNTRY', pSQL($country->name));
             }
+            Hook::exec('actionUpdateStoresAfter');
         }
     }
 
