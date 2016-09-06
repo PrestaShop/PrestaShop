@@ -41,6 +41,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     {
         $this->order_slip = $order_slip;
         $this->order = new Order((int)$order_slip->id_order);
+        $this->id_cart = $this->order->id_cart;
 
         $products = OrderSlip::getOrdersSlipProducts($this->order_slip->id, $this->order);
 
