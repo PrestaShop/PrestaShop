@@ -159,10 +159,6 @@ define('PS_ROUND_HALF_ODD', 5);
 /* Backward compatibility */
 define('PS_ROUND_HALF', PS_ROUND_HALF_UP);
 
-/* Registration behavior */
-define('PS_REGISTRATION_PROCESS_STANDARD', 0);
-define('PS_REGISTRATION_PROCESS_AIO', 1);
-
 /* Carrier::getCarriers() filter */
 // these defines are DEPRECATED since 1.4.5 version
 define('PS_CARRIERS_ONLY', 1);
