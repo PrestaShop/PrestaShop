@@ -1702,13 +1702,50 @@
 	      };
 	    }
 	
+	    var productPriceSelector = '.product-price strong';
+	
+	    var updatePrices = function updatePrices(pricesInCart, $cartOverview, $newCart) {
+	      _jquery2['default'].each(pricesInCart, function (index, priceInCart) {
+	        var productLink = (0, _jquery2['default'])((0, _jquery2['default'])(priceInCart).parents('.product-line-grid')[0]).find('a.label').attr('href');
+	        var productLinkSelector = '.label[href="' + productLink + '"]';
+	        var newProductLink = $newCart.find(productLinkSelector);
+	        var $cartItem = (0, _jquery2['default'])($cartOverview.find(productLinkSelector).parents('.cart-item')[0]);
+	
+	        // Remove cart item if response does not contain current product link
+	        if (0 === newProductLink.length) {
+	          $cartItem.remove();
+	
+	          return;
+	        }
+	
+	        var $newCartItem = (0, _jquery2['default'])($newCart.find(productLinkSelector).parents('.cart-item')[0]);
+	        var newPrice = $newCartItem.find(productPriceSelector).text();
+	
+	        $cartItem.find(productPriceSelector).text(newPrice);
+	      });
+	    };
+	
 	    _jquery2['default'].post(getCartViewUrl, requestData).then(function (resp) {
-	      (0, _jquery2['default'])('.cart-overview').replaceWith(resp.cart_detailed);
+	      var $newCart = (0, _jquery2['default'])(resp.cart_detailed);
+	      var $cartOverview = (0, _jquery2['default'])('.cart-overview');
+	      var pricesInCart = $cartOverview.find(productPriceSelector);
+	
+	      if ($newCart.find('.no-items').length > 0) {
+	        $cartOverview.replaceWith(resp.cart_detailed);
+	      } else {
+	        updatePrices(pricesInCart, $cartOverview, $newCart);
+	      }
+	
 	      (0, _jquery2['default'])('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
 	      (0, _jquery2['default'])('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
 	      (0, _jquery2['default'])('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
 	      (0, _jquery2['default'])('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
 	      (0, _jquery2['default'])('.cart-voucher').replaceWith(resp.cart_voucher);
+	
+	      (0, _jquery2['default'])('.js-cart-line-product-quantity').each(function (index, input) {
+	        var $input = (0, _jquery2['default'])(input);
+	        $input.attr('value', $input.val());
+	      });
 	
 	      _prestashop2['default'].emit('updatedCart');
 	    }).fail(function (resp) {
