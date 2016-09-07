@@ -36,7 +36,6 @@
         <table class="table table-striped table-bordered">
           <thead class="thead-default">
             <tr>
-              <th>{l s='Reference' d='Shop.Theme.Catalog'}</th>
               <th>{l s='Product' d='Shop.Theme.Catalog'}</th>
               <th>{l s='Quantity' d='Shop.Theme.Checkout'}</th>
             </tr>
@@ -44,22 +43,49 @@
           <tbody>
           {foreach from=$products item=product}
             <tr>
-              <td>{$product.product_reference}</td>
-              <td>{$product.product_name}
-                {if $product.customizations}
+              <td>
+                <strong>{$product.product_name}</strong>
+                {if $product.product_reference}
                   <br />
-                  {foreach $product.customizations as $customization}
-                    <ul>
-                      {foreach from=$customization.fields item=field}
-                        {if $field.type == 'image'}
-                          <li><img src="{$field.image.small.url}" alt=""></li>
-                        {elseif $field.type == 'text'}
-                          <li>
-                            {$field.label} : {if (int)$field.id_module}{$field.text nofilter}{else}{$field.text}{/if}
-                          </li>
-                        {/if}
-                      {/foreach}
-                    </ul>
+                  {l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}
+                {/if}
+                {if $product.customizations}
+                  {foreach from=$product.customizations item="customization"}
+                    <div class="customization">
+                      <a href="#" data-toggle="modal" data-target="#product-customizations-modal-{$customization.id_customization}">{l s='Product customization' d='Shop.Theme.Catalog'}</a>
+                    </div>
+                    <div class="modal fade customization-modal" id="product-customizations-modal-{$customization.id_customization}" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">{l s='Product customization' d='Shop.Theme.Catalog'}</h4>
+                          </div>
+                          <div class="modal-body">
+                            {foreach from=$customization.fields item="field"}
+                              <div class="product-customization-line row">
+                                <div class="col-sm-3 col-xs-4 label">
+                                  {$field.label}
+                                </div>
+                                <div class="col-sm-9 col-xs-8 value">
+                                  {if $field.type == 'text'}
+                                    {if (int)$field.id_module}
+                                      {$field.text nofilter}
+                                    {else}
+                                      {$field.text}
+                                    {/if}
+                                  {elseif $field.type == 'image'}
+                                    <img src="{$field.image.small.url}">
+                                  {/if}
+                                </div>
+                              </div>
+                            {/foreach}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   {/foreach}
                 {/if}
               </td>

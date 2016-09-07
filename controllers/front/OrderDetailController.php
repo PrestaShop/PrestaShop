@@ -185,4 +185,17 @@ class OrderDetailControllerCore extends FrontController
 
         $this->setTemplate('customer/order-detail');
     }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
+        $breadcrumb['links'][] = array(
+            'title' => $this->trans('Order history', array(), 'Shop.Theme.CustomerAccount'),
+            'url' => $this->context->link->getPageLink('history'),
+        );
+
+        return $breadcrumb;
+    }
 }
