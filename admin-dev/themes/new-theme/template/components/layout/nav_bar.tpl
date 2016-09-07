@@ -19,7 +19,7 @@
 
           <li class="link-levelone {if $level1.current}-active{/if}">
             <a href="{$level1Href}" class="link" >
-              <i class="material-icons">{$level1.icon}</i> {$level1Name}
+              <i class="material-icons">{$level1.icon}</i> <span>{$level1Name}</span>
             </a>
           </li>
 
@@ -41,7 +41,7 @@
 
                 <li class="link-levelone {if $level2.current}-active{/if}">
                   <a href="{$level2Href}" class="link">
-                    <i class="material-icons">{$level2.icon}</i> {$level2Name}
+                    <i class="material-icons">{$level2.icon}</i> <span>{$level2Name}</span>
                   </a>
                     {if $level2.sub_tabs|@count}
                       <ul class="submenu">
