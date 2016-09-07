@@ -112,6 +112,10 @@ $(document).ready(() => {
         action: 'update'
       };
 
+      if (typeof cartAction === 'undefined') {
+        return;
+      }
+
       $.post(cartAction.url, requestData, null, 'json').then(function() {
         // Refresh cart preview
         prestashop.emit('updateCart', {
