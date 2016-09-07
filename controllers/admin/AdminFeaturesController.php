@@ -190,18 +190,20 @@ class AdminFeaturesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_feature'] = array(
-                'href' => self::$currentIndex.'&addfeature&token='.$this->token,
-                'desc' => $this->trans('Add new feature', array(), 'Admin.Catalog.Feature'),
-                'icon' => 'process-icon-new'
-            );
+        if (Feature::isFeatureActive()) {
+            if (empty($this->display)) {
+                $this->page_header_toolbar_btn['new_feature'] = array(
+                    'href' => self::$currentIndex.'&addfeature&token='.$this->token,
+                    'desc' => $this->trans('Add new feature', array(), 'Admin.Catalog.Feature'),
+                    'icon' => 'process-icon-new'
+                );
 
-            $this->page_header_toolbar_btn['new_feature_value'] = array(
-                'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
-                'desc' => $this->trans('Add new feature value', array(), 'Admin.Catalog.Help'),
-                'icon' => 'process-icon-new'
-            );
+                $this->page_header_toolbar_btn['new_feature_value'] = array(
+                    'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
+                    'desc' => $this->trans('Add new feature value', array(), 'Admin.Catalog.Help'),
+                    'icon' => 'process-icon-new'
+                );
+            }
         }
 
         if ($this->display == 'view') {

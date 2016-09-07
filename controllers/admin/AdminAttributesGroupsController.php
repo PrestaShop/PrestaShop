@@ -504,17 +504,19 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_attribute_group'] = array(
-                'href' => self::$currentIndex.'&addattribute_group&token='.$this->token,
-                'desc' => $this->trans('Add new attribute', array(), 'Admin.Catalog.Feature'),
-                'icon' => 'process-icon-new'
-            );
-            $this->page_header_toolbar_btn['new_value'] = array(
-                'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
-                'desc' => $this->trans('Add new value', array(), 'Admin.Catalog.Feature'),
-                'icon' => 'process-icon-new'
-            );
+        if (Combination::isFeatureActive()) {
+            if (empty($this->display)) {
+                $this->page_header_toolbar_btn['new_attribute_group'] = array(
+                    'href' => self::$currentIndex.'&addattribute_group&token='.$this->token,
+                    'desc' => $this->trans('Add new attribute', array(), 'Admin.Catalog.Feature'),
+                    'icon' => 'process-icon-new'
+                );
+                $this->page_header_toolbar_btn['new_value'] = array(
+                    'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
+                    'desc' => $this->trans('Add new value', array(), 'Admin.Catalog.Feature'),
+                    'icon' => 'process-icon-new'
+                );
+            }
         }
 
         if ($this->display == 'view') {
