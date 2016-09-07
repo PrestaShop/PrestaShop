@@ -158,7 +158,13 @@ $(document).ready(() => {
       op: dir
     };
 
-    $.post(updateQuantityInCartUrl, requestData, null, 'json').then(function() {
+    $.post(updateQuantityInCartUrl, requestData, null, 'json').then(function (resp) {
+      if (resp.hasError) {
+        $target.val($target.attr('value'));
+
+        return;
+      }
+
       // Refresh cart preview
       prestashop.emit('updateCart', {
         reason: $target.dataset
