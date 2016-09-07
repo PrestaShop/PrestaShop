@@ -501,6 +501,7 @@ class ProductController extends FrameworkBundleAdminController
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
             'warehouses' => ($stockManager->isAsmGloballyActivated())? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
+            'is_combination_active' => $this->get('prestashop.adapter.legacy.configuration')->combinationIsActive(),
             'showContentHeader' => false,
             'preview_link' => $preview_url,
             'preview_link_deactivate' => $preview_url_deactive,

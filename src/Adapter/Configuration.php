@@ -75,4 +75,22 @@ class Configuration implements ConfigurationInterface
 
         return $this;
     }
+
+    /**
+     * Return if Feature feature is active or not
+     * @return bool
+     */
+    public function featureIsActive()
+    {
+        return \FeatureCore::isFeatureActive();
+    }
+
+    /**
+     * Return if Combination feature is active or not
+     * @return bool
+     */
+    public function combinationIsActive()
+    {
+        return  \CombinationCore::isFeatureActive();
+    }
 }

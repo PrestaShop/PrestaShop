@@ -57,6 +57,7 @@ export default function() {
         } else {
           $jsCombinationsBulkForm.removeClass('inactive');
           $('#loading-attribute').fadeOut(1000).remove();
+          $('[data-toggle="popover"]').popover();
         }
       });
     };
