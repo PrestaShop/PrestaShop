@@ -54,7 +54,8 @@ $(document).ready(() => {
       $('.cart-voucher').replaceWith(resp.cart_voucher);
 
       $('.js-cart-line-product-quantity').each((index, input) => {
-        $(input).attr('value', $(input).val());
+        var $input = $(input);
+        $input.attr('value', $input.val());
       });
 
       prestashop.emit('updatedCart');
