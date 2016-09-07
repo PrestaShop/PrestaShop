@@ -160,3 +160,5 @@ INSERT INTO  `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_sh
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_STORES_DISPLAY_FOOTER', 'PS_STORES_SIMPLIFIED', 'PS_STORES_CENTER_LAT', 'PS_STORES_CENTER_LONG', 'PS_STORES_DISPLAY_SITEMAP');
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('actionValidateCustomerAddressForm', 'Customer address form validation', 'This hook is called when a customer submit its address form', '1');
+
+/* PHP:add_quick_access_tab(); */;
