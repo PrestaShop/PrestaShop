@@ -312,7 +312,6 @@ class TabCore extends ObjectModel
             'AdminParentStats',
             'AdminMarketing',
             'AdminCarrierWizard',
-            'AdminQuickAccesses',
             'AdminTabs',
         );
 
