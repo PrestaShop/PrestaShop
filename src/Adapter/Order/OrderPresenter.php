@@ -154,13 +154,30 @@ class OrderPresenter implements PresenterInterface
         }
 
         $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
-        $subtotals['tax'] = null;
+        $subtotals['tax'] = array(
+            'type' => 'tax',
+            'label' => null,
+            'amount' => null,
+            'value' => '',
+        );
         if ((float) $tax && Configuration::get('PS_TAX_DISPLAY')) {
             $subtotals['tax'] = array(
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
                 'amount' => $tax,
                 'value' => $this->priceFormatter->format($tax),
+            );
+        }
+
+        if ($order->gift) {
+            $giftWrapping = ($this->includeTaxes())
+                ? $order->total_wrapping_tax_incl
+                : $order->total_wrapping_tax_incl;
+            $subtotals['gift_wrapping'] = array(
+                'type' => 'gift_wrapping',
+                'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
+                'amount' => $giftWrapping,
+                'value' => $this->priceFormatter->format($giftWrapping),
             );
         }
 
