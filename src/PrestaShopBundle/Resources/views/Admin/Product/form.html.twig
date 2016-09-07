@@ -24,12 +24,14 @@
             <span class="help-box pull-xs-right" data-toggle="popover"
               data-content="{{ "Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?"|trans({}, 'Admin.Catalog.Help') }}"></span>
           </div>
-          <div class="col-md-1 form_switch_language {{ languages|length == 1 ? 'hide' : '' }}">
-            <select id="form_switch_language" class="form-control" data-toggle="select2">
-              {% for language in languages %}
-                <option value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
-              {% endfor %}
-            </select>
+          <div class="col-md-1 form_switch_language">
+            <div class="{{ languages|length == 1 ? 'hide' : '' }}">
+              <select id="form_switch_language" class="form-control" data-toggle="select2">
+                {% for language in languages %}
+                  <option value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
+                {% endfor %}
+              </select>
+            </div>
           </div>
           <div class="toolbar col-lg-2 text-md-right">
             <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
