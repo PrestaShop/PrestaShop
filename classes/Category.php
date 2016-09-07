@@ -456,7 +456,7 @@ class CategoryCore extends ObjectModel
         $id = Context::getContext()->shop->id;
         $idShop = $id ? $id: Configuration::get('PS_SHOP_DEFAULT');
         $sql = new DbQuery();
-        $sql->select('c`id_category`, c.`id_parent`');
+        $sql->select('c.`id_category`, c.`id_parent`');
         $sql->from('category', 'c');
         $sql->leftJoin('category_shop', 'cs', 'c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int) $idShop);
         $sql->orderBy('c.`id_parent`, cs.`position` ASC');
