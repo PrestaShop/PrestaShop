@@ -215,31 +215,33 @@
                       <div class="row">
                         <div class="col-md-12">
 
-                          <div class="form-group" id="show_variations_selector">
-                            <h2>
-                              {{ "Combinations"|trans({}, 'Admin.Catalog.Feature') }}
-                              <span class="help-box" data-toggle="popover"
-                                data-content="{{ "Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?"|trans({}, 'Admin.Catalog.Help') }}" ></span>
-                            </h2>
-                            <div class="radio">
-                              <label>
-                                <input type="radio" name="show_variations" value="0" {% if not has_combinations %}checked="checked"{% endif %}>
-                                {{ "Simple product"|trans({}, 'Admin.Catalog.Feature') }}
-                              </label>
-                            </div>
-                            <div class="radio">
-                              <label>
-                                <input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>
-                                {{ "Product with combinations"|trans({}, 'Admin.Catalog.Feature') }}
-                              </label>
-                              <div id="product_type_combinations_shortcut">
-                                <span class="small font-secondary">
-                                  {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
-                                  {{ "Advanced settings in [1][2]Combinations[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive p-x-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
-                                </span>
+                          {% if is_combination_active %}
+                            <div class="form-group" id="show_variations_selector">
+                              <h2>
+                                {{ "Combinations"|trans({}, 'Admin.Catalog.Feature') }}
+                                <span class="help-box" data-toggle="popover"
+                                  data-content="{{ "Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                              </h2>
+                              <div class="radio">
+                                <label>
+                                  <input type="radio" name="show_variations" value="0" {% if not has_combinations %}checked="checked"{% endif %}>
+                                  {{ "Simple product"|trans({}, 'Admin.Catalog.Feature') }}
+                                </label>
+                              </div>
+                              <div class="radio">
+                                <label>
+                                  <input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>
+                                  {{ "Product with combinations"|trans({}, 'Admin.Catalog.Feature') }}
+                                </label>
+                                <div id="product_type_combinations_shortcut">
+                                  <span class="small font-secondary">
+                                    {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
+                                    {{ "Advanced settings in [1][2]Combinations[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive p-x-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          {% endif %}
 
                           <div class="form-group">
                             <h2>
