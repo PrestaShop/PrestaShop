@@ -354,7 +354,7 @@ class ProductPresenter
             if ($product['quantity'] > 0) {
                 $presentedProduct['availability_message'] = $product['available_now'];
                 $presentedProduct['availability'] = 'available';
-                $presentedProduct['availability_date'] = null;
+                $presentedProduct['availability_date'] = $product['available_date'];
             } elseif ($product['allow_oosp']) {
                 if ($product['available_later']) {
                     $presentedProduct['availability_message'] = $product['available_later'];
@@ -388,7 +388,7 @@ class ProductPresenter
             }
         } else {
             $presentedProduct['availability_message'] = null;
-            $presentedProduct['availability_date'] = null;
+            $presentedProduct['availability_date'] = $product['available_date'];
             $presentedProduct['availability'] = null;
         }
 
