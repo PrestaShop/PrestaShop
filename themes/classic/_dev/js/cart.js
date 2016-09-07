@@ -31,10 +31,6 @@ $(document).ready(() => {
 
   createSpin();
 
-  prestashop.on('updatedCart', () => {
-    createSpin();
-  });
-
   let $body = $('body');
 
   function isTouchSpin($target) {
