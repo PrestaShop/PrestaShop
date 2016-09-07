@@ -258,6 +258,7 @@ services:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractor
         arguments:
           - "@prestashop.translation.extractor.smarty"
+          - "@prestashop.translation.theme_provider"
 
 # Addons API Client
     prestashop.addons.client_api:

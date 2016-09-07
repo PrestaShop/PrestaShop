@@ -58,18 +58,22 @@ class DatabaseTranslationLoader implements LoaderInterface
             ->getRepository('PrestaShopBundle:Translation')
         ;
 
-        $translations = $translationRepository
+        $queryBuilder = $translationRepository
             ->createQueryBuilder('t')
             ->where('t.lang =:lang')
-            ->andWhere('t.domain LIKE :domain')
-            ->setParameters(array(
-                'lang' => $lang,
-                'domain' => $domain,
-            ))
-            ->getQuery()
-            ->getResult()
+            ->setParameter('lang', $lang)
         ;
 
+        if ($domain !== '*') {
+            $queryBuilder->andWhere('t.domain LIKE :domain')
+                ->setParameter('domain', $domain)
+            ;
+        }
+
+        $translations = $queryBuilder->getQuery()
+            ->getResult()
+        ;
+        
         $catalogue = new MessageCatalogue($locale);
 
         foreach ($translations as $translation) {

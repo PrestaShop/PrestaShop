@@ -145,6 +145,7 @@ abstract class AbstractProvider implements ProviderInterface
 
         foreach ($this->getTranslationDomains() as $translationDomain) {
             $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain);
+
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);
             }
