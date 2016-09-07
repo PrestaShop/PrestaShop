@@ -3,7 +3,7 @@
 <head>
   {$header}
 </head>
-<body class="{$smarty.get.controller|escape|strtolower}">
+<body class="{$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
 
 {* TODO: REPLACE THIS CLASSS SOMEWHERE
 {if $collapse_menu} page-sidebar-closed{/if}

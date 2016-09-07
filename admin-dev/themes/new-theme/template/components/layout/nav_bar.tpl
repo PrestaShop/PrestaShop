@@ -75,7 +75,7 @@
   </ul>
 
   <span class="menu-collapse">
-    <i class="icon-align-justify icon-rotate-90"></i>
+    <i class="material-icons">&#xE8EE;</i>
   </span>
 
   {hook h='displayAdminNavBarBeforeEnd'}
