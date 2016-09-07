@@ -292,7 +292,7 @@ class AdminCategoriesControllerCore extends AdminController
         }
         if (Tools::getValue('id_category') && !Tools::isSubmit('updatecategory')) {
             $this->toolbar_btn['edit'] = array(
-                'href' => self::$currentIndex.'&update'.$this->table.'&id_category='.(int)Tools::getValue('id_category').'&token='.$this->token,
+                'href' => self::$currentIndex.'&update'.$this->table.'&cid_category='.(int)Tools::getValue('id_category').'&token='.$this->token,
                 'desc' => $this->trans('Edit', array(), 'Admin.Actions')
             );
         }
