@@ -405,11 +405,12 @@ class AdminFeaturesControllerCore extends AdminController
      */
     public function initContent()
     {
+        // toolbar (save, cancel, new, ..) - show toolbar even if features are not active
+        $this->initTabModuleList();
+        $this->initToolbar();
+        $this->initPageHeaderToolbar();
+
         if (Feature::isFeatureActive()) {
-            // toolbar (save, cancel, new, ..)
-            $this->initTabModuleList();
-            $this->initToolbar();
-            $this->initPageHeaderToolbar();
             if ($this->display == 'edit' || $this->display == 'add') {
                 if (!$this->loadObject(true)) {
                     return;
@@ -425,7 +426,6 @@ class AdminFeaturesControllerCore extends AdminController
                 if (!$this->object = new FeatureValue((int)Tools::getValue('id_feature_value'))) {
                     return;
                 }
-
                 $this->content .= $this->initFormFeatureValue();
             } elseif (!$this->ajax) {
                 // If a feature value was saved, we need to reset the values to display the list
