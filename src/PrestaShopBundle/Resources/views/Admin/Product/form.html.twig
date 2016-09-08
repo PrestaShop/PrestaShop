@@ -707,10 +707,10 @@
                       <div class="col-md-7 form-group">
                           {{ form_errors(form.step6.display_options) }}
                           <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-4 js-available-for-order">
                               {{ form_widget(form.step6.display_options.available_for_order) }}
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3 js-show-price">
                               {{ form_widget(form.step6.display_options.show_price) }}
                             </div>
                             <div class="col-md-5">

@@ -94,6 +94,8 @@ var displayFieldsManager = (function() {
         $(this).select();
       });
 
+      this.initVisibilityRule();
+
       /** Tax rule dropdown shortcut */
       $('a#tax_rule_shortcut_opener').on('click', function () {
         // lazy instantiated
@@ -113,6 +115,28 @@ var displayFieldsManager = (function() {
 
         return false;
       });
+    },
+    /**
+     * When a product is available for order, its price should be visible,
+     * whereas products unavailable for order can have their prices visible or hidden.
+     */
+    'initVisibilityRule': function () {
+      var showPriceSelector = '.js-show-price';
+      var availableForOrderSelector = '.js-available-for-order';
+
+      var applyVisibilityRule = () => {
+        var $availableForOrder = $(availableForOrderSelector + ' input');
+        var $showPrice = $(showPriceSelector + ' input');
+        var $showPriceColumn = $(showPriceSelector);
+        if ($availableForOrder.prop('checked')) {
+          $showPrice.prop('checked', true);
+          $showPriceColumn.addClass('hide');
+        } else {
+          $showPriceColumn.removeClass('hide');
+        }
+      };
+      $(availableForOrderSelector + ' .checkbox').on('click', applyVisibilityRule);
+      applyVisibilityRule();
     },
     'refresh': function () {
       this.checkAccessVariations();
