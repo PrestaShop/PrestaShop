@@ -178,3 +178,11 @@
     }
   }
 }
+
+@media (max-height: 920px) {
+  .link-levelone {
+    &.-active:not(.-hover) .submenu {
+      display: none;
+    }
+  }
+}
