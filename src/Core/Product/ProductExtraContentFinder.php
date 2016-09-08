@@ -25,51 +25,31 @@
  */
 namespace PrestaShop\PrestaShop\Core\Product;
 
+use PrestaShopBundle\Service\Hook\Finder;
+
 /**
  * This class gets the extra content to display on the product page
- * from the modules hooked on productExtraContent
+ * from the modules hooked on displayProductExtraContent
  */
-class ProductExtraContentFinder {
+class ProductExtraContentFinder extends Finder {
+    
+    protected $hookName = 'displayProductExtraContent';
+    protected $expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Product\ProductExtraContent');
+    
     /**
      * Execute hook to get all addionnal product content, and check if valid
      * (not empty and only instances of class ProductExtraContent).
      * 
-     * @param \Product $product
      * @return array
      * @throws \Exception
      */
-    public function getProductExtraContent(\Product $product)
+    public function find()
     {
-        $extraContent = \Hook::exec('displayProductExtraContent', array('product' => $product), null, true);
-        if (!is_array($extraContent)) {
-            $extraContent = array();
-        }
-        foreach ($extraContent as $moduleName => $moduleExtraContents) {
-            foreach ($moduleExtraContents as $content) {
-                if (!$content instanceof ProductExtraContent) {
-                    throw new \Exception('The module '.$moduleName.' did not return expected ProductExtraContent object.');
-                }
-            }
-        }
-        return $extraContent;
-    }
-    
-    /**
-     * Present all product extra content for templates
-     * @param \Product $product
-     * @return array
-     */
-    public function getPresentedProductExtraContent(\Product $product)
-    {
-        $extraContent = $this->getProductExtraContent($product);
-        $presentedExtraContent = array();
-        
-        foreach ($extraContent as $moduleExtraContents) {
-            foreach ($moduleExtraContents as $content) {
-                $presentedExtraContent[] = $content->toArray();
-            }
+        // Check first that we have a product to send as params
+        if (!array_key_exists('product', $this->params) || !$this->params['product'] instanceof \Product) {
+            throw new \Exception('Required product param not found.');
         }
         
-        return $presentedExtraContent;
+        return parent::find();
     }
 }

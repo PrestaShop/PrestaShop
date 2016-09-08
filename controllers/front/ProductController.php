@@ -292,10 +292,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
 
             $product_for_template = $this->getTemplateVarProduct();
-            
-            // Hook displayProductExtraContent
-            $extraContentFinder = new ProductExtraContentFinder();
-            $productExtraContent = $extraContentFinder->getPresentedProductExtraContent($this->product);
 
             $this->context->smarty->assign(array(
                 'priceDisplay' => $priceDisplay,
@@ -306,7 +302,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'product' => $product_for_template,
                 'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
                 'product_manufacturer' => new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
-                'productExtraContent' => $productExtraContent,
             ));
 
             // Assign attribute groups to the template
@@ -812,6 +807,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function getTemplateVarProduct()
     {
         $productSettings = $this->getProductPresentationSettings();
+        // Hook displayProductExtraContent
+        $extraContentFinder = new ProductExtraContentFinder();
 
         $product = $this->objectPresenter->present($this->product);
         $product['id_product'] = (int) $this->product->id;
@@ -820,6 +817,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product_attribute'] = (int) Tools::getValue('id_product_attribute');
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
+        $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 

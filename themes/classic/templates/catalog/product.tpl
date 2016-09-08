@@ -131,7 +131,7 @@
                   <a class="nav-link" data-toggle="tab" href="#attachments">{l s='Attachments' d='Shop.Theme.Catalog'}</a>
                 </li>
                 {/if}
-                {foreach from=$productExtraContent item=extra key=extraKey}
+                {foreach from=$product.extraContent item=extra key=extraKey}
                 <li class="nav-item">
                   <a class="nav-link" data-toggle="tab" href="#extra-{$extraKey}">{$extra.title}</a>
                 </li>
@@ -166,7 +166,7 @@
                    </div>
                  {/if}
                {/block}
-               {foreach from=$productExtraContent item=extra key=extraKey}
+               {foreach from=$product.extraContent item=extra key=extraKey}
                <div class="tab-pane fade in {$extra.attr}" id="extra-{$extraKey}">
                    {$extra.content nofilter}
                </div>
