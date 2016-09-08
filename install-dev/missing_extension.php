@@ -78,7 +78,10 @@
       max-width: 580px;
       width: 580px;
       margin: 0 auto;
-      text-align: center;
+    }
+
+    .container p {
+        text-align: center;
     }
 
     input::-moz-focus-inner {
@@ -90,8 +93,22 @@
 <body>
 <div class="container">
   <h2>We can't start installation :(</h2>
-  <p><p>PrestaShop installation requires at least the <b>SimpleXML extension</b> to be enabled. <br><br>
-    Contact your web host provider to enable it.</p>
+
+  <ol>
+    <?php if (!extension_loaded('SimpleXML')): ?>
+    <li>
+        PrestaShop installation requires at least the <b>SimpleXML extension</b> to be enabled.
+    </li>
+    <?php endif; ?>
+    <?php if (PHP_VERSION_ID < 50400): ?>
+      <li>
+          PrestaShop requires at least PHP 5.4 or newer versions.
+          <i>You can install PrestaShop 1.6 if you can't update your version of PHP.</i>
+      </li>
+    <?php endif; ?>
+  </ol>
+
+  <p>You can contact your web host provider to fix theses requirements.</p>
 </div>
 </body>
 </html>

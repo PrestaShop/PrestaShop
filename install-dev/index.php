@@ -25,8 +25,8 @@
  */
 
 
-if (!extension_loaded('SimpleXML')) {
-    header('Location: missing_extension.html');
+if (!extension_loaded('SimpleXML') || PHP_VERSION_ID < 50400) {
+    require_once dirname(__FILE__).'/missing_extension.php';
     exit();
 }
 
