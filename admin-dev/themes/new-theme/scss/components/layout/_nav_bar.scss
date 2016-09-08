@@ -107,6 +107,7 @@
   cursor: pointer;
   text-align: center;
   color: $gray-dark-text;
+  margin-top: $size-navbar-link-height;
 
   &:hover {
     color: $gray-dark-text-hover;
