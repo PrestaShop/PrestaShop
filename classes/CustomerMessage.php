@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,23 +19,45 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class CustomerMessageCore
+ */
 class CustomerMessageCore extends ObjectModel
 {
     public $id;
+    /** @var int CustomerThread ID */
     public $id_customer_thread;
+
+    /** @var   */
     public $id_employee;
+
+    /** @var string $message */
     public $message;
+
+    /** @var string $file_name */
     public $file_name;
+
+    /** @var string $ip_address */
     public $ip_address;
+
+    /** @var string $user_agent */
     public $user_agent;
+
+    /** @var int $private */
     public $private;
+
+    /** @var string $date_add */
     public $date_add;
+
+    /** @var string $date_upd */
     public $date_upd;
+
+    /** @var bool $read */
     public $read;
 
     /**
@@ -45,31 +67,40 @@ class CustomerMessageCore extends ObjectModel
         'table' => 'customer_message',
         'primary' => 'id_customer_message',
         'fields' => array(
-            'id_employee' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_customer_thread' => array('type' => self::TYPE_INT),
-            'ip_address' =>        array('type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15),
-            'message' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 16777216),
-            'file_name' =>            array('type' => self::TYPE_STRING),
-            'user_agent' =>        array('type' => self::TYPE_STRING),
-            'private' =>            array('type' => self::TYPE_INT),
-            'date_add' =>            array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' =>            array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'read' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
+            'ip_address' => array('type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15),
+            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 16777216),
+            'file_name' => array('type' => self::TYPE_STRING),
+            'user_agent' => array('type' => self::TYPE_STRING),
+            'private' => array('type' => self::TYPE_INT),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'read' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
         ),
     );
 
+    /** @var array $webserviceParameters */
     protected $webserviceParameters = array(
         'fields' => array(
             'id_employee' => array(
-                'xlink_resource' => 'employees'
+                'xlink_resource' => 'employees',
             ),
             'id_customer_thread' => array(
-                'xlink_resource' => 'customer_threads'
+                'xlink_resource' => 'customer_threads',
             ),
         ),
     );
 
-    public static function getMessagesByOrderId($id_order, $private = true)
+    /**
+     * Get CustomerMessages by Order ID
+     *
+     * @param int  $idOrder Order ID
+     * @param bool $private Private
+     *
+     * @return array|false|mysqli_result|null|PDOStatement|resource
+     */
+    public static function getMessagesByOrderId($idOrder, $private = true)
     {
         return Db::getInstance()->executeS('
 			SELECT cm.*,
@@ -85,13 +116,20 @@ class CustomerMessageCore extends ObjectModel
 				ON ct.`id_customer` = c.`id_customer`
 			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e
 				ON e.`id_employee` = cm.`id_employee`
-			WHERE ct.id_order = '.(int)$id_order.'
+			WHERE ct.id_order = '.(int) $idOrder.'
 			'.(!$private ? 'AND cm.`private` = 0' : '').'
 			GROUP BY cm.id_customer_message
 			ORDER BY cm.date_add DESC
 		');
     }
 
+    /**
+     * Get total CustomerMessages
+     *
+     * @param string|null $where Additional SQL query
+     *
+     * @return int Amount of CustomerMessages found
+     */
     public static function getTotalCustomerMessages($where = null)
     {
         if (is_null($where)) {
@@ -111,11 +149,18 @@ class CustomerMessageCore extends ObjectModel
         }
     }
 
+    /**
+     * Deletes current CustomerMessage from the database
+     *
+     * @return bool `true` if delete was successful
+     * @throws PrestaShopException
+     */
     public function delete()
     {
         if (!empty($this->file_name)) {
             @unlink(_PS_UPLOAD_DIR_.$this->file_name);
         }
+
         return parent::delete();
     }
 }
