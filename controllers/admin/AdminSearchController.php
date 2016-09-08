@@ -234,14 +234,6 @@ class AdminSearchControllerCore extends AdminController
                 $key_match[strtolower($row['class_name'])] = $row['class_name'];
             }
         }
-        foreach (AdminTab::$tabParenting as $key => $value) {
-            $value = stripslashes($value);
-            if (!isset($tabs[strtolower($key)]) || !isset($tabs[strtolower($value)])) {
-                continue;
-            }
-            $tabs[strtolower($key)] = $tabs[strtolower($value)];
-            $key_match[strtolower($key)] = $key;
-        }
 
         $this->_list['features'] = array();
         foreach ($_LANGADM as $key => $value) {
