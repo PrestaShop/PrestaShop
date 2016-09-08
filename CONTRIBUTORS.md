@@ -85,6 +85,7 @@ GitHub contributors:
 - David Gasperoni
 - David Sivocha
 - David-Julian BUCH
+- Davide
 - Davy Rolink
 - Denver Prophit Jr.
 - Desbouche Christophe
@@ -170,7 +171,7 @@ GitHub contributors:
 - janisVincent
 - Jaume
 - Javsmile
-- JEAN
+- jean
 - jeanbe
 - jeckyl
 - Jeroen Dewaele
@@ -208,6 +209,7 @@ GitHub contributors:
 - Krystian Podemski
 - Kevin Dunglas
 - Ladel
+- Lars Hallqvist
 - ldecoker
 - Lesley Paone
 - LOIC ROSSET ltd
@@ -235,6 +237,7 @@ GitHub contributors:
 - Mats Rynge
 - Matteo
 - MatthieuB
+- matthieume
 - MaX3315
 - Maxence
 - Maxime
@@ -290,6 +293,7 @@ GitHub contributors:
 - Petyuska
 - PhpMadman
 - Pierre
+- Pierre-Olivier Vares
 - Piotr Kaczor
 - Piotr Moćko
 - Presta Module
@@ -366,6 +370,7 @@ GitHub contributors:
 - Sebastien Monterisi
 - Tanguy JACQUET
 - tchauviere
+- therampagerado
 - Thibaud Chauviere
 - thoma202
 - Thomas
