@@ -13,13 +13,50 @@ $(document).ready(() => {
       };
     }
 
+    var productPriceSelector = '.product-price strong';
+
+    var updatePrices = function (pricesInCart, $cartOverview, $newCart) {
+      $.each(pricesInCart, function (index, priceInCart) {
+        var productLink = $($(priceInCart).parents('.product-line-grid')[0]).find('a.label').attr('href');
+        var productLinkSelector = '.label[href="' + productLink + '"]';
+        var newProductLink = $newCart.find(productLinkSelector);
+        var $cartItem = $($cartOverview.find(productLinkSelector).parents('.cart-item')[0]);
+
+        // Remove cart item if response does not contain current product link
+        if (0 === newProductLink.length) {
+          $cartItem.remove();
+
+          return;
+        }
+
+        var $newCartItem = $($newCart.find(productLinkSelector).parents('.cart-item')[0]);
+        var newPrice = $newCartItem.find(productPriceSelector).text();
+
+        $cartItem.find(productPriceSelector).text(newPrice);
+      });
+    };
+
     $.post(getCartViewUrl, requestData).then((resp) => {
-      $('.cart-overview').replaceWith(resp.cart_detailed);
+      var $newCart = $(resp.cart_detailed);
+      var $cartOverview = $('.cart-overview');
+      var pricesInCart = $cartOverview.find(productPriceSelector);
+
+      if ($newCart.find('.no-items').length > 0) {
+        $cartOverview.replaceWith(resp.cart_detailed);
+      } else {
+        updatePrices(pricesInCart, $cartOverview, $newCart);
+      }
+
       $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
       $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
       $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
       $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
       $('.cart-voucher').replaceWith(resp.cart_voucher);
+
+      $('.js-cart-line-product-quantity').each((index, input) => {
+        var $input = $(input);
+        $input.attr('value', $input.val());
+      });
 
       prestashop.emit('updatedCart');
     }).fail((resp) => {

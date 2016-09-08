@@ -187,6 +187,11 @@ class CartPresenter implements PresenterInterface
                                     $product['id_product_attribute'],
                                     $presentedCustomization['id_customization']
                                 );
+                                $product['update_quantity_url'] = $this->link->getUpdateQuantityCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
 
                                 $presentedCustomization['up_quantity_url'] = $this->link->getUpQuantityCartURL(
                                     $product['id_product'],
@@ -205,6 +210,8 @@ class CartPresenter implements PresenterInterface
                                     $product['id_product_attribute'],
                                     $presentedCustomization['id_customization']
                                 );
+
+                                $presentedCustomization['update_quantity_url'] = $product['update_quantity_url'];
 
                                 $product['customizations'][] = $presentedCustomization;
                             }
