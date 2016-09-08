@@ -357,5 +357,8 @@
     <hook id="validateCustomerFormFields">
       <name>validateCustomerFormFields</name><title>Customer registration form validation</title><description>This hook is called to a module when it has sent addtionnal fields with additionalCustomerFormFields</description>
     </hook>
+    <hook id="displayProductExtraContent">
+      <name>displayProductExtraContent</name><title>Display extra content on the product page</title><description>This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.</description>
+    </hook>
   </entities>
 </entity_hook>

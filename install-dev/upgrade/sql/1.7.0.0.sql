@@ -162,6 +162,13 @@ DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_STORES_DISPLAY_FOOTER', 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('actionValidateCustomerAddressForm', 'Customer address form validation', 'This hook is called when a customer submit its address form', '1');
 
 /* PHP:add_quick_access_tab(); */;
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+=======
+<<<<<<< HEAD
+
+>>>>>>> CO: Introduce new hook displayProductExtraContent
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayAfterCarrier', 'After carriers list', 'This hook is displayed after the carrier list in Front Office', '1');
 
 DELETE FROM `PREFIX_hook` WHERE `name` IN ('displayProductTab', 'displayProductTabContent', 'displayBeforePayment');
@@ -176,3 +183,4 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_HTML_THEME_COMPRESSION';
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('validateCustomerFormFields', 'Customer registration form validation', 'This hook is called to a module when it has sent addtionnal fields with additionalCustomerFormFields', '1');
 
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayProductExtraContent', 'Display extra content on the product page', 'This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.', '1');

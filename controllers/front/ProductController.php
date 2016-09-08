@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
 use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
@@ -291,6 +292,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
 
             $product_for_template = $this->getTemplateVarProduct();
+            
+            // Hook displayProductExtraContent
+            $extraContentFinder = new ProductExtraContentFinder();
+            $productExtraContent = $extraContentFinder->getPresentedProductExtraContent($this->product);
 
             $this->context->smarty->assign(array(
                 'priceDisplay' => $priceDisplay,
@@ -301,6 +306,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'product' => $product_for_template,
                 'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
                 'product_manufacturer' => new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
+                'productExtraContent' => $productExtraContent,
             ));
 
             // Assign attribute groups to the template
