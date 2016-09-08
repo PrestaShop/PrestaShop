@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class ConnectionsSourceCore
+ */
 class ConnectionsSourceCore extends ObjectModel
 {
     public $id_connections;
@@ -48,11 +51,22 @@ class ConnectionsSourceCore extends ObjectModel
         ),
     );
 
-    public function add($autodate = true, $nullValues = false)
+    /**
+     * Adds current ConnectionsSource as a new Object to the database
+     *
+     * @param bool $autoDate    Automatically set `date_upd` and `date_add` columns
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the ConnectionsSource has been successfully added
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function add($autoDate = true, $nullValues = false)
     {
-        if ($result = parent::add($autodate, $nullValues)) {
+        if ($result = parent::add($autoDate, $nullValues)) {
             Referrer::cacheNewSource($this->id);
         }
+
         return $result;
     }
 
@@ -80,13 +94,13 @@ class ConnectionsSourceCore extends ObjectModel
         if (isset($_SERVER['HTTP_REFERER'])) {
             // If the referrer is internal (i.e. from your own website), then we drop the connection
             $parsed = parse_url($_SERVER['HTTP_REFERER']);
-            $parsed_host = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
+            $parsedHost = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
 
-            if (!isset($parsed['host']) || (!isset($parsed['path']) || !isset($parsed_host['path']))) {
+            if (!isset($parsed['host']) || (!isset($parsed['path']) || !isset($parsedHost['path']))) {
                 return false;
             }
 
-            if ((preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__))) {
+            if ((preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsedHost['path'], strlen(__PS_BASE_URI__))) {
                 return false;
             }
 
@@ -94,7 +108,7 @@ class ConnectionsSourceCore extends ObjectModel
             $source->keywords = substr(trim(SearchEngine::getKeywords($_SERVER['HTTP_REFERER'])), 0, ConnectionsSource::$uri_max_size);
         }
 
-        $source->id_connections = (int)$cookie->id_connections;
+        $source->id_connections = (int) $cookie->id_connections;
         $source->request_uri = Tools::getHttpHost(false, false);
 
         if (isset($_SERVER['REQUEST_URI'])) {
@@ -107,10 +121,18 @@ class ConnectionsSourceCore extends ObjectModel
             $source->request_uri = '';
         }
         $source->request_uri = substr($source->request_uri, 0, ConnectionsSource::$uri_max_size);
+
         return $source->add();
     }
 
-    public static function getOrderSources($id_order)
+    /**
+     * Get Order sources
+     *
+     * @param int $idOrder Order ID
+     *
+     * @return array|false|mysqli_result|null|PDOStatement|resource
+     */
+    public static function getOrderSources($idOrder)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cos.http_referer, cos.request_uri, cos.keywords, cos.date_add
@@ -118,7 +140,7 @@ class ConnectionsSourceCore extends ObjectModel
 		INNER JOIN '._DB_PREFIX_.'guest g ON g.id_customer = o.id_customer
 		INNER JOIN '._DB_PREFIX_.'connections co  ON co.id_guest = g.id_guest
 		INNER JOIN '._DB_PREFIX_.'connections_source cos ON cos.id_connections = co.id_connections
-		WHERE id_order = '.(int)($id_order).'
+		WHERE id_order = '.(int) ($idOrder).'
 		ORDER BY cos.date_add DESC');
     }
 }
