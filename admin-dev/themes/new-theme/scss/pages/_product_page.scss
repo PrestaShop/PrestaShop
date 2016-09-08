@@ -545,6 +545,9 @@
 
   .btn-action {
     text-transform: none;
+    &.focus, &:focus {
+      color: $brand-primary;
+    }
   }
 
   .seo-table thead th {
