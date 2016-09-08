@@ -16,13 +16,13 @@
         </p>
       </div>
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-8 col-xs-5">
           <fieldset class="form-group">
             {{ form_errors(form.attributes) }}
             {{ form_widget(form.attributes) }}
           </fieldset>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 col-xs-3">
           <button class="btn btn-primary-outline" id="create-combinations">
             Generate
           </button>
@@ -159,7 +159,7 @@
       {{ form_errors(form.available_later) }}
       {{ form_widget(form.available_later) }}
     </div>
-    
+
     {% if not has_combinations %}
     <div class="col-md-4 ">
       <label class="form-control-label">{{ form.available_date.vars.label }}</label>
