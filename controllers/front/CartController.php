@@ -99,7 +99,7 @@ class CartControllerCore extends FrontController
                 Tools::redirect('index.php?controller=order&'.(isset($this->id_product) ? 'ipa='.$this->id_product : ''));
             }
         } elseif (!$this->isTokenValid()) {
-            if ($this->ajax) {
+            if (Tools::getValue('ajax')) {
                 $this->ajaxDie(Tools::jsonEncode(array(
                     'hasError' => true,
                     'errors' => array(Tools::displayError('Impossible to add the product to the cart. Please refresh page.')),
