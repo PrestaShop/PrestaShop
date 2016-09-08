@@ -69,6 +69,12 @@ $(document).ready(function() {
     locale: iso_user,
     format: 'YYYY-MM-DD'
   });
+
+  /** tooltips should be hidden when we move to another tab */
+  $('#form-nav').on('click','.nav-item', function clearTooltipsAndPopovers() {
+    $('[data-toggle="tooltip"]').tooltip('hide');
+    $('[data-toggle="popover"]').popover('hide');
+  });
 });
 
 /**

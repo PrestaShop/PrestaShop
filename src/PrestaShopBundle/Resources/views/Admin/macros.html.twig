@@ -5,3 +5,9 @@
 {% macro check(variable) %}
   {{ variable is defined and variable|length > 0 ? variable : false }}
 {% endmacro %}
+
+{% macro tooltip(text, icon, position) %}
+  <span data-toggle="tooltip" class="label-tooltip" data-original-title="{{ text }}" data-html="true" data-placement="{{ position|default('top') }}">
+    <i class="material-icons">{{ icon }}</i>
+  </span>
+{% endmacro %}

@@ -51,25 +51,16 @@
       <div class="row">
         <div class="col-md-12">
           <div class="pull-right">
-            <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
-              <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ "Export"|trans({}, 'Admin.Actions') }}" data-html="true" data-placement="top">
-                <i class="material-icons">cloud_upload</i>
-              </span>
+            {{ ps.tooltip(("Export"|trans({}, 'Admin.Actions')), 'cloud_upload') }}
             </a>
             <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
-              <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ "Import"|trans({}, 'Admin.Actions') }}" data-html="true" data-placement="top">
-                <i class="material-icons">cloud_download</i>
-              </span>
+              {{ ps.tooltip(("Import"|trans({}, 'Admin.Actions')), 'cloud_download') }}
             </a>
             <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
-              <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ "Show SQL query"|trans({}, 'Admin.Actions') }}" data-html="true" data-placement="top">
-                <i class="material-icons">code</i>
-              </span>
+              {{ ps.tooltip(("Show SQL query"|trans({}, 'Admin.Actions')), 'code') }}
             </a>
             <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
-              <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ "Export to SQL Manager"|trans({}, 'Admin.Actions') }}" data-html="true" data-placement="top">
-                <i class="material-icons">storage</i>
-              </span>
+              {{ ps.tooltip(("Export to SQL Manager"|trans({}, 'Admin.Actions')), 'storage') }}
             </a>
           </div>
         </div>
