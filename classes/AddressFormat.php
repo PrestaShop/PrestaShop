@@ -459,11 +459,16 @@ class AddressFormatCore extends ObjectModel
             unset($object);
             unset($reflect);
         }
+
         return $propertyList;
     }
 
     /**
      * Return a list of liable class of the className
+     *
+     * @param string $className
+     *
+     * @return array
      */
     public static function getLiableClass($className)
     {
@@ -488,35 +493,38 @@ class AddressFormatCore extends ObjectModel
             unset($object);
             unset($reflect);
         }
+
         return $objectList;
     }
 
     /**
      * Returns address format fields in array by country
      *
-     * @param int $id_country If null using PS_COUNTRY_DEFAULT
-     * @param bool $split_all
+     * @param int  $idCountry If null using PS_COUNTRY_DEFAULT
+     * @param bool $splitAll
      * @param bool $cleaned
+     *
      * @return array String field address format
      */
-    public static function getOrderedAddressFields($id_country = 0, $split_all = false, $cleaned = false)
+    public static function getOrderedAddressFields($idCountry = 0, $splitAll = false, $cleaned = false)
     {
         $out = array();
-        $field_set = explode("\n", AddressFormat::getAddressCountryFormat($id_country));
-        foreach ($field_set as $field_item) {
-            if ($split_all) {
+        $fieldSet = explode("\n", AddressFormat::getAddressCountryFormat($idCountry));
+        foreach ($fieldSet as $fieldItem) {
+            if ($splitAll) {
                 if ($cleaned) {
-                    $keyList = ($cleaned) ? preg_split(self::_CLEANING_REGEX_, $field_item, -1, PREG_SPLIT_NO_EMPTY) :
-                        explode(' ', $field_item);
+                    $keyList = ($cleaned) ? preg_split(self::_CLEANING_REGEX_, $fieldItem, -1, PREG_SPLIT_NO_EMPTY) :
+                        explode(' ', $fieldItem);
                 }
-                foreach ($keyList as $word_item) {
-                    $out[] = trim($word_item);
+                foreach ($keyList as $wordItem) {
+                    $out[] = trim($wordItem);
                 }
             } else {
-                $out[] = ($cleaned) ? implode(' ', preg_split(self::_CLEANING_REGEX_, trim($field_item), -1, PREG_SPLIT_NO_EMPTY))
-                    : trim($field_item);
+                $out[] = ($cleaned) ? implode(' ', preg_split(self::_CLEANING_REGEX_, trim($fieldItem), -1, PREG_SPLIT_NO_EMPTY))
+                    : trim($fieldItem);
             }
         }
+
         return $out;
     }
 
@@ -528,76 +536,91 @@ class AddressFormatCore extends ObjectModel
         $layoutData = array();
 
         if ($address && $address instanceof Address) {
-            $layoutData['ordered'] = AddressFormat::getOrderedAddressFields((int)$address->id_country);
+            $layoutData['ordered'] = AddressFormat::getOrderedAddressFields((int) $address->id_country);
             $layoutData['formated'] = AddressFormat::getFormattedAddressFieldsValues($address, $layoutData['ordered']);
             $layoutData['object'] = array();
 
             $reflect = new ReflectionObject($address);
-            $public_properties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
-            foreach ($public_properties as $property) {
+            $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
+            foreach ($publicProperties as $property) {
                 if (isset($address->{$property->getName()})) {
                     $layoutData['object'][$property->getName()] = $address->{$property->getName()};
                 }
             }
         }
+
         return $layoutData;
     }
 
     /**
      * Returns address format by country if not defined using default country
      *
-     * @param int $id_country Country ID
+     * @param int $idCountry Country ID
      *
      * @return String field address format
      */
-    public static function getAddressCountryFormat($id_country = 0)
+    public static function getAddressCountryFormat($idCountry = 0)
     {
-        $id_country = (int)$id_country;
+        $idCountry = (int) $idCountry;
 
-        $tmp_obj = new AddressFormat();
-        $tmp_obj->id_country = $id_country;
-        $out = $tmp_obj->getFormat($tmp_obj->id_country);
-        unset($tmp_obj);
+        $tmpObj = new AddressFormat();
+        $tmpObj->id_country = $idCountry;
+        $out = $tmpObj->getFormat($tmpObj->id_country);
+        unset($tmpObj);
+
         return $out;
     }
 
     /**
      * Returns address format by Country
      *
-     * @param int $id_country Country ID
+     * @param int $idCountry Country ID
      *
      * @return String field Address format
      */
-    public function getFormat($id_country)
+    public function getFormat($idCountry)
     {
-        $out = $this->_getFormatDB($id_country);
+        $out = $this->getFormatDB($idCountry);
         if (empty($out)) {
-            $out = $this->_getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
+            $out = $this->getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
         }
+
         return $out;
+    }
+
+    /**
+     * @param int $idCountry
+     *
+     * @return false|null|string
+     * @deprecated 1.7.0
+     */
+    protected function _getFormatDB($idCountry)
+    {
+        return self::getFormatDB($idCountry);
     }
 
     /**
      * Get Address format from DB
      *
-     * @param int $id_country Country ID
+     * @param int $idCountry Country ID
      *
      * @return false|null|string Address format
+     * @since 1.7.0
      */
-    protected function _getFormatDB($id_country)
+    protected function getFormatDB($idCountry)
     {
-        if (!Cache::isStored('AddressFormat::_getFormatDB'.$id_country)) {
+        if (!Cache::isStored('AddressFormat::getFormatDB'.$idCountry)) {
             $format = Db::getInstance()->getValue('
 			SELECT format
 			FROM `'._DB_PREFIX_.$this->def['table'].'`
-			WHERE `id_country` = '.(int)$id_country);
+			WHERE `id_country` = '.(int) $idCountry);
             $format = trim($format);
-            Cache::store('AddressFormat::_getFormatDB'.$id_country, $format);
+            Cache::store('AddressFormat::getFormatDB'.$idCountry, $format);
 
             return $format;
         }
 
-        return Cache::retrieve('AddressFormat::_getFormatDB'.$id_country);
+        return Cache::retrieve('AddressFormat::getFormatDB'.$idCountry);
     }
 
     /**
@@ -606,6 +629,7 @@ class AddressFormatCore extends ObjectModel
     public static function getFieldsRequired()
     {
         $address = new Address();
+
         return array_unique(array_merge($address->getFieldsRequiredDB(), AddressFormat::$requireFormFieldsList));
     }
 }
