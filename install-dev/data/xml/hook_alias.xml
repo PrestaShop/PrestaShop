@@ -113,14 +113,6 @@
       <alias>orderSlip</alias>
       <name>actionOrderSlipAdd</name>
     </hook_alias>
-    <hook_alias id="productTab">
-      <alias>productTab</alias>
-      <name>displayProductTab</name>
-    </hook_alias>
-    <hook_alias id="productTabContent">
-      <alias>productTabContent</alias>
-      <name>displayProductTabContent</name>
-    </hook_alias>
     <hook_alias id="shoppingCart">
       <alias>shoppingCart</alias>
       <name>displayShoppingCartFooter</name>
@@ -184,10 +176,6 @@
     <hook_alias id="search">
       <alias>search</alias>
       <name>actionSearch</name>
-    </hook_alias>
-    <hook_alias id="backBeforePayment">
-      <alias>backBeforePayment</alias>
-      <name>displayBeforePayment</name>
     </hook_alias>
     <hook_alias id="updateCarrier">
       <alias>updateCarrier</alias>

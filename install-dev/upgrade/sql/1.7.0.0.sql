@@ -163,3 +163,6 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('
 
 /* PHP:add_quick_access_tab(); */;
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayAfterCarrier', 'After carriers list', 'This hook is displayed after the carrier list in Front Office', '1');
+
+DELETE FROM `PREFIX_hook` WHERE `name` IN ('displayProductTab', 'displayProductTabContent', 'displayBeforePayment');
+DELETE FROM `PREFIX_hook_alias` WHERE `name` IN ('displayProductTab', 'displayProductTabContent', 'displayBeforePayment');

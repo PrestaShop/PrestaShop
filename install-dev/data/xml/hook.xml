@@ -117,12 +117,6 @@
     <hook id="actionOrderSlipAdd">
       <name>actionOrderSlipAdd</name><title>Order slip creation</title><description>This hook is called when a new credit slip is added regarding client order</description>
     </hook>
-    <hook id="displayProductTab">
-      <name>displayProductTab</name><title>Tabs on product page</title><description>This hook is called on the product page's tab</description>
-    </hook>
-    <hook id="displayProductTabContent">
-      <name>displayProductTabContent</name><title>Tabs content on the product page</title><description>This hook is called on the product page's tab</description>
-    </hook>
     <hook id="displayShoppingCartFooter">
       <name>displayShoppingCartFooter</name><title>Shopping cart footer</title><description>This hook displays some specific information on the shopping cart's page</description>
     </hook>
@@ -176,9 +170,6 @@
     </hook>
     <hook id="actionSearch">
       <name>actionSearch</name><title>Search</title><description/>
-    </hook>
-    <hook id="displayBeforePayment">
-      <name>displayBeforePayment</name><title>Redirect during the order process</title><description>This hook redirects the user to the module instead of displaying payment modules</description>
     </hook>
     <hook id="actionCarrierUpdate">
       <name>actionCarrierUpdate</name><title>Carrier Update</title><description>This hook is called when a carrier is updated</description>
