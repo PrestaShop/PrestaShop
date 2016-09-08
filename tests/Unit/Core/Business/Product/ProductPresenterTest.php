@@ -56,6 +56,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['on_sale'] = false;
         $this->product['new'] = false;
         $this->product['pack'] = false;
+        $this->product['show_price'] = true;
         $this->language = new Language;
     }
 
@@ -119,7 +120,14 @@ class ProductPresenterTest extends UnitTestCase
     public function test_price_should_not_be_shown_if_product_not_available_for_order()
     {
         $this->product['available_for_order'] = false;
+        $this->product['show_price'] = false;
+
         $this->assertFalse($this->getPresentedProduct('show_price'));
+
+        $this->product['available_for_order'] = false;
+        $this->product['show_price'] = true;
+
+        $this->assertTrue($this->getPresentedProduct('show_price'));
     }
 
     public function test_price_is_tax_excluded()
@@ -281,6 +289,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['online_only'] = true;
         $this->product['available_for_order'] = false;
+        $this->product['show_price'] = false;
         $this->assertEquals(
             [],
             $this->getPresentedProduct('flags')

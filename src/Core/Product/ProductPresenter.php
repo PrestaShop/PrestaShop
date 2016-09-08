@@ -33,11 +33,30 @@ class ProductPresenter
         $this->translator = $translator;
     }
 
+    /**
+     * Prices should be shown for products with active "Show price" option
+     * and customer groups with active "Show price" option.
+     *
+     * @param ProductPresentationSettings $settings
+     * @param array $product
+     * @return bool
+     */
     private function shouldShowPrice(
         ProductPresentationSettings $settings,
         array $product
     ) {
-        return  $settings->showPrices && $product['available_for_order'];
+        return $settings->showPrices && (bool) $product['show_price'];
+    }
+
+    /**
+     * The "Add to cart" button should be shown for products available for order.
+     *
+     * @param $product
+     * @return mixed
+     */
+    private function shouldShowAddToCartButton($product)
+    {
+        return (bool) $product['available_for_order'];
     }
 
     private function fillImages(
@@ -160,30 +179,30 @@ class ProductPresenter
         return $presentedProduct;
     }
 
-    private function shouldEnableAddToCartButton(
-        ProductPresentationSettings $settings,
-        array $product
-    ) {
-        $can_add_to_cart = $this->shouldShowPrice($settings, $product);
-
+    private function shouldEnableAddToCartButton(array $product)
+    {
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
-            $can_add_to_cart = false;
+            $shouldShowButton = false;
 
             if (isset($product['customizations'])) {
-                $can_add_to_cart = true;
+                $shouldShowButton = true;
                 foreach ($product['customizations']['fields'] as $field) {
                     if ($field['required'] && !$field['is_customized']) {
-                        $can_add_to_cart = false;
+                        $shouldShowButton = false;
                     }
                 }
             }
+        } else {
+            $shouldShowButton = true;
         }
+
+        $shouldShowButton = $shouldShowButton && $this->shouldShowAddToCartButton($product);
 
         if ($product['quantity'] <= 0 && !$product['allow_oosp']) {
-            $can_add_to_cart = false;
+            $shouldShowButton = false;
         }
 
-        return $can_add_to_cart;
+        return $shouldShowButton;
     }
 
     private function getAddToCartURL(array $product)
@@ -430,7 +449,7 @@ class ProductPresenter
             $language
         );
 
-        if ($this->shouldEnableAddToCartButton($settings, $product)) {
+        if ($this->shouldEnableAddToCartButton($product)) {
             $presentedProduct['add_to_cart_url'] = $this->getAddToCartURL($product);
         } else {
             $presentedProduct['add_to_cart_url'] = null;
