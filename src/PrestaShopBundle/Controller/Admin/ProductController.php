@@ -618,16 +618,21 @@ class ProductController extends FrameworkBundleAdminController
                     $productIdList = $request->request->get('mass_edit_action_sorted_products');
                     $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
                     $hookDispatcher->dispatchMultiple(
-                        ['actionAdminSortBefore', 'actionAdminProductsControllerSortBefore'],
-                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]
+                        array('actionAdminSortBefore', 'actionAdminProductsControllerSortBefore'),
+                        array('product_list_id' => $productIdList, 'product_list_position' => $productPositionList)
                     );
                     // Hooks: managed in ProductUpdater
-                    $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList), $productProvider->getPersistedFilterParameters());
+                    $persistedFilterParams = $productProvider->getPersistedFilterParameters();
+                    $productList = array_combine($productIdList, $productPositionList);
+                    $productUpdater->sortProductIdList(
+                        $productList,
+                        array('filter_category' => $persistedFilterParams['filter_category'])
+                    );
                     $this->addFlash('success', $translator->trans('Products successfully sorted.', [], 'Admin.Catalog.Notification'));
                     $logger->info('Products sorted: ('.implode(',', $productIdList).') with positions ('.implode(',', $productPositionList).').');
                     $hookDispatcher->dispatchMultiple(
-                        ['actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'],
-                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]
+                        array('actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'),
+                        array('product_list_id' => $productIdList, 'product_list_position' => $productPositionList)
                     );
                     break;
                 default:

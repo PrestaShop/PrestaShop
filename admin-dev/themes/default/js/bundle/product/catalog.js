@@ -288,7 +288,14 @@ function bulkProductAction(element, action) {
 			// no break !
 		// this case will post inline edition command
 		case 'edition':
-      var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
+		  var editionAction;
+      var bulkEditionSelector = '#bulk_edition_toolbar input:submit';
+      if ($(bulkEditionSelector).length > 0) {
+        editionAction = $(bulkEditionSelector).attr('editionaction');
+      } else {
+        editionAction = 'sort';
+      }
+
 			urlHandler = $('[massediturl]');
       postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
 			if (redirectUrl === '') {
