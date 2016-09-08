@@ -1934,6 +1934,13 @@ div.star a:hover {
 							}
 						}
 					}
+					&.vkontakte {
+						a {
+							&:before {
+								content: "\f189";
+							}
+						}
+					}
 				}
 			}
 			h4 {
