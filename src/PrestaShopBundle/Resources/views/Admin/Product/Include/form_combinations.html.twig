@@ -159,12 +159,14 @@
       {{ form_errors(form.available_later) }}
       {{ form_widget(form.available_later) }}
     </div>
-
+    
+    {% if not has_combinations %}
     <div class="col-md-4 ">
       <label class="form-control-label">{{ form.available_date.vars.label }}</label>
       {{ form_errors(form.available_date) }}
       {{ form_widget(form.available_date) }}
     </div>
+    {% endif %}
 
   </div>
 </div>
