@@ -14,8 +14,7 @@
           {$level1Name = $level1.class_name|escape:'html':'UTF-8'}
         {/if}
 
-        {* TODO: DASHBOARD EXCEPTION TO MODIFY WHEN THE DIFFERENTS SUBMENUS LEVEL CAN AVOID PARENTS *}
-        {if $level1.class_name == 'AdminDashboard'}
+        {if $level1.icon != ''}
 
           <li class="link-levelone {if $level1.current}-active{/if}">
             <a href="{$level1Href}" class="link" >
