@@ -414,6 +414,57 @@ class ProductPresenter
         return $presentedProduct;
     }
 
+    /**
+     * Add new attribute reference_to_display if the product reference or the selected combinations reference is set
+     * @param array $product
+     * @param array $presentedProduct
+     * @return array
+     */
+    public function addReferenceToDisplay(array $product, array $presentedProduct)
+    {
+        foreach ($product['attributes'] as $attribute) {
+            if (isset($attribute['reference']) && $attribute['reference'] != null) {
+                $presentedProduct['reference_to_display'] = $attribute['reference'];
+            } else {
+                $presentedProduct['reference_to_display'] = $product['reference'];
+            }
+        }
+
+        return $presentedProduct;
+    }
+
+    /**
+     * Add all specific references to product
+     * @param array $product
+     * @param array $presentedProduct
+     * @return array
+     */
+    public function addAttributesSpecificReferences(array $product, array $presentedProduct)
+    {
+        $presentedProduct['specific_references'] = array_slice($product['attributes'], 0)[0];
+        //this attributes should not be displayed in FO
+        unset(
+            $presentedProduct['specific_references']['id_attribute'],
+            $presentedProduct['specific_references']['id_attribute_group'],
+            $presentedProduct['specific_references']['name'],
+            $presentedProduct['specific_references']['group'],
+            $presentedProduct['specific_references']['reference']
+        );
+
+        //if the attribute's references doesn't exist then get the product's references or unset it
+        foreach ($presentedProduct['specific_references'] as $key => $value) {
+            if (null === $value) {
+                if (null !== $product[$key]) {
+                    $presentedProduct['specific_references'][$key] = $product[$key];
+                } else {
+                    unset($presentedProduct['specific_references'][$key]);
+                }
+            }
+        }
+
+        return $presentedProduct;
+    }
+
     public function present(
         ProductPresentationSettings $settings,
         array $product,
@@ -503,6 +554,18 @@ class ProductPresenter
             $product
         );
 
+        // If product has attributes and it's no added to card
+        if (isset($product['attributes']) && !isset($product['cart_quantity'])) {
+            $presentedProduct = $this->addReferenceToDisplay(
+                $product,
+                $presentedProduct
+            );
+
+            $presentedProduct = $this->addAttributesSpecificReferences(
+                $product,
+                $presentedProduct
+            );
+        }
         return $presentedProduct;
     }
 }

@@ -5647,7 +5647,7 @@ class ProductCore extends ObjectModel
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS('
-			SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`
+			SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`, pa.`reference`, pa.`ean13`, pa.`isbn`,pa.`upc`
 			FROM `'._DB_PREFIX_.'attribute` a
 			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 				ON (al.`id_attribute` = a.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
@@ -5674,7 +5674,7 @@ class ProductCore extends ObjectModel
     public static function getAttributesInformationsByProduct($id_product)
     {
         $result = Db::getInstance()->executeS('
-        SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+        SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`,pa.`reference`, pa.`ean13`, pa.`isbn`,pa.`upc`
         FROM `'._DB_PREFIX_.'attribute` a
         LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
             ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')

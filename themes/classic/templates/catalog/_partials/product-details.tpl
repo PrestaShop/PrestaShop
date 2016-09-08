@@ -1,9 +1,9 @@
 <div class="tab-pane fade{if !$product.description} in active{/if}" id="product-details">
   {block name='product_reference'}
-    {if $product.reference}
+    {if isset($product.reference_to_display)}
       <div class="product-reference">
         <label class="label">{l s='Reference' d='Shop.Theme.Catalog'} </label>
-        <span itemprop="sku">{$product.reference}</span>
+        <span itemprop="sku">{$product.reference_to_display}</span>
       </div>
     {/if}
     {/block}
@@ -39,6 +39,21 @@
               <dd class="value">{$feature.value}</dd>
             {/foreach}
           </dl>
+        </section>
+      {/if}
+    {/block}
+
+    {* if product have specific references, a table will be added to product details section *}
+    {block name='product_specific_references'}
+      {if isset($product.specific_references)}
+        <section class="product-features">
+          <h3 class="h6">{l s='Specific References' d='Shop.Theme.Catalog'}</h3>
+            <dl class="data-sheet">
+              {foreach from=$product.specific_references item=reference key=key}
+                <dt class="name">{l s=$key|ucfirst d='Shop.Theme.Catalog'}</dt>
+                <dd class="value">{$reference}</dd>
+              {/foreach}
+            </dl>
         </section>
       {/if}
     {/block}
