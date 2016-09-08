@@ -150,10 +150,11 @@ class ProductController extends FrameworkBundleAdminController
         $hasColumnFilter = $productProvider->isColumnFiltered();
 
         // Alternative layout for empty list
-        $totalFilteredProductCount = (count($products)>0) ? $products[0]['total'] : 0;
+        $totalFilteredProductCount = (count($products) > 0) ? $products[0]['total'] : 0;
         $totalProductCount = 0;
         if ((!$hasCategoryFilter && !$hasColumnFilter && $totalFilteredProductCount === 0)
-            || ($totalProductCount = $productProvider->countAllProducts()) === 0) {
+            || ($totalProductCount = $productProvider->countAllProducts()) === 0
+        ) {
             // no filter, total filtered == 0, and then total count == 0 too.
             $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
             return $this->render('PrestaShopBundle:Admin/Product:catalog_empty.html.twig', array(
@@ -271,7 +272,7 @@ class ProductController extends FrameworkBundleAdminController
 
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
-            $totalCount = isset($product['total'])? $product['total'] : $totalCount;
+            $totalCount = isset($product['total']) ? $product['total'] : $totalCount;
             $product['url'] = $this->generateUrl('admin_product_form', array('id' => $product['id_product']));
             $product['unit_action_url'] = $this->generateUrl(
                 'admin_product_unit_action',
@@ -288,7 +289,7 @@ class ProductController extends FrameworkBundleAdminController
             'last_sql_query' => $lastSql,
         );
         if ($view != 'full') {
-            return $this->render('PrestaShopBundle:Admin:Product/list_'.$view.'.html.twig', array_merge($vars, [
+            return $this->render('PrestaShopBundle:Admin:Product/list_' . $view . '.html.twig', array_merge($vars, [
                 'limit' => $limit,
                 'offset' => $offset,
                 'total' => $totalCount,
@@ -316,7 +317,7 @@ class ProductController extends FrameworkBundleAdminController
 
         /** @var \Product $product */
         $product = $productAdapter->getProductInstance();
-        $product->active = $productProvider->isNewProductDefaultActivated()? 1 : 0;
+        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
         $product->id_category_default = $context->shop->id_category;
         $product->state = \Product::STATE_TEMP;
 
@@ -390,7 +391,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $formBulkCombinations = $this->createForm('PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk', null, array(
             'iso_code' => $this->get('prestashop.adapter.legacy.context')->getContext()->currency->iso_code,
-            'price_display_precision' =>  $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_'),
+            'price_display_precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_'),
         ));
 
         $form->handleRequest($request);
@@ -403,7 +404,7 @@ class ProductController extends FrameworkBundleAdminController
                 $postData = $request->request->all();
                 $combinations = array();
 
-                foreach ((array) $postData as $postKey => $postValue) {
+                foreach ((array)$postData as $postKey => $postValue) {
                     if (preg_match('/^combination_.*/', $postKey)) {
                         $combinations[$postKey] = $postValue;
                     }
@@ -487,8 +488,7 @@ class ProductController extends FrameworkBundleAdminController
             ->getDoctrine()
             ->getManager()
             ->getRepository('PrestaShopBundle:Attribute')
-            ->findByLangAndShop(1, 1)
-        ;
+            ->findByLangAndShop(1, 1);
 
         return array(
             'form' => $form->createView(),
@@ -499,7 +499,7 @@ class ProductController extends FrameworkBundleAdminController
             'has_combinations' => (isset($formData['step3']['id_product_attributes']) && count($formData['step3']['id_product_attributes']) > 0),
             'combinations_count' => isset($formData['step3']['id_product_attributes']) ? count($formData['step3']['id_product_attributes']) : 0,
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
-            'warehouses' => ($stockManager->isAsmGloballyActivated())? $warehouseProvider->getWarehouses() : [],
+            'warehouses' => ($stockManager->isAsmGloballyActivated()) ? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
             'is_combination_active' => $this->get('prestashop.adapter.legacy.configuration')->combinationIsActive(),
             'showContentHeader' => false,
@@ -543,7 +543,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList($productIdList);
                     $this->addFlash('success', $translator->trans('Product(s) successfully activated.', [], 'Admin.Catalog.Notification'));
-                    $logger->info('Products activated: ('.implode(',', $productIdList).').');
+                    $logger->info('Products activated: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'], $hookEventParameters);
                     break;
                 case 'deactivate_all':
@@ -551,7 +551,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList($productIdList, false);
                     $this->addFlash('success', $translator->trans('Product(s) successfully deactivated.', [], 'Admin.Catalog.Notification'));
-                    $logger->info('Products deactivated: ('.implode(',', $productIdList).').');
+                    $logger->info('Products deactivated: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'], $hookEventParameters);
                     break;
                 case 'delete_all':
@@ -559,7 +559,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->deleteProductIdList($productIdList);
                     $this->addFlash('success', $translator->trans('Product(s) successfully deleted.', [], 'Admin.Catalog.Notification'));
-                    $logger->info('Products deleted: ('.implode(',', $productIdList).').');
+                    $logger->info('Products deleted: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'], $hookEventParameters);
                     break;
                 case 'duplicate_all':
@@ -567,13 +567,13 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->duplicateProductIdList($productIdList);
                     $this->addFlash('success', $translator->trans('Product(s) successfully duplicated.', [], 'Admin.Catalog.Notification'));
-                    $logger->info('Products duplicated: ('.implode(',', $productIdList).').');
+                    $logger->info('Products duplicated: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
                     break;
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
                     $logger->error('Bulk action from ProductController received a bad parameter.');
-                    throw new \Exception('Bad action received from call to ProductController::bulkAction: "'.$action.'"', 2001);
+                    throw new \Exception('Bad action received from call to ProductController::bulkAction: "' . $action . '"', 2001);
             }
         } catch (DataUpdateException $due) {
             //TODO : need to translate this with an domain name
@@ -629,7 +629,7 @@ class ProductController extends FrameworkBundleAdminController
                         array('filter_category' => $persistedFilterParams['filter_category'])
                     );
                     $this->addFlash('success', $translator->trans('Products successfully sorted.', [], 'Admin.Catalog.Notification'));
-                    $logger->info('Products sorted: ('.implode(',', $productIdList).') with positions ('.implode(',', $productPositionList).').');
+                    $logger->info('Products sorted: (' . implode(',', $productIdList) . ') with positions (' . implode(',', $productPositionList) . ').');
                     $hookDispatcher->dispatchMultiple(
                         array('actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'),
                         array('product_list_id' => $productIdList, 'product_list_position' => $productPositionList)
@@ -638,7 +638,7 @@ class ProductController extends FrameworkBundleAdminController
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
                     $logger->error('Mass edit action from ProductController received a bad parameter.');
-                    throw new \Exception('Bad action received from call to ProductController::massEditAction: "'.$action.'"', 2001);
+                    throw new \Exception('Bad action received from call to ProductController::massEditAction: "' . $action . '"', 2001);
             }
         } catch (DataUpdateException $due) {
             //TODO : need to translate with domain name
@@ -703,7 +703,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList([$id]);
                     $this->addFlash('success', $translator->trans('Product successfully activated.', [], 'Admin.Catalog.Notification'));
-                    $logger->info('Product activated: '.$id);
+                    $logger->info('Product activated: ' . $id);
                     $hookDispatcher->dispatchMultiple(['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'], $hookEventParameters);
                     break;
                 case 'deactivate':
@@ -711,7 +711,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList([$id], false);
                     $this->addFlash('success', $translator->trans('Product successfully deactivated.', [], 'Admin.Catalog.Notification'));
-                    $logger->info('Product deactivated: '.$id);
+                    $logger->info('Product deactivated: ' . $id);
                     $hookDispatcher->dispatchMultiple(['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'], $hookEventParameters);
                     break;
                 default:
@@ -764,7 +764,7 @@ class ProductController extends FrameworkBundleAdminController
         // export CSV
         $csvTools->exportData(
             $dataCallback,
-            [   'id_product' => 'ID',
+            ['id_product' => 'ID',
                 'image' => 'Image',
                 'name' => 'Name',
                 'reference' => 'Reference',
@@ -776,8 +776,8 @@ class ProductController extends FrameworkBundleAdminController
                 'position' => 'Position',
             ],
             100,
-            'product_'.date('Y-m-d_His').'.csv',
-            30*60, // 30 minutes of download max!
+            'product_' . date('Y-m-d_His') . '.csv',
+            30 * 60, // 30 minutes of download max!
             true // TODO: windows CRLF, to make dynamic or always ON?
         );
         // exportData will "die" at the end of its process.
@@ -807,10 +807,10 @@ class ProductController extends FrameworkBundleAdminController
 
         $logger = $this->container->get('logger');
         /* @var $logger LoggerInterface */
-        $logger->info('Changed setting to use '.($use?'legacy':'new version').' pages for ProductController.');
+        $logger->info('Changed setting to use ' . ($use ? 'legacy' : 'new version') . ' pages for ProductController.');
 
         // Then redirect
-        $urlGenerator = $this->container->get($use?'prestashop.core.admin.url_generator_legacy':'prestashop.core.admin.url_generator');
+        $urlGenerator = $this->container->get($use ? 'prestashop.core.admin.url_generator_legacy' : 'prestashop.core.admin.url_generator');
         /* @var $urlGenerator UrlGeneratorInterface */
         return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
     }
@@ -833,8 +833,8 @@ class ProductController extends FrameworkBundleAdminController
 
         // we merge empty filter set with given values, to reset the other filters!
         $productProvider->persistFilterParameters(array_merge(AdminFilter::getProductCatalogEmptyFilter(), [
-            'filter_column_sav_quantity' => ($quantity=='none')?'':$quantity,
-            'filter_column_active' => ($active=='none')?'':$active
+            'filter_column_sav_quantity' => ($quantity == 'none') ? '' : $quantity,
+            'filter_column_active' => ($active == 'none') ? '' : $active
         ]));
 
         return $this->redirectToRoute('admin_product_catalog');
@@ -887,7 +887,7 @@ class ProductController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
-            'formId' => $step.'_'.$fieldName.'_rendered'
+            'formId' => $step . '_' . $fieldName . '_rendered'
         ]);
     }
 }
