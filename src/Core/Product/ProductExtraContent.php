@@ -48,37 +48,55 @@ class ProductExtraContent
      * For some reason, you may need to have a class on the div generated,
      * or to be able to set an anchor.
      * 
-     * @var string
+     * @var array
      */
-    private $attr = '';
+    private $attr = array(
+        'id' => '',
+        'class' => '',
+    );
 
-    function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
     }
 
-    function getContent() {
+    public function getContent()
+    {
         return $this->content;
     }
 
-    function getAttr() {
+    public function getAttr()
+    {
         return $this->attr;
     }
 
-    function setTitle($title) {
+    public function setTitle($title) {
         $this->title = $title;
         return $this;
     }
 
-    function setContent($content) {
+    public function setContent($content)
+    {
         $this->content = $content;
         return $this;
     }
-
-    function setAttr($attr) {
-        $this->attr = $attr;
+    
+    public function addAttr($attr)
+    {
+        $this->attr = array_merge($this->attr, $attr);
         return $this;
     }
 
+    public function setAttr($attr)
+    {
+        // We declare default values for if and class which
+        // could be mandatory in the template
+        $this->attr = array_merge(array(
+            'id' => '',
+            'class' => '',
+        ), $attr);
+        return $this;
+    }
     
     public function toArray()
     {
