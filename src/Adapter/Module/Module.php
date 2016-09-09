@@ -144,7 +144,7 @@ class Module implements ModuleInterface
         $this->disk->add($disk);
         $this->database->add($database);
 
-        $version = $this->disk->get('is_valid') ?
+        $version = is_null($this->attributes->get('version')) && $this->disk->get('is_valid') ?
             $this->disk->get('version') :
             $this->attributes->get('version');
 
