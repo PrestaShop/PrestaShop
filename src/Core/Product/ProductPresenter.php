@@ -402,10 +402,39 @@ class ProductPresenter
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             }
+
+            $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
         } else {
             $presentedProduct['availability_message'] = null;
             $presentedProduct['availability_date'] = null;
             $presentedProduct['availability'] = null;
+        }
+
+        return $presentedProduct;
+    }
+
+    /**
+     * Override availability message when quantity of products in stock is less than what has been defined
+     * in Shop Parameters > Product Settings
+     *
+     * @param array $product
+     * @param ProductPresentationSettings $settings
+     * @param array $presentedProduct
+     * @return array
+     */
+    protected function applyLastItemsInStockDisplayRule(
+        array $product,
+        ProductPresentationSettings $settings,
+        array $presentedProduct
+    )
+    {
+        if ($product['quantity'] < $settings->lastRemainingItems) {
+            $presentedProduct['availability_message'] = $this->translator->trans(
+                'Last items in stock',
+                array(),
+                'Shop.Theme.Catalog'
+            );
+            $presentedProduct['availability'] = 'last_remaining_items';
         }
 
         return $presentedProduct;
