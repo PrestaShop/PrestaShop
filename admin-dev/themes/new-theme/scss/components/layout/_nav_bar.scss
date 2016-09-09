@@ -181,8 +181,26 @@
 
 @media (max-height: 920px) {
   .link-levelone {
+    position: relative;
+
     &.-active:not(.-hover) .submenu {
       display: none;
+    }
+
+    &.-active.-hover .submenu {
+      position: absolute;
+    }
+
+    .submenu {
+      bottom: 0;
+    }
+
+    &:nth-child(-n+6) {
+      .submenu {
+        top: 0;
+        bottom: auto;
+        margin-top: 0;
+      }
     }
   }
 }
