@@ -351,5 +351,8 @@
     <hook id="actionValidateCustomerAddressForm">
       <name>actionValidateCustomerAddressForm</name><title>Customer address form validation</title><description>This hook is called when a customer submit its address form</description>
     </hook>
+    <hook id="displayCarrierExtraContent">
+      <name>displayCarrierExtraContent</name><title>Display additionnal content for a carrier (e.g pickup points)</title><description>This hook calls only the module related to the carrier, in order to add options when needed.</description>
+    </hook>
   </entities>
 </entity_hook>
