@@ -45,8 +45,8 @@ class AdminCountriesControllerCore extends AdminController
         parent::__construct();
 
         $this->bulk_actions = array(
-            'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-            'AffectZone' => array('text' => $this->l('Assign to a new zone'))
+            'delete' => array('text' => $this->trans('Delete selected', array(), 'Admin.Actions'), 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Actions')),
+            'AffectZone' => array('text' => $this->trans('Assign to a new zone', array(), 'Admin.International.Feature'))
         );
 
         $this->fieldImageSettings = array(
@@ -56,10 +56,10 @@ class AdminCountriesControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->l('Country options'),
+                'title' =>    $this->trans('Country options', array(), 'Admin.International.Feature'),
                 'fields' =>    array(
                     'PS_RESTRICT_DELIVERED_COUNTRIES' => array(
-                        'title' => $this->l('Restrict country selections in front office to those covered by active carriers'),
+                        'title' => $this->trans('Restrict country selections in front office to those covered by active carriers', array(), 'Admin.International.Help'),
                         'cast' => 'intval',
                         'type' => 'bool',
                         'default' => '0'
@@ -86,12 +86,12 @@ class AdminCountriesControllerCore extends AdminController
                 'filter_key' => 'b!name'
             ),
             'iso_code' => array(
-                'title' => $this->l('ISO code'),
+                'title' => $this->trans('ISO code', array(), 'Admin.International.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'call_prefix' => array(
-                'title' => $this->l('Call prefix'),
+                'title' => $this->trans('Call prefix', array(), 'Admin.International.Feature'),
                 'align' => 'center',
                 'callback' => 'displayCallPrefix',
                 'class' => 'fixed-width-sm'
@@ -121,7 +121,7 @@ class AdminCountriesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_country'] = array(
                 'href' => self::$currentIndex.'&addcountry&token='.$this->token,
-                'desc' => $this->l('Add new country', null, null, false),
+                'desc' => $this->trans('Add new country', array(), 'Admin.International.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -184,7 +184,7 @@ class AdminCountriesControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Countries'),
+                'title' => $this->trans('Countries', array(), 'Admin.International.Feature'),
                 'icon' => 'icon-globe'
             ),
             'input' => array(
@@ -194,17 +194,17 @@ class AdminCountriesControllerCore extends AdminController
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
-                    'hint' => $this->l('Country name').' - '.$this->l('Invalid characters:').' &lt;&gt;;=#{} '
+                    'hint' => $this->trans('Country name', array(), 'Admin.International.Feature').' - '.$this->trans('Invalid characters:', array(), 'Admin.Global').' &lt;&gt;;=#{} '
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('ISO code'),
+                    'label' => $this->trans('ISO code', array(), 'Admin.International.Feature'),
                     'name' => 'iso_code',
                     'maxlength' => 3,
                     'class' => 'uppercase',
                     'required' => true,
-                    'hint' => $this->l('Two -- or three -- letter ISO code (e.g. "us for United States).')
-                    /* @TODO - ajouter les liens dans le hint ? */
+                    'hint' => $this->trans('Two -- or three -- letter ISO code (e.g. "us for United States).', array(), 'Admin.International.Help')
+                    /* @TODO - add two lines for the hint? */
                     /*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
                             <a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
                                 $this->l('Official list here').'
@@ -212,23 +212,23 @@ class AdminCountriesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Call prefix'),
+                    'label' => $this->trans('Call prefix', array(), 'Admin.International.Feature'),
                     'name' => 'call_prefix',
                     'maxlength' => 3,
                     'class' => 'uppercase',
                     'required' => true,
-                    'hint' => $this->l('International call prefix, (e.g. 1 for United States).')
+                    'hint' => $this->trans('International call prefix, (e.g. 1 for United States).', array(), 'Admin.International.Help')
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Default currency'),
+                    'label' => $this->trans('Default currency', array(), 'Admin.International.Feature'),
                     'name' => 'id_currency',
                     'options' => array(
                         'query' => Currency::getCurrencies(false, true, true),
                         'id' => 'id_currency',
                         'name' => 'name',
                         'default' => array(
-                            'label' => $this->l('Default store currency'),
+                            'label' => $this->trans('Default store currency', array(), 'Admin.International.Feature'),
                             'value' => 0
                         )
                     )
@@ -242,11 +242,11 @@ class AdminCountriesControllerCore extends AdminController
                         'id' => 'id_zone',
                         'name' => 'name'
                     ),
-                    'hint' => $this->l('Geographical region.')
+                    'hint' => $this->trans('Geographical region.', array(), 'Admin.International.Help')
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Does it need Zip/postal code?'),
+                    'label' => $this->trans('Does it need Zip/postal code?', array(), 'Admin.International.Feature'),
                     'name' => 'need_zip_code',
                     'required' => false,
                     'is_bool' => true,
@@ -265,14 +265,14 @@ class AdminCountriesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Zip/postal code format'),
+                    'label' => $this->trans('Zip/postal code format', array(), 'Admin.International.Feature'),
                     'name' => 'zip_code_format',
                     'required' => true,
-                    'desc' => $this->l('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.')
+                    'desc' => $this->trans('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.', array(), 'Admin.International.Help')
                 ),
                 array(
                     'type' => 'address_layout',
-                    'label' => $this->l('Address format'),
+                    'label' => $this->trans('Address format', array(), 'Admin.International.Feature'),
                     'name' => 'address_layout',
                     'address_layout' => $address_layout,
                     'encoding_address_layout' => urlencode($address_layout),
@@ -281,7 +281,7 @@ class AdminCountriesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Active'),
+                    'label' => $this->trans('Active', array(), 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
@@ -297,11 +297,11 @@ class AdminCountriesControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office).')
+                    'hint' => $this->trans('Display this country to your customers (the selected country will always be displayed in the Back Office).', array(), 'Admin.International.Help')
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Contains states'),
+                    'label' => $this->trans('Contains states', array(), 'Admin.International.Feature'),
                     'name' => 'contains_states',
                     'required' => false,
                     'values' => array(
@@ -319,7 +319,7 @@ class AdminCountriesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Do you need a tax identification number?'),
+                    'label' => $this->trans('Do you need a tax identification number?', array(), 'Admin.International.Feature'),
                     'name' => 'need_identification_number',
                     'required' => false,
                     'values' => array(
@@ -337,7 +337,7 @@ class AdminCountriesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Display tax label (e.g. "Tax incl.")'),
+                    'label' => $this->trans('Display tax label (e.g. "Tax incl.")', array(), 'Admin.International.Feature'),
                     'name' => 'display_tax_label',
                     'required' => false,
                     'values' => array(
@@ -360,7 +360,7 @@ class AdminCountriesControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             );
         }
@@ -430,7 +430,7 @@ class AdminCountriesControllerCore extends AdminController
             }
         }
         if (strlen($tmp_addr_format->format) <= 0) {
-            $this->errors[] = $this->l('Address format invalid');
+            $this->errors[] = $this->trans('Address format invalid', array(), 'Admin.Notifications.Error');
         }
 
         $country = parent::processSave();
