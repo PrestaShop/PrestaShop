@@ -267,6 +267,7 @@ class ProductController extends FrameworkBundleAdminController
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
             $lastSql = $productProvider->getLastCompiledSql();
         }
+
         $hasColumnFilter = $productProvider->isColumnFiltered();
 
         // Adds controller info (URLs, etc...) to product list
@@ -286,13 +287,13 @@ class ProductController extends FrameworkBundleAdminController
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
+            'has_category_filter' => $productProvider->isCategoryFiltered(),
         );
         if ($view != 'full') {
             return $this->render('PrestaShopBundle:Admin:Product/list_' . $view . '.html.twig', array_merge($vars, [
                 'limit' => $limit,
                 'offset' => $offset,
                 'total' => $totalCount,
-
             ]));
         }
         return $vars;
