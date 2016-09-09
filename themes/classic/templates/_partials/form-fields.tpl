@@ -62,7 +62,7 @@
 
       {elseif $field.type === 'date'}
 
-        <input class="form-control" type="text" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+        <input class="form-control" type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
         {if isset($field.availableValues.comment)}
           <span class="form-control-comment">
             {$field.availableValues.comment}
