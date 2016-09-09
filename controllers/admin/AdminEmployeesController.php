@@ -322,37 +322,6 @@ class AdminEmployeesControllerCore extends AdminController
                     'name' => 'name'
                 )
             ),
-            array(
-                'type' => 'select',
-                'label' => $this->l('Theme'),
-                'name' => 'bo_theme_css',
-                'options' => array(
-                    'query' => $this->themes,
-                    'id' => 'id',
-                    'name' => 'name'
-                ),
-                'onchange' => 'var value_array = $(this).val().split("|"); $("link").first().attr("href", "themes/" + value_array[0] + "/css/" + value_array[1]);',
-                'hint' => $this->l('Back office theme.')
-            ),
-            array(
-                'type' => 'radio',
-                'label' => $this->l('Admin menu orientation'),
-                'name' => 'bo_menu',
-                'required' => false,
-                'is_bool' => true,
-                'values' => array(
-                    array(
-                        'id' => 'bo_menu_on',
-                        'value' => 0,
-                        'label' => $this->l('Top')
-                    ),
-                    array(
-                        'id' => 'bo_menu_off',
-                        'value' => 1,
-                        'label' => $this->l('Left')
-                    )
-                )
-            )
         ));
 
         if ((int)$this->access('edit') && !$this->restrict_edition) {
