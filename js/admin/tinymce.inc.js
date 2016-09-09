@@ -24,53 +24,49 @@ function changeToMaterial() {
     'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
   };
 
-  $.each(materialIconAssoc, function(index, value){
+  $.each(materialIconAssoc, function (index, value) {
     $('.' + index).replaceWith(value);
   });
 }
 
-function tinySetup(config)
-{
-	if (!config) {
-		config = {};
-	}
+function tinySetup(config) {
+  if (!config) {
+    config = {};
+  }
 
-	//var editor_selector = 'rte';
+  if (typeof config.editor_selector != 'undefined') {
+    config.selector = '.' + config.editor_selector;
+  }
 
-	if (typeof config.editor_selector != 'undefined') {
-		config.selector = '.'+config.editor_selector;
-	}
+  var default_config = {
+    selector: ".rte",
+    plugins: "align colorpicker link image filemanager table media placeholder advlist code table media",
+    browser_spellcheck: true,
+    toolbar1: "code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media",
+    toolbar2: "",
+    external_filemanager_path: baseAdminDir + "filemanager/",
+    filemanager_title: "File manager",
+    external_plugins: {"filemanager": baseAdminDir + "filemanager/plugin.min.js"},
+    language: iso_user,
+    skin: "prestashop",
+    menubar: false,
+    statusbar: false,
+    relative_urls: false,
+    convert_urls: false,
+    entity_encoding: "raw",
+    extended_valid_elements: "em[class|name|id],@[role|data-*|aria-*]",
+    valid_children: "+*[*]",
+    valid_elements: "*[*]",
+    init_instance_callback: "changeToMaterial"
+  };
 
-	var default_config = {
-		selector: ".rte" ,
-		plugins : "align colorpicker link image filemanager table media placeholder advlist code table media",
-		browser_spellcheck : true,
-		toolbar1 : "code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media",
-		toolbar2: "",
-		external_filemanager_path: baseAdminDir+"filemanager/",
-		filemanager_title: "File manager" ,
-		external_plugins: { "filemanager" : baseAdminDir+"filemanager/plugin.min.js"},
-		language: iso_user,
-		skin: "prestashop",
-    menubar:false,
-		statusbar: false,
-		relative_urls : false,
-		convert_urls: false,
-		entity_encoding: "raw",
-		extended_valid_elements : "em[class|name|id],@[role|data-*|aria-*]",
-		valid_children : "+*[*]",
-		valid_elements:"*[*]",
-    init_instance_callback : "changeToMaterial"
-	};
-
-	$.each(default_config, function(index, el)
-	{
-		if (config[index] === undefined )
-			config[index] = el;
-	});
+  $.each(default_config, function (index, el) {
+    if (config[index] === undefined)
+      config[index] = el;
+  });
 
   // Change icons in popups
-  $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', function() {
+  $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', function () {
     changeToMaterial();
   });
 
