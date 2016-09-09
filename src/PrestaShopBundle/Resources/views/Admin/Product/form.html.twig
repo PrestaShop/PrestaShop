@@ -839,12 +839,12 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-8">
+                      <div class="col-md-12">
                         <div id="custom_fields">
                           <h2>{{ form.step6.suppliers.vars.label }}</h2>
                           <div class="row">
                             <div class="col-md-12">
-                              <div class="alert alert-info alert-drop" role="alert">
+                              <div class="alert alert-info alert-drop m-b-1" role="alert">
                                 <i class="material-icons">help</i>
                                 <p class="alert-text">
                                   {{ 'This interface allows you to specify the suppliers of the current product and its combinations, if any.'|trans({}, 'Admin.Catalog.Help')|raw }}<br>
@@ -876,7 +876,7 @@
                       </div>
                     </div>
 
-                    <div id="supplier_combination_collection" class="col-md-8" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
+                    <div id="supplier_combination_collection" class="col-md-12" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
                       {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
                     </div>
                   </div>

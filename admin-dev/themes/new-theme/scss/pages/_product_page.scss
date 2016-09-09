@@ -595,6 +595,20 @@
     }
   }
 
+  #supplier_combination_collection {
+    .panel-body {
+      padding: 0;
+    }
+    .table-striped {
+      thead, th, tbody {
+        border:none;
+      }
+      td{
+        color: $gray-medium;
+      }
+    }
+  }
+
   .combinations-list {
     td,
     th {
@@ -606,8 +620,10 @@
       font-weight: $font-weight-normal;
       font-size: $font-size-xs;
     }
-    .table-striped tbody tr:nth-of-type(odd) {
-      background-color: $notice;
+    .table-striped {
+      tbody tr:nth-of-type(odd) {
+        background-color: $notice;
+      }
     }
     .combination {
       &.loaded {
