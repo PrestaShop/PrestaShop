@@ -56,10 +56,15 @@ $(document).ready(function() {
     displayFieldsManager.refresh();
   });
 
-  /* validate price fields , as Thomas de Nabord said */
-  $(".money-type input[type='text']").change(function validate(event) {
+  // Validate price fields on input change
+  $(".money-type input[type='text']").change(function validate() {
     var inputValue = $(this).val();
-    var parsedValue = truncateDecimals(parseFloat(inputValue),6);
+
+    if (isNaN(inputValue) || '' === inputValue) {
+      inputValue = 0;
+    }
+
+    var parsedValue = truncateDecimals(parseFloat(inputValue), 6);
 
     $(this).val(parsedValue);
   });
@@ -1673,10 +1678,12 @@ var priceCalculation = (function() {
 
       /** update without tax price and shortcut price field on change */
       $('#form_step1_price_shortcut, #form_step2_price').keyup(function() {
+        var price = priceCalculation.normalizePrice($(this).val());
+
         if ($(this).attr('id') === 'form_step1_price_shortcut') {
-          $('#form_step2_price').val($(this).val());
+          $('#form_step2_price').val(price);
         } else {
-          $('#form_step1_price_shortcut').val($(this).val());
+          $('#form_step1_price_shortcut').val(price);
         }
 
         priceCalculation.taxInclude();
@@ -1684,10 +1691,12 @@ var priceCalculation = (function() {
 
       /** update HT price and shortcut price field on change */
       $('#form_step1_price_ttc_shortcut, #form_step2_price_ttc').keyup(function() {
+        var price = priceCalculation.normalizePrice($(this).val());
+
         if ($(this).attr('id') === 'form_step1_price_ttc_shortcut') {
-          $('#form_step2_price_ttc').val($(this).val());
+          $('#form_step2_price_ttc').val(price);
         } else {
-          $('#form_step1_price_ttc_shortcut').val($(this).val());
+          $('#form_step1_price_ttc_shortcut').val(price);
         }
 
         priceCalculation.taxExclude();
@@ -1695,8 +1704,11 @@ var priceCalculation = (function() {
 
       /** on price change, update final retails prices */
       $('#form_step2_price, #form_step2_price_ttc').change(function() {
-        $('#final_retail_price_te').text(formatCurrency(parseFloat($('#form_step2_price').val())));
-        $('#final_retail_price_ti').text(formatCurrency(parseFloat($('#form_step2_price_ttc').val())));
+        var taxExcludedPrice = priceCalculation.normalizePrice($('#form_step2_price').val());
+        var taxIncludedPrice = priceCalculation.normalizePrice($('#form_step2_price_ttc').val());
+
+        $('#final_retail_price_te').text(formatCurrency(parseFloat(taxExcludedPrice)));
+        $('#final_retail_price_ti').text(formatCurrency(parseFloat(taxIncludedPrice)));
       });
 
       /** update HT price and shortcut price field on change */
@@ -1718,11 +1730,16 @@ var priceCalculation = (function() {
 
       $('#form_step2_price, #form_step2_price_ttc').change();
     },
-    'taxInclude': function() {
-      var price = priceHTElem.val().replace(/,/g, '.');
-      if (isNaN(price)) {
+    'normalizePrice': function (price) {
+      if (isNaN(price) || price === '') {
         price = 0;
       }
+
+      return price;
+    },
+    'taxInclude': function() {
+      var price = priceHTElem.val().replace(/,/g, '.');
+      price = this.normalizePrice(price);
 
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
@@ -1734,9 +1751,7 @@ var priceCalculation = (function() {
     },
     'taxExclude': function() {
       var price = parseFloat(priceTTCElem.val().replace(/,/g, '.'));
-      if (isNaN(price)) {
-        price = 0;
-      }
+      price = this.normalizePrice(price);
 
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
