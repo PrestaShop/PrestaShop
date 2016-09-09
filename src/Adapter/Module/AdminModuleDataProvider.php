@@ -139,8 +139,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 } else {
                     unset($urls['enable_mobile']);
                 }
-                if ($addon->database->get('installed') == 0 || version_compare($addon->database->get('version'), $addon->disk->get('version'), '<=')
-                    && version_compare($addon->attributes->get('version'), $addon->database->get('version'), '<=')) {
+                if (!$addon->canBeUpgraded()) {
                     unset(
                         $urls['upgrade']
                     );

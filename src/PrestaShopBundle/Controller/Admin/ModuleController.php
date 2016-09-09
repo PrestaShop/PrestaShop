@@ -297,7 +297,7 @@ class ModuleController extends FrameworkBundleAdminController
             $warnings = $installedProduct->attributes->get('warning');
             if (!empty($warnings)) {
                 $row = 'to_configure';
-            } elseif ($installedProduct->database->get('installed') == 1 && $installedProduct->database->get('version') !== 0 && version_compare($installedProduct->database->get('version'), $installedProduct->attributes->get('version'), '<')) {
+            } elseif ($installedProduct->canBeUpgraded()) {
                 $row = 'to_update';
             } else {
                 $row = false;
