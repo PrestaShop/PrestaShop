@@ -871,15 +871,15 @@
         display: inline-block;
       }
       .arrow {
-        padding-top: rem(15px);
+        padding: rem(15px) rem(5px);
         background: white;
         position: relative;
         height: rem(48px);
         z-index: 2;
         visibility: hidden;
-        &:hover {
-          background: $brand-primary;
-        }
+        background: $brand-primary;
+        color: white;
+        display: none;
         &.visible {
           visibility: visible;
         }
@@ -887,7 +887,6 @@
       .right-arrow {
         margin-top: rem(-50px);
       }
-      .left-arrow {}
     }
     .nav-tabs {
       height: rem(50px);
