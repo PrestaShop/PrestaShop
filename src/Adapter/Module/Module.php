@@ -328,4 +328,13 @@ class Module implements ModuleInterface
             $this->set('image_absolute', $this->get('img'));
         }
     }
+
+    public function canBeUpgraded()
+    {
+        return
+            $this->database->get('installed') == 1
+            && $this->database->get('version')
+            !== 0 && version_compare($this->database->get('version'), $this->attributes->get('version'), '<')
+        ;
+    }
 }
