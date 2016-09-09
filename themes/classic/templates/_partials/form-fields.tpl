@@ -119,9 +119,15 @@
           name="{$field.name}"
           type="{$field.type}"
           value="{$field.value}"
+          placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}"
           {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
           {if $field.required}required{/if}
         >
+        {if isset($field.availableValues.comment)}
+          <span class="form-control-comment">
+            {$field.availableValues.comment}
+          </span>
+        {/if}
 
       {/if}
 

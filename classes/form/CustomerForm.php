@@ -44,15 +44,9 @@ class CustomerFormCore extends AbstractForm
 
     public function fillFromCustomer(Customer $customer)
     {
-        $birthday = $customer->birthday;
-        if ($birthday === '0000-00-00') {
-            // this is just because '0000-00-00' is not a valid
-            // value for an <input type="date">
-            $birthday = null;
-        }
-
         $params = get_object_vars($customer);
         $params['id_customer'] = $customer->id;
+        $params['birthday'] = $customer->birthday === '0000-00-00' ? null : Tools::displayDate($customer->birthday);
 
         return $this->fillWith($params);
     }
@@ -85,6 +79,15 @@ class CustomerFormCore extends AbstractForm
                 ),
                 $emailField->getValue()
             ));
+        }
+
+        // birthday is from input type text..., so we need to convert to a valid date
+        $birthdayField = $this->getField('birthday');
+        if (!empty($birthdayField) && !empty($birthdayField->getValue())) {
+            $dateBuilt = DateTime::createFromFormat(Context::getContext()->language->date_format_lite, $birthdayField->getValue());
+            if (!empty($dateBuilt)) {
+                $birthdayField->setValue($dateBuilt->format('Y-m-d'));
+            }
         }
 
         return parent::validate();
