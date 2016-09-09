@@ -61,6 +61,30 @@ if (defined('_PS_ADMIN_DIR_')) {
 
 require_once _PS_SMARTY_DIR_ .'plugins/modifier.truncate.php';
 
+// This escape modifier is required for invoice PDF generation
+function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_encode = true)
+{
+    $escapeModifierFile = implode(
+        DIRECTORY_SEPARATOR,
+        array(
+            _PS_VENDOR_DIR_,
+            'prestashop',
+            'smarty',
+            'plugins',
+            'modifier.escape.php'
+        )
+    );
+    require_once $escapeModifierFile;
+
+    global $smarty;
+    if (($esc_type === 'html' || $esc_type === 'htmlall') && $smarty->escape_html) {
+        return $string;
+    } else {
+        return smarty_modifier_escape($string, $esc_type, $char_set, $double_encode);
+    }
+}
+
+smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'function', 'dump', 'smartyDump'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
