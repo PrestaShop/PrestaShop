@@ -69,6 +69,26 @@
           </span>
         {/if}
 
+      {elseif $field.type === 'birthday'}
+
+        <div class="js-parent-focus">
+          {html_select_date
+          field_order=DMY
+          time=$field.value
+          field_array={$field.name}
+          prefix=false
+          reverse_years=true
+          field_separator='<br>'
+          day_extra='class="form-control form-control-select"'
+          month_extra='class="form-control form-control-select"'
+          year_extra='class="form-control form-control-select"'
+          day_empty={l s='-- day --' d='Shop.Forms.Labels'}
+          month_empty={l s='-- month --' d='Shop.Forms.Labels'}
+          year_empty={l s='-- year --' d='Shop.Forms.Labels'}
+          start_year={'Y'|date}-100 end_year={'Y'|date}
+          }
+        </div>
+
       {elseif $field.type === 'password'}
 
         <div class="input-group js-parent-focus">
