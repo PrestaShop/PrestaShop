@@ -365,19 +365,19 @@ class ProductPresenter
 
         $presentedProduct['show_availability'] = $show_availability;
 
-        if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
-            $product['available_date'] = null;
+        if (isset($product['available_date']) && '0000-00-00' != $product['available_date']) {
+            $presentedProduct['availability_date'] = $product['available_date'];
+        } else {
+            $presentedProduct['availability_date'] = null;
         }
 
         if ($show_availability) {
             if ($product['quantity'] > 0) {
                 $presentedProduct['availability_message'] = $product['available_now'];
                 $presentedProduct['availability'] = 'available';
-                $presentedProduct['availability_date'] = null;
             } elseif ($product['allow_oosp']) {
                 if ($product['available_later']) {
                     $presentedProduct['availability_message'] = $product['available_later'];
-                    $presentedProduct['availability_date'] = $product['available_date'];
                     $presentedProduct['availability'] = 'available';
                 } else {
                     $presentedProduct['availability_message'] = $this->translator->trans(
@@ -385,7 +385,6 @@ class ProductPresenter
                         array(),
                         'Shop.Theme.Catalog'
                     );
-                    $presentedProduct['availability_date'] = $product['available_date'];
                     $presentedProduct['availability'] = 'unavailable';
                 }
             } elseif ($product['quantity_all_versions']) {
@@ -394,7 +393,6 @@ class ProductPresenter
                     array(),
                     'Shop.Theme.Catalog'
                 );
-                $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             } else {
                 $presentedProduct['availability_message'] = $this->translator->trans(
@@ -402,12 +400,10 @@ class ProductPresenter
                     array(),
                     'Shop.Theme.Catalog'
                 );
-                $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             }
         } else {
             $presentedProduct['availability_message'] = null;
-            $presentedProduct['availability_date'] = null;
             $presentedProduct['availability'] = null;
         }
 
