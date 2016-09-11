@@ -683,6 +683,8 @@ class HookCore extends ObjectModel
                     $display = Hook::coreCallHook($moduleInstance, 'hook'.$hook_name, $hook_args);
                 } elseif ($hook_retro_callable) {
                     $display = Hook::coreCallHook($moduleInstance, 'hook'.$retro_hook_name, $hook_args);
+                } else {
+                    continue;
                 }
 
                 if ($array_return) {
