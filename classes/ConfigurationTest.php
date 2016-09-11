@@ -105,7 +105,6 @@ class ConfigurationTestCore
             'mcrypt' => false,
             'mbstring' => false,
             'dom' => false,
-            'pdo_mysql' => false,
         );
     }
 
