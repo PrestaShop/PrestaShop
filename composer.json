@@ -5,6 +5,7 @@
   "require": {
     "php": ">=5.4",
     "symfony/symfony": "~2.8.6",
+    "defuse/php-encryption": "~2.0.1",
     "doctrine/dbal": "~2.5.3",
     "doctrine/common": "~2.5.3",
     "doctrine/orm": "~2.5.3",

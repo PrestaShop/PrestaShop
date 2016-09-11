@@ -83,6 +83,7 @@ class ConfigurationTestCore
                 'config_dir' => 'config',
                 'files' => false,
                 'mails_dir' => 'mails',
+                'openssl' => 'false',
                 'zip' => false,
             ));
         }
@@ -102,7 +103,6 @@ class ConfigurationTestCore
             'new_phpversion' => false,
             'fopen' => false,
             'gz' => false,
-            'mcrypt' => false,
             'mbstring' => false,
             'dom' => false,
             'pdo_mysql' => false,
@@ -361,9 +361,9 @@ class ConfigurationTestCore
         return function_exists('mb_strtolower');
     }
 
-    public static function test_mcrypt()
+    public static function test_openssl()
     {
-        return function_exists('mcrypt_encrypt');
+        return function_exists('openssl_encrypt');
     }
 
     public static function test_sessions()

@@ -42,7 +42,7 @@ class CookieCore
     protected $_path;
 
     /** @var array cipher tool instance */
-    protected $_cipherTool;
+    protected $cipherTool;
 
     protected $_modified = false;
 
@@ -76,11 +76,13 @@ class CookieCore
         $this->_name = 'PrestaShop-'.md5(($this->_standalone ? '' : _PS_VERSION_).$name.$this->_domain);
         $this->_allow_writing = true;
         $this->_salt = $this->_standalone ? str_pad('', 8, md5('ps'.__FILE__)) : _COOKIE_IV_;
+
         if ($this->_standalone) {
-            $this->_cipherTool = new Rijndael(str_pad('', 56, md5('ps'.__FILE__)), str_pad('', 56, md5('iv'.__FILE__)));
-        } else {
-            $this->_cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
+            $asciiSafeString = \Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString('ps17', str_pad('', 32, __FILE__));
+            $this->cipherTool = new PhpEncryption($asciiSafeString);
         }
+        $this->cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
+
         $this->_secure = (bool)$secure;
 
         $this->update();
@@ -236,7 +238,7 @@ class CookieCore
     public function logout()
     {
         $this->_content = array();
-        $this->_setcookie();
+        $this->encryptAndSetCookie();
         unset($_COOKIE[$this->_name]);
         $this->_modified = true;
     }
@@ -278,7 +280,7 @@ class CookieCore
     {
         if (isset($_COOKIE[$this->_name])) {
             /* Decrypt cookie content */
-            $content = $this->_cipherTool->decrypt($_COOKIE[$this->_name]);
+            $content = $this->cipherTool->decrypt($_COOKIE[$this->_name]);
             //printf("\$content = %s<br />", $content);
 
             /* Get cookie checksum */
@@ -317,12 +319,37 @@ class CookieCore
     }
 
     /**
-     * Setcookie according to php version
+     * Encrypt and set the Cookie
+     *
+     * @param string|null $cookie Cookie content
+     *
+     * @return bool Indicates whether the Cookie was successfully set
+     *
+     * @deprecated 1.7.0
      */
     protected function _setcookie($cookie = null)
     {
+        return $this->encryptAndSetCookie($cookie);
+    }
+
+    /**
+     * Encrypt and set the Cookie
+     *
+     * @param string|null $cookie Cookie content
+     *
+     * @return bool Indicates whether the Cookie was successfully set
+     *
+     * @since 1.7.0
+     */
+    protected function encryptAndSetCookie($cookie = null)
+    {
+        // Check if the content fits in the Cookie
+        $length = (ini_get('mbstring.func_overload') & 2) ? mb_strlen($cookie, ini_get('default_charset')) : strlen($cookie);
+        if ($length >= 1048576) {
+            return false;
+        }
         if ($cookie) {
-            $content = $this->_cipherTool->encrypt($cookie);
+            $content = $this->cipherTool->encrypt($cookie);
             $time = $this->_expire;
         } else {
             $content = 0;
@@ -360,7 +387,7 @@ class CookieCore
         $cookie .= 'checksum|'.crc32($this->_salt.$cookie);
         $this->_modified = false;
         /* Cookies are encrypted for evident security reasons */
-        return $this->_setcookie($cookie);
+        return $this->encryptAndSetCookie($cookie);
     }
 
     /**

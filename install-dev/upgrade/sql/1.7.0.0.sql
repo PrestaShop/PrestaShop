@@ -157,12 +157,11 @@ ALTER TABLE `PREFIX_product` ADD KEY state (state, date_upd);
 
 INSERT INTO  `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`) VALUES (NULL , NULL , NULL ,  'PS_ORDER_RECALCULATE_SHIPPING',  '1',  '0000-00-00 00:00:00',  '0000-00-00 00:00:00');
 
-DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_STORES_DISPLAY_FOOTER', 'PS_STORES_SIMPLIFIED', 'PS_STORES_CENTER_LAT', 'PS_STORES_CENTER_LONG', 'PS_STORES_DISPLAY_SITEMAP');
+DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_STORES_DISPLAY_FOOTER', 'PS_STORES_SIMPLIFIED', 'PS_STORES_CENTER_LAT', 'PS_STORES_CENTER_LONG', 'PS_STORES_DISPLAY_SITEMAP', 'PS_CIPHER_ALGORITHM');
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('actionValidateCustomerAddressForm', 'Customer address form validation', 'This hook is called when a customer submit its address form', '1');
 
 /* PHP:add_quick_access_tab(); */;
-
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayAfterCarrier', 'After carriers list', 'This hook is displayed after the carrier list in Front Office', '1');
 
 DELETE FROM `PREFIX_hook` WHERE `name` IN ('displayProductTab', 'displayProductTabContent', 'displayBeforePayment');
@@ -176,3 +175,4 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_CART_REDIRECT';
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_HTML_THEME_COMPRESSION';
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('validateCustomerFormFields', 'Customer registration form validation', 'This hook is called to a module when it has sent addtionnal fields with additionalCustomerFormFields', '1');
+

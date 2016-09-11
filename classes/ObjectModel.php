@@ -1149,7 +1149,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     }
                     if ($field == 'passwd') {
                         if ($value = Tools::getValue($field)) {
-                            $this->{$field} = Tools::encrypt($value);
+                            $this->{$field} = Tools::hash($value);
                         }
                     } else {
                         $this->{$field} = $value;
