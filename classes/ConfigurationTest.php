@@ -78,6 +78,7 @@ class ConfigurationTestCore
                 ),
                 'phpversion' => false,
                 'apache_mod_rewrite' => false,
+                'curl' => false,
                 'gd' => false,
                 'pdo_mysql' => false,
                 'config_dir' => 'config',
@@ -147,6 +148,11 @@ class ConfigurationTestCore
         }
 
         return in_array('mod_rewrite', apache_get_modules());
+    }
+
+    public static function test_curl()
+    {
+        return function_exists('curl_exec');
     }
 
     public static function test_new_phpversion()
