@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,27 +19,37 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class CustomizationCore
+ */
 class CustomizationCore extends ObjectModel
 {
     /** @var int */
     public $id_product_attribute;
+
     /** @var int */
     public $id_address_delivery;
+
     /** @var int */
     public $id_cart;
+
     /** @var int */
     public $id_product;
+
     /** @var int */
     public $quantity;
+
     /** @var int */
     public $quantity_refunded;
+
     /** @var int */
     public $quantity_returned;
+
     /** @var bool */
     public $in_cart;
 
@@ -51,143 +61,207 @@ class CustomizationCore extends ObjectModel
         'primary' => 'id_customization',
         'fields' => array(
             /* Classic fields */
-            'id_product_attribute' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_address_delivery' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_cart' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_product' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'quantity' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'quantity_refunded' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'quantity_returned' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'in_cart' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+            'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_address_delivery' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_cart' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'quantity_refunded' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'quantity_returned' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'in_cart' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
         ),
     );
+
     protected $webserviceParameters = array(
         'fields' => array(
             'id_address_delivery' => array(
                 'xlink_resource' => array(
-                    'resourceName' => 'addresses'
-                )
+                    'resourceName' => 'addresses',
+                ),
             ),
             'id_cart' => array(
                 'xlink_resource' => array(
-                    'resourceName' => 'carts'
-                )
+                    'resourceName' => 'carts',
+                ),
             ),
             'id_product' => array(
                 'xlink_resource' => array(
-                    'resourceName' => 'products'
-                )
+                    'resourceName' => 'products',
+                ),
             ),
         ),
         'associations' => array(
-            'customized_data_text_fields' => array('resource' => 'customized_data_text_field', 'virtual_entity' => true, 'fields' => array(
-                'id_customization_field' => array('required' => true, 'xlink_resource' => 'product_customization_fields'),
-                'value' => array(),
-                )
+            'customized_data_text_fields' => array(
+                'resource' => 'customized_data_text_field',
+                'virtual_entity' => true,
+                'fields' => array(
+                    'id_customization_field' => array('required' => true, 'xlink_resource' => 'product_customization_fields'),
+                    'value' => array(),
+                ),
             ),
-            'customized_data_images' => array('resource' => 'customized_data_image', 'virtual_entity' => true, 'setter' => false, 'fields' => array(
-                'id_customization_field' => array('xlink_resource' => 'product_customization_fields'),
-                'value' => array(),
-                )
+            'customized_data_images' => array(
+                'resource' => 'customized_data_image',
+                'virtual_entity' => true,
+                'setter' => false,
+                'fields' => array(
+                    'id_customization_field' => array('xlink_resource' => 'product_customization_fields'),
+                    'value' => array(),
+                ),
             ),
         ),
     );
 
-    public static function getReturnedCustomizations($id_order)
+    /**
+     * Get returned Customizations
+     *
+     * @param int $idOrder Order ID
+     *
+     * @return array|bool
+     */
+    public static function getReturnedCustomizations($idOrder)
     {
         if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT ore.`id_order_return`, ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`
 			FROM `'._DB_PREFIX_.'order_return` ore
 			INNER JOIN `'._DB_PREFIX_.'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return`)
-			WHERE ore.`id_order` = '.(int)($id_order).' AND ord.`id_customization` != 0')) === false) {
+			WHERE ore.`id_order` = '.(int) ($idOrder).' AND ord.`id_customization` != 0')) === false) {
             return false;
         }
         $customizations = array();
         foreach ($result as $row) {
-            $customizations[(int)($row['id_customization'])] = $row;
+            $customizations[(int) ($row['id_customization'])] = $row;
         }
+
         return $customizations;
     }
 
-    public static function getOrderedCustomizations($id_cart)
+    /**
+     * Get ordered Customizations
+     *
+     * @param int $idCart Cart ID
+     *
+     * @return array|bool Ordered Customizations
+     *                    `false` if not found
+     */
+    public static function getOrderedCustomizations($idCart)
     {
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `'._DB_PREFIX_.'customization` WHERE `id_cart` = '.(int)($id_cart))) {
+        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_customization`, `quantity` FROM `'._DB_PREFIX_.'customization` WHERE `id_cart` = '.(int) ($idCart))) {
             return false;
         }
         $customizations = array();
         foreach ($result as $row) {
-            $customizations[(int)($row['id_customization'])] = $row;
+            $customizations[(int) ($row['id_customization'])] = $row;
         }
+
         return $customizations;
     }
 
-    public static function getCustomizationPrice($id_customization)
+    /**
+     * Get price of Customization
+     *
+     * @param int $idCustomization Customization ID
+     *
+     * @return float|int Price of customization
+     */
+    public static function getCustomizationPrice($idCustomization)
     {
-        if (!(int)$id_customization) {
+        if (!(int) $idCustomization) {
             return 0;
         }
-        return (float)Db::getInstance()->getValue('
+
+        return (float) Db::getInstance()->getValue('
             SELECT SUM(`price`) FROM `'._DB_PREFIX_.'customized_data`
-            WHERE `id_customization` = '.(int)$id_customization
+            WHERE `id_customization` = '.(int) $idCustomization
         );
     }
 
-    public static function getCustomizationWeight($id_customization)
+    /**
+     * Get weight of Customization
+     *
+     * @param int $idCustomization Customization ID
+     *
+     * @return float|int Weight
+     */
+    public static function getCustomizationWeight($idCustomization)
     {
-        if (!(int)$id_customization) {
+        if (!(int) $idCustomization) {
             return 0;
         }
         return (float)Db::getInstance()->getValue('
             SELECT SUM(`weight`) FROM `'._DB_PREFIX_.'customized_data`
-            WHERE `id_customization` = '.(int)$id_customization
+            WHERE `id_customization` = '.(int) $idCustomization
         );
     }
 
+    /**
+     * Count Customization quantity by Product
+     *
+     * @param array $customizations Customizations
+     *
+     * @return array Customization quantities by Product
+     */
     public static function countCustomizationQuantityByProduct($customizations)
     {
         $total = array();
         foreach ($customizations as $customization) {
-            $total[(int)$customization['id_order_detail']] = !isset($total[(int)$customization['id_order_detail']]) ? (int)$customization['quantity'] : $total[(int)$customization['id_order_detail']] + (int)$customization['quantity'];
+            $total[(int) $customization['id_order_detail']] = !isset($total[(int) $customization['id_order_detail']]) ? (int) $customization['quantity'] : $total[(int) $customization['id_order_detail']] + (int) $customization['quantity'];
         }
+
         return $total;
     }
 
-    public static function getLabel($id_customization, $id_lang, $id_shop = null)
+    /**
+     * Get label
+     *
+     * @param int      $idCustomization Customization ID
+     * @param int      $idLang          Language IOD
+     * @param int|null $idShop          Shop ID
+      *
+     * @return bool|false|null|string
+     */
+    public static function getLabel($idCustomization, $idLang, $idShop = null)
     {
-        if (!(int)$id_customization || !(int)$id_lang) {
+        if (!(int) $idCustomization || !(int) $idLang) {
             return false;
         }
-        if (Shop::isFeatureActive() && !(int)$id_shop) {
-            $id_shop = (int)Context::getContext()->shop->id;
+        if (Shop::isFeatureActive() && !(int) $idShop) {
+            $idShop = (int) Context::getContext()->shop->id;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `name`
 		FROM `'._DB_PREFIX_.'customization_field_lang`
-		WHERE `id_customization_field` = '.(int)$id_customization.((int)$id_shop ? ' AND cfl.`id_shop` = '.(int)$id_shop : '').'
-		AND `id_lang` = '.(int)$id_lang
+		WHERE `id_customization_field` = '.(int) $idCustomization.((int) $idShop ? ' AND cfl.`id_shop` = '.(int) $idShop : '').'
+		AND `id_lang` = '.(int) $idLang
         );
 
         return $result;
     }
 
-    public static function retrieveQuantitiesFromIds($ids_customizations)
+    /**
+     * Retrieve quantities from IDs
+     *
+     * @param array $idsCustomizations Customization IDs
+     *
+     * @return array Quantities
+     */
+    public static function retrieveQuantitiesFromIds($idsCustomizations)
     {
         $quantities = array();
 
-        $in_values  = '';
-        foreach ($ids_customizations as $key => $id_customization) {
+        $inValues  = '';
+        foreach ($idsCustomizations as $key => $idCustomization) {
             if ($key > 0) {
-                $in_values .= ',';
+                $inValues .= ',';
             }
-            $in_values .= (int)($id_customization);
+            $inValues .= (int) $idCustomization;
         }
 
-        if (!empty($in_values)) {
+        if (!empty($inValues)) {
             $results = Db::getInstance()->executeS(
                             'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
 							 FROM `'._DB_PREFIX_.'customization`
-							 WHERE `id_customization` IN ('.$in_values.')');
+							 WHERE `id_customization` IN ('.$inValues.')');
 
             foreach ($results as $row) {
                 $quantities[$row['id_customization']] = $row;
@@ -197,14 +271,21 @@ class CustomizationCore extends ObjectModel
         return $quantities;
     }
 
-    public static function countQuantityByCart($id_cart)
+    /**
+     * Count quantity by Cart
+     *
+     * @param int $idCart Cart ID
+     *
+     * @return array
+     */
+    public static function countQuantityByCart($idCart)
     {
         $quantity = array();
 
         $results = Db::getInstance()->executeS('
 			SELECT `id_product`, `id_product_attribute`, SUM(`quantity`) AS quantity
 			FROM `'._DB_PREFIX_.'customization`
-			WHERE `id_cart` = '.(int)$id_cart.'
+			WHERE `id_cart` = '.(int) $idCart.'
 			GROUP BY `id_cart`, `id_product`, `id_product_attribute`
 		');
 
@@ -229,10 +310,10 @@ class CustomizationCore extends ObjectModel
      * This method is allow to know if a Customization entity is currently used
      * @since 1.5.0.1
      * @param $table
-     * @param $has_active_column
+     * @param $hasActiveColumn
      * @return bool
      */
-    public static function isCurrentlyUsed($table = null, $has_active_column = false)
+    public static function isCurrentlyUsed($table = null, $hasActiveColumn = false)
     {
         return (bool)Db::getInstance()->getValue('
 			SELECT `id_customization_field`
@@ -240,6 +321,12 @@ class CustomizationCore extends ObjectModel
 		');
     }
 
+    /**
+     * Get customized text fields
+     * (for webservice)
+     *
+     * @return array|false|mysqli_result|null|PDOStatement|resource
+     */
     public function getWsCustomizedDataTextFields()
     {
         if (!$results = Db::getInstance()->executeS('
@@ -253,6 +340,12 @@ class CustomizationCore extends ObjectModel
         return $results;
     }
 
+    /**
+     * Get customized images data
+     * (for webservice)
+     *
+     * @return array|false|mysqli_result|null|PDOStatement|resource
+     */
     public function getWsCustomizedDataImages()
     {
         if (!$results = Db::getInstance()->executeS('
@@ -266,25 +359,35 @@ class CustomizationCore extends ObjectModel
         return $results;
     }
 
+    /**
+     * Set customized text fields
+     * (for webservice)
+     *
+     * @param array $values
+     *
+     * @return bool
+     */
     public function setWsCustomizedDataTextFields($values)
     {
         $cart = new Cart($this->id_cart);
         if (!Validate::isLoadedObject($cart)) {
             WebserviceRequest::getInstance()->setError(500, Tools::displayError('Could not load cart id='.$this->id_cart), 137);
+
             return false;
         }
         Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'customized_data`
-		WHERE id_customization = '.(int)$this->id.'
+		WHERE id_customization = '.(int) $this->id.'
 		AND type = 1');
         foreach ($values as $value) {
             $query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`)
-				VALUES ('.(int)$this->id.', 1, '.(int)$value['id_customization_field'].', \''.pSQL($value['value']).'\')';
+				VALUES ('.(int) $this->id.', 1, '.(int) $value['id_customization_field'].', \''.pSQL($value['value']).'\')';
 
             if (!Db::getInstance()->execute($query)) {
                 return false;
             }
         }
+
         return true;
     }
 }
