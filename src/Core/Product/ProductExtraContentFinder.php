@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2016 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,24 +23,26 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Product;
 
 use PrestaShopBundle\Service\Hook\Finder;
 
 /**
  * This class gets the extra content to display on the product page
- * from the modules hooked on displayProductExtraContent
+ * from the modules hooked on displayProductExtraContent.
  */
-class ProductExtraContentFinder extends Finder {
-    
+class ProductExtraContentFinder extends Finder
+{
     protected $hookName = 'displayProductExtraContent';
     protected $expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Product\ProductExtraContent');
-    
+
     /**
      * Execute hook to get all addionnal product content, and check if valid
      * (not empty and only instances of class ProductExtraContent).
      * 
      * @return array
+     *
      * @throws \Exception
      */
     public function find()
@@ -49,7 +51,7 @@ class ProductExtraContentFinder extends Finder {
         if (!array_key_exists('product', $this->params) || !$this->params['product'] instanceof \Product) {
             throw new \Exception('Required product param not found.');
         }
-        
+
         return parent::find();
     }
 }

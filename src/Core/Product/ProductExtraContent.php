@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Product;
 
 class ProductExtraContent
@@ -35,7 +36,6 @@ class ProductExtraContent
      */
     private $title;
 
-
     /**
      * Content in HTML to display.
      * This is the main attribute of this class.
@@ -43,7 +43,7 @@ class ProductExtraContent
      * @var string
      */
     private $content;
-    
+
     /**
      * For some reason, you may need to have a class on the div generated,
      * or to be able to set an anchor.
@@ -70,20 +70,24 @@ class ProductExtraContent
         return $this->attr;
     }
 
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->title = $title;
+
         return $this;
     }
 
     public function setContent($content)
     {
         $this->content = $content;
+
         return $this;
     }
-    
+
     public function addAttr($attr)
     {
         $this->attr = array_merge($this->attr, $attr);
+
         return $this;
     }
 
@@ -95,9 +99,10 @@ class ProductExtraContent
             'id' => '',
             'class' => '',
         ), $attr);
+
         return $this;
     }
-    
+
     public function toArray()
     {
         return array(
@@ -106,5 +111,4 @@ class ProductExtraContent
             'attr' => $this->attr,
         );
     }
-
 }
