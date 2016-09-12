@@ -2063,10 +2063,12 @@
 	  var updateDeliveryForm = function updateDeliveryForm() {
 	    var $deliveryMethodForm = (0, _jquery2['default'])(deliveryFormSelector);
 	    var requestData = $deliveryMethodForm.serialize();
+	    var $inputChecked = (0, _jquery2['default'])(event.currentTarget);
+	    var $newDeliveryOption = $inputChecked.parents("div.delivery-option");
 	
 	    _jquery2['default'].post($deliveryMethodForm.data('url-update'), requestData).then(function (resp) {
 	      (0, _jquery2['default'])(summarySelector).replaceWith(resp.preview);
-	      _prestashop2['default'].emit('updatedDeliveryForm');
+	      _prestashop2['default'].emit('updatedDeliveryForm', { dataForm: $deliveryMethodForm.serializeArray(), deliveryOption: $newDeliveryOption });
 	    }).fail(function (resp) {
 	      _prestashop2['default'].trigger('handleError', { eventType: 'updateDeliveryOptions', resp: resp });
 	    });

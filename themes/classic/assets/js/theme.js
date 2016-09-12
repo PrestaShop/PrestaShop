@@ -12689,6 +12689,13 @@
 	  if ((0, _jquery2['default'])('body#checkout').length === 1) {
 	    setUpCheckout();
 	  }
+	
+	  _prestashop2['default'].on('updatedDeliveryForm', function (params) {
+	    // Hide all carrier extra content ...
+	    (0, _jquery2['default'])(".carrier-extra-content").hide();
+	    // and show the one related to the selected carrier
+	    params.deliveryOption.find(".carrier-extra-content").slideDown();
+	  });
 	});
 
 /***/ },
