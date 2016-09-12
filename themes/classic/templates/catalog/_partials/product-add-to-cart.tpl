@@ -20,7 +20,7 @@
           </button>
           {block name='product_availability'}
             <span id="product-availability">
-              {if $product.show_availability}
+              {if $product.show_availability && $product.availability_message}
                 {if $product.availability == 'available'}
                   <i class="material-icons product-available">&#xE5CA;</i>
                 {else}

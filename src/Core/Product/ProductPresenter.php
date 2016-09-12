@@ -380,11 +380,8 @@ class ProductPresenter
                     $presentedProduct['availability_date'] = $product['available_date'];
                     $presentedProduct['availability'] = 'available';
                 } else {
-                    $presentedProduct['availability_message'] = $this->translator->trans(
-                        'Out of stock',
-                        array(),
-                        'Shop.Theme.Catalog'
-                    );
+                    // no default message when allow_oosp (out of stock) is enabled & available_later is empty
+                    $presentedProduct['availability_message'] = null;
                     $presentedProduct['availability_date'] = $product['available_date'];
                     $presentedProduct['availability'] = 'unavailable';
                 }
