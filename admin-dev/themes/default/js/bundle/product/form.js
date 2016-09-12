@@ -135,7 +135,7 @@ var displayFieldsManager = (function() {
       var showPriceSelector = '.js-show-price';
       var availableForOrderSelector = '.js-available-for-order';
 
-      var applyVisibilityRule = () => {
+      var applyVisibilityRule = function applyVisibilityRule() {
         var $availableForOrder = $(availableForOrderSelector + ' input');
         var $showPrice = $(showPriceSelector + ' input');
         var $showPriceColumn = $(showPriceSelector);
