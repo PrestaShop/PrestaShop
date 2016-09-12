@@ -40,11 +40,11 @@
             <td>
               {% if product.active|default(0) == 0 %}
                 <a href="#" onclick="unitProductAction(this, 'activate'); return false;">
-                  <i class="material-icons action-disabled danger">highlight_off</i>
+                  <i class="material-icons action-disabled">clear</i>
                 </a>
               {% else %}
                 <a href="#" onclick="unitProductAction(this, 'deactivate'); return false;">
-                  <i class="material-icons action-enabled ">check_circle</i>
+                  <i class="material-icons action-enabled ">check</i>
                 </a>
               {% endif %}
             </td>
