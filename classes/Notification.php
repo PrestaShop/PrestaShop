@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class NotificationCore
+ */
 class NotificationCore
 {
     public $types;
 
+    /**
+     * NotificationCore constructor.
+     */
     public function __construct()
     {
         $this->types = array('order', 'customer_message', 'customer');
@@ -44,13 +50,13 @@ class NotificationCore
         global $cookie;
 
         $notifications = array();
-        $employee_infos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        $employeeInfos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT id_last_order, id_last_customer_message, id_last_customer
 		FROM `'._DB_PREFIX_.'employee`
-		WHERE `id_employee` = '.(int)$cookie->id_employee);
+		WHERE `id_employee` = '.(int) $cookie->id_employee);
 
         foreach ($this->types as $type) {
-            $notifications[$type] = Notification::getLastElementsIdsByType($type, $employee_infos['id_last_'.$type]);
+            $notifications[$type] = Notification::getLastElementsIdsByType($type, $employeeInfos['id_last_'.$type]);
         }
 
         return $notifications;
@@ -60,11 +66,12 @@ class NotificationCore
      * getLastElementsIdsByType return all the element ids to show (order, customer registration, and customer message)
      * Get all the element ids
      *
-     * @param string $type contains the field name of the Employee table
-     * @param int $id_last_element contains the id of the last seen element
+     * @param string $type          contains the field name of the Employee table
+     * @param int    $idLastElement contains the id of the last seen element
+     *
      * @return array containing the notifications
      */
-    public static function getLastElementsIdsByType($type, $id_last_element)
+    public static function getLastElementsIdsByType($type, $idLastElement)
     {
         global $cookie;
 
@@ -77,7 +84,7 @@ class NotificationCore
 					LEFT JOIN `'._DB_PREFIX_.'carrier` as ca ON (ca.`id_carrier` = o.`id_carrier`)
 					LEFT JOIN `'._DB_PREFIX_.'address` as a ON (a.`id_address` = o.`id_address_delivery`)
 					LEFT JOIN `'._DB_PREFIX_.'country` as co ON (co.`id_country` = a.`id_country`)
-					WHERE `id_order` > '.(int)$id_last_element.
+					WHERE `id_order` > '.(int) $idLastElement.
                     Shop::addSqlRestriction(false, 'o').'
 					ORDER BY `id_order` DESC
 					LIMIT 5';
@@ -89,7 +96,7 @@ class NotificationCore
 					FROM `'._DB_PREFIX_.'customer_message` as c
 					LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
 					LEFT JOIN `'._DB_PREFIX_.'customer` as cu ON (cu.`id_customer` = ct.`id_customer`)
-					WHERE c.`id_customer_message` > '.(int)$id_last_element.'
+					WHERE c.`id_customer_message` > '.(int) $idLastElement.'
 						AND c.`id_employee` = 0
 						AND ct.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
 					ORDER BY c.`id_customer_message` DESC
@@ -99,7 +106,7 @@ class NotificationCore
                 $sql = '
 					SELECT SQL_CALC_FOUND_ROWS t.`id_'.bqSQL($type).'`, t.*
 					FROM `'._DB_PREFIX_.bqSQL($type).'` t
-					WHERE t.`deleted` = 0 AND t.`id_'.bqSQL($type).'` > '.(int)$id_last_element.
+					WHERE t.`deleted` = 0 AND t.`id_'.bqSQL($type).'` > '.(int) $idLastElement.
                     Shop::addSqlRestriction(false, 't').'
 					ORDER BY t.`id_'.bqSQL($type).'` DESC
 					LIMIT 5';
@@ -110,24 +117,24 @@ class NotificationCore
         $total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()', false);
         $json = array('total' => $total, 'results' => array());
         foreach ($result as $value) {
-            $customer_name = '';
+            $customerName = '';
             if (isset($value['firstname']) && isset($value['lastname'])) {
-                $customer_name = Tools::safeOutput($value['firstname'].' '.$value['lastname']);
+                $customerName = Tools::safeOutput($value['firstname'].' '.$value['lastname']);
             } elseif (isset($value['email'])) {
-                $customer_name = Tools::safeOutput($value['email']);
+                $customerName = Tools::safeOutput($value['email']);
             }
 
             $json['results'][] = array(
-                'id_order' => ((!empty($value['id_order'])) ? (int)$value['id_order'] : 0),
-                'id_customer' => ((!empty($value['id_customer'])) ? (int)$value['id_customer'] : 0),
-                'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int)$value['id_customer_message'] : 0),
-                'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),
-                'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float)$value['total_paid'], (int)$value['id_currency'], false) : 0),
+                'id_order' => ((!empty($value['id_order'])) ? (int) $value['id_order'] : 0),
+                'id_customer' => ((!empty($value['id_customer'])) ? (int) $value['id_customer'] : 0),
+                'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int) $value['id_customer_message'] : 0),
+                'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int) $value['id_customer_thread'] : 0),
+                'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float) $value['total_paid'], (int) $value['id_currency'], false) : 0),
                 'carrier' => ((!empty($value['name'])) ? Tools::safeOutput($value['name']) : ''),
                 'iso_code' => ((!empty($value['iso_code'])) ? Tools::safeOutput($value['iso_code']) : ''),
                 'company' => ((!empty($value['company'])) ? Tools::safeOutput($value['company']) : ''),
                 'status' => ((!empty($value['status'])) ? Tools::safeOutput($value['status']) : ''),
-                'customer_name' => $customer_name,
+                'customer_name' => $customerName,
                 'date_add' => isset($value['date_add']) ? Tools::displayDate($value['date_add']) : 0,
             );
         }
@@ -154,8 +161,9 @@ class NotificationCore
 				SELECT IFNULL(MAX(`id_'.$type.'`), 0)
 				FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`
 			)
-			WHERE `id_employee` = '.(int)$cookie->id_employee);
+			WHERE `id_employee` = '.(int) $cookie->id_employee);
         }
+
         return false;
     }
 }
