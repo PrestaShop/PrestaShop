@@ -2496,7 +2496,7 @@ abstract class ModuleCore
     }
 
     /**
-     * Get Unauthorized modules for a client group
+     * Get authorized modules for a client group
      *
      * @param int $group_id
      * @return array|null
