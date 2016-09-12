@@ -17,6 +17,10 @@
   margin: 0;
 }
 
+.category-title > .title {
+  text-transform: uppercase;
+}
+
 .link-levelone {
   $padding-size: rem(20px);
   > .link {
