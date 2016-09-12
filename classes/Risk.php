@@ -63,7 +63,8 @@ class RiskCore extends ObjectModel
     public function getTranslationsFieldsChild()
     {
         $this->validateFieldsLang();
-        return $this->getTranslationsFields(array('name'));
+
+        return $this->getFieldsLang();
     }
 
     public static function getRisks($id_lang = null)
