@@ -17021,6 +17021,17 @@
 	      updateProductQuantityInCart(event);
 	    }
 	  });
+	
+	  $body.on('click', '.js-discount .code', function (event) {
+	    event.stopPropagation();
+	
+	    var $code = (0, _jquery2['default'])(event.currentTarget);
+	    var $discountInput = (0, _jquery2['default'])('[name=discount_name]');
+	
+	    $discountInput.val($code.text());
+	
+	    return false;
+	  });
 	});
 
 /***/ },
