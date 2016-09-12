@@ -426,7 +426,7 @@ var featuresCollection = (function() {
 
       var $featuresContainer = $('#features-content');
 
-      $featuresContainer.on('change', '.row select, .row input[type="text"]', (event) => {
+      $featuresContainer.on('change', '.row select, .row input[type="text"]', function onChange(event){
         var that = event.currentTarget;
         var $row = $($(that).parents('.row')[0]);
         var $definedValueSelector = $row.find('.feature-value-selector');
