@@ -288,7 +288,16 @@ class CartRuleCore extends ObjectModel
      * @return array
      * @throws PrestaShopDatabaseException
      */
-    public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null, $free_shipping_only = false, $highlight_only = false)
+    public static function getCustomerCartRules(
+        $id_lang,
+        $id_customer,
+        $active = false,
+        $includeGeneric = true,
+        $inStock = false,
+        Cart $cart = null,
+        $free_shipping_only = false,
+        $highlight_only = false
+    )
     {
         if (!CartRule::isFeatureActive()) {
             return array();
@@ -432,6 +441,25 @@ class CartRuleCore extends ObjectModel
 
         return $result;
     }
+
+    public static function getCustomerHighlightedDiscounts(
+        $languageId,
+        $customerId,
+        Cart $cart
+    )
+    {
+       return self::getCustomerCartRules(
+           $languageId,
+           $customerId,
+           $active = true,
+           $includeGeneric = true,
+           $inStock = true,
+           $cart,
+           $freeShippingOnly = false,
+           $highlightOnly = true
+       );
+    }
+
 
     /**
      * Check if the CartRule has been used by the given Customer

@@ -348,6 +348,8 @@ class CartPresenter implements PresenterInterface
                 : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme'),
         );
 
+        $discounts = $cart->getDiscounts();
+
         return array(
             'products' => $products,
             'totals' => $totals,
@@ -359,6 +361,7 @@ class CartPresenter implements PresenterInterface
             'id_address_invoice' => $cart->id_address_invoice,
             'is_virtual' => $cart->isVirtualCart(),
             'vouchers' => $this->getTemplateVarVouchers($cart),
+            'discounts' => $discounts,
             'minimalPurchase' => $minimalPurchase,
             'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
                 sprintf(
