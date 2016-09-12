@@ -294,7 +294,16 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         foreach ($installedProducts as $installedProduct) {
-            $warnings = $installedProduct->attributes->get('warning');
+            $warnings = array();
+            $moduleProvider = $this->get('prestashop.adapter.data_provider.module');
+            $moduleName = $installedProduct->attributes->get('name');
+
+            if ($moduleProvider->isModuleMainClassValid($moduleName)) {
+                require_once _PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php';
+
+                $module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($moduleName);
+                $warnings[] = $module->warning;
+            }
             if (!empty($warnings)) {
                 $modules->to_configure[] = (object) $installedProduct;
             }
