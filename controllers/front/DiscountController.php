@@ -39,7 +39,7 @@ class DiscountControllerCore extends FrontController
     {
         parent::initContent();
 
-        $cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, true, true);
+        $cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false, true);
         $nb_cart_rules = count($cart_rules);
 
         foreach ($cart_rules as $key => &$discount ) {

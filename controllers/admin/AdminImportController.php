@@ -1003,7 +1003,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         foreach ($array as $k => $row) {
-            if (!call_user_func_array($funcname, array($row, $k, $user_data))) {
+            if (!call_user_func_array($funcname, array($row, $k, &$user_data))) {
                 return false;
             }
         }
