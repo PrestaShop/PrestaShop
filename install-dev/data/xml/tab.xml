@@ -423,5 +423,9 @@
       <tab id="DEFAULT" id_parent="" active="1" hide_host_mode="0" icon="">
         <class_name>DEFAULT</class_name>
       </tab>
+
+      <tab id="Patterns" id_parent="-1" active="1" hide_host_mode="0" icon="">
+        <class_name>AdminPatterns</class_name>
+      </tab>
     </entities>
 </entity_tab>
