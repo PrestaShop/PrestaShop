@@ -505,6 +505,10 @@ class AdminGroupsControllerCore extends AdminController
         if (is_array($auth_modules)) {
             $return &= Group::addModulesRestrictions($id_group, $auth_modules, $shops);
         }
+
+        // update module list by hook cache
+        Cache::delete(Hook::MODULE_LIST_BY_HOOK_KEY.'*');
+
         return $return;
     }
 

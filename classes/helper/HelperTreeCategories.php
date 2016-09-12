@@ -391,7 +391,7 @@ class HelperTreeCategoriesCore extends TreeCore
 
         $html = '';
         foreach ($data as $item) {
-            if (array_key_exists('children', $item)
+            if (is_array($item) && array_key_exists('children', $item)
                 && !empty($item['children'])) {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeFolderTemplate()),
