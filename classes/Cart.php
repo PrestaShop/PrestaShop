@@ -164,15 +164,15 @@ class CartCore extends ObjectModel
      *
      * @param int|null $id      Cart ID
      *                          null = new Cart
-     * @param int|null $id_lang Language ID
+     * @param int|null $idLang  Language ID
      *                          null = Language ID of current Context
      */
-    public function __construct($id = null, $id_lang = null)
+    public function __construct($id = null, $idLang = null)
     {
         parent::__construct($id);
 
-        if (!is_null($id_lang)) {
-            $this->id_lang = (int)(Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
+        if (!is_null($idLang)) {
+            $this->id_lang = (int)(Language::getLanguage($idLang) !== false) ? $idLang : Configuration::get('PS_LANG_DEFAULT');
         }
 
         if ($this->id_customer) {
@@ -204,14 +204,14 @@ class CartCore extends ObjectModel
     /**
      * Adds current Cart as a new Object to the database
      *
-     * @param bool $autodate    Automatically set `date_upd` and `date_add` columns
-     * @param bool $null_values Whether we want to use NULL values instead of empty quotes values
+     * @param bool $autoDate   Automatically set `date_upd` and `date_add` columns
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Whether the Cart has been successfully added
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function add($autodate = true, $null_values = false)
+    public function add($autoDate = true, $nullValues = false)
     {
         if (!$this->id_lang) {
             $this->id_lang = Configuration::get('PS_LANG_DEFAULT');
@@ -220,7 +220,7 @@ class CartCore extends ObjectModel
             $this->id_shop = Context::getContext()->shop->id;
         }
 
-        $return = parent::add($autodate, $null_values);
+        $return = parent::add($autoDate, $nullValues);
         Hook::exec('actionCartSave');
 
         return $return;
@@ -229,13 +229,13 @@ class CartCore extends ObjectModel
     /**
      * Updates the current object in the database
      *
-     * @param bool $null_values Whether we want to use NULL values instead of empty quotes values
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Whether the Cart has been successfully updated
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function update($null_values = false)
+    public function update($nullValues = false)
     {
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
@@ -246,7 +246,7 @@ class CartCore extends ObjectModel
         }
 
         $this->_products = null;
-        $return = parent::update($null_values);
+        $return = parent::update($nullValues);
         Hook::exec('actionCartSave');
 
         return $return;
@@ -4351,7 +4351,7 @@ class CartCore extends ObjectModel
         $product_in_stock = 0;
         foreach ($this->getProducts() as $product) {
             if (!$exclusive) {
-                if (((int)$product['quantity_available'] - (int)$product['cart_quantity']) <= 0
+                if (((int)$product['quantity_available'] - (int)$product['cart_quantity']) < 0
                     && (!$ignore_virtual || !$product['is_virtual'])) {
                     return false;
                 }
