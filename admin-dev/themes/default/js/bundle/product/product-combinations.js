@@ -160,6 +160,9 @@ var combinations = (function() {
                 productTypeSelector.prop('disabled', false);
               }
             }).show();
+          } else {
+            // enable the top header selector if no combination(s) exists
+            productTypeSelector.prop('disabled', false);
           }
         }else {
           // this means we have or we want to have combinations
