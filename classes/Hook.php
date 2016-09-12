@@ -604,7 +604,11 @@ class HookCore extends ObjectModel
 
         // Look on modules list
         $altern = 0;
-        $output = '';
+        if ($array_return) {
+            $output = array();
+        } else {
+            $output = '';
+        }
 
         if ($disable_non_native_modules && !isset(Hook::$native_module)) {
             Hook::$native_module = Module::getNativeModuleList();
