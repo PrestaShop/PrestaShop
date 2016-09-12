@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,8 +18,8 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
+ *  @author     PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2016 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,69 +33,45 @@ namespace PrestaShop\PrestaShop\Core\Crypto;
 class Hashing
 {
     /** @var array should contain hashing methods */
-    private $hash_methods = [];
+    private $hashMethods = array();
 
     /**
-     * Init $hash_methods
-     * @return void
+     * Check if it's the first function of the array that was used for hashing
+     *
+     * @param  string $passwd     The password you want to check
+     * @param  string $hash       The hash you want to check
+     * @param  string $staticSalt A static salt
+     *
+     * @return bool              Result of the verify function
      */
-    private function initHashMethods()
+    public function isFirstHash($passwd, $hash, $staticSalt = _COOKIE_KEY_)
     {
-        $this->hash_methods = [
-                'bcrypt' => [
-                    'option' => [],
-                    'hash' => function ($passwd, $cookie_key, $option) {
-                        return password_hash($passwd, PASSWORD_BCRYPT);
-                    },
-                    'verify' => function ($passwd, $hash, $cookie_key) {
-                        return password_verify($passwd, $hash);
-                    }
-                ],
-                'md5' => [
-                    'option' => [],
-                    'hash' => function ($passwd, $cookie_key, $option) {
-                        return md5($cookie_key.$passwd);
-                    },
-                    'verify' => function ($passwd, $hash, $cookie_key) {
-                        return md5($cookie_key.$passwd) === $hash;
-                    }
-                ]
-            ];
-    }
-
-    /**
-     * check if it's the first function of the array that was used for hashing
-     * @param  string  $passwd     the password you want to check
-     * @param  string  $hash       the hash you want to check
-     * @param  string  $cookie_key the define _COOKIE_KEY_
-     * @return bool                result of the verify function
-     */
-    public function isFirstHash($passwd, $hash, $cookie_key)
-    {
-        if (!count($this->hash_methods)) {
+        if (!count($this->hashMethods)) {
             $this->initHashMethods();
         }
 
-        $closure = reset($this->hash_methods);
+        $closure = reset($this->hashMethods);
 
-        return $closure['verify']($passwd, $hash, $cookie_key);
+        return $closure['verify']($passwd, $hash, $staticSalt);
     }
 
     /**
-     * Iter on hash_methods array and return true if it match
-     * @param  string  $passwd     the password you want to check
-     * @param  string  $hash       the hash you want to check
-     * @param  string  $cookie_key the define _COOKIE_KEY_
-     * @return bool                true is returned if the function find a match else false
+     * Iterate on hash_methods array and return true if it matches
+     *
+     * @param  string $passwd     The password you want to check
+     * @param  string $hash       The hash you want to check
+     * @param  string $staticSalt A static salt
+     *
+     * @return bool               `true` is returned if the function find a match else false
      */
-    public function checkHash($passwd, $hash, $cookie_key)
+    public function checkHash($passwd, $hash, $staticSalt = _COOKIE_KEY_)
     {
-        if (!count($this->hash_methods)) {
+        if (!count($this->hashMethods)) {
             $this->initHashMethods();
         }
 
-        foreach ($this->hash_methods as $closure) {
-            if ($closure['verify']($passwd, $hash, $cookie_key)) {
+        foreach ($this->hashMethods as $closure) {
+            if ($closure['verify']($passwd, $hash, $staticSalt)) {
                 return true;
             }
         }
@@ -104,20 +80,51 @@ class Hashing
     }
 
     /**
-     * hash the $passwd string and return the result of the 1st hashing method
+     * Hash the `$plaintextPassword` string and return the result of the 1st hashing method
      * contained in PrestaShop\PrestaShop\Core\Crypto\Hashing::hash_methods
-     * @param  string  $passwd     the password you want to hash
-     * @param  string  $cookie_key the define _COOKIE_KEY_
+     *
+     * @param string $plaintextPassword The password you want to hash
+     * @param string $staticSalt        The static salt
+     *
      * @return string
      */
-    public function encrypt($passwd, $cookie_key)
+    public function hash($plaintextPassword, $staticSalt = _COOKIE_KEY_)
     {
-        if (!count($this->hash_methods)) {
+        if (!count($this->hashMethods)) {
             $this->initHashMethods();
         }
 
-        $closure = reset($this->hash_methods);
+        $closure = reset($this->hashMethods);
 
-        return $closure['hash']($passwd, $cookie_key, $closure['option']);
+        return $closure['hash']($plaintextPassword, $staticSalt, $closure['option']);
+    }
+
+    /**
+     * Init $hash_methods
+     *
+     * @return void
+     */
+    private function initHashMethods()
+    {
+        $this->hashMethods = array(
+            'bcrypt' => array(
+                'option' => array(),
+                'hash' => function ($passwd, $staticSalt, $option) {
+                    return password_hash($passwd, PASSWORD_BCRYPT);
+                },
+                'verify' => function ($passwd, $hash, $staticSalt) {
+                    return password_verify($passwd, $hash);
+                },
+            ),
+            'md5' => array(
+                'option' => array(),
+                'hash' => function ($passwd, $staticSalt, $option) {
+                    return md5($staticSalt.$passwd);
+                },
+                'verify' => function ($passwd, $hash, $staticSalt) {
+                    return md5($staticSalt.$passwd) === $hash;
+                },
+            ),
+        );
     }
 }

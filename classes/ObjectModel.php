@@ -1,4 +1,6 @@
 <?php
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+
 /**
  * 2007-2015 PrestaShop
  *
@@ -1148,8 +1150,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                         continue;
                     }
                     if ($field == 'passwd') {
+                        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+                        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
                         if ($value = Tools::getValue($field)) {
-                            $this->{$field} = Tools::hash($value);
+                            $this->{$field} = $crypto->hash($value, _COOKIE_KEY_);
                         }
                     } else {
                         $this->{$field} = $value;

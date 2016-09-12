@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Adapter\CoreException;
+
 /**
  * Class EmployeeCore
  */
@@ -112,7 +115,7 @@ class EmployeeCore extends ObjectModel
             'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
             'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 255),
+            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isHashedPassword', 'required' => true, 'size' => 60),
             'last_passwd_gen' => array('type' => self::TYPE_STRING),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'optin' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -307,36 +310,55 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Return employee instance from its e-mail (optionnaly check password)
+     * Return employee instance from its e-mail (optionally check password)
      *
-     * @param string $email      e-mail
-     * @param string $passwd     Password is also checked if specified
-     * @param bool   $activeOnly Filter employee by active status
+     * @param string $email             e-mail
+     * @param string $plaintextPassword Password is also checked if specified
+     * @param bool   $activeOnly        Filter employee by active status
      *
      * @return bool|Employee|EmployeeCore Employee instance
      *                                    `false` if not found
      */
-    public function getByEmail($email, $passwd = null, $activeOnly = true)
+
+    public function getByEmail($email, $plaintextPassword = null, $activeOnly = true)
     {
-        if (!Validate::isEmail($email) || ($passwd != null && !Validate::isPasswd($passwd))) {
+        if (!Validate::isEmail($email) || ($plaintextPassword != null && !Validate::isPlaintextPassword($plaintextPassword))) {
             die(Tools::displayError());
         }
 
-        $result = Db::getInstance()->getRow('
-		SELECT *
-		FROM `'._DB_PREFIX_.'employee`
-		WHERE `email` = \''.pSQL($email).'\'
-		'.($activeOnly ? ' AND `active` = 1' : '')
-        .($passwd !== null ? ' AND `passwd` = \''.Tools::hash($passwd).'\'' : ''));
+        $sql = new DbQuery();
+        $sql->select('e.*');
+        $sql->from('employee', 'e');
+        $sql->where('e.`email` = \''.pSQL($email).'\'');
+        if ($activeOnly) {
+            $sql->where('e.`active` = 1');
+        }
+
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
         if (!$result) {
             return false;
         }
+
+        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+
+        $passwordHash = $result['passwd'];
+        if (isset($plaintextPassword) && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
+            return false;
+        }
+
         $this->id = $result['id_employee'];
         $this->id_profile = $result['id_profile'];
         foreach ($result as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
+        }
+
+        if (!$crypto->isFirstHash($plaintextPassword, $passwordHash)) {
+            $this->passwd = $crypto->hash($plaintextPassword);
+
+            $this->update();
         }
 
         return $this;
@@ -364,23 +386,25 @@ class EmployeeCore extends ObjectModel
     /**
      * Check if employee password is the right one
      *
-     * @param int    $idEmployee Employee ID
-     * @param string $passwd     Password
+     * @param string $passwordHash Password
      *
      * @return bool result
      */
-    public static function checkPassword($idEmployee, $passwd)
+    public static function checkPassword($idEmployee, $passwordHash)
     {
-        if (!Validate::isUnsignedId($idEmployee) || !Validate::isPasswd($passwd, 8)) {
+        if (!Validate::isUnsignedId($idEmployee)) {
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->getValue('
-		SELECT `id_employee`
-		FROM `'._DB_PREFIX_.'employee`
-		WHERE `id_employee` = '.(int) $idEmployee.'
-		AND `passwd` = \''.pSQL($passwd).'\'
-		AND `active` = 1');
+        $sql = new DbQuery();
+        $sql->select('e.`id_employee`');
+        $sql->from('employee', 'e');
+        $sql->where('e.`id_employee` = '.(int) $idEmployee);
+        $sql->where('e.`passwd` = \''.pSQL($passwordHash).'\'');
+        $sql->where('e.`active` = 1');
+
+        // Get result from DB
+        return Db::getInstance()->getValue($sql);
     }
 
     /**
@@ -396,7 +420,7 @@ class EmployeeCore extends ObjectModel
         return Db::getInstance()->getValue('
 		SELECT COUNT(*)
 		FROM `'._DB_PREFIX_.'employee`
-		WHERE `id_profile` = '.(int)$idProfile.'
+		WHERE `id_profile` = '.(int) $idProfile.'
 		'.($activeOnly ? ' AND `active` = 1' : ''));
     }
 
@@ -423,12 +447,19 @@ class EmployeeCore extends ObjectModel
      */
     public function setWsPasswd($passwd)
     {
+        try {
+            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+            $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+        } catch (CoreException $e) {
+            return false;
+        }
+
         if ($this->id != 0) {
             if ($this->passwd != $passwd) {
-                $this->passwd = Tools::hash($passwd);
+                $this->passwd = $crypto->hash($passwd);
             }
         } else {
-            $this->passwd = Tools::hash($passwd);
+            $this->passwd = $crypto->hash($passwd);
         }
 
         return true;

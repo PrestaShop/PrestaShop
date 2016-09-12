@@ -22,9 +22,9 @@ ALTER TABLE PREFIX_employee ADD `reset_password_validity` datetime DEFAULT NULL;
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
 
 /*  Need to set the date to null before manipulate the table if the strict mode is enabled on MySQL */
-UPDATE `PREFIX_customer` SET `newsletter_date_add` = NULL WHERE YEAR(newsletter_date_add) = "0000"
-ALTER TABLE `PREFIX_customer` CHANGE COLUMN `passwd` `passwd` varchar(255) NOT NULL;
-ALTER TABLE `PREFIX_employee` CHANGE COLUMN `passwd` `passwd` varchar(255) NOT NULL;
+UPDATE `PREFIX_customer` SET `newsletter_date_add` = NULL WHERE YEAR(newsletter_date_add) = "0000";
+ALTER TABLE `PREFIX_customer` CHANGE COLUMN `passwd` `passwd` varchar(60) NOT NULL;
+ALTER TABLE `PREFIX_employee` CHANGE COLUMN `passwd` `passwd` varchar(60) NOT NULL;
 
 INSERT INTO `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`) VALUES (NULL , NULL , NULL , 'PS_ACTIVE_CRONJOB_EXCHANGE_RATE', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
