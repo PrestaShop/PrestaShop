@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class MessageCore
+ */
 class MessageCore extends ObjectModel
 {
     public $id;
@@ -56,29 +59,29 @@ class MessageCore extends ObjectModel
         'table' => 'message',
         'primary' => 'id_message',
         'fields' => array(
-            'message' =>        array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600),
-            'id_cart' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_order' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_customer' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_employee' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'private' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' =>        array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600),
+            'id_cart' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'private' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
         ),
     );
 
     protected $webserviceParameters = array(
         'fields' => array(
             'id_cart' => array(
-                'xlink_resource' => 'carts'
+                'xlink_resource' => 'carts',
             ),
             'id_order' => array(
-                'xlink_resource' => 'orders'
+                'xlink_resource' => 'orders',
             ),
             'id_customer' => array(
-                'xlink_resource' => 'customers'
+                'xlink_resource' => 'customers',
             ),
             'id_employee' => array(
-                'xlink_resource' => 'employees'
+                'xlink_resource' => 'employees',
             ),
         ),
     );
@@ -86,26 +89,28 @@ class MessageCore extends ObjectModel
     /**
      * Return the last message from cart
      *
-     * @param int $id_cart Cart ID
+     * @param int $idCart Cart ID
+     *
      * @return array Message
      */
-    public static function getMessageByCartId($id_cart)
+    public static function getMessageByCartId($idCart)
     {
         return Db::getInstance()->getRow('
 			SELECT *
 			FROM `'._DB_PREFIX_.'message`
-			WHERE `id_cart` = '.(int)$id_cart
+			WHERE `id_cart` = '.(int) $idCart
         );
     }
 
     /**
      * Return messages from Order ID
      *
-     * @param int $id_order Order ID
+     * @param int  $idOrder Order ID
      * @param bool $private return WITH private messages
+     *
      * @return array Messages
      */
-    public static function getMessagesByOrderId($id_order, $private = false, Context $context = null)
+    public static function getMessagesByOrderId($idOrder, $private = false, Context $context = null)
     {
         if (!Validate::isBool($private)) {
             die(Tools::displayError());
@@ -124,7 +129,7 @@ class MessageCore extends ObjectModel
 				ON mr.`id_message` = m.`id_message`
 				AND mr.`id_employee` = '.(isset($context->employee) ? (int)$context->employee->id : '\'\'').'
 			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = m.`id_employee`
-			WHERE id_order = '.(int)$id_order.'
+			WHERE id_order = '.(int) $idOrder.'
 			'.(!$private ? ' AND m.`private` = 0' : '').'
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
@@ -134,11 +139,12 @@ class MessageCore extends ObjectModel
     /**
      * Return messages from Cart ID
      *
-     * @param int $id_order Order ID
-     * @param bool $private return WITH private messages
+     * @param int  $id_order Order ID
+     * @param bool $private  return WITH private messages
+     *
      * @return array Messages
      */
-    public static function getMessagesByCartId($id_cart, $private = false, Context $context = null)
+    public static function getMessagesByCartId($idCart, $private = false, Context $context = null)
     {
         if (!Validate::isBool($private)) {
             die(Tools::displayError());
@@ -155,7 +161,7 @@ class MessageCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'customer` c ON m.`id_customer` = c.`id_customer`
 			LEFT JOIN `'._DB_PREFIX_.'message_readed` mr ON (mr.id_message = m.id_message AND mr.id_employee = '.(int)$context->employee->id.')
 			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = m.`id_employee`
-			WHERE id_cart = '.(int)$id_cart.'
+			WHERE id_cart = '.(int) $idCart.'
 			'.(!$private ? ' AND m.`private` = 0' : '').'
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
@@ -165,19 +171,22 @@ class MessageCore extends ObjectModel
     /**
      * Registered a message 'readed'
      *
-     * @param int $id_message Message ID
+     * @param int $idMessage  Message ID
      * @param int $id_emplyee Employee ID
+     *
+     * @return bool
      */
-    public static function markAsReaded($id_message, $id_employee)
+    public static function markAsReaded($idMessage, $idEmployee)
     {
-        if (!Validate::isUnsignedId($id_message) || !Validate::isUnsignedId($id_employee)) {
+        if (!Validate::isUnsignedId($idMessage) || !Validate::isUnsignedId($idEmployee)) {
             die(Tools::displayError());
         }
 
         $result = Db::getInstance()->execute('
 			INSERT INTO '._DB_PREFIX_.'message_readed (id_message , id_employee , date_add) VALUES
-			('.(int)$id_message.', '.(int)$id_employee.', NOW());
+			('.(int) $idMessage.', '.(int) $idEmployee.', NOW());
 		');
+
         return $result;
     }
 }
