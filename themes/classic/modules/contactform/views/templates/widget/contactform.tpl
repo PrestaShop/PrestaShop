@@ -38,11 +38,15 @@
           <label class="col-md-3 form-control-label">{l s='Order reference' d='Shop.Forms.Labels'}</label>
           <div class="col-md-6">
             <select name="id_order" class="form-control form-control-select">
+              <option value="">{l s='Select reference' d='Shop.Forms.Help'}</option>
               {foreach from=$contact.orders item=order}
                 <option value="{$order.id_order}">{$order.reference}</option>
               {/foreach}
             </select>
           </div>
+          <span class="col-md-3 form-control-comment">
+            {l s='optional' d='Shop.Forms.Help'}
+          </span>
         </div>
       {/if}
 
