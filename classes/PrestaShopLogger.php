@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class PrestaShopLoggerCore
+ */
 class PrestaShopLoggerCore extends ObjectModel
 {
     /** @var int Log id */
@@ -60,14 +63,14 @@ class PrestaShopLoggerCore extends ObjectModel
         'table' => 'log',
         'primary' => 'id_log',
         'fields' => array(
-            'severity' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'error_code' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'message' =>        array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
-            'object_id' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_employee' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'object_type' =>    array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'date_add' =>        array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' =>        array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'severity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+            'error_code' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
+            'object_id' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'object_type' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
         ),
     );
 
@@ -81,10 +84,10 @@ class PrestaShopLoggerCore extends ObjectModel
      */
     public static function sendByMail($log)
     {
-        if ((int)Configuration::get('PS_LOGS_BY_EMAIL') <= (int)$log->severity) {
+        if ((int) Configuration::get('PS_LOGS_BY_EMAIL') <= (int) $log->severity) {
             $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
             Mail::Send(
-                (int)Configuration::get('PS_LANG_DEFAULT'),
+                (int) Configuration::get('PS_LANG_DEFAULT'),
                 'log_alert',
                 Context::getContext()->getTranslator()->trans(
                     'Log: You have a new alert from your shop',
@@ -101,47 +104,50 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * add a log item to the database and send a mail if configured for this $severity
      *
-     * @param string $message the log message
-     * @param int $severity
-     * @param int $error_code
-     * @param string $object_type
-     * @param int $object_id
-     * @param bool $allow_duplicate if set to true, can log several time the same information (not recommended)
+     * @param string $message        the log message
+     * @param int    $severity
+     * @param int    $errorCode
+     * @param string $objectType
+     * @param int    $objectId
+     * @param bool   $allowDuplicate if set to true, can log several time the same information (not recommended)
+     *
      * @return bool true if succeed
      */
-    public static function addLog($message, $severity = 1, $error_code = null, $object_type = null, $object_id = null, $allow_duplicate = false, $id_employee = null)
+    public static function addLog($message, $severity = 1, $errorCode = null, $objectType = null, $objectId = null, $allowDuplicate = false, $idEmployee = null)
     {
         $log = new PrestaShopLogger();
-        $log->severity = (int)$severity;
-        $log->error_code = (int)$error_code;
+        $log->severity = (int) $severity;
+        $log->error_code = (int) $errorCode;
         $log->message = pSQL($message);
         $log->date_add = date('Y-m-d H:i:s');
         $log->date_upd = date('Y-m-d H:i:s');
 
-        if ($id_employee === null && isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee)) {
-            $id_employee = Context::getContext()->employee->id;
+        if ($idEmployee === null && isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee)) {
+            $idEmployee = Context::getContext()->employee->id;
         }
 
-        if ($id_employee !== null) {
-            $log->id_employee = (int)$id_employee;
+        if ($idEmployee !== null) {
+            $log->id_employee = (int)$idEmployee;
         }
 
-        if (!empty($object_type) && !empty($object_id)) {
-            $log->object_type = pSQL($object_type);
-            $log->object_id = (int)$object_id;
+        if (!empty($objectType) && !empty($objectId)) {
+            $log->object_type = pSQL($objectType);
+            $log->object_id = (int)$objectId;
         }
 
-        if ($object_type != 'Swift_Message') {
+        if ($objectType != 'Swift_Message') {
             PrestaShopLogger::sendByMail($log);
         }
 
-        if ($allow_duplicate || !$log->_isPresent()) {
+        if ($allowDuplicate || !$log->_isPresent()) {
             $res = $log->add();
             if ($res) {
-                self::$is_present[$log->getHash()] = isset(self::$is_present[$log->getHash()])?self::$is_present[$log->getHash()] + 1:1;
+                self::$is_present[$log->getHash()] = isset(self::$is_present[$log->getHash()]) ? self::$is_present[$log->getHash()] + 1 : 1;
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -165,11 +171,21 @@ class PrestaShopLoggerCore extends ObjectModel
     }
 
     /**
+     * @deprecated 1.7.0
+     */
+    protected function _isPresent()
+    {
+        return $this->isPresent();
+    }
+
+    /**
      * check if this log message already exists in database.
      *
      * @return true if exists
+     *
+     * @since 1.7.0
      */
-    protected function _isPresent()
+    protected function isPresent()
     {
         if (!isset(self::$is_present[md5($this->message)])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
