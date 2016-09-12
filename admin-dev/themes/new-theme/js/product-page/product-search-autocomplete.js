@@ -8,7 +8,7 @@ export default function() {
         let autocompleteFormId = autocompleteObject.attr('data-formid');
         let formId = `#${autocompleteFormId}-data .delete`;
         let autocompleteSource = `${autocompleteFormId}_source`;
-        
+
         $(document).on('click', formId, (e) => {
           e.preventDefault();
 
@@ -72,9 +72,13 @@ export default function() {
           let tplcollection = $('#tplcollection-' + autocompleteFormId);
           let tplcollectionHtml = tplcollection.html().replace('%s', suggestion[autocompleteObject.attr('data-mappingname')]);
 
-          var html = `<li class="card">
-                      <img class="image" src="${suggestion.image}" />
+          var html = `<li class="media">
+                      <div class="media-left">
+                      <img class="media-object image" src="${suggestion.image}" />
+                      </div>
+                      <div class="media-body media-middle">
                       ${tplcollectionHtml}
+                      </div>
                       <input type="hidden" name="${autocompleteObject.attr('data-fullname')}[data][]" value="${value}" />
                       </li>`;
 

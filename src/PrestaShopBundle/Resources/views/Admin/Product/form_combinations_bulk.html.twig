@@ -1,66 +1,65 @@
 <div class="row">
-  <div class="col-xl-2 col-lg-6">
+  <div class="col-xl-2 col-lg-6 custom-width m-b-1">
     <label class="form-control-label">{{ form.quantity.vars.label }}</label>
     {{ form_errors(form.quantity) }}
     {{ form_widget(form.quantity) }}
   </div>
 
-  <div class="col-xl-2 col-lg-6">
+  <div class="col-xl-2 col-lg-6 custom-width m-b-1">
     <label class="form-control-label">{{ form.cost_price.vars.label }}</label>
     {{ form_errors(form.cost_price) }}
     {{ form_widget(form.cost_price) }}
   </div>
 
-  <div class="col-xl-2 col-lg-6">
+  <div class="col-xl-2 col-lg-6 custom-width m-b-1">
     <label class="form-control-label">{{ form.impact_on_weight.vars.label }}</label>
     {{ form_errors(form.impact_on_weight) }}
     {{ form_widget(form.impact_on_weight) }}
   </div>
 
-  <div class="col-xl-2 col-lg-6">
+  <div class="col-xl-3 col-lg-6 custom-width m-b-1">
     <label class="form-control-label">{{ form.impact_on_price_te.vars.label }}</label>
     {{ form_errors(form.impact_on_price_te) }}
     {{ form_widget(form.impact_on_price_te) }}
   </div>
 
-  <div class="col-xl-2 col-lg-6 col-xl-offset-1 col-lg-offset-0">
+  <div class="col-xl-3 col-lg-6 custom-width m-b-1">
     <label class="form-control-label">{{ form.impact_on_price_ti.vars.label }}</label>
     {{ form_errors(form.impact_on_price_ti) }}
     {{ form_widget(form.impact_on_price_ti) }}
   </div>
-</div>
 
-<div class="row">
-  <div class="col-md-4">
+  <div class="col-xl-4 col-lg-6 custom-width m-b-1">
     <label class="form-control-label">{{ form.date_availability.vars.label }}</label>
     {{ form_errors(form.date_availability) }}
     {{ form_widget(form.date_availability) }}
   </div>
 
-  <div class="col-md-4 col-md-offset-4">
+  <div class="col-xl-4 col-lg-6 custom-width">
     <label class="form-control-label">{{ form.reference.vars.label }}</label>
     {{ form_errors(form.reference) }}
     {{ form_widget(form.reference) }}
   </div>
-</div>
-<div class="row">
-  <div class="col-md-2">
+
+  <div class="col-xl-4 col-lg-6 custom-width">
     <label class="form-control-label">{{ form.minimal_quantity.vars.label }}</label>
     {{ form_errors(form.minimal_quantity) }}
     {{ form_widget(form.minimal_quantity) }}
   </div>
-  <div class="col-md-3 col-md-offset-5">
-    <label class="form-control-label">&nbsp;</label>
-    <button id="delete-combinations" class="btn btn-tertiary-outline btn-block" data="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}">
-      <i class="material-icons">delete</i>
-      {{ 'Delete combinations'|trans({}, 'Admin.Catalog.Feature') }}
-    </button>
-  </div>
-  <div class="col-md-2">
-    <label class="form-control-label">&nbsp;</label>
-    <button id="apply-on-combinations" class="btn btn-primary-outline btn-block">
-      {{ 'Apply'|trans({}, 'Admin.Actions') }}
-    </button>
-  </div>
+</div>
+<div class="row">
+    <div class="col-md-3 col-md-offset-7">
+      <label class="form-control-label">&nbsp;</label>
+      <button id="delete-combinations" class="btn btn-tertiary-outline btn-block" data="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}">
+        <i class="material-icons">delete</i>
+        {{ 'Delete combinations'|trans({}, 'Admin.Catalog.Feature') }}
+      </button>
+    </div>
+    <div class="col-md-2">
+      <label class="form-control-label">&nbsp;</label>
+      <button id="apply-on-combinations" class="btn btn-primary-outline btn-block">
+        {{ 'Apply'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
   {{ form_widget(form) }}
 </div>

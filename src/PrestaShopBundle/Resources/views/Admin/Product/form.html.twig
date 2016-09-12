@@ -164,8 +164,8 @@
                     </div>
 
                     <ul class="nav nav-tabs bordered">
-                      <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link active">{{ 'Summary'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-                      <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link">{{ 'Description'|trans({}, 'Admin.Global') }}</a></li>
+                      <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link description-tab active">{{ 'Summary'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+                      <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link description-tab">{{ 'Description'|trans({}, 'Admin.Global') }}</a></li>
                     </ul>
 
                     <div class="tab-content bordered">
@@ -251,7 +251,7 @@
                             </2>
                             {{ form_errors(form.step6.reference) }}
                             <div class="row">
-                              <div class="col-md-6" id="product_reference_field">
+                              <div class="col-xl-6 col-lg-12" id="product_reference_field">
                                   {{ form_widget(form.step6.reference) }}
                               </div>
                             </div>
@@ -265,7 +265,7 @@
                             </h2>
                             {{ form_errors(form.step1.qty_0_shortcut) }}
                             <div class="row">
-                              <div class="col-md-6">
+                              <div class="col-xl-6 col-lg-12">
                                 {{ form_widget(form.step1.qty_0_shortcut) }}
                               </div>
                             </div>
@@ -545,7 +545,7 @@
                       </div>
                       <div class="col-md-12">
                         <div class="row">
-                          <div class="col-md-5">
+                          <div class="col-xl-5 col-lg-12">
                             <div class="alert alert-info" role="alert">
                               <i class="material-icons">help</i>
                               <p class="alert-text">
@@ -567,7 +567,7 @@
                             data-content="{{ "The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin."|trans({}, 'Admin.Catalog.Help') }}" ></span>
                         </h2>
                       </div>
-                      <div class="col-md-2 form-group">
+                      <div class="col-xl-2 col-lg-3 form-group">
                         <label class="form-control-label">{{ form.step2.wholesale_price.vars.label|raw }}</label>
                         {{ form_errors(form.step2.wholesale_price) }}
                         {{ form_widget(form.step2.wholesale_price) }}
@@ -839,12 +839,12 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-8">
+                      <div class="col-md-12">
                         <div id="custom_fields">
                           <h2>{{ form.step6.suppliers.vars.label }}</h2>
                           <div class="row">
                             <div class="col-md-12">
-                              <div class="alert alert-info alert-drop" role="alert">
+                              <div class="alert alert-info alert-drop m-b-1" role="alert">
                                 <i class="material-icons">help</i>
                                 <p class="alert-text">
                                   {{ 'This interface allows you to specify the suppliers of the current product and its combinations, if any.'|trans({}, 'Admin.Catalog.Help')|raw }}<br>
@@ -876,7 +876,7 @@
                       </div>
                     </div>
 
-                    <div id="supplier_combination_collection" class="col-md-8" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
+                    <div id="supplier_combination_collection" class="col-md-12" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
                       {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
                     </div>
                   </div>

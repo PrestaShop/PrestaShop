@@ -2,14 +2,18 @@ import $ from 'jquery';
 
 export default function() {
   let tabWidth = 0;
+  let navWidth = 50;
+
+  $(window).on('resize', () => {
+    init();
+  });
+
+  $('.js-nav-tabs li').each((index, item) => {
+    navWidth += $(item).width();
+    $('.js-nav-tabs').width(navWidth);
+  });
+
   $('.js-arrow').on('click', (e) => {
-    let navWidth = 40;
-
-    $('.js-nav-tabs li').each((index, item) => {
-      navWidth += $(item).width();
-      $('.js-nav-tabs').width(navWidth);
-    });
-
     tabWidth = navWidth - $('.js-tabs').width();
 
     if ($('.js-arrow').is(':visible')) {
@@ -33,4 +37,16 @@ export default function() {
       $('.js-spinner').hide();
     });
   });
+
+  var init = () => {
+    if($('.js-nav-tabs').width() < $('.js-tabs').width()) {
+      $('.js-nav-tabs').width($('.js-tabs').width());
+      return $('.js-arrow').hide();
+    }
+    else {
+      $('.js-arrow').show();
+    }
+  };
+
+  init();
 }

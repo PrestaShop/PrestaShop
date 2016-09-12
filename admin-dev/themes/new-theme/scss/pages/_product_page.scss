@@ -97,9 +97,6 @@
     width: 97%;
     font-size: rem(12px);
     font-weight: 600;
-    div.row:first-child .form-control-label {
-      min-height: rem(45px);
-    }
   }
 
   #delete-combinations {
@@ -246,7 +243,7 @@
         width: 130px;
         height: 130px;
         border: 1px solid $gray-light;
-        &.active {
+        &.active, &:hover {
           border: 3px solid $brand-primary;
           border-radius: 3px;
         }
@@ -291,6 +288,10 @@
             left: 0;
             right: 0;
             margin: auto;
+            @include filter(none);
+          }
+          &:hover {
+            cursor: pointer;
           }
         }
         .iscover {
@@ -436,9 +437,29 @@
       right: rem(1px);
     }
     &:hover {
+      border: 2px $brand-primary solid;
       > .btn-danger {
         opacity: 1;
         visibility: visible;
+      }
+    }
+    h4,.ref {
+      padding: rem(10px);
+    }
+    h4 {
+      color: black;
+      font-weight: normal;
+      margin: 0;
+      line-height: rem(20px);
+    }
+    .ref {
+      color: $gray-medium;
+    }
+    .delete {
+      background: white;
+      border: none;
+      .material-icons {
+        color: $gray-light;
       }
     }
   }
@@ -524,6 +545,9 @@
 
   .btn-action {
     text-transform: none;
+    &.focus, &:focus {
+      color: $brand-primary;
+    }
   }
 
   .seo-table thead th {
@@ -571,6 +595,20 @@
     }
   }
 
+  #supplier_combination_collection {
+    .panel-body {
+      padding: 0;
+    }
+    .table-striped {
+      thead, th, tbody {
+        border:none;
+      }
+      td{
+        color: $gray-medium;
+      }
+    }
+  }
+
   .combinations-list {
     td,
     th {
@@ -582,8 +620,10 @@
       font-weight: $font-weight-normal;
       font-size: $font-size-xs;
     }
-    .table-striped tbody tr:nth-of-type(odd) {
-      background-color: $notice;
+    .table-striped {
+      tbody tr:nth-of-type(odd) {
+        background-color: $notice;
+      }
     }
     .combination {
       &.loaded {
@@ -847,15 +887,15 @@
         display: inline-block;
       }
       .arrow {
-        padding-top: rem(15px);
+        padding: rem(15px) rem(5px);
         background: white;
         position: relative;
         height: rem(48px);
         z-index: 2;
         visibility: hidden;
-        &:hover {
-          background: $brand-primary;
-        }
+        background: $brand-primary;
+        color: white;
+        display: none;
         &.visible {
           visibility: visible;
         }
@@ -863,13 +903,12 @@
       .right-arrow {
         margin-top: rem(-50px);
       }
-      .left-arrow {}
     }
     .nav-tabs {
       height: rem(50px);
       width: rem(2000px);
       position: relative;
-      .nav-link.active {
+      .nav-link.active:not(.description-tab) {
         border-top: transparent;
         border-bottom: 3px solid $brand-primary;
       }
@@ -910,10 +949,19 @@
       #delete-combinations {
         float: right;
       }
+      div.row:first-child .form-control-label {
+        min-height: auto;
+      }
       .btn-block {
         width: auto;
         float: right;
       }
+    }
+    .category-hr {
+      width: 100%;
+    }
+    .checkbox label {
+      max-width: 80%;
     }
     .product-footer {
       .hidden-xs,
@@ -933,6 +981,14 @@
           top: rem(-120px);
         }
       }
+    }
+  }
+}
+
+@media (min-width: 1300px) and (max-width: 1750px) {
+  #bulk-combinations-container{
+    .custom-width {
+      width: 33%;
     }
   }
 }
