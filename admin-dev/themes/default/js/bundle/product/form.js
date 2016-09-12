@@ -870,7 +870,7 @@ var form = (function() {
         /** scroll to 1st error */
         if ($('.has-danger').first().offset()) {
           $('html, body').animate({
-            scrollTop: $('.has-danger').first().offset().top - $('.page-head').height() - $('.navbar-header').height()
+            scrollTop: $('.has-danger').first().offset().top - $('nav.main-header').height()
           }, 500);
         }
       },
