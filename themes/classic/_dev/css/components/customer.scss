@@ -47,6 +47,15 @@
     padding: 0;
     margin: 0;
   }
+  .custom-checkbox {
+    @include display(flex);
+    span {
+      flex: 0 0 rem(15px);
+    }
+    label {
+      padding-left: rem(10px);
+    }
+  }
 }
 #identity,
 #authentication {
