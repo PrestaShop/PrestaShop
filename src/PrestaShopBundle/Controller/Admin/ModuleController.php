@@ -296,15 +296,11 @@ class ModuleController extends FrameworkBundleAdminController
         foreach ($installedProducts as $installedProduct) {
             $warnings = $installedProduct->attributes->get('warning');
             if (!empty($warnings)) {
-                $row = 'to_configure';
-            } elseif ($installedProduct->canBeUpgraded()) {
-                $row = 'to_update';
-            } else {
-                $row = false;
+                $modules->to_configure[] = (object) $installedProduct;
             }
 
-            if ($row) {
-                $modules->{$row}[] = (object) $installedProduct;
+            if ($installedProduct->canBeUpgraded()) {
+                $modules->to_update[] = (object) $installedProduct;
             }
         }
 
