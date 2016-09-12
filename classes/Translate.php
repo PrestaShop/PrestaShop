@@ -109,7 +109,7 @@ class TranslateCore
         }
         $str = str_replace('"', '&quot;', $str);
 
-        if ($sprintf !== null) {
+        if ($sprintf !== null && (!is_array($sprintf) || !empty($sprintf))) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
 
