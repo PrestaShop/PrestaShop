@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,19 +19,25 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class PrestaShopBackupCore
+ */
 class PrestaShopBackupCore
 {
     /** @var int Object id */
     public $id;
+
     /** @var string Last error messages */
     public $error;
-/** @var string default backup directory. */
+
+    /** @var string default backup directory. */
     public static $backupDir = '/backups/';
+
     /** @var string custom backup directory. */
     public $customBackupDir = null;
 
@@ -64,9 +70,9 @@ class PrestaShopBackupCore
      */
     public function setCustomBackupPath($dir)
     {
-        $custom_dir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
-        if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$custom_dir)) {
-            $this->customBackupDir = $custom_dir;
+        $customDir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
+        if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$customDir)) {
+            $this->customBackupDir = $customDir;
         } else {
             return false;
         }
@@ -91,6 +97,7 @@ class PrestaShopBackupCore
                 $backupDir .= DIRECTORY_SEPARATOR;
             }
         }
+
         return $backupDir;
     }
 
@@ -158,8 +165,10 @@ class PrestaShopBackupCore
         if (!$this->id || !unlink($this->id)) {
             $this->error = Tools::displayError('Error deleting').' '.($this->id ? '"'.$this->id.'"' :
                 Tools::displayError('Invalid ID'));
+
             return false;
         }
+
         return true;
     }
 
@@ -174,9 +183,11 @@ class PrestaShopBackupCore
             $backup = new PrestaShopBackup($file);
             if (!$backup->delete()) {
                 $this->error = $backup->error;
+
                 return false;
             }
         }
+
         return true;
     }
 
@@ -188,10 +199,10 @@ class PrestaShopBackupCore
     public function add()
     {
         if (!$this->psBackupAll) {
-            $ignore_insert_table = array(_DB_PREFIX_.'connections', _DB_PREFIX_.'connections_page', _DB_PREFIX_
+            $ignoreInsertTable = array(_DB_PREFIX_.'connections', _DB_PREFIX_.'connections_page', _DB_PREFIX_
                 .'connections_source', _DB_PREFIX_.'guest', _DB_PREFIX_.'statssearch');
         } else {
-            $ignore_insert_table = array();
+            $ignoreInsertTable = array();
         }
 
         // Generate some random number, to make it extra hard to guess backup file names
@@ -212,6 +223,7 @@ class PrestaShopBackupCore
 
         if ($fp === false) {
             echo Tools::displayError('Unable to create backup file').' "'.addslashes($backupfile).'"';
+
             return false;
         }
 
@@ -238,6 +250,7 @@ class PrestaShopBackupCore
                 fclose($fp);
                 $this->delete();
                 echo Tools::displayError('An error occurred while backing up. Unable to obtain the schema of').' "'.$table;
+
                 return false;
             }
 
@@ -249,7 +262,7 @@ class PrestaShopBackupCore
 
             fwrite($fp, $schema[0]['Create Table'].";\n\n");
 
-            if (!in_array($schema[0]['Table'], $ignore_insert_table)) {
+            if (!in_array($schema[0]['Table'], $ignoreInsertTable)) {
                 $data = Db::getInstance()->query('SELECT * FROM `'.$schema[0]['Table'].'`', false);
                 $sizeof = DB::getInstance()->NumRows();
                 $lines = explode("\n", $schema[0]['Create Table']);
@@ -300,6 +313,7 @@ class PrestaShopBackupCore
         if ($found == 0) {
             $this->delete();
             echo Tools::displayError('No valid tables were found to backup.');
+
             return false;
         }
 
