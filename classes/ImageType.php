@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class ImageTypeCore
+ */
 class ImageTypeCore extends ObjectModel
 {
     public $id;
@@ -59,14 +62,14 @@ class ImageTypeCore extends ObjectModel
         'table' => 'image_type',
         'primary' => 'id_image_type',
         'fields' => array(
-            'name' =>        array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 64),
-            'width' =>        array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
-            'height' =>        array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
-            'categories' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'products' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'manufacturers' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'suppliers' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'stores' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 64),
+            'width' => array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
+            'height' => array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
+            'categories' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'products' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'manufacturers' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'suppliers' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'stores' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
         ),
     );
 
@@ -83,11 +86,12 @@ class ImageTypeCore extends ObjectModel
      * Returns image type definitions
      *
      * @param string|null Image type
-     * @param bool        $order_by_size
+     * @param bool        $orderBySize
+     *
      * @return array Image type definitions
      * @throws PrestaShopDatabaseException
      */
-    public static function getImagesTypes($type = null, $order_by_size = false)
+    public static function getImagesTypes($type = null, $orderBySize = false)
     {
         if (!isset(self::$images_types_cache[$type])) {
             $where = 'WHERE 1';
@@ -95,7 +99,7 @@ class ImageTypeCore extends ObjectModel
                 $where .= ' AND `'.bqSQL($type).'` = 1 ';
             }
 
-            if ($order_by_size) {
+            if ($orderBySize) {
                 $query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `width` DESC, `height` DESC, `name`ASC';
             } else {
                 $query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `name` ASC';
@@ -103,6 +107,7 @@ class ImageTypeCore extends ObjectModel
 
             self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
         }
+
         return self::$images_types_cache[$type];
     }
 
@@ -112,18 +117,18 @@ class ImageTypeCore extends ObjectModel
     * @param string $typeName Name
     * @return int Number of results found
     */
-    public static function typeAlreadyExists($type_name)
+    public static function typeAlreadyExists($typeName)
     {
-        if (!Validate::isImageTypeName($type_name)) {
+        if (!Validate::isImageTypeName($typeName)) {
             die(Tools::displayError());
         }
 
         Db::getInstance()->executeS('
 			SELECT `id_image_type`
 			FROM `'._DB_PREFIX_.'image_type`
-			WHERE `name` = \''.pSQL($type_name).'\'');
+			WHERE `name` = \''.pSQL($typeName).'\'');
 
-        return Db::getInstance()->NumRows();
+        return Db::getInstance()->numRows();
     }
 
     /**
@@ -156,32 +161,39 @@ class ImageTypeCore extends ObjectModel
         if (isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order])) {
             $return = self::$images_types_name_cache[$name.'_'.$type.'_'.$order];
         }
+
         return $return;
     }
 
-    public static function getFormatedName($name)
-    {
-        Tools::displayAsDeprecated('Please use ImageType::getFormattedName($name) instead');
-        return self::getFormattedName($name);
-    }
-
+    /**
+     * Get formatted name
+     *
+     * @param string $name
+     *
+     * @return string
+     */
     public static function getFormattedName($name)
     {
-        $theme_name = Context::getContext()->shop->theme_name;
-        $name_without_theme_name = str_replace(array('_'.$theme_name, $theme_name.'_'), '', $name);
+        $themeName = Context::getContext()->shop->theme_name;
+        $nameWithoutThemeName = str_replace(array('_'.$themeName, $themeName.'_'), '', $name);
 
         //check if the theme name is already in $name if yes only return $name
-        if (strstr($name, $theme_name) && self::getByNameNType($name)) {
+        if (strstr($name, $themeName) && self::getByNameNType($name)) {
             return $name;
-        } elseif (self::getByNameNType($name_without_theme_name.'_'.$theme_name)) {
-            return $name_without_theme_name.'_'.$theme_name;
-        } elseif (self::getByNameNType($theme_name.'_'.$name_without_theme_name)) {
-            return $theme_name.'_'.$name_without_theme_name;
+        } elseif (self::getByNameNType($nameWithoutThemeName.'_'.$themeName)) {
+            return $nameWithoutThemeName.'_'.$themeName;
+        } elseif (self::getByNameNType($themeName.'_'.$nameWithoutThemeName)) {
+            return $themeName.'_'.$nameWithoutThemeName;
         } else {
-            return $name_without_theme_name.'_default';
+            return $nameWithoutThemeName.'_default';
         }
     }
 
+    /**
+     * Get all image types
+     *
+     * @return array|mixed|null
+     */
     public static function getAll()
     {
         $context = Context::getContext();
