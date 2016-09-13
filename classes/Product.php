@@ -4158,6 +4158,8 @@ class ProductCore extends ObjectModel
             $specific_price = new SpecificPrice((int)$data['id_specific_price']);
             if (!$specific_price->duplicate((int)$product_id)) {
                 return false;
+            }else{
+                unset($specific_price);
             }
         }
         return true;
