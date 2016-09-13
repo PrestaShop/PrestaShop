@@ -111,6 +111,9 @@ class SortOrder
                 return 'pl.';
             } elseif ($this->field === 'position') {
                 return 'cp.';
+            } elseif ($this->field === 'manufacturer_name') {
+                $this->setField('name');
+                return 'm.';
             } else {
                 return 'p.';
             }
