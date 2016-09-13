@@ -59,7 +59,7 @@ if (defined('_PS_ADMIN_DIR_')) {
     require_once dirname(__FILE__).'/smartyfront.config.inc.php';
 }
 
-require_once _PS_SMARTY_DIR_ .'plugins/modifier.truncate.php';
+require_once _PS_SMARTY_DIR_.'plugins/modifier.truncate.php';
 
 // This escape modifier is required for invoice PDF generation
 function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_encode = true)
@@ -71,7 +71,7 @@ function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_enc
             'prestashop',
             'smarty',
             'plugins',
-            'modifier.escape.php'
+            'modifier.escape.php',
         )
     );
     require_once $escapeModifierFile;
@@ -102,8 +102,6 @@ function smartyDump($params, &$smarty)
 {
     return Tools::dump($params['var']);
 }
-
-
 
 function smarty_modifier_htmlentitiesUTF8($string)
 {
@@ -140,6 +138,9 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
     // lazy is better if the function is not called on every page
     if ($lazy) {
         $lazy_register = SmartyLazyRegister::getInstance();
+        if ($lazy_register->isRegistered($params)) {
+            return;
+        }
         $lazy_register->register($params);
 
         if (is_array($params)) {
