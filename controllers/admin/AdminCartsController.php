@@ -219,7 +219,7 @@ class AdminCartsControllerCore extends AdminController
         $summary = $cart->getSummaryDetails();
 
         /* Display order information */
-        $id_order = (int)Order::getOrderByCartId($cart->id);
+        $id_order = (int)Order::getIdByCartId($cart->id);
         $order = new Order($id_order);
         if (Validate::isLoadedObject($order)) {
             $tax_calculation_method = $order->getTaxCalculationMethod();
