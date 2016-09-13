@@ -87,7 +87,7 @@ class ThemeValidator
             'assets/js/theme.js',
             'assets/css/theme.css',
             // Templates
-            'templates/_partials/form-field.tpl',
+            'templates/_partials/form-fields.tpl',
             'templates/catalog/product.tpl',
             'templates/catalog/listing/product-list.tpl',
             'templates/checkout/cart.tpl',
