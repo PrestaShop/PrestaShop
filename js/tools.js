@@ -90,7 +90,8 @@ function formatNumberCldr(value, callback, numberOfDecimal) {
 function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 {
 	var formatter = cldrForCurrencyFormatterWrapper(null, {
-		maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2
+    minimumFractionDigits: 0,
+    maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2,
 	});
 	return formatter(price);
 }
@@ -106,8 +107,9 @@ function formatCurrencyCldr(price, callback) {
 	cldrForCurrencyFormatterWrapper(function(formatter) {
 		callback(formatter(price));
 	}, {
-		maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2
-	});
+    minimumFractionDigits: 0,
+    maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2,
+  });
 }
 
 function ps_round_helper(value, mode)
