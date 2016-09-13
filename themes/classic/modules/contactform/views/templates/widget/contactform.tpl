@@ -1,6 +1,16 @@
 <section class="contact-form">
   <form action="#" method="post">
 
+    {if $notifications}
+      <div class="col-xs-12 alert {if $notifications.nw_error}alert-danger{else}alert-success{/if}">
+        <ul>
+          {foreach $notifications.messages as $notif}
+            <li>{$notif}</li>
+          {/foreach}
+        </ul>
+      </div>
+    {/if}
+
     <section class="form-fields">
 
       <div class="form-group row">
@@ -38,11 +48,15 @@
           <label class="col-md-3 form-control-label">{l s='Order reference' d='Shop.Forms.Labels'}</label>
           <div class="col-md-6">
             <select name="id_order" class="form-control form-control-select">
+              <option value="">{l s='Select reference' d='Shop.Forms.Help'}</option>
               {foreach from=$contact.orders item=order}
                 <option value="{$order.id_order}">{$order.reference}</option>
               {/foreach}
             </select>
           </div>
+          <span class="col-md-3 form-control-comment">
+            {l s='optional' d='Shop.Forms.Help'}
+          </span>
         </div>
       {/if}
 
