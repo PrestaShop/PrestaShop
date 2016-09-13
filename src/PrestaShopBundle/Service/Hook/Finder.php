@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Service\Hook;
 
+use PrestaShopBundle\Service\Hook\HookContentClassInterface;
+
 /**
  * This class declares the functions needed to get structured data
  * from the modules, by asking them to follow a specific class.
@@ -69,15 +71,21 @@ class Finder
         if (!is_array($hookContent)) {
             $hookContent = array();
         }
-        // Check data returned if asked
-        if (count($this->expectedInstanceClasses)) {
-            foreach ($hookContent as $moduleName => $moduleContents) {
-                foreach ($moduleContents as $content) {
-                    if (is_object($content) && !in_array(get_class($content), $this->expectedInstanceClasses)) {
-                        throw new \Exception('The module '.$moduleName.' did not return expected class. Was '.get_class($content).' instead of '.implode(' or ', $this->expectedInstanceClasses).'.');
-                    } elseif (!is_object($content)) {
-                        throw new \Exception('The module '.$moduleName.' did not return expected type. Was '.gettype($content).' instead of '.implode(' or ', $this->expectedInstanceClasses).'.');
-                    }
+        
+        foreach ($hookContent as $moduleName => $moduleContents) {
+            foreach ($moduleContents as $content) {
+                if (!$content instanceof HookContentClassInterface) {
+                    throw new \Exception('The class returned must implement HookContentClassInterface');
+                }
+                
+                // Check data returned if asked
+                if (!count($this->expectedInstanceClasses)) {
+                    continue;
+                }
+                if (is_object($content) && !in_array(get_class($content), $this->expectedInstanceClasses)) {
+                    throw new \Exception('The module '.$moduleName.' did not return expected class. Was '.get_class($content).' instead of '.implode(' or ', $this->expectedInstanceClasses).'.');
+                } elseif (!is_object($content)) {
+                    throw new \Exception('The module '.$moduleName.' did not return expected type. Was '.gettype($content).' instead of '.implode(' or ', $this->expectedInstanceClasses).'.');
                 }
             }
         }

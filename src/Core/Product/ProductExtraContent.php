@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
-class ProductExtraContent
+use PrestaShopBundle\Service\Hook\HookContentClassInterface;
+
+class ProductExtraContent implements HookContentClassInterface
 {
     /**
      * Title of the content. This can be used in the template

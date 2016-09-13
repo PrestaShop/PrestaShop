@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Payment;
 
+use PrestaShopBundle\Service\Hook\HookContentClassInterface;
+
 /**
  * We define 4 types of payment options:
  *
@@ -33,7 +35,7 @@ namespace PrestaShop\PrestaShop\Core\Payment;
  * - the "embedded" kind: you write your credit card info in a form that is on your site and not inside an iframe (e.g. stripe)
  * - the "iframe" kind: payment form is displayed on your website but inside an iframe (e.g. atos)
  */
-class PaymentOption
+class PaymentOption implements HookContentClassInterface
 {
     /**
      * This text will be displayed
