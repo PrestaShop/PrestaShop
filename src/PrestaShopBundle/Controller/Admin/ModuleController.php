@@ -294,17 +294,22 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         foreach ($installedProducts as $installedProduct) {
-            $warnings = $installedProduct->attributes->get('warning');
+            $warnings = array();
+            $moduleProvider = $this->get('prestashop.adapter.data_provider.module');
+            $moduleName = $installedProduct->attributes->get('name');
+
+            if ($moduleProvider->isModuleMainClassValid($moduleName)) {
+                require_once _PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php';
+
+                $module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($moduleName);
+                $warnings = $module->warning;
+            }
             if (!empty($warnings)) {
-                $row = 'to_configure';
-            } elseif ($installedProduct->database->get('installed') == 1 && $installedProduct->database->get('version') !== 0 && version_compare($installedProduct->database->get('version'), $installedProduct->attributes->get('version'), '<')) {
-                $row = 'to_update';
-            } else {
-                $row = false;
+                $modules->to_configure[] = (object) $installedProduct;
             }
 
-            if ($row) {
-                $modules->{$row}[] = (object) $installedProduct;
+            if ($installedProduct->canBeUpgraded()) {
+                $modules->to_update[] = (object) $installedProduct;
             }
         }
 

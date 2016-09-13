@@ -144,7 +144,7 @@ class Module implements ModuleInterface
         $this->disk->add($disk);
         $this->database->add($database);
 
-        $version = $this->disk->get('is_valid') ?
+        $version = is_null($this->attributes->get('version')) && $this->disk->get('is_valid') ?
             $this->disk->get('version') :
             $this->attributes->get('version');
 
@@ -327,5 +327,14 @@ class Module implements ModuleInterface
         if (!empty($img)) {
             $this->set('image_absolute', $this->get('img'));
         }
+    }
+
+    public function canBeUpgraded()
+    {
+        return
+            $this->database->get('installed') == 1
+            && $this->database->get('version')
+            !== 0 && version_compare($this->database->get('version'), $this->attributes->get('version'), '<')
+        ;
     }
 }

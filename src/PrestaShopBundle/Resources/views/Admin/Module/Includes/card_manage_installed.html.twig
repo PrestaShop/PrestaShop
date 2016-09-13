@@ -1,0 +1,15 @@
+{% extends "PrestaShopBundle:Admin/Module/Includes:card_list.html.twig" %}
+
+{# Twig extension for "Addons to update" part in notification page #}
+
+{# Display database version #}
+{% block addon_version %}
+  {% if module.attributes.productType == "service" %} bbb
+    {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
+    <b>{{ module.attributes.author }}</b>
+  {% else %}
+    {{ 'v%version% - by '|trans({ '%version%' : module.database.version }, 'Admin.Modules.Feature') }}
+    <b>{{ module.attributes.author }}</b>
+  {% endif %}
+{% endblock %}
+

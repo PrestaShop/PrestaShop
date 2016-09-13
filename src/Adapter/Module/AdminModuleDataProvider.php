@@ -122,16 +122,21 @@ class AdminModuleDataProvider implements ModuleInterface
                     $url_active = 'configure';
                     unset(
                         $urls['enable'],
-                        $urls['install'],
-                        $urls['upgrade']
+                        $urls['install']
                     );
                 } else {
                     $url_active = 'disable';
                     unset(
-                        $urls['upgrade'],
                         $urls['install'],
                         $urls['enable'],
                         $urls['configure']
+                    );
+                }
+                if ($addon->canBeUpgraded()) {
+                    $url_active = 'upgrade';
+                } else {
+                    unset(
+                        $urls['upgrade']
                     );
                 }
                 if ($addon->database->get('active_on_mobile') == 0) {
@@ -139,8 +144,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 } else {
                     unset($urls['enable_mobile']);
                 }
-                if ($addon->database->get('installed') == 0 || version_compare($addon->database->get('version'), $addon->disk->get('version'), '<=')
-                    && version_compare($addon->attributes->get('version'), $addon->database->get('version'), '<=')) {
+                if (!$addon->canBeUpgraded()) {
                     unset(
                         $urls['upgrade']
                     );
