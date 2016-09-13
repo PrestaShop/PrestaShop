@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class FeatureValueCore
+ */
 class FeatureValueCore extends ObjectModel
 {
     /** @var int Group id which attribute belongs */
@@ -44,10 +47,10 @@ class FeatureValueCore extends ObjectModel
         'multilang' => true,
         'fields' => array(
             'id_feature' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'custom' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'custom' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
-            'value' =>        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
+            'value' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
         ),
     );
 
@@ -55,40 +58,42 @@ class FeatureValueCore extends ObjectModel
         'objectsNodeName' => 'product_feature_values',
         'objectNodeName' => 'product_feature_value',
         'fields' => array(
-            'id_feature' => array('xlink_resource'=> 'product_features'),
+            'id_feature' => array('xlink_resource' => 'product_features'),
         ),
     );
 
     /**
      * Get all values for a given feature
      *
-     * @param bool $id_feature Feature id
+     * @param bool $idFeature Feature id
+     *
      * @return array Array with feature's values
      */
-    public static function getFeatureValues($id_feature)
+    public static function getFeatureValues($idFeature)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'feature_value`
-			WHERE `id_feature` = '.(int)$id_feature
+			WHERE `id_feature` = '.(int) $idFeature
         );
     }
 
     /**
      * Get all values for a given feature and language
      *
-     * @param int $id_lang Language id
-     * @param bool $id_feature Feature id
+     * @param int  $idLang    Language id
+     * @param bool $idFeature Feature id
+     *
      * @return array Array with feature's values
      */
-    public static function getFeatureValuesWithLang($id_lang, $id_feature, $custom = false)
+    public static function getFeatureValuesWithLang($idLang, $idFeature, $custom = false)
     {
         return Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'feature_value` v
 			LEFT JOIN `'._DB_PREFIX_.'feature_value_lang` vl
-				ON (v.`id_feature_value` = vl.`id_feature_value` AND vl.`id_lang` = '.(int)$id_lang.')
-			WHERE v.`id_feature` = '.(int)$id_feature.'
+				ON (v.`id_feature_value` = vl.`id_feature_value` AND vl.`id_lang` = '.(int) $idLang.')
+			WHERE v.`id_feature` = '.(int) $idFeature.'
 				'.(!$custom ? 'AND (v.`custom` IS NULL OR v.`custom` = 0)' : '').'
 			ORDER BY vl.`value` ASC
 		');
@@ -97,15 +102,16 @@ class FeatureValueCore extends ObjectModel
     /**
      * Get all language for a given value
      *
-     * @param bool $id_feature_value Feature value id
+     * @param bool $idFeatureValue Feature value id
+     *
      * @return array Array with value's languages
      */
-    public static function getFeatureValueLang($id_feature_value)
+    public static function getFeatureValueLang($idFeatureValue)
     {
         return Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'feature_value_lang`
-			WHERE `id_feature_value` = '.(int)$id_feature_value.'
+			WHERE `id_feature_value` = '.(int) $idFeatureValue.'
 			ORDER BY `id_lang`
 		');
     }
@@ -113,96 +119,136 @@ class FeatureValueCore extends ObjectModel
     /**
      * Select the good lang in tab
      *
-     * @param array $lang Array with all language
-     * @param int $id_lang Language id
+     * @param array $lang   Array with all language
+     * @param int   $idLang Language id
+     *
      * @return string String value name selected
      */
-    public static function selectLang($lang, $id_lang)
+    public static function selectLang($lang, $idLang)
     {
         foreach ($lang as $tab) {
-            if ($tab['id_lang'] == $id_lang) {
+            if ($tab['id_lang'] == $idLang) {
                 return $tab['value'];
             }
         }
     }
 
-    public static function addFeatureValueImport($id_feature, $value, $id_product = null, $id_lang = null, $custom = false)
+    /**
+     * Add FeatureValue from import
+     *
+     * @param  int    $idFeature
+     * @param  string $value
+     * @param null    $idProduct
+     * @param null    $idLang
+     * @param bool    $custom
+     *
+     * @return int
+     */
+    public static function addFeatureValueImport($idFeature, $value, $idProduct = null, $idLang = null, $custom = false)
     {
-        $id_feature_value = false;
-        if (!is_null($id_product) && $id_product) {
-            $id_feature_value = Db::getInstance()->getValue('
+        $idFeatureValue = false;
+        if (!is_null($idProduct) && $idProduct) {
+            $idFeatureValue = Db::getInstance()->getValue('
 				SELECT fp.`id_feature_value`
 				FROM '._DB_PREFIX_.'feature_product fp
 				INNER JOIN '._DB_PREFIX_.'feature_value fv USING (`id_feature_value`)
-				WHERE fp.`id_feature` = '.(int)$id_feature.'
+				WHERE fp.`id_feature` = '.(int)$idFeature.'
 				AND fv.`custom` = '.(int)$custom.'
-				AND fp.`id_product` = '.(int)$id_product);
+				AND fp.`id_product` = '.(int)$idProduct);
 
-            if ($custom && $id_feature_value && !is_null($id_lang) && $id_lang) {
+            if ($custom && $idFeatureValue && !is_null($idLang) && $idLang) {
                 Db::getInstance()->execute('
 				UPDATE '._DB_PREFIX_.'feature_value_lang
 				SET `value` = \''.pSQL($value).'\'
-				WHERE `id_feature_value` = '.(int)$id_feature_value.'
+				WHERE `id_feature_value` = '.(int) $idFeatureValue.'
 				AND `value` != \''.pSQL($value).'\'
-				AND `id_lang` = '.(int)$id_lang);
+				AND `id_lang` = '.(int) $idLang);
             }
         }
 
         if (!$custom) {
-            $id_feature_value = Db::getInstance()->getValue('
+            $idFeatureValue = Db::getInstance()->getValue('
 				SELECT fv.`id_feature_value`
 				FROM '._DB_PREFIX_.'feature_value fv
-				LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.`id_feature_value` = fv.`id_feature_value` AND fvl.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.`id_feature_value` = fv.`id_feature_value` AND fvl.`id_lang` = '.(int)$idLang.')
 				WHERE `value` = \''.pSQL($value).'\'
-				AND fv.`id_feature` = '.(int)$id_feature.'
+				AND fv.`id_feature` = '.(int) $idFeature.'
 				AND fv.`custom` = 0
 				GROUP BY fv.`id_feature_value`');
         }
 
-        if ($id_feature_value) {
-            return (int)$id_feature_value;
+        if ($idFeatureValue) {
+            return (int) $idFeatureValue;
         }
 
         // Feature doesn't exist, create it
         $feature_value = new FeatureValue();
-        $feature_value->id_feature = (int)$id_feature;
-        $feature_value->custom = (bool)$custom;
+        $feature_value->id_feature = (int) $idFeature;
+        $feature_value->custom = (bool) $custom;
         $feature_value->value = array_fill_keys(Language::getIDs(false), $value);
         $feature_value->add();
 
-        return (int)$feature_value->id;
+        return (int) $feature_value->id;
     }
 
-    public function add($autodate = true, $nullValues = false)
+    /**
+     * Adds current FeatureValue as a new Object to the database
+     *
+     * @param bool $autoDate   Automatically set `date_upd` and `date_add` columns
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the FeatureValue has been successfully added
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function add($autoDate = true, $nullValues = false)
     {
-        $return = parent::add($autodate, $nullValues);
+        $return = parent::add($autoDate, $nullValues);
         if ($return) {
             Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
         }
+
         return $return;
     }
 
-    public function delete()
-    {
-        /* Also delete related products */
-        Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'feature_product`
-			WHERE `id_feature_value` = '.(int)$this->id
-        );
-        $return = parent::delete();
-
-        if ($return) {
-            Hook::exec('actionFeatureValueDelete', array('id_feature_value' => $this->id));
-        }
-        return $return;
-    }
-
+    /**
+     * Updates the current FeatureValue in the database
+     *
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the FeatureValue has been successfully updated
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function update($nullValues = false)
     {
         $return = parent::update($nullValues);
         if ($return) {
             Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
         }
+
+        return $return;
+    }
+
+    /**
+     * Deletes current FeatureValue from the database
+     *
+     * @return bool `true` if delete was successful
+     * @throws PrestaShopException
+     */
+    public function delete()
+    {
+        /* Also delete related products */
+        Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'feature_product`
+			WHERE `id_feature_value` = '.(int) $this->id
+        );
+        $return = parent::delete();
+
+        if ($return) {
+            Hook::exec('actionFeatureValueDelete', array('id_feature_value' => $this->id));
+        }
+
         return $return;
     }
 }
