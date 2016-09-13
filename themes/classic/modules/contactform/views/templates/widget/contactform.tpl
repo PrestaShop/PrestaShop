@@ -1,6 +1,16 @@
 <section class="contact-form">
   <form action="#" method="post">
 
+    {if $notifications}
+      <div class="col-xs-12 alert {if $notifications.nw_error}alert-danger{else}alert-success{/if}">
+        <ul>
+          {foreach $notifications.messages as $notif}
+            <li>{$notif}</li>
+          {/foreach}
+        </ul>
+      </div>
+    {/if}
+
     <section class="form-fields">
 
       <div class="form-group row">
