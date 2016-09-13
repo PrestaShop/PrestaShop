@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 
 class ModuleController extends FrameworkBundleAdminController
 {
@@ -150,7 +151,17 @@ class ModuleController extends FrameworkBundleAdminController
         foreach ($installedProducts as $installedProduct) {
             if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
                 $row = 'theme_bundle';
-            } elseif ($installedProduct->attributes->has('origin') && $installedProduct->attributes->get('origin') === 'native' && $installedProduct->attributes->get('author') === 'PrestaShop') {
+            } elseif (
+                $installedProduct->attributes->has('origin_filter_value')
+                && in_array(
+                    $installedProduct->attributes->get('origin_filter_value'),
+                    array(
+                        AddonListFilterOrigin::ADDONS_NATIVE,
+                        AddonListFilterOrigin::ADDONS_NATIVE_ALL,
+                    )
+                )
+                && 'PrestaShop' === $installedProduct->attributes->get('author')
+            ) {
                 $row = 'native_modules';
             } else {
                 $row = 'modules';
