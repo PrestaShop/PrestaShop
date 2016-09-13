@@ -383,7 +383,7 @@ class CartPresenter implements PresenterInterface
         $cartVouchers = $cart->getCartRules();
         $vouchers = array();
 
-        $cart_have_tax = $cart::getTaxesAverageUsed($cart->id);
+        $cart_have_tax = is_null($cart->id) ? false : $cart::getTaxesAverageUsed($cart->id);
 
         foreach ($cartVouchers as $cartVoucher) {
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
