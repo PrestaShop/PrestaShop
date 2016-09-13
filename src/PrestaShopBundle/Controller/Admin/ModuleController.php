@@ -302,7 +302,7 @@ class ModuleController extends FrameworkBundleAdminController
                 require_once _PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php';
 
                 $module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($moduleName);
-                $warnings[] = $module->warning;
+                $warnings = $module->warning;
             }
             if (!empty($warnings)) {
                 $modules->to_configure[] = (object) $installedProduct;
