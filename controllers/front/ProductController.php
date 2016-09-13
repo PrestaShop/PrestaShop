@@ -914,7 +914,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
 
-        $breadcrumb['links'][] = $this->getCategoryPath($categoryDefault);
+        if (!$categoryDefault->is_root_category) {
+            $breadcrumb['links'][] = $this->getCategoryPath($categoryDefault);
+        }
 
         $breadcrumb['links'][] = array(
             'title' => $this->context->controller->product->name,
