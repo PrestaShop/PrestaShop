@@ -26,6 +26,12 @@ ul.category-tree {
       content: "\E5CC";
     }
   }
+  .category-label {
+    display: block;
+    .category {
+      cursor: pointer;
+    }
+  }
   ul {
     padding-left: rem(25px);
   }
