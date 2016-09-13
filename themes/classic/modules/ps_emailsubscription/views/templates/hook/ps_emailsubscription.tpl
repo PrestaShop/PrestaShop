@@ -58,7 +58,7 @@
                 <p>{$conditions}</p>
               {/if}
               {if $msg}
-                <p class="text-warning notification {if $nw_error}notification-error{else}notification-success{/if}">
+                <p class="alert {if $nw_error}alert-danger{else}alert-success{/if}">
                   {$msg}
                 </p>
               {/if}
