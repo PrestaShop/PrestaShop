@@ -4099,10 +4099,6 @@ class AdminControllerCore extends Controller
         if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int)Tools::getValue('conf') > 0) {
             unset($obj);
         }
-
-        if (!empty($module->image) && false !== strpos($module->image, '../img')) {
-            $module->image_absolute = str_replace('../', _PS_BASE_URL_.__PS_BASE_URI__, $module->image);
-        }
     }
 
     /** @var array */

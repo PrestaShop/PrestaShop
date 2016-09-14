@@ -322,11 +322,6 @@ class Module implements ModuleInterface
             .DIRECTORY_SEPARATOR.'logo.png')) {
             $this->set('logo', 'logo.png');
         }
-
-        $img = $this->get('img');
-        if (!empty($img)) {
-            $this->set('image_absolute', $this->get('img'));
-        }
     }
 
     public function canBeUpgraded()

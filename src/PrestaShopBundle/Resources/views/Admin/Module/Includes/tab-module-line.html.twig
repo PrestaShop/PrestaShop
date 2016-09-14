@@ -3,11 +3,7 @@
     <img
       class="img-thumbnail"
       alt="{{ module.attributes.name }}"
-      src="{% if module.attributes.image_absolute is not empty %}
-        {{ module.attributes.image_absolute }}
-        {% else %}
-          {{ constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo }}
-        {% endif %}"
+      src="{{ constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo }}"
     />
   </td>
   <td>
