@@ -21,7 +21,7 @@
     </section>
 
     <footer class="form-footer text-xs-center">
-      <button type="submit" name="submit" class="form-control-submit">
+      <button class="form-control-submit btn btn-primary" name="submit" type="submit">
         {l s='Send reset link' d='Shop.Theme.Actions'}
       </button>
     </footer>
