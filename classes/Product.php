@@ -830,7 +830,7 @@ class ProductCore extends ObjectModel
         if ($id_product_attribute === null) {
             $sql .= ' p.`available_date`';
         } else {
-            $sql .= ' IF(pa.`available_date` = "0000-00-00", p.`available_date`, pa.`available_date`) AS available_date';
+            $sql .= ' pa.`available_date`';
         }
 
         $sql .= ' FROM `'._DB_PREFIX_.'product` p';
@@ -4415,6 +4415,11 @@ class ProductCore extends ObjectModel
                 (int)$row['id_product'],
                 $id_product_attribute,
                 isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
+            );
+
+            $row['available_date'] = Product::getAvailableDate(
+                (int)$row['id_product'],
+                $id_product_attribute
             );
         }
 
