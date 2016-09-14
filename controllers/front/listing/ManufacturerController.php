@@ -101,7 +101,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
         $query = new ProductSearchQuery();
         $query
             ->setIdManufacturer($this->manufacturer->id)
-            ->setSortOrder(new SortOrder('product', 'position', 'asc'))
+            ->setSortOrder(new SortOrder('product', Tools::getProductsOrder('by'), Tools::getProductsOrder('way')));
         ;
 
         return $query;
