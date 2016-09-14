@@ -8,7 +8,7 @@
  */
 
 .bootstrap-touchspin .input-group-btn-vertical{position:relative;white-space:nowrap;width:1%;vertical-align:middle;display:table-cell}.bootstrap-touchspin .input-group-btn-vertical>.btn{display:block;float:none;width:100%;max-width:100%;padding:8px 10px;margin-left:-1px;position:relative}.bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-up{border-radius:0;border-top-right-radius:4px}.bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down{margin-top:-2px;border-radius:0;border-bottom-right-radius:4px}.bootstrap-touchspin .input-group-btn-vertical i{position:absolute;top:3px;left:5px;font-size:9px;font-weight:400}/*!
- * Bootstrap v4.0.0-alpha.3 (http://getbootstrap.com)
+ * Bootstrap v4.0.0-alpha.4 (http://getbootstrap.com)
  * Copyright 2011-2016 The Bootstrap Authors
  * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -1563,14 +1563,8 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 
 .has-success .form-control-feedback,
 .has-success .form-control-label,
-.has-success .radio,
-.has-success .checkbox,
-.has-success .radio-inline,
-.has-success .checkbox-inline,
-.has-success.radio label,
-.has-success.checkbox label,
-.has-success.radio-inline label,
-.has-success.checkbox-inline label,
+.has-success .form-check-label,
+.has-success .form-check-inline,
 .has-success .custom-control {
   color: #4cbb6c; }
 
@@ -1590,14 +1584,8 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 
 .has-warning .form-control-feedback,
 .has-warning .form-control-label,
-.has-warning .radio,
-.has-warning .checkbox,
-.has-warning .radio-inline,
-.has-warning .checkbox-inline,
-.has-warning.radio label,
-.has-warning.checkbox label,
-.has-warning.radio-inline label,
-.has-warning.checkbox-inline label,
+.has-warning .form-check-label,
+.has-warning .form-check-inline,
 .has-warning .custom-control {
   color: #ff9a52; }
 
@@ -1617,14 +1605,8 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 
 .has-danger .form-control-feedback,
 .has-danger .form-control-label,
-.has-danger .radio,
-.has-danger .checkbox,
-.has-danger .radio-inline,
-.has-danger .checkbox-inline,
-.has-danger.radio label,
-.has-danger.checkbox label,
-.has-danger.radio-inline label,
-.has-danger.checkbox-inline label,
+.has-danger .form-check-label,
+.has-danger .form-check-inline,
 .has-danger .custom-control {
   color: #ff4c4c; }
 
@@ -3158,7 +3140,6 @@ input[type="button"].btn-block {
     column-count: 3;
     column-gap: 1.25rem; }
     .card-columns .card {
-      display: inline-block;
       width: 100%; } }
 
 .breadcrumb {
@@ -3330,7 +3311,7 @@ a.tag:focus, a.tag:hover {
   border-radius: 0; }
 
 .alert {
-  padding: 15px;
+  padding: 1rem;
   margin-bottom: 1rem;
   border: 1px solid transparent;
   border-radius: 0; }
@@ -3342,11 +3323,11 @@ a.tag:focus, a.tag:hover {
   font-weight: bold; }
 
 .alert-dismissible {
-  padding-right: 35px; }
+  padding-right: 2rem; }
   .alert-dismissible .close {
     position: relative;
-    top: -2px;
-    right: -21px;
+    top: -.125rem;
+    right: -1rem;
     color: inherit; }
 
 .alert-success {
@@ -3527,11 +3508,6 @@ base::-moz-progress-bar,
 @media screen and (min-width: 0\0) {
   .progress-danger .progress-bar {
     background-color: #ff4c4c; } }
-
-.media {
-  margin-top: 15px; }
-  .media:first-child {
-    margin-top: 0; }
 
 .media,
 .media-body {
@@ -4221,9 +4197,6 @@ button.close {
   .carousel-indicators {
     bottom: 20px; } }
 
-.bg-inverse {
-  background-color: #878787; }
-
 .bg-faded {
   background-color: #f7f7f9; }
 
@@ -4261,6 +4234,13 @@ a.bg-warning:focus, a.bg-warning:hover {
 
 a.bg-danger:focus, a.bg-danger:hover {
   background-color: #ff1919 !important; }
+
+.bg-inverse {
+  color: #fff !important;
+  background-color: #878787 !important; }
+
+a.bg-inverse:focus, a.bg-inverse:hover {
+  background-color: #6e6e6e !important; }
 
 .clearfix::after {
   content: "";
@@ -4607,37 +4587,37 @@ a.bg-danger:focus, a.bg-danger:hover {
   color: #acaaa6 !important; }
 
 a.text-muted:focus, a.text-muted:hover {
-  color: #93918c; }
+  color: #93918c !important; }
 
 .text-primary {
   color: #2fb5d2 !important; }
 
 a.text-primary:focus, a.text-primary:hover {
-  color: #2592a9; }
+  color: #2592a9 !important; }
 
 .text-success {
   color: #4cbb6c !important; }
 
 a.text-success:focus, a.text-success:hover {
-  color: #3a9a56; }
+  color: #3a9a56 !important; }
 
 .text-info {
   color: #5bc0de !important; }
 
 a.text-info:focus, a.text-info:hover {
-  color: #31b0d5; }
+  color: #31b0d5 !important; }
 
 .text-warning {
   color: #ff9a52 !important; }
 
 a.text-warning:focus, a.text-warning:hover {
-  color: #ff7c1f; }
+  color: #ff7c1f !important; }
 
 .text-danger {
   color: #ff4c4c !important; }
 
 a.text-danger:focus, a.text-danger:hover {
-  color: #ff1919; }
+  color: #ff1919 !important; }
 
 .text-hide {
   font: 0/0 a;
@@ -7623,6 +7603,8 @@ li.product-flag {
   .block-social li:hover {
     background-color: #2fb5d2; }
   .block-social li a {
+    display: block;
+    height: 100%;
     white-space: nowrap;
     text-indent: 100%;
     overflow: hidden; }
