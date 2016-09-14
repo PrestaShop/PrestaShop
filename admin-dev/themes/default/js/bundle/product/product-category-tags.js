@@ -133,7 +133,8 @@ var productCategoriesTags = (function () {
       return name;
     },
     'initSearchBox': function () {
-      var searchBox = $('#ps-select-product-category');
+      var searchCategorySelector = '#ps-select-product-category';
+      var searchBox = $(searchCategorySelector);
       var tree = this.getTree();
       var tags = [];
       var that = this;
@@ -173,6 +174,13 @@ var productCategoriesTags = (function () {
           .append('<a>'+item.label+'</a>')
           .appendTo(ul);
       };
+
+      $('body').on('focusout', searchCategorySelector, function (event) {
+        var $searchInput = $(event.currentTarget);
+        if (0 === $searchInput.val().length ) {
+          $searchInput.parent().find('[role=status]').text('');
+        }
+      });
     }
   };
 })();
