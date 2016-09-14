@@ -24,7 +24,7 @@
 *}
 <tr>
 	<td class="fixed-width-sm center">
-		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image_absolute)}{$module->image_absolute}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}" />
+		<img class="img-thumbnail" alt="{$module->name}" src="{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}" />
 	</td>
 	<td>
 		<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
