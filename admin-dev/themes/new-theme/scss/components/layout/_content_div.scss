@@ -8,3 +8,9 @@
     padding-top: $size-header-height + $grid-gutter-width / 2;
   }
 }
+
+.page-sidebar-closed {
+  .content-div {
+    padding-left: $size-navbar-width-mini + ($grid-gutter-width / 2);
+  }
+}

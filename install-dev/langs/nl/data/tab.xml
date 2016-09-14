@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
-  <tab id="SELL" name="VERKOPEN"/>
-  <tab id="IMPROVE" name="VERBETEREN"/>
-  <tab id="CONFIGURE" name="VERANDEREN"/>
-  <tab id="DEFAULT" name="STANDAARD"/>
+  <tab id="SELL" name="Verkopen"/>
+  <tab id="IMPROVE" name="Verbeteren"/>
+  <tab id="CONFIGURE" name="Veranderen"/>
+  <tab id="DEFAULT" name="Standaard"/>
   <tab id="Addresses" name="Adressen"/>
   <tab id="Administration" name="Administratie"/>
   <tab id="Module_Page" name="Modules &amp; services"/>

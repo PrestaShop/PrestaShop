@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
-  <tab id="SELL" name="VENDRE" />
-  <tab id="IMPROVE" name="PERSONNALISER" />
-  <tab id="CONFIGURE" name="CONFIGURER" />
-  <tab id="DEFAULT" name="AUTRES" />
+  <tab id="SELL" name="Vendre" />
+  <tab id="IMPROVE" name="Personnaliser" />
+  <tab id="CONFIGURE" name="Configurer" />
+  <tab id="DEFAULT" name="Autres" />
   <tab id="Addresses" name="Adresses"/>
   <tab id="Administration" name="Administration"/>
   <tab id="Module_Page" name="Modules &amp; Services" />

@@ -1985,6 +1985,8 @@ class AdminControllerCore extends Controller
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
             if (isset($tabs[$index]['sub_tabs'][0])) {
                 $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
+            } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {
+                unset($tabs[$index]);
             }
 
             foreach ($tabs[$index]['sub_tabs'] as $sub_tab) {
