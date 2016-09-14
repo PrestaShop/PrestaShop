@@ -74,7 +74,7 @@
         <div class="js-parent-focus">
           {html_select_date
           field_order=DMY
-          time=$field.value
+          time={$field.value}
           field_array={$field.name}
           prefix=false
           reverse_years=true
@@ -119,7 +119,7 @@
           name="{$field.name}"
           type="{$field.type}"
           value="{$field.value}"
-          placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}"
+          {if isset($field.availableValues.placeholder)}placeholder="{$field.availableValues.placeholder}"{/if}
           {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
           {if $field.required}required{/if}
         >
