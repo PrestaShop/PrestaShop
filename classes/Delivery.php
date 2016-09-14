@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class DeliveryCore
+ */
 class DeliveryCore extends ObjectModel
 {
     /** @var int */
@@ -57,13 +60,13 @@ class DeliveryCore extends ObjectModel
         'table' => 'delivery',
         'primary' => 'id_delivery',
         'fields' => array(
-            'id_carrier' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_carrier' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_range_price' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_range_weight' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_zone' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_shop' =>        array('type' => self::TYPE_INT),
-            'id_shop_group' =>    array('type' => self::TYPE_INT),
-            'price' =>            array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'id_range_weight' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_zone' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_shop' => array('type' => self::TYPE_INT),
+            'id_shop_group' => array('type' => self::TYPE_INT),
+            'price' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
         ),
     );
 
@@ -77,19 +80,24 @@ class DeliveryCore extends ObjectModel
         )
     );
 
+    /**
+     * Get Object fields and values in array
+     *
+     * @return array
+     */
     public function getFields()
     {
         $fields = parent::getFields();
 
         // @todo add null management in definitions
         if ($this->id_shop) {
-            $fields['id_shop'] = (int)$this->id_shop;
+            $fields['id_shop'] = (int) $this->id_shop;
         } else {
             $fields['id_shop'] = null;
         }
 
         if ($this->id_shop_group) {
-            $fields['id_shop_group'] = (int)$this->id_shop_group;
+            $fields['id_shop_group'] = (int) $this->id_shop_group;
         } else {
             $fields['id_shop_group'] = null;
         }
