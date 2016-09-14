@@ -91,10 +91,13 @@ class HookDispatcher extends EventDispatcher
                 $listenerName = $event->popListener() ?: $listener[1];
 
                 $eventContent = $event->popContent();
-                $this->renderingContent[$listenerName] = strlen($eventContent) > strlen($obContent)
-                    ? $eventContent
-                    : $obContent;
-
+                if (!is_string($eventContent)) {
+                    $this->renderingContent[$listenerName] = $eventContent;
+                } else {
+                    $this->renderingContent[$listenerName] = strlen($eventContent) > strlen($obContent)
+                        ? $eventContent
+                        : $obContent;
+                }
             }
             if ($event->isPropagationStopped()) {
                 $this->propagationStoppedCalledBy = $listener;

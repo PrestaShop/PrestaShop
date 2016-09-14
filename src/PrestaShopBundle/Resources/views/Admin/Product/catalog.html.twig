@@ -114,7 +114,7 @@
               "onclick": "bulkProductAction(this, 'delete_all');",
               "icon": "delete",
               "label": "Delete selection"|trans({}, 'Admin.Actions')
-            }]
+            }]|merge(additionnalProductActions)
           }%}
         </div>
         <div id="product_catalog_category_tree_filter" class="pull-right col-md-3">

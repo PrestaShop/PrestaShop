@@ -357,5 +357,8 @@
     <hook id="actionValidateCustomerAddressForm">
       <name>actionValidateCustomerAddressForm</name><title>Customer address form validation</title><description>This hook is called when a customer submit its address form</description>
     </hook>
+    <hook id="displayAdminProductAction">
+      <name>displayAdminProductAction</name><title>Add actions to products in back office</title><description>This hook displays additionnal buttons on the catalog and product page</description>
+    </hook>
   </entities>
 </entity_hook>

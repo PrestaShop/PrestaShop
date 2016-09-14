@@ -214,6 +214,7 @@ class ProductController extends FrameworkBundleAdminController
                 'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
+                'additionnalProductActions' => $productProvider->getAdditionnalProductActions($request),
             )
         );
     }
@@ -344,7 +345,10 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function formAction($id, Request $request)
     {
+        /* @var $productAdapter ProductInterfaceProvider */
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        /* @var $productProvider ProductInterfaceProvider */
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
         $product = $productAdapter->getProduct($id);
         if (!$product || empty($product->id)) {
             return $this->redirectToRoute('admin_product_catalog');
@@ -510,6 +514,7 @@ class ProductController extends FrameworkBundleAdminController
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
             'attribute_groups' => $attributeGroups,
+            'additionnalProductActions' => $productProvider->getAdditionnalProductActions($request),
         );
     }
 

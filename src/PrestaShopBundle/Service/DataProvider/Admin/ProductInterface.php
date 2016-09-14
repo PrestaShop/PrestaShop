@@ -118,4 +118,13 @@ interface ProductInterface
      * @return boolean True if a newly created product should be activated by default.
      */
     public function isNewProductDefaultActivated();
+    
+    /**
+     * Many modules would like to add actions sur the product catalog, as single or bulk action.
+     * 
+     * This function will call each of them to get the actions to display.
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @return array The additionnal product actions.
+     */
+    public function getAdditionnalProductActions($request);
 }

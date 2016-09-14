@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
+use PrestaShopBundle\Service\Hook\HookFinder;
 
 /**
  * Data provider for new Architecture, about Product object model.
@@ -400,5 +401,21 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     public function isNewProductDefaultActivated()
     {
         return (bool) \Configuration::get('PS_PRODUCT_ACTIVATION_DEFAULT');
+    }
+    
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::getAdditionnalProductActions()
+     */
+    public function getAdditionnalProductActions($request)
+    {
+        $hookFinder = new HookFinder();
+        $productActions = $hookFinder->setExpectedInstanceClasses(array('PrestaShopBundle\Model\Product\AdminProductAction'))
+                ->setHookName('displayAdminProductAction')
+                ->addParams(array('request' => $request))
+                ->present();
+        if (count($productActions)) {
+            array_unshift($productActions, array('divider' => true));
+        }
+        return $productActions;
     }
 }
