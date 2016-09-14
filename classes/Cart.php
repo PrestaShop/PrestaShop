@@ -466,6 +466,14 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Get cart discounts
+     */
+    public function getDiscounts()
+    {
+        return CartRule::getCustomerHighlightedDiscounts($this->id_lang, $this->id_customer, $this);
+    }
+
+    /**
      * Return the CartRule IDs in the Cart
      *
      * @param int $filter Filter enum:
@@ -1565,7 +1573,7 @@ class CartCore extends ObjectModel
 
     /**
      * Get total in Cart using a tax calculation method
-     * 
+     *
      * @param int $id_cart Cart ID
      *
      * @return string Formatted total amount in Cart
@@ -1868,7 +1876,7 @@ class CartCore extends ObjectModel
 
     /**
     * Get the gift wrapping price
-     * 
+     *
     * @param bool $with_taxes With or without taxes
      *
     * @return float wrapping price
@@ -4405,7 +4413,7 @@ class CartCore extends ObjectModel
      *
      * @param bool $return_collection Returns sa collection
      * @param array &$error Contains an error message if an error occurs
-     *                      
+     *
      * @return array Array of address id or of address object
      */
     public function getDeliveryAddressesWithoutCarriers($return_collection = false, &$error = array())

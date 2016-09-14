@@ -204,6 +204,21 @@ $(document).ready(() => {
       }
     }
   );
+
+  $body.on(
+    'click',
+    '.js-discount .code',
+    (event) => {
+      event.stopPropagation();
+
+      var $code = $(event.currentTarget);
+      var $discountInput = $('[name=discount_name]');
+
+      $discountInput.val($code.text());
+
+      return false;
+    }
+  )
 });
 
 

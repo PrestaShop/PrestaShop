@@ -52,6 +52,18 @@
   hr {
     margin: 0;
   }
+  .promo-discounts {
+    margin-bottom: 0;
+    .cart-summary-line {
+      .label {
+        color: $gray-dark;
+        .code {
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+    }
+  }
 }
 .block-promo {
   .promo-code {
@@ -103,6 +115,11 @@
     padding-left: rem(20px);
     margin-bottom: rem(20px);
     display: inline-block;
+  }
+  &.promo-highlighted {
+    padding: rem(20px);
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
 }
 /** CONTENT LEFT **/
@@ -180,7 +197,7 @@
       border-bottom: 0;
     }
   }
-  .cart-grid-body { 
+  .cart-grid-body {
     .cart-overview {
       padding: 0;
     }

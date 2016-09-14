@@ -7207,6 +7207,14 @@ li.product-flag {
 .cart-grid-right hr {
   margin: 0; }
 
+.cart-grid-right .promo-discounts {
+  margin-bottom: 0; }
+  .cart-grid-right .promo-discounts .cart-summary-line .label {
+    color: #878787; }
+    .cart-grid-right .promo-discounts .cart-summary-line .label .code {
+      text-decoration: underline;
+      cursor: pointer; }
+
 .block-promo .promo-code {
   padding: 1.60rem;
   background: #ebebeb; }
@@ -7253,6 +7261,11 @@ li.product-flag {
   padding-left: 1.25rem;
   margin-bottom: 1.25rem;
   display: inline-block; }
+
+.block-promo.promo-highlighted {
+  padding: 1.25rem;
+  padding-bottom: 0;
+  margin-bottom: 0; }
 
 /** CONTENT LEFT **/
 .product-line-grid-left img {
