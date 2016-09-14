@@ -1091,7 +1091,7 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Return an array of all parents of the current category
+     * Return an ordered array of all parents of the current category
      *
      * @param int $idLang
      *
@@ -1106,6 +1106,7 @@ class CategoryCore extends ObjectModel
         $categories = new PrestaShopCollection('Category', $idLang);
         $categories->where('nleft', '<', $this->nleft);
         $categories->where('nright', '>', $this->nright);
+        $categories->orderBy('nleft');
 
         return $categories;
     }
