@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
-use PrestaShopBundle\Service\Hook\Finder;
+use PrestaShopBundle\Service\Hook\HookFinder;
 
 /**
  * This class gets the extra content to display on the product page
  * from the modules hooked on displayProductExtraContent.
  */
-class ProductExtraContentFinder extends Finder
+class ProductExtraContentFinder extends HookFinder
 {
     protected $hookName = 'displayProductExtraContent';
     protected $expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Product\ProductExtraContent');

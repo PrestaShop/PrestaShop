@@ -2,10 +2,10 @@
 
 use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
-use PrestaShopBundle\Service\Hook\Finder;
+use PrestaShopBundle\Service\Hook\HookFinder;
 
-class PaymentOptionsFinderCore extends Finder
-{    
+class PaymentOptionsFinderCore extends HookFinder
+{   
     public function find() //getPaymentOptions()
     {
         // Payment options coming from intermediate, deprecated version of the Advanced API

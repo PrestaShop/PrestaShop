@@ -26,13 +26,13 @@
 
 namespace PrestaShopBundle\Service\Hook;
 
-use PrestaShopBundle\Service\Hook\HookContentClassInterface;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 
 /**
  * This class declares the functions needed to get structured data
  * from the modules, by asking them to follow a specific class.
  */
-class Finder
+class HookFinder
 {
     /**
      * In order to not return wrong things to the caller, we ask for an
@@ -67,7 +67,7 @@ class Finder
      */
     public function find()
     {
-        $hookContent = \Hook::exec($this->hookName, $this->params, null, true);
+        $hookContent = (new HookManager())->exec($this->hookName, $this->params, null, true);
         if (!is_array($hookContent)) {
             $hookContent = array();
         }
