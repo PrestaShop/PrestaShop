@@ -18,6 +18,14 @@
   }
 }
 
+#pagenotfound {
+  .page-content {
+    #search_widget {
+      width: 100%;
+    }
+  }
+}
+
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {
   .header-top {

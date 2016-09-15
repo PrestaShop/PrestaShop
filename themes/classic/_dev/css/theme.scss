@@ -22,6 +22,7 @@
 @import "components/footer";
 @import "components/contact";
 @import "components/errors";
+@import "components/customization-modal";
 /*** HEADER ***/
 #header {
   background: white;
@@ -199,9 +200,18 @@
     h6 {
       margin-bottom: rem(18p);
     }
+    #notifications {
+      margin-left: -15px;
+      margin-right: -15px;
+    }
   }
   .page-footer {
     margin-bottom: rem(25px);
+  }
+}
+#notifications {
+  ul {
+    margin-bottom: 0;
   }
 }
 /*** FOOTER ***/

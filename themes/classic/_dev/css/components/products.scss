@@ -502,6 +502,7 @@ li.product-flag {
     width: 100%;
     height: rem(50px);
     resize: none;
+    padding: rem(10px);
     @include placeholder {
       color: $gray;
     }

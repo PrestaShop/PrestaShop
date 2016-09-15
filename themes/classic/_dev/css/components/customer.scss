@@ -18,10 +18,12 @@
   }
   .label {
     font-weight: 400;
-    border-radius: 0;
+    border-radius: 3px;
     font-size: inherit;
-    padding-top: rem(8px);
-    padding-bottom: rem(8px);
+    padding: rem(4px) rem(6px);
+    margin: rem(2px);
+    color: white;
+    white-space: nowrap;
   }
 }
 .page-order {
@@ -170,6 +172,24 @@
       margin: 0;
     }
   }
+  #order-history {
+    .history-lines {
+      .history-line {
+        padding: rem(8px) 0;
+        border-bottom: 1px solid $gray-lighter;
+        &:last-child {
+          border-bottom: 0;
+        }
+        .label {
+          display: inline-block;
+          margin: rem(4px) 0;
+          padding: rem(4px) rem(6px);
+          color: white;
+          border-radius: 3px;
+        }
+      }
+    }
+  }
   .addresses {
     margin: 0 rem(-15px);
     h4 {
@@ -208,11 +228,61 @@
       }
     }
   }
+  .order-items {
+    padding: 0 !important;
+    .order-item {
+      padding: rem(16px) rem(16px) 0;
+      border-bottom: 1px solid $gray-lighter;
+      .checkbox {
+        width: 30px;
+        float: left;
+        padding: 0 rem(15px);
+      }
+      .content {
+        width: calc(100% - 30px);
+        float: left;
+        padding: 0 rem(15px);
+      }
+      .desc {
+        .name {
+          font-weight: bold;
+        }
+        margin-bottom: rem(16px);
+      }
+      .qty {
+        margin-bottom: rem(16px);
+        .q {
+          margin-bottom: rem(4px);
+        }
+        .s {
+          margin-bottom: rem(4px);
+        }
+      }
+    }
+  }
+  .messages {
+    .message {
+      margin-top: rem(8px);
+      border-bottom: 1px solid $gray-lighter;
+      &:last-child {
+        border-bottom: 0;
+      }
+      > div {
+        margin-bottom: rem(8px);
+      }
+    }
+  }
+  .customization {
+    margin-top: rem(12px);
+  }
 }
 /*** Order return page ***/
 #order-return-infos {
   .thead-default th {
     color: $gray-darker;
+  }
+  .customization {
+    margin-top: rem(12px);
   }
 }
 /*** My account landing page ***/
@@ -230,7 +300,7 @@
         color: $gray-dark;
         width: 100%;
         margin-bottom: rem(30px);
-        padding: 1.6rem;
+        padding: rem(25px) rem(4px);
         i {
           display: block;
           font-size: 2.6rem;
@@ -248,6 +318,32 @@
     }
   }
 }
+/*** History page ***/
+#history {
+  .orders {
+    margin: 0 rem(-16px);
+    .order {
+      a {
+        h3 {
+          color: $gray-dark;
+        }
+      }
+      padding: rem(12px) rem(16px);
+      border-bottom: 1px solid $gray-lighter;
+      .label {
+        display: inline-block;
+        margin: rem(4px) 0;
+        padding: rem(4px) rem(6px);
+        color: white;
+        border-radius: 3px;
+      }
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
 /*** FOOTER ***/
 .page-footer {
   .account-link {
