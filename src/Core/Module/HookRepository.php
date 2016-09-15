@@ -39,10 +39,10 @@ class HookRepository
     public function createHook($hook_name, $title = '', $description = '', $position = 1)
     {
         $this->db->insert('hook', [
-            'name'          => $hook_name,
-            'title'         => $title,
-            'description'   => $description,
-            'position'      => $position
+            'name'          => $this->db->escape($hook_name),
+            'title'         => $this->db->escape($title),
+            'description'   => $this->db->escape($description),
+            'position'      => $this->db->escape($position)
         ], false, true, Db::REPLACE);
 
         return $this->getIdByName($hook_name);

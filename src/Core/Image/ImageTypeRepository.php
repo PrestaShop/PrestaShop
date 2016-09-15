@@ -38,9 +38,9 @@ class ImageTypeRepository
     public function createType($name, $width, $height, array $scope)
     {
         $data = [
-            'name'          => $name,
-            'width'          => $width,
-            'height'          => $height,
+            'name' => $this->db->escape($name),
+            'width' => $this->db->escape($width),
+            'height' => $this->db->escape($height),
         ];
 
         foreach ($this->getScopeList() as $scope_item) {
