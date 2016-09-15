@@ -252,7 +252,8 @@ class AdminTabsControllerCore extends AdminController
             $this->toolbar_title = $tab->name[$this->context->employee->id_lang];
 
             $this->_select = 'b.*';
-            $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'tab_lang` b ON (b.`id_tab` = a.`id_tab` AND b.`id_lang` = '.$this->context->language->id.')';
+            $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'tab_lang` b ON (b.`id_tab` = a.`id_tab` AND b.`id_lang` = ' .
+                (int) $this->context->language->id.')';
             $this->_where = 'AND a.`id_parent` = '.(int)$id;
             $this->_orderBy = 'position';
             $this->_use_found_rows = false;
