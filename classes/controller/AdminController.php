@@ -1989,10 +1989,12 @@ class AdminControllerCore extends Controller
                 unset($tabs[$index]);
             }
 
-            foreach ($tabs[$index]['sub_tabs'] as $sub_tab) {
-                if ((int)$sub_tab['current'] == true) {
-                    $tabs[$index]['current'] = true;
-                    $tabs[$index]['current_level'] = $sub_tab['current_level'];
+            if (array_key_exists($index, $tabs) && array_key_exists('sub_tabs', $tabs[$index])) {
+                foreach ($tabs[$index]['sub_tabs'] as $sub_tab) {
+                    if ((int)$sub_tab['current'] == true) {
+                        $tabs[$index]['current'] = true;
+                        $tabs[$index]['current_level'] = $sub_tab['current_level'];
+                    }
                 }
             }
         }
