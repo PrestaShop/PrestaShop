@@ -701,7 +701,7 @@ class ConfigurationCore extends ObjectModel
         '.$sqlJoin.'
         WHERE id_configuration NOT IN (
             SELECT id_configuration
-            FROM '._DB_PREFIX_.bqSQL($this->def['table']).'_lang
+            FROM `'._DB_PREFIX_.bqSQL($this->def['table']).'_lang`
         ) '.$sqlFilter.'
         '.($sqlSort != '' ? $sqlSort : '').'
         '.($sqlLimit != '' ? $sqlLimit : '');
