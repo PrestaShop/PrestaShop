@@ -51,11 +51,9 @@
             </tbody>
         </table>
     </div>
-    <div class="quicknav-fixed-bottom navbar-form-footer">
+    <div class="quicknav-bottom navbar-form-footer">
         {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
             {'limit': limit, 'offset': offset, 'total': total, 'caller_parameters': {'_route': 'admin_product_list', 'view': 'quicknav'}, 'view': 'quicknav'}))
         }}
     </div>
-    <br/>
-    <br/>
 </div>

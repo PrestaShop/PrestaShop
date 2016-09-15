@@ -6,8 +6,6 @@
   top: 136px;
   bottom: 0px;
   z-index: 399;
-  min-height: 100%;
-  max-height: none;
   overflow: auto;
   right: -3em;
   padding: 0 3em 0 0;
@@ -105,5 +103,8 @@
   color: #fff;
 }
 
+.sidebar.sidebar-right .quicknav-scroller table {
+  margin-bottom: 0;
+}
 
 
