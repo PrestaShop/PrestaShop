@@ -645,7 +645,7 @@ class CategoryCore extends ObjectModel
 				'.(isset($idRootCategory) ? 'RIGHT JOIN `'._DB_PREFIX_.'category` c2 ON c2.`id_category` = '.(int) $idRootCategory.' AND c.`nleft` >= c2.`nleft` AND c.`nright` <= c2.`nright`' : '').'
 				WHERE 1 '.$sqlFilter.' '.($idLang ? 'AND `id_lang` = '.(int) $idLang : '').'
 				'.($active ? ' AND c.`active` = 1' : '').'
-				'.(isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN ('.implode(',', $groups).')' : '').'
+				'.(isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN ('.implode(',', array_map('intval', $groups)).')' : '').'
 				'.(!$idLang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.`id_category`' : '').'
 				'.($orderBy != '' ? $orderBy : ' ORDER BY c.`level_depth` ASC').'
 				'.($orderBy == '' && $useShopRestriction ? ', category_shop.`position` ASC' : '').'
@@ -711,7 +711,7 @@ class CategoryCore extends ObjectModel
 				'.(isset($idRootCategory) ? 'RIGHT JOIN `'._DB_PREFIX_.'category` c2 ON c2.`id_category` = '.(int) $idRootCategory.' AND c.`nleft` >= c2.`nleft` AND c.`nright` <= c2.`nright`' : '').'
 				WHERE 1 '.$sqlFilter.' '.($idLang ? 'AND `id_lang` = '.(int) $idLang : '').'
 				'.($active ? ' AND c.`active` = 1' : '').'
-				'.(isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN ('.implode(',', $groups).')' : '').'
+				'.(isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN ('.implode(',', array_map('intval', $groups)).')' : '').'
 				'.(!$idLang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.`id_category`' : '').'
 				'.($orderBy != '' ? $orderBy : ' ORDER BY c.`level_depth` ASC').'
 				'.($orderBy == '' && $useShopRestriction ? ', category_shop.`position` ASC' : '').'
@@ -1146,7 +1146,7 @@ class CategoryCore extends ObjectModel
 			AND c3.`id_category`  IN ('.implode(',', array_map('intval', $selectedCategory)).')
 		)' : '0').' AS nbSelectedSubCat
 		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` '.Shop::addSqlRestrictionOnLang('cl', $idShop).')
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` '.Shop::addSqlRestrictionOnLang('cl', (int) $idShop).')
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int) $idShop.')
 		WHERE `id_lang` = '.(int) $idLang.'
 		AND c.`id_parent` = '.(int) $idParent;
