@@ -2404,7 +2404,7 @@ abstract class ModuleCore
             FROM `'._DB_PREFIX_.'authorization_role` a
             LEFT JOIN `'._DB_PREFIX_.'module_access` j ON j.id_authorization_role = a.id_authorization_role
             WHERE `slug` LIKE "ROLE_MOD_MODULE_%"
-            AND j.id_profile = "'.$idProfile.'"
+            AND j.id_profile = "'.(int) $idProfile.'"
             ORDER BY a.slug
         ');
 
