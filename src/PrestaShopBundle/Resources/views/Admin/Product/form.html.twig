@@ -1049,6 +1049,22 @@
               >
               {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
             </a>
+            {% for entry in additionnalProductActions %}
+              {% if entry.divider is defined and entry.divider==true %}
+                <div class="dropdown-divider"></div>
+              {% else %}
+                <a
+                  class="dropdown-item js-btn-save" href="{{ entry.href|default("#") }}"
+                  {% if entry.onclick is defined %}onclick="{{ entry.onclick }}"{% endif %}
+                  {% if entry.target is defined %}target="{{ entry.target }}"{% endif %}
+                >
+                  {% if entry.icon %}
+                    <i class="material-icons">{{ entry.icon }}</i>
+                  {% endif %}
+                  {{ entry.label|default('') }}
+                </a>
+               {% endif %}
+              {% endfor %}
           </div>
         </div>
       </div>
