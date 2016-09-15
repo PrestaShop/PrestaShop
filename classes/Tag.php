@@ -141,7 +141,7 @@ class TagCore extends ObjectModel
     {
         if (!Module::getBatchMode()) {
             if ($tag_list != null) {
-                $tag_list_query = ' AND pt.id_tag IN ('.implode(',', $tag_list).')';
+                $tag_list_query = ' AND pt.id_tag IN ('.implode(',', array_map('intval', $tag_list)).')';
                 Db::getInstance()->execute('DELETE pt FROM `'._DB_PREFIX_.'tag_count` pt WHERE 1=1 '.$tag_list_query);
             } else {
                 $tag_list_query = '';
