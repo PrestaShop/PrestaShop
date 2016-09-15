@@ -220,7 +220,9 @@ class CarrierCore extends ObjectModel
         }
 
         // Register reference
-        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->def['table'].'` SET `id_reference` = '.$this->id.' WHERE `id_carrier` = '.$this->id);
+        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->def['table'].'` SET `id_reference` = ' .
+            (int) $this->id.' WHERE `id_carrier` = ' . (int) $this->id
+        );
 
         return true;
     }
@@ -929,7 +931,7 @@ class CarrierCore extends ObjectModel
                 } elseif (is_int($v) || is_float($v)) {
                     $sql .= $v;
                 } else {
-                    $sql .= '\''.$v.'\'';
+                    $sql .= '\''. Db::getInstance()->escape($v, false, true) . '\'';
                 }
                 $sql .= ', ';
             }
@@ -977,7 +979,7 @@ class CarrierCore extends ObjectModel
                 foreach ($res as $val) {
                     Db::getInstance()->execute('
 						INSERT INTO `'._DB_PREFIX_.$range.'` (`id_carrier`, `delimiter1`, `delimiter2`)
-						VALUES ('.$this->id.','.(float)$val['delimiter1'].','.(float)$val['delimiter2'].')');
+						VALUES ('. (int) $this->id.','.(float)$val['delimiter1'].','.(float)$val['delimiter2'].')');
                     $range_id = (int)Db::getInstance()->Insert_ID();
 
                     $range_price_id = ($range == 'range_price') ? $range_id : 'NULL';
@@ -1003,7 +1005,7 @@ class CarrierCore extends ObjectModel
         foreach ($res as $val) {
             Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'carrier_zone` (`id_carrier`, `id_zone`)
-				VALUES ('.$this->id.','.(int)$val['id_zone'].')
+				VALUES ('. (int) $this->id.','.(int)$val['id_zone'].')
 			');
         }
 
@@ -1564,6 +1566,9 @@ class CarrierCore extends ObjectModel
         if (!is_array($id_group_list)) {
             $id_group_list = array($id_group_list);
         }
+
+        $id_group_list = array_map('intval', $id_group_list);
+        $exception = array_map('intval', $exception);
 
         Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'carrier_group`

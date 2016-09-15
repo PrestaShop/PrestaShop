@@ -39,28 +39,29 @@ class SqlTranslationLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages')
     {
+        $locale = Db::getInstance()->escape($locale, false, true);
         $localeResult = Db::getInstance()->getRow('
             SELECT `id_lang`
             FROM `'._DB_PREFIX_.'lang`
             WHERE `locale` = "'.$locale.'"'
         );
-        
+
         if (empty($localeResult)) {
             throw new Exception(sprintf('Language not found in database: %s', $locale));
         }
-        
+
         $translations = Db::getInstance()->executeS('
             SELECT `key`, `translation`, `domain`
             FROM `'._DB_PREFIX_.'translation`
             WHERE `id_lang` = '.$localeResult['id_lang']
         );
-        
+
         $catalogue = new MessageCatalogue($locale);
-        
+
         foreach ($translations as $translation) {
             $catalogue->set($translation['key'], $translation['translation'], $translation['domain']);
         }
-        
+
         return $catalogue;
     }
 }
