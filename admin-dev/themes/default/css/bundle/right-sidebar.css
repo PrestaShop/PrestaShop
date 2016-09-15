@@ -101,6 +101,7 @@
 
 .sidebar.sidebar-right .quicknav-header h2{
   color: #fff;
+  margin-bottom: 0;
 }
 
 .sidebar.sidebar-right .quicknav-scroller table {
