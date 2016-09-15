@@ -1,4 +1,4 @@
-<div>
+<div class="quicknav-container">
     <div class="quicknav-header">
         <div class="pull-left"><a href="#" data-toggle="sidebar" data-target=".sidebar">&times;</a></div>
         <h2>{{ "Quick navigation"|trans({}, 'Admin.Global') }}</h2>
@@ -51,7 +51,7 @@
             </tbody>
         </table>
     </div>
-    <div class="quicknav-bottom navbar-form-footer">
+    <div class="quicknav-fixed-bottom navbar-form-footer">
         {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
             {'limit': limit, 'offset': offset, 'total': total, 'caller_parameters': {'_route': 'admin_product_list', 'view': 'quicknav'}, 'view': 'quicknav'}))
         }}

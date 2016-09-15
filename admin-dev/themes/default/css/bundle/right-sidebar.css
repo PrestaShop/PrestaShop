@@ -80,14 +80,24 @@
   transform: translate(0,0);
 }
 
+#right-sidebar .quicknav-container {
+  height: 100%;
+}
+
 .sidebar.sidebar-right .quicknav-fixed-bottom {
-  bottom: 6em;
+  bottom: 0;
   margin-bottom: 0;
   position: fixed;
   left: 0;
   right: 3em;
-  padding: 0 1em 1em;
+  height: 50px;
 }
+
+.sidebar.sidebar-right .quicknav-fixed-bottom ul.pagination {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 .sidebar.sidebar-right .quicknav-fixed-bottom input {
   outline-style: none;
   text-align: center;
@@ -97,11 +107,17 @@
   background: #363A41;
   color: #fff;
   padding: 1.2em;
+  height: 50px;
 }
 
 .sidebar.sidebar-right .quicknav-header h2{
   color: #fff;
   margin-bottom: 0;
+}
+
+.sidebar.sidebar-right .quicknav-scroller {
+  overflow: auto;
+  height: calc(100% - 50px - 50px);
 }
 
 .sidebar.sidebar-right .quicknav-scroller table {
