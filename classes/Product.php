@@ -2586,7 +2586,7 @@ class ProductCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 		WHERE product_shop.`active` = 1
 		AND product_shop.`show_price` = 1
-		'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
+		'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 		'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
 		'.$sql_groups.'
 		ORDER BY '.(isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').pSQL($order_by).' '.pSQL($order_way).'
