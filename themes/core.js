@@ -2255,7 +2255,13 @@
 	
 	      // Replace all "add to cart" sections but the quantity input in order to keep quantity field intact i.e.
 	      // Prevent quantity input from blinking with classic theme.
-	      replaceAddToCartSections((0, _jquery2['default'])(resp.product_add_to_cart)[2]);
+	      var $productAddToCart = undefined;
+	      (0, _jquery2['default'])(resp.product_add_to_cart).each(function (index, value) {
+	        if ((0, _jquery2['default'])(value).hasClass('product-add-to-cart')) {
+	          $productAddToCart = (0, _jquery2['default'])(value);
+	        }
+	      });
+	      replaceAddToCartSections($productAddToCart);
 	
 	      var minimalProductQuantity = parseInt(resp.product_minimal_quantity, 10);
 	      var quantityInputSelector = '#quantity_wanted';
