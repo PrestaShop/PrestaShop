@@ -94,6 +94,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'phpversion' => $this->translator->trans('PHP 5.4 or later is not enabled', array(), 'Install'),
                         'upload' => $this->translator->trans('Cannot upload files', array(), 'Install'),
                         'system' => $this->translator->trans('Cannot create new files and folders', array(), 'Install'),
+                        'curl' => $this->translator->trans('cURL extension is not installed', array(), 'Install'),
                         'gd' => $this->translator->trans('GD library is not installed', array(), 'Install'),
                         'pdo_mysql' => $this->translator->trans('PDO MySQL extension is not loaded', array(), 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
