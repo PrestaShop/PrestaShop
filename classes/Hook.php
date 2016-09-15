@@ -320,7 +320,9 @@ class HookCore extends ObjectModel
     public static function isModuleRegisteredOnHook($module_instance, $hook_name, $id_shop)
     {
         $prefix = _DB_PREFIX_;
-        $id_hook = (int)Hook::getIdByName($hook_name);
+        $id_hook = (int) Hook::getIdByName($hook_name);
+        $id_shop = (int) $id_shop;
+
         $sql = "SELECT * FROM {$prefix}hook_module
                   WHERE `id_hook` = $id_hook
                   AND `id_module` = {$module_instance->id}
