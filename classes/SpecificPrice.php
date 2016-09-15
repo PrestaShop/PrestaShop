@@ -211,14 +211,15 @@ class SpecificPriceCore extends ObjectModel
      */
     protected static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
-        $query_extra = 'AND `'.$field_name.'` = 0 ';
+        $name = Db::getInstance()->escape($field_name);
+        $query_extra = 'AND `'.$name.'` = 0 ';
         if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
             return $query_extra;
         }
         $key_cache     = __FUNCTION__.'-'.$field_name.'-'.$threshold;
         $specific_list = array();
         if (!array_key_exists($key_cache, SpecificPrice::$_filterOutCache)) {
-            $query_count    = 'SELECT COUNT(DISTINCT `'.$field_name.'`) FROM `'._DB_PREFIX_.'specific_price` WHERE `'.$field_name.'` != 0';
+            $query_count    = 'SELECT COUNT(DISTINCT `'.$name.'`) FROM `'._DB_PREFIX_.'specific_price` WHERE `'.$field_name.'` != 0';
             $specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_count);
             if ($specific_count == 0) {
                 self::$_no_specific_values[$field_name] = true;
@@ -226,7 +227,7 @@ class SpecificPriceCore extends ObjectModel
                 return $query_extra;
             }
             if ($specific_count < $threshold) {
-                $query             = 'SELECT DISTINCT `'.$field_name.'` FROM `'._DB_PREFIX_.'specific_price` WHERE `'.$field_name.'` != 0';
+                $query             = 'SELECT DISTINCT `'.$name.'` FROM `'._DB_PREFIX_.'specific_price` WHERE `'.$name.'` != 0';
                 $tmp_specific_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
                 foreach ($tmp_specific_list as $key => $value) {
                     $specific_list[] = $value[$field_name];
@@ -238,7 +239,7 @@ class SpecificPriceCore extends ObjectModel
         }
 
         if (in_array($field_value, $specific_list)) {
-            $query_extra = 'AND `'.$field_name.'` '.self::formatIntInQuery(0, $field_value).' ';
+            $query_extra = 'AND `'.$name.'` '.self::formatIntInQuery(0, $field_value).' ';
         }
 
         return $query_extra;
@@ -306,6 +307,9 @@ class SpecificPriceCore extends ObjectModel
         if (!$from_specific_count && !$to_specific_count) {
             $ending = $beginning = $first_date;
         }
+        $db = Db::getInstance();
+        $beginning = $db->escape($beginning);
+        $ending = $db->escape($ending);
 
         $query_extra .= ' AND (`from` = \'0000-00-00 00:00:00\' OR \''.$beginning.'\' >= `from`)'
                        .' AND (`to` = \'0000-00-00 00:00:00\' OR \''.$ending.'\' <= `to`)';
