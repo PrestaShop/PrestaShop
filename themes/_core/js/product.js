@@ -54,7 +54,13 @@ $(document).ready(function () {
 
       // Replace all "add to cart" sections but the quantity input in order to keep quantity field intact i.e.
       // Prevent quantity input from blinking with classic theme.
-      replaceAddToCartSections($(resp.product_add_to_cart)[2]);
+      let $productAddToCart;
+      $(resp.product_add_to_cart).each(function(index, value) {
+          if ($(value).hasClass('product-add-to-cart')) {
+            $productAddToCart = $(value);
+          }
+      });
+      replaceAddToCartSections($productAddToCart);
 
       const minimalProductQuantity = parseInt(resp.product_minimal_quantity, 10);
       const quantityInputSelector = '#quantity_wanted';
