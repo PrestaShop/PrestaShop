@@ -1136,8 +1136,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             // Hack for postcode required for country which does not have postcodes
             if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0')) {
                 if (isset($data['validate'])) {
-                    $data_validate = $data['validate'];
-                    if (!Validate::$data_validate($value) && (!empty($value) || $data['required'])) {
+                    if (!call_user_func('Validate::'.$data['validate'],$value) && (!empty($value) || $data['required'])) {
                         $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).
                             '</b> '.Tools::displayError('is invalid.');
                     }
