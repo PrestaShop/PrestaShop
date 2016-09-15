@@ -171,7 +171,7 @@ class ProductController extends FrameworkBundleAdminController
                 null,
                 array(
                     'label' => $translator->trans('Categories', array(), 'Admin.Catalog.Feature'),
-                    'list' => $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(),
+                    'list' => $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(null, $this->get('prestashop.adapter.legacy.context')->getContext()->language->id, false),
                     'valid_list' => [],
                     'multiple' => false,
                 )
