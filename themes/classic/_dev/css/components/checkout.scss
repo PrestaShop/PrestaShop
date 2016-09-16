@@ -251,6 +251,9 @@ body#checkout {
   .condition-label {
     margin-left: rem(40px);
     margin-top: rem(10px);
+    label {
+      text-align: inherit;
+    }
   }
   .cancel-address {
     margin: rem(10px);
@@ -371,14 +374,30 @@ body#checkout {
       }
     }
   }
+  .order-line {
+    margin-top: rem(16px);
+  }
+  .image {
+    img {
+        width: 100%;
+        border: 1px solid gray-lighter;
+        margin-bottom: rem(16px);
+    }
+  }
   .details {
+    margin-bottom: rem(16px);
+    .customizations {
+      margin-top: rem(10px);
+    }
+  }
+  .qty {
     margin-bottom: rem(16px);
   }
 }
 #order-confirmation {
   #registration-form {
     width: 50%;
-    margin: 0 auto;
+    margin: 0 auto rem(16px);
   }
 }
 @include media-breakpoint-down(md) {
@@ -402,6 +421,11 @@ body#checkout {
   .condition-label {
     label[for="conditions_to_approve[terms-and-conditions]"] {
       text-align: left;
+    }
+  }
+  #order-confirmation {
+    #registration-form {
+      width: 100%;
     }
   }
 }

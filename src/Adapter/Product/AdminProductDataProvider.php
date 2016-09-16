@@ -278,11 +278,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         // Column 'position' added if filtering by category
         if ($showPositionColumn) {
+            $filteredCategoryId = (int) $filterParams['filter_category'];
             $sqlSelect['position'] = array('table' => 'cp', 'field' => 'position');
             $sqlTable['cp'] = array(
                 'table' => 'category_product',
                 'join' => 'INNER JOIN',
-                'on' => 'cp.`id_product` = p.`id_product` AND cp.`id_category` = '.$filterParams['filter_category'],
+                'on' => 'cp.`id_product` = p.`id_product` AND cp.`id_category` = ' . $filteredCategoryId ,
             );
         } elseif ($orderBy == 'position') {
             // We do not show position column, so we do not join the table, so we do not order by position!

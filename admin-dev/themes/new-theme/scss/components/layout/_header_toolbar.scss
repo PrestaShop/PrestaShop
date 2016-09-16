@@ -49,3 +49,9 @@
         border-bottom: 3px solid #3ed2f0;
     }
 }
+
+.page-sidebar-closed {
+  .header-toolbar {
+    left: $size-navbar-width-mini;
+  }
+}

@@ -1985,12 +1985,16 @@ class AdminControllerCore extends Controller
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
             if (isset($tabs[$index]['sub_tabs'][0])) {
                 $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
+            } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {
+                unset($tabs[$index]);
             }
 
-            foreach ($tabs[$index]['sub_tabs'] as $sub_tab) {
-                if ((int)$sub_tab['current'] == true) {
-                    $tabs[$index]['current'] = true;
-                    $tabs[$index]['current_level'] = $sub_tab['current_level'];
+            if (array_key_exists($index, $tabs) && array_key_exists('sub_tabs', $tabs[$index])) {
+                foreach ($tabs[$index]['sub_tabs'] as $sub_tab) {
+                    if ((int)$sub_tab['current'] == true) {
+                        $tabs[$index]['current'] = true;
+                        $tabs[$index]['current_level'] = $sub_tab['current_level'];
+                    }
                 }
             }
         }
@@ -4098,10 +4102,6 @@ class AdminControllerCore extends Controller
 
         if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int)Tools::getValue('conf') > 0) {
             unset($obj);
-        }
-
-        if (!empty($module->image) && false !== strpos($module->image, '../img')) {
-            $module->image_absolute = str_replace('../', _PS_BASE_URL_.__PS_BASE_URI__, $module->image);
         }
     }
 

@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
@@ -171,7 +172,7 @@ class ProductController extends FrameworkBundleAdminController
                 null,
                 array(
                     'label' => $translator->trans('Categories', array(), 'Admin.Catalog.Feature'),
-                    'list' => $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(),
+                    'list' => $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(null, $this->get('prestashop.adapter.legacy.context')->getContext()->language->id, false),
                     'valid_list' => [],
                     'multiple' => false,
                 )
@@ -413,7 +414,7 @@ class ProductController extends FrameworkBundleAdminController
                 $formData['step3']['combinations'] = $combinations;
 
                 //define POST values for keeping legacy adminController skills
-                $_POST = $modelMapper->getModelData($formData, $isMultiShopContext);
+                $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
                 $_POST['state'] = \Product::STATE_SAVED;
 
                 $adminProductController = $adminProductWrapper->getInstance();
@@ -510,6 +511,7 @@ class ProductController extends FrameworkBundleAdminController
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
             'attribute_groups' => $attributeGroups,
+            'max_upload_size' => \Tools::formatBytes(UploadedFile::getMaxFilesize())
         );
     }
 

@@ -1,25 +1,17 @@
 {if $order.messages}
-<div class="box">
+<div class="box messages">
   <h3>{l s='Messages' d='Shop.Theme.CustomerAccount'}</h3>
-  <table class="table table-striped table-bordered">
-    <thead class="thead-default">
-      <tr>
-        <th>{l s='From' d='Shop.Theme.CustomerAccount'}</th>
-        <th>{l s='Message' d='Shop.Theme.CustomerAccount'}</th>
-      </tr>
-    </thead>
-    <tbody>
-    {foreach from=$order.messages item=message}
-      <tr>
-        <td>
-          {$message.name}<br>
-          {$message.message_date}
-        </td>
-        <td>{$message.message nofilter}</td>
-      </tr>
-    {/foreach}
-    </tbody>
-  </table>
+  {foreach from=$order.messages item=message}
+    <div class="message row">
+      <div class="col-sm-4">
+        {$message.name}<br/>
+        {$message.message_date}
+      </div>
+      <div class="col-sm-8">
+        {$message.message nofilter}
+      </div>
+    </div>
+  {/foreach}
 </div>
 {/if}
 

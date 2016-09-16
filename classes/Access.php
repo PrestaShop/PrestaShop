@@ -73,13 +73,15 @@ class AccessCore extends ObjectModel
                 throw new Exception('The slug '.$currentRole.' is invalid');
             }
 
+            $currentRole = Db::getInstance()->escape($currentRole);
+
             $isCurrentGranted = (bool) Db::getInstance()->getRow('
                 SELECT t.`id_authorization_role`
                 FROM `'._DB_PREFIX_.'authorization_role` t
                 LEFT JOIN '.$joinTable.' j
                 ON j.`id_authorization_role` = t.`id_authorization_role`
                 WHERE `slug` = "'.$currentRole.'"
-                AND j.`id_profile` = "'.$idProfile.'"
+                AND j.`id_profile` = "'. (int) $idProfile.'"
             ');
 
             if (!$isCurrentGranted) {
@@ -99,6 +101,7 @@ class AccessCore extends ObjectModel
      */
     public static function getRoles($idProfile)
     {
+        $idProfile = (int) $idProfile;
         $result =  Db::getInstance()->executeS('
             SELECT r.`slug`
             FROM `'._DB_PREFIX_.'authorization_role` r
@@ -155,7 +158,7 @@ class AccessCore extends ObjectModel
         $result = Db::getInstance()->getRow('
             SELECT `class_name`
             FROM `'._DB_PREFIX_.'tab` t
-            WHERE `id_tab` = "'.$idTab.'"
+            WHERE `id_tab` = "'.(int) $idTab.'"
         ');
         return self::sluggifyTab($result);
     }
@@ -172,7 +175,7 @@ class AccessCore extends ObjectModel
         $result = Db::getInstance()->getRow('
             SELECT `name`
             FROM `'._DB_PREFIX_.'module` t
-            WHERE `id_module` = "'.$idModule.'"
+            WHERE `id_module` = "'.(int) $idModule.'"
         ');
         return self::sluggifyModule($result);
     }
@@ -238,7 +241,7 @@ class AccessCore extends ObjectModel
     {
         $sql = '
             INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
-            VALUES ('.$idProfile.','.$idRole.')
+            VALUES ('.(int) $idProfile.','.(int) $idRole.')
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
@@ -256,8 +259,8 @@ class AccessCore extends ObjectModel
     {
         $sql = '
             DELETE FROM `'._DB_PREFIX_.'access`
-            WHERE `id_profile` = "'.$idProfile.'"
-            AND `id_authorization_role` = "'.$idRole.'"
+            WHERE `id_profile` = "'.(int) $idProfile.'"
+            AND `id_authorization_role` = "'.(int) $idRole.'"
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
@@ -275,7 +278,7 @@ class AccessCore extends ObjectModel
     {
         $sql = '
             INSERT IGNORE INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_authorization_role`)
-            VALUES ('.$idProfile.','.$idRole.')
+            VALUES ('.(int)$idProfile.','.(int) $idRole.')
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
@@ -291,8 +294,8 @@ class AccessCore extends ObjectModel
     {
         $sql = '
             DELETE FROM `'._DB_PREFIX_.'module_access`
-            WHERE `id_profile` = "'.$idProfile.'"
-            AND `id_authorization_role` = "'.$idRole.'"
+            WHERE `id_profile` = "'.(int) $idProfile.'"
+            AND `id_authorization_role` = "'.(int) $idRole.'"
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
@@ -311,6 +314,9 @@ class AccessCore extends ObjectModel
      */
     public function updateLgcAccess($idProfile, $idTab, $lgcAuth, $enabled)
     {
+        $idProfile = (int) $idProfile;
+        $idTab = (int) $idTab;
+
         if ($idTab == -1) {
             $slug = 'ROLE_MOD_TAB_%_';
         } else {
@@ -320,7 +326,8 @@ class AccessCore extends ObjectModel
         $whereClauses = array();
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
-            $whereClauses[] = ' `slug` LIKE "'.$slug.$auth.'"';
+            $slugLike = Db::getInstance()->escape($slug.$auth);
+            $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
         }
 
         $roles = Db::getInstance()->executeS('
@@ -356,6 +363,9 @@ class AccessCore extends ObjectModel
      */
     public function updateLgcModuleAccess($idProfile, $idModule, $lgcAuth, $enabled)
     {
+        $idProfile = (int) $idProfile;
+        $idModule = (int) $idModule;
+
         if ($idModule == -1) {
             $slug = 'ROLE_MOD_MODULE_%_';
         } else {
@@ -365,7 +375,8 @@ class AccessCore extends ObjectModel
         $whereClauses = array();
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
-            $whereClauses[] = ' `slug` LIKE "'.$slug.$auth.'"';
+            $slugLike = Db::getInstance()->escape($slug.$auth);
+            $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
         }
 
         $roles = Db::getInstance()->executeS('

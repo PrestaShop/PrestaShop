@@ -45,6 +45,15 @@ class SmartyLazyRegister
         }
     }
 
+    public function isRegistered($params)
+    {
+        if (is_array($params)) {
+            $params = $params[1];
+        }
+
+        return isset($this->registry[$params]);
+    }
+
     /**
      * Dynamically call static function or method.
      *

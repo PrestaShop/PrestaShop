@@ -145,7 +145,6 @@ class ProductSpecificPrice extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Starting at', array(), 'Admin.Catalog.Feature'),
             'constraints' => array(
-                new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric')),
             ),
         ))

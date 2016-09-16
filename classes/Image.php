@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class ImageCore
+ */
 class ImageCore extends ObjectModel
 {
     public $id;
@@ -67,22 +70,38 @@ class ImageCore extends ObjectModel
         'multilang' => true,
         'fields' => array(
             'id_product' => array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
-            'position' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'cover' =>        array('type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true),
-            'legend' =>    array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+            'position' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'cover' => array('type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true),
+            'legend' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
         ),
     );
 
     protected static $_cacheGetSize = array();
 
-    public function __construct($id = null, $id_lang = null)
+    /**
+     * ImageCore constructor.
+     *
+     * @param null $id
+     * @param null $idLang
+     */
+    public function __construct($id = null, $idLang = null)
     {
-        parent::__construct($id, $id_lang);
+        parent::__construct($id, $idLang);
         $this->image_dir = _PS_PROD_IMG_DIR_;
         $this->source_index = _PS_PROD_IMG_DIR_.'index.php';
     }
 
-    public function add($autodate = true, $null_values = false)
+    /**
+     * Adds current Image as a new Object to the database
+     *
+     * @param bool $autoDate   Automatically set `date_upd` and `date_add` columns
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the Image has been successfully added
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function add($autoDate = true, $nullValues = false)
     {
         if ($this->position <= 0) {
             $this->position = Image::getHighestPosition($this->id_product) + 1;
@@ -94,10 +113,19 @@ class ImageCore extends ObjectModel
             $this->cover = null;
         }
 
-        return parent::add($autodate, $null_values);
+        return parent::add($autoDate, $nullValues);
     }
 
-    public function update($null_values = false)
+    /**
+     * Updates the current Image in the database
+     *
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the Image has been successfully updated
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function update($nullValues = false)
     {
         if ($this->cover) {
             $this->cover = 1;
@@ -106,9 +134,15 @@ class ImageCore extends ObjectModel
         }
 
 
-        return parent::update($null_values);
+        return parent::update($nullValues);
     }
 
+    /**
+     * Deletes current Image from the database
+     *
+     * @return bool `true` if delete was successful
+     * @throws PrestaShopException
+     */
     public function delete()
     {
         if (!parent::delete()) {
@@ -134,80 +168,85 @@ class ImageCore extends ObjectModel
     /**
      * Return first image (by position) associated with a product attribute
      *
-     * @param int $id_shop Shop ID
-     * @param int $id_lang Language ID
-     * @param int $id_product Product ID
-     * @param int $id_product_attribute Product Attribute ID
+     * @param int $idShop             Shop ID
+     * @param int $idLang             Language ID
+     * @param int $idProduct          Product ID
+     * @param int $idProductAttribute Product Attribute ID
+     *
      * @return array
      */
-    public static function getBestImageAttribute($id_shop, $id_lang, $id_product, $id_product_attribute)
+    public static function getBestImageAttribute($idShop, $idLang, $idProduct, $idProductAttribute)
     {
-        $cache_id = 'Image::getBestImageAttribute'.'-'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_lang.'-'.(int)$id_shop;
+        $cacheId = 'Image::getBestImageAttribute'.'-'.(int) $idProduct.'-'.(int) $idProductAttribute.'-'.(int) $idLang.'-'.(int) $idShop;
 
-        if (!Cache::isStored($cache_id)) {
+        if (!Cache::isStored($cacheId)) {
             $row = Db::getInstance()->getRow('
 					SELECT image_shop.`id_image` id_image, il.`legend`
 					FROM `'._DB_PREFIX_.'image` i
 					INNER JOIN `'._DB_PREFIX_.'image_shop` image_shop
-						ON (i.id_image = image_shop.id_image AND image_shop.id_shop = '.(int)$id_shop.')
+						ON (i.id_image = image_shop.id_image AND image_shop.id_shop = '.(int) $idShop.')
 						INNER JOIN `'._DB_PREFIX_.'product_attribute_image` pai
-						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = '.(int)$id_product_attribute.')
+						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = '.(int) $idProductAttribute.')
 					LEFT JOIN `'._DB_PREFIX_.'image_lang` il
-						ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-					WHERE i.`id_product` = '.(int)$id_product.' ORDER BY i.`position` ASC');
+						ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int) $idLang.')
+					WHERE i.`id_product` = '.(int) $idProduct.' ORDER BY i.`position` ASC');
 
-            Cache::store($cache_id, $row);
+            Cache::store($cacheId, $row);
         } else {
-            $row = Cache::retrieve($cache_id);
+            $row = Cache::retrieve($cacheId);
         }
+
         return $row;
     }
 
     /**
      * Return available images for a product
      *
-     * @param int $id_lang Language ID
-     * @param int $id_product Product ID
-     * @param int $id_product_attribute Product Attribute ID
+     * @param int $idLang             Language ID
+     * @param int $idProduct          Product ID
+     * @param int $idProductAttribute Product Attribute ID
+     *
      * @return array Images
      */
-    public static function getImages($id_lang, $id_product, $id_product_attribute = null)
+    public static function getImages($idLang, $idProduct, $idProductAttribute = null)
     {
-        $attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = '.(int)$id_product_attribute : '');
+        $attributeFilter = ($idProductAttribute ? ' AND ai.`id_product_attribute` = '.(int) $idProductAttribute : '');
         $sql = 'SELECT *
 			FROM `'._DB_PREFIX_.'image` i
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`)';
 
-        if ($id_product_attribute) {
+        if ($idProductAttribute) {
             $sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
         }
 
-        $sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang.$attribute_filter.'
+        $sql .= ' WHERE i.`id_product` = '.(int)$idProduct.' AND il.`id_lang` = '.(int) $idLang.$attributeFilter.'
 			ORDER BY i.`position` ASC';
+
         return Db::getInstance()->executeS($sql);
     }
 
     /**
      * Check if a product has an image available
      *
-     * @param int $id_lang Language ID
-     * @param int $id_product Product ID
-     * @param int $id_product_attribute Product Attribute ID
+     * @param int $idLang             Language ID
+     * @param int $idProduct          Product ID
+     * @param int $idProductAttribute Product Attribute ID
+     *
      * @return bool
      */
-    public static function hasImages($id_lang, $id_product, $id_product_attribute = null)
+    public static function hasImages($idLang, $idProduct, $idProductAttribute = null)
     {
-        $attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = '.(int)$id_product_attribute : '');
+        $attribute_filter = ($idProductAttribute ? ' AND ai.`id_product_attribute` = '.(int) $idProductAttribute : '');
         $sql = 'SELECT 1
 			FROM `'._DB_PREFIX_.'image` i
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`)';
 
-        if ($id_product_attribute) {
+        if ($idProductAttribute) {
             $sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
         }
 
-        $sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang.$attribute_filter;
-        return (bool)Db::getInstance()->getValue($sql);
+        $sql .= ' WHERE i.`id_product` = '.(int) $idProduct.' AND il.`id_lang` = '.(int) $idLang.$attribute_filter;
+        return (bool) Db::getInstance()->getValue($sql);
     }
 
     /**
@@ -226,151 +265,162 @@ class ImageCore extends ObjectModel
     /**
      * Return number of images for a product
      *
-     * @param int $id_product Product ID
+     * @param int $idProduct Product ID
+     *
      * @return int number of images
      */
-    public static function getImagesTotal($id_product)
+    public static function getImagesTotal($idProduct)
     {
         $result = Db::getInstance()->getRow('
 		SELECT COUNT(`id_image`) AS total
 		FROM `'._DB_PREFIX_.'image`
-		WHERE `id_product` = '.(int)$id_product);
+		WHERE `id_product` = '.(int) $idProduct);
         return $result['total'];
     }
 
     /**
      * Return highest position of images for a product
      *
-     * @param int $id_product Product ID
+     * @param int $idProduct Product ID
+     *
      * @return int highest position of images
      */
-    public static function getHighestPosition($id_product)
+    public static function getHighestPosition($idProduct)
     {
         $result = Db::getInstance()->getRow('
 		SELECT MAX(`position`) AS max
 		FROM `'._DB_PREFIX_.'image`
-		WHERE `id_product` = '.(int)$id_product);
+		WHERE `id_product` = '.(int) $idProduct);
         return $result['max'];
     }
 
     /**
      * Delete product cover
      *
-     * @param int $id_product Product ID
+     * @param int $idProduct Product ID
+     *
      * @return bool result
      */
-    public static function deleteCover($id_product)
+    public static function deleteCover($idProduct)
     {
-        if (!Validate::isUnsignedId($id_product)) {
+        if (!Validate::isUnsignedId($idProduct)) {
             die(Tools::displayError());
         }
 
-        if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg')) {
-            unlink(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg');
+        if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$idProduct.'.jpg')) {
+            unlink(_PS_TMP_IMG_DIR_.'product_'.$idProduct.'.jpg');
         }
 
         return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
 			SET `cover` = NULL
-			WHERE `id_product` = '.(int)$id_product
+			WHERE `id_product` = '.(int) $idProduct
         ) &&
         Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image_shop` image_shop
 			SET image_shop.`cover` = NULL
-			WHERE image_shop.id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).') AND image_shop.`id_product` = '.(int)$id_product
+			WHERE image_shop.id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).') AND image_shop.`id_product` = '.(int) $idProduct
         ));
     }
 
     /**
      *Get product cover
      *
-     * @param int $id_product Product ID
+     * @param int $idProduct Product ID
+     *
      * @return bool result
      */
-    public static function getCover($id_product)
+    public static function getCover($idProduct)
     {
         return Db::getInstance()->getRow('
 			SELECT * FROM `'._DB_PREFIX_.'image_shop` image_shop
-			WHERE image_shop.`id_product` = '.(int)$id_product.'
+			WHERE image_shop.`id_product` = '.(int) $idProduct.'
 			AND image_shop.`cover`= 1');
     }
 
     /**
      *Get global product cover
      *
-     * @param int $id_product Product ID
+     * @param int $idProduct Product ID
+     *
      * @return bool result
      */
-    public static function getGlobalCover($id_product)
+    public static function getGlobalCover($idProduct)
     {
         return Db::getInstance()->getRow('
 			SELECT * FROM `'._DB_PREFIX_.'image` i
-			WHERE i.`id_product` = '.(int)$id_product.'
+			WHERE i.`id_product` = '.(int) $idProduct.'
 			AND i.`cover`= 1');
     }
 
     /**
      * Copy images from a product to another
      *
-     * @param int $id_product_old Source product ID
-     * @param bool $id_product_new Destination product ID
+     * @param int  $idProductOld Source product ID
+     * @param bool $idProductNew Destination product ID
      */
-    public static function duplicateProductImages($id_product_old, $id_product_new, $combination_images)
+    public static function duplicateProductImages($idProductOld, $idProductNew, $combinationImages)
     {
-        $images_types = ImageType::getImagesTypes('products');
+        $imagesTypes = ImageType::getImagesTypes('products');
         $result = Db::getInstance()->executeS('
 		SELECT `id_image`
 		FROM `'._DB_PREFIX_.'image`
-		WHERE `id_product` = '.(int)$id_product_old);
+		WHERE `id_product` = '.(int) $idProductOld);
         foreach ($result as $row) {
-            $image_old = new Image($row['id_image']);
-            $image_new = clone $image_old;
-            unset($image_new->id);
-            $image_new->id_product = (int)$id_product_new;
+            $imageOld = new Image($row['id_image']);
+            $imageNew = clone $imageOld;
+            unset($imageNew->id);
+            $imageNew->id_product = (int) $idProductNew;
 
             // A new id is generated for the cloned image when calling add()
-            if ($image_new->add()) {
-                $new_path = $image_new->getPathForCreation();
-                foreach ($images_types as $image_type) {
-                    if (file_exists(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'.jpg')) {
+            if ($imageNew->add()) {
+                $newPath = $imageNew->getPathForCreation();
+                foreach ($imagesTypes as $imageType) {
+                    if (file_exists(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'-'.$imageType['name'].'.jpg')) {
                         if (!Configuration::get('PS_LEGACY_IMAGES')) {
-                            $image_new->createImgFolder();
+                            $imageNew->createImgFolder();
                         }
-                        copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'.jpg',
-                        $new_path.'-'.$image_type['name'].'.jpg');
+                        copy(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'-'.$imageType['name'].'.jpg',
+                        $newPath.'-'.$imageType['name'].'.jpg');
                         if (Configuration::get('WATERMARK_HASH')) {
-                            $old_image_path = _PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg';
-                            if (file_exists($old_image_path)) {
-                                copy($old_image_path, $new_path.'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg');
+                            $oldImagePath = _PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'-'.$imageType['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg';
+                            if (file_exists($oldImagePath)) {
+                                copy($oldImagePath, $newPath.'-'.$imageType['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg');
                             }
                         }
                     }
                 }
 
-                if (file_exists(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'.jpg')) {
-                    copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'.jpg', $new_path.'.jpg');
+                if (file_exists(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'.jpg')) {
+                    copy(_PS_PROD_IMG_DIR_.$imageOld->getExistingImgPath().'.jpg', $newPath.'.jpg');
                 }
 
-                Image::replaceAttributeImageAssociationId($combination_images, (int)$image_old->id, (int)$image_new->id);
+                Image::replaceAttributeImageAssociationId($combinationImages, (int) $imageOld->id, (int) $imageNew->id);
 
                 // Duplicate shop associations for images
-                $image_new->duplicateShops($id_product_old);
+                $imageNew->duplicateShops($idProductOld);
             } else {
                 return false;
             }
         }
-        return Image::duplicateAttributeImageAssociations($combination_images);
+
+        return Image::duplicateAttributeImageAssociations($combinationImages);
     }
 
-    protected static function replaceAttributeImageAssociationId(&$combination_images, $saved_id, $id_image)
+    /**
+     * @param array $combinationImages
+     * @param int   $savedId
+     * @param int   $idImage
+     */
+    protected static function replaceAttributeImageAssociationId(&$combinationImages, $savedId, $idImage)
     {
-        if (!isset($combination_images['new']) || !is_array($combination_images['new'])) {
+        if (!isset($combinationImages['new']) || !is_array($combinationImages['new'])) {
             return;
         }
-        foreach ($combination_images['new'] as $id_product_attribute => $image_ids) {
-            foreach ($image_ids as $key => $image_id) {
-                if ((int)$image_id == (int)$saved_id) {
-                    $combination_images['new'][$id_product_attribute][$key] = (int)$id_image;
+        foreach ($combinationImages['new'] as $id_product_attribute => $image_ids) {
+            foreach ($image_ids as $key => $imageId) {
+                if ((int) $imageId == (int) $savedId) {
+                    $combinationImages['new'][$id_product_attribute][$key] = (int) $idImage;
                 }
             }
         }
@@ -378,29 +428,34 @@ class ImageCore extends ObjectModel
 
     /**
      * Duplicate product attribute image associations
-     * @param int $id_product_attribute_old
+     *
+     * @param array $combinationImages
+     *
      * @return bool
+     *
      */
-    public static function duplicateAttributeImageAssociations($combination_images)
+    public static function duplicateAttributeImageAssociations($combinationImages)
     {
-        if (!isset($combination_images['new']) || !is_array($combination_images['new'])) {
+        if (!isset($combinationImages['new']) || !is_array($combinationImages['new'])) {
             return true;
         }
         $query = 'INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`) VALUES ';
-        foreach ($combination_images['new'] as $id_product_attribute => $image_ids) {
-            foreach ($image_ids as $image_id) {
-                $query .= '('.(int)$id_product_attribute.', '.(int)$image_id.'), ';
+        foreach ($combinationImages['new'] as $idProductAttribute => $imageIds) {
+            foreach ($imageIds as $imageId) {
+                $query .= '('.(int) $idProductAttribute.', '.(int) $imageId.'), ';
             }
         }
         $query = rtrim($query, ', ');
-        return DB::getInstance()->execute($query);
+
+        return Db::getInstance()->execute($query);
     }
 
     /**
      * Change an image position and update relative positions
      *
-     * @param int $way position is moved up if 0, moved down if 1
+     * @param int $way      position is moved up if 0, moved down if 1
      * @param int $position new position of the moved image
+     *
      * @return int success
      */
     public function updatePosition($way, $position)
@@ -416,17 +471,22 @@ class ImageCore extends ObjectModel
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
-                ? '> '.(int)$this->position.' AND `position` <= '.(int)$position
-                : '< '.(int)$this->position.' AND `position` >= '.(int)$position).'
-			AND `id_product`='.(int)$this->id_product)
+                ? '> '.(int) $this->position.' AND `position` <= '.(int) $position
+                : '< '.(int) $this->position.' AND `position` >= '.(int) $position).'
+			AND `id_product`='.(int) $this->id_product)
         && Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
-			SET `position` = '.(int)$position.'
-			WHERE `id_image` = '.(int)$this->id_image));
+			SET `position` = '.(int) $position.'
+			WHERE `id_image` = '.(int) $this->id_image));
 
         return $result;
     }
 
+    /**
+     * @param string $type
+     *
+     * @return mixed
+     */
     public static function getSize($type)
     {
         if (!isset(self::$_cacheGetSize[$type]) || self::$_cacheGetSize[$type] === null) {
@@ -439,15 +499,27 @@ class ImageCore extends ObjectModel
         return self::$_cacheGetSize[$type];
     }
 
-    public static function getWidth($params, &$smarty)
+    /**
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public static function getWidth($params)
     {
         $result = self::getSize($params['type']);
+
         return $result['width'];
     }
 
-    public static function getHeight($params, &$smarty)
+    /**
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public static function getHeight($params)
     {
         $result = self::getSize($params['type']);
+
         return $result['height'];
     }
 
@@ -470,7 +542,7 @@ class ImageCore extends ObjectModel
         return Db::getInstance()->execute('
 			DELETE
 			FROM `'._DB_PREFIX_.'product_attribute_image`
-			WHERE `id_image` = '.(int)$this->id
+			WHERE `id_image` = '.(int) $this->id
         );
     }
 
@@ -478,7 +550,7 @@ class ImageCore extends ObjectModel
      * Delete the product image from disk and remove the containing folder if empty
      * Handles both legacy and new image filesystems
      */
-    public function deleteImage($force_delete = false)
+    public function deleteImage($forceDelete = false)
     {
         if (!$this->id) {
             return false;
@@ -491,26 +563,26 @@ class ImageCore extends ObjectModel
             return false;
         }
 
-        $files_to_delete = array();
+        $filesToDelete = array();
 
         // Delete auto-generated images
         $image_types = ImageType::getImagesTypes();
-        foreach ($image_types as $image_type) {
-            $files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-'.$image_type['name'].'.'.$this->image_format;
+        foreach ($image_types as $imageType) {
+            $filesToDelete[] = $this->image_dir.$this->getExistingImgPath().'-'.$imageType['name'].'.'.$this->image_format;
             if (Configuration::get('WATERMARK_HASH')) {
-                $files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.'.$this->image_format;
+                $filesToDelete[] = $this->image_dir.$this->getExistingImgPath().'-'.$imageType['name'].'-'.Configuration::get('WATERMARK_HASH').'.'.$this->image_format;
             }
         }
 
         // Delete watermark image
-        $files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-watermark.'.$this->image_format;
+        $filesToDelete[] = $this->image_dir.$this->getExistingImgPath().'-watermark.'.$this->image_format;
         // delete index.php
-        $files_to_delete[] = $this->image_dir.$this->getImgFolder().'index.php';
+        $filesToDelete[] = $this->image_dir.$this->getImgFolder().'index.php';
         // Delete tmp images
-        $files_to_delete[] = _PS_TMP_IMG_DIR_.'product_'.$this->id_product.'.'.$this->image_format;
-        $files_to_delete[] = _PS_TMP_IMG_DIR_.'product_mini_'.$this->id_product.'.'.$this->image_format;
+        $filesToDelete[] = _PS_TMP_IMG_DIR_.'product_'.$this->id_product.'.'.$this->image_format;
+        $filesToDelete[] = _PS_TMP_IMG_DIR_.'product_mini_'.$this->id_product.'.'.$this->image_format;
 
-        foreach ($files_to_delete as $file) {
+        foreach ($filesToDelete as $file) {
             if (file_exists($file) && !@unlink($file)) {
                 return false;
             }
@@ -518,15 +590,15 @@ class ImageCore extends ObjectModel
 
         // Can we delete the image folder?
         if (is_dir($this->image_dir.$this->getImgFolder())) {
-            $delete_folder = true;
+            $deleteFolder = true;
             foreach (scandir($this->image_dir.$this->getImgFolder()) as $file) {
                 if (($file != '.' && $file != '..')) {
-                    $delete_folder = false;
+                    $deleteFolder = false;
                     break;
                 }
             }
         }
-        if (isset($delete_folder) && $delete_folder) {
+        if (isset($deleteFolder) && $deleteFolder) {
             @rmdir($this->image_dir.$this->getImgFolder());
         }
 
@@ -536,8 +608,9 @@ class ImageCore extends ObjectModel
     /**
      * Recursively deletes all product images in the given folder tree and removes empty folders.
      *
-     * @param string $path folder containing the product images to delete
+     * @param string $path   folder containing the product images to delete
      * @param string $format image format
+     *
      * @return bool success
      */
     public static function deleteAllImages($path, $format = 'jpg')
@@ -555,15 +628,15 @@ class ImageCore extends ObjectModel
 
         // Can we remove the image folder?
         if (is_numeric(basename($path))) {
-            $remove_folder = true;
+            $removeFolder = true;
             foreach (scandir($path) as $file) {
                 if (($file != '.' && $file != '..' && $file != 'index.php')) {
-                    $remove_folder = false;
+                    $removeFolder = false;
                     break;
                 }
             }
 
-            if ($remove_folder) {
+            if ($removeFolder) {
                 // we're only removing index.php if it's a folder we want to delete
                 if (file_exists($path.'index.php')) {
                     @unlink($path.'index.php');
@@ -638,6 +711,7 @@ class ImageCore extends ObjectModel
                 return @copy($this->source_index, _PS_PROD_IMG_DIR_.$this->getImgFolder().'index.php');
             }
         }
+        
         return true;
     }
 
@@ -653,21 +727,24 @@ class ImageCore extends ObjectModel
         }
 
         $path = $this->getImgFolder().$this->id;
+        
         return $path;
     }
 
     /**
      * Returns the path to the folder containing the image in the new filesystem
      *
-     * @param mixed $id_image
+     * @param mixed $idImage
+     *
      * @return string path to folder
      */
-    public static function getImgFolderStatic($id_image)
+    public static function getImgFolderStatic($idImage)
     {
-        if (!is_numeric($id_image)) {
+        if (!is_numeric($idImage)) {
             return false;
         }
-        $folders = str_split((string)$id_image);
+        $folders = str_split((string) $idImage);
+
         return implode('/', $folders).'/';
     }
 
@@ -676,23 +753,24 @@ class ImageCore extends ObjectModel
      * If max_execution_time is provided, stops before timeout and returns string "timeout".
      * If any image cannot be moved, stops and returns "false"
      *
-     * @param int $max_execution_time
+     * @param int $maxExecutionTime
+     *
      * @return mixed success or timeout
      */
-    public static function moveToNewFileSystem($max_execution_time = 0)
+    public static function moveToNewFileSystem($maxExecutionTime = 0)
     {
-        $start_time = time();
+        $startTime = time();
         $image = null;
-        $tmp_folder = 'duplicates/';
+        $tmpFolder = 'duplicates/';
         foreach (scandir(_PS_PROD_IMG_DIR_) as $file) {
             // matches the base product image or the thumbnails
             if (preg_match('/^([0-9]+\-)([0-9]+)(\-(.*))?\.jpg$/', $file, $matches)) {
                 // don't recreate an image object for each image type
-                if (!$image || $image->id !== (int)$matches[2]) {
-                    $image = new Image((int)$matches[2]);
+                if (!$image || $image->id !== (int) $matches[2]) {
+                    $image = new Image((int) $matches[2]);
                 }
                 // image exists in DB and with the correct product?
-                if (Validate::isLoadedObject($image) && $image->id_product == (int)rtrim($matches[1], '-')) {
+                if (Validate::isLoadedObject($image) && $image->id_product == (int) rtrim($matches[1], '-')) {
                     // create the new folder if it does not exist
                     if (!$image->createImgFolder()) {
                         return false;
@@ -700,27 +778,28 @@ class ImageCore extends ObjectModel
 
                     // if there's already a file at the new image path, move it to a dump folder
                     // most likely the preexisting image is a demo image not linked to a product and it's ok to replace it
-                    $new_path = _PS_PROD_IMG_DIR_.$image->getImgPath().(isset($matches[3]) ? $matches[3] : '').'.jpg';
-                    if (file_exists($new_path)) {
-                        if (!file_exists(_PS_PROD_IMG_DIR_.$tmp_folder)) {
-                            @mkdir(_PS_PROD_IMG_DIR_.$tmp_folder, self::$access_rights);
-                            @chmod(_PS_PROD_IMG_DIR_.$tmp_folder, self::$access_rights);
+                    $newPath = _PS_PROD_IMG_DIR_.$image->getImgPath().(isset($matches[3]) ? $matches[3] : '').'.jpg';
+                    if (file_exists($newPath)) {
+                        if (!file_exists(_PS_PROD_IMG_DIR_.$tmpFolder)) {
+                            @mkdir(_PS_PROD_IMG_DIR_.$tmpFolder, self::$access_rights);
+                            @chmod(_PS_PROD_IMG_DIR_.$tmpFolder, self::$access_rights);
                         }
-                        $tmp_path = _PS_PROD_IMG_DIR_.$tmp_folder.basename($file);
-                        if (!@rename($new_path, $tmp_path) || !file_exists($tmp_path)) {
+                        $tmpPath = _PS_PROD_IMG_DIR_.$tmpFolder.basename($file);
+                        if (!@rename($newPath, $tmpPath) || !file_exists($tmpPath)) {
                             return false;
                         }
                     }
                     // move the image
-                if (!@rename(_PS_PROD_IMG_DIR_.$file, $new_path) || !file_exists($new_path)) {
-                    return false;
-                }
+                    if (!@rename(_PS_PROD_IMG_DIR_.$file, $newPath) || !file_exists($newPath)) {
+                        return false;
+                    }
                 }
             }
-            if ((int)$max_execution_time != 0 && (time() - $start_time > (int)$max_execution_time - 4)) {
+            if ((int) $maxExecutionTime != 0 && (time() - $startTime > (int) $maxExecutionTime - 4)) {
                 return 'timeout';
             }
         }
+
         return true;
     }
 
@@ -732,27 +811,28 @@ class ImageCore extends ObjectModel
     public static function testFileSystem()
     {
         $folder1 = _PS_PROD_IMG_DIR_.'testfilesystem/';
-        $test_folder = $folder1.'testsubfolder/';
+        $testFolder = $folder1.'testsubfolder/';
         // check if folders are already existing from previous failed test
-        if (file_exists($test_folder)) {
-            @rmdir($test_folder);
+        if (file_exists($testFolder)) {
+            @rmdir($testFolder);
             @rmdir($folder1);
         }
-        if (file_exists($test_folder)) {
+        if (file_exists($testFolder)) {
             return false;
         }
 
-        @mkdir($test_folder, self::$access_rights, true);
-        @chmod($test_folder, self::$access_rights);
-        if (!is_writeable($test_folder)) {
+        @mkdir($testFolder, self::$access_rights, true);
+        @chmod($testFolder, self::$access_rights);
+        if (!is_writeable($testFolder)) {
             return false;
         }
-        @rmdir($test_folder);
+        @rmdir($testFolder);
         @rmdir($folder1);
 
         if (file_exists($folder1)) {
             return false;
         }
+
         return true;
     }
 
@@ -775,6 +855,7 @@ class ImageCore extends ObjectModel
             $path = $this->getImgPath();
             $this->createImgFolder();
         }
+
         return _PS_PROD_IMG_DIR_.$path;
     }
 }

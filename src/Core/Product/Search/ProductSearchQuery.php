@@ -71,7 +71,7 @@ class ProductSearchQuery
         return $this->id_supplier;
     }
 
-    public function setSortOption(SortOption $option)
+    public function setSortOption(SortOption $sortOption)
     {
         $this->sortOption = $sortOption;
         return $this;

@@ -760,17 +760,18 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Database deletion
         $has_multishop_entries = $this->hasMultishopEntries();
+
+        // Database deletion for multilingual fields related to the object
+        if (!empty($this->def['multilang']) && !$has_multishop_entries) {
+            $result &= Db::getInstance()->delete($this->def['table'].'_lang', '`'.bqSQL($this->def['primary']).'` = '.(int)$this->id);
+        }
+
         if ($result && !$has_multishop_entries) {
             $result &= Db::getInstance()->delete($this->def['table'], '`'.bqSQL($this->def['primary']).'` = '.(int)$this->id);
         }
 
         if (!$result) {
             return false;
-        }
-
-        // Database deletion for multilingual fields related to the object
-        if (!empty($this->def['multilang']) && !$has_multishop_entries) {
-            $result &= Db::getInstance()->delete($this->def['table'].'_lang', '`'.bqSQL($this->def['primary']).'` = '.(int)$this->id);
         }
 
         // @hook actionObject*DeleteAfter

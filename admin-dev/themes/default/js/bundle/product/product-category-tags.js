@@ -76,7 +76,7 @@ var productCategoriesTags = (function () {
         event.preventDefault();
         var id = $(this).data('id');
         that.removeTag(id);
-        categoriesForm.find('input[value="' + id + '"].category').attr('checked', false);
+        categoriesForm.find('input[value="' + id + '"].category').prop('checked', false);
         tagsContainer.focus();
       });
 
@@ -85,7 +85,7 @@ var productCategoriesTags = (function () {
     'checkDefaultCategory': function (categoryId) {
       var categoriesForm = $('#form_step1_categories');
       var selector = 'input[value="'+categoryId+'"].default-category';
-      categoriesForm.find(selector).attr('checked', 'checked');
+      categoriesForm.find(selector).prop('checked', true);
     },
     'getTree': function () {
       var tree = JSON.parse($('#ps_categoryTree').html());
@@ -133,7 +133,8 @@ var productCategoriesTags = (function () {
       return name;
     },
     'initSearchBox': function () {
-      var searchBox = $('#ps-select-product-category');
+      var searchCategorySelector = '#ps-select-product-category';
+      var searchBox = $(searchCategorySelector);
       var tree = this.getTree();
       var tags = [];
       var that = this;
@@ -164,7 +165,7 @@ var productCategoriesTags = (function () {
             'breadcrumb': label
           });
           var categoriesForm = $('#form_step1_categories');
-          categoriesForm.find('input[value="' + categoryId + '"].category').attr('checked', 'checked');
+          categoriesForm.find('input[value="' + categoryId + '"].category').prop('checked', true);
           $(this).val('');
         }
       }).data('ui-autocomplete')._renderItem = function(ul, item) {
@@ -173,6 +174,13 @@ var productCategoriesTags = (function () {
           .append('<a>'+item.label+'</a>')
           .appendTo(ul);
       };
+
+      $('body').on('focusout', searchCategorySelector, function (event) {
+        var $searchInput = $(event.currentTarget);
+        if (0 === $searchInput.val().length ) {
+          $searchInput.parent().find('[role=status]').text('');
+        }
+      });
     }
   };
 })();

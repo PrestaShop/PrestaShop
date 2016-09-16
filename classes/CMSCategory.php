@@ -266,7 +266,7 @@ class CMSCategoryCore extends ObjectModel
             $id_shop_list = $this->id_shop_list;
         }
 
-        Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'` IN ('.$list.') AND id_shop IN ('.implode(', ', $id_shop_list).')');
+        Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'` IN ('.$list.') AND id_shop IN ('.implode(', ', array_map('intval', $id_shop_list)).')');
 
         $has_multishop_entries = $this->hasMultishopEntries();
         if (!$has_multishop_entries) {

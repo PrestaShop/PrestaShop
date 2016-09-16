@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 global $smarty;
 
 $smarty->setTemplateDir(array(
@@ -99,7 +98,7 @@ function smartyFormField($params, &$smarty)
 
     $scope->assign($params);
 
-    $file = '_partials/form-field.tpl';
+    $file = '_partials/form-fields.tpl';
 
     if (isset($params['file'])) {
         $file = $params['file'];
@@ -198,6 +197,7 @@ function smartyTranslate($params, &$smarty)
                 throw new Exception($errorMessage);
             } else {
                 PrestaShopLogger::addLog($errorMessage);
+
                 return $params['s'];
             }
         }

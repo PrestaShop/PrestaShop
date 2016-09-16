@@ -46,6 +46,9 @@
                         </div>
                       </div>
                     </label>
+                    <div class="col-md-12 carrier-extra-content"{if $delivery_option != $carrier_id} style="display:none;"{/if}>
+                        {$carrier.extraContent nofilter}
+                    </div>
                     <div class="clearfix"></div>
                   </div>
               {/foreach}

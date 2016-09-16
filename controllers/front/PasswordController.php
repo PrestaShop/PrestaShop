@@ -56,26 +56,28 @@ class PasswordControllerCore extends FrontController
             $customer = new Customer();
             $customer->getByEmail($email);
             if (!Validate::isLoadedObject($customer)) {
-                $this->errors[] = $this->trans('There is no account registered for this email address.', array(), 'Shop.Notifications.Error');
+                $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', array('%email%', $customer->email), 'Shop.Notifications.Success');
+                $this->setTemplate('customer/password-infos');
             } elseif (!$customer->active) {
                 $this->errors[] = $this->trans('You cannot regenerate the password for this account.', array(), 'Shop.Notifications.Error');
-            } elseif ((strtotime($customer->last_passwd_gen.'+'.($min_time = (int)Configuration::get('PS_PASSWD_TIME_FRONT')).' minutes') - time()) > 0) {
-                $this->errors[] = $this->trans('You can regenerate your password only every %d minute(s)', array((int) $min_time), 'Shop.Notifications.Error');
+            } elseif ((strtotime($customer->last_passwd_gen.'+'.($minTime = (int) Configuration::get('PS_PASSWD_TIME_FRONT')).' minutes') - time()) > 0) {
+                $this->errors[] = $this->trans('You can regenerate your password only every %d minute(s)', array((int) $minTime), 'Shop.Notifications.Error');
             } else {
                 if (!$customer->hasRecentResetPasswordToken()) {
                     $customer->stampResetPasswordToken();
                     $customer->update();
                 }
 
-                $mail_params = [
+                $mailParams = array(
                     '{email}' => $customer->email,
+
                     '{lastname}' => $customer->lastname,
                     '{firstname}' => $customer->firstname,
-                    '{url}' => $this->context->link->getPageLink('password', true, null, 'token='.$customer->secure_key.'&id_customer='.(int)$customer->id.'&reset_token='.$customer->reset_password_token)
-                ];
+                    '{url}' => $this->context->link->getPageLink('password', true, null, 'token='.$customer->secure_key.'&id_customer='.(int) $customer->id.'&reset_token='.$customer->reset_password_token),
+                );
 
-                if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'), $mail_params, $customer->email, $customer->firstname.' '.$customer->lastname)) {
-                    $this->success[] = $this->trans('A link to reset your password has been sent to your address: %s', array($customer->email), 'Shop.Notifications.Success');
+                if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'), $mailParams, $customer->email, $customer->firstname.' '.$customer->lastname)) {
+                    $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', array('%email%', $customer->email), 'Shop.Notifications.Success');
                     $this->setTemplate('customer/password-infos');
                 } else {
                     $this->errors[] = $this->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');

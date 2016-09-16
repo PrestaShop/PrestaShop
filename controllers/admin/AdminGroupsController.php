@@ -38,7 +38,7 @@ class AdminGroupsControllerCore extends AdminController
         $this->lang = true;
 
         parent::__construct();
-        
+
         $this->addRowAction('edit');
         $this->addRowAction('view');
         $this->addRowAction('delete');
@@ -507,7 +507,7 @@ class AdminGroupsControllerCore extends AdminController
         }
 
         // update module list by hook cache
-        Cache::delete(Hook::MODULE_LIST_BY_HOOK_KEY.'*');
+        Cache::clean(Hook::MODULE_LIST_BY_HOOK_KEY.'*');
 
         return $return;
     }

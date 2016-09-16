@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
-  <tab id="SELL" name="OBCHOD" />
-  <tab id="IMPROVE" name="ROZŠÍŘENÍ" />
-  <tab id="CONFIGURE" name="KONFIGURACE" />
-  <tab id="DEFAULT" name="DEFAULT" />
+  <tab id="SELL" name="Obchod" />
+  <tab id="IMPROVE" name="Rozšíření" />
+  <tab id="CONFIGURE" name="Konfigurace" />
+  <tab id="DEFAULT" name="More" />
   <tab id="Addresses" name="Adresy"/>
   <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Administration" name="Administrace"/>

@@ -1010,6 +1010,10 @@ class ShopCore extends ObjectModel
             $alias .= '.';
         }
 
+        if (is_string($alias)) {
+            $alias = Db::getInstance()->escape($alias);
+        }
+
         $group = Shop::getGroupFromShop(Shop::getContextShopID(), false);
         if ($share == Shop::SHARE_CUSTOMER && Shop::getContext() == Shop::CONTEXT_SHOP && $group['share_customer']) {
             $restriction = ' AND '.$alias.'id_shop_group = '.(int)Shop::getContextShopGroupID().' ';
@@ -1069,7 +1073,7 @@ class ShopCore extends ObjectModel
             $id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
         }
 
-        return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$id_shop.' ';
+        return ' AND '.(($alias) ? Db::getInstance()->escape($alias).'.' : '').'id_shop = '.$id_shop.' ';
     }
 
     /**
@@ -1241,10 +1245,10 @@ class ShopCore extends ObjectModel
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT entity.`id_'.pSQL($entity).'`
-            FROM `'._DB_PREFIX_.pSQL($entity).'_shop`es
-            LEFT JOIN '._DB_PREFIX_.pSQL($entity).' entity
-                ON (entity.`id_'.pSQL($entity).'` = es.`id_'.pSQL($entity).'`)
+            'SELECT entity.`id_'.bqSQL($entity).'`
+            FROM `'._DB_PREFIX_.bqSQL($entity).'_shop`es
+            LEFT JOIN '._DB_PREFIX_.bqSQL($entity).' entity
+                ON (entity.`id_'.bqSQL($entity).'` = es.`id_'.bqSQL($entity).'`)
             WHERE es.`id_shop` = '.(int)$id_shop.
             ($active ? ' AND entity.`active` = 1' : '').
             ($delete ? ' AND entity.deleted = 0' : '')
