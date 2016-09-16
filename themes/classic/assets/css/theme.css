@@ -6957,6 +6957,8 @@ body#checkout {
     color: #4cbb6c; }
   #product-availability .product-unavailable {
     color: #ff9a52; }
+  #product-availability .product-last-items {
+    color: #ff9a52; }
 
 #product-details .label {
   font-size: 1rem;
