@@ -23,6 +23,7 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
@@ -100,7 +101,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return $responseArray->module;
+        return isset($responseArray->module) ? $responseArray->module : array();
     }
 
     public function getModule($moduleId)
