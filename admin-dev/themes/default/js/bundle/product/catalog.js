@@ -189,25 +189,32 @@ function productColumnFilterReset(tr) {
 	$('form#product_catalog_list').submit();
 }
 
-function bulkDuplicateAction(allItems, postUrl, redirectUrl) {
+function bulkModalAction(allItems, postUrl, redirectUrl, action) {
 	var itemsCount = allItems.length;
 	var currentItemIdx = 0;
 	if (itemsCount < 1) {
 		return;
 	}
-	$('#catalog_duplication_modal').modal('show');
-	var details = $('#catalog_duplication_progression .progress-details-text');
+
+	var targetModal = $('#catalog_' + action + '_modal');
+    targetModal.modal('show');
+
+	var details = targetModal.find('#catalog_' + action + '_progression .progress-details-text');
+	var progressBar = targetModal.find('#catalog_' + action + '_progression .progress-bar');
+    var failure = targetModal.find('#catalog_' + action + '_failure');
 
 	// re-init popup
 	details.html(details.attr('default-value'));
-	$('#catalog_duplication_progression .progress-bar').css('width', '0%');
-	$('#catalog_duplication_progression .progress-bar span').html('');
-	$('#catalog_duplication_progression .progress-bar').removeClass('progress-bar-danger');
-	$('#catalog_duplication_progression .progress-bar').addClass('progress-bar-success');
-	$('#catalog_duplication_failure').hide();
 
-	// call duplication in ajax. Recursive with inner function
-	var duplicateCall = function(items, successCallback, errorCallback) {
+	progressBar.css('width', '0%');
+	progressBar.find('span').html('');
+	progressBar.removeClass('progress-bar-danger');
+	progressBar.addClass('progress-bar-success');
+
+    failure.hide();
+
+	// call in ajax. Recursive with inner function
+	var bulkCall = function(items, successCallback, errorCallback) {
 		if (items.length === 0) {
 			return;
 		}
@@ -220,10 +227,11 @@ function bulkDuplicateAction(allItems, postUrl, redirectUrl) {
 			url: postUrl,
 			data: { bulk_action_selected_products: [item0] },
 			success: function(data, status) {
-				$('#catalog_duplication_progression .progress-bar').css('width', (currentItemIdx*100/itemsCount)+'%');
-				$('#catalog_duplication_progression .progress-bar span').html(currentItemIdx+' / '+itemsCount);
-				if (items.length > 0) {
-					duplicateCall(items, successCallback, errorCallback);
+                progressBar.css('width', (currentItemIdx*100/itemsCount)+'%');
+				progressBar.find('span').html(currentItemIdx+' / '+itemsCount);
+
+                if (items.length > 0) {
+                    bulkCall(items, successCallback, errorCallback);
 				} else {
 					successCallback();
 				}
@@ -233,12 +241,12 @@ function bulkDuplicateAction(allItems, postUrl, redirectUrl) {
 		});
 	};
 
-	duplicateCall(allItems.toArray(), function() {
+    bulkCall(allItems.toArray(), function() {
 		window.location.href = redirectUrl;
 	}, function() {
-		$('#catalog_duplication_progression .progress-bar').removeClass('progress-bar-success');
-		$('#catalog_duplication_progression .progress-bar').addClass('progress-bar-danger');
-		$('#catalog_duplication_failure').show();
+		progressBar.removeClass('progress-bar-success');
+		progressBar.addClass('progress-bar-danger');
+        failure.show();
 	});
 }
 
@@ -247,13 +255,16 @@ function bulkProductAction(element, action) {
 	var postUrl = '';
 	var redirectUrl = '';
 	var urlHandler = null;
+
+    var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
+    if (items.size() === 0) {
+        return false;
+    } else {
+        urlHandler = $(element).closest('[bulkurl]');
+    }
+
 	switch (action) {
 		case 'delete_all':
-			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() === 0) {
-				return false;
-			}
-
-			urlHandler = $(element).closest('[bulkurl]');
 			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
 			redirectUrl = urlHandler.attr('redirecturl');
 
@@ -262,28 +273,55 @@ function bulkProductAction(element, action) {
 			$('#catalog_deletion_modal button[value="confirm"]').off('click');
 			$('#catalog_deletion_modal button[value="confirm"]').on('click', function() {
 
-				var redirectionInput = $('<input>')
-					.attr('type', 'hidden')
-					.attr('name', 'redirect_url').val(redirectUrl);
-				form.append($(redirectionInput));
-				form.attr('action', postUrl);
-				form.submit();
+                $('#catalog_deletion_modal').modal('hide');
 
-				$('#catalog_deletion_modal').modal('hide');
+                // use a progressbar if more 1 item
+                if (items.size() > 1) {
+                    return bulkModalAction(items, postUrl, redirectUrl, action);
+                } else {
+                    var redirectionInput = $('<input>')
+                        .attr('type', 'hidden')
+                        .attr('name', 'redirect_url').val(redirectUrl);
+                    form.append($(redirectionInput));
+                    form.attr('action', postUrl);
+                    form.submit();
+                }
 			});
 
 			return; // No break, but RETURN, to avoid code after switch block :)
 
 		case 'activate_all':
+            postUrl = urlHandler.attr('bulkurl');
+            redirectUrl = urlHandler.attr('redirecturl');
+
+            // use a progressbar if more 1 item
+            if (items.size() > 1) {
+                return bulkModalAction(items, postUrl, redirectUrl, action);
+            }
+
+            break;
 
         case 'deactivate_all':
-			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() === 0) {
-				return false;
-			}
-			urlHandler = $(element).closest('[bulkurl]');
-			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
-			redirectUrl = urlHandler.attr('redirecturl');
-			break;
+            postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+            redirectUrl = urlHandler.attr('redirecturl');
+
+            // use a progressbar if more 1 item
+            if (items.size() > 1) {
+                return bulkModalAction(items, postUrl, redirectUrl, action);
+            }
+
+            break;
+
+        case 'duplicate_all':
+            postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+            redirectUrl = urlHandler.attr('redirecturl');
+
+            // use a progressbar if more 1 item
+            if (items.size() > 1) {
+                return bulkModalAction(items, postUrl, redirectUrl, action);
+            }
+
+            break;
 
         // this case will brings to the next page
 		case 'edition_next':
@@ -305,20 +343,6 @@ function bulkProductAction(element, action) {
 			if (redirectUrl === '') {
 				redirectUrl = urlHandler.attr('redirecturl');
 			}
-			break;
-
-		case 'duplicate_all':
-			var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
-			if (items.size() === 0) {
-				return false;
-			}
-			urlHandler = $(element).closest('[bulkurl]');
-			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
-			redirectUrl = urlHandler.attr('redirecturl');
-			if (items.size() > 1) {
-				// use a progressbar, because duplication is slow...
-				return bulkDuplicateAction(items, postUrl, redirectUrl);
-			} // else, just post like a single action.
 			break;
 
         // unknown cases...
