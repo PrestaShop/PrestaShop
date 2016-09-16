@@ -539,12 +539,17 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $hookDispatcher HookDispatcher */
 
         try {
+
+            $hasMessages = $this->container->get('session')->getFlashBag()->has('success');
+
             switch ($action) {
                 case 'activate_all':
                     $hookDispatcher->dispatchMultiple(['actionAdminActivateBefore', 'actionAdminProductsControllerActivateBefore'], $hookEventParameters);
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList($productIdList);
-                    $this->addFlash('success', $translator->trans('Product(s) successfully activated.', [], 'Admin.Catalog.Notification'));
+                    if (empty($hasMessages)) {
+                        $this->addFlash('success', $translator->trans('Product(s) successfully activated.', [], 'Admin.Catalog.Notification'));
+                    }
                     $logger->info('Products activated: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'], $hookEventParameters);
                     break;
@@ -552,7 +557,9 @@ class ProductController extends FrameworkBundleAdminController
                     $hookDispatcher->dispatchMultiple(['actionAdminDeactivateBefore', 'actionAdminProductsControllerDeactivateBefore'], $hookEventParameters);
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList($productIdList, false);
-                    $this->addFlash('success', $translator->trans('Product(s) successfully deactivated.', [], 'Admin.Catalog.Notification'));
+                    if (empty($hasMessages)) {
+                        $this->addFlash('success', $translator->trans('Product(s) successfully deactivated.', [], 'Admin.Catalog.Notification'));
+                    }
                     $logger->info('Products deactivated: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'], $hookEventParameters);
                     break;
@@ -560,7 +567,9 @@ class ProductController extends FrameworkBundleAdminController
                     $hookDispatcher->dispatchMultiple(['actionAdminDeleteBefore', 'actionAdminProductsControllerDeleteBefore'], $hookEventParameters);
                     // Hooks: managed in ProductUpdater
                     $productUpdater->deleteProductIdList($productIdList);
-                    $this->addFlash('success', $translator->trans('Product(s) successfully deleted.', [], 'Admin.Catalog.Notification'));
+                    if (empty($hasMessages)) {
+                        $this->addFlash('success', $translator->trans('Product(s) successfully deleted.', [], 'Admin.Catalog.Notification'));
+                    }
                     $logger->info('Products deleted: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'], $hookEventParameters);
                     break;
@@ -568,7 +577,9 @@ class ProductController extends FrameworkBundleAdminController
                     $hookDispatcher->dispatchMultiple(['actionAdminDuplicateBefore', 'actionAdminProductsControllerDuplicateBefore'], $hookEventParameters);
                     // Hooks: managed in ProductUpdater
                     $productUpdater->duplicateProductIdList($productIdList);
-                    $this->addFlash('success', $translator->trans('Product(s) successfully duplicated.', [], 'Admin.Catalog.Notification'));
+                    if (empty($hasMessages)) {
+                        $this->addFlash('success', $translator->trans('Product(s) successfully duplicated.', [], 'Admin.Catalog.Notification'));
+                    }
                     $logger->info('Products duplicated: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
                     break;
