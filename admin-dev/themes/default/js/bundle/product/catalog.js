@@ -247,6 +247,7 @@ function bulkModalAction(allItems, postUrl, redirectUrl, action) {
 		progressBar.removeClass('progress-bar-success');
 		progressBar.addClass('progress-bar-danger');
         failure.show();
+        window.location.href = redirectUrl;
 	});
 }
 
