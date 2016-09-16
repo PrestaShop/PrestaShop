@@ -47,33 +47,33 @@ class AdminSearchEnginesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
 
         $this->fields_list = array(
             'id_search_engine' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'width' => 25),
-            'server' => array('title' => $this->l('Server')),
-            'getvar' => array('title' => $this->l('GET variable'), 'width' => 100)
+            'server' => array('title' => $this->trans('Server', array(), 'Admin.ShopParam.Feature')),
+            'getvar' => array('title' => $this->trans('GET variable', array(), 'Admin.ShopParam.Feature'), 'width' => 100)
         );
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Referrer')
+                'title' => $this->trans('Referrer', array(), 'Admin.ShopParam.Feature')
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Server'),
+                    'label' => $this->trans('Server', array(), 'Admin.ShopParam.Feature'),
                     'name' => 'server',
                     'size' => 20,
                     'required' => true
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('$_GET variable'),
+                    'label' => $this->trans('$_GET variable', array(), 'Admin.ShopParam.Feature'),
                     'name' => 'getvar',
                     'size' => 40,
                     'required' => true
@@ -90,7 +90,7 @@ class AdminSearchEnginesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_search_engine'] = array(
                 'href' => self::$currentIndex.'&addsearch_engine&token='.$this->token,
-                'desc' => $this->l('Add new search engine', null, null, false),
+                'desc' => $this->trans('Add new search engine', array(), 'Admin.ShopParam.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
