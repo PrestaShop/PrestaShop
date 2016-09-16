@@ -166,3 +166,5 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('
 
 DELETE FROM `PREFIX_hook` WHERE `name` IN ('displayProductTab', 'displayProductTabContent', 'displayBeforePayment');
 DELETE FROM `PREFIX_hook_alias` WHERE `name` IN ('displayProductTab', 'displayProductTabContent', 'displayBeforePayment');
+
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayCarrierExtraContent', 'Display additionnal content for a carrier (e.g pickup points)', 'This hook calls only the module related to the carrier, in order to add options when needed.', '1');
