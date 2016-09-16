@@ -222,7 +222,7 @@ class TranslationsController extends FrameworkBundleAdminController
 
         $locale = $this->langToLocale($lang);
 
-        if (!is_null($theme)) {
+        if (!is_null($theme) && 'themes' === $type) {
             if ('classic' === $theme) {
                 $type = 'front';
             } else {
