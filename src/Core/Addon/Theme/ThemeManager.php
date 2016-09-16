@@ -211,6 +211,17 @@ class ThemeManager implements AddonManagerInterface
         return;
     }
 
+    /**
+     * Get all errors of theme install
+     *
+     * @param string $name The technical theme name
+     * @return array|false
+     */
+    public function getErrors($theme_name)
+    {
+        return $this->themeValidator->getErrors($theme_name);
+    }
+
     private function doCreateCustomHooks(array $hooks)
     {
         foreach ($hooks as $hook) {

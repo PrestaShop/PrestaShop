@@ -242,8 +242,13 @@ class AdminThemesControllerCore extends AdminController
             $this->processSubmitConfigureLayouts();
             $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
         } elseif (Tools::getValue('action') == 'enableTheme') {
-            $this->theme_manager->enable(Tools::getValue('theme_name'));
-            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+            $isThemeEnabled = $this->theme_manager->enable(Tools::getValue('theme_name'));
+            // get errors if theme wasn't enabled
+            if (!$isThemeEnabled) {
+                $this->errors[] = $this->theme_manager->getErrors(Tools::getValue('theme_name'));
+            } else {
+                $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+            }
         } elseif (Tools::getValue('action') == 'deleteTheme') {
             $this->theme_manager->uninstall(Tools::getValue('theme_name'));
             $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
