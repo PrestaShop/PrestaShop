@@ -1,5 +1,5 @@
 <section class="contact-form">
-  <form action="#" method="post">
+  <form action="{$urls.pages.contact}" method="post" {if $contact.allow_file_upload}enctype="multipart/form-data"{/if}>
 
     {if $notifications}
       <div class="col-xs-12 alert {if $notifications.nw_error}alert-danger{else}alert-success{/if}">
@@ -60,15 +60,17 @@
         </div>
       {/if}
 
-      <div class="form-group row">
-        <label class="col-md-3 form-control-label">{l s='Attachment' d='Shop.Forms.Labels'}</label>
-        <div class="col-md-6">
-          <input type="file" name="fileUpload" class="filestyle">
+      {if $contact.allow_file_upload}
+        <div class="form-group row">
+          <label class="col-md-3 form-control-label">{l s='Attachment' d='Shop.Forms.Labels'}</label>
+          <div class="col-md-6">
+            <input type="file" name="fileUpload" class="filestyle">
+          </div>
+          <span class="col-md-3 form-control-comment">
+            {l s='optional' d='Shop.Forms.Help'}
+          </span>
         </div>
-        <span class="col-md-3 form-control-comment">
-          {l s='optional' d='Shop.Forms.Help'}
-        </span>
-      </div>
+      {/if}
 
       <div class="form-group row">
         <label class="col-md-3 form-control-label">{l s='Message' d='Shop.Forms.Labels'}</label>
