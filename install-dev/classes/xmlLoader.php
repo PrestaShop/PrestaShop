@@ -590,7 +590,11 @@ class InstallXmlLoader
     public function generatePrimary($entity, $primary)
     {
         if (!isset($this->primaries[$entity])) {
-            $this->primaries[$entity] = (int)Db::getInstance()->getValue('SELECT '.$primary.' FROM '._DB_PREFIX_.$entity.' ORDER BY '.$primary.' DESC');
+            $entity = Db::getInstance()->escape($entity, false, true);
+            $primary = Db::getInstance()->escape($primary, false, true);
+            $this->primaries[$entity] = (int)Db::getInstance()->getValue(
+                'SELECT '.$primary.' FROM `'._DB_PREFIX_.$entity.'` ORDER BY '.$primary.' DESC'
+            );
         }
         return ++$this->primaries[$entity];
     }
@@ -718,7 +722,9 @@ class InstallXmlLoader
 
     public function hasElements($table)
     {
-        return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.$table);
+        $table = Db::getInstance()->escape($table, false, true);
+
+        return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_.$table . '`');
     }
 
     public function getColumns($table, $multilang = false, array $exclude = array())
