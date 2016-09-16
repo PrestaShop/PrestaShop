@@ -123,24 +123,6 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'radio',
-                    'label' => $this->l('Caching type'),
-                    'name' => 'smarty_caching_type',
-                    'values' => array(
-                        array(
-                            'id' => 'smarty_caching_type_filesystem',
-                            'value' => 'filesystem',
-                            'label' => $this->l('File System').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
-                        ),
-                        array(
-                            'id' => 'smarty_caching_type_mysql',
-                            'value' => 'mysql',
-                            'label' => $this->l('MySQL')
-                        ),
-
-                    )
-                ),
-                array(
-                    'type' => 'radio',
                     'label' => $this->l('Clear cache'),
                     'name' => 'smarty_clear_cache',
                     'values' => array(
@@ -511,55 +493,6 @@ class AdminPerformanceControllerCore extends AdminController
         $this->fields_value['_MEDIA_SERVER_3_'] = Configuration::get('PS_MEDIA_SERVER_3');
     }
 
-    public function initFieldsetCiphering()
-    {
-        $phpdoc_langs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
-        $php_lang = in_array($this->context->language->iso_code, $phpdoc_langs) ? $this->context->language->iso_code : 'en';
-
-        $warning_mcrypt = ' '.$this->l('(you must install the [a]Mcrypt extension[/a])');
-        $warning_mcrypt = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/book.mcrypt.php" target="_blank">', $warning_mcrypt);
-        $warning_mcrypt = str_replace('[/a]', '</a>', $warning_mcrypt);
-
-        if (defined('_RIJNDAEL_KEY_') && defined('_RIJNDAEL_IV_')) {
-            $this->fields_form[5]['form'] = array(
-
-                'legend' => array(
-                    'title' => $this->l('Ciphering'),
-                    'icon' => 'icon-desktop'
-                ),
-                'input' => array(
-                    array(
-                        'type' => 'hidden',
-                        'name' => 'ciphering_up'
-                    ),
-                    array(
-                        'type' => 'radio',
-                        'label' => $this->l('Algorithm'),
-                        'name' => 'PS_CIPHER_ALGORITHM',
-                        'hint' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the "mcrypt" PHP extension. If you change this configuration, all cookies will be reset.'),
-                        'values' => array(
-                            array(
-                                'id' => 'PS_CIPHER_ALGORITHM_1',
-                                'value' => 1,
-                                'label' => $this->l('Use Rijndael with mcrypt lib.').(function_exists('mcrypt_encrypt') ? '' : $warning_mcrypt)
-                            ),
-                            array(
-                                'id' => 'PS_CIPHER_ALGORITHM_0',
-                                'value' => 0,
-                                'label' => $this->l('Use the custom BlowFish class.')
-                            )
-                        )
-                    )
-                ),
-                'submit' => array(
-                    'title' => $this->trans('Save', array(), 'Admin.Actions')
-                )
-            );
-        }
-
-        $this->fields_value['PS_CIPHER_ALGORITHM'] = Configuration::get('PS_CIPHER_ALGORITHM');
-    }
-
     public function initFieldsetCaching()
     {
         $phpdoc_langs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
@@ -618,11 +551,6 @@ class AdminPerformanceControllerCore extends AdminController
                     'hint' => $this->l('The CacheFS system should be used only when the infrastructure contains one front-end server. If you are not sure, ask your hosting company.'),
                     'values' => array(
                         array(
-                            'id' => 'CacheFs',
-                            'value' => 'CacheFs',
-                            'label' => $this->l('File System').(is_writable(_PS_CACHEFS_DIRECTORY_) ? '' : $warning_fs)
-                        ),
-                        array(
                             'id' => 'CacheMemcache',
                             'value' => 'CacheMemcache',
                             'label' => $this->l('Memcached via PHP::Memcache').(extension_loaded('memcache') ? '' : $warning_memcache)
@@ -675,7 +603,6 @@ class AdminPerformanceControllerCore extends AdminController
 
         if (!defined('_PS_HOST_MODE_')) {
             $this->initFieldsetMediaServer();
-            $this->initFieldsetCiphering();
             $this->initFieldsetCaching();
         }
 
@@ -769,12 +696,11 @@ class AdminPerformanceControllerCore extends AdminController
             if ($this->access('edit')) {
                 Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 
-                if (Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache') || Configuration::get('PS_SMARTY_CACHING_TYPE') != Tools::getValue('smarty_caching_type')) {
+                if (Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache')) {
                     Tools::clearSmartyCache();
                 }
 
                 Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
-                Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
                 Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
                 Configuration::updateValue('PS_SMARTY_LOCAL', Tools::getValue('smarty_local', 0));
                 $redirectAdmin = true;
@@ -898,41 +824,6 @@ class AdminPerformanceControllerCore extends AdminController
                         $message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
                         $this->errors[] = Tools::displayError($message, false);
                         Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
-                    }
-                }
-            } else {
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
-            }
-        }
-        if ((bool)Tools::getValue('ciphering_up') && Configuration::get('PS_CIPHER_ALGORITHM') != (int)Tools::getValue('PS_CIPHER_ALGORITHM')) {
-            if ($this->access('edit')) {
-                $algo = (int)Tools::getValue('PS_CIPHER_ALGORITHM');
-
-                $config = Yaml::parse(_PS_ROOT_DIR_.'/app/config/parameters.yml');
-
-                if ($algo) {
-                    if (!function_exists('mcrypt_encrypt')) {
-                        $this->errors[] = $this->trans('The "Mcrypt" PHP extension is not activated on this server.', array(), 'Admin.Parameters.Notification');
-                    } else {
-                        if (!isset($config['parameters']['_rijndael_key'])) {
-                            $key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-                            $key = Tools::passwdGen($key_size);
-                            $config['parameters']['_rijndael_key'] = $key;
-                        }
-                        if (!isset($config['parameters']['_rijndael_iv'])) {
-                            $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-                            $iv = base64_encode(mcrypt_create_iv($iv_size, MCRYPT_RAND));
-                            $config['parameters']['_rijndael_iv'] = $iv;
-                        }
-                    }
-                }
-                if (!count($this->errors)) {
-                    // If there is not settings file modification or if the backup and replacement of the settings file worked
-                    if (file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($config))) {
-                        Configuration::updateValue('PS_CIPHER_ALGORITHM', $algo);
-                        $redirectAdmin = true;
-                    } else {
-                        $this->errors[] = $this->trans('The settings file cannot be overwritten.', array(), 'Admin.Parameters.Notification');
                     }
                 }
             } else {
