@@ -574,13 +574,21 @@
   }
 
   #product-attachment-file {
-    border: $gray-light 2px solid;
-    thead {
-      text-transform: uppercase;
-    }
+    margin: 0;
+
     tbody {
-      border: none;
-      border-top: $gray-light 2px solid;
+      max-height: 450px;
+      overflow-y: auto;
+      display: block;
+
+      tr {
+        display: block;
+        overflow: hidden;
+      }
+    }
+
+    .checkbox {
+      margin: 0;
     }
   }
 
@@ -595,7 +603,7 @@
     }
   }
 
-  #supplier_combination_collection {
+  #supplier_combination_collection, #product-attachments {
     .panel-body {
       padding: 0;
     }
