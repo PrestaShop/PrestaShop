@@ -158,7 +158,7 @@ class NotificationCore
             return Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'employee`
 			SET `id_last_'.bqSQL($type).'` = (
-				SELECT IFNULL(MAX(`id_'.$type.'`), 0)
+				SELECT IFNULL(MAX(`id_'.bqSQL($type).'`), 0)
 				FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`
 			)
 			WHERE `id_employee` = '.(int) $cookie->id_employee);
