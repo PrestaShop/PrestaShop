@@ -72,6 +72,7 @@ script:
   - bash ./travis-scripts/install-prestashop
   - bash ./travis-scripts/backup-prestashop
   - php bin/phpunit -c tests/
+  - SYMFONY_DEPRECATIONS_HELPER=disabled php bin/phpunit -c tests/phpunit-admin.xml
   - composer phpunit-sf
   - cd $TRAVIS_BUILD_DIR # because /var/www/prestashop.unit.test (cwd) is about to be deleted
   - bash ./travis-scripts/restore-backup

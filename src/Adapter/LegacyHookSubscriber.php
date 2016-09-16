@@ -230,26 +230,29 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         }
 
         $hooks = \HookCore::getHooks();
-        foreach ($hooks as $hook) {
-            $name = $hook['name'];
-            $id = $hook['id_hook'];
+        
+        if (is_array($hooks)) {
+            foreach ($hooks as $hook) {
+                $name = $hook['name'];
+                $id = $hook['id_hook'];
 
-            $moduleListeners = array();
-            $modules = array();
-            //SF2 cache clear bug fix : call bqSQL alias function
-            if (function_exists("bqSQL")) {
-                $modules = \HookCore::getHookModuleExecList($name);
-            }
-            
-            if (is_array($modules)) {
-                foreach ($modules as $order => $module) {
-                    $moduleId = $module['id_module'];
-                    $functionName = 'call_'.$id.'_'.$moduleId;
-                    $moduleListeners[] = array($functionName, 2000-$order);
+                $moduleListeners = array();
+                $modules = array();
+                //SF2 cache clear bug fix : call bqSQL alias function
+                if (function_exists("bqSQL")) {
+                    $modules = \HookCore::getHookModuleExecList($name);
                 }
-    
-                if (count($moduleListeners)) {
-                    $listeners[$name] = $moduleListeners;
+
+                if (is_array($modules)) {
+                    foreach ($modules as $order => $module) {
+                        $moduleId = $module['id_module'];
+                        $functionName = 'call_' . $id . '_' . $moduleId;
+                        $moduleListeners[] = array($functionName, 2000 - $order);
+                    }
+
+                    if (count($moduleListeners)) {
+                        $listeners[$name] = $moduleListeners;
+                    }
                 }
             }
         }

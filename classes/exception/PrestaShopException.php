@@ -34,6 +34,10 @@ class PrestaShopExceptionCore extends Exception
      */
     public function displayMessage()
     {
+        if (getenv('kernel.environment') === 'test') {
+            throw $this;
+        }
+
         header('HTTP/1.1 500 Internal Server Error');
         if (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_')) {
             // Display error message
