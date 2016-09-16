@@ -273,8 +273,10 @@ function bulkProductAction(element, action) {
 			});
 
 			return; // No break, but RETURN, to avoid code after switch block :)
+
 		case 'activate_all':
-		case 'deactivate_all':
+
+        case 'deactivate_all':
 			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() === 0) {
 				return false;
 			}
@@ -282,26 +284,29 @@ function bulkProductAction(element, action) {
 			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
 			redirectUrl = urlHandler.attr('redirecturl');
 			break;
-		// this case will brings to the next page
+
+        // this case will brings to the next page
 		case 'edition_next':
-			redirectUrl = $(element).closest('[massediturl]').attr('redirecturlnextpage');
+            redirectUrl = $(element).closest('[massediturl]').attr('redirecturlnextpage');
 			// no break !
-		// this case will post inline edition command
+
+        // this case will post inline edition command
 		case 'edition':
-		  var editionAction;
-      var bulkEditionSelector = '#bulk_edition_toolbar input:submit';
-      if ($(bulkEditionSelector).length > 0) {
-        editionAction = $(bulkEditionSelector).attr('editionaction');
-      } else {
-        editionAction = 'sort';
-      }
+		  	var editionAction;
+      		var bulkEditionSelector = '#bulk_edition_toolbar input:submit';
+		    if ($(bulkEditionSelector).length > 0) {
+			    editionAction = $(bulkEditionSelector).attr('editionaction');
+		    } else {
+			    editionAction = 'sort';
+		    }
 
 			urlHandler = $('[massediturl]');
-      postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
+            postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
 			if (redirectUrl === '') {
 				redirectUrl = urlHandler.attr('redirecturl');
 			}
 			break;
+
 		case 'duplicate_all':
 			var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
 			if (items.size() === 0) {
@@ -315,7 +320,8 @@ function bulkProductAction(element, action) {
 				return bulkDuplicateAction(items, postUrl, redirectUrl);
 			} // else, just post like a single action.
 			break;
-		// unknown cases...
+
+        // unknown cases...
 		default:
 			return false;
 	}
