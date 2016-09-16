@@ -373,6 +373,8 @@
                         <div class="col-md-12">
                           <fieldset class="form-group">
                             <label class="form-control-label">{{ form.step3.virtual_product.file.vars.label }}</label>
+                            <span class="help-box" data-toggle="popover"
+                                  data-content="{{ "Upload a file from your computer (%maxUploadSize% max.)"|trans({'%maxUploadSize%': max_upload_size}, 'Admin.Catalog.Help') }}" ></span>
                             <div id="form_step3_virtual_product_file_input" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'hide' : 'show' }}">
                               {{ form_widget(form.step3.virtual_product.file) }}
                             </div>
@@ -385,6 +387,8 @@
                         <div class="col-md-6">
                           <fieldset class="form-group">
                             <label class="form-control-label">{{ form.step3.virtual_product.name.vars.label }}</label>
+                            <span class="help-box" data-toggle="popover"
+                                  data-content="{{ "The full filename with its extension (e.g. Book.pdf)"|trans({}, 'Admin.Catalog.Help') }}" ></span>
                             {{ form_errors(form.step3.virtual_product.name) }}
                             {{ form_widget(form.step3.virtual_product.name) }}
                           </fieldset>
@@ -392,6 +396,8 @@
                         <div class="col-md-6">
                           <fieldset class="form-group">
                             <label class="form-control-label">{{ form.step3.virtual_product.nb_downloadable.vars.label }}</label>
+                            <span class="help-box" data-toggle="popover"
+                                  data-content="{{ "Number of downloads allowed per customer. Set to 0 for unlimited downloads."|trans({}, 'Admin.Catalog.Help') }}" ></span>
                             {{ form_errors(form.step3.virtual_product.nb_downloadable) }}
                             {{ form_widget(form.step3.virtual_product.nb_downloadable) }}
                           </fieldset>
@@ -399,6 +405,8 @@
                         <div class="col-md-6">
                           <fieldset class="form-group">
                             <label class="form-control-label">{{ form.step3.virtual_product.expiration_date.vars.label }}</label>
+                            <span class="help-box" data-toggle="popover"
+                                  data-content="{{ "If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date."|trans({}, 'Admin.Catalog.Help') }}" ></span>
                             {{ form_errors(form.step3.virtual_product.expiration_date) }}
                             {{ form_widget(form.step3.virtual_product.expiration_date) }}
                           </fieldset>
@@ -406,6 +414,8 @@
                         <div class="col-md-6">
                           <fieldset class="form-group">
                             <label class="form-control-label">{{ form.step3.virtual_product.nb_days.vars.label }}</label>
+                            <span class="help-box" data-toggle="popover"
+                                  data-content="{{ "Number of days this file can be accessed by customers. Set to zero for unlimited access."|trans({}, 'Admin.Catalog.Help') }}" ></span>
                             {{ form_errors(form.step3.virtual_product.nb_days) }}
                             {{ form_widget(form.step3.virtual_product.nb_days) }}
                           </fieldset>
