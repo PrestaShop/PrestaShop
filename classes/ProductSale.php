@@ -73,7 +73,8 @@ class ProductSaleCore
         $final_order_by = $order_by;
         $order_table = '';
 
-        if (is_null($order_by)) {
+        $invalidOrderBy = !Validate::isOrderBy($order_by);
+        if ($invalidOrderBy || is_null($order_by)) {
             $order_by = 'quantity';
             $order_table = 'ps';
         }
@@ -82,7 +83,8 @@ class ProductSaleCore
             $order_table = 'product_shop';
         }
 
-        if (is_null($order_way) || $order_by == 'sales') {
+        $invalidOrderWay = !Validate::isOrderWay($order_way);
+        if ($invalidOrderWay || is_null($order_way) || $order_by == 'sales') {
             $order_way = 'DESC';
         }
 
@@ -99,7 +101,7 @@ class ProductSaleCore
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00",
 					INTERVAL '.(int)$interval.' DAY)) > 0 AS new'
-                .' FROM `'._DB_PREFIX_.'product_sale` ps
+            .' FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p', false);
         if (Combination::isFeatureActive()) {
@@ -132,6 +134,7 @@ class ProductSaleCore
         }
 
         if ($final_order_by != 'price') {
+
             $sql .= '
 					ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
 					LIMIT '.(int)(($page_number-1) * $nb_products).', '.(int)$nb_products;
@@ -147,7 +150,6 @@ class ProductSaleCore
         }
         return Product::getProductsProperties($id_lang, $result);
     }
-
     /*
     ** Get required informations on best sales products
     **
