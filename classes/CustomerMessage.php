@@ -163,4 +163,20 @@ class CustomerMessageCore extends ObjectModel
 
         return parent::delete();
     }
+
+    /**
+     * Get the last message for a thread customer
+     *
+     * @param $id_customer_thread   Thread customer reference
+     * @return string               Last message
+     */
+    public static function getLastMessageForCustomerThread($id_customer_thread)
+    {
+        return (string) Db::getInstance()->getValue('
+            SELECT message
+            FROM '._DB_PREFIX_.'customer_message
+            WHERE id_customer_thread = '. (int) $id_customer_thread .'
+            ORDER BY date_add DESC'
+        );
+    }
 }
