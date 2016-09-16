@@ -109,8 +109,6 @@ class AdminModuleDataProvider implements ModuleInterface
                 'module_name' => $addon->attributes->get('name'),
             ));
 
-            // Which button should be displayed first ?
-            $url_active = '';
             if ($addon->database->has('installed') && $addon->database->get('installed') == 1) {
                 if ($addon->database->get('active') == 0) {
                     $url_active = 'enable';
@@ -132,6 +130,11 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['configure']
                     );
                 }
+
+                if ($addon->attributes->get('is_configurable') == 0) {
+                    unset($urls['configure']);
+                }
+
                 if ($addon->canBeUpgraded()) {
                     $url_active = 'upgrade';
                 } else {
