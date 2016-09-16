@@ -755,7 +755,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $id_shop_list = $this->id_shop_list;
             }
 
-            $result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id.' AND id_shop IN ('.implode(', ', $id_shop_list).')');
+            $id_shop_list = array_map('intval', $id_shop_list);
+
+            $result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.
+                (int)$this->id.' AND id_shop IN ('.implode(', ', $id_shop_list).')');
         }
 
         // Database deletion
