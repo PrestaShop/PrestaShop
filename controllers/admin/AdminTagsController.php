@@ -45,7 +45,7 @@ class AdminTagsControllerCore extends AdminController
                 'class' => 'fixed-width-xs'
             ),
             'lang' => array(
-                'title' => $this->l('Language'),
+                'title' => $this->trans('Language', array(), 'Admin.Global'),
                 'filter_key' => 'l!name'
             ),
             'name' => array(
@@ -53,7 +53,7 @@ class AdminTagsControllerCore extends AdminController
                 'filter_key' => 'a!name'
             ),
             'products' => array(
-                'title' => $this->l('Products'),
+                'title' => $this->trans('Products', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'havingFilter' => true
@@ -62,9 +62,9 @@ class AdminTagsControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->l('Delete selected items?')
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')
             )
         );
     }
@@ -74,7 +74,7 @@ class AdminTagsControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tag'] = array(
                 'href' => self::$currentIndex.'&addtag&token='.$this->token,
-                'desc' => $this->l('Add new tag', null, null, false),
+                'desc' => $this->trans('Add new tag', array(), 'Admin.ShopParam.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -132,7 +132,7 @@ class AdminTagsControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Tag'),
+                'title' => $this->trans('Tag', array(), 'Admin.ShopParam.Feature'),
                 'icon' => 'icon-tag'
             ),
             'input' => array(
@@ -144,7 +144,7 @@ class AdminTagsControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Language'),
+                    'label' => $this->trans('Language', array(), 'Admin.Global'),
                     'name' => 'id_lang',
                     'required' => true,
                     'options' => array(

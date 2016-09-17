@@ -755,7 +755,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $id_shop_list = $this->id_shop_list;
             }
 
-            $result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id.' AND id_shop IN ('.implode(', ', $id_shop_list).')');
+            $id_shop_list = array_map('intval', $id_shop_list);
+
+            $result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.
+                (int)$this->id.' AND id_shop IN ('.implode(', ', $id_shop_list).')');
         }
 
         // Database deletion
@@ -1136,8 +1139,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             // Hack for postcode required for country which does not have postcodes
             if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0')) {
                 if (isset($data['validate'])) {
-                    $data_validate = $data['validate'];
-                    if (!Validate::$data_validate($value) && (!empty($value) || $data['required'])) {
+                    if (!call_user_func('Validate::'.$data['validate'],$value) && (!empty($value) || $data['required'])) {
                         $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).
                             '</b> '.Tools::displayError('is invalid.');
                     }

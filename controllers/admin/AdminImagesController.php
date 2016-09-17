@@ -47,8 +47,8 @@ class AdminImagesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
@@ -56,13 +56,13 @@ class AdminImagesControllerCore extends AdminController
         $this->fields_list = array(
             'id_image_type' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
-            'width' => array('title' => $this->l('Width'),  'suffix' => ' px'),
-            'height' => array('title' => $this->l('Height'),  'suffix' => ' px'),
-            'products' => array('title' => $this->l('Products'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'categories' => array('title' => $this->l('Categories'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'manufacturers' => array('title' => $this->l('Brands'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'suppliers' => array('title' => $this->l('Suppliers'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'stores' => array('title' => $this->l('Stores'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
+            'width' => array('title' => $this->trans('Width', array(), 'Admin.Global'),  'suffix' => ' px'),
+            'height' => array('title' => $this->trans('Height', array(), 'Admin.Global'),  'suffix' => ' px'),
+            'products' => array('title' => $this->trans('Products', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+            'categories' => array('title' => $this->trans('Categories', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+            'manufacturers' => array('title' => $this->trans('Brands', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+            'suppliers' => array('title' => $this->trans('Suppliers', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+            'stores' => array('title' => $this->trans('Stores', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
         );
 
         // No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
@@ -81,38 +81,38 @@ class AdminImagesControllerCore extends AdminController
 
         $this->fields_options = array(
             'images' => array(
-                'title' =>    $this->l('Images generation options'),
+                'title' =>    $this->trans('Images generation options', array(), 'Admin.Design.Feature'),
                 'icon' =>    'icon-picture',
                 'top' => '',
                 'bottom' => '',
-                'description' => $this->l('JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
-					<br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".'),
+                'description' => $this->trans('JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.', array(), 'Admin.Design.Help').'
+					<br /><br />'.$this->trans('WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".', array(), 'Admin.Design.Help'),
                 'fields' =>    array(
                     'PS_IMAGE_QUALITY' => array(
-                        'title' => $this->l('Image format'),
+                        'title' => $this->trans('Image format', array(), 'Admin.Design.Feature'),
                         'show' => true,
                         'required' => true,
                         'type' => 'radio',
-                        'choices' => array('jpg' => $this->l('Use JPEG.'), 'png' => $this->l('Use PNG only if the base image is in PNG format.'), 'png_all' => $this->l('Use PNG for all images.'))
+                        'choices' => array('jpg' => $this->trans('Use JPEG.', array(), 'Admin.Design.Feature'), 'png' => $this->trans('Use PNG only if the base image is in PNG format.', array(), 'Admin.Design.Feature'), 'png_all' => $this->trans('Use PNG for all images.', array(), 'Admin.Design.Feature'))
                     ),
                     'PS_JPEG_QUALITY' => array(
-                        'title' => $this->l('JPEG compression'),
-                        'hint' => $this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).').' '.$this->l('Recommended: 90.'),
+                        'title' => $this->trans('JPEG compression', array(), 'Admin.Design.Feature'),
+                        'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', array(), 'Admin.Design.Help').' '.$this->trans('Recommended: 90.', array(), 'Admin.Design.Help'),
                         'validation' => 'isUnsignedId',
                         'required' => true,
                         'cast' => 'intval',
                         'type' => 'text'
                     ),
                     'PS_PNG_QUALITY' => array(
-                         'title' => $this->l('PNG compression'),
-                         'hint' => $this->l('PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.').' '.$this->l('Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).').' '.$this->l('Recommended: 7.'),
+                         'title' => $this->trans('PNG compression', array(), 'Admin.Design.Feature'),
+                         'hint' => $this->trans('PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.', array(), 'Admin.Design.Help').' '.$this->trans('Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).', array(), 'Admin.Design.Help').' '.$this->trans('Recommended: 7.', array(), 'Admin.Design.Help'),
                          'validation' => 'isUnsignedId',
                          'required' => true,
                          'cast' => 'intval',
                          'type' => 'text'
                      ),
                     'PS_IMAGE_GENERATION_METHOD' => array(
-                        'title' => $this->l('Generate images based on one side of the source image'),
+                        'title' => $this->trans('Generate images based on one side of the source image', array(), 'Admin.Design.Feature'),
                         'validation' => 'isUnsignedId',
                         'required' => false,
                         'cast' => 'intval',
@@ -120,59 +120,59 @@ class AdminImagesControllerCore extends AdminController
                         'list' => array(
                             array(
                                 'id' => '0',
-                                'name' => $this->l('Automatic (longest side)')
+                                'name' => $this->trans('Automatic (longest side)', array(), 'Admin.Design.Feature')
                             ),
                             array(
                                 'id' => '1',
-                                'name' => $this->l('Width')
+                                'name' => $this->trans('Width', array(), 'Admin.Global')
                             ),
                             array(
                                 'id' => '2',
-                                'name' => $this->l('Height')
+                                'name' => $this->trans('Height', array(), 'Admin.Global')
                             )
                         ),
                         'identifier' => 'id',
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                     'PS_PRODUCT_PICTURE_MAX_SIZE' => array(
-                        'title' => $this->l('Maximum file size of product customization pictures'),
-                        'hint' => $this->l('The maximum file size of pictures that customers can upload to customize a product (in bytes).'),
+                        'title' => $this->trans('Maximum file size of product customization pictures', array(), 'Admin.Design.Feature'),
+                        'hint' => $this->trans('The maximum file size of pictures that customers can upload to customize a product (in bytes).', array(), 'Admin.Design.Help'),
                         'validation' => 'isUnsignedInt',
                         'required' => true,
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => $this->l('bytes'),
+                        'suffix' => $this->trans('bytes', array(), 'Admin.Design.Feature'),
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                     'PS_PRODUCT_PICTURE_WIDTH' => array(
-                        'title' => $this->l('Product picture width'),
-                        'hint' => $this->l('Width of product customization pictures that customers can upload (in pixels).'),
+                        'title' => $this->trans('Product picture width', array(), 'Admin.Design.Feature'),
+                        'hint' => $this->trans('Width of product customization pictures that customers can upload (in pixels).', array(), 'Admin.Design.Help'),
                         'validation' => 'isUnsignedInt',
                         'required' => true,
                         'cast' => 'intval',
                         'type' => 'text',
                         'width' => 'px',
-                        'suffix' => $this->l('pixels'),
+                        'suffix' => $this->trans('pixels', array(), 'Admin.Design.Feature'),
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                     'PS_PRODUCT_PICTURE_HEIGHT' => array(
-                        'title' => $this->l('Product picture height'),
-                        'hint' => $this->l('Height of product customization pictures that customers can upload (in pixels).'),
+                        'title' => $this->trans('Product picture height', array(), 'Admin.Design.Feature'),
+                        'hint' => $this->trans('Height of product customization pictures that customers can upload (in pixels).', array(), 'Admin.Design.Help'),
                         'validation' => 'isUnsignedInt',
                         'required' => true,
                         'cast' => 'intval',
                         'type' => 'text',
                         'height' => 'px',
-                        'suffix' => $this->l('pixels'),
+                        'suffix' => $this->trans('pixels', array(), 'Admin.Design.Feature'),
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                     'PS_HIGHT_DPI' => array(
                         'type' => 'bool',
-                        'title' => $this->l('Generate high resolution images'),
+                        'title' => $this->trans('Generate high resolution images', array(), 'Admin.Design.Feature'),
                         'required' => false,
                         'is_bool' => true,
-                        'hint' => $this->l('This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.'),
-                        'desc' => $this->l('Enable to optimize the display of your images on high pixel density screens.'),
+                        'hint' => $this->trans('This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.', array(), 'Admin.Design.Help'),
+                        'desc' => $this->trans('Enable to optimize the display of your images on high pixel density screens.', array(), 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ),
                 ),
@@ -182,8 +182,8 @@ class AdminImagesControllerCore extends AdminController
 
         if ($this->display_move) {
             $this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = array(
-                'title' => $this->l('Use the legacy image filesystem'),
-                'hint' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.'),
+                'title' => $this->trans('Use the legacy image filesystem', array(), 'Admin.Design.Feature'),
+                'hint' => $this->trans('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.', array(), 'Admin.Design.Help'),
                 'validation' => 'isBool',
                 'cast' => 'intval',
                 'required' => false,
@@ -194,42 +194,42 @@ class AdminImagesControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Image type'),
+                'title' => $this->trans('Image type', array(), 'Admin.Design.Feature'),
                 'icon' => 'icon-picture'
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name for the image type'),
+                    'label' => $this->trans('Name for the image type', array(), 'Admin.Design.Feature'),
                     'name' => 'name',
                     'required' => true,
-                    'hint' => $this->l('Letters, underscores and hyphens only (e.g. "small_custom", "cart_medium", "large", "thickbox_extra-large").')
+                    'hint' => $this->trans('Letters, underscores and hyphens only (e.g. "small_custom", "cart_medium", "large", "thickbox_extra-large").', array(), 'Admin.Design.Help')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Width'),
+                    'label' => $this->trans('Width', array(), 'Admin.Global'),
                     'name' => 'width',
                     'required' => true,
                     'maxlength' => 5,
-                    'suffix' => $this->l('pixels'),
-                    'hint' => $this->l('Maximum image width in pixels.')
+                    'suffix' => $this->trans('pixels', array(), 'Admin.Design.Feature'),
+                    'hint' => $this->trans('Maximum image width in pixels.', array(), 'Admin.Design.Help')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Height'),
+                    'label' => $this->trans('Height', array(), 'Admin.Global'),
                     'name' => 'height',
                     'required' => true,
                     'maxlength' => 5,
-                    'suffix' => $this->l('pixels'),
-                    'hint' => $this->l('Maximum image height in pixels.')
+                    'suffix' => $this->trans('pixels', array(), 'Admin.Design.Feature'),
+                    'hint' => $this->trans('Maximum image height in pixels.', array(), 'Admin.Design.Help')
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Products'),
+                    'label' => $this->trans('Products', array(), 'Admin.Global'),
                     'name' => 'products',
                     'required' => false,
                     'is_bool' => true,
-                    'hint' => $this->l('This type will be used for Product images.'),
+                    'hint' => $this->trans('This type will be used for Product images.', array(), 'Admin.Design.Help'),
                     'values' => array(
                         array(
                             'id' => 'products_on',
@@ -245,12 +245,12 @@ class AdminImagesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Categories'),
+                    'label' => $this->trans('Categories', array(), 'Admin.Global'),
                     'name' => 'categories',
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'hint' => $this->l('This type will be used for Category images.'),
+                    'hint' => $this->trans('This type will be used for Category images.', array(), 'Admin.Design.Help'),
                     'values' => array(
                         array(
                             'id' => 'categories_on',
@@ -266,11 +266,11 @@ class AdminImagesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Brands'),
+                    'label' => $this->trans('Brands', array(), 'Admin.Global'),
                     'name' => 'manufacturers',
                     'required' => false,
                     'is_bool' => true,
-                    'hint' => $this->l('This type will be used for Brand images.'),
+                    'hint' => $this->trans('This type will be used for Brand images.', array(), 'Admin.Design.Help'),
                     'values' => array(
                         array(
                             'id' => 'manufacturers_on',
@@ -286,11 +286,11 @@ class AdminImagesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Suppliers'),
+                    'label' => $this->trans('Suppliers', array(), 'Admin.Global'),
                     'name' => 'suppliers',
                     'required' => false,
                     'is_bool' => true,
-                    'hint' => $this->l('This type will be used for Supplier images.'),
+                    'hint' => $this->trans('This type will be used for Supplier images.', array(), 'Admin.Design.Help'),
                     'values' => array(
                         array(
                             'id' => 'suppliers_on',
@@ -306,11 +306,11 @@ class AdminImagesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Stores'),
+                    'label' => $this->trans('Stores', array(), 'Admin.Global'),
                     'name' => 'stores',
                     'required' => false,
                     'is_bool' => true,
-                    'hint' => $this->l('This type will be used for Store images.'),
+                    'hint' => $this->trans('This type will be used for Store images.', array(), 'Admin.Design.Help'),
                     'values' => array(
                         array(
                             'id' => 'stores_on',
@@ -335,7 +335,7 @@ class AdminImagesControllerCore extends AdminController
     {
         // When moving images, if duplicate images were found they are moved to a folder named duplicates/
         if (file_exists(_PS_PROD_IMG_DIR_.'duplicates/')) {
-            $this->warnings[] = sprintf($this->l('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %s only contains demonstration images, and then delete it.'), _PS_PROD_IMG_DIR_.'duplicates/');
+            $this->warnings[] = sprintf($this->trans('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %s only contains demonstration images, and then delete it.', array(), 'Admin.Design.Notification'), _PS_PROD_IMG_DIR_.'duplicates/');
         }
 
         if (Tools::isSubmit('submitRegenerate'.$this->table)) {
@@ -396,11 +396,11 @@ class AdminImagesControllerCore extends AdminController
     public function initRegenerate()
     {
         $types = array(
-            'categories' => $this->l('Categories'),
-            'manufacturers' => $this->l('Brands'),
-            'suppliers' => $this->l('Suppliers'),
-            'products' => $this->l('Products'),
-            'stores' => $this->l('Stores')
+            'categories' => $this->trans('Categories', array(), 'Admin.Global'),
+            'manufacturers' => $this->trans('Brands', array(), 'Admin.Global'),
+            'suppliers' => $this->trans('Suppliers', array(), 'Admin.Global'),
+            'products' => $this->trans('Products', array(), 'Admin.Global'),
+            'stores' => $this->trans('Stores', array(), 'Admin.Global')
         );
 
         $formats = array();
@@ -694,7 +694,7 @@ class AdminImagesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_image_type'] = array(
                 'href' => self::$currentIndex.'&addimage_type&token='.$this->token,
-                'desc' => $this->l('Add new image type', null, null, false),
+                'desc' => $this->trans('Add new image type', array(), 'Admin.Design.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -734,7 +734,7 @@ class AdminImagesControllerCore extends AdminController
         }
 
         if ($this->display == 'edit') {
-            $this->warnings[] = $this->l('After modification, do not forget to regenerate thumbnails');
+            $this->warnings[] = $this->trans('After modification, do not forget to regenerate thumbnails', array(), 'Admin.Design.Notification');
         }
 
         parent::initContent();

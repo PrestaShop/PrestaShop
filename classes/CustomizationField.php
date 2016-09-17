@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class CustomizationFieldCore
+ */
 class CustomizationFieldCore extends ObjectModel
 {
     /** @var int */
@@ -47,21 +50,23 @@ class CustomizationFieldCore extends ObjectModel
         'multilang_shop' => true,
         'fields' => array(
             /* Classic fields */
-            'id_product' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'type' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'required' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-            'is_module' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => false),
+            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'type' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'required' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+            'is_module' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => false),
 
             /* Lang fields */
-            'name' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => 255),
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => 255),
         ),
     );
+
+    /** @var array $webserviceParameters */
     protected $webserviceParameters = array(
         'fields' => array(
             'id_product' => array(
                 'xlink_resource' => array(
-                    'resourceName' => 'products'
-                )
+                    'resourceName' => 'products',
+                ),
             ),
         ),
     );

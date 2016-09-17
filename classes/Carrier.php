@@ -520,16 +520,16 @@ class CarrierCore extends ObjectModel
         }
 
         switch ($modules_filters) {
-            case 1 :
+            case 1:
                 $sql .= ' AND c.is_module = 0 ';
                 break;
-            case 2 :
+            case 2:
                 $sql .= ' AND c.is_module = 1 ';
                 break;
-            case 3 :
+            case 3:
                 $sql .= ' AND c.is_module = 1 AND c.need_range = 1 ';
                 break;
-            case 4 :
+            case 4:
                 $sql .= ' AND (c.is_module = 0 OR c.need_range = 1) ';
                 break;
         }
@@ -1561,7 +1561,7 @@ class CarrierCore extends ObjectModel
      *
      * @return bool
      */
-    public static function assignGroupToAllCarriers($id_group_list, $exception = null)
+    public static function assignGroupToAllCarriers($id_group_list, $exception = array())
     {
         if (!is_array($id_group_list)) {
             $id_group_list = array($id_group_list);
