@@ -486,7 +486,7 @@ class AdminCarrierWizardControllerCore extends AdminController
      */
     protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
     {
-        $tpl_vars['zones'] = Zone::getZones(false);
+        $tpl_vars['zones'] = Zone::getZones(false, true);
         $carrier_zones = $carrier->getZones();
         $carrier_zones_ids = array();
         if (is_array($carrier_zones)) {

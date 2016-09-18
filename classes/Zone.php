@@ -50,9 +50,10 @@ class ZoneCore extends ObjectModel
      * Get all available geographical zones
      *
      * @param bool $active
+     * @param bool $active_first
      * @return array Zones
      */
-    public static function getZones($active = false)
+    public static function getZones($active = false, $active_first = false)
     {
         $cache_id = 'Zone::getZones_'.(bool)$active;
         if (!Cache::isStored($cache_id)) {
@@ -60,7 +61,7 @@ class ZoneCore extends ObjectModel
 				SELECT *
 				FROM `'._DB_PREFIX_.'zone`
 				'.($active ? 'WHERE active = 1' : '').'
-				ORDER BY `name` ASC
+				ORDER BY '.( $active_first ? '`active` DESC,' : '').' `name` ASC
 			');
             Cache::store($cache_id, $result);
             return $result;
