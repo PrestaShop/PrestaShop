@@ -164,7 +164,12 @@
                     limit: 30,
                     templates: {
                         suggestion: function(item){
-                            return '<div><img src="'+ item.image +'" style="width:50px" /> '+ item.name +'</div>'
+                            return '<div>' +
+                                   '<table><tr>' +
+                                   '<td rowspan="2"><img src="'+ item.image +'" style="width:50px; margin-right: 7px;" /></td>' +
+                                   '<td>' + item.name + '</td></tr>' +
+                                   '<tr><td>REF: ' + item.ref + '</td></tr>' +
+                                   '</table></div>'
                         }
                     }
                 }).bind('typeahead:select', function(ev, suggestion) {
