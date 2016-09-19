@@ -1643,9 +1643,12 @@ class FrontControllerCore extends Controller
             $this->context->language
         );
 
+        $customer = new Customer();
+
         $formatter
             ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
             ->setAskForBirthdate(Configuration::get('PS_CUSTOMER_BIRTHDATE'))
+            ->setPartnerOptinRequired($customer->isFieldRequired('optin'))
         ;
 
         return $formatter;
