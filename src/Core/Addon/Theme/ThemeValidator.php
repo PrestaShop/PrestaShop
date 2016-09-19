@@ -45,8 +45,8 @@ class ThemeValidator
         $this->translator = $translator;
     }
 
-    public function getErrors($theme_name) {
-        return array_key_exists($theme_name, $this->errors) ? $this->errors[$theme_name] : false;
+    public function getErrors($themeName) {
+        return array_key_exists($themeName, $this->errors) ? $this->errors[$themeName] : false;
     }
 
     public function isValid(Theme $theme)
