@@ -41,10 +41,12 @@ class IdentityControllerCore extends FrontController
         parent::initContent();
 
         $customer_form = $this->makeCustomerForm();
+        $customer = new Customer();
 
         $customer_form->getFormatter()
             ->setAskForNewPassword(true)
             ->setPasswordRequired(true)
+            ->setPartnerOptinRequired($customer->isFieldRequired('optin'))
         ;
 
         if (Tools::isSubmit('submitCreate')) {
