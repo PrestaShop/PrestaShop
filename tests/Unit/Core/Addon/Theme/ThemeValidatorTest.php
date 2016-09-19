@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Tests\Core\Addon;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
 use Symfony\Component\Yaml\Parser;
+use Phake;
 
 class ThemeValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,8 +38,10 @@ class ThemeValidatorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        $translator = Phake::mock('Symfony\Component\Translation\TranslatorInterface');
+
         /* @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator */
-        $this->validator = new ThemeValidator();
+        $this->validator = new ThemeValidator($translator);
     }
 
     protected function tearDown()
