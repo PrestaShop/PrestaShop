@@ -29,9 +29,6 @@
   <configuration id="PS_LAST_QTIES" name="PS_LAST_QTIES">
     <value>3</value>
   </configuration>
-  <configuration id="PS_CART_REDIRECT" name="PS_CART_REDIRECT">
-    <value>1</value>
-  </configuration>
   <configuration id="PS_CONDITIONS" name="PS_CONDITIONS">
     <value>1</value>
   </configuration>

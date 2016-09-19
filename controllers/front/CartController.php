@@ -162,27 +162,6 @@ class CartControllerCore extends FrontController
     public function postProcess()
     {
         $this->updateCart();
-
-        // Make redirection
-        if (!$this->errors) {
-            if ($back = Tools::getValue('back')) {
-                Tools::redirect(urldecode($back));
-            }
-
-            $queryString = Tools::safeOutput(Tools::getValue('query', null));
-            if ($queryString && !Configuration::get('PS_CART_REDIRECT')) {
-                Tools::redirect('index.php?controller=search&search='.$queryString);
-            }
-
-            // Redirect to previous page
-            if (isset($_SERVER['HTTP_REFERER'])) {
-                preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
-                if (isset($regs[3]) && !Configuration::get('PS_CART_REDIRECT')) {
-                    $url = preg_replace('/(\?)+content_only=1/', '', $_SERVER['HTTP_REFERER']);
-                    Tools::redirect($url);
-                }
-            }
-        }
     }
 
     protected function updateCart()

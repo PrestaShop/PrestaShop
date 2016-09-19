@@ -162,9 +162,13 @@ DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_STORES_DISPLAY_FOOTER', 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('actionValidateCustomerAddressForm', 'Customer address form validation', 'This hook is called when a customer submit its address form', '1');
 
 /* PHP:add_quick_access_tab(); */;
+
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayAfterCarrier', 'After carriers list', 'This hook is displayed after the carrier list in Front Office', '1');
 
 DELETE FROM `PREFIX_hook` WHERE `name` IN ('displayProductTab', 'displayProductTabContent', 'displayBeforePayment');
+
 DELETE FROM `PREFIX_hook_alias` WHERE `name` IN ('displayProductTab', 'displayProductTabContent', 'displayBeforePayment');
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayCarrierExtraContent', 'Display additionnal content for a carrier (e.g pickup points)', 'This hook calls only the module related to the carrier, in order to add options when needed.', '1');
+
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_CART_REDIRECT';
