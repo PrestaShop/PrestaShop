@@ -1,6 +1,5 @@
-{% set is_stock_management = 'PS_STOCK_MANAGEMENT'|configuration %}
 <div class="row">
-  {% if is_stock_management %}
+  {% if configuration.get('PS_STOCK_MANAGEMENT') %}
     <div class="col-xl-2 col-lg-6 custom-width m-b-1">
       <label class="form-control-label">{{ form.quantity.vars.label }}</label>
       {{ form_errors(form.quantity) }}

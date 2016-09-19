@@ -1,7 +1,6 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
-  {% set is_stock_management = 'PS_STOCK_MANAGEMENT'|configuration %}
 
   <form name="form" id="form" method="post" class="form-horizontal product-page row" novalidate="novalidate">
 
@@ -258,7 +257,7 @@
                             </div>
                           </div>
 
-                          {% if is_stock_management %}
+                          {% if configuration.get('PS_STOCK_MANAGEMENT') %}
                             <div class="form-group" id="product_qty_0_shortcut_div">
                               <h2>
                                 {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
@@ -342,7 +341,7 @@
                       <h2>{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                       <fieldset class="form-group">
                         <div class="row">
-                          {% if is_stock_management %}
+                          {% if configuration.get('PS_STOCK_MANAGEMENT') %}
                             <div class="col-md-4">
                               <label class="form-control-label">{{ form.step3.qty_0.vars.label }}</label>
                               {{ form_errors(form.step3.qty_0) }}
@@ -450,7 +449,7 @@
                         </div>
                       </div>
                     {% endif %}
-                    {% if is_stock_management %}
+                    {% if configuration.get('PS_STOCK_MANAGEMENT') %}
                       <div id="pack_stock_type">
                         <h2>{{ form.step3.pack_stock_type.vars.label }}</h2>
                         <div class="row col-md-4">

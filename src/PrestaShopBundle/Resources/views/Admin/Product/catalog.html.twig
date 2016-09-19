@@ -47,8 +47,6 @@
 
 {% block content %}
 
-  {% set is_stock_management = 'PS_STOCK_MANAGEMENT'|configuration %}
-
   <div class="products-catalog">
 
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
@@ -230,7 +228,7 @@
                     } %}
                   </th>
 
-                  {% if is_stock_management %}
+                  {% if configuration.get('PS_STOCK_MANAGEMENT') %}
                   <th style="width: 9%">
                     {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
@@ -307,7 +305,7 @@
                     } %}
                   </th>
 
-                  {% if is_stock_management %}
+                  {% if configuration.get('PS_STOCK_MANAGEMENT') %}
                   <th>
                     {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
                       'input_name': "filter_column_sav_quantity",
@@ -319,7 +317,7 @@
                     } %}
                   </th>
                   {% else %}
-                    <th>&nbsp;</th>
+                    <th></th>
                   {% endif %}
 
                   <th>

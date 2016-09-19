@@ -2,7 +2,6 @@
   {% if activate_drag_and_drop and has_category_filter %}class="sortable"{% endif %}
   last_sql="{{ last_sql_query|escape('html_attr') }}"
 >
-{% set is_stock_management = 'PS_STOCK_MANAGEMENT'|configuration %}
   {% for product in products %}
         <tr data-uniturl="{{ product.unit_action_url|default('#') }}" data-product-id="{{ product.id_product }}">
             <td class="checkbox-column">
@@ -29,7 +28,7 @@
               <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'Admin.Global')) }}</a>
             </td>
 
-            {% if is_stock_management %}
+            {% if configuration.get('PS_STOCK_MANAGEMENT') %}
             <td class="product-sav-quantity" data-product-quantity-value="{{ product.sav_quantity|default('') }}">
               <a href="{{ product.url|default('') }}#tab-step3">
                 {% if product.sav_quantity is defined and product.sav_quantity > 0 %}

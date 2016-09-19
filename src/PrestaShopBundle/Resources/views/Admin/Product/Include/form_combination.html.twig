@@ -1,4 +1,3 @@
-{% set is_stock_management = 'PS_STOCK_MANAGEMENT'|configuration %}
 <tr class="combination loaded" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}">
   <td width="1%"><input class="js-combination" type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}"></td>
   <td class="img"><div class="fake-img"></div></td>
@@ -12,7 +11,7 @@
     <td class="attribute-finalprice text-xs-right">
       <span data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}
     </td>
-    {% if is_stock_management %}
+    {% if configuration.get('PS_STOCK_MANAGEMENT') %}
       <td class="attribute-quantity">
           <div>
               <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control text-xs-right">
@@ -40,7 +39,7 @@
                 </h2>
                 {{ form_widget(form.attribute_default) }}
                 <div class="row">
-                  {% if is_stock_management %}
+                  {% if configuration.get('PS_STOCK_MANAGEMENT') %}
                     <div class="col-md-2">
                       <fieldset class="form-group">
                           <label class="combination-label">

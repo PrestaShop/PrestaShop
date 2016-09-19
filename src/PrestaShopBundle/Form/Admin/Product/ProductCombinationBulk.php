@@ -40,16 +40,17 @@ class ProductCombinationBulk extends CommonAbstractType
     private $isoCode;
     private $priceDisplayPrecision;
     private $translator;
+    private $configuration;
 
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
+        $this->configuration = $this->getConfiguration();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $configuration = new Configuration();
-        $is_stock_management = $configuration->get('PS_STOCK_MANAGEMENT');
+        $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
         $this->isoCode = $options['iso_code'];
         $this->priceDisplayPrecision = $options['price_display_precision'];
 
@@ -110,5 +111,15 @@ class ProductCombinationBulk extends CommonAbstractType
     public function getBlockPrefix()
     {
         return 'product_combination_bulk';
+    }
+
+    /**
+     * Get the configuration adapter
+     *
+     * @return object Configuration adapter
+     */
+    protected function getConfiguration()
+    {
+        return new Configuration();
     }
 }

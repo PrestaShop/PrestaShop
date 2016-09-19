@@ -54,6 +54,9 @@ twig:
     strict_variables: "%kernel.debug%"
     form_themes:
         - 'PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_3_horizontal_layout.html.twig'
+    globals:
+        configuration: "@prestashop.adapter.legacy.configuration"
+
 
 # Doctrine Configuration
 doctrine:
