@@ -92,6 +92,7 @@ class AdminPaymentControllerCore extends AdminController
     {
         if ($this->getModulesList($this->filter_modules_list, $tracking_source)) {
             $active_list = array();
+            $unactive_list = array();
             foreach ($this->modules_list as $key => $module) {
                 if (in_array($module->name, $this->list_partners_modules)) {
                     $this->modules_list[$key]->type = 'addonsPartner';
