@@ -62,10 +62,10 @@ var combinations = (function() {
 
   return {
     'init': function() {
-      var _this = this;
       var showVariationsSelector = $('#show_variations_selector input');
       var productTypeSelector = $('#form_step1_type_product');
-      var combinationsList = $('#accordion_combinations .combination');
+      var combinationsListSelector = '#accordion_combinations .combination';
+      var combinationsList = $(combinationsListSelector);
 
       if (combinationsList.length > 0) {
         productTypeSelector.prop('disabled', true);
@@ -134,6 +134,7 @@ var combinations = (function() {
       /** Combinations fields display management */
       showVariationsSelector.change(function() {
         displayFieldsManager.refresh();
+        combinationsList = $(combinationsListSelector);
 
         if ($(this).val() === '0') {
           //if combination(s) exists, alert user for deleting it
