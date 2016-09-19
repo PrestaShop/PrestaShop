@@ -468,7 +468,10 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             die(json_encode($this->getAjaxProductSearchVariables()));
         } else {
             $variables = $this->getProductSearchVariables();
-            if (!empty($variables['products'])) {
+            if (
+                !empty($variables['products'])
+                || $params['entity'] === 'category'
+            ) {
                 $this->context->smarty->assign(array(
                     'listing' => $variables,
                 ));

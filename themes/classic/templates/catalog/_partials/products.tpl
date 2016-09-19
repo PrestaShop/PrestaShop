@@ -49,5 +49,7 @@
         <i class="material-icons">&#xE316;</i>
       </a>
     </div>
+  {else}
+    {include file='errors/not-found.tpl'}
   {/if}
 </section>
