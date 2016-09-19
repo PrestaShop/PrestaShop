@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes\Module;
 
-use Media;
+use DomDocument;
 use Module;
 use PHPUnit_Framework_TestCase;
 
@@ -75,7 +75,7 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
         $errors = array(
             'Error 1',
             'Error 2',
-            'Error 3'
+            'Error 3',
         );
 
         $module = new FakeModule();
@@ -92,6 +92,14 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
      */
     public function assertHtmlEquals($expected, $html_output)
     {
-        $this->assertEquals(Media::minifyHTML($expected), Media::minifyHTML($html_output));
+        $expectedDom = new DomDocument();
+        $expectedDom->loadHTML($expected);
+        $expectedDom->preserveWhiteSpace = false;
+
+        $actualDom = new DomDocument();
+        $actualDom->loadHTML($html_output);
+        $actualDom->preserveWhiteSpace = false;
+
+        $this->assertEquals($expectedDom->saveHTML(), $actualDom->saveHTML());
     }
 }

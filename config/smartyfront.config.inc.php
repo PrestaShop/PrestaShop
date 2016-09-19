@@ -37,9 +37,6 @@ $smarty->registerResource('module', new SmartyResourceModule(array(
     'modules' => _PS_MODULE_DIR_,
 )));
 
-if (Configuration::get('PS_HTML_THEME_COMPRESSION')) {
-    $smarty->registerFilter('output', 'smartyMinifyHTML');
-}
 if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION')) {
     $smarty->registerFilter('output', 'smartyPackJSinHTML');
 }
