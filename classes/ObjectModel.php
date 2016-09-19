@@ -1356,6 +1356,27 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
+     * Returns true if required field exists
+     *
+     * @param string $field_name to search
+     * @param bool $all If true, returns required fields of all object classes.
+     *
+     * @return boolean
+     */
+    public function isFieldRequired($field_name, $all = false)
+    {
+        if (empty($field_name)) {
+            return false;
+        } else {
+            return (bool) Db::getInstance()->getValue('
+            SELECT id_required_field
+            FROM '._DB_PREFIX_.'required_field
+            WHERE field_name = "'. Db::getInstance()->escape($field_name) .'"
+            '.(!$all ? ' AND object_name = \''.pSQL(get_class($this)).'\'' : ''));
+        }
+    }
+
+    /**
      * Caches data about required objects fields in memory
      *
      * @param bool $all If true, caches required fields of all object classes.
