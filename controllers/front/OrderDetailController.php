@@ -151,13 +151,12 @@ class OrderDetailControllerCore extends FrontController
         parent::initContent();
 
         $id_order = (int)Tools::getValue('id_order');
-        $reference = Tools::getValue('reference');
-
         $id_order = $id_order && Validate::isUnsignedId($id_order) ? $id_order : false;
-        $reference = $reference && Validate::isReference($reference) ? $reference : false;
 
-        if (!$id_order && $reference) {
-            $order = Order::getByReference($reference)->getFirst();
+        if (!$id_order) {
+            $reference = Tools::getValue('reference');
+            $reference = $reference && Validate::isReference($reference) ? $reference : false;
+            $order = $reference ? Order::getByReference($reference)->getFirst() : false;
             $id_order = $order ? $order->id : false;
         }
 
