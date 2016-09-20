@@ -133,8 +133,7 @@ class TranslateCore
         } elseif (isset($lang_array['AdminTab'.$key])) {
             $str = $lang_array['AdminTab'.$key];
         } else {
-            // fallback to Symfony translator
-            $str = Context::getContext()->getTranslator()->trans($string);
+            $str = $string;
         }
 
         return $str;
