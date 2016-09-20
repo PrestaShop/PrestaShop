@@ -222,10 +222,6 @@
 			$('#media_server_up').val(1);
 		});
 
-		$('input[name="PS_CIPHER_ALGORITHM"]').change(function(){
-			$('#ciphering_up').val(1);
-		});
-
 		$('input[name="cache_active"]').change(function(){
 			$('#cache_up').val(1);
 		});
