@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Classes\Module;
 use DomDocument;
 use Module;
 use PHPUnit_Framework_TestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 class FakeModule extends Module
 {
@@ -63,10 +64,11 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
         $module = new FakeModule();
 
         // when
-        $html_output = $module->displayError($error);
+        $htmlOutput = $module->displayError($error);
 
         // then
-        $this->assertHtmlEquals($this->error_string_res, $html_output);
+        $crawler = new Crawler($htmlOutput);
+        $this->assertContains($error, $crawler->filter('.module_error')->text());
     }
 
     public function testDisplayError_shouldReturnMultipleErrors()
@@ -81,25 +83,10 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
         $module = new FakeModule();
 
         // when
-        $html_output = $module->displayError($errors);
+        $htmlOutput = $module->displayError($errors);
 
         // then
-        $this->assertHtmlEquals($this->error_array_res, $html_output);
-    }
-
-    /**
-     * @param $html_output
-     */
-    public function assertHtmlEquals($expected, $html_output)
-    {
-        $expectedDom = new DomDocument();
-        $expectedDom->loadHTML($expected);
-        $expectedDom->preserveWhiteSpace = false;
-
-        $actualDom = new DomDocument();
-        $actualDom->loadHTML($html_output);
-        $actualDom->preserveWhiteSpace = false;
-
-        $this->assertEquals($expectedDom->saveHTML(), $actualDom->saveHTML());
+        $crawler = new Crawler($htmlOutput);
+        $this->assertCount(3, $crawler->filter('.module_error li'));
     }
 }
