@@ -78,25 +78,25 @@ class HookCore extends ObjectModel
      * @deprecated 1.5.0
      */
     protected static $_hook_modules_cache_exec = null;
-    
+
     /**
      * List of all deprecated hooks
-     * @var array 
+     * @var array
      */
     protected static $deprecated_hooks = array(
         // Back office
         'backOfficeFooter' => array('from' => '1.7.0.0'),
         'displayBackOfficeFooter' => array('from' => '1.7.0.0'),
-        
+
         // Shipping step
         'displayCarrierList' => array('from' => '1.7.0.0'),
         'extraCarrier' => array('from' => '1.7.0.0'),
-        
+
         // Payment step
         'hookBackBeforePayment' => array('from' => '1.7.0.0'),
         'hookDisplayBeforePayment' => array('from' => '1.7.0.0'),
         'hookOverrideTOSDisplay' => array('from' => '1.7.0.0'),
-        
+
         // Product page
         'displayProductTabContent' => array('from' => '1.7.0.0'),
         'displayProductTab' => array('from' => '1.7.0.0'),
@@ -322,11 +322,12 @@ class HookCore extends ObjectModel
         $prefix = _DB_PREFIX_;
         $id_hook = (int) Hook::getIdByName($hook_name);
         $id_shop = (int) $id_shop;
+        $id_module = (int) $module_instance->id;
 
         $sql = "SELECT * FROM {$prefix}hook_module
-                  WHERE `id_hook` = $id_hook
-                  AND `id_module` = {$module_instance->id}
-                  AND `id_shop` = $id_shop";
+                  WHERE `id_hook` = {$id_hook}
+                  AND `id_module` = {$id_module}
+                  AND `id_shop` = {$id_shop}";
 
         $rows = Db::getInstance()->executeS($sql);
         return !empty($rows);
