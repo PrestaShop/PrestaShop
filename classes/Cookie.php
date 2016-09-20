@@ -336,11 +336,8 @@ class CookieCore
             $content = 0;
             $time = 1;
         }
-        if (PHP_VERSION_ID <= 50200) { /* PHP version > 5.2.0 */
-            return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, $this->_secure);
-        } else {
-            return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, $this->_secure, true);
-        }
+
+        return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, $this->_secure, true);
     }
 
     public function __destruct()
