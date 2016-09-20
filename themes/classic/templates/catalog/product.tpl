@@ -171,11 +171,13 @@
       {if $accessories}
         <section class="product-accessories clearfix">
           <h3 class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</h3>
-          {foreach from=$accessories item="product_accessory"}
-            {block name='product_miniature'}
-              {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory}
-            {/block}
-          {/foreach}
+          <div class="products">
+            {foreach from=$accessories item="product_accessory"}
+              {block name='product_miniature'}
+                {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory}
+              {/block}
+            {/foreach}
+          </div>
         </section>
       {/if}
     {/block}
