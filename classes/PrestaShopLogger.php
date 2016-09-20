@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class    PrestaShopLoggerCore extends ObjectModel
+class PrestaShopLoggerCore extends ObjectModel
 {
     /** @var int Log id */
     public $id_log;
@@ -82,10 +82,16 @@ class    PrestaShopLoggerCore extends ObjectModel
     public static function sendByMail($log)
     {
         if ((int)Configuration::get('PS_LOGS_BY_EMAIL') <= (int)$log->severity) {
+            $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
             Mail::Send(
                 (int)Configuration::get('PS_LANG_DEFAULT'),
                 'log_alert',
-                Mail::l('Log: You have a new alert from your shop', (int)Configuration::get('PS_LANG_DEFAULT')),
+                Context::getContext()->getTranslator()->trans(
+                    'Log: You have a new alert from your shop',
+                    array(),
+                    'Emails.Subject',
+                    $language->locale
+                ),
                 array(),
                 Configuration::get('PS_SHOP_EMAIL')
             );

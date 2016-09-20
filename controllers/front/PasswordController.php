@@ -76,7 +76,20 @@ class PasswordControllerCore extends FrontController
                     '{url}' => $this->context->link->getPageLink('password', true, null, 'token='.$customer->secure_key.'&id_customer='.(int) $customer->id.'&reset_token='.$customer->reset_password_token),
                 );
 
-                if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'), $mailParams, $customer->email, $customer->firstname.' '.$customer->lastname)) {
+                if (
+                    Mail::Send(
+                        $this->context->language->id,
+                        'password_query',
+                        $this->trans(
+                            'Password query confirmation',
+                            array(),
+                            'Emails.Subject'
+                        ),
+                        $mailParams,
+                        $customer->email,
+                        $customer->firstname.' '.$customer->lastname
+                    )
+                ) {
                     $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', array('%email%', $customer->email), 'Shop.Notifications.Success');
                     $this->setTemplate('customer/password-infos');
                 } else {
@@ -148,7 +161,20 @@ class PasswordControllerCore extends FrontController
                                 '{firstname}' => $customer->firstname
                             ];
 
-                            if (Mail::Send($this->context->language->id, 'password', Mail::l('Your new password'), $mail_params, $customer->email, $customer->firstname.' '.$customer->lastname)) {
+                            if (
+                                Mail::Send(
+                                    $this->context->language->id,
+                                    'password',
+                                    $this->trans(
+                                        'Your new password',
+                                        array(),
+                                        'Emails.Subject'
+                                    ),
+                                    $mail_params,
+                                    $customer->email,
+                                    $customer->firstname.' '.$customer->lastname
+                                )
+                            ) {
                                 $this->context->smarty->assign([
                                     'customer_email' => $customer->email
                                 ]);

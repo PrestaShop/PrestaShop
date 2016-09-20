@@ -364,7 +364,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     if (Mail::Send(
                         $this->context->language->id,
                         'forward_msg',
-                        Mail::l('Fwd: Customer message', $this->context->language->id),
+                        $this->trans(
+                            'Fwd: Customer message',
+                            array(),
+                            'Emails.Subject',
+                            $this->context->language->locale
+                        ),
                         $params,
                         $employee->email,
                         $employee->firstname.' '.$employee->lastname,
@@ -387,7 +392,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     if (Mail::Send(
                         $this->context->language->id,
                         'forward_msg',
-                        Mail::l('Fwd: Customer message', $this->context->language->id),
+                        $this->trans(
+                            'Fwd: Customer message',
+                            array(),
+                            'Emails.Subject',
+                            $this->context->language->locale
+                        ),
                         $params, $email, null,
                         $current_employee->email, $current_employee->firstname.' '.$current_employee->lastname,
                         null, null, _PS_MAIL_DIR_, true)) {
@@ -440,10 +450,20 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $from_email = null;
                     }
 
+                    $language = new Language((int) $ct->id_lang);
+
                     if (Mail::Send(
                         (int)$ct->id_lang,
                         'reply_msg',
-                        sprintf(Mail::l('An answer to your message is available #ct%1$s #tc%2$s', $ct->id_lang), $ct->id, $ct->token),
+                        $this->trans(
+                            'An answer to your message is available #ct%thread_id% #tc%thread_token%',
+                            array(
+                                '%thread_id%' => $ct->id,
+                                '%thread_token%' => $ct->token,
+                            ),
+                            'Emails.Subject',
+                            $language->locale
+                        ),
                         $params, Tools::getValue('msg_email'), null, $from_email, $from_name, $file_attachment, null,
                         _PS_MAIL_DIR_, true, $ct->id_shop)) {
                         $ct->status = 'closed';

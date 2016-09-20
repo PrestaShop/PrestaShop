@@ -1059,10 +1059,17 @@ class CustomerCore extends ObjectModel
                 '{email}' => $this->email,
             );
 
+            $language = new Language((int) $idLang);
+
             Mail::Send(
                 (int) $idLang,
                 'guest_to_customer',
-                Mail::l('Your guest account has been transformed into a customer account', (int) $idLang),
+                Context::getContext()->getTranslator()->trans(
+                    'Your guest account has been transformed into a customer account',
+                    array(),
+                    'Emails.Subject',
+                    $language->locale
+                ),
                 $vars,
                 $this->email,
                 $this->firstname.' '.$this->lastname,
