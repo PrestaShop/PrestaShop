@@ -8,6 +8,7 @@ class CustomerFormatterCore implements FormFormatterInterface
 
     private $ask_for_birthdate              = true;
     private $ask_for_partner_optin          = true;
+    private $partner_optin_is_required      = true;
     private $ask_for_password               = true;
     private $password_is_required           = true;
     private $ask_for_new_password           = false;
@@ -29,6 +30,12 @@ class CustomerFormatterCore implements FormFormatterInterface
     public function setAskForPartnerOptin($ask_for_partner_optin)
     {
         $this->ask_for_partner_optin = $ask_for_partner_optin;
+        return $this;
+    }
+
+    public function setPartnerOptinRequired($partner_optin_is_required)
+    {
+        $this->partner_optin_is_required = $partner_optin_is_required;
         return $this;
     }
 
@@ -171,6 +178,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                         'Receive offers from our partners', [], 'Shop.Theme.CustomerAccount'
                     )
                 )
+                ->setRequired($this->partner_optin_is_required)
             ;
         }
 
