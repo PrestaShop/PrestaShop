@@ -92,7 +92,7 @@ class CustomerFormCore extends AbstractForm
                 }
             }
         }
-        
+
         $this->validateByModules();
 
         return parent::validate();
@@ -137,11 +137,11 @@ class CustomerFormCore extends AbstractForm
             ),
         ];
     }
-    
+
     /**
      * This function call the hook validateCustomerFormFields of every modules
      * which added one or several fields to the customer registration form.
-     * 
+     *
      * Note: they won't get all the fields from the form, but only the one
      * they added.
      */
@@ -160,7 +160,10 @@ class CustomerFormCore extends AbstractForm
             if ($moduleId = Module::getModuleIdByName($moduleName)) {
                 // ToDo : replace Hook::exec with HookFinder, because we expect a specific class here
                 $validatedCustomerFormFields = Hook::exec('validateCustomerFormFields', array('fields' => $formFields), $moduleId, true);
-                array_merge($this->formFields, $validatedCustomerFormFields);
+
+                if (is_array($validatedCustomerFormFields)) {
+                    array_merge($this->formFields, $validatedCustomerFormFields);
+                }
             }
         }
     }
