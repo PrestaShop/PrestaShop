@@ -173,6 +173,8 @@ class ProductOptions extends CommonAbstractType
         ->add('default_supplier', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->suppliers,
             'choices_as_values' => true,
+            'expanded' =>  true,
+            'multiple' =>  false,
             'required' =>  true,
             'label' => $this->translator->trans('Default suppliers', [], 'Admin.Catalog.Feature')
         ));
