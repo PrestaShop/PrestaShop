@@ -173,3 +173,5 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('
 
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_CACHEFS_DIRECTORY_DEPTH';
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_CART_REDIRECT';
+
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('validateCustomerFormFields', 'Customer registration form validation', 'This hook is called to a module when it has sent addtionnal fields with additionalCustomerFormFields', '1');

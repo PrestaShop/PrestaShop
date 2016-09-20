@@ -354,5 +354,8 @@
     <hook id="displayCarrierExtraContent">
       <name>displayCarrierExtraContent</name><title>Display additionnal content for a carrier (e.g pickup points)</title><description>This hook calls only the module related to the carrier, in order to add options when needed.</description>
     </hook>
+    <hook id="validateCustomerFormFields">
+      <name>validateCustomerFormFields</name><title>Customer registration form validation</title><description>This hook is called to a module when it has sent addtionnal fields with additionalCustomerFormFields</description>
+    </hook>
   </entities>
 </entity_hook>
