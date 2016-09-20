@@ -33,6 +33,12 @@
       display: inline-block;
       width: 48%;
     }
+    .action-enabled {
+      color: $brand-success
+    }
+    .action-disabled {
+      color: $brand-danger
+    }
   }
 
 }
