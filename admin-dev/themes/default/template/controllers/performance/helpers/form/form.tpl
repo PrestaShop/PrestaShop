@@ -126,19 +126,14 @@
 {/block}
 
 {block name="script"}
-
 	function showMemcached() {
-		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache' || $('input[name="caching_system"]:radio:checked').val() == 'CacheMemcached') {
+		if (
+      $('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache'
+      || $('input[name="caching_system"]:radio:checked').val() == 'CacheMemcached'
+    ) {
 			$('#memcachedServers').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
-			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
-		}
-		else if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs') {
+		} else {
 			$('#memcachedServers').hide();
-			$('#ps_cache_fs_directory_depth').closest('.form-group').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
-		}
-		else {
-			$('#memcachedServers').hide();
-			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 		}
 	}
 
@@ -149,17 +144,11 @@
 		$('input[name="cache_active"]').change(function() {
 			$('#caching_system_wrapper').css('display', ($(this).val() == 1) ? 'block' : 'none');
 			showMemcached();
-
-			if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs')
-				$('#ps_cache_fs_directory_depth').focus();
 		});
 
 		$('input[name="caching_system"]').change(function() {
 			$('#cache_up').val(1);
 			showMemcached();
-
-			if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs')
-				$('#ps_cache_fs_directory_depth').focus();
 		});
 
 		$('input[name="smarty_cache"]').change(function() {
@@ -220,10 +209,6 @@
 
 		$('input[name="_MEDIA_SERVER_1_"], input[name="_MEDIA_SERVER_2_"], input[name="_MEDIA_SERVER_3_"]').change(function(){
 			$('#media_server_up').val(1);
-		});
-
-		$('input[name="PS_CIPHER_ALGORITHM"]').change(function(){
-			$('#ciphering_up').val(1);
 		});
 
 		$('input[name="cache_active"]').change(function(){

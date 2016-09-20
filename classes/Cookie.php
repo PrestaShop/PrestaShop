@@ -77,9 +77,7 @@ class CookieCore
         $this->_allow_writing = true;
         $this->_salt = $this->_standalone ? str_pad('', 8, md5('ps'.__FILE__)) : _COOKIE_IV_;
         if ($this->_standalone) {
-            $this->_cipherTool = new Blowfish(str_pad('', 56, md5('ps'.__FILE__)), str_pad('', 56, md5('iv'.__FILE__)));
-        } elseif (!Configuration::get('PS_CIPHER_ALGORITHM') || !defined('_RIJNDAEL_KEY_')) {
-            $this->_cipherTool = new Blowfish(_COOKIE_KEY_, _COOKIE_IV_);
+            $this->_cipherTool = new Rijndael(str_pad('', 56, md5('ps'.__FILE__)), str_pad('', 56, md5('iv'.__FILE__)));
         } else {
             $this->_cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
         }
@@ -298,12 +296,6 @@ class CookieCore
                     $this->_content[$tmpTab2[0]] = $tmpTab2[1];
                 }
             }
-            /* Blowfish fix */
-            if (isset($this->_content['checksum'])) {
-                $this->_content['checksum'] = (int)($this->_content['checksum']);
-            }
-            //printf("\$this->_content['checksum'] = %s<br />", $this->_content['checksum']);
-            //die();
             /* Check if cookie has not been modified */
             if (!isset($this->_content['checksum']) || $this->_content['checksum'] != $checksum) {
                 $this->logout();
@@ -336,11 +328,8 @@ class CookieCore
             $content = 0;
             $time = 1;
         }
-        if (PHP_VERSION_ID <= 50200) { /* PHP version > 5.2.0 */
-            return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, $this->_secure);
-        } else {
-            return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, $this->_secure, true);
-        }
+
+        return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, $this->_secure, true);
     }
 
     public function __destruct()

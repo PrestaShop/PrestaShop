@@ -123,6 +123,25 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'radio',
+                    'label' => $this->l('Caching type'),
+                    'name' => 'smarty_caching_type',
+                    'values' => array(
+                        array(
+                            'id' => 'smarty_caching_type_filesystem',
+                            'value' => 'filesystem',
+                            'label' => $this->l('File System').(is_writable(_PS_CACHE_DIR_.'smarty/cache')
+                                    ? ''
+                                    : ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
+                        ),
+                        array(
+                            'id' => 'smarty_caching_type_mysql',
+                            'value' => 'mysql',
+                            'label' => $this->l('MySQL')
+                        ),
+                    )
+                ),
+                array(
+                    'type' => 'radio',
                     'label' => $this->l('Clear cache'),
                     'name' => 'smarty_clear_cache',
                     'values' => array(
@@ -514,8 +533,6 @@ class AdminPerformanceControllerCore extends AdminController
         $warning_xcache = str_replace('[a]', '<a href="http://xcache.lighttpd.net" target="_blank">', $warning_xcache);
         $warning_xcache = str_replace('[/a]', '</a>', $warning_xcache);
 
-        $warning_fs = ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHEFS_DIRECTORY_));
-
         $this->fields_form[6]['form'] = array(
             'legend' => array(
                 'title' => $this->l('Caching'),
@@ -548,7 +565,6 @@ class AdminPerformanceControllerCore extends AdminController
                     'type' => 'radio',
                     'label' => $this->l('Caching system'),
                     'name' => 'caching_system',
-                    'hint' => $this->l('The CacheFS system should be used only when the infrastructure contains one front-end server. If you are not sure, ask your hosting company.'),
                     'values' => array(
                         array(
                             'id' => 'CacheMemcache',
@@ -573,11 +589,6 @@ class AdminPerformanceControllerCore extends AdminController
 
                     )
                 ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Directory depth'),
-                    'name' => 'ps_cache_fs_directory_depth'
-                ),
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions')
@@ -585,10 +596,8 @@ class AdminPerformanceControllerCore extends AdminController
             'memcachedServers' => true
         );
 
-        $depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
         $this->fields_value['cache_active'] = _PS_CACHE_ENABLED_;
         $this->fields_value['caching_system'] = _PS_CACHING_SYSTEM_;
-        $this->fields_value['ps_cache_fs_directory_depth'] = $depth ? $depth : 1;
 
         $this->tpl_form_vars['servers'] = CacheMemcache::getMemcachedServers();
         $this->tpl_form_vars['_PS_CACHE_ENABLED_'] = _PS_CACHE_ENABLED_;
@@ -696,11 +705,15 @@ class AdminPerformanceControllerCore extends AdminController
             if ($this->access('edit')) {
                 Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 
-                if (Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache')) {
+                if (
+                    Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache')
+                    || Configuration::get('PS_SMARTY_CACHING_TYPE') != Tools::getValue('smarty_caching_type')
+                ) {
                     Tools::clearSmartyCache();
                 }
 
                 Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
+                Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
                 Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
                 Configuration::updateValue('PS_SMARTY_LOCAL', Tools::getValue('smarty_local', 0));
                 $redirectAdmin = true;
@@ -859,30 +872,9 @@ class AdminPerformanceControllerCore extends AdminController
                     } elseif ($caching_system == 'CacheXcache' && !ini_get('xcache.var_size')) {
                         $this->errors[] = $this->trans('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).', array(), 'Admin.Parameters.Notification').'
 							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';
-                    } elseif ($caching_system == 'CacheFs') {
-                        if (!is_dir(_PS_CACHEFS_DIRECTORY_)) {
-                            @mkdir(_PS_CACHEFS_DIRECTORY_, 0777, true);
-                        } elseif (!is_writable(_PS_CACHEFS_DIRECTORY_)) {
-                            $this->errors[] = $this->trans(
-                                'To use CacheFS, the directory %directorypath% must be writable.',
-                                array(
-                                    '%directorypath%' => realpath(_PS_CACHEFS_DIRECTORY_)
-                                ),
-                                'Admin.Parameters.Notification'
-                            );
-                        }
                     }
 
-                    if ($caching_system == 'CacheFs') {
-                        if (!($depth = Tools::getValue('ps_cache_fs_directory_depth'))) {
-                            $this->errors[] = $this->trans('Please set a directory depth.', array(), 'Admin.Parameters.Notification');
-                        }
-                        if (!count($this->errors)) {
-                            CacheFs::deleteCacheDirectory();
-                            CacheFs::createCacheDirectories((int)$depth);
-                            Configuration::updateValue('PS_CACHEFS_DIRECTORY_DEPTH', (int)$depth);
-                        }
-                    } elseif ($caching_system == 'CacheMemcache' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache') {
+                    if ($caching_system == 'CacheMemcache' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache') {
                         Cache::getInstance()->flush();
                     } elseif ($caching_system == 'CacheMemcached' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcached') {
                         Cache::getInstance()->flush();
