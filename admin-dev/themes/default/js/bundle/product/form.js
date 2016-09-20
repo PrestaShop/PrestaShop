@@ -446,27 +446,29 @@ var featuresCollection = (function() {
  * Suppliers management
  */
 var supplier = (function() {
-  var defaultSupplierRow = $('#default_supplier_list');
-  var isInit = false;
+
+  var supplierInputManage = function(input) {
+    var supplierDefaultInput = $('#form_step6_suppliers input[name="form[step6][default_supplier]"][value=' + $(input).val() +']');
+    if($(input).is(':checked')) {
+      $(supplierDefaultInput).prop('disabled', false).show();
+    } else {
+      $(supplierDefaultInput).prop('disabled', true).hide();
+    }
+  };
+
   return {
     'init': function() {
       /** On supplier select, hide or show the default supplier selector */
-      var supplierInput = $('#form_step6_suppliers input');
+      var supplierInput = $('#form_step6_suppliers input[name="form[step6][suppliers][]"]');
       supplierInput.change(function() {
-        if (supplierInput.length >= 1 && $('#form_step6_suppliers input:checked').length >= 1) {
-          defaultSupplierRow.show();
-        } else {
-          defaultSupplierRow.hide();
-        }
+        supplierInputManage($(this));
         supplierCombinations.refresh();
       });
 
       //default display
-      if (supplierInput.length >= 1 && $('#form_step6_suppliers input:checked').length >= 1) {
-        defaultSupplierRow.show();
-      } else {
-        defaultSupplierRow.hide();
-      }
+      $('#form_step6_suppliers input[name="form[step6][suppliers][]"]').map(function() {
+        supplierInputManage($(this));
+      });
     }
   };
 })();
