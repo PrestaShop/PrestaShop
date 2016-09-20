@@ -4490,11 +4490,18 @@ class AdminImportControllerCore extends AdminController
                     '{lastname}' => $this->context->employee->lastname,
                     '{filename}' => Tools::getValue('csv')
                 );
+
+                $employeeLanguage = new Language((int) $this->context->employee->id_lang);
                 // Mail send in last step because in case of failure, does NOT throw an error.
                 $mailSuccess = @Mail::Send(
                     (int)$this->context->employee->id_lang,
                     'import',
-                    Mail::l('Import complete', (int)$this->context->employee->id_lang),
+                    $this->trans(
+                        'Import complete',
+                        array(),
+                        'Emails.Subject',
+                        $employeeLanguage->locale
+                    ),
                     $templateVars,
                     $this->context->employee->email,
                     $this->context->employee->firstname . ' ' . $this->context->employee->lastname,

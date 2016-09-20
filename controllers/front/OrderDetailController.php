@@ -112,7 +112,11 @@ class OrderDetailControllerCore extends FrontController
                         Mail::Send(
                             $this->context->language->id,
                             'order_customer_comment',
-                            Mail::l('Message from a customer'),
+                            $this->trans(
+                                'Message from a customer',
+                                array(),
+                                'Emails.Subject'
+                            ),
                             array(
                                 '{lastname}' => $customer->lastname,
                                 '{firstname}' => $customer->firstname,

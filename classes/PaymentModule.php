@@ -610,6 +610,7 @@ abstract class PaymentModuleCore extends Module
                             if ($voucher->add()) {
                                 // If the voucher has conditions, they are now copied to the new voucher
                                 CartRule::copyConditions($cart_rule['obj']->id, $voucher->id);
+                                $orderLanguage = new Language((int) $order->id_lang);
 
                                 $params = array(
                                     '{voucher_amount}' => Tools::displayPrice($voucher->reduction_amount, $this->context->currency, false),
@@ -622,7 +623,12 @@ abstract class PaymentModuleCore extends Module
                                 Mail::Send(
                                     (int)$order->id_lang,
                                     'voucher',
-                                    sprintf(Mail::l('New voucher for your order %s', (int)$order->id_lang), $order->reference),
+                                    Context::getContext()->getTranslator()->trans(
+                                        'New voucher for your order %s',
+                                        array($order->reference),
+                                        'Emails.Subject',
+                                        $orderLanguage->locale
+                                    ),
                                     $params,
                                     $this->context->customer->email,
                                     $this->context->customer->firstname.' '.$this->context->customer->lastname,
@@ -811,11 +817,18 @@ abstract class PaymentModuleCore extends Module
                             PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int)$id_cart, true);
                         }
 
+                        $orderLanguage = new Language((int) $order->id_lang);
+
                         if (Validate::isEmail($this->context->customer->email)) {
                             Mail::Send(
                                 (int)$order->id_lang,
                                 'order_conf',
-                                Mail::l('Order confirmation', (int)$order->id_lang),
+                                Context::getContext()->getTranslator()->trans(
+                                    'Order confirmation',
+                                    array(),
+                                    'Emails.Subject',
+                                    $orderLanguage->locale
+                                ),
                                 $data,
                                 $this->context->customer->email,
                                 $this->context->customer->firstname.' '.$this->context->customer->lastname,

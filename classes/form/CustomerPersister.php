@@ -184,12 +184,16 @@ class CustomerPersisterCore
         return Mail::Send(
             $this->context->language->id,
             'account',
-            Mail::l('Welcome!'),
-            [
+            $this->translator->trans(
+                'Welcome!',
+                array(),
+                'Emails.Subject'
+            ),
+            array(
                 '{firstname}' => $customer->firstname,
                 '{lastname}' => $customer->lastname,
                 '{email}' => $customer->email,
-            ],
+            ),
             $customer->email,
             $customer->firstname.' '.$customer->lastname
         );

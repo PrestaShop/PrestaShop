@@ -279,7 +279,23 @@ class AdminLoginControllerCore extends AdminController
                 '{url}' => $admin_url.'&id_employee='.(int)$employee->id.'&reset_token='.$employee->reset_password_token
             );
 
-            if (Mail::Send($employee->id_lang, 'employee_password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname)) {
+            $employeeLanguage = new Language((int) $employee->id_lang);
+
+            if (
+                Mail::Send(
+                    $employee->id_lang,
+                    'employee_password',
+                    $this->trans(
+                        'Your new password',
+                        array(),
+                        'Emails.Subject',
+                        $employeeLanguage->locale
+                    ),
+                    $params,
+                    $employee->email,
+                    $employee->firstname.' '.$employee->lastname
+                )
+            ) {
                 // Update employee only if the mail can be sent
                 Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
                 die(Tools::jsonEncode(array(
@@ -342,7 +358,23 @@ class AdminLoginControllerCore extends AdminController
                 '{firstname}' => $employee->firstname,
             );
 
-            if (Mail::Send($employee->id_lang, 'password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname)) {
+            $employeeLanguage = new Language((int) $this->context->employee->id_lang);
+
+            if (
+                Mail::Send(
+                    $employee->id_lang,
+                    'password',
+                    $this->trans(
+                        'Your new password',
+                        array(),
+                        'Emails.Subject',
+                        $employeeLanguage->locale
+                    ),
+                    $params,
+                    $employee->email,
+                    $employee->firstname.' '.$employee->lastname
+                )
+            ) {
                 // Update employee only if the mail can be sent
                 Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
 
