@@ -225,19 +225,26 @@ class AdminThemesControllerCore extends AdminController
     public function postProcess()
     {
         if (Tools::isSubmit('submitAddconfiguration')) {
-            if ($filename = Tools::getValue('theme_archive_server')) {
-                $path = _PS_ALL_THEMES_DIR_.$filename;
-                $this->theme_manager->install($path);
-            } elseif ($filename = Tools::getValue('themearchive')) {
-                $path = _PS_ALL_THEMES_DIR_.$filename;
-                if ($this->processUploadFile($path)) {
+            try {
+                if ($filename = Tools::getValue('theme_archive_server')) {
+                    $path = _PS_ALL_THEMES_DIR_.$filename;
                     $this->theme_manager->install($path);
-                    @unlink($path);
+                } elseif ($filename = Tools::getValue('themearchive')) {
+                    $path = _PS_ALL_THEMES_DIR_.$filename;
+                    if ($this->processUploadFile($path)) {
+                        $this->theme_manager->install($path);
+                        @unlink($path);
+                    }
+                } elseif ($source = Tools::getValue('themearchiveUrl')) {
+                    $this->theme_manager->install($source);
                 }
-            } elseif ($source = Tools::getValue('themearchiveUrl')) {
-                $this->theme_manager->install($source);
+            } catch (Exception $e) {
+                $this->errors[] = $e->getMessage();
             }
-            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+
+            if (empty($this->errors)) {
+                $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+            }
         } elseif (Tools::getValue('action') == 'submitConfigureLayouts') {
             $this->processSubmitConfigureLayouts();
             $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
