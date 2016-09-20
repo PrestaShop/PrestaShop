@@ -229,25 +229,29 @@
     <div class="js-options-no-attachments {{ form|length >1 ? 'hide' : '' }}">
         <small>{{ 'There is no attachment yet.'|trans({}, 'Admin.Catalog.Notification') }}</small>
     </div>
-    <div class="js-options-with-attachments {{ form|length == 0 ? 'hide' : '' }}">
-        <table id="product-attachment-file" class="table table-striped table-fixed">
-            <thead>
-            <tr>
+    <div id="product-attachments" class="panel panel-default">
+      <div class="panel-body js-options-with-attachments {{ form|length == 0 ? 'hide' : '' }}">
+        <div>
+          <table id="product-attachment-file" class="table table-striped">
+            <thead class="text-uppercase">
+              <tr>
                 <th class="col-md-3"><input type="checkbox" id="product-attachment-files-check"> {{ 'Title'|trans({}, 'Admin.Global') }}</th>
                 <th class="col-md-6">{{ 'File name'|trans({}, 'Admin.Global') }}</th>
                 <th class="col-md-2">{{ 'Type'|trans({}, 'Admin.Catalog.Feature') }}</th>
-            </tr>
+              </tr>
             </thead>
-          <tbody>
-          {%- for child in form %}
-            <tr>
-              <td class="col-md-3">{{ form_widget(child) }}</td>
-              <td class="col-md-6"><span>{{ form.vars.attr.data[loop.index0]['file_name'] }}</span></td>
-              <td class="col-md-2">{{ form.vars.attr.data[loop.index0]['mime'] }}</td>
-            </tr>
-          {% endfor -%}
-          </tbody>
-        </table>
+            <tbody>
+            {%- for child in form %}
+              <tr>
+                <td class="col-md-3">{{ form_widget(child) }}</td>
+                <td class="col-md-6"><span>{{ form.vars.attr.data[loop.index0]['file_name'] }}</span></td>
+                <td class="col-md-2">{{ form.vars.attr.data[loop.index0]['mime'] }}</td>
+              </tr>
+            {% endfor -%}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 {% endblock %}
 

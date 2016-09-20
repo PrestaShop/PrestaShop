@@ -1237,6 +1237,7 @@ var attachmentProduct = (function() {
   return {
     'init': function() {
       var buttonSave = $('#form_step6_attachment_product_add');
+      var buttonCancel = $('#form_step6_attachment_product_cancel');
 
       /** check all attachments files */
       $('#product-attachment-files-check').change(function() {
@@ -1246,6 +1247,16 @@ var attachmentProduct = (function() {
           $('#product-attachment-file input[type="checkbox"]').prop('checked', false);
         }
       });
+
+      buttonCancel.click(function (){
+        resetAttachmentForm();
+      });
+
+      function resetAttachmentForm() {
+        $('#form_step6_attachment_product_file').val('');
+        $('#form_step6_attachment_product_name').val('');
+        $('#form_step6_attachment_product_description').val('');
+      }
 
       /** add attachment */
       $('#form_step6_attachment_product_add').click(function() {
@@ -1270,9 +1281,7 @@ var attachmentProduct = (function() {
             $('*.has-danger').removeClass('has-danger');
           },
           success: function(response) {
-            $('#form_step6_attachment_product_file').val('');
-            $('#form_step6_attachment_product_name').val('');
-            $('#form_step6_attachment_product_description').val('');
+            resetAttachmentForm();
 
             //inject new attachment in attachment list
             if (response.id) {
