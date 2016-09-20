@@ -1591,6 +1591,7 @@ var formImagesProduct = (function() {
             complete: function() {
               formZoneElem.find('.close').click();
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
+              $('.images .product-combination-image [value=' + id + ']').parent().remove();
               imagesProduct.checkDropzoneMode();
             }
           });
