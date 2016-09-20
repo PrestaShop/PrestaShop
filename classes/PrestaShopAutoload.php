@@ -159,7 +159,7 @@ class PrestaShopAutoload
 
         // Write classes index on disc to cache it
         $filename = PrestaShopAutoload::getCacheFileIndex();
-        @mkdir(_PS_CACHE_DIR_);
+        @mkdir(_PS_CACHE_DIR_, 0777, true);
 
         if (!$this->dumpFile($filename, $content)) {
             Tools::error_log('Cannot write temporary file '.$filename);
