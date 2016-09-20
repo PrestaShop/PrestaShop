@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_tab>
+    <tab id="SELL" name="Sell" />
+    <tab id="IMPROVE" name="Improve" />
+    <tab id="CONFIGURE" name="Configure" />
+    <tab id="DEFAULT" name="More" />
+    <tab id="Addresses" name="Adresser" />
+    <tab id="Administration" name="Administration" />
+    <tab id="Module_Page" name="Moduler og tjenester" />
+    <tab id="Advanced_Parameters" name="Avancerede parametre" />
+    <tab id="Attachments" name="Filer" />
+    <tab id="Attributes_and_features" name="Egenskaber og funktioner" />
+    <tab id="Attributes_and_Values" name="Egenskaber" />
+    <tab id="Carriers" name="Forsendelsesfirmaer" />
+    <tab id="CarrierWizard" name="Forsendelsesfirma" />
+    <tab id="Cart_Rules" name="Regler for kurv" />
+    <tab id="Catalog_Price_Rules" name="Katalog prisregler" />
+    <tab id="Catalog" name="Katalog" />
+    <tab id="Categories" name="Kategorier" />
+    <tab id="CMS_Categories" name="Page Categories" />
+    <tab id="CMS_Pages" name="Sider" />
+    <tab id="Combinations_Generator" name="Variant generator" />
+    <tab id="Configuration" name="Konfiguration" />
+    <tab id="Contact" name="Kontakt" />
+    <tab id="Contacts" name="Kontakter" />
+    <tab id="Countries" name="Lande" />
+    <tab id="Credit_Slips" name="Kreditnotaer" />
+    <tab id="CSV_Import" name="Import" />
+    <tab id="Currencies" name="Valutaer" />
+    <tab id="Customer_Service_2" name="Customer Service" />
+    <tab id="Customer_Service" name="Customer Service" />
+    <tab id="Customer_settings" name="Customer Settings" />
+    <tab id="Customers_1" name="Kunder" />
+    <tab id="Customers_2" name="Kunder" />
+    <tab id="Customers" name="Kunder" />
+    <tab id="Dashboard" name="Kontrolpanel" />
+    <tab id="Database" name="Database" />
+    <tab id="DB_Backup" name="Database backup" />
+    <tab id="Delivery_Slips" name="Følgesedler" />
+    <tab id="E-mail" name="E-mail" />
+    <tab id="Employees_1" name="Medarbejdere" />
+    <tab id="Employees" name="Team" />
+    <tab id="Features" name="Medarbejdere" />
+    <tab id="General_1" name="Generelt" />
+    <tab id="General" name="Generelt" />
+    <tab id="Geolocation" name="Geolokation" />
+    <tab id="Groups" name="Grupper" />
+    <tab id="Image_Settings" name="Billeder" />
+    <tab id="Images" name="Billeder" />
+    <tab id="Information" name="Information" />
+    <tab id="Instant_Stock_Status" name="Instant Stock Status" />
+    <tab id="International" name="International" />
+    <tab id="Invoices" name="Fakturaer" />
+    <tab id="Languages" name="Sprog" />
+    <tab id="Localization_1" name="Lokalisering" />
+    <tab id="Localization" name="Lokalisering" />
+    <tab id="Locations" name="Locations" />
+    <tab id="Login" name="Log ind" />
+    <tab id="Logs" name="Logfiler" />
+    <tab id="Look_feel" name="Design" />
+    <tab id="Maintenance" name="Vedligeholdelse" />
+    <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
+    <tab id="Manufacturers" name="Manufacturers" />
+    <tab id="Marketing" name="Markedsføring" />
+    <tab id="Menus" name="Menuer" />
+    <tab id="Merchandise_Returns" name="Vare returneringer" />
+    <tab id="Modules_1" name="Moduler" />
+    <tab id="Modules" name="Moduler" />
+    <tab id="Monitoring" name="Overvågning" />
+    <tab id="Multistore" name="Multistore" />
+    <tab id="Order_Messages" name="Ordrebeskeder" />
+    <tab id="Order_settings_2" name="Order Settings" />
+    <tab id="Order_settings" name="Order Settings" />
+    <tab id="Orders_1" name="Ordrer" />
+    <tab id="Orders_2" name="Ordrer" />
+    <tab id="Orders" name="Ordrer" />
+    <tab id="Outstanding" name="Udestående" />
+    <tab id="Pages" name="Pages" />
+    <tab id="Payment_methods" name="Payment Methods" />
+    <tab id="Payment_preferences" name="Preferences" />
+    <tab id="Payment" name="Betaling" />
+    <tab id="Performance" name="Ydelse" />
+    <tab id="Permissions" name="Tilladelser" />
+    <tab id="Positions" name="Positioner" />
+    <tab id="Preferences_1" name="Indstillinger" />
+    <tab id="Preferences" name="Indstillinger" />
+    <tab id="Price_Rules" name="Discounts" />
+    <tab id="Products_1" name="Product Settings" />
+    <tab id="Products" name="Varer" />
+    <tab id="Profiles" name="Profiler" />
+    <tab id="Quick_Access" name="Hurtig adgang" />
+    <tab id="Referrers" name="Henvisere" />
+    <tab id="Search_1" name="Søg" />
+    <tab id="Search_Engines" name="Søgemaskiner" />
+    <tab id="Search" name="Søg" />
+    <tab id="SEO_URLs" name="SEO og URL'er" />
+    <tab id="Shipping_1" name="Indstillinger" />
+    <tab id="Shipping" name="Forsendelse" />
+    <tab id="Shop_parameters" name="Shop Parameters" />
+    <tab id="Shop_URLs" name="Butik URL'er" />
+    <tab id="Shopping_Carts" name="Indkøbskurve" />
+    <tab id="Shops" name="Butikker" />
+    <tab id="SQL_Manager" name="SQL Manager" />
+    <tab id="States" name="Stater" />
+    <tab id="Stats_1" name="Statistik" />
+    <tab id="Stats" name="Statistik" />
+    <tab id="Statuses" name="Statusser" />
+    <tab id="Stock_Coverage" name="Lager dækning" />
+    <tab id="Stock_Management" name="Lagerstyring" />
+    <tab id="Stock_Movement" name="Lagerreguleringer" />
+    <tab id="Stock" name="Lager" />
+    <tab id="Store_Contacts" name="Butikker" />
+    <tab id="Suppliers" name="Leverandører" />
+    <tab id="Supply_orders" name="Beholdningsordrer" />
+    <tab id="Tags" name="Tags" />
+    <tab id="Tax_Management" name="Moms" />
+    <tab id="Tax_Rules" name="Regler for moms" />
+    <tab id="Taxes" name="Moms" />
+    <tab id="Themes_Catalog" name="Theme Catalog" />
+    <tab id="Themes" name="Theme &amp; Logo" />
+    <tab id="Titles" name="Titler" />
+    <tab id="Traffic" name="Traffic" />
+    <tab id="Translations" name="Oversættelser" />
+    <tab id="Warehouses" name="Lagersteder" />
+    <tab id="Webservice" name="Webservice" />
+    <tab id="Zones" name="Zoner" />
+    <tab id="Marketing_tools" name="Modules Catalog" />
+</entity_tab>
