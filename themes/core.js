@@ -1981,6 +1981,7 @@
 	      (0, _jquery2['default'])('#' + selectedOption + '-additional-information').show();
 	      (0, _jquery2['default'])('#pay-with-' + selectedOption + '-form').show();
 	
+	      (0, _jquery2['default'])('.js-payment-binary').hide();
 	      if ((0, _jquery2['default'])('#' + selectedOption).hasClass('binary')) {
 	        var paymentOption = this.getPaymentOptionSelector(selectedOption);
 	        this.hideConfirmation();
@@ -1992,8 +1993,6 @@
 	          (0, _jquery2['default'])(paymentOption).addClass('disabled');
 	        }
 	      } else {
-	        (0, _jquery2['default'])('.js-payment-binary').hide();
-	
 	        this.showConfirmation();
 	        (0, _jquery2['default'])(this.confirmationSelector + ' button').attr('disabled', !show);
 	

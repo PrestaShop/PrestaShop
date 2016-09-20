@@ -56,6 +56,7 @@ class Payment {
     $('#' + selectedOption + '-additional-information').show();
     $('#pay-with-' + selectedOption + '-form').show();
 
+    $('.js-payment-binary').hide();
     if ($('#' + selectedOption).hasClass('binary')) {
       var paymentOption = this.getPaymentOptionSelector(selectedOption);
       this.hideConfirmation();
@@ -67,8 +68,6 @@ class Payment {
         $(paymentOption).addClass('disabled');
       }
     } else {
-      $('.js-payment-binary').hide();
-
       this.showConfirmation();
       $(this.confirmationSelector + ' button').attr('disabled', !show);
 
