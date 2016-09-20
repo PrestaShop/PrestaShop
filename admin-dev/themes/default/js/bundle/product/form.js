@@ -450,9 +450,9 @@ var supplier = (function() {
   var supplierInputManage = function(input) {
     var supplierDefaultInput = $('#form_step6_suppliers input[name="form[step6][default_supplier]"][value=' + $(input).val() +']');
     if($(input).is(':checked')) {
-      $(supplierDefaultInput).prop('disabled', false).show();
+      supplierDefaultInput.prop('disabled', false).show();
     } else {
-      $(supplierDefaultInput).prop('disabled', true).hide();
+      supplierDefaultInput.prop('disabled', true).hide();
     }
   };
 
