@@ -12,7 +12,10 @@ export default function() {
     let currentCount = 0;
     let step = 5;
 
-    $.get($jsCombinationsList.attr('data-action-refresh-images') + '/' + $jsCombinationsList.data('id-product'))
+    let refreshImagesUrl = $jsCombinationsList.attr('data-action-refresh-images') + '/' +
+      $jsCombinationsList.data('id-product');
+
+    $.get(refreshImagesUrl)
       .then(function(response) {
         if (idsProductAttribute[0] != '') {
           getCombinations(response);
@@ -21,6 +24,18 @@ export default function() {
           generate();
         });
       });
+
+    let productDropzone = Dropzone.forElement('#product-images-dropzone');
+    let updateCombinationImages = function () {
+      var productAttributeIds = $.map($('.js-combinations-list .combination'), function (combination) {
+        return $(combination).data('index');
+      });
+      $.get(refreshImagesUrl)
+        .then(function(response) {
+          refreshImagesCombination(response, productAttributeIds);
+        });
+    };
+    productDropzone.on('success', updateCombinationImages);
 
     $(document).on('click', '#form .product-combination-image', function() {
       var input = $(this).find('input');
@@ -68,6 +83,10 @@ export default function() {
       var $combinationElem = $('.combination[data="' + value + '"]');
       var $imagesElem = $combinationElem.find('.images');
       var $index = $combinationElem.attr('data-index');
+
+      if (0 === $imagesElem.length) {
+        $imagesElem = $('#combination_' + $index + '_id_image_attr');
+      }
 
       $imagesElem.html('');
 
