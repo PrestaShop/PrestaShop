@@ -82,10 +82,10 @@ $(document).ready(function() {
 	 * Form submit pre action
 	 */
 	form.submit(function(e) {
-	    e.preventDefault();
+    e.preventDefault();
 		$('#filter_column_id_product', form).val($('#filter_column_id_product', form).attr('sql'));
-	    $('#filter_column_price', form).val($('#filter_column_price', form).attr('sql'));
-	    $('#filter_column_sav_quantity', form).val($('#filter_column_sav_quantity', form).attr('sql'));
+    $('#filter_column_price', form).val($('#filter_column_price', form).attr('sql'));
+    $('#filter_column_sav_quantity', form).val($('#filter_column_sav_quantity', form).attr('sql'));
 		productCatalogFilterChanged = false;
 	    this.submit();
 	    return false;
@@ -190,213 +190,213 @@ function productColumnFilterReset(tr) {
 }
 
 function bulkModalAction(allItems, postUrl, redirectUrl, action) {
-	var itemsCount = allItems.length;
-	var currentItemIdx = 0;
-	if (itemsCount < 1) {
-		return;
-	}
+  var itemsCount = allItems.length;
+  var currentItemIdx = 0;
+  if (itemsCount < 1) {
+    return;
+  }
 
-	var targetModal = $('#catalog_' + action + '_modal');
-    targetModal.modal('show');
+  var targetModal = $('#catalog_' + action + '_modal');
+  targetModal.modal('show');
 
-	var details = targetModal.find('#catalog_' + action + '_progression .progress-details-text');
-	var progressBar = targetModal.find('#catalog_' + action + '_progression .progress-bar');
-    var failure = targetModal.find('#catalog_' + action + '_failure');
+  var details = targetModal.find('#catalog_' + action + '_progression .progress-details-text');
+  var progressBar = targetModal.find('#catalog_' + action + '_progression .progress-bar');
+  var failure = targetModal.find('#catalog_' + action + '_failure');
 
-	// re-init popup
-	details.html(details.attr('default-value'));
+  // re-init popup
+  details.html(details.attr('default-value'));
 
-	progressBar.css('width', '0%');
-	progressBar.find('span').html('');
-	progressBar.removeClass('progress-bar-danger');
-	progressBar.addClass('progress-bar-success');
+  progressBar.css('width', '0%');
+  progressBar.find('span').html('');
+  progressBar.removeClass('progress-bar-danger');
+  progressBar.addClass('progress-bar-success');
 
-    failure.hide();
+  failure.hide();
 
-	// call in ajax. Recursive with inner function
-	var bulkCall = function(items, successCallback, errorCallback) {
-		if (items.length === 0) {
-			return;
-		}
-		var item0 = $(items.shift()).val();
-		currentItemIdx++;
+  // call in ajax. Recursive with inner function
+  var bulkCall = function (items, successCallback, errorCallback) {
+    if (items.length === 0) {
+      return;
+    }
+    var item0 = $(items.shift()).val();
+    currentItemIdx++;
 
-		details.html(details.attr('default-value').replace(/\.\.\./, '')+' (#'+item0+')');
-		$.ajax({
-			type: 'POST',
-			url: postUrl,
-			data: { bulk_action_selected_products: [item0] },
-			success: function(data, status) {
-                progressBar.css('width', (currentItemIdx*100/itemsCount)+'%');
-				progressBar.find('span').html(currentItemIdx+' / '+itemsCount);
+    details.html(details.attr('default-value').replace(/\.\.\./, '') + ' (#' + item0 + ')');
+    $.ajax({
+      type: 'POST',
+      url: postUrl,
+      data: {bulk_action_selected_products: [item0]},
+      success: function (data, status) {
+        progressBar.css('width', (currentItemIdx * 100 / itemsCount) + '%');
+        progressBar.find('span').html(currentItemIdx + ' / ' + itemsCount);
 
-                if (items.length > 0) {
-                    bulkCall(items, successCallback, errorCallback);
-				} else {
-					successCallback();
-				}
-			},
-			error: errorCallback,
-			dataType: 'json'
-		});
-	};
+        if (items.length > 0) {
+          bulkCall(items, successCallback, errorCallback);
+        } else {
+          successCallback();
+        }
+      },
+      error: errorCallback,
+      dataType: 'json'
+    });
+  };
 
-    bulkCall(allItems.toArray(), function() {
-		window.location.href = redirectUrl;
-	}, function() {
-		progressBar.removeClass('progress-bar-success');
-		progressBar.addClass('progress-bar-danger');
-        failure.show();
-        window.location.href = redirectUrl;
-	});
+  bulkCall(allItems.toArray(), function () {
+    window.location.href = redirectUrl;
+  }, function () {
+    progressBar.removeClass('progress-bar-success');
+    progressBar.addClass('progress-bar-danger');
+    failure.show();
+    window.location.href = redirectUrl;
+  });
 }
 
 function bulkProductAction(element, action) {
-	var form = $('form#product_catalog_list');
-	var postUrl = '';
-	var redirectUrl = '';
-	var urlHandler = null;
+  var form = $('form#product_catalog_list');
+  var postUrl = '';
+  var redirectUrl = '';
+  var urlHandler = null;
 
-    var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
-    if (items.size() === 0) {
-        return false;
-    } else {
-        urlHandler = $(element).closest('[bulkurl]');
-    }
+  var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
+  if (items.size() === 0) {
+    return false;
+  } else {
+    urlHandler = $(element).closest('[bulkurl]');
+  }
 
-	switch (action) {
-		case 'delete_all':
-			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
-			redirectUrl = urlHandler.attr('redirecturl');
+  switch (action) {
+    case 'delete_all':
+      postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+      redirectUrl = urlHandler.attr('redirecturl');
 
-			// Confirmation popup and callback...
-			$('#catalog_deletion_modal').modal('show');
-			$('#catalog_deletion_modal button[value="confirm"]').off('click');
-			$('#catalog_deletion_modal button[value="confirm"]').on('click', function() {
+      // Confirmation popup and callback...
+      $('#catalog_deletion_modal').modal('show');
+      $('#catalog_deletion_modal button[value="confirm"]').off('click');
+      $('#catalog_deletion_modal button[value="confirm"]').on('click', function () {
 
-                $('#catalog_deletion_modal').modal('hide');
+        $('#catalog_deletion_modal').modal('hide');
 
-                // use a progressbar if more 1 item
-                if (items.size() > 1) {
-                    return bulkModalAction(items, postUrl, redirectUrl, action);
-                } else {
-                    var redirectionInput = $('<input>')
-                        .attr('type', 'hidden')
-                        .attr('name', 'redirect_url').val(redirectUrl);
-                    form.append($(redirectionInput));
-                    form.attr('action', postUrl);
-                    form.submit();
-                }
-			});
+        // use a progressbar if more 1 item
+        if (items.size() > 1) {
+          return bulkModalAction(items, postUrl, redirectUrl, action);
+        } else {
+          var redirectionInput = $('<input>')
+            .attr('type', 'hidden')
+            .attr('name', 'redirect_url').val(redirectUrl);
+          form.append($(redirectionInput));
+          form.attr('action', postUrl);
+          form.submit();
+        }
+      });
 
-			return; // No break, but RETURN, to avoid code after switch block :)
+      return; // No break, but RETURN, to avoid code after switch block :)
 
-		case 'activate_all':
-            postUrl = urlHandler.attr('bulkurl');
-            redirectUrl = urlHandler.attr('redirecturl');
+    case 'activate_all':
+      postUrl = urlHandler.attr('bulkurl');
+      redirectUrl = urlHandler.attr('redirecturl');
 
-            // use a progressbar if more 1 item
-            if (items.size() > 1) {
-                return bulkModalAction(items, postUrl, redirectUrl, action);
-            }
+      // use a progressbar if more 1 item
+      if (items.size() > 1) {
+        return bulkModalAction(items, postUrl, redirectUrl, action);
+      }
 
-            break;
+      break;
 
-        case 'deactivate_all':
-            postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
-            redirectUrl = urlHandler.attr('redirecturl');
+    case 'deactivate_all':
+      postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+      redirectUrl = urlHandler.attr('redirecturl');
 
-            // use a progressbar if more 1 item
-            if (items.size() > 1) {
-                return bulkModalAction(items, postUrl, redirectUrl, action);
-            }
+      // use a progressbar if more 1 item
+      if (items.size() > 1) {
+        return bulkModalAction(items, postUrl, redirectUrl, action);
+      }
 
-            break;
+      break;
 
-        case 'duplicate_all':
-            postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
-            redirectUrl = urlHandler.attr('redirecturl');
+    case 'duplicate_all':
+      postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+      redirectUrl = urlHandler.attr('redirecturl');
 
-            // use a progressbar if more 1 item
-            if (items.size() > 1) {
-                return bulkModalAction(items, postUrl, redirectUrl, action);
-            }
+      // use a progressbar if more 1 item
+      if (items.size() > 1) {
+        return bulkModalAction(items, postUrl, redirectUrl, action);
+      }
 
-            break;
+      break;
 
-        // this case will brings to the next page
-		case 'edition_next':
-            redirectUrl = $(element).closest('[massediturl]').attr('redirecturlnextpage');
-			// no break !
+    // this case will brings to the next page
+    case 'edition_next':
+      redirectUrl = $(element).closest('[massediturl]').attr('redirecturlnextpage');
+    // no break !
 
-        // this case will post inline edition command
-		case 'edition':
-		  	var editionAction;
-      		var bulkEditionSelector = '#bulk_edition_toolbar input:submit';
-		    if ($(bulkEditionSelector).length > 0) {
-			    editionAction = $(bulkEditionSelector).attr('editionaction');
-		    } else {
-			    editionAction = 'sort';
-		    }
+    // this case will post inline edition command
+    case 'edition':
+      var editionAction;
+      var bulkEditionSelector = '#bulk_edition_toolbar input:submit';
+      if ($(bulkEditionSelector).length > 0) {
+        editionAction = $(bulkEditionSelector).attr('editionaction');
+      } else {
+        editionAction = 'sort';
+      }
 
-			urlHandler = $('[massediturl]');
-            postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
-			if (redirectUrl === '') {
-				redirectUrl = urlHandler.attr('redirecturl');
-			}
-			break;
+      urlHandler = $('[massediturl]');
+      postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
+      if (redirectUrl === '') {
+        redirectUrl = urlHandler.attr('redirecturl');
+      }
+      break;
 
-        // unknown cases...
-		default:
-			return false;
-	}
+    // unknown cases...
+    default:
+      return false;
+  }
 
-	if (postUrl !== '' && redirectUrl !== '') {
-		// save action URL for redirection and update to post to bulk action instead
-		// using form action URL allow to get route attributes and stay on the same page & ordering.
-		var redirectionInput = $('<input>')
-			.attr('type', 'hidden')
-			.attr('name', 'redirect_url').val(redirectUrl);
-		form.append($(redirectionInput));
-		form.attr('action', postUrl);
-		form.submit();
-	}
-	return false;
+  if (postUrl !== '' && redirectUrl !== '') {
+    // save action URL for redirection and update to post to bulk action instead
+    // using form action URL allow to get route attributes and stay on the same page & ordering.
+    var redirectionInput = $('<input>')
+      .attr('type', 'hidden')
+      .attr('name', 'redirect_url').val(redirectUrl);
+    form.append($(redirectionInput));
+    form.attr('action', postUrl);
+    form.submit();
+  }
+  return false;
 }
 
 function unitProductAction(element, action) {
-	var form = $('form#product_catalog_list');
+  var form = $('form#product_catalog_list');
 
-	// save action URL for redirection and update to post to bulk action instead
-	// using form action URL allow to get route attributes and stay on the same page & ordering.
-	var urlHandler = $(element).closest('[data-uniturl]');
-	var redirectUrlHandler = $(element).closest('[redirecturl]');
-	var redirectionInput = $('<input>')
-		.attr('type', 'hidden')
-		.attr('name', 'redirect_url').val(redirectUrlHandler.attr('redirecturl'));
+  // save action URL for redirection and update to post to bulk action instead
+  // using form action URL allow to get route attributes and stay on the same page & ordering.
+  var urlHandler = $(element).closest('[data-uniturl]');
+  var redirectUrlHandler = $(element).closest('[redirecturl]');
+  var redirectionInput = $('<input>')
+    .attr('type', 'hidden')
+    .attr('name', 'redirect_url').val(redirectUrlHandler.attr('redirecturl'));
 
-	switch (action) {
-		case 'delete':
-			// Confirmation popup and callback...
-			$('#catalog_deletion_modal').modal('show');
-			$('#catalog_deletion_modal button[value="confirm"]').off('click');
-			$('#catalog_deletion_modal button[value="confirm"]').on('click', function() {
-				form.append($(redirectionInput));
-				var url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
-				form.attr('action', url);
-				form.submit();
+  switch (action) {
+    case 'delete':
+      // Confirmation popup and callback...
+      $('#catalog_deletion_modal').modal('show');
+      $('#catalog_deletion_modal button[value="confirm"]').off('click');
+      $('#catalog_deletion_modal button[value="confirm"]').on('click', function () {
+        form.append($(redirectionInput));
+        var url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
+        form.attr('action', url);
+        form.submit();
 
-				$('#catalog_deletion_modal').modal('hide');
-			});
-			return;
-		// Other cases, nothing to do, continue.
-		//default:
-	}
+        $('#catalog_deletion_modal').modal('hide');
+      });
+      return;
+    // Other cases, nothing to do, continue.
+    //default:
+  }
 
-	form.append($(redirectionInput));
-	var url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
-	form.attr('action', url);
-	form.submit();
+  form.append($(redirectionInput));
+  var url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
+  form.attr('action', url);
+  form.submit();
 }
 
 function showBulkProductEdition(show) {
