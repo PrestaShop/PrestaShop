@@ -593,7 +593,7 @@ class InstallXmlLoader
             $entity = Db::getInstance()->escape($entity, false, true);
             $primary = Db::getInstance()->escape($primary, false, true);
             $this->primaries[$entity] = (int)Db::getInstance()->getValue(
-                'SELECT '.$primary.' FROM `'._DB_PREFIX_.$entity.'` ORDER BY '.$primary.' DESC'
+                'SELECT '.$primary.' FROM `'._DB_PREFIX_.$entity.'` ORDER BY `'.$primary.'` DESC'
             );
         }
         return ++$this->primaries[$entity];
