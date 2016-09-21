@@ -44,6 +44,9 @@ class ProductOptions extends CommonAbstractType
     private $productAdapter;
     private $router;
     private $locales;
+    private $currencyDataprovider;
+    private $fullAttachmentList;
+    private $attachmentList;
 
     /**
      * Constructor
@@ -73,7 +76,8 @@ class ProductOptions extends CommonAbstractType
         $this->fullAttachmentList = $attachmentDataprovider->getAllAttachments($this->context->getLanguages()[0]['id_lang']);
         $this->attachmentList = $this->formatDataChoicesList(
             $this->fullAttachmentList,
-            'id_attachment'
+            'id_attachment',
+            'file'
         );
     }
 
@@ -207,6 +211,9 @@ class ProductOptions extends CommonAbstractType
             'multiple'  => true,
             'choices'  => $this->attachmentList,
             'choices_as_values' => true,
+            'choice_label' => function ($value, $key, $index) {
+                return $this->fullAttachmentList[$index - 1]['name'];
+            },
             'required' => false,
             'attr' => ['data' => $this->fullAttachmentList],
             'label' => $this->translator->trans('Attachments for this product:', [], 'Admin.Catalog.Feature')
