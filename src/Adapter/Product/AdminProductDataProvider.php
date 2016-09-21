@@ -249,6 +249,35 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             ),
         );
         $sqlWhere = array('AND', 1);
+        $sqlOrder = array($orderBy.' '.$sortOrder);
+        if ($orderBy != 'id_product') {
+            $sqlOrder[] = 'id_product asc'; // secondary order by (useful when ordering by active, quantity, price, etc...)
+        }
+        $sqlLimit = $offset.', '.$limit;
+
+        // Column 'position' added if filtering by category
+        if ($showPositionColumn) {
+            $filteredCategoryId = (int) $filterParams['filter_category'];
+            $sqlSelect['position'] = array('table' => 'cp', 'field' => 'position');
+            $sqlTable['cp'] = array(
+                'table' => 'category_product',
+                'join' => 'INNER JOIN',
+                'on' => 'cp.`id_product` = p.`id_product` AND cp.`id_category` = ' . $filteredCategoryId ,
+            );
+        } elseif ($orderBy == 'position') {
+            // We do not show position column, so we do not join the table, so we do not order by position!
+            $sqlOrder = array('id_product ASC');
+        }
+
+        // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
+        \HookCore::exec('actionAdminProductsListingFieldsModifier', array(
+            '_ps_version' => _PS_VERSION_,
+            'sql_select' => &$sqlSelect,
+            'sql_table' => &$sqlTable,
+            'sql_where' => &$sqlWhere,
+            'sql_order' => &$sqlOrder,
+            'sql_limit' => &$sqlLimit,
+        ));
         foreach ($filterParams as $filterParam => $filterValue) {
             if (!$filterValue && $filterValue !== '0') {
                 continue;
@@ -269,26 +298,6 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             // for 'filter_category', see next if($showPositionColumn) block.
         }
         $sqlWhere[] = 'state = '.\Product::STATE_SAVED;
-
-        $sqlOrder = array($orderBy.' '.$sortOrder);
-        if ($orderBy != 'id_product') {
-            $sqlOrder[] = 'id_product asc'; // secondary order by (useful when ordering by active, quantity, price, etc...)
-        }
-        $sqlLimit = $offset.', '.$limit;
-
-        // Column 'position' added if filtering by category
-        if ($showPositionColumn) {
-            $filteredCategoryId = (int) $filterParams['filter_category'];
-            $sqlSelect['position'] = array('table' => 'cp', 'field' => 'position');
-            $sqlTable['cp'] = array(
-                'table' => 'category_product',
-                'join' => 'INNER JOIN',
-                'on' => 'cp.`id_product` = p.`id_product` AND cp.`id_category` = ' . $filteredCategoryId ,
-            );
-        } elseif ($orderBy == 'position') {
-            // We do not show position column, so we do not join the table, so we do not order by position!
-            $sqlOrder = array('id_product ASC');
-        }
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
         \HookCore::exec('actionAdminProductsListingFieldsModifier', array(
