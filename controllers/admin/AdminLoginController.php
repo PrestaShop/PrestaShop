@@ -29,12 +29,11 @@ class AdminLoginControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
+        parent::__construct();
         $this->errors = array();
-        $this->context = Context::getContext();
         $this->display_header = false;
         $this->display_footer = false;
         $this->meta_title = $this->l('Administration panel');
-        parent::__construct();
         $this->layout = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme
             .DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'login'
             .DIRECTORY_SEPARATOR.'layout.tpl';
