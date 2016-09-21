@@ -2211,7 +2211,7 @@ class AdminImportControllerCore extends AdminController
                 }
 
                 // This code allows us to set qty and disable depends on stock
-                if (!$validateOnly && isset($product->quantity) && (int)$product->quantity) {
+                if (!$validateOnly && isset($product->quantity)) {
                     // if depends on stock and quantity, add quantity to stock
                     if ($product->depends_on_stock == 1) {
                         $stock_manager = StockManagerFactory::getManager();
