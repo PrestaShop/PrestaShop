@@ -48,6 +48,9 @@
                                 {$shop_data['name']}
                             {/if}
                         </a>
+                        <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
+                            <i class="mt-eye" aria-hidden="true"></i>
+                        </a>
                     </li>
                 {/if}
             {/foreach}
