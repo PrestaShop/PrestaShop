@@ -37,15 +37,17 @@ class AdminStatusesControllerCore extends AdminController
         $this->lang = true;
         $this->deleted = false;
         $this->colorOnBackground = false;
-        $this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-        $this->context = Context::getContext();
+        
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->imageType = 'gif';
         $this->fieldImageSettings = array(
             'name' => 'icon',
             'dir' => 'os'
         );
+
         parent::__construct();
+
+        $this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
     }
 
     public function init()
@@ -211,7 +213,7 @@ class AdminStatusesControllerCore extends AdminController
         //init and render the first list
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-        $this->addRowActionSkipList('delete', range(1, 14));
+        $this->addRowActionSkipList('delete', $this->getUnremovableStatuses());
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -237,6 +239,13 @@ class AdminStatusesControllerCore extends AdminController
         $lists .= parent::renderList();
 
         return $lists;
+    }
+
+    protected function getUnremovableStatuses()
+    {
+        return array_map(function ($row) {
+            return (int) $row['id_order_state'];
+        }, Db::getInstance()->executeS('SELECT id_order_state FROM '._DB_PREFIX_.'order_state WHERE unremovable = 1'));
     }
 
     protected function checkFilterForOrdersReturnsList()
