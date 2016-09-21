@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Twig;
 
 class TranslationsExtension extends \Twig_Extension
@@ -51,9 +52,10 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * Returns concatenated edit translation forms
+     * Returns concatenated edit translation forms.
      *
      * @param array $translationsTree
+     *
      * @return string
      */
     public function getTranslationsForms(array $translationsTree)
@@ -101,6 +103,7 @@ class TranslationsExtension extends \Twig_Extension
      * Returns a tree of translations key values.
      *
      * @param array $translationsTree
+     *
      * @return string
      */
     public function getTranslationsTree(array $translationsTree)
@@ -124,6 +127,7 @@ class TranslationsExtension extends \Twig_Extension
     /**
      * @param $tree
      * @param int $level
+     *
      * @return string
      */
     public function makeSubtree($tree, $level = 3)
@@ -153,14 +157,14 @@ class TranslationsExtension extends \Twig_Extension
                 if ($isLastPage) {
                     $output .= '</div>';
                 } elseif ((0 === $formIndex % $itemsPerPage) && ($formIndex > 0)) {
-                    $pageIndex++;
+                    ++$pageIndex;
 
                     // Close div with page class
                     $output .= '</div>';
-                    $output .= '<div class="page hide" data-status="inactive" data-page-index="' . $pageIndex . '">';
+                    $output .= '<div class="page hide" data-status="inactive" data-page-index="'.$pageIndex.'">';
                 }
 
-                $formIndex++;
+                ++$formIndex;
             }
 
             // Close div with page class when no message is available
@@ -193,6 +197,7 @@ class TranslationsExtension extends \Twig_Extension
 
     /**
      * @param $properties
+     *
      * @return mixed|string
      */
     protected function renderEditTranslationForm($properties)
@@ -219,7 +224,7 @@ class TranslationsExtension extends \Twig_Extension
 
     protected function getTranslationHash($domain, $translationKey)
     {
-        return md5($domain . $translationKey);
+        return md5($domain.$translationKey);
     }
 
     /**
@@ -227,6 +232,7 @@ class TranslationsExtension extends \Twig_Extension
      * @param $domain
      * @param $locale
      * @param $translationValue
+     *
      * @return array
      */
     protected function getDefaultTranslationValue($translationKey, $domain, $locale, $translationValue)
@@ -243,6 +249,7 @@ class TranslationsExtension extends \Twig_Extension
 
     /**
      * @param $translation
+     *
      * @return mixed
      */
     protected function getTranslationValue($translation)
@@ -252,6 +259,7 @@ class TranslationsExtension extends \Twig_Extension
 
     /**
      * @param $tree
+     *
      * @return bool
      */
     protected function hasMessages($tree)
@@ -273,12 +281,13 @@ class TranslationsExtension extends \Twig_Extension
      * @param $subdomain
      * @param $subtree
      * @param int $level
+     *
      * @return string
      */
     protected function concatenateSubtreeHeader($subdomain, $subtree, $level = 2)
     {
         $hasMessagesSubtree = $this->hasMessages($subtree);
-        $subject = $this->makeSubdomainPrefix($level) . $subdomain;
+        $subject = $this->makeSubdomainPrefix($level).$subdomain;
 
         $id = null;
         if ($hasMessagesSubtree) {
@@ -290,7 +299,7 @@ class TranslationsExtension extends \Twig_Extension
         if ($hasMessagesSubtree) {
             $output .= $this->render('button-toggle-messages-visibility.html.twig', array(
                 'label_show_messages' => $this->translator->trans('Show messages', array(), 'Admin.International.Feature'),
-                'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'Admin.International.Feature')
+                'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'Admin.International.Feature'),
             ));
 
             $output .= $this->getNavigation($this->parseDomain($subtree));
@@ -321,6 +330,7 @@ class TranslationsExtension extends \Twig_Extension
 
     /**
      * @param $subtree
+     *
      * @return mixed
      */
     protected function parseDomain($subtree)
@@ -333,20 +343,24 @@ class TranslationsExtension extends \Twig_Extension
 
     /**
      * @param $id
+     *
      * @return string
      */
-    protected function getNavigation($id) {
+    protected function getNavigation($id)
+    {
         return $this->render('pagination-bar.html.twig', array('page_id' => $id));
     }
 
     /**
      * @param $view
      * @param array $parameters
+     *
      * @return mixed|string
      */
-    protected function render($view, $parameters = array()) {
-        $viewsDirectory = __DIR__ . '/../Resources/views/Admin/Translations/include';
-        $viewPath = $viewsDirectory . '/' . $view;
+    protected function render($view, $parameters = array())
+    {
+        $viewsDirectory = __DIR__.'/../Resources/views/Admin/Translations/include';
+        $viewPath = $viewsDirectory.'/'.$view;
         if (!file_exists($viewPath)) {
             $message = sprintf('A view ("%s") does not exist.', $viewPath);
             $this->logger->error($message);
@@ -355,7 +369,7 @@ class TranslationsExtension extends \Twig_Extension
         $view = file_get_contents($viewPath);
 
         foreach ($parameters as $key => $value) {
-            $view = str_replace('{{ ' . $key . ' }}', $value, $view);
+            $view = str_replace('{{ '.$key.' }}', $value, $view);
         }
 
         return $view;
@@ -363,13 +377,14 @@ class TranslationsExtension extends \Twig_Extension
 
     /**
      * @param $level
+     *
      * @return string
      */
     protected function makeSubdomainPrefix($level)
     {
         $subdomainPrefix = '';
         if ($level > 1) {
-            $subdomainPrefix = '<span class="separator">' . str_repeat(' > ', $level - 1) . ' </span>';
+            $subdomainPrefix = '<span class="separator">'.str_repeat(' > ', $level - 1).' </span>';
         }
 
         return $subdomainPrefix;
@@ -379,6 +394,7 @@ class TranslationsExtension extends \Twig_Extension
      * @param $subject
      * @param $level
      * @param null $id
+     *
      * @return string
      */
     protected function tagSubject($subject, $level, $id = null)
@@ -392,15 +408,15 @@ class TranslationsExtension extends \Twig_Extension
         }
 
         if ($id) {
-            $openingTag = '<span id="_' . $id . '">';
+            $openingTag = '<span id="_'.$id.'">';
             $closingTag = '</span>';
 
             if (2 === $level) {
-                $openingTag = '<h2>' . $openingTag;
-                $closingTag = $closingTag . '</h2>';
+                $openingTag = '<h2>'.$openingTag;
+                $closingTag = $closingTag.'</h2>';
             }
         }
 
-        return $openingTag . $subject . $closingTag;
+        return $openingTag.$subject.$closingTag;
     }
 }
