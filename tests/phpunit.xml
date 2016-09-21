@@ -1,4 +1,9 @@
 <phpunit bootstrap="bootstrap.php">
+    <groups>
+        <exclude>
+            <group>admin</group>
+        </exclude>
+    </groups>
     <testsuites>
         <testsuite name="Unit">
             <directory>Unit</directory>

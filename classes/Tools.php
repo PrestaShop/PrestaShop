@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\HttpFoundation\Request;
+
 class ToolsCore
 {
     protected static $file_exists_cache = array();
@@ -31,8 +33,17 @@ class ToolsCore
     protected static $_caching;
     protected static $_user_plateform;
     protected static $_user_browser;
+    protected static $request;
 
     public static $round_mode = null;
+
+
+    public function __construct(Request $request = null)
+    {
+        if ($request) {
+            self::$request = $request;
+        }
+    }
 
     /**
     * Random password generator
@@ -456,13 +467,17 @@ class ToolsCore
             return false;
         }
 
-        $ret = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default_value));
-
-        if (is_string($ret)) {
-            return stripslashes(urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($ret))));
+        if (getenv('kernel.environment') === 'test' && self::$request instanceof Request) {
+            $value = self::$request->request->get($key, self::$request->query->get($key, $default_value));
+        } else {
+            $value = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default_value));
         }
 
-        return $ret;
+        if (is_string($value)) {
+            return stripslashes(urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($value))));
+        }
+
+        return $value;
     }
 
 
@@ -1203,7 +1218,7 @@ class ToolsCore
         if ($has_mb_strtolower === null) {
             $has_mb_strtolower = function_exists('mb_strtolower');
         }
-        
+
         if (!is_string($str)) {
             return false;
         }

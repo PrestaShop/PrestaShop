@@ -1,0 +1,15 @@
+<phpunit bootstrap="bootstrap-admin.php">
+    <php>
+      <env name="kernel.environment" value="test" />
+    </php>
+    <groups>
+      <include>
+        <group>admin</group>
+      </include>
+    </groups>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>Unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
