@@ -774,10 +774,10 @@ class CustomerCore extends ObjectModel
         AND o.valid = 1');
 
         $result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-        SELECT MAX(c.`date_add`) AS last_visit
-        FROM `'._DB_PREFIX_.'guest` g
-        LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
-        WHERE g.`id_customer` = '.(int) $this->id);
+		SELECT c.`date_add` AS last_visit
+		FROM `'._DB_PREFIX_.'connections` c 
+      	LEFT JOIN `'._DB_PREFIX_.'guest` g USING (id_guest)
+		WHERE g.`id_customer` = '.(int)$this->id.' ORDER BY c.`date_add` DESC ');
 
         $result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         SELECT (YEAR(CURRENT_DATE)-YEAR(c.`birthday`)) - (RIGHT(CURRENT_DATE, 5)<RIGHT(c.`birthday`, 5)) AS age
