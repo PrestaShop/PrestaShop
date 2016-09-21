@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2016 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,30 +27,25 @@
 namespace PrestaShopBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Translation\TranslatorInterface;
-
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-
-use \Language;
 
 class UserLocaleListener
 {
-    private $translator;
     private $prestaShopContext;
 
-    public function __construct(TranslatorInterface $translator, LegacyContext $context)
+    public function __construct(LegacyContext $context)
     {
-        $this->translator = $translator;
         $this->prestaShopContext = $context->getContext();
-
     }
 
     public function onKernelRequest(GetResponseEvent $event)
     {
         if (isset($this->prestaShopContext->employee) && $this->prestaShopContext->employee->isLoggedBack()) {
+            $request = $event->getRequest();
             $locale = $this->getLocaleFromEmployee();
+            $request->setDefaultLocale($locale);
 
-            $this->translator->setLocale($locale);
+            $request->setLocale($locale);
         }
     }
 
