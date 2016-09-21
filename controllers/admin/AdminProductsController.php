@@ -64,7 +64,10 @@ class AdminProductsControllerCore extends AdminController
 
     public function __construct($theme_name = 'default')
     {
-        parent::__construct();
+        $this->bootstrap = true;
+        $this->table = 'product';
+        $this->className = 'Product';
+        parent::__construct('', $theme_name);
     }
 
     public function init()
@@ -1958,7 +1961,6 @@ class AdminProductsControllerCore extends AdminController
      */
     public function checkProduct()
     {
-        $className = 'Product';
         // @todo : the call_user_func seems to contains only statics values (className = 'Product')
         $rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
         $default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
@@ -1976,7 +1978,7 @@ class AdminProductsControllerCore extends AdminController
                 }
                 $this->errors[] = sprintf(
                     Tools::displayError('The %s field is required.'),
-                    call_user_func(array($className, 'displayFieldName'), $field, $className)
+                    call_user_func(array($this->className, 'displayFieldName'), $field, $this->className)
                 );
             }
         }
@@ -1986,7 +1988,7 @@ class AdminProductsControllerCore extends AdminController
             if ($this->isProductFieldUpdated($fieldLang, $default_language->id) && !Tools::getValue($fieldLang.'_'.$default_language->id)) {
                 $this->errors[] = sprintf(
                     Tools::displayError('This %1$s field is required at least in %2$s'),
-                    call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+                    call_user_func(array($this->className, 'displayFieldName'), $fieldLang, $this->className),
                     $default_language->name
                 );
             }
@@ -1997,7 +1999,7 @@ class AdminProductsControllerCore extends AdminController
             if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)) && Tools::strlen($value) > $maxLength) {
                 $this->errors[] = sprintf(
                     Tools::displayError('The %1$s field is too long (%2$d chars max).'),
-                    call_user_func(array($className, 'displayFieldName'), $field, $className),
+                    call_user_func(array($this->className, 'displayFieldName'), $field, $this->className),
                     $maxLength
                 );
             }
@@ -2018,7 +2020,7 @@ class AdminProductsControllerCore extends AdminController
                 if (Tools::strlen(strip_tags($value)) > $limit) {
                     $this->errors[] = sprintf(
                         Tools::displayError('This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).'),
-                        call_user_func(array($className, 'displayFieldName'), 'description_short'),
+                        call_user_func(array($this->className, 'displayFieldName'), 'description_short'),
                         $language['name'],
                         $limit,
                         Tools::strlen(strip_tags($value))
@@ -2034,7 +2036,7 @@ class AdminProductsControllerCore extends AdminController
                 if ($value && Tools::strlen($value) > $maxLength) {
                     $this->errors[] = sprintf(
                         Tools::displayError('The %1$s field is too long (%2$d chars max).'),
-                        call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+                        call_user_func(array($this->className, 'displayFieldName'), $fieldLang, $this->className),
                         $maxLength
                     );
                 }
@@ -2060,7 +2062,7 @@ class AdminProductsControllerCore extends AdminController
                 if (!$res) {
                     $this->errors[] = sprintf(
                         Tools::displayError('The %s field is invalid.'),
-                        call_user_func(array($className, 'displayFieldName'), $field, $className)
+                        call_user_func(array($this->className, 'displayFieldName'), $field, $this->className)
                     );
                 }
             }
@@ -2072,7 +2074,7 @@ class AdminProductsControllerCore extends AdminController
                     if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME'))) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The %1$s field (%2$s) is invalid.'),
-                            call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+                            call_user_func(array($this->className, 'displayFieldName'), $fieldLang, $this->className),
                             $language['name']
                         );
                     }
