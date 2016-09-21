@@ -69,6 +69,7 @@ class ProductDataProvider
                 $linkRewrite = $product->link_rewrite[$id_lang ? $id_lang : key($product->link_rewrite)];
             }
 
+            $product->ecotax = \Tools::ps_round($product->ecotax * (1 + \Tax::getProductEcotaxRate() / 100), 2);
             $cover = \ProductCore::getCover($product->id);
             $product->image = \Context::getContext()->link->getImageLink($linkRewrite, $cover ? $cover['id_image'] : '', 'home_default');
         }
