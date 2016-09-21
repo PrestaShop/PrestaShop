@@ -35,4 +35,5 @@
       {/if}
     </div>
   {/foreach}
+  <input type="hidden" name="idCombination" id="idCombination" value="{$product.id_product_attribute}">
 </div>
