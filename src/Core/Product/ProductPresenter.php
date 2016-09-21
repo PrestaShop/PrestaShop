@@ -158,10 +158,16 @@ class ProductPresenter
 
     private function addEcotaxInformation(
         array $presentedProduct,
+        ProductPresentationSettings $settings,
         array $product
     ) {
+        $value = $product['ecotax'];
+        if ($settings->include_taxes) {
+            $value *= 1 + $product['ecotax_rate'] / 100;
+        }
+
         $presentedProduct['ecotax'] = array(
-            'value' => $this->priceFormatter->format($product['ecotax']),
+            'value' => $this->priceFormatter->format($value),
             'amount' => $product['ecotax'],
             'rate' => $product['ecotax_rate'],
         );
@@ -573,6 +579,7 @@ class ProductPresenter
         if (isset($product['ecotax'])) {
             $presentedProduct = $this->addEcotaxInformation(
                 $presentedProduct,
+                $settings,
                 $product
             );
         }
