@@ -33,11 +33,6 @@ class TranslateCore
     {
         global $_LANG;
 
-        $iso = Context::getContext()->language->iso_code;
-        if (empty($iso)) {
-            $iso = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
-        }
-
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = $class.'_'.md5($string);
 
@@ -138,7 +133,6 @@ class TranslateCore
         } elseif (isset($lang_array['AdminTab'.$key])) {
             $str = $lang_array['AdminTab'.$key];
         } else {
-            // note in 1.5, some translations has moved from AdminXX to helper/*.tpl
             $str = $string;
         }
 

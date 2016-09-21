@@ -2708,6 +2708,11 @@ class AdminControllerCore extends Controller
      */
     protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
     {
+        $translated = $this->translator->trans($string);
+        if ($translated !== $string) {
+            return $translated;
+        }
+
         if ($class === null || $class == 'AdminTab') {
             $class = substr(get_class($this), 0, -10);
         } elseif (strtolower(substr($class, -10)) == 'controller') {

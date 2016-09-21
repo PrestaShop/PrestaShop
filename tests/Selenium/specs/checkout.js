@@ -148,7 +148,7 @@ function runScenario (scenario) {
           } else {
             it("should have an existing address pre-selected", function () {
               return browser
-                .waitForVisible('#checkout-addresses-step.-current')
+                .waitForVisible('#checkout-addresses-step.-current', 5000)
                 .isSelected('[name="id_address_delivery"]')
                 .should.become.true
               ;

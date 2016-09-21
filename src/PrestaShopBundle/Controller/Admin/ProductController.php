@@ -79,6 +79,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
     {
+        $request->getSession()->set('_locale', 'fr-FR');
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */

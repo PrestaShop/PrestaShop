@@ -85,10 +85,19 @@ services:
             - "@prestashop.security.admin.provider"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
     prestashop.security.admin.provider:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:
             - "@prestashop.adapter.legacy.context"
+
+    prestashop.user_locale.listener:
+        class: PrestaShopBundle\EventListener\UserLocaleListener
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     #UTILS
     prestashop.utils.zip_manager:
