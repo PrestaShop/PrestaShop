@@ -84,59 +84,57 @@
     padding-left: 0;
     li:first-child a {
       color: $brand-primary;
-      &::before {
-        font-family: 'Material Icons';
-        margin-right: rem(10px);
-      }
       &:hover {
         background: none;
       }
     }
-    li {
-      &.active {
+    li:not(:first-child) {
+      &.active, &:hover {
         background-color: #3ed2f0;
-
-        .dropdown-item {
+        a {
           color: #fff;
         }
+        i.mt-eye:hover::after {
+          color: #fff;
+          border: solid 1px #fff;
+        }
       }
-      a {
+      a:not(.link-shop) {
         padding-top: rem(5px);
         padding-bottom: rem(5px);
+        display: inline-block;
+        width: inherit;
       }
     }
     .group {
-      text-indent: rem(50px);
-      a{
+      a {
+        padding-left: rem(30px);
         padding-top: rem(5px);
         padding-bottom: rem(5px);
-        font-size: 600;
       }
     }
     .shop {
-      text-indent: rem(80px);
       a {
+        padding-left: rem(60px);
         @include justify-content(space-between);
-        &:hover{
-          &::after{
-            color:white;
-            border-color: white;
+      }
+      a.link-shop {
+        text-decoration: none;
+        float: right;
+        padding-left: inherit;
+        padding-right: 10px;
+        padding-top: 3px;
+        i.mt-eye {
+          &::after {
+            content: "\E8F4";
+            font-family: 'Material Icons';
+            color: $gray-medium;
+            border: solid 1px $gray-light;
+            border-radius: rem(3px);
+            padding: 1px 8px;
+            font-size: 1rem;
           }
         }
-      }
-      a::after {
-        content: "\E8F4";
-        font-family: 'Material Icons';
-        margin-left: rem(10px);
-        font-size: rem(20px);
-        color: $gray-medium;
-        border: solid 1px $gray-light;
-        border-radius: rem(3px);
-        padding: 0 rem(10px);
-        text-indent: 0;
-        height: rem(24px);
-        margin-top: 0;
-        font-size: rem(16px);
       }
     }
     .material-icons {
