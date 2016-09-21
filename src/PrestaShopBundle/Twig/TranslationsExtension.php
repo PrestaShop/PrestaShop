@@ -247,14 +247,7 @@ class TranslationsExtension extends \Twig_Extension
      */
     protected function getTranslationValue($translation)
     {
-        // Extract translation value from db if available
-        if (is_array($translation)) {
-            $translationValue = $translation['db'];
-        } else {
-            $translationValue = $translation;
-        }
-
-        return $translationValue;
+        return !empty($translation['db']) ? $translation['db'] : $translation['xlf'];
     }
 
     /**
