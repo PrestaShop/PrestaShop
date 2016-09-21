@@ -1875,12 +1875,15 @@
 	
 	  var currentStepClass = 'js-current-step';
 	  var currentStepSelector = '.' + currentStepClass;
-	  var stepsAfterPersonalInformation = (0, _jquery2['default'])('#checkout-personal-information-step' + currentStepSelector).nextAll();
+	  var stepsAfterPersonalInformation = (0, _jquery2['default'])('#checkout-personal-information-step').nextAll();
 	
 	  (0, _jquery2['default'])(currentStepSelector).prevAll().add(stepsAfterPersonalInformation).on('click', function (event) {
-	    (0, _jquery2['default'])(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
-	    (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass('-current');
-	    (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass(currentStepClass);
+	    var $nextStep = (0, _jquery2['default'])(event.target).closest('.checkout-step');
+	    if (!$nextStep.hasClass('-unreachable')) {
+	      (0, _jquery2['default'])(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
+	      $nextStep.toggleClass('-current');
+	      $nextStep.toggleClass(currentStepClass);
+	    }
 	    _prestashop2['default'].emit('changedCheckoutStep', { event: event });
 	  });
 	

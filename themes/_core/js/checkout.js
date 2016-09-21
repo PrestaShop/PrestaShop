@@ -17,14 +17,17 @@ function handleCheckoutStepChange() {
 
   let currentStepClass = 'js-current-step';
   let currentStepSelector = '.' + currentStepClass;
-  let stepsAfterPersonalInformation = $('#checkout-personal-information-step' + currentStepSelector).nextAll();
+  let stepsAfterPersonalInformation = $('#checkout-personal-information-step').nextAll();
 
   $(currentStepSelector).prevAll().add(stepsAfterPersonalInformation).on(
     'click',
     (event) => {
-      $(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
-      $(event.target).closest('.checkout-step').toggleClass('-current');
-      $(event.target).closest('.checkout-step').toggleClass(currentStepClass);
+      let $nextStep = $(event.target).closest('.checkout-step');
+      if (!$nextStep.hasClass('-unreachable')) {
+        $(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
+        $nextStep.toggleClass('-current');
+        $nextStep.toggleClass(currentStepClass);
+      }
       prestashop.emit('changedCheckoutStep', {event: event});
     }
   );
