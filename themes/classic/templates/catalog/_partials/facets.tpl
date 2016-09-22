@@ -60,6 +60,7 @@
                       <a
                         href="{$filter.nextEncodedFacetsURL}"
                         class="_gray-darker search-link js-search-link"
+                        rel="nofollow"
                       >
                         {$filter.label}
                         {if $filter.magnitude}
