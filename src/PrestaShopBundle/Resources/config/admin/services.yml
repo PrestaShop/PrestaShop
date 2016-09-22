@@ -94,10 +94,9 @@ services:
     prestashop.user_locale.listener:
         class: PrestaShopBundle\EventListener\UserLocaleListener
         arguments:
-            - "@translator"
             - "@prestashop.adapter.legacy.context"
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
 
     #UTILS
     prestashop.utils.zip_manager:
