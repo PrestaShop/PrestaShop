@@ -5817,6 +5817,9 @@ body#checkout {
   #authentication .custom-checkbox label {
     padding-left: 0.625rem; }
 
+#authentication [data-action="show-password"] {
+  background: #878787; }
+
 #identity .radio-inline,
 #authentication .radio-inline {
   padding: 0; }
