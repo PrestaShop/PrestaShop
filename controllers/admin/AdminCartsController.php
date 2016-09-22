@@ -53,7 +53,7 @@ class AdminCartsControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', co.`date_add`)) < 1800)';
 
         if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts') {
-            $this->_having = 'status = \''.$this->l('Abandoned cart').'\'';
+            $this->_having = 'status = \''.$this->trans('Abandoned cart', array(), 'Admin.OrdersCustomers.Feature').'\'';
         } else {
             $this->_use_found_rows = false;
         }

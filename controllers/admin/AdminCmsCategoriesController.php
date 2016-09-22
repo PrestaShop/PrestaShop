@@ -51,20 +51,20 @@ class AdminCmsCategoriesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
         $this->tpl_list_vars['icon'] = 'icon-folder-close';
-        $this->tpl_list_vars['title'] = $this->l('Categories');
+        $this->tpl_list_vars['title'] = $this->trans('Categories', array(), 'Admin.Catalog.Feature');
         $this->fields_list = array(
         'id_cms_category' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
         'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
         'description' => array('title' => $this->trans('Description', array(), 'Admin.Global'), 'maxlength' => 90, 'orderby' => false),
-        'position' => array('title' => $this->l('Position'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
+        'position' => array('title' => $this->trans('Position', array(), 'Admin.Global'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
         'active' => array(
-            'title' => $this->l('Displayed'), 'class' => 'fixed-width-sm', 'active' => 'status',
+            'title' => $this->trans('Displayed', array(), 'Admin.Global'), 'class' => 'fixed-width-sm', 'active' => 'status',
             'align' => 'center','type' => 'bool', 'orderby' => false
         ));
 
@@ -211,7 +211,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('CMS Category'),
+                'title' => $this->trans('CMS Category', array(), 'Admin.Design.Feature'),
                 'icon' => 'icon-folder-close'
             ),
             'input' => array(
@@ -221,11 +221,11 @@ class AdminCmsCategoriesControllerCore extends AdminController
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
-                    'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Displayed'),
+                    'label' => $this->trans('Displayed', array(), 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
@@ -245,7 +245,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
                 // custom template
                 array(
                     'type' => 'select_category',
-                    'label' => $this->l('Parent CMS Category'),
+                    'label' => $this->trans('Parent CMS Category', array(), 'Admin.Design.Feature'),
                     'name' => 'id_parent',
                     'options' => array(
                         'html' => $html_categories,
@@ -258,36 +258,36 @@ class AdminCmsCategoriesControllerCore extends AdminController
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 40,
-                    'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Meta title'),
+                    'label' => $this->trans('Meta title', array(), 'Admin.Global'),
                     'name' => 'meta_title',
                     'lang' => true,
-                    'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Meta description'),
+                    'label' => $this->trans('Meta description', array(), 'Admin.Global'),
                     'name' => 'meta_description',
                     'lang' => true,
-                    'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Meta keywords'),
+                    'label' => $this->trans('Meta keywords', array(), 'Admin.Global'),
                     'name' => 'meta_keywords',
                     'lang' => true,
-                    'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Friendly URL'),
+                    'label' => $this->trans('Friendly URL', array(), 'Admin.Global'),
                     'name' => 'link_rewrite',
                     'required' => true,
                     'lang' => true,
-                    'hint' => $this->l('Only letters and the minus (-) character are allowed.')
+                    'hint' => $this->trans('Only letters and the minus (-) character are allowed.', array(), 'Admin.Catalog.Help')
                 ),
             ),
             'submit' => array(
@@ -298,7 +298,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             );
         }

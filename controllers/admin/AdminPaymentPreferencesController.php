@@ -219,7 +219,7 @@ class AdminPaymentPreferencesControllerCore extends AdminController
 
     public function renderView()
     {
-        $this->toolbar_title = $this->l('Payment preferences'); // FIXME
+        $this->toolbar_title = $this->trans('Payment preferences', array(), 'Admin.Payment.Feature'); // FIXME
         unset($this->toolbar_btn['back']);
 
         $shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
@@ -238,29 +238,29 @@ class AdminPaymentPreferencesControllerCore extends AdminController
 
         $lists = array(
                     array('items' => Currency::getCurrencies(),
-                          'title' => $this->l('Currency restrictions'),
-                          'desc' => $this->l('Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.'),
+                          'title' => $this->trans('Currency restrictions', array(), 'Admin.Payment.Feature'),
+                          'desc' => $this->trans('Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.', array(), 'Admin.Payment.Help'),
                           'name_id' => 'currency',
                           'identifier' => 'id_currency',
                           'icon' => 'icon-money',
                     ),
                     array('items' => Group::getGroups($this->context->language->id),
-                          'title' => $this->l('Group restrictions'),
-                          'desc' => $this->l('Please mark each checkbox for the customer group(s), for which you want the payment module(s) to be available.'),
+                          'title' => $this->trans('Group restrictions', array(), 'Admin.Payment.Feature'),
+                          'desc' => $this->trans('Please mark each checkbox for the customer group(s), for which you want the payment module(s) to be available.', array(), 'Admin.Payment.Help'),
                           'name_id' => 'group',
                           'identifier' => 'id_group',
                           'icon' => 'icon-group',
                     ),
                     array('items' =>Country::getCountries($this->context->language->id),
-                          'title' => $this->l('Country restrictions'),
-                          'desc' => $this->l('Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.'),
+                          'title' => $this->trans('Country restrictions', array(), 'Admin.Payment.Feature'),
+                          'desc' => $this->trans('Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.', array(), 'Admin.Payment.Help'),
                           'name_id' => 'country',
                           'identifier' => 'id_country',
                           'icon' => 'icon-globe',
                     ),
                     array('items' => Carrier::getCarriers($this->context->language->id),
-                        'title' => $this->l('Carrier restrictions'),
-                        'desc' => $this->l('Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.'),
+                        'title' => $this->trans('Carrier restrictions', array(), 'Admin.Payment.Feature'),
+                        'desc' => $this->trans('Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.', array(), 'Admin.Payment.Help'),
                         'name_id' => 'reference',
                         'identifier' => 'id_reference',
                         'icon' => 'icon-truck',
@@ -274,7 +274,7 @@ class AdminPaymentPreferencesControllerCore extends AdminController
 
                 if ($name_id === 'currency'
                     && Tools::strpos($list['items'][$key_item]['name'], '('.$list['items'][$key_item]['iso_code'].')') === false) {
-                    $list['items'][$key_item]['name'] = sprintf($this->l('%1$s (%2$s)'), $list['items'][$key_item]['name'],
+                    $list['items'][$key_item]['name'] = sprintf('%1$s (%2$s)', $list['items'][$key_item]['name'],
                         $list['items'][$key_item]['iso_code']);
                 }
 
