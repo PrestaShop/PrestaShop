@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,9 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes\Module;
 
-use Media;
+use DomDocument;
 use Module;
 use PHPUnit_Framework_TestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 class FakeModule extends Module
 {
@@ -63,10 +64,11 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
         $module = new FakeModule();
 
         // when
-        $html_output = $module->displayError($error);
+        $htmlOutput = $module->displayError($error);
 
         // then
-        $this->assertHtmlEquals($this->error_string_res, $html_output);
+        $crawler = new Crawler($htmlOutput);
+        $this->assertContains($error, $crawler->filter('.module_error')->text());
     }
 
     public function testDisplayError_shouldReturnMultipleErrors()
@@ -75,23 +77,16 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
         $errors = array(
             'Error 1',
             'Error 2',
-            'Error 3'
+            'Error 3',
         );
 
         $module = new FakeModule();
 
         // when
-        $html_output = $module->displayError($errors);
+        $htmlOutput = $module->displayError($errors);
 
         // then
-        $this->assertHtmlEquals($this->error_array_res, $html_output);
-    }
-
-    /**
-     * @param $html_output
-     */
-    public function assertHtmlEquals($expected, $html_output)
-    {
-        $this->assertEquals(Media::minifyHTML($expected), Media::minifyHTML($html_output));
+        $crawler = new Crawler($htmlOutput);
+        $this->assertCount(3, $crawler->filter('.module_error li'));
     }
 }

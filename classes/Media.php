@@ -99,57 +99,6 @@ class MediaCore
     protected static $pattern_keepinline = 'data-keepinline';
 
     /**
-     * Minify HTML
-     *
-     * @param string $htmlContent
-     *
-     * @return bool|mixed|string
-     */
-    public static function minifyHTML($htmlContent)
-    {
-        if (strlen($htmlContent) > 0) {
-            //set an alphabetical order for args
-            // $html_content = preg_replace_callback(
-            // '/(<[a-zA-Z0-9]+)((\s*[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s*)*)>/',
-            // array('Media', 'minifyHTMLpregCallback'),
-            // $html_content,
-            // Media::getBackTrackLimit());
-
-            $htmlContent = str_replace(chr(194).chr(160), '&nbsp;', $htmlContent);
-            if (trim($minified_content = \Minify_HTML::minify($htmlContent, array('cssMinifier', 'jsMinifier'))) != '') {
-                $htmlContent = $minified_content;
-            }
-
-            return $htmlContent;
-        }
-
-        return false;
-    }
-
-    /**
-     * Minify HTML with regex callback
-     *
-     * @param array $pregMatches
-     *
-     * @return string
-     */
-    public static function minifyHTMLpregCallback($pregMatches)
-    {
-        $args = array();
-        preg_match_all('/[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']/is', $pregMatches[2], $args);
-        $args = $args[0];
-        sort($args);
-        // if there is no args in the balise, we don't write a space (avoid previous : <title >, now : <title>)
-        if (empty($args)) {
-            $output = $pregMatches[1].'>';
-        } else {
-            $output = $pregMatches[1].' '.implode(' ', $args).'>';
-        }
-
-        return $output;
-    }
-
-    /**
      * Minify JS in HTML
      *
      * @param string $htmlContent

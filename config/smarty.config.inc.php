@@ -107,16 +107,6 @@ function smarty_modifier_htmlentitiesUTF8($string)
 {
     return Tools::htmlentitiesUTF8($string);
 }
-function smartyMinifyHTML($tpl_output, &$smarty)
-{
-    $context = Context::getContext();
-    if (isset($context->controller) && in_array($context->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip'))) {
-        return $tpl_output;
-    }
-    $tpl_output = Media::minifyHTML($tpl_output);
-
-    return $tpl_output;
-}
 
 function smartyPackJSinHTML($tpl_output, &$smarty)
 {
