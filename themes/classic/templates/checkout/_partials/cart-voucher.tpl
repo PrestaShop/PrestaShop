@@ -6,7 +6,7 @@
           {foreach from=$cart.vouchers.added item=voucher}
             <li class="cart-summary-line">
               <span class="label">{$voucher.name}</span>
-              <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">{l s='delete' d='Shop.Theme.Actions'}</i></a>
+              <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
               <div class="pull-xs-right">
                 {$voucher.reduction_formatted}
               </div>
