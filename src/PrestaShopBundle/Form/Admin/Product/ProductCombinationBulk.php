@@ -42,10 +42,10 @@ class ProductCombinationBulk extends CommonAbstractType
     private $translator;
     private $configuration;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, Configuration $configuration)
     {
         $this->translator = $translator;
-        $this->configuration = $this->getConfiguration();
+        $this->configuration = $configuration;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -113,13 +113,4 @@ class ProductCombinationBulk extends CommonAbstractType
         return 'product_combination_bulk';
     }
 
-    /**
-     * Get the configuration adapter
-     *
-     * @return object Configuration adapter
-     */
-    protected function getConfiguration()
-    {
-        return new Configuration();
-    }
 }
