@@ -54,7 +54,7 @@
         var clickHandler = function (event) {
 
           var $ui = $(event.target);
-          if ($ui.attr('type') === 'radio') {
+          if ($ui.attr('type') === 'radio' || $ui.attr('type') === 'checkbox') {
             return;
           } else {
             event.stopPropagation();
