@@ -134,9 +134,14 @@ class ModuleController extends FrameworkBundleAdminController
         // Retrieve current shop
         $shopID = $shopService->getContextShopID();
         $shops = $shopService->getShops();
-        $shop = $shops[$shopID];
-        $currentTheme = $themeRepository->getInstanceByName($shop['theme_name']);
-        $modulesTheme = $currentTheme->getModulesToEnable();
+
+        if (!empty($shopID) && is_array($shops) && array_key_exists($shopID, $shops)) {
+            $shop = $shops[$shopID];
+            $currentTheme = $themeRepository->getInstanceByName($shop['theme_name']);
+            $modulesTheme = $currentTheme->getModulesToEnable();
+        } else {
+            $modulesTheme = false;
+        }
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
@@ -149,7 +154,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         foreach ($installedProducts as $installedProduct) {
-            if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
+            if (is_array($modulesTheme) && in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
                 $row = 'theme_bundle';
             } elseif (
                 $installedProduct->attributes->has('origin_filter_value')
