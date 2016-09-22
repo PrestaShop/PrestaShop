@@ -21,3 +21,4 @@ Disallow: /tools/
 Disallow: /translations/
 Disallow: /upload/
 Disallow: /webservice/
+Disallow: /*?q=*
