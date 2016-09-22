@@ -58,6 +58,9 @@
       padding-left: rem(10px);
     }
   }
+  [data-action="show-password"]{
+    background: $gray-dark;
+  }
 }
 #identity,
 #authentication {
