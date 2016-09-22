@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class ContactCore
+ */
 class ContactCore extends ObjectModel
 {
     public $id;
@@ -59,21 +62,22 @@ class ContactCore extends ObjectModel
     /**
      * Return available contacts
      *
-     * @param int $id_lang Language ID
-     * @param Context
+     * @param int $idLang Language ID
+     *
      * @return array Contacts
      */
-    public static function getContacts($id_lang)
+    public static function getContacts($idLang)
     {
-        $shop_ids = Shop::getContextListShopID();
+        $shopIds = Shop::getContextListShopID();
         $sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'contact` c
 				'.Shop::addSqlAssociation('contact', 'c', false).'
 				LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
-				WHERE cl.`id_lang` = '.(int)$id_lang.'
-				AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shop_ids)).')
+				WHERE cl.`id_lang` = '.(int) $idLang.'
+				AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shopIds)).')
 				GROUP BY c.`id_contact`
 				ORDER BY `name` ASC';
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
@@ -83,15 +87,15 @@ class ContactCore extends ObjectModel
      */
     public static function getCategoriesContacts()
     {
-        $shop_ids = Shop::getContextListShopID();
+        $shopIds = Shop::getContextListShopID();
         return Db::getInstance()->executeS('
 			SELECT cl.*
 			FROM '._DB_PREFIX_.'contact ct
 			'.Shop::addSqlAssociation('contact', 'ct', false).'
 			LEFT JOIN '._DB_PREFIX_.'contact_lang cl
-				ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)Context::getContext()->language->id.')
+				ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int) Context::getContext()->language->id.')
 			WHERE ct.customer_service = 1
-			AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shop_ids)).')
+			AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shopIds)).')
 			GROUP BY ct.`id_contact`
 		');
     }
