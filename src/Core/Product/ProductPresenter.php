@@ -371,9 +371,13 @@ class ProductPresenter
 
         if ($show_availability) {
             if ($product['quantity'] > 0) {
-                $presentedProduct['availability_message'] = $product['available_now'];
-                $presentedProduct['availability'] = 'available';
                 $presentedProduct['availability_date'] = $product['available_date'];
+                if ($product['quantity'] < $settings->lastRemainingItems) {
+                    $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
+                } else {
+                    $presentedProduct['availability_message'] = $product['available_now'];
+                    $presentedProduct['availability'] = 'available';
+                }
             } elseif ($product['allow_oosp']) {
                 if ($product['available_later']) {
                     $presentedProduct['availability_message'] = $product['available_later'];
@@ -402,8 +406,6 @@ class ProductPresenter
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             }
-
-            $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
         } else {
             $presentedProduct['availability_message'] = null;
             $presentedProduct['availability_date'] = null;
@@ -428,14 +430,12 @@ class ProductPresenter
         array $presentedProduct
     )
     {
-        if ($product['quantity'] < $settings->lastRemainingItems) {
-            $presentedProduct['availability_message'] = $this->translator->trans(
-                'Last items in stock',
-                array(),
-                'Shop.Theme.Catalog'
-            );
-            $presentedProduct['availability'] = 'last_remaining_items';
-        }
+        $presentedProduct['availability_message'] = $this->translator->trans(
+            'Last items in stock',
+            array(),
+            'Shop.Theme.Catalog'
+        );
+        $presentedProduct['availability'] = 'last_remaining_items';
 
         return $presentedProduct;
     }
