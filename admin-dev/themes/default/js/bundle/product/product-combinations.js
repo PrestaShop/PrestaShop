@@ -90,13 +90,14 @@ var combinations = (function() {
       });
 
       /** on change shortcut impact on price, update form field impact on price */
-      $(document).on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function() {
+      $(document).on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function () {
         var id_attribute = $(this).closest('.combination-form').attr('data');
         var input = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price input');
+
         input.val($(this).val());
 
         /* force the update of final price */
-        input.change();
+        updateFinalPrice($(input.parents('tr')[0]));
       });
 
       /** on change default attribute, update which combination is the new default */
