@@ -190,25 +190,36 @@ class ThemeManager implements AddonManagerInterface
     /**
      * Actions to perform to restore default settings.
      *
-     * @param string $theme_name The theme name to reset
+     * @param string $themeName The theme name to reset
      *
      * @return bool True for success
      */
-    public function reset($theme_name)
+    public function reset($themeName)
     {
-        return $this->disable($theme_name) && $this->enable($theme_name);
+        return $this->disable($themeName) && $this->enable($themeName);
     }
 
     /**
      * Returns the last error, if found.
      *
-     * @param string $name The technical theme name
+     * @param string $themeName The technical theme name
      *
      * @return string|null The last error if found
      */
-    public function getError($theme_name)
+    public function getError($themeName)
     {
         return;
+    }
+
+    /**
+     * Get all errors of theme install
+     *
+     * @param string $themeName The technical theme name
+     * @return array|false
+     */
+    public function getErrors($themeName)
+    {
+        return $this->themeValidator->getErrors($themeName);
     }
 
     private function doCreateCustomHooks(array $hooks)

@@ -52,7 +52,7 @@ class ThemeManagerBuilder
         return new ThemeManager(
             $this->context->shop,
             new Configuration($this->context->shop),
-            new ThemeValidator(),
+            new ThemeValidator($this->context->getTranslator()),
             $this->context->employee,
             new Filesystem(),
             new Finder(),

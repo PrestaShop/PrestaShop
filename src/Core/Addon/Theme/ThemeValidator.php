@@ -27,9 +27,28 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use Shudrum\Component\ArrayFinder\ArrayFinder;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ThemeValidator
 {
+    /**
+     * Translator.
+     *
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    private $translator;
+
+    private $errors = array();
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    public function getErrors($themeName) {
+        return array_key_exists($themeName, $this->errors) ? $this->errors[$themeName] : false;
+    }
+
     public function isValid(Theme $theme)
     {
         return $this->hasRequiredFiles($theme)
@@ -39,14 +58,20 @@ class ThemeValidator
     private function hasRequiredProperties($theme)
     {
         $attributes = new ArrayFinder($theme->get(null));
+        $themeName = $theme->getName();
 
         foreach ($this->getRequiredProperties() as $prop) {
             if (!$attributes->offsetExists($prop)) {
-                return false;
+
+                if (!array_key_exists($themeName, $this->errors)) {
+                    $this->errors[$themeName] = array();
+                }
+
+                $this->errors[$themeName] = $this->translator->trans('An error occurred. The information "%s" is missing.', array($prop), 'Admin.Design.Notification');
             }
         }
 
-        return true;
+        return !array_key_exists($themeName, $this->errors);
     }
 
     public function getRequiredProperties()
@@ -70,13 +95,20 @@ class ThemeValidator
 
     private function hasRequiredFiles($theme)
     {
+        $themeName = $theme->getName();
+
         foreach ($this->getRequiredFiles() as $file) {
             if (!file_exists($theme->getDirectory().$file)) {
-                return false;
+
+                if (!array_key_exists($themeName, $this->errors)) {
+                    $this->errors[$themeName] = array();
+                }
+
+                $this->errors[$themeName] = $this->translator->trans('An error occurred. The template "%s" is missing.', array($file), 'Admin.Design.Notification');
             }
         }
 
-        return true;
+        return !array_key_exists($themeName, $this->errors);
     }
 
     public function getRequiredFiles()
