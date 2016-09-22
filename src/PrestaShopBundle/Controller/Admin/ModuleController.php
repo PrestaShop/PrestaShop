@@ -140,7 +140,7 @@ class ModuleController extends FrameworkBundleAdminController
             $currentTheme = $themeRepository->getInstanceByName($shop['theme_name']);
             $modulesTheme = $currentTheme->getModulesToEnable();
         } else {
-            $modulesTheme = false;
+            $modulesTheme = array();
         }
 
         $filters = new AddonListFilter();
@@ -154,7 +154,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         foreach ($installedProducts as $installedProduct) {
-            if (is_array($modulesTheme) && in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
+            if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
                 $row = 'theme_bundle';
             } elseif (
                 $installedProduct->attributes->has('origin_filter_value')
