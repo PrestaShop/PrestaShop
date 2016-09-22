@@ -40,8 +40,21 @@ class PrestaShopExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new AddOnsConfiguration();
+        $config = $this->processConfiguration($configuration, $configs);
+
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));
         $loader->load('services.yml');
+
+        $hasVerifySslParameter = $container->hasParameter('addons.api_client.verify_ssl');
+
+        if ($hasVerifySslParameter) {
+            $verifySsl = $container->getParameter('addons.api_client.verify_ssl');
+        } else {
+            $verifySsl = $config['addons']['api_client']['verify_ssl'];
+        }
+
+        $container->setParameter('prestashop.addons.api_client.verify_ssl', $verifySsl);
     }
 
     /**
@@ -49,6 +62,6 @@ class PrestaShopExtension extends Extension
      */
     public function getAlias()
     {
-        return 'prestashop_bundle';
+        return 'prestashop';
     }
 }

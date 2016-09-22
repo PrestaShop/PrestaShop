@@ -48,6 +48,22 @@ class ApiClient
         ;
     }
 
+    public function setSslVerification($verifySsl)
+    {
+        $this->addonsApiClient->setDefaultOption('verify', $verifySsl);
+    }
+
+    /**
+     * @param Client $client
+     * @return $this
+     */
+    public function setClient(Client $client)
+    {
+        $this->addonsApiClient = $client;
+
+        return $this;
+    }
+
     public function getNativesModules()
     {
         $response = $this->setMethod('listing')
