@@ -1345,6 +1345,12 @@ class AdminTranslationsControllerCore extends AdminController
                 'dir' => '',
                 'file' => '',
             ),
+            'modules' => array(
+                'name' => $this->l('Installed modules translations'),
+                'var' => '_MODULES',
+                'dir' => _PS_MODULE_DIR_,
+                'file' => ''
+            ),
         );
     }
 
