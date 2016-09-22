@@ -234,10 +234,10 @@ class AdminQuickAccessesControllerCore extends AdminController
             if ($object->toggleNewWindow()) {
                 $this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
             } else {
-                $this->errors[] = $this->trans('An error occurred while updating new window property.', array(), 'Admin.Parameters.Notification');
+                $this->errors[] = $this->trans('An error occurred while updating new window property.', array(), 'Admin.Navigation.Notification');
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while updating the new window property for this object.', array(), 'Admin.Parameters.Notification').
+            $this->errors[] = $this->trans('An error occurred while updating the new window property for this object.', array(), 'Admin.Navigation.Notification').
                 ' <b>'.$this->table.'</b> '.
                 $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }

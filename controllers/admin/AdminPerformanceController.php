@@ -648,13 +648,13 @@ class AdminPerformanceControllerCore extends AdminController
         if (Tools::isSubmit('submitAddServer')) {
             if ($this->access('add')) {
                 if (!Tools::getValue('memcachedIp')) {
-                    $this->errors[] = $this->trans('The Memcached IP is missing.', array(), 'Admin.Parameters.Notification');
+                    $this->errors[] = $this->trans('The Memcached IP is missing.', array(), 'Admin.AdvParameters.Notification');
                 }
                 if (!Tools::getValue('memcachedPort')) {
-                    $this->errors[] = $this->trans('The Memcached port is missing.', array(), 'Admin.Parameters.Notification');
+                    $this->errors[] = $this->trans('The Memcached port is missing.', array(), 'Admin.AdvParameters.Notification');
                 }
                 if (!Tools::getValue('memcachedWeight')) {
-                    $this->errors[] = $this->trans('The Memcached weight is missing.', array(), 'Admin.Parameters.Notification');
+                    $this->errors[] = $this->trans('The Memcached weight is missing.', array(), 'Admin.AdvParameters.Notification');
                 }
                 if (!count($this->errors)) {
                     if (CacheMemcache::addServer(pSQL(Tools::getValue('memcachedIp')),
@@ -662,7 +662,7 @@ class AdminPerformanceControllerCore extends AdminController
                         (int)Tools::getValue('memcachedWeight'))) {
                         Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
                     } else {
-                        $this->errors[] = $this->trans('The Memcached server cannot be added.', array(), 'Admin.Parameters.Notification');
+                        $this->errors[] = $this->trans('The Memcached server cannot be added.', array(), 'Admin.AdvParameters.Notification');
                     }
                 }
             } else {
@@ -675,7 +675,7 @@ class AdminPerformanceControllerCore extends AdminController
                 if (CacheMemcache::deleteServer((int)Tools::getValue('deleteMemcachedServer'))) {
                     Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
                 } else {
-                    $this->errors[] = $this->trans('There was an error when attempting to delete the Memcached server.', array(), 'Admin.Parameters.Notification');
+                    $this->errors[] = $this->trans('There was an error when attempting to delete the Memcached server.', array(), 'Admin.AdvParameters.Notification');
                 }
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
@@ -735,7 +735,7 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             '%directorypath%' => realpath($theme_cache_directory)
                         ),
-                        'Admin.Parameters.Notification'
+                        'Admin.AdvParameters.Notification'
                     );
                 }
 
@@ -781,13 +781,13 @@ class AdminPerformanceControllerCore extends AdminController
         if ((bool)Tools::getValue('media_server_up') && !defined('_PS_HOST_MODE_')) {
             if ($this->access('edit')) {
                 if (Tools::getValue('_MEDIA_SERVER_1_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_1_'))) {
-                    $this->errors[] = $this->trans('Media server #1 is invalid', array(), 'Admin.Parameters.Notification');
+                    $this->errors[] = $this->trans('Media server #1 is invalid', array(), 'Admin.AdvParameters.Notification');
                 }
                 if (Tools::getValue('_MEDIA_SERVER_2_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_2_'))) {
-                    $this->errors[] = $this->trans('Media server #2 is invalid', array(), 'Admin.Parameters.Notification');
+                    $this->errors[] = $this->trans('Media server #2 is invalid', array(), 'Admin.AdvParameters.Notification');
                 }
                 if (Tools::getValue('_MEDIA_SERVER_3_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_3_'))) {
-                    $this->errors[] = $this->trans('Media server #3 is invalid', array(), 'Admin.Parameters.Notification');
+                    $this->errors[] = $this->trans('Media server #3 is invalid', array(), 'Admin.AdvParameters.Notification');
                 }
                 if (!count($this->errors)) {
                     $base_urls = array();
@@ -835,23 +835,23 @@ class AdminPerformanceControllerCore extends AdminController
                     $config['parameters']['ps_caching'] = $caching_system;
                 } else {
                     $cache_active = false;
-                    $this->errors[] = $this->trans('The caching system is missing.', array(), 'Admin.Parameters.Notification');
+                    $this->errors[] = $this->trans('The caching system is missing.', array(), 'Admin.AdvParameters.Notification');
                 }
                 if ($cache_active) {
                     if ($caching_system == 'CacheMemcache' && !extension_loaded('memcache')) {
-                        $this->errors[] = $this->trans('To use Memcached, you must install the Memcache PECL extension on your server.', array(), 'Admin.Parameters.Notification').'
+                        $this->errors[] = $this->trans('To use Memcached, you must install the Memcache PECL extension on your server.', array(), 'Admin.AdvParameters.Notification').'
 							<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
                     } elseif ($caching_system == 'CacheMemcached' && !extension_loaded('memcached')) {
-                        $this->errors[] = $this->trans('To use Memcached, you must install the Memcached PECL extension on your server.', array(), 'Admin.Parameters.Notification').'
+                        $this->errors[] = $this->trans('To use Memcached, you must install the Memcached PECL extension on your server.', array(), 'Admin.AdvParameters.Notification').'
 							<a href="http://www.php.net/manual/en/memcached.installation.php">http://www.php.net/manual/en/memcached.installation.php</a>';
                     } elseif ($caching_system == 'CacheApc'  && !extension_loaded('apc') && !extension_loaded('apcu')) {
-                        $this->errors[] = $this->trans('To use APC cache, you must install the APC PECL extension on your server.', array(), 'Admin.Parameters.Notification').'
+                        $this->errors[] = $this->trans('To use APC cache, you must install the APC PECL extension on your server.', array(), 'Admin.AdvParameters.Notification').'
 							<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
                     } elseif ($caching_system == 'CacheXcache' && !extension_loaded('xcache')) {
-                        $this->errors[] = $this->trans('To use Xcache, you must install the Xcache extension on your server.', array(), 'Admin.Parameters.Notification').'
+                        $this->errors[] = $this->trans('To use Xcache, you must install the Xcache extension on your server.', array(), 'Admin.AdvParameters.Notification').'
 							<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
                     } elseif ($caching_system == 'CacheXcache' && !ini_get('xcache.var_size')) {
-                        $this->errors[] = $this->trans('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).', array(), 'Admin.Parameters.Notification').'
+                        $this->errors[] = $this->trans('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).', array(), 'Admin.AdvParameters.Notification').'
 							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';
                     }
 
@@ -871,7 +871,7 @@ class AdminPerformanceControllerCore extends AdminController
                         }
                         $redirectAdmin = true;
                     } else {
-                        $this->errors[] = $this->trans('The settings file cannot be overwritten.', array(), 'Admin.Parameters.Notification');
+                        $this->errors[] = $this->trans('The settings file cannot be overwritten.', array(), 'Admin.AdvParameters.Notification');
                     }
                 }
             } else {

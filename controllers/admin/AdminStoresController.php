@@ -332,14 +332,14 @@ class AdminStoresControllerCore extends AdminController
 
             /* If the selected country contains states, then a state have to be selected */
             if ((int)$country->contains_states && !$id_state) {
-                $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', array(), 'Admin.Parameters.Notification');
+                $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', array(), 'Admin.ShopParameters.Notification');
             }
 
             $latitude = (float)Tools::getValue('latitude');
             $longitude = (float)Tools::getValue('longitude');
 
             if (empty($latitude) || empty($longitude)) {
-                $this->errors[] = $this->trans('Latitude and longitude are required.', array(), 'Admin.Parameters.Notification');
+                $this->errors[] = $this->trans('Latitude and longitude are required.', array(), 'Admin.ShopParameters.Notification');
             }
 
             $postcode = Tools::getValue('postcode');
@@ -522,7 +522,7 @@ class AdminStoresControllerCore extends AdminController
 						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
             $isStateOk = Db::getInstance()->getValue($sql);
             if ($isStateOk != 1) {
-                $this->errors[] = $this->trans('The specified state is not located in this country.', array(), 'Admin.Parameters.Notification');
+                $this->errors[] = $this->trans('The specified state is not located in this country.', array(), 'Admin.ShopParameters.Notification');
             }
         }
     }
