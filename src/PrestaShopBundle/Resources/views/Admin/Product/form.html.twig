@@ -861,49 +861,19 @@
                         </fieldset>
                       </div>
                     </div>
+
                     <div class="row">
-                      <div class="col-md-12">
-                        <div id="custom_fields">
-                          <h2>{{ form.step6.suppliers.vars.label }}</h2>
-                          <div class="row">
-                            <div class="col-md-12">
-                              <div class="alert alert-info alert-drop m-b-1" role="alert">
-                                <i class="material-icons">help</i>
-                                <p class="alert-text">
-                                  {{ 'This interface allows you to specify the suppliers of the current product and its combinations, if any.'|trans({}, 'Admin.Catalog.Help')|raw }}<br>
-                                  {{ 'You can specify supplier references according to previously associated suppliers.'|trans({}, 'Admin.Catalog.Help')|raw }}
-                                  <strong>{{ 'Read more'|trans({}, 'Admin.Actions')|raw }}</strong>
-                                </p>
-                              </div>
-                              <div class="alert alert-info alert-down" role="alert">
-                                <p class="alert-down-text">
-                                  {{ 'When using the advanced stock management tool (see Shop Parameters > Products settings), the values you define (price, references) will be used in supply orders.'|trans({}, 'Admin.Catalog.Help')|raw }}
-                                </p>
-                              </div>
-                            </div>
-                            {{ form_errors(form.step6.suppliers) }}
-                            <div class="col-md-4">
-                              <fieldset class="form-group">
-                                <label>{{ 'Choose the suppliers associated with this product'|trans({}, 'Admin.Catalog.Feature') }}</label>
-                                {{ form_widget(form.step6.suppliers) }}
-                              </fieldset>
-                            </div>
-                            <div class="col-md-4" id="default_supplier_list">
-                              <fieldset class="form-group">
-                                <label>{{ 'Default supplier'|trans({}, 'Admin.Catalog.Feature') }}</label>
-                                {{ form_widget(form.step6.default_supplier) }}
-                              </fieldset>
-                            </div>
-                          </div>
-                        </div>
+                      <div class="col-md-8" id="supplier_collection">
+                        {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-choice.html.twig', { 'form': form.step6 }) }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div id="supplier_combination_collection" class="col-md-12" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
+                        {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
                       </div>
                     </div>
 
-                    <div id="supplier_combination_collection" class="col-md-12" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
-                      {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
-                    </div>
                   </div>
-
                 </div>
               </div>
             </div>
