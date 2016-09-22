@@ -33,7 +33,7 @@ class AdminShopControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
+        parent::__construct();
         $this->table = 'shop';
         $this->className = 'Shop';
         $this->multishop_context = Shop::CONTEXT_ALL;
@@ -81,8 +81,6 @@ class AdminShopControllerCore extends AdminController
                 'width' => 50,
             )*/
         );
-
-        parent::__construct();
     }
 
     public function getTabSlug()
