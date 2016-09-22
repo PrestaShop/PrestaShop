@@ -10,7 +10,7 @@
             <span class="spacer">&hellip;</span>
           {else}
             <a
-              rel="nofollow"
+              rel="{if $page.type === 'previous'}prev{elseif $page.type === 'next'}next{else}nofollow{/if}"
               href="{$page.url}"
               class="{if $page.type === 'previous'}previous {elseif $page.type === 'next'}next {/if}{['disabled' => !$page.clickable, 'js-search-link' => true]|classnames}"
             >
