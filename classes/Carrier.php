@@ -1577,7 +1577,7 @@ class CarrierCore extends ObjectModel
         $carrier_list = Db::getInstance()->executeS('
 			SELECT id_carrier FROM `'._DB_PREFIX_.'carrier`
 			WHERE deleted = 0
-			'.(is_array($exception) ? 'AND id_carrier NOT IN ('.join(',', $exception).')' : ''));
+			'.(is_array($exception) && count($exception) > 0 ? 'AND id_carrier NOT IN ('.join(',', $exception).')' : ''));
 
         if ($carrier_list) {
             $data = array();
