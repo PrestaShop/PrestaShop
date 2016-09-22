@@ -420,25 +420,6 @@ class CartRuleCore extends ObjectModel
             $result = $result_bak;
         }
 
-        // Retrocompatibility with 1.4 discounts
-        // TODO: remove? We're at 1.7 now
-        foreach ($result as &$cart_rule) {
-            $cart_rule['value'] = 0;
-            $cart_rule['minimal'] = Tools::convertPriceFull($cart_rule['minimum_amount'], new Currency($cart_rule['minimum_amount_currency']), Context::getContext()->currency);
-            $cart_rule['cumulable'] = !$cart_rule['cart_rule_restriction'];
-            $cart_rule['id_discount_type'] = false;
-            if ($cart_rule['free_shipping']) {
-                $cart_rule['id_discount_type'] = Discount::FREE_SHIPPING;
-            } elseif ($cart_rule['reduction_percent'] > 0) {
-                $cart_rule['id_discount_type'] = Discount::PERCENT;
-                $cart_rule['value'] = $cart_rule['reduction_percent'];
-            } elseif ($cart_rule['reduction_amount'] > 0) {
-                $cart_rule['id_discount_type'] = Discount::AMOUNT;
-                $cart_rule['value'] = $cart_rule['reduction_amount'];
-            }
-        }
-        unset($cart_rule);
-
         return $result;
     }
 
