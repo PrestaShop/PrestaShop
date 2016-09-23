@@ -1382,7 +1382,7 @@ class AdminModulesControllerCore extends AdminController
         parent::initModal();
 
         $this->context->smarty->assign(array(
-            'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=',
+            'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&module='.Tools::getValue('configure').'&lang=',
             'module_languages' => Language::getLanguages(false),
             'module_name' => Tools::getValue('module_name'),
         ));

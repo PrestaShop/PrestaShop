@@ -147,6 +147,7 @@ class AdminTranslationsControllerCore extends AdminController
             'theme' => $this->theme_selected,
             'post_limit_exceeded' => $this->post_limit_exceed,
             'url_submit' => self::$currentIndex.'&submitTranslations'.ucfirst($this->type_selected).'=1&token='.$this->token,
+            'url_submit_installed_module' => self::$currentIndex.'&submitSelect'.ucfirst($this->type_selected).'=1&token='.$this->token,
             'toggle_button' => $this->displayToggleButton(),
             'textarea_sized' => AdminTranslationsControllerCore::TEXTAREA_SIZED
         );
@@ -1543,6 +1544,8 @@ class AdminTranslationsControllerCore extends AdminController
                 } else {
                     $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 }
+            } elseif (Tools::isSubmit('submitSelectModules')){
+                $this->redirect(false,false,true);
             }
         } catch (PrestaShopException $e) {
             $this->errors[] = $e->getMessage();
@@ -1554,13 +1557,16 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @param bool $save_and_stay : true if the user has clicked on the button "save and stay"
      * @param bool $conf : id of confirmation message
+     * @param bool $modify_translation : true if the user has clicked on the button "Modify translation"
      */
-    protected function redirect($save_and_stay = false, $conf = false)
+    protected function redirect($save_and_stay = false, $conf = false, $modify_translation = false)
     {
         $conf = !$conf ? 4 : $conf;
         $url_base = self::$currentIndex.'&token='.$this->token.'&conf='.$conf;
-        if ($save_and_stay) {
-            Tools::redirectAdmin($url_base.'&lang='.$this->lang_selected->iso_code.'&type='.$this->type_selected.'&theme='.$this->theme_selected);
+        if($modify_translation) {
+            Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&lang='.Tools::getValue('langue').'&type='.$this->type_selected.'&module='.Tools::getValue('module').'&theme='.$this->theme_selected);
+        } elseif ($save_and_stay) {
+            Tools::redirectAdmin($url_base.'&lang='.$this->lang_selected->iso_code.'&type='.$this->type_selected.'&module='.Tools::getValue('module').'&theme='.$this->theme_selected);
         } else {
             Tools::redirectAdmin($url_base);
         }
@@ -2971,7 +2977,7 @@ class AdminTranslationsControllerCore extends AdminController
         $initial_root_dir = $root_dir;
         foreach ($modules as $module) {
             $root_dir = $initial_root_dir;
-            if ($module{0} == '.') {
+            if (isset($module{0}) && $module{0} == '.') {
                 continue;
             }
 
@@ -3020,8 +3026,11 @@ class AdminTranslationsControllerCore extends AdminController
      */
     public function initFormModules()
     {
-        // Get list of modules
-        $modules = $this->getListModules();
+        // Get list of installed modules
+        $installed_modules = $this->getListModules();
+
+        // get selected module
+        $modules[0] = Tools::getValue('module');
 
         if (!empty($modules)) {
             // Get all modules files and include all translation files
@@ -3038,7 +3047,9 @@ class AdminTranslationsControllerCore extends AdminController
                 'textarea_sized' => AdminTranslationsControllerCore::TEXTAREA_SIZED,
                 'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
                 'modules_translations' => isset($this->modules_translations) ? $this->modules_translations : array(),
-                'missing_translations' => $this->missing_translations
+                'missing_translations' => $this->missing_translations,
+                'module_name' => $modules[0],
+                'installed_modules' => $installed_modules
             ));
 
             $this->initToolbar();
