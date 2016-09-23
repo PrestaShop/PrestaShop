@@ -96,16 +96,16 @@ class ThemeValidator
     private function hasRequiredFiles(Theme $theme)
     {
         $themeName = $theme->getName();
-        $parentdir = realpath($theme->getDirectory().'/../'.$theme->get('parent')).'/';
-        $parentfile = false;
+        $parentDir = realpath($theme->getDirectory().'/../'.$theme->get('parent')).'/';
+        $parentFile = false;
 
         foreach ($this->getRequiredFiles() as $file) {
-            $childfile = $theme->getDirectory().$file;
+            $childFile = $theme->getDirectory().$file;
             if ($theme->get('parent')) {
-                $parentfile = $parentdir.$file;
+                $parentFile = $parentDir.$file;
             }
 
-            if (!file_exists($childfile) && !file_exists($parentfile)) {
+            if (!file_exists($childFile) && !file_exists($parentFile)) {
                 if (!array_key_exists($themeName, $this->errors)) {
                     $this->errors[$themeName] = array();
                 }
