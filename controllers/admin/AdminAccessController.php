@@ -107,6 +107,8 @@ class AdminAccessControllerCore extends AdminController
      */
     public function initContent()
     {
+        parent::initContent();
+
         $this->display = 'edit';
         $this->initTabModuleList();
         if (!$this->loadObject(true)) {
@@ -156,7 +158,7 @@ class AdminAccessControllerCore extends AdminController
             $enabled = (int)Tools::getValue('enabled');
             $id_tab = (int)Tools::getValue('id_tab');
             $id_profile = (int)Tools::getValue('id_profile');
-            
+
             die($access->updateLgcAccess((int)$id_profile, $id_tab, $perm, $enabled));
         }
     }

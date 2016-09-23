@@ -101,6 +101,8 @@ class AdminTranslationsControllerCore extends AdminController
      */
     public function initContent()
     {
+        parent::initContent();
+
         $this->initTabModuleList();
         $this->initPageHeaderToolbar();
 

@@ -36,6 +36,8 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
     public function initContent()
     {
+        parent::initContent();
+
         if ($this->ajax) {
             return;
         }

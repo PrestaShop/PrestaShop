@@ -407,6 +407,8 @@ class AdminFeaturesControllerCore extends AdminController
      */
     public function initContent()
     {
+        parent::initContent();
+
         // toolbar (save, cancel, new, ..) - show toolbar even if features are not active
         $this->initTabModuleList();
         $this->initToolbar();

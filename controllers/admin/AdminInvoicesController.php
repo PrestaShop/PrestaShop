@@ -226,6 +226,8 @@ class AdminInvoicesControllerCore extends AdminController
 
     public function initContent()
     {
+        parent::initContent();
+
         $this->display = 'edit';
         $this->initTabModuleList();
         $this->initToolbar();

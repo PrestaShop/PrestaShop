@@ -376,6 +376,8 @@ class AdminLocalizationControllerCore extends AdminController
 
     public function initContent()
     {
+        parent::initContent();
+
         $this->initTabModuleList();
         if (!$this->loadObject(true)) {
             return;

@@ -1414,6 +1414,8 @@ class AdminModulesControllerCore extends AdminController
 
     public function initContent()
     {
+        parent::initContent();
+
         if (Tools::isSubmit('addnewmodule') && $this->context->mode == Context::MODE_HOST) {
             $this->display = 'add';
             $this->context->smarty->assign(array('iso_code' => $this->context->language->iso_code));
