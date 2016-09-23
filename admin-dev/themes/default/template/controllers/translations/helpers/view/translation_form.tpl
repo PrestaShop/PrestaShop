@@ -81,13 +81,13 @@
 				<div id="BoxUseSpecialSyntax">
 					<div class="alert alert-warning">
 						<p>
-							{l s='Some of these expressions use this special syntax: %s.' sprintf='%d'}
+							{l s='Some of these expressions use this special syntax: %s.' sprintf=['%d']}
 							<br />
 							{l s='You MUST use this syntax in your translations. Here are several examples:'}
 						</p>
 						<ul>
-							<li>"{l s='There are [1]%d[/1] products' tags=['<strong>']}": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
-							<li>"{l s='List of pages in [1]%s[/1]' tags=['<strong>']}": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
+							<li>"{l s='There are [1]%d[/1] products' tags=['<strong>']}": {l s='"%s" will be replaced by a number.' sprintf=['%d']}</li>
+							<li>"{l s='List of pages in [1]%s[/1]' tags=['<strong>']}": {l s='"%s" will be replaced by a string.' sprintf=['%s']}</li>
 							<li>"{l s='Feature: [1]%1$s[/1] ([1]%2$d[/1] values)' tags=['<strong>']}": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
 						</ul>
 					</div>
