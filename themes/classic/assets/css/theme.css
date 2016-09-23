@@ -7014,6 +7014,8 @@ body#checkout {
       .product-features > dl.data-sheet dd.value:nth-of-type(even),
       .product-features > dl.data-sheet dt.name:nth-of-type(even) {
         background: #f6f6f6; }
+    .product-features > dl.data-sheet dt.name {
+      text-transform: capitalize; }
 
 .product-variants > .product-variants-item {
   margin: 1.25rem 0; }
