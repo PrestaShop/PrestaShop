@@ -43,6 +43,11 @@ _admin_international_routing:
     resource: "admin/routing_international.yml"
     prefix: /international
 
+_admin_security_routing:
+    resource: "admin/routing_security.yml"
+    prefix: /security
+
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}/{view}

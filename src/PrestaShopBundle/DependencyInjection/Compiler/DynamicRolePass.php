@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\DependencyInjection;
+namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -40,7 +40,7 @@ class DynamicRolePass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        /**
+        /*
          * @see Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension:createRoleHierarchy
          */
         if ($container->hasDefinition('security.access.role_hierarchy_voter')) {
@@ -49,7 +49,7 @@ class DynamicRolePass implements CompilerPassInterface
                 'security.access.role_hierarchy_voter'
             );
         }
-        
+
         $roleHierarchyVoterDefinition = $container->register(
             'security.access.role_hierarchy_voter',
             '%security.access.role_hierarchy_voter.class%'
