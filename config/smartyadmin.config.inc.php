@@ -54,12 +54,13 @@ function toolsConvertPrice($params, &$smarty)
 
 function smartyTranslate($params, &$smarty)
 {
-    $htmlentities = !isset($params['js']);
-    $pdf = isset($params['pdf']);
-    $addslashes = (isset($params['slashes']) || isset($params['js']));
+    $translator = Context::getContext()->getTranslator();
+
+    $isInPDF = isset($params['pdf']);
+    $isInModule = isset($params['mod']) && !empty($params['mod']);
     $sprintf = isset($params['sprintf']) ? $params['sprintf'] : array();
 
-    if (!empty($params['d'])) {
+    if (isset($params['d']) && !empty($params['d'])) {
         if (isset($params['tags'])) {
             $backTrace = debug_backtrace();
 
@@ -93,50 +94,19 @@ function smartyTranslate($params, &$smarty)
             }
         }
 
-        return Context::getContext()->getTranslator()->trans($params['s'], $sprintf, $params['d']);
+        return $translator->trans($params['s'], $sprintf, $params['d']);
     }
 
-    if ($pdf) {
+    if ($isInPDF) {
         return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $sprintf), $params);
     }
 
     $filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 
     // If the template is part of a module
-    if (!empty($params['mod'])) {
+    if ($isInModule) {
         return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf, isset($params['js'])), $params);
     }
 
-    // If the tpl is at the root of the template folder
-    if (dirname($filename) == '.') {
-        $class = 'index';
-    }
-
-    // If the tpl is used by a Helper
-    if (strpos($filename, 'helpers') === 0) {
-        $class = 'Helper';
-    } else {
-        // If the tpl is used by a Controller
-
-        if (!empty(Context::getContext()->override_controller_name_for_translations)) {
-            $class = Context::getContext()->override_controller_name_for_translations;
-        } elseif (isset(Context::getContext()->controller)) {
-            $class_name = get_class(Context::getContext()->controller);
-            $class = substr($class_name, 0, strpos(Tools::strtolower($class_name), 'controller'));
-        } else {
-            // Split by \ and / to get the folder tree for the file
-            $folder_tree = preg_split('#[/\\\]#', $filename);
-            $key = array_search('controllers', $folder_tree);
-
-            // If there was a match, construct the class name using the child folder name
-            // Eg. xxx/controllers/customers/xxx => AdminCustomers
-            if ($key !== false) {
-                $class = 'Admin'.Tools::toCamelCase($folder_tree[$key + 1], true);
-            } elseif (isset($folder_tree[0])) {
-                $class = 'Admin'.Tools::toCamelCase($folder_tree[0], true);
-            }
-        }
-    }
-
-    return Translate::smartyPostProcessTranslation(Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf), $params);
+    return $translator->trans($params['s'], $sprintf, null);
 }
