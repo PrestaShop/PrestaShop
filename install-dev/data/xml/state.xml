@@ -978,5 +978,6 @@
     <state id="AU-WA" id_country="AU" id_zone="Oceania" iso_code="WA" tax_behavior="0" active="1">
       <name>Western Australia</name>
     </state>
+	
   </entities>
 </entity_state>

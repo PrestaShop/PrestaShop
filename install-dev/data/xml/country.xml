@@ -35,7 +35,7 @@
     <country id="US" id_zone="North_America" iso_code="US" call_prefix="1" active="1" contains_states="1" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNN" display_tax_label="0"/>
     <country id="HK" id_zone="Asia" iso_code="HK" call_prefix="852" active="1" contains_states="0" need_identification_number="0" need_zip_code="0" zip_code_format="" display_tax_label="1"/>
     <country id="NO" id_zone="Europe_out_E_U" iso_code="NO" call_prefix="47" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>
-    <country id="AU" id_zone="Oceania" iso_code="AU" call_prefix="61" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>
+    <country id="AU" id_zone="Oceania" iso_code="AU" call_prefix="61" active="1" contains_states="1" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>
     <country id="SG" id_zone="Asia" iso_code="SG" call_prefix="65" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNNN" display_tax_label="1"/>
     <country id="IE" id_zone="Europe" iso_code="IE" call_prefix="353" active="1" contains_states="0" need_identification_number="0" need_zip_code="0" zip_code_format="" display_tax_label="1"/>
     <country id="NZ" id_zone="Oceania" iso_code="NZ" call_prefix="64" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>
