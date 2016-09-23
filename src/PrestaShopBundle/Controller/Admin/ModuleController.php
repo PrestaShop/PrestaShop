@@ -134,9 +134,14 @@ class ModuleController extends FrameworkBundleAdminController
         // Retrieve current shop
         $shopID = $shopService->getContextShopID();
         $shops = $shopService->getShops();
-        $shop = $shops[$shopID];
-        $currentTheme = $themeRepository->getInstanceByName($shop['theme_name']);
-        $modulesTheme = $currentTheme->getModulesToEnable();
+
+        if (!empty($shopID) && is_array($shops) && array_key_exists($shopID, $shops)) {
+            $shop = $shops[$shopID];
+            $currentTheme = $themeRepository->getInstanceByName($shop['theme_name']);
+            $modulesTheme = $currentTheme->getModulesToEnable();
+        } else {
+            $modulesTheme = array();
+        }
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
