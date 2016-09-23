@@ -6,6 +6,8 @@ use Link;
 use Language;
 use Product;
 use ImageType;
+use Image;
+use ImageManager;
 
 class ImageRetriever
 {
@@ -82,15 +84,44 @@ class ImageRetriever
         if (get_class($object) === 'Product') {
             $type = 'products';
             $getImageURL = 'getImageLink';
+            $root = _PS_PROD_IMG_DIR_;
         } else {
             $type = 'categories';
             $getImageURL = 'getCatImageLink';
+            $root = _PS_CAT_IMG_DIR_;
         }
 
         $urls  = [];
         $image_types = ImageType::getImagesTypes($type, true);
 
+        $imageFolderPath = implode(DIRECTORY_SEPARATOR, [
+            rtrim($root, DIRECTORY_SEPARATOR),
+            rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
+        ]);
+
+        $extPath = $imageFolderPath . DIRECTORY_SEPARATOR . 'fileType';
+        $ext = @file_get_contents($extPath) ?: 'jpg';
+
+        $mainImagePath = implode(DIRECTORY_SEPARATOR, [
+            $imageFolderPath,
+            $id_image.'.'.$ext
+        ]);
+
         foreach ($image_types as $image_type) {
+            $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
+                $imageFolderPath,
+                $id_image.'-'.$image_type['name'].'.'.$ext
+            ]);
+
+            if (!file_exists($resizedImagePath)) {
+                ImageManager::resize(
+                    $mainImagePath,
+                    $resizedImagePath,
+                    (int)$image_type['width'],
+                    (int)$image_type['height']
+                );
+            }
+
             $url = $this->link->$getImageURL(
                 $object->link_rewrite,
                 $id_image,
