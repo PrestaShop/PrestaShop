@@ -58,13 +58,8 @@ $(document).ready(function() {
 
   // Validate price fields on input change
   $(".money-type input[type='text']").change(function validate() {
-    var inputValue = $(this).val();
-
-    if (isNaN(inputValue) || '' === inputValue) {
-      inputValue = 0;
-    }
-
-    var parsedValue = truncateDecimals(parseFloat(inputValue), 6);
+    var inputValue = priceCalculation.normalizePrice($(this).val());
+    var parsedValue = truncateDecimals(inputValue, 6);
 
     $(this).val(parsedValue);
   });
@@ -1766,6 +1761,8 @@ var priceCalculation = (function() {
       $('#form_step2_price, #form_step2_price_ttc').change();
     },
     'normalizePrice': function (price) {
+      price = parseFloat(price.replace(/,/g, '.'));
+
       if (isNaN(price) || price === '') {
         price = 0;
       }
@@ -1773,21 +1770,19 @@ var priceCalculation = (function() {
       return price;
     },
     'taxInclude': function() {
-      var price = priceHTElem.val().replace(/,/g, '.');
-      price = this.normalizePrice(price);
-
+      var price = this.normalizePrice(priceHTElem.val());
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
-      var newPrice = new Number(ps_round(addTaxes(price, rates, computation_method), displayPricePrecision)) + new Number(getEcotaxTaxIncluded());
+      var priceWithTaxes = new Number(ps_round(addTaxes(price, rates, computation_method), displayPricePrecision));
+      var ecotaxIncluded = new Number(getEcotaxTaxIncluded());
+      var newPrice = priceWithTaxes + ecotaxIncluded;
       newPrice = truncateDecimals(newPrice, 6);
 
       priceTTCElem.val(newPrice);
       priceTTCShorcutElem.val(newPrice);
     },
     'taxExclude': function() {
-      var price = parseFloat(priceTTCElem.val().replace(/,/g, '.'));
-      price = this.normalizePrice(price);
-
+      var price = this.normalizePrice(priceTTCElem.val());
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
       var newPrice = ps_round(removeTaxes(ps_round(price - getEcotaxTaxIncluded(), displayPricePrecision), rates, computation_method), displayPricePrecision);
@@ -1797,7 +1792,7 @@ var priceCalculation = (function() {
       priceHTShortcutElem.val(newPrice);
     },
     'impactTaxInclude': function(obj) {
-      var price = parseFloat(obj.val().replace(/,/g, '.'));
+      var price = this.normalizePrice(obj.val());
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
       if (isNaN(price)) {
         targetInput.val(0);
@@ -1811,7 +1806,7 @@ var priceCalculation = (function() {
       targetInput.val(newPrice);
     },
     'impactFinalPrice': function(obj) {
-      var price = parseFloat(obj.val().replace(/,/g, '.'));
+      var price = this.normalizePrice(obj.val());
       var finalPrice = obj.closest('div[id^="combination_form_"]').find('.final-price');
       var defaultFinalPrice = finalPrice.attr('data-price');
       var priceToBeChanged = new Number(price) + new Number(defaultFinalPrice);
@@ -1820,7 +1815,7 @@ var priceCalculation = (function() {
       finalPrice.html(priceToBeChanged);
     },
     'impactTaxExclude': function(obj) {
-      var price = parseFloat(obj.val().replace(/,/g, '.'));
+      var price = this.normalizePrice(obj.val());
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
       if (isNaN(price)) {
         targetInput.val(0);
