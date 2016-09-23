@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class ConfigurationKPICore
+ */
 class ConfigurationKPICore extends Configuration
 {
     public static $definition_backup;
 
+    /**
+     * Set KPI definition
+     */
     public static function setKpiDefinition()
     {
         ConfigurationKPI::$definition_backup = Configuration::$definition;
@@ -35,136 +41,272 @@ class ConfigurationKPICore extends Configuration
         Configuration::$definition['primary'] = 'id_configuration_kpi';
     }
 
+    /**
+     * Unset KPI definition
+     */
     public static function unsetKpiDefinition()
     {
         Configuration::$definition = ConfigurationKPI::$definition_backup;
     }
 
-    public static function getIdByName($key, $id_shop_group = null, $id_shop = null)
+    /**
+     * Get ID by name
+     *
+     * @param string   $key         Configuration key
+     * @param int|null $idShopGroup ShopGroup ID
+     * @param int|null $idShop      Shop ID
+     *
+     * @return int ConfigurationKPI ID
+     */
+    public static function getIdByName($key, $idShopGroup = null, $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::getIdByName($key, $id_shop_group, $id_shop);
+        $configurationKpi = parent::getIdByName($key, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $configurationKpi;
     }
 
+    /**
+     * Load configuration
+     */
     public static function loadConfiguration()
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::loadConfiguration();
+        parent::loadConfiguration();
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
     }
 
-    public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null, $default = false)
+    /**
+     * Get value
+     *
+     * @param string $key         Configuration key
+     * @param null   $idLang      Language ID
+     * @param null   $idShopGroup ShopGroup ID
+     * @param null   $idShop      Shop ID
+     * @param bool   $default     Default value
+     *
+     * @return string
+     */
+    public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::get($key, $id_lang, $id_shop_group, $id_shop, $default);
+        $value = parent::get($key, $idLang, $idShopGroup, $idShop, $default);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $value;
     }
 
-    public static function getGlobalValue($key, $id_lang = null)
+    /**
+     * Get global vlaue
+     *
+     * @param string   $key    Configuration key
+     * @param int|null $idLang Language ID
+     *
+     * @return string Global value
+     */
+    public static function getGlobalValue($key, $idLang = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::getGlobalValue($key, $id_lang);
+        $globalValue = parent::getGlobalValue($key, $idLang);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $globalValue;
     }
 
-    public static function getInt($key, $id_shop_group = null, $id_shop = null)
+    /**
+     * Get value independent from language
+     *
+     * @param string $key         Configuration key
+     * @param null   $idShopGroup ShopGroup ID
+     * @param null   $idShop      Shop ID
+     *
+     * @return array Values for key for all available languages
+     */
+    public static function getInt($key, $idShopGroup = null, $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::getInt($key, $id_shop_group, $id_shop);
+        $values = parent::getInt($key, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $values;
     }
 
-    public static function getMultiple($keys, $id_lang = null, $id_shop_group = null, $id_shop = null)
+    /**
+     * Get multiple keys
+     *
+     * @param array    $keys        Configuation keys
+     * @param int|null $idLang      Language ID
+     * @param int|null $idShopGroup ShopGroup ID
+     * @param int|null $idShop      Shop ID
+     *
+     * @return array Configuration values
+     */
+    public static function getMultiple($keys, $idLang = null, $idShopGroup = null, $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::getMultiple($keys, $id_lang, $id_shop_group, $id_shop);
+        $configurationValues = parent::getMultiple($keys, $idLang, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $configurationValues;
     }
 
-    public static function hasKey($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
+    /**
+     * Has key
+     *
+     * @param string   $key
+     * @param int|null $idLang      Language ID
+     * @param int|null $idShopGroup ShopGroup ID
+     * @param int|null $idShop      Shop ID
+     *
+     * @return bool
+     */
+    public static function hasKey($key, $idLang = null, $idShopGroup = null, $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::hasKey($key, $id_lang, $id_shop_group, $id_shop);
+        $hasKey = parent::hasKey($key, $idLang, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $hasKey;
     }
 
-    public static function set($key, $values, $id_shop_group = null, $id_shop = null)
+    /**
+     * Set key
+     *
+     * @param string $key         Configuration key
+     * @param mixed  $values      Values
+     * @param null   $idShopGroup ShopGroup ID
+     * @param null   $idShop      Shop ID
+     */
+    public static function set($key, $values, $idShopGroup = null, $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::set($key, $values, $id_shop_group, $id_shop);
+        parent::set($key, $values, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
     }
 
+    /**
+     * Update global value
+     *
+     * @param string $key    Configuration key
+     * @param mixed  $values Values
+     * @param bool   $html   Do the values contain HTML?
+     *
+     * @return bool Indicates whether the key was successfully updated
+     */
     public static function updateGlobalValue($key, $values, $html = false)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::updateGlobalValue($key, $values, $html);
+        $updateSuccess = parent::updateGlobalValue($key, $values, $html);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $updateSuccess;
     }
 
-    public static function updateValue($key, $values, $html = false, $id_shop_group = null, $id_shop = null)
+    /**
+     * Update value
+     *
+     * @param string $key         Configuration key
+     * @param mixed  $values      Values
+     * @param bool   $html        Do the values contain HTML?
+     * @param null   $idShopGroup ShopGroup ID
+     * @param null   $idShop      Shop ID
+     *
+     * @return bool Indicates whether the key was successfully updated
+     */
+    public static function updateValue($key, $values, $html = false, $idShopGroup = null, $idShop = null)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::updateValue($key, $values, $html, $id_shop_group, $id_shop);
+        $updateSuccess = parent::updateValue($key, $values, $html, $idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $updateSuccess;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
     public static function deleteByName($key)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::deleteByName($key);
+        $deleteSuccess = parent::deleteByName($key);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $deleteSuccess;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
     public static function deleteFromContext($key)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::deleteFromContext($key);
+        $deleteSuccess = parent::deleteFromContext($key);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $deleteSuccess;
     }
 
-    public static function hasContext($key, $id_lang, $context)
+    /**
+     * @param string $key
+     * @param int    $idLang
+     * @param int    $context
+     *
+     * @return bool
+     */
+    public static function hasContext($key, $idLang, $context)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::hasContext($key, $id_lang, $context);
+        $hasContext = parent::hasContext($key, $idLang, $context);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $hasContext;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
     public static function isOverridenByCurrentContext($key)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::isOverridenByCurrentContext($key);
+        $isOverriden = parent::isOverridenByCurrentContext($key);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $isOverriden;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
     public static function isLangKey($key)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::isLangKey($key);
+        $isLangKey = parent::isLangKey($key);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $isLangKey;
     }
 
-    protected static function sqlRestriction($id_shop_group, $id_shop)
+    /**
+     * @param int $idShopGroup
+     * @param int $idShop
+     *
+     * @return string
+     */
+    protected static function sqlRestriction($idShopGroup, $idShop)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::sqlRestriction($id_shop_group, $id_shop);
+        $sqlRestriction = parent::sqlRestriction($idShopGroup, $idShop);
         ConfigurationKPI::unsetKpiDefinition();
-        return $r;
+
+        return $sqlRestriction;
     }
 }
