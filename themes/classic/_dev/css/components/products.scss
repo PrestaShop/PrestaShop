@@ -434,6 +434,9 @@
         background: $gray-lighter;
       }
     }
+    dt.name {
+      text-transform: capitalize;
+    }
   }
 }
 .product-variants {

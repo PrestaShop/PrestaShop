@@ -50,7 +50,7 @@
           <h3 class="h6">{l s='Specific References' d='Shop.Theme.Catalog'}</h3>
             <dl class="data-sheet">
               {foreach from=$product.specific_references item=reference key=key}
-                <dt class="name">{l s=$key|ucfirst d='Shop.Theme.Catalog'}</dt>
+                <dt class="name">{$key}</dt>
                 <dd class="value">{$reference}</dd>
               {/foreach}
             </dl>
