@@ -71,7 +71,7 @@
 					{foreach from=$zones key=i item=zone}
 					<tr class="fees" data-zoneid="{$zone.id_zone}">
 						<td>
-							<label for="zone_{$zone.id_zone}">{$zone.name}</label>
+							<label for="zone_{$zone.id_zone}">{$zone.name}{if !$zone.active} <small>({l s='inactive'})</small>{/if}</label>
 						</td>
 						<td class="zone">
 							<input class="form-control input_zone" id="zone_{$zone.id_zone}" name="zone_{$zone.id_zone}" value="1" type="checkbox" {if isset($fields_value['zones'][$zone.id_zone]) && $fields_value['zones'][$zone.id_zone]} checked="checked"{/if}/>
