@@ -56,38 +56,6 @@
 			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=[$count]}</span></p>
 			<p>{l s='Total missing expressions:'} <span class="badge">{l s='%d' sprintf=[$missing_translations]}</p>
 		</div>
-		<form action="{$url_submit_installed_module|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
-			<div class="panel">
-				<input type="hidden" name="langue" value="{$lang}" />
-				<input type="hidden" name="type" value="{$type}" />
-				<input type="hidden" name="theme" value="{$theme}" />
-				<input type="hidden" name="controller" value="AdminTranslations" />
-				<h3>
-					<i class="icon-file-text"></i>
-					{l s='Modify translations'}
-				</h3>
-				<p class="alert alert-info">
-					{l s='Here you can modify translations for all installed module.'}<br />
-				</p>
-				<div class="form-group">
-					<label class="control-label col-lg-3" for="translations-languages">{l s='Select your module'}</label>
-					<div class="col-lg-4">
-						<select name="module" id="installed_module">
-							<option value="">{l s='Module'}</option>
-							{foreach from=$installed_modules key=key item=module}
-								<option value="{$module}">{$module}</option>
-							{/foreach}
-						</select>
-					</div>
-					<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
-				</div>
-				<div class="panel-footer">
-					<button type="submit" class="btn btn-default pull-right" id="submitSelect{$type|ucfirst}" name="submitSelect{$type|ucfirst}">
-						<i class="process-icon-edit"></i> {l s='Modify translation'}
-					</button>
-				</div>
-			</div>
-		</form>
 
 		<form method="post" id="{$table}_form" action="{$url_submit|escape:'html':'UTF-8'}" class="form-horizontal">
 			<div class="panel">
@@ -128,9 +96,9 @@
 				</div>
 			</div>
 
-			{foreach $modules_translations as $theme_name => $theme}
+			{foreach $modules_translations as $theme_name => $selected_theme}
 				{if $theme_name}<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{$theme_name}</h2>{/if}
-				{foreach $theme as $module_name => $module}
+				{foreach $selected_theme as $module_name => $module}
 					<h2>{l s='Module:'} <a name="{$module_name}">{$module_name}</a></h2>
 					{foreach $module as $template_name => $newLang}
 						{if !empty($newLang)}
@@ -184,10 +152,43 @@
 									<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay' d='Admin.Actions'}</button>
 								</div>
 							</div>
+              </form>
 						{/if}
 					{/foreach}
 				{/foreach}
 			{/foreach}
 		{/if}
 
+    <form action="{$url_submit_installed_module|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
+      <div class="panel">
+        <input type="hidden" name="langue" value="{$lang}" />
+        <input type="hidden" name="type" value="{$type}" />
+        <input type="hidden" name="theme" value="{$theme}" />
+        <input type="hidden" name="controller" value="AdminTranslations" />
+        <h3>
+          <i class="icon-file-text"></i>
+          {l s='Modify translations'}
+        </h3>
+        <p class="alert alert-info">
+          {l s='Here you can modify translations for all installed module.'}<br />
+        </p>
+        <div class="form-group">
+          <label class="control-label col-lg-3" for="translations-languages">{l s='Select your module'}</label>
+          <div class="col-lg-4">
+            <select name="module" id="installed_module">
+              <option value="">{l s='Module'}</option>
+              {foreach from=$installed_modules key=key item=module}
+                <option value="{$module}">{$module}</option>
+              {/foreach}
+            </select>
+          </div>
+          <input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
+        </div>
+        <div class="panel-footer">
+          <button type="submit" class="btn btn-default pull-right" id="submitSelect{$type|ucfirst}" name="submitSelect{$type|ucfirst}">
+            <i class="process-icon-edit"></i> {l s='Modify translation'}
+          </button>
+        </div>
+      </div>
+    </form>
 {/block}
