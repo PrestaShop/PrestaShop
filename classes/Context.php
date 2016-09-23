@@ -69,7 +69,7 @@ class ContextCore
     /** @var Currency */
     public $currency;
 
-    /** @var AdminTab */
+    /** @var Tab */
     public $tab;
 
     /** @var Shop */
