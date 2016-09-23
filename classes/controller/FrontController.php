@@ -1129,6 +1129,18 @@ class FrontControllerCore extends Controller
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
 
+        if ($overridden_layout = Hook::exec(
+            'overrideLayoutTemplate',
+            array(
+                'default_layout' => $layout,
+                'entity' => $entity,
+                'locale' => $this->context->language->locale,
+                'controller' => $this,
+            )
+        )) {
+            return $overridden_layout;
+        }
+
         if ((int) Tools::getValue('content_only')) {
             $layout = 'layouts/layout-content-only.tpl';
         }
