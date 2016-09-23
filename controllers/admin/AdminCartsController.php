@@ -95,15 +95,18 @@ class AdminCartsControllerCore extends AdminController
                 'class' => 'fixed-width-lg',
                 'filter_key' => 'a!date_add'
             ),
-            'id_guest' => array(
+        );
+
+        if (Configuration::get('PS_GUEST_CHECKOUT_ENABLED')) {
+            $this->fields_list['id_guest'] = array(
                 'title' => $this->trans('Online', array(), 'Admin.Global'),
                 'align' => 'text-center',
                 'type' => 'bool',
                 'havingFilter' => true,
                 'class' => 'fixed-width-xs',
-                'icon' => array(0 => 'icon-', 1 => 'icon-user')
-            )
-        );
+            );
+        }
+
         $this->shopLinkType = 'shop';
 
         $this->bulk_actions = array(
