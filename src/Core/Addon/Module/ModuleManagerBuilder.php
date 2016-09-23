@@ -131,6 +131,13 @@ class ModuleManagerBuilder
             _PS_VERSION_)
         ;
 
+        if (file_exists($this->getConfigDir().'/parameters.php')) {
+            $parameters = require($this->getConfigDir().'/parameters.php');
+            if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {
+                $marketPlaceClient->setSslVerification($parameters['parameters']['addons.api_client.verify_ssl']);
+            }
+        }
+
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient);
         self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
 
@@ -159,11 +166,16 @@ class ModuleManagerBuilder
     {
         // get the environment to load the good routing file
         $routeFileName = _PS_MODE_DEV_ === true ? 'routing_dev.yml' : 'routing.yml';
-        $routesDirectory = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config';
+        $routesDirectory = $this->getConfigDir();
         $locator = new FileLocator(array($routesDirectory));
         $loader = new YamlFileLoader($locator);
 
         return new Router($loader, $routeFileName);
+    }
+
+    protected function getConfigDir()
+    {
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config';
     }
 
     /**

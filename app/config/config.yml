@@ -104,3 +104,8 @@ csa_guzzle:
                 timeout: "5.0"
                 headers:
                     Accept: "application/json"
+
+prestashop:
+    addons:
+        api_client:
+            verify_ssl: ~ # true by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage
