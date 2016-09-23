@@ -42,8 +42,8 @@ class AdminTaxesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
@@ -51,45 +51,45 @@ class AdminTaxesControllerCore extends AdminController
         $this->fields_list = array(
             'id_tax' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto'),
-            'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%' , 'class' => 'fixed-width-md'),
+            'rate' => array('title' => $this->trans('Rate', array(), 'Admin.International.Feature'), 'align' => 'center', 'suffix' => '%' , 'class' => 'fixed-width-md'),
             'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm', 'remove_onclick' => true)
             );
 
         $ecotax_desc = '';
         if (Configuration::get('PS_USE_ECOTAX')) {
-            $ecotax_desc = $this->l('If you disable the ecotax, the ecotax for all your products will be set to 0.');
+            $ecotax_desc = $this->trans('If you disable the ecotax, the ecotax for all your products will be set to 0.', array(), 'Admin.International.Help');
         }
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->l('Tax options'),
+                'title' =>    $this->trans('Tax options', array(), 'Admin.International.Feature'),
                 'fields' =>    array(
                     'PS_TAX' => array(
-                        'title' => $this->l('Enable tax'),
-                        'desc' => $this->l('Select whether or not to include tax on purchases.'),
+                        'title' => $this->trans('Enable tax', array(), 'Admin.International.Feature'),
+                        'desc' => $this->trans('Select whether or not to include tax on purchases.', array(), 'Admin.International.Help'),
                         'cast' => 'intval', 'type' => 'bool'),
                     'PS_TAX_DISPLAY' => array(
-                        'title' => $this->l('Display tax in the shopping cart'),
-                        'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart.'),
+                        'title' => $this->trans('Display tax in the shopping cart', array(), 'Admin.International.Feature'),
+                        'desc' => $this->trans('Select whether or not to display tax on a distinct line in the cart.', array(), 'Admin.International.Help'),
                         'cast' => 'intval',
                         'type' => 'bool'),
                     'PS_TAX_ADDRESS_TYPE' => array(
-                        'title' => $this->l('Based on'),
+                        'title' => $this->trans('Based on', array(), 'Admin.International.Feature'),
                         'cast' => 'pSQL',
                         'type' => 'select',
                         'list' => array(
                             array(
-                                'name' => $this->l('Invoice address'),
+                                'name' => $this->trans('Invoice address', array(), 'Admin.International.Feature'),
                                 'id' => 'id_address_invoice'
                                 ),
                             array(
-                                'name' => $this->l('Delivery address'),
+                                'name' => $this->trans('Delivery address', array(), 'Admin.International.Feature'),
                                 'id' => 'id_address_delivery')
                                 ),
                         'identifier' => 'id'
                         ),
                     'PS_USE_ECOTAX' => array(
-                        'title' => $this->l('Use ecotax'),
+                        'title' => $this->trans('Use ecotax', array(), 'Admin.International.Feature'),
                         'desc' => $ecotax_desc,
                         'validation' => 'isBool',
                         'cast' => 'intval',
@@ -102,8 +102,8 @@ class AdminTaxesControllerCore extends AdminController
 
         if (Configuration::get('PS_USE_ECOTAX') || Tools::getValue('PS_USE_ECOTAX')) {
             $this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array(
-                'title' => $this->l('Ecotax'),
-                'hint' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
+                'title' => $this->trans('Ecotax', array(), 'Admin.International.Feature'),
+                'hint' => $this->trans('Define the ecotax (e.g. French ecotax: 19.6%).', array(), 'Admin.International.Help'),
                 'cast' => 'intval',
                 'type' => 'select',
                 'identifier' => 'id_tax_rules_group',
@@ -119,7 +119,7 @@ class AdminTaxesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tax'] = array(
                 'href' => self::$currentIndex.'&addtax&token='.$this->token,
-                'desc' => $this->l('Add new tax', null, null, false),
+                'desc' => $this->trans('Add new tax', array(), 'Admin.International.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -144,11 +144,11 @@ class AdminTaxesControllerCore extends AdminController
         }
 
         if (!array_key_exists('DeleteItem', self::$cache_lang)) {
-            self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
+            self::$cache_lang['DeleteItem'] = $this->trans('Delete item #', array(), 'Admin.International.Feature');
         }
 
         if (TaxRule::isTaxInUse($id)) {
-            $confirm = $this->l('This tax is currently in use as a tax rule. Are you sure you\'d like to continue?', null, true, false);
+            $confirm = $this->trans('This tax is currently in use as a tax rule. Are you sure you\'d like to continue?', array(), 'Admin.International.Notification');
         }
 
         $this->context->smarty->assign(array(
@@ -173,7 +173,7 @@ class AdminTaxesControllerCore extends AdminController
     public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
     {
         if ($value && TaxRule::isTaxInUse($id)) {
-            $confirm = $this->l('This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you\'d like to continue?', null, true, false);
+            $confirm = $this->trans('This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you\'d like to continue?', array(), 'Admin.International.Notification');
         }
         $tpl_enable = $this->context->smarty->createTemplate('helpers/list/list_action_enable.tpl');
         $tpl_enable->assign(array(
@@ -190,7 +190,7 @@ class AdminTaxesControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Taxes'),
+                'title' => $this->trans('Taxes', array(), 'Admin.Global'),
                 'icon' => 'icon-money'
             ),
             'input' => array(
@@ -200,15 +200,15 @@ class AdminTaxesControllerCore extends AdminController
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
-                    'hint' => $this->l('Tax name to display in carts and on invoices (e.g. "VAT").').' - '.$this->l('Invalid characters').' <>;=#{}'
+                    'hint' => $this->trans('Tax name to display in carts and on invoices (e.g. "VAT").', array(), 'Admin.International.Help').' - '.$this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}'
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Rate'),
+                    'label' => $this->trans('Rate', array(), 'Admin.International.Feature'),
                     'name' => 'rate',
                     'maxlength' => 6,
                     'required' => true,
-                    'hint' => $this->l('Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)').' - '.$this->l('Invalid characters').' <>;=#{}'
+                    'hint' => $this->trans('Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)', array(), 'Admin.International.Help').' - '.$this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}'
                 ),
                 array(
                     'type' => 'switch',

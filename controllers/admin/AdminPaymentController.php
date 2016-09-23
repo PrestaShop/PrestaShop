@@ -69,7 +69,7 @@ class AdminPaymentControllerCore extends AdminController
 
     public function renderView()
     {
-        $this->toolbar_title = $this->l('Payment');
+        $this->toolbar_title = $this->trans('Payment', array(), 'Admin.Global');
         unset($this->toolbar_btn['back']);
 
         $shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
@@ -112,12 +112,12 @@ class AdminPaymentControllerCore extends AdminController
             $fetch = '';
 
             if (isset($active_list)) {
-                $this->context->smarty->assign('panel_title', $this->l('Active payment'));
+                $this->context->smarty->assign('panel_title', $this->trans('Active payment', array(), 'Admin.Payment.Feature'));
                 $fetch = $helper->renderModulesList($active_list);
             }
 
             $this->context->smarty->assign(array(
-                'panel_title' => $this->l('Recommended payment gateways'),
+                'panel_title' => $this->trans('Recommended payment gateways', array(), 'Admin.Payment.Feature'),
                 'view_all' => true
             ));
             $fetch .= $helper->renderModulesList($unactive_list);
