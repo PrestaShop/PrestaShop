@@ -349,6 +349,18 @@ class CartPresenter implements PresenterInterface
         );
 
         $discounts = $cart->getDiscounts();
+        $vouchers = $this->getTemplateVarVouchers($cart);
+
+        $cartRulesIds = array_flip(array_map(
+            function ($voucher) {
+               return $voucher['id_cart_rule'];
+            },
+            $vouchers['added']
+        ));
+
+        $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds) {
+            return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
+        });
 
         return array(
             'products' => $products,
@@ -360,7 +372,7 @@ class CartPresenter implements PresenterInterface
             'id_address_delivery' => $cart->id_address_delivery,
             'id_address_invoice' => $cart->id_address_invoice,
             'is_virtual' => $cart->isVirtualCart(),
-            'vouchers' => $this->getTemplateVarVouchers($cart),
+            'vouchers' => $vouchers,
             'discounts' => $discounts,
             'minimalPurchase' => $minimalPurchase,
             'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
