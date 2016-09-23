@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use Shudrum\Component\ArrayFinder\ArrayFinder;
+use Symfony\Component\Yaml\Yaml;
 
 class Theme implements AddonInterface
 {
@@ -35,8 +36,19 @@ class Theme implements AddonInterface
 
     public function __construct(array $attributes)
     {
+        if (isset($attributes['parent'])) {
+            $parentAttributes = Yaml::parse(file_get_contents(_PS_ALL_THEMES_DIR_.'/'.$attributes['parent'].'/config/theme.yml'));
+            $parentAttributes['preview'] = $attributes['physical_uri'].'themes/'.$attributes['parent'].'/preview.png';
+            $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/').'/';
+            $attributes = array_merge($parentAttributes, $attributes);
+        }
+
         $attributes['directory'] = rtrim($attributes['directory'], '/').'/';
-        $attributes['preview'] = $attributes['physical_uri'].'themes/'.$attributes['name'].'/preview.png';
+
+        $childPreview = $attributes['physical_uri'].'themes/'.$attributes['name'].'/preview.png';
+        if (file_exists($childPreview)) {
+            $attributes['preview'] = $childPreview;
+        }
 
         $this->attributes = new ArrayFinder($attributes);
     }
