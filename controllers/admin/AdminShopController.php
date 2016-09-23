@@ -71,15 +71,6 @@ class AdminShopControllerCore extends AdminController
                 'title' => $this->l('Main URL for this shop'),
                 'havingFilter' => 'url',
             ),
-            /*'active' => array(
-                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
-                'align' => 'center',
-                'active' => 'status',
-                'type' => 'bool',
-                'orderby' => false,
-                'filter_key' => 'active',
-                'width' => 50,
-            )*/
         );
     }
 
@@ -244,16 +235,6 @@ class AdminShopControllerCore extends AdminController
         if (Tools::isSubmit('id_category_default')) {
             $_POST['id_category'] = Tools::getValue('id_category_default');
         }
-        /*if ((Tools::isSubmit('status') ||
-            Tools::isSubmit('status'.$this->table) ||
-            (Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue($this->identifier) && !Tools::getValue('active'))) &&
-            $this->loadObject() && $this->loadObject()->active)
-        {
-            if (Tools::getValue('id_shop') == Configuration::get('PS_SHOP_DEFAULT'))
-                $this->errors[] = Tools::displayError('You cannot disable the default shop.');
-            elseif (Shop::getTotalShops() == 1)
-                $this->errors[] = Tools::displayError('You cannot disable the last shop.');
-        }*/
 
         if (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) {
             $shop_group = new ShopGroup((int)Tools::getValue('id_shop_group'));
