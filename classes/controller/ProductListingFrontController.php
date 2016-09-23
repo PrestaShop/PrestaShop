@@ -465,7 +465,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         if ($this->ajax) {
             ob_end_clean();
             header('Content-Type: application/json');
-            die(json_encode($this->getAjaxProductSearchVariables()));
+            $this->ajaxDie(json_encode($this->getAjaxProductSearchVariables()));
         } else {
             $variables = $this->getProductSearchVariables();
             if (
