@@ -33,10 +33,11 @@ class AdminShopControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        parent::__construct();
         $this->table = 'shop';
         $this->className = 'Shop';
         $this->multishop_context = Shop::CONTEXT_ALL;
+
+        parent::__construct();
 
         $this->id_shop_group = (int)Tools::getValue('id_shop_group');
 
