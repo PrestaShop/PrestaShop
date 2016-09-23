@@ -103,6 +103,12 @@
 						{$tr.$key|string_format:"%.2f"}
 					{elseif isset($params.type) && $params.type == 'percent'}
 						{$tr.$key} {l s='%'}
+					{elseif isset($params.type) && $params.type == 'bool'}
+            {if $tr.$key == 1}
+              {l s='Yes' d='Admin.Global'}
+            {elseif $tr.$key == 0 && $tr.$key != ''}
+              {l s='No' d='Admin.Global'}
+            {/if}
 					{* If type is 'editable', an input is created *}
 					{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
 						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'html':'UTF-8'}" class="{$key}" />
