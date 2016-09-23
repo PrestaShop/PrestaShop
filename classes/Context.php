@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,7 +60,7 @@ class ContextCore
     /** @var AdminController|FrontController */
     public $controller;
 
-    /** @var string */
+    /** @var string $override_controller_name_for_translations */
     public $override_controller_name_for_translations;
 
     /** @var Language */
@@ -143,9 +143,10 @@ class ContextCore
     public function isMobile()
     {
         if ($this->is_mobile === null) {
-            $mobile_detect = $this->getMobileDetect();
-            $this->is_mobile = $mobile_detect->isMobile();
+            $mobileDetect = $this->getMobileDetect();
+            $this->is_mobile = $mobileDetect->isMobile();
         }
+
         return $this->is_mobile;
     }
 
@@ -157,9 +158,10 @@ class ContextCore
     public function isTablet()
     {
         if ($this->is_tablet === null) {
-            $mobile_detect = $this->getMobileDetect();
-            $this->is_tablet = $mobile_detect->isTablet();
+            $mobileDetect = $this->getMobileDetect();
+            $this->is_tablet = $mobileDetect->isTablet();
         }
+
         return $this->is_tablet;
     }
 
@@ -173,10 +175,10 @@ class ContextCore
         if ($this->mobile_device === null) {
             $this->mobile_device = false;
             if ($this->checkMobileContext()) {
-                if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0) {
+                if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int) Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0) {
                     $this->mobile_device = true;
                 } else {
-                    switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
+                    switch ((int) Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
                         case 1: // Only for mobile device
                             if ($this->isMobile() && !$this->isTablet()) {
                                 $this->mobile_device = true;
@@ -196,6 +198,7 @@ class ContextCore
                 }
             }
         }
+
         return $this->mobile_device;
     }
 
@@ -248,7 +251,7 @@ class ContextCore
 
         return isset($_SERVER['HTTP_USER_AGENT'])
             && isset(Context::getContext()->cookie)
-            && (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE')
+            && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;
     }
@@ -268,12 +271,12 @@ class ContextCore
     }
 
     /**
-     * @param $test_instance Context
+     * @param $testInstance Context
      * Unit testing purpose only
      */
-    public static function setInstanceForTesting($test_instance)
+    public static function setInstanceForTesting($testInstance)
     {
-        self::$instance = $test_instance;
+        self::$instance = $testInstance;
     }
 
     /**
@@ -301,7 +304,7 @@ class ContextCore
     public function updateCustomer(Customer $customer)
     {
         $this->customer = $customer;
-        $this->cookie->id_customer = (int)$customer->id;
+        $this->cookie->id_customer = (int) $customer->id;
         $this->cookie->customer_lastname = $customer->lastname;
         $this->cookie->customer_firstname = $customer->firstname;
         $this->cookie->passwd = $customer->passwd;
@@ -311,24 +314,24 @@ class ContextCore
         $this->cookie->is_guest =  $customer->isGuest();
         $this->cart->secure_key = $customer->secure_key;
 
-        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts($this->cookie->id_cart) == 0) && $id_cart = (int)Cart::lastNoneOrderedCart($this->customer->id)) {
-            $this->cart = new Cart($id_cart);
+        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts($this->cookie->id_cart) == 0) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
+            $this->cart = new Cart($idCart);
         } else {
-            $id_carrier = (int)$this->cart->id_carrier;
+            $idCarrier = (int) $this->cart->id_carrier;
             $this->cart->id_carrier = 0;
             $this->cart->setDeliveryOption(null);
-            $this->cart->id_address_delivery = (int)Address::getFirstCustomerAddressId((int)($customer->id));
-            $this->cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)($customer->id));
+            $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+            $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
         }
-        $this->cart->id_customer = (int)$customer->id;
+        $this->cart->id_customer = (int) $customer->id;
 
-        if (isset($id_carrier) && $id_carrier) {
-            $delivery_option = [$this->cart->id_address_delivery => $id_carrier.','];
-            $this->cart->setDeliveryOption($delivery_option);
+        if (isset($idCarrier) && $idCarrier) {
+            $deliveryOption = [$this->cart->id_address_delivery => $idCarrier.','];
+            $this->cart->setDeliveryOption($deliveryOption);
         }
 
         $this->cart->save();
-        $this->cookie->id_cart = (int)$this->cart->id;
+        $this->cookie->id_cart = (int) $this->cart->id;
         $this->cookie->write();
         $this->cart->autosetProductAddress();
     }
@@ -341,11 +344,11 @@ class ContextCore
     {
         if (null === $this->translator) {
             $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_, false);
-            $this->translator->addLoader('xlf', new XliffFileLoader);
-            $this->translator->addLoader('db', new SqlTranslationLoader);
+            $this->translator->addLoader('xlf', new XliffFileLoader());
+            $this->translator->addLoader('db', new SqlTranslationLoader());
 
             $locations = array(_PS_ROOT_DIR_.'/app/Resources/translations');
-            
+
             if (!is_null($this->shop)) {
                 $activeThemeLocation = _PS_ROOT_DIR_.'/themes/'.$this->shop->theme_name.'/translations';
                 if (is_dir($activeThemeLocation)) {
