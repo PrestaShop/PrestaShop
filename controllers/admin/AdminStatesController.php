@@ -47,8 +47,8 @@ class AdminStatesControllerCore extends AdminController
         }
 
         $this->bulk_actions = array(
-            'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-            'AffectZone' => array('text' => $this->l('Assign to a new zone'))
+            'delete' => array('text' => $this->trans('Delete selected', array(), 'Admin.Actions'), 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')),
+            'AffectZone' => array('text' => $this->trans('Assign to a new zone', array(), 'Admin.International.Feature'))
         );
 
         $this->_select = 'z.`name` AS zone, cl.`name` AS country';
@@ -78,7 +78,7 @@ class AdminStatesControllerCore extends AdminController
                 'filter_key' => 'a!name'
             ),
             'iso_code' => array(
-                'title' => $this->l('ISO code'),
+                'title' => $this->trans('ISO code', array(), 'Admin.International.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
@@ -115,7 +115,7 @@ class AdminStatesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_state'] = array(
                 'href' => self::$currentIndex.'&addstate&token='.$this->token,
-                'desc' => $this->l('Add new state', null, null, false),
+                'desc' => $this->trans('Add new state', array(), 'Admin.International.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -136,7 +136,7 @@ class AdminStatesControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('States'),
+                'title' => $this->trans('States', array(), 'Admin.International.Feature'),
                 'icon' => 'icon-globe'
             ),
             'input' => array(
@@ -146,16 +146,16 @@ class AdminStatesControllerCore extends AdminController
                     'name' => 'name',
                     'maxlength' => 32,
                     'required' => true,
-                    'hint' => $this->l('Provide the State name to be display in addresses and on invoices.')
+                    'hint' => $this->trans('Provide the State name to be display in addresses and on invoices.', array(), 'Admin.International.Help')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('ISO code'),
+                    'label' => $this->trans('ISO code', array(), 'Admin.International.Feature'),
                     'name' => 'iso_code',
                     'maxlength' => 7,
                     'required' => true,
                     'class' => 'uppercase',
-                    'hint' => $this->l('1 to 4 letter ISO code.').' '.$this->l('You can prefix it with the country ISO code if needed.')
+                    'hint' => $this->trans('1 to 4 letter ISO code.', array(), 'Admin.International.Help').' '.$this->trans('You can prefix it with the country ISO code if needed.', array(), 'Admin.International.Help')
                 ),
                 array(
                     'type' => 'select',
@@ -168,7 +168,7 @@ class AdminStatesControllerCore extends AdminController
                         'id' => 'id_country',
                         'name' => 'name',
                     ),
-                    'hint' => $this->l('Country where the state is located.').' '.$this->l('Only the countries with the option "contains states" enabled are displayed.')
+                    'hint' => $this->trans('Country where the state is located.', array(), 'Admin.International.Help').' '.$this->trans('Only the countries with the option "contains states" enabled are displayed.', array(), 'Admin.International.Help')
                 ),
                 array(
                     'type' => 'select',
@@ -181,13 +181,13 @@ class AdminStatesControllerCore extends AdminController
                         'name' => 'name'
                     ),
                     'hint' => array(
-                        $this->l('Geographical region where this state is located.'),
-                        $this->l('Used for shipping')
+                        $this->trans('Geographical region where this state is located.', array(), 'Admin.International.Help'),
+                        $this->trans('Used for shipping', array(), 'Admin.International.Help')
                     )
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Status'),
+                    'label' => $this->trans('Status', array(), 'Admin.Global'),
                     'name' => 'active',
                     'required' => true,
                     'values' => array(

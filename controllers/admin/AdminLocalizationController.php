@@ -276,7 +276,7 @@ class AdminLocalizationControllerCore extends AdminController
             array(
                 'id' => 'states',
                 'val' => 'states',
-                'name' => $this->trans('States', array(), 'Admin.Global')
+                'name' => $this->trans('States', array(), 'Admin.International.Feature')
             ),
             array(
                 'id' => 'taxes',

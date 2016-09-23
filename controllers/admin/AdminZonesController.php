@@ -60,8 +60,8 @@ class AdminZonesControllerCore extends AdminController
         );
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
@@ -72,7 +72,7 @@ class AdminZonesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_zone'] = array(
                 'href' => self::$currentIndex.'&addzone&token='.$this->token,
-                'desc' => $this->l('Add new zone', null, null, false),
+                'desc' => $this->trans('Add new zone', array(), 'Admin.International.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -92,7 +92,7 @@ class AdminZonesControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Zones'),
+                'title' => $this->trans('Zones', array(), 'Admin.International.Feature'),
                 'icon' => 'icon-globe'
             ),
             'input' => array(
@@ -101,11 +101,11 @@ class AdminZonesControllerCore extends AdminController
                     'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
-                    'hint' => $this->l('Zone name (e.g. Africa, West Coast, Neighboring Countries).'),
+                    'hint' => $this->trans('Zone name (e.g. Africa, West Coast, Neighboring Countries).', array(), 'Admin.International.Help'),
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Active'),
+                    'label' => $this->trans('Active', array(), 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
@@ -121,7 +121,7 @@ class AdminZonesControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Allow or disallow shipping to this zone.')
+                    'hint' => $this->trans('Allow or disallow shipping to this zone.', array(), 'Admin.International.Help')
                 )
             )
         );
@@ -129,7 +129,7 @@ class AdminZonesControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             );
         }
