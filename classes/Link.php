@@ -1066,6 +1066,14 @@ class LinkCore
                     $params['relative_protocol']
                 );
                 break;
+            case 'categoryImage':
+                $params = array_merge(array('selected_filters' => null), $params);
+                $link = $context->link->getCatImageLink(
+                    $params['name'],
+                    $params['id'],
+                    $params['type'] = (isset($params['type']) ? $params['type'] : null)
+                );
+                break;
             case 'cms':
                 $link = $context->link->getCMSLink(
                     new CMS($params['id'], $params['id_lang']),
