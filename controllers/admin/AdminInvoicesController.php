@@ -39,26 +39,26 @@ class AdminInvoicesControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_INVOICE' => array(
                         'title' => $this->trans('Enable invoices', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('If enabled, your customers will receive an invoice for their purchase(s).', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('If enabled, your customers will receive an invoice for the purchase.', array(), 'Admin.OrdersCustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_INVOICE_TAXES_BREAKDOWN' => array(
                         'title' => $this->trans('Enable tax breakdown', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('Show a summary of tax rates when there are several taxes.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('If required, show the total amount per rate of the corresponding tax.', array(), 'Admin.OrdersCustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_PDF_IMG_INVOICE' => array(
                         'title' => $this->trans('Enable product image', array(), 'Admin.OrdersCustomers.Feature'),
-                        'hint' => $this->trans('Adds an image before product name on the invoice', array(), 'Admin.OrdersCustomers.Help'),
+                        'hint' => $this->trans('Adds an image in front of the product name on the invoice', array(), 'Admin.OrdersCustomers.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_INVOICE_PREFIX' => array(
                         'title' => $this->trans('Invoice prefix', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('Prefix used for invoice name (e.g. #IN00001).', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Freely definable prefix for invoice number (e.g. #IN00001).', array(), 'Admin.OrdersCustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang'
                     ),
@@ -68,20 +68,20 @@ class AdminInvoicesControllerCore extends AdminController
                         'type' => 'bool'
                     ),
                     'PS_INVOICE_RESET' => array(
-                        'title' => $this->trans('Reset invoice progressive number at beginning of the year', array(), 'Admin.OrdersCustomers.Feature'),
+                        'title' => $this->trans('Reset sequential invoice number at the beginning of the year', array(), 'Admin.OrdersCustomers.Feature'),
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_INVOICE_YEAR_POS' => array(
-                        'title' => $this->trans('Position of the year number', array(), 'Admin.OrdersCustomers.Feature'),
+                        'title' => $this->trans('Position of the year date', array(), 'Admin.OrdersCustomers.Feature'),
                         'cast' => 'intval',
                         'show' => true,
                         'required' => false,
                         'type' => 'radio',
                         'validation' => 'isBool',
                         'choices' => array(
-                            0 => $this->trans('After the progressive number', array(), 'Admin.OrdersCustomers.Feature'),
-                            1 => $this->trans('Before the progressive number', array(), 'Admin.OrdersCustomers.Feature')
+                            0 => $this->trans('After the sequential number', array(), 'Admin.OrdersCustomers.Feature'),
+                            1 => $this->trans('Before the sequential number', array(), 'Admin.OrdersCustomers.Feature')
                         )
                     ),
                     'PS_INVOICE_START_NUMBER' => array(
@@ -99,7 +99,7 @@ class AdminInvoicesControllerCore extends AdminController
                     ),
                     'PS_INVOICE_LEGAL_FREE_TEXT' => array(
                         'title' => $this->trans('Legal free text', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('Use this field to display additional text on your invoice, like specific legal information. It will appear below the payment methods summary.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Use this field to show additional informations on the invoice,below the payment methods summary (like e.g. specific legal informations).', array(), 'Admin.OrdersCustomers.Help'),
                         'size' => 50,
                         'type' => 'textareaLang',
                     ),
