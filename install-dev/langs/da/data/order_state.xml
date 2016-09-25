@@ -13,11 +13,11 @@
     <template>preparation</template>
   </order_state>
   <order_state id="Shipped">
-    <name>Afsender</name>
+    <name>Afsendt</name>
     <template>shipped</template>
   </order_state>
   <order_state id="Delivered">
-    <name>Afsendt</name>
+    <name>Leveret</name>
     <template/>
   </order_state>
   <order_state id="Canceled">
@@ -33,11 +33,11 @@
     <template>payment_error</template>
   </order_state>
   <order_state id="On_backorder_paid">
-    <name>On backorder (paid)</name>
+    <name>I restordre (betalt)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id="On_backorder_unpaid">
-    <name>On backorder (not paid)</name>
+    <name>I restordre (ikke betalt)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id="Awaiting_bank_wire_payment">
