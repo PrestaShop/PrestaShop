@@ -311,7 +311,7 @@ class SupplyOrderDetailCore extends ObjectModel
                     $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
                 } elseif ($field == 'passwd') {
                     if ($value = Tools::getValue($field)) {
-                        $this->{$field} = Tools::encrypt($value);
+                        $this->{$field} = Tools::hash($value);
                     } else {
                         $this->{$field} = $value;
                     }

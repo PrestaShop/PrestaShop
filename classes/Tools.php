@@ -92,86 +92,27 @@ class ToolsCore
     /**
      * Random bytes generator
      *
-     * Thanks to Zend for entropy
+     * Limited to OpenSSL since 1.7.0.0
      *
-     * @param $length Desired length of random bytes
+     * @param int $length Desired length of random bytes
+     *
      * @return bool|string Random bytes
      */
     public static function getBytes($length)
     {
-        $length = (int)$length;
+        $length = (int) $length;
 
         if ($length <= 0) {
             return false;
         }
 
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            $bytes = openssl_random_pseudo_bytes($length, $crypto_strong);
+        $bytes = openssl_random_pseudo_bytes($length, $cryptoStrong);
 
-            if ($crypto_strong === true) {
-                return $bytes;
-            }
+        if ($cryptoStrong === true) {
+            return $bytes;
         }
 
-        if (function_exists('mcrypt_create_iv')) {
-            $bytes = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
-
-            if ($bytes !== false && strlen($bytes) === $length) {
-                return $bytes;
-            }
-        }
-
-        // Else try to get $length bytes of entropy.
-        // Thanks to Zend
-
-        $result         = '';
-        $entropy        = '';
-        $msec_per_round = 400;
-        $bits_per_round = 2;
-        $total          = $length;
-        $hash_length    = 20;
-
-        while (strlen($result) < $length) {
-            $bytes  = ($total > $hash_length) ? $hash_length : $total;
-            $total -= $bytes;
-
-            for ($i=1; $i < 3; $i++) {
-                $t1 = microtime(true);
-                $seed = mt_rand();
-
-                for ($j=1; $j < 50; $j++) {
-                    $seed = sha1($seed);
-                }
-
-                $t2 = microtime(true);
-                $entropy .= $t1 . $t2;
-            }
-
-            $div = (int) (($t2 - $t1) * 1000000);
-
-            if ($div <= 0) {
-                $div = 400;
-            }
-
-            $rounds = (int) ($msec_per_round * 50 / $div);
-            $iter = $bytes * (int) (ceil(8 / $bits_per_round));
-
-            for ($i = 0; $i < $iter; $i ++) {
-                $t1 = microtime();
-                $seed = sha1(mt_rand());
-
-                for ($j = 0; $j < $rounds; $j++) {
-                    $seed = sha1($seed);
-                }
-
-                $t2 = microtime();
-                $entropy .= $t1 . $t2;
-            }
-
-            $result .= sha1($entropy, true);
-        }
-
-        return substr($result, 0, $length);
+        return false;
     }
 
     public static function strReplaceFirst($search, $replace, $subject, $cur = 0)
@@ -1099,21 +1040,57 @@ class ToolsCore
     }
 
     /**
-    * Encrypt password
-    *
-    * @param string $passwd String to encrypt
-    */
+     * Hash password
+     *
+     * @param string $passwd String to hash
+     *
+     * @return string Hashed password
+     *
+     * @deprecated 1.7.0
+     */
     public static function encrypt($passwd)
+    {
+        return self::hash($passwd);
+    }
+
+    /**
+    * Hash password
+    *
+    * @param string $passwd String to has
+     *
+     * @return string Hashed password
+     *
+     * @since 1.7.0
+     */
+    public static function hash($passwd)
     {
         return md5(_COOKIE_KEY_.$passwd);
     }
 
     /**
-    * Encrypt data string
-    *
-    * @param string $data String to encrypt
-    */
+     * Hash data string
+     *
+     * @param string $data String to encrypt
+     *
+     * @return string Hashed IV
+     *
+     * @deprecated 1.7.0
+     */
     public static function encryptIV($data)
+    {
+        return self::hashIV($data);
+    }
+
+    /**
+     * Hash data string
+     *
+     * @param string $data String to encrypt
+     *
+     * @return string Hashed IV
+     *
+     * @since 1.7.0
+     */
+    public static function hashIV($data)
     {
         return md5(_COOKIE_IV_.$data);
     }
@@ -1129,9 +1106,9 @@ class ToolsCore
             $context = Context::getContext();
         }
         if ($page === true) {
-            return (Tools::encrypt($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
+            return (Tools::hash($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
         } else {
-            return (Tools::encrypt($context->customer->id.$context->customer->passwd.$page));
+            return (Tools::hash($context->customer->id.$context->customer->passwd.$page));
         }
     }
 
@@ -1142,7 +1119,7 @@ class ToolsCore
     */
     public static function getAdminToken($string)
     {
-        return !empty($string) ? Tools::encrypt($string) : false;
+        return !empty($string) ? Tools::hash($string) : false;
     }
 
     public static function getAdminTokenLite($tab, Context $context = null)

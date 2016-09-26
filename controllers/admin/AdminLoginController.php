@@ -348,7 +348,7 @@ class AdminLoginControllerCore extends AdminController
         }
 
         if (!count($this->errors)) {
-            $employee->passwd = Tools::encrypt($reset_password);
+            $employee->passwd = Tools::hash($reset_password);
             $employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
             $params = array(

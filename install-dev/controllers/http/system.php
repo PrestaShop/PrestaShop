@@ -95,6 +95,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'upload' => $this->translator->trans('Cannot upload files', array(), 'Install'),
                         'system' => $this->translator->trans('Cannot create new files and folders', array(), 'Install'),
                         'gd' => $this->translator->trans('GD library is not installed', array(), 'Install'),
+                        'openssl' => $this->translator->trans('PHP OpenSSL extension is not loaded', array(), 'Install'),
                         'pdo_mysql' => $this->translator->trans('PDO MySQL extension is not loaded', array(), 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                     )
@@ -141,7 +142,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'new_phpversion' => sprintf($this->translator->trans('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion()),
                         'fopen' => $this->translator->trans('Cannot open external URLs', array(), 'Install'),
                         'gz' => $this->translator->trans('GZIP compression is not activated', array(), 'Install'),
-                        'mcrypt' => $this->translator->trans('Mcrypt extension is not enabled', array(), 'Install'),
                         'mbstring' => $this->translator->trans('Mbstring extension is not enabled', array(), 'Install'),
                         'dom' => $this->translator->trans('Dom extension is not loaded', array(), 'Install'),
                     )

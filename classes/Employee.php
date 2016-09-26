@@ -326,8 +326,8 @@ class EmployeeCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `email` = \''.pSQL($email).'\'
-		'.($activeOnly ? ' AND `active` = 1' : '')
-        .($passwd !== null ? ' AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
+		'.($active_only ? ' AND `active` = 1' : '')
+        .($passwd !== null ? ' AND `passwd` = \''.Tools::hash($passwd).'\'' : ''));
         if (!$result) {
             return false;
         }
@@ -425,10 +425,10 @@ class EmployeeCore extends ObjectModel
     {
         if ($this->id != 0) {
             if ($this->passwd != $passwd) {
-                $this->passwd = Tools::encrypt($passwd);
+                $this->passwd = Tools::hash($passwd);
             }
         } else {
-            $this->passwd = Tools::encrypt($passwd);
+            $this->passwd = Tools::hash($passwd);
         }
 
         return true;

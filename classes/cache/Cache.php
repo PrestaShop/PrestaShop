@@ -258,14 +258,14 @@ abstract class CacheCore
         }
 
         if (is_null($this->sql_tables_cached)) {
-            $this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
+            $this->sql_tables_cached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
             if (!is_array($this->sql_tables_cached)) {
                 $this->sql_tables_cached = array();
             }
         }
 
         // Store query results in cache
-        $key = Tools::encryptIV($query);
+        $key = Tools::hashIV($query);
         // no need to check the key existence before the set : if the query is already
         // in the cache, setQuery is not invoked
         $this->set($key, $result);
@@ -279,7 +279,7 @@ abstract class CacheCore
                 }
             }
         }
-        $this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
     }
 
     /**
@@ -327,7 +327,7 @@ abstract class CacheCore
         }
 
         if (is_null($this->sql_tables_cached)) {
-            $this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
+            $this->sql_tables_cached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
             if (!is_array($this->sql_tables_cached)) {
                 $this->sql_tables_cached = array();
             }
@@ -344,7 +344,7 @@ abstract class CacheCore
                 }
             }
         }
-        $this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
     }
 
     /**

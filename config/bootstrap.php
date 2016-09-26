@@ -94,6 +94,7 @@ if ($lastParametersModificationTime) {
     define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
     define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
 
+    // Legacy cookie
     if (array_key_exists('cookie_key', $config['parameters'])) {
         define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
     } else {
@@ -106,6 +107,15 @@ if ($lastParametersModificationTime) {
     } else {
         // Define cookie IV if missing to prevent failure in composer post-install script
         define('_COOKIE_IV_', Tools::passwdGen(8));
+    }
+
+    // New cookie
+    if (array_key_exists('new_cookie_key', $config['parameters'])) {
+        define('_NEW_COOKIE_KEY_', $config['parameters']['new_cookie_key']);
+    } else {
+        // Define cookie key if missing to prevent failure in composer post-install script
+        $key = \Defuse\Crypto\Key::createNewRandomKey();
+        define('_NEW_COOKIE_KEY_', $key->saveToAsciiSafeString());
     }
 
     define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);

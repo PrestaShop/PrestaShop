@@ -101,6 +101,8 @@ class InstallModelInstall extends InstallAbstractModel
             $database_host = implode(':', $splits);
         }
 
+        $key = \Defuse\Crypto\Key::createNewRandomKey();
+
         $parameters  = array_replace_recursive(
             Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml.dist')),
             array(
@@ -114,20 +116,13 @@ class InstallModelInstall extends InstallAbstractModel
                     'database_engine' =>  $database_engine,
                     'cookie_key' => $cookie_key,
                     'cookie_iv' =>  $cookie_iv,
+                    'new_cookie_key' => $key->saveToAsciiSafeString(),
                     'ps_creation_date' => date('Y-m-d'),
                     'secret' => $secret,
                     'locale' => $this->language->getLanguage()->getLocale(),
                 )
             )
         );
-
-        // If mcrypt is activated, add Rijndael 128 configuration
-        if (function_exists('mcrypt_encrypt')) {
-            if (!isset($config['parameters']['_rijndael_key'])) {
-                $parameters['parameters']['_rijndael_key'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
-                $parameters['parameters']['_rijndael_iv'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
-            }
-        }
 
         $settings_content = "<?php\n";
         $settings_content .= "//@deprecated 1.7";
@@ -597,9 +592,6 @@ class InstallModelInstall extends InstallAbstractModel
 
         // Set default rewriting settings
         Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', $data['rewrite_engine']);
-
-        // Activate rijndael 128 encrypt algorihtm if mcrypt is activated
-        Configuration::updateGlobalValue('PS_CIPHER_ALGORITHM', function_exists('mcrypt_encrypt') ? 1 : 0);
 
         $groups = Group::getGroups((int)Configuration::get('PS_LANG_DEFAULT'));
         $groups_default = Db::getInstance()->executeS('SELECT `name` FROM '._DB_PREFIX_.'configuration WHERE `name` LIKE "PS_%_GROUP" ORDER BY `id_configuration`');

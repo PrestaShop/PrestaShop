@@ -39,6 +39,11 @@ class Migrate
 
                 $default_parameters = Yaml::parse($root_dir.'/app/config/parameters.yml.dist');
 
+                if (!defined('_NEW_COOKIE_KEY_')) {
+                    $key = \Defuse\Crypto\Key::createNewRandomKey();
+                    define('_NEW_COOKIE_KEY_', $key->saveToAsciiSafeString());
+                }
+
                 $parameters = array(
                     'parameters' => array(
                         'database_host'     => _LEGACY_DB_SERVER_,
@@ -50,6 +55,7 @@ class Migrate
                         'database_engine'   => _LEGACY_MYSQL_ENGINE_,
                         'cookie_key'        => _LEGACY_COOKIE_KEY_,
                         'cookie_iv'         => _LEGACY_COOKIE_IV_,
+                        'new_cookie_key'    => _NEW_COOKIE_KEY_,
                         'ps_caching'        => _LEGACY_PS_CACHING_SYSTEM_,
                         'ps_cache_enable'   => _LEGACY_PS_CACHE_ENABLED_,
                         'ps_creation_date'  => _LEGACY_PS_CREATION_DATE_,
