@@ -188,3 +188,4 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_LOGO_MOBILE', 'SHOP_LOGO_MOBILE_HEIGHT', 'SHOP_LOGO_MOBILE_WIDTH');
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayNavFullWidth', 'Navigation', 'This hook displays full width navigation menu at the top of your pages', '1');
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('actionOutputHTMLBefore', 'Before HTML output', 'This hook is called before HTML is sent to browser so you can manipulate it (html parameter is passed by reference)', '1');

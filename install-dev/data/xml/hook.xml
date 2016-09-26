@@ -363,5 +363,8 @@
     <hook id="displayProductExtraContent">
       <name>displayProductExtraContent</name><title>Display extra content on the product page</title><description>This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.</description>
     </hook>
+    <hook id="actionOutputHTMLBefore">
+      <name>actionOutputHTMLBefore</name><title>Before HTML output</title><description>This hook is called before HTML is sent to browser so you can manipulate it ('html' parameter is passed by reference)</description>
+    </hook>
   </entities>
 </entity_hook>
