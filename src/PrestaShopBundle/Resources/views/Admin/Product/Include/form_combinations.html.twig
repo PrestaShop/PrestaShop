@@ -63,7 +63,7 @@
             <th>{{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}</th>
             <th>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</th>
             <th>{{ 'Final price'|trans({}, 'Admin.Catalog.Feature') }}</th>
-            {% if configuration.get('PS_STOCK_MANAGEMENT') %}
+            {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                 <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
             {% endif %}
             <th colspan="3" class="text-xs-right">{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
@@ -86,7 +86,7 @@
               <td class="attribute-finalprice">
                 <div class="animated-background"></div>
               </td>
-              {% if configuration.get('PS_STOCK_MANAGEMENT') %}
+              {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                 <td class="attribute-quantity">
                   <div class="animated-background"></div>
                 </td>
@@ -145,7 +145,7 @@
     <div class="col-md-12">
       <h2>{{ 'Availability preferences'|trans({}, 'Admin.Catalog.Feature') }}</h2>
     </div>
-    {% if configuration.get('PS_STOCK_MANAGEMENT') %}
+    {% if 'PS_STOCK_MANAGEMENT'|configuration %}
       <div class="col-md-12">
         <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'Admin.Catalog.Feature') }}</label>
         {{ form_errors(form.out_of_stock) }}

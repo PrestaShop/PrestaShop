@@ -11,7 +11,7 @@
     <td class="attribute-finalprice text-xs-right">
       <span data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}
     </td>
-    {% if configuration.get('PS_STOCK_MANAGEMENT') %}
+    {% if 'PS_STOCK_MANAGEMENT'|configuration %}
       <td class="attribute-quantity">
           <div>
               <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control text-xs-right">
@@ -39,7 +39,7 @@
                 </h2>
                 {{ form_widget(form.attribute_default) }}
                 <div class="row">
-                  {% if configuration.get('PS_STOCK_MANAGEMENT') %}
+                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                     <div class="col-md-2">
                       <fieldset class="form-group">
                           <label class="combination-label">

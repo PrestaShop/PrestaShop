@@ -228,7 +228,7 @@
                     } %}
                   </th>
 
-                  {% if configuration.get('PS_STOCK_MANAGEMENT') %}
+                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                   <th style="width: 9%">
                     {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
@@ -305,7 +305,7 @@
                     } %}
                   </th>
 
-                  {% if configuration.get('PS_STOCK_MANAGEMENT') %}
+                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                   <th>
                     {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
                       'input_name': "filter_column_sav_quantity",
