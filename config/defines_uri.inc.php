@@ -27,7 +27,7 @@
 /* Theme URLs */
 define('_PS_DEFAULT_THEME_NAME_', 'classic');
 define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/');
-if (_PARENT_THEME_NAME_) {
+if (defined('_PARENT_THEME_NAME_') && _PARENT_THEME_NAME_) {
     define('_PS_PARENT_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._PARENT_THEME_NAME_.'/');
 } else {
     define('_PS_PARENT_THEME_DIR_', '');

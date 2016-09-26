@@ -37,7 +37,7 @@ $smarty->addPluginsDir($plugin_dirs);
 
 $module_resources = array('theme' => _PS_THEME_DIR_.'modules/');
 if (_PS_PARENT_THEME_DIR_) {
-    $module_resources['parent'] = _PS_PARENT_THEME_DIR_.'templates/';
+    $module_resources['parent'] = _PS_PARENT_THEME_DIR_.'modules/';
 }
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources));
