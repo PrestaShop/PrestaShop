@@ -6002,7 +6002,8 @@ body#checkout {
     color: #878787;
     width: 100%;
     margin-bottom: 1.875rem;
-    padding: 1.5625rem 0.25rem; }
+    padding: 1.5625rem 0.25rem;
+    min-height: 150px; }
     .page-my-account #content .links a i {
       display: block;
       font-size: 2.6rem;
