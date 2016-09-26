@@ -68,7 +68,7 @@
 		{if $host_mode}
 		<div class="alert alert-info">
 			<h4>{l s='How to restore a database backup'}</h4>
-			{l s='If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].' tags=['<strong>', '<a class="_blank" href="http://addons.prestashop.com/support/16298-support-essentiel-plan.html">']}
+			{l s='If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].' sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a class="_blank" href="http://addons.prestashop.com/support/16298-support-essentiel-plan.html">', '[/2]' => '</a>']}
 			<br />
 			{l s='Our team will take care of restoring your database safely.'}
 			<br />
