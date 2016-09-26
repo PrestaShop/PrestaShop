@@ -595,7 +595,6 @@ class ProductPresenter
                 $presentedProduct
             );
         }
-        /*dump($presentedProduct);*/
         return $presentedProduct;
     }
 }
