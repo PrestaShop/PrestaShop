@@ -56,6 +56,8 @@ function smartyTranslate($params, &$smarty)
 {
     $translator = Context::getContext()->getTranslator();
 
+    $htmlEntities = !isset($params['js']);
+    $addSlashes = (isset($params['slashes']) || isset($params['js']));
     $isInPDF = isset($params['pdf']);
     $isInModule = isset($params['mod']) && !empty($params['mod']);
     $sprintf = isset($params['sprintf']) ? $params['sprintf'] : array();
@@ -90,6 +92,7 @@ function smartyTranslate($params, &$smarty)
                 throw new Exception($errorMessage);
             } else {
                 PrestaShopLogger::addLog($errorMessage);
+
                 return $params['s'];
             }
         }
@@ -108,5 +111,15 @@ function smartyTranslate($params, &$smarty)
         return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf, isset($params['js'])), $params);
     }
 
-    return $translator->trans($params['s'], $sprintf, null);
+    $translatedValue = $translator->trans($params['s'], $sprintf, null);
+
+    if ($htmlEntities) {
+        $translatedValue = htmlspecialchars($translatedValue, ENT_COMPAT, 'UTF-8');
+    }
+
+    if ($addSlashes) {
+        $translatedValue = addslashes($translatedValue);
+    }
+
+    return $translatedValue;
 }
