@@ -55,7 +55,8 @@
       <div class="row">
         <div class="col-md-12">
           <div class="pull-right">
-            {{ ps.tooltip(("Export"|trans({}, 'Admin.Actions')), 'cloud_upload') }}
+            <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
+              {{ ps.tooltip(("Export"|trans({}, 'Admin.Actions')), 'cloud_upload') }}
             </a>
             <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
               {{ ps.tooltip(("Import"|trans({}, 'Admin.Actions')), 'cloud_download') }}
