@@ -789,17 +789,26 @@ class FrontControllerCore extends Controller
      */
     public function setMedia()
     {
-        $this->addCSS(array(
+        $cssFileList = array();
+        $parent = $this->context->shop->theme->get('parent');
+
+        if ($parent && $this->context->shop->theme->get('assets.use_parent_assets')) {
+            $cssFileList = array(
+                _PS_ALL_THEMES_DIR_.$parent.'/assets/css/theme.css',
+                _PS_ALL_THEMES_DIR_.$parent.'/assets/css/custom.css',
+            );
+        }
+
+        $cssFileList = array_merge($cssFileList, array(
             _THEME_CSS_DIR_.'theme.css',
             _THEME_CSS_DIR_.'custom.css',
         ));
 
         if ($this->context->language->is_rtl) {
-            $this->addCSS(array(
-                _THEME_CSS_DIR_.'rtl.css',
-            ));
+            $cssFileList[] = _THEME_CSS_DIR_.'rtl.css';
         }
 
+        $this->addCSS($cssFileList);
         $this->addJS(array(
             _THEMES_DIR_.'core.js',
             _THEME_JS_DIR_.'theme.js',

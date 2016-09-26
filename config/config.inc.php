@@ -114,6 +114,8 @@ try {
     $e->displayMessage();
 }
 define('_THEME_NAME_', $context->shop->theme->getName());
+define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
+
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */

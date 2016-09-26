@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use Shudrum\Component\ArrayFinder\ArrayFinder;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ThemeValidator
@@ -45,7 +44,8 @@ class ThemeValidator
         $this->translator = $translator;
     }
 
-    public function getErrors($themeName) {
+    public function getErrors($themeName)
+    {
         return array_key_exists($themeName, $this->errors) ? $this->errors[$themeName] : false;
     }
 
@@ -55,19 +55,19 @@ class ThemeValidator
             && $this->hasRequiredProperties($theme);
     }
 
-    private function hasRequiredProperties($theme)
+    private function hasRequiredProperties(Theme $theme)
     {
-        $attributes = new ArrayFinder($theme->get(null));
         $themeName = $theme->getName();
 
         foreach ($this->getRequiredProperties() as $prop) {
-            if (!$attributes->offsetExists($prop)) {
-
+            if (!$theme->has($prop)) {
                 if (!array_key_exists($themeName, $this->errors)) {
                     $this->errors[$themeName] = array();
                 }
 
-                $this->errors[$themeName] = $this->translator->trans('An error occurred. The information "%s" is missing.', array($prop), 'Admin.Design.Notification');
+                $this->errors[$themeName] = $this->translator->trans(
+                    'An error occurred. The information "%s" is missing.', array($prop), 'Admin.Design.Notification'
+                );
             }
         }
 
@@ -93,13 +93,19 @@ class ThemeValidator
         );
     }
 
-    private function hasRequiredFiles($theme)
+    private function hasRequiredFiles(Theme $theme)
     {
         $themeName = $theme->getName();
+        $parentDir = realpath($theme->getDirectory().'/../'.$theme->get('parent')).'/';
+        $parentFile = false;
 
         foreach ($this->getRequiredFiles() as $file) {
-            if (!file_exists($theme->getDirectory().$file)) {
+            $childFile = $theme->getDirectory().$file;
+            if ($theme->get('parent')) {
+                $parentFile = $parentDir.$file;
+            }
 
+            if (!file_exists($childFile) && !file_exists($parentFile)) {
                 if (!array_key_exists($themeName, $this->errors)) {
                     $this->errors[$themeName] = array();
                 }

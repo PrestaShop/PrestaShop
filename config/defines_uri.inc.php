@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,6 +27,11 @@
 /* Theme URLs */
 define('_PS_DEFAULT_THEME_NAME_', 'classic');
 define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/');
+if (_PARENT_THEME_NAME_) {
+    define('_PS_PARENT_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._PARENT_THEME_NAME_.'/');
+} else {
+    define('_PS_PARENT_THEME_DIR_', '');
+}
 define('_THEMES_DIR_', __PS_BASE_URI__.'themes/');
 define('_THEME_DIR_', _THEMES_DIR_._THEME_NAME_.'/');
 define('_THEME_IMG_DIR_', _THEME_DIR_.'assets/img/');
