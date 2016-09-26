@@ -954,5 +954,30 @@
     <state id="JP-19" id_country="JP" id_zone="Asia" iso_code="19" tax_behavior="0" active="1">
       <name>Yamanashi</name>
     </state>
+    <state id="AU-ACT" id_country="AU" id_zone="Oceania" iso_code="ACT" tax_behavior="0" active="1">
+      <name>Australian Capital Territory</name>
+    </state>
+    <state id="AU-NSW" id_country="AU" id_zone="Oceania" iso_code="NSW" tax_behavior="0" active="1">
+      <name>New South Wales</name>
+    </state>
+    <state id="AU-NT" id_country="AU" id_zone="Oceania" iso_code="NT" tax_behavior="0" active="1">
+      <name>Northern Territory</name>
+    </state>
+    <state id="AU-QLD" id_country="AU" id_zone="Oceania" iso_code="QLD" tax_behavior="0" active="1">
+      <name>Queensland</name>
+    </state>
+    <state id="AU-SA" id_country="AU" id_zone="Oceania" iso_code="SA" tax_behavior="0" active="1">
+      <name>South Australia</name>
+    </state>
+    <state id="AU-TAS" id_country="AU" id_zone="Oceania" iso_code="TAS" tax_behavior="0" active="1">
+      <name>Tasmania</name>
+    </state>
+    <state id="AU-VIC" id_country="AU" id_zone="Oceania" iso_code="VIC" tax_behavior="0" active="1">
+      <name>Victoria</name>
+    </state>
+    <state id="AU-WA" id_country="AU" id_zone="Oceania" iso_code="WA" tax_behavior="0" active="1">
+      <name>Western Australia</name>
+    </state>
+	
   </entities>
 </entity_state>
