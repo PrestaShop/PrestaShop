@@ -116,7 +116,7 @@ class InstallModelInstall extends InstallAbstractModel
                     'database_engine' =>  $database_engine,
                     'cookie_key' => $cookie_key,
                     'cookie_iv' =>  $cookie_iv,
-                    'new_cookie_key' => $key->saveToAsciiSafeString(),
+                    'cookie_key_2' => $key->saveToAsciiSafeString(),
                     'ps_creation_date' => date('Y-m-d'),
                     'secret' => $secret,
                     'locale' => $this->language->getLanguage()->getLocale(),
