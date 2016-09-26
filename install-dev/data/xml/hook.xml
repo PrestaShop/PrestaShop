@@ -616,5 +616,10 @@
       <title>Update "lang" tables</title>
       <description>Update "lang" tables after adding or updating a language.</description>
     </hook>
+    <hook id="actionOutputHTMLBefore">
+      <name>actionOutputHTMLBefore</name>
+      <title>Before HTML output</title>
+      <description>This hook is used to filter the whole HTML page before it is rendered (only front)</description>
+    </hook>
   </entities>
 </entity_hook>
