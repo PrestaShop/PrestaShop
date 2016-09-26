@@ -462,6 +462,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
      */
     public function initContent()
     {
+        parent::initContent();
+
         // toolbar (save, cancel, new, ..) - show toolbar even if combinations are not active
         $this->initTabModuleList();
         $this->initToolbar();
