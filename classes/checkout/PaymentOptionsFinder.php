@@ -2,13 +2,15 @@
 
 use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+use PrestaShopBundle\Service\Hook\HookFinder;
 
-class PaymentOptionsFinderCore
-{
-    public function getPaymentOptions()
+class PaymentOptionsFinderCore extends HookFinder
+{   
+    public function find() //getPaymentOptions()
     {
         // Payment options coming from intermediate, deprecated version of the Advanced API
-        $rawDisplayPaymentEUOptions = Hook::exec('displayPaymentEU', array(), null, true);
+        $this->hookName = 'displayPaymentEU';
+        $rawDisplayPaymentEUOptions = parent::find();
 
         if (!is_array($rawDisplayPaymentEUOptions)) {
             $rawDisplayPaymentEUOptions = array();
@@ -20,13 +22,16 @@ class PaymentOptionsFinderCore
         );
 
         // Payment options coming from regular Advanced API
-        $advancedPaymentOptions = Hook::exec('advancedPaymentOptions', array(), null, true);
+        $this->hookName = 'advancedPaymentOptions';
+        $advancedPaymentOptions = parent::find();
         if (!is_array($advancedPaymentOptions)) {
             $advancedPaymentOptions = array();
         }
 
         // Payment options coming from regular Advanced API
-        $newOption = Hook::exec('paymentOptions', array(), null, true);
+        $this->hookName = 'paymentOptions';
+        $this->expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Payment\PaymentOption');
+        $newOption = parent::find();
         if (!is_array($newOption)) {
             $newOption = array();
         }
@@ -42,7 +47,7 @@ class PaymentOptionsFinderCore
         return $paymentOptions;
     }
 
-    public function getPaymentOptionsForTemplate()
+    public function present() //getPaymentOptionsForTemplate()
     {
         $id = 0;
 
@@ -62,6 +67,6 @@ class PaymentOptionsFinderCore
 
                 return $formattedOption;
             }, $options);
-        }, $this->getPaymentOptions());
+        }, $this->find());
     }
 }

@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
 use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
@@ -806,6 +807,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function getTemplateVarProduct()
     {
         $productSettings = $this->getProductPresentationSettings();
+        // Hook displayProductExtraContent
+        $extraContentFinder = new ProductExtraContentFinder();
 
         $product = $this->objectPresenter->present($this->product);
         $product['id_product'] = (int) $this->product->id;
@@ -814,6 +817,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product_attribute'] = (int) Tools::getValue('id_product_attribute');
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
+        $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 

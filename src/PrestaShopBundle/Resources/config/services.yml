@@ -52,6 +52,9 @@ services:
         calls:
             - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
             - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]
+            
+    prestashop.hook.finder:
+        class: PrestaShopBundle\Service\Hook\HookFinder
 
     # EVENT HANDLER
     prestashop.handler.log:

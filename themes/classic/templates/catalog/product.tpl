@@ -131,6 +131,11 @@
                   <a class="nav-link" data-toggle="tab" href="#attachments">{l s='Attachments' d='Shop.Theme.Catalog'}</a>
                 </li>
                 {/if}
+                {foreach from=$product.extraContent item=extra key=extraKey}
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" href="#extra-{$extraKey}">{$extra.title}</a>
+                </li>
+                {/foreach}
               </ul>
 
               <div class="tab-content" id="tab-content">
@@ -161,6 +166,11 @@
                    </div>
                  {/if}
                {/block}
+               {foreach from=$product.extraContent item=extra key=extraKey}
+               <div class="tab-pane fade in {$extra.attr.class}" id="extra-{$extraKey}" {foreach $extra.attr as $key => $val} {$key}="{$val}"{/foreach}>
+                   {$extra.content nofilter}
+               </div>
+               {/foreach}
             </div>
           </div>
         </div>

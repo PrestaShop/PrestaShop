@@ -51,11 +51,19 @@ class HookManager
         $use_push = false,
         $id_shop = null
     ) {
-        try {
-            return \HookCore::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
-        } catch (\Exception $e) {
-            $logger = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('logger');
-            $logger->error(sprintf('Exception on hook %s for module %s. %s', $hook_name, $id_module, $e->getMessage()));
+        global $kernel;
+        if (!is_null($kernel)) {
+            // If the Symfony kernel is instanciated, we use it for the event fonctionnality
+            $hookDispatcher = $kernel->getContainer()->get('prestashop.hook.dispatcher');
+            return $hookDispatcher->renderForParameters($hook_name, $hook_args)->getContent();
+        }
+        else {
+            try {
+                return \HookCore::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
+            } catch (\Exception $e) {
+                $logger = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('logger');
+                $logger->error(sprintf('Exception on hook %s for module %s. %s', $hook_name, $id_module, $e->getMessage()));
+            }
         }
     }
 }

@@ -47,7 +47,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         $assignedVars = array(
             'payment_options' => $this
                 ->paymentOptionsFinder
-                ->getPaymentOptionsForTemplate(),
+                ->present(),
             'conditions_to_approve' => $this
                 ->conditionsToApproveFinder
                 ->getConditionsToApproveForTemplate(),

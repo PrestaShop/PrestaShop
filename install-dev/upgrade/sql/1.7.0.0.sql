@@ -176,3 +176,4 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_HTML_THEME_COMPRESSION';
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('validateCustomerFormFields', 'Customer registration form validation', 'This hook is called to a module when it has sent addtionnal fields with additionalCustomerFormFields', '1');
 
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayProductExtraContent', 'Display extra content on the product page', 'This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.', '1');
