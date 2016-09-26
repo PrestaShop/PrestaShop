@@ -18,14 +18,14 @@
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="addresses-link" href="{$urls.pages.addresses}">
           <i class="material-icons">&#xE56A;</i>
-          <span class="text-nowrap">{l s='Addresses' d='Shop.Theme.CustomerAccount'}</span>
+          <span>{l s='Addresses' d='Shop.Theme.CustomerAccount'}</span>
         </a>
       </div>
     {else}
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="address-link" href="{$urls.pages.address}">
           <i class="material-icons">&#xE567;</i>
-          <span class="text-nowrap">{l s='Add first address' d='Shop.Theme.CustomerAccount'}</span>
+          <span>{l s='Add first address' d='Shop.Theme.CustomerAccount'}</span>
         </a>
       </div>
     {/if}
@@ -34,7 +34,7 @@
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="history-link" href="{$urls.pages.history}">
           <i class="material-icons">&#xE916;</i>
-          <span class="text-nowrap">{l s='Order history and details' d='Shop.Theme.CustomerAccount'}</span>
+          <span>{l s='Order history and details' d='Shop.Theme.CustomerAccount'}</span>
         </a>
       </div>
     {/if}
@@ -43,7 +43,7 @@
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="order-slips-link" href="{$urls.pages.order_slip}">
           <i class="material-icons">&#xE8B0;</i>
-          <span class="text-nowrap">{l s='Credit slips' d='Shop.Theme.CustomerAccount'}</span>
+          <span>{l s='Credit slips' d='Shop.Theme.CustomerAccount'}</span>
         </a>
       </div>
     {/if}
@@ -52,7 +52,7 @@
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="discounts-link" href="{$urls.pages.discount}">
           <i class="material-icons">&#xE54E;</i>
-          <span class="text-nowrap">{l s='Vouchers' d='Shop.Theme.CustomerAccount'}</span>
+          <span>{l s='Vouchers' d='Shop.Theme.CustomerAccount'}</span>
         </a>
       </div>
     {/if}
@@ -61,7 +61,7 @@
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="returns-link" href="{$urls.pages.order_follow}">
           <i class="material-icons">&#xE860;</i>
-          <span class="text-nowrap">{l s='Merchandise returns' d='Shop.Theme.CustomerAccount'}</span>
+          <span>{l s='Merchandise returns' d='Shop.Theme.CustomerAccount'}</span>
         </a>
       </div>
     {/if}
