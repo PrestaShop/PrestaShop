@@ -72,7 +72,7 @@
           {$active = ""}
         {/if}
         {if $show_new_customers}
-          <div class="tab-pane empty" id="customers-notifications" role="tabpanel">
+          <div class="tab-pane {$active} empty" id="customers-notifications" role="tabpanel">
             <p class="no-notification">
               {l s='No new customer for now :('}<br>
               {$no_customer_tip}
@@ -82,7 +82,7 @@
           {$active = ""}
         {/if}
         {if $show_new_messages}
-          <div class="tab-pane empty" id="messages-notifications" role="tabpanel">
+          <div class="tab-pane {$active} empty" id="messages-notifications" role="tabpanel">
             <p class="no-notification">
               {l s='No new message for now.'}<br>
               {$no_customer_message_tip}
