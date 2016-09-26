@@ -696,6 +696,56 @@ class LinkCore
         return $this->protocol_content.Tools::getMediaServer($uriPath).$uriPath;
     }
 
+    /**
+     * Returns a link to a supplier image for display
+     *
+     * @param $idSupplier
+     * @param null $type    image type (small_default, medium_default, large_default, etc.)
+     *
+     * @return string
+     */
+    public function getSupplierImageLink($idSupplier, $type = null)
+    {
+        $idSupplier = (int)$idSupplier;
+
+        if (file_exists(_PS_SUPP_IMG_DIR_.$idSupplier.(empty($type) ? '.jpg' : '-'.$type.'.jpg'))) {
+            $uriPath = _THEME_SUP_DIR_.$idSupplier.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
+        } else if (!empty($type) && file_exists(_PS_SUPP_IMG_DIR_.$idSupplier.'.jpg')) { // !empty($type) because if is empty, is already tested
+            $uriPath = _THEME_SUP_DIR_.$idSupplier.'.jpg';
+        } else if (file_exists(_PS_SUPP_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+            $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
+        } else {
+            $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.'.jpg';
+        }
+
+        return $this->protocol_content.Tools::getMediaServer($uriPath).$uriPath;
+    }
+
+    /**
+     * Returns a link to a manufacturer image for display
+     *
+     * @param $idManufacturer
+     * @param null $type    image type (small_default, medium_default, large_default, etc.)
+     *
+     * @return string
+     */
+    public function getManufacturerImageLink($idManufacturer, $type = null)
+    {
+        $idManufacturer = (int)$idManufacturer;
+
+        if (file_exists(_PS_MANU_IMG_DIR_.$idManufacturer.(empty($type) ? '.jpg' : '-'.$type.'.jpg'))) {
+            $uriPath = _THEME_MANU_DIR_.$idManufacturer.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
+        } else if (!empty($type) && file_exists(_PS_MANU_IMG_DIR_.$idManufacturer.'.jpg')) { // !empty($type) because if is empty, is already tested
+            $uriPath = _THEME_MANU_DIR_.$idManufacturer.'.jpg';
+        } else if (file_exists(_PS_MANU_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+            $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
+        } else {
+            $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.'.jpg';
+        }
+
+        return $this->protocol_content.Tools::getMediaServer($uriPath).$uriPath;
+    }
+
     public function getMediaLink($filepath)
     {
         return $this->protocol_content.Tools::getMediaServer($filepath).$filepath;
