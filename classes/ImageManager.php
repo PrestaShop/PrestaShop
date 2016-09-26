@@ -271,6 +271,11 @@ class ImageManagerCore
         Hook::exec('actionOnImageResizeAfter', array('dst_file' => $destinationFile, 'file_type' => $fileType));
         @imagedestroy($srcImage);
 
+        file_put_contents(
+            dirname($destinationFile) . DIRECTORY_SEPARATOR . 'fileType',
+            $fileType
+        );
+
         return $writeFile;
     }
 
@@ -433,7 +438,7 @@ class ImageManagerCore
         if ($file['error']) {
             return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);
         }
-        
+
         return false;
     }
 
