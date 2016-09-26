@@ -2845,14 +2845,18 @@ exit;
      */
     public static function getMaxUploadSize($max_size = 0)
     {
+		$values = array();
+		
+		if($max_size > 0)
+			$values[] = $max_size;
+		
         $post_max_size = Tools::convertBytes(ini_get('post_max_size'));
-        $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
-        if ($max_size > 0) {
-            $result = min($post_max_size, $upload_max_filesize, $max_size);
-        } else {
-            $result = min($post_max_size, $upload_max_filesize);
-        }
-        return $result;
+		if($post_max_size > 0)
+			$values[] = $post_max_size;
+		
+        $values[] = Tools::convertBytes(ini_get('upload_max_filesize'));
+        
+        return min($values);
     }
 
     /**
