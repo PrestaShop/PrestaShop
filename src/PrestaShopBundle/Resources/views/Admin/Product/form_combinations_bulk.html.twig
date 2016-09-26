@@ -1,9 +1,11 @@
 <div class="row">
-  <div class="col-xl-2 col-lg-6 custom-width m-b-1">
-    <label class="form-control-label">{{ form.quantity.vars.label }}</label>
-    {{ form_errors(form.quantity) }}
-    {{ form_widget(form.quantity) }}
-  </div>
+  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+    <div class="col-xl-2 col-lg-6 custom-width m-b-1">
+      <label class="form-control-label">{{ form.quantity.vars.label }}</label>
+      {{ form_errors(form.quantity) }}
+      {{ form_widget(form.quantity) }}
+    </div>
+  {% endif %}
 
   <div class="col-xl-2 col-lg-6 custom-width m-b-1">
     <label class="form-control-label">{{ form.cost_price.vars.label }}</label>

@@ -227,12 +227,18 @@
                       'column': 'price'
                     } %}
                   </th>
+
+                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                   <th style="width: 9%">
                     {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'sav_quantity'
                     } %}
                   </th>
+                  {% else %}
+                    <th></th>
+                  {% endif %}
+
                   <th>
                     {{ "Status"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
@@ -299,6 +305,7 @@
                     } %}
                   </th>
 
+                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                   <th>
                     {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
                       'input_name': "filter_column_sav_quantity",
@@ -309,6 +316,10 @@
                       'value': filter_column_sav_quantity,
                     } %}
                   </th>
+                  {% else %}
+                    <th></th>
+                  {% endif %}
+
                   <th>
                     <select data-toggle="select2" name="filter_column_active">
                       <option value=""></option>

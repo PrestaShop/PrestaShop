@@ -248,7 +248,7 @@
                               {{ "Reference"|trans({}, 'Admin.Catalog.Feature') }}
                               <span class="help-box" data-toggle="popover"
                                 data-content="{{ "Your internal reference code for this product. Allowed special characters: .-_#\."|trans({}, 'Admin.Catalog.Help') }}" ></span>
-                            </2>
+                            </h2>
                             {{ form_errors(form.step6.reference) }}
                             <div class="row">
                               <div class="col-xl-12 col-lg-12" id="product_reference_field">
@@ -257,23 +257,25 @@
                             </div>
                           </div>
 
-                          <div class="form-group" id="product_qty_0_shortcut_div">
-                            <h2>
-                              {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
-                              <span class="help-box" data-toggle="popover"
-                                data-content="{{ "How many products should be available for sale?"|trans({}, 'Admin.Catalog.Help') }}" ></span>
-                            </h2>
-                            {{ form_errors(form.step1.qty_0_shortcut) }}
-                            <div class="row">
-                              <div class="col-xl-6 col-lg-12">
-                                {{ form_widget(form.step1.qty_0_shortcut) }}
+                          {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                            <div class="form-group" id="product_qty_0_shortcut_div">
+                              <h2>
+                                {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
+                                <span class="help-box" data-toggle="popover"
+                                  data-content="{{ "How many products should be available for sale?"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                              </h2>
+                              {{ form_errors(form.step1.qty_0_shortcut) }}
+                              <div class="row">
+                                <div class="col-xl-6 col-lg-12">
+                                  {{ form_widget(form.step1.qty_0_shortcut) }}
+                                </div>
                               </div>
+                              <span class="small font-secondary">
+                                {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
+                                {{ "Advanced settings in [1][2]Quantities[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive p-x-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                              </span>
                             </div>
-                            <span class="small font-secondary">
-                              {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
-                              {{ "Advanced settings in [1][2]Quantities[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive p-x-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
-                            </span>
-                          </div>
+                          {% endif %}
 
                           <div class="form-group">
                             <h2>
@@ -339,11 +341,13 @@
                       <h2>{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                       <fieldset class="form-group">
                         <div class="row">
-                          <div class="col-md-4">
-                            <label class="form-control-label">{{ form.step3.qty_0.vars.label }}</label>
-                            {{ form_errors(form.step3.qty_0) }}
-                            {{ form_widget(form.step3.qty_0) }}
-                          </div>
+                          {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                            <div class="col-md-4">
+                              <label class="form-control-label">{{ form.step3.qty_0.vars.label }}</label>
+                              {{ form_errors(form.step3.qty_0) }}
+                              {{ form_widget(form.step3.qty_0) }}
+                            </div>
+                          {% endif %}
                           <div class="col-md-4">
                             <label class="form-control-label">{{ form.step3.minimal_quantity.vars.label }}</label>
                             <span class="help-box" data-toggle="popover"
@@ -445,17 +449,17 @@
                         </div>
                       </div>
                     {% endif %}
-
-                    <div id="pack_stock_type">
-                      <h2>{{ form.step3.pack_stock_type.vars.label }}</h2>
-                      <div class="row col-md-4">
-                        <fieldset class="form-group">
-                          {{ form_errors(form.step3.pack_stock_type) }}
-                          {{ form_widget(form.step3.pack_stock_type) }}
-                        </fieldset>
+                    {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                      <div id="pack_stock_type">
+                        <h2>{{ form.step3.pack_stock_type.vars.label }}</h2>
+                        <div class="row col-md-4">
+                          <fieldset class="form-group">
+                            {{ form_errors(form.step3.pack_stock_type) }}
+                            {{ form_widget(form.step3.pack_stock_type) }}
+                          </fieldset>
+                        </div>
                       </div>
-                    </div>
-
+                    {% endif %}
                     {{ include('PrestaShopBundle:Admin/Product/Include:form_combinations.html.twig', {'form': form.step3, 'form_combination_bulk': formCombinations}) }}
 
                   </div>

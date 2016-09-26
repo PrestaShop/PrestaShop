@@ -63,6 +63,8 @@ class ProductCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
+
         $builder->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType', array(
             'required' => false,
         ))
@@ -142,16 +144,18 @@ class ProductCombination extends CommonAbstractType
             'label'    => $this->translator->trans('Set as default combination', [], 'Admin.Catalog.Feature'),
             'required' => false,
             'attr' => array('class' => 'attribute_default_checkbox'),
-        ))
-        ->add('attribute_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-            'required' => true,
-            'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric')),
-            )
-        ))
-        ->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+        ));
+        if ($is_stock_management){
+           $builder->add('attribute_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+                'required' => true,
+                'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
+                'constraints' => array(
+                    new Assert\NotBlank(),
+                    new Assert\Type(array('type' => 'numeric')),
+                )
+            ));
+        }
+        $builder->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(),
             'choices_as_values' => true,
             'required' => false,

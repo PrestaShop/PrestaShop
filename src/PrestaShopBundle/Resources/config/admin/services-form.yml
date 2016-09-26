@@ -177,6 +177,7 @@ services:
         class: PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk
         arguments:
             - "@translator"
+            - "@prestashop.adapter.legacy.configuration"
         tags:
             - { name: form.type }
 

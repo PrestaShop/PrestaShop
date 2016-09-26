@@ -28,6 +28,7 @@
               <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'Admin.Global')) }}</a>
             </td>
 
+            {% if 'PS_STOCK_MANAGEMENT'|configuration %}
             <td class="product-sav-quantity" data-product-quantity-value="{{ product.sav_quantity|default('') }}">
               <a href="{{ product.url|default('') }}#tab-step3">
                 {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
@@ -37,6 +38,9 @@
                 {% endif %}
               </a>
             </td>
+            {% else %}
+                <td></td>
+            {% endif %}
             <td>
               {% if product.active|default(0) == 0 %}
                 <a href="#" onclick="unitProductAction(this, 'activate'); return false;">
