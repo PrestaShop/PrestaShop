@@ -24,12 +24,6 @@ const refreshNotifications = function () {
         setNotificationsNumber("_nb_new_customers_", nbCustomers);
         setNotificationsNumber("_nb_new_messages_", nbCustomerMessages);
         $('#notifications-total').html(notifications_total);
-
-        if (notifications_total > 0 ) {
-          $('#notifications-total').removeClass('hide');
-        } else {
-          $('#notifications-total').addClass('hide');
-        }
       }
       timer = setTimeout(refreshNotifications, 120000);
     }

@@ -246,7 +246,7 @@
 					<li id="notification" class="dropdown">
 						<a href="javascript:void(0);" class="notification dropdown-toggle notifs">
 							<i class="material-icons">notifications_none</i>
-							<span id="total_notif_number_wrapper" class="notifs_badge hide">
+							<span id="total_notif_number_wrapper" class="notifs_badge">
 								<span id="total_notif_value">0</span>
 							</span>
 						</a>
