@@ -2140,7 +2140,13 @@ abstract class ModuleCore
         } elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/hook/'.$template)) {
             return _PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/hook/'.$template;
         } elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/front/'.$template)) {
-            return _PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/front/'.$template;
+            return _PS_THEME_DIR_ . 'modules/' . $module_name . '/views/templates/front/' . $template;
+        } elseif (Tools::file_exists_cache(_PS_PARENT_THEME_DIR_.'modules/'.$module_name.'/'.$template)) {
+            return _PS_PARENT_THEME_DIR_.'modules/'.$module_name.'/'.$template;
+        } elseif (Tools::file_exists_cache(_PS_PARENT_THEME_DIR_.'modules/'.$module_name.'/views/templates/hook/'.$template)) {
+            return _PS_PARENT_THEME_DIR_.'modules/'.$module_name.'/views/templates/hook/'.$template;
+        } elseif (Tools::file_exists_cache(_PS_PARENT_THEME_DIR_.'modules/'.$module_name.'/views/templates/front/'.$template)) {
+            return _PS_PARENT_THEME_DIR_.'modules/'.$module_name.'/views/templates/front/'.$template;
         } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/views/templates/hook/'.$template)) {
             return false;
         } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/views/templates/front/'.$template)) {
