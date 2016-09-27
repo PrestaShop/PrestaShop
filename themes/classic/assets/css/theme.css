@@ -8006,6 +8006,9 @@ li.product-flag {
   #header .top-menu-link {
     margin-left: 1.25rem; }
 
+.popover {
+  font-family: inherit; }
+
 /*** WRAPPER ***/
 #wrapper {
   background: #ebebeb;

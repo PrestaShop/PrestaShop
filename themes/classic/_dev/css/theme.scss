@@ -147,6 +147,10 @@
     margin-left: $medium-space;
   }
 }
+
+.popover {
+  font-family: inherit;
+}
 /*** WRAPPER ***/
 #wrapper {
   background: $gray-light;
