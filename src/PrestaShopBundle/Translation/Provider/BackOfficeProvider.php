@@ -37,7 +37,7 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
     {
         return array(
             '^Admin*',
-            '^Modules\.(.*)\.Admin^Modules\.(.*)\.Admin',
+            '^Modules(.*)Admin',
         );
     }
 
@@ -48,7 +48,7 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
     {
         return array(
             'Admin*',
-            '^Modules\.(.*)\.Admin^Modules\.(.*)\.Admin',
+            '#^Modules(.*)Admin#',
         );
     }
 
