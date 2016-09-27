@@ -274,7 +274,7 @@
                       {$active = ""}
                     {/if}
                   </ul>
-                  
+
                   <!-- Tab panes -->
                   <div class="tab-content">
                     {$active = "active"}
@@ -282,7 +282,7 @@
                       <div class="tab-pane {$active} empty" id="orders-notifications" role="tabpanel">
                         <p class="no-notification">
                           {l s='No new order for now :('}<br>
-                          {l s='Have you checked your [1][2]abandonned carts[/2][/1]?' tags=['<strong>', '<a href="'|cat:$abandoned_cart_url|cat:'">']}<br>
+                          {l s='Have you checked your [1][2]abandonned carts[/2][/1]?' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a href="'|cat:$abandoned_cart_url|cat:'">', '[/2]' => '</a>']}<br>
                           {$no_order_tip}
                         </p>
                         <div class="notification-elements"></div>
@@ -324,7 +324,7 @@
                 <span class="shop-state" id="debug-mode">
                   <i class="material-icons">bug_report</i>
                   <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' sprintf=['[1]' => '<strong>', '[/1]' => '</strong>']}</p>">{l s='Debug mode'}</span>
+                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>']}</p>">{l s='Debug mode'}</span>
                 </span>
               {/if}
               {if isset($maintenance_mode) && $maintenance_mode == true}
