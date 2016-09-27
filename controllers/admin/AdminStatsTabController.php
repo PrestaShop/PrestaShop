@@ -36,16 +36,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
     public function initContent()
     {
-        parent::initContent();
-
         if ($this->ajax) {
             return;
         }
 
-        $this->initTabModuleList();
         $this->addToolBarModulesListButton();
         $this->toolbar_title = $this->trans('Stats', array(), 'Admin.Stats.Feature');
-        $this->initPageHeaderToolbar();
+
         if ($this->display == 'view') {
             // Some controllers use the view action without an object
             if ($this->className) {
@@ -58,13 +55,8 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         $this->content .= $this->displayCalendar();
         $this->content .= $this->displayStats();
 
-
         $this->context->smarty->assign(array(
             'content' => $this->content,
-            'url_post' => self::$currentIndex.'&token='.$this->token,
-            'show_page_header_toolbar' => $this->show_page_header_toolbar,
-            'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
     }
 
