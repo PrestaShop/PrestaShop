@@ -3935,6 +3935,7 @@ button.close {
   display: block;
   max-width: 276px;
   padding: 1px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -5988,20 +5989,45 @@ body#checkout {
 
 /*** My account landing page ***/
 .page-my-account #content .links {
-  margin: 0 -0.9375rem; }
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  -js-display: flex;
+  display: flex;
+  -webkit-box-lines: multiple;
+  -moz-box-lines: multiple;
+  box-lines: multiple;
+  -webkit-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  box-pack: start;
+  -webkit-justify-content: flex-start;
+  -moz-justify-content: flex-start;
+  -ms-justify-content: flex-start;
+  -o-justify-content: flex-start;
+  justify-content: flex-start;
+  -ms-flex-pack: start; }
   .page-my-account #content .links a {
-    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-    background: white;
-    padding: 1rem;
     text-align: center;
     display: inline-block;
     font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
     color: #878787;
-    width: 100%;
-    margin-bottom: 1.875rem;
-    padding: 1.5625rem 0.25rem; }
+    padding: 0 0.9375rem;
+    margin-bottom: 1.875rem; }
+    .page-my-account #content .links a span.link-item {
+      display: block;
+      height: 100%;
+      box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
+      background: white;
+      padding: 1rem; }
     .page-my-account #content .links a i {
       display: block;
       font-size: 2.6rem;

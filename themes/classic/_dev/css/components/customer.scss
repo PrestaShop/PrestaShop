@@ -292,18 +292,23 @@
 .page-my-account {
   #content {
     .links {
-      margin: 0 rem(-15px);
+      @include display(flex);
+      @include flex-wrap(wrap);
+      @include justify-content(flex-start);
       a {
-        @include customer-area-base-box;
         text-align: center;
         display: inline-block;
         font-size: $base-font-size;
         font-weight: 700;
         text-transform: uppercase;
         color: $gray-dark;
-        width: 100%;
+        padding: 0 rem(15px);
         margin-bottom: rem(30px);
-        padding: rem(25px) rem(4px);
+        span.link-item {
+          display: block;
+          height: 100%;
+          @include customer-area-base-box;
+        }
         i {
           display: block;
           font-size: 2.6rem;
