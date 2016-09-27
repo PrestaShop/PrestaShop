@@ -65,7 +65,7 @@ class DatabaseTranslationLoader implements LoaderInterface
         ;
 
         if ($domain !== '*') {
-            $queryBuilder->andWhere('t.domain LIKE :domain')
+            $queryBuilder->andWhere('REGEXP(t.domain, :domain) = true')
                 ->setParameter('domain', $domain)
             ;
         }
@@ -73,7 +73,7 @@ class DatabaseTranslationLoader implements LoaderInterface
         $translations = $queryBuilder->getQuery()
             ->getResult()
         ;
-        
+
         $catalogue = new MessageCatalogue($locale);
 
         foreach ($translations as $translation) {

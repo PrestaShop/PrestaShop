@@ -5,7 +5,7 @@ namespace PrestaShopBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Translation
+ * Translation.
  *
  * @ORM\Table(indexes={@ORM\Index(name="key", columns={"domain"})})
  * @ORM\Entity(repositoryClass="TranslationRepository")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Translation
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id_translation", type="integer")
      * @ORM\Id
@@ -37,8 +37,8 @@ class Translation
 
     /**
      * @var Lang
-     * 
-     * @ORM\ManyToOne(targetEntity="Lang")
+     *
+     * @ORM\ManyToOne(targetEntity="Lang", inversedBy="translations")
      * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false)
      */
     private $lang;
@@ -51,9 +51,9 @@ class Translation
     private $domain;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -61,16 +61,14 @@ class Translation
     }
 
     /**
-     * 
      * @return string
      */
     public function getKey()
     {
         return $this->key;
     }
-    
+
     /**
-     * 
      * @return string
      */
     public function getTranslation()
@@ -79,7 +77,6 @@ class Translation
     }
 
     /**
-     * 
      * @return Lang
      */
     public function getLang()
@@ -88,7 +85,6 @@ class Translation
     }
 
     /**
-     * 
      * @return string
      */
     public function getDomain()
@@ -97,50 +93,50 @@ class Translation
     }
 
     /**
-     * 
      * @param string $key
+     *
      * @return \PrestaShopBundle\Entity\Translation
      */
     public function setKey($key)
     {
         $this->key = $key;
-        
+
         return $this;
     }
 
     /**
-     * 
      * @param string $translation
+     *
      * @return \PrestaShopBundle\Entity\Translation
      */
     public function setTranslation($translation)
     {
         $this->translation = $translation;
-        
+
         return $this;
     }
 
     /**
-     * 
      * @param Lang $lang
+     *
      * @return \PrestaShopBundle\Entity\Translation
      */
     public function setLang(Lang $lang)
     {
         $this->lang = $lang;
-        
+
         return $this;
     }
 
     /**
-     * 
      * @param string $domain
+     *
      * @return \PrestaShopBundle\Entity\Translation
      */
     public function setDomain($domain)
     {
         $this->domain = $domain;
-        
+
         return $this;
     }
 }

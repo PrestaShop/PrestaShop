@@ -52,10 +52,19 @@ class BackOfficeProviderTest extends \PHPUnit_Framework_TestCase
 
         // Check integrity of translations
         $this->assertArrayHasKey('AdminActions.en-US', $expectedReturn->all());
-        $translations = $expectedReturn->all('AdminActions.en-US');
+        $this->assertArrayHasKey('ModulesWirePaymentAdmin.en-US', $expectedReturn->all());
 
-        $this->assertCount(38, $translations);
-        $this->assertArrayHasKey('Download file', $translations);
-        $this->assertSame('Download file', $translations['Download file']);
+        $adminTranslations = $expectedReturn->all('AdminActions.en-US');
+        $this->assertCount(38, $adminTranslations);
+        $this->assertArrayHasKey('Download file', $adminTranslations);
+        $this->assertSame('Download file', $adminTranslations['Download file']);
+
+        $moduleTranslations = $expectedReturn->all('ModulesWirePaymentAdmin.en-US');
+        $this->assertCount(14, $moduleTranslations);
+        $this->assertArrayHasKey('No currency has been set for this module.', $moduleTranslations);
+        $this->assertSame(
+            'No currency has been set for this module.',
+            $moduleTranslations['No currency has been set for this module.']
+        );
     }
 }
