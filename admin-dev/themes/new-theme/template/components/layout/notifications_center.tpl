@@ -15,7 +15,7 @@
             href="#orders-notifications"
             role="tab"
           >
-            {l s='Orders[1][/1]' tags=['<span id="_nb_new_orders_">']}
+            {l s='Orders[1][/1]' sprintf=['[1]' => '<span id="_nb_new_orders_">', '[/1]' => '</span>']}
           </a>
         </li>
         <li class="nav-item">
@@ -27,7 +27,7 @@
             href="#customers-notifications"
             role="tab"
           >
-            {l s='Customers[1][/1]' tags=['<span id="_nb_new_customers_">']}
+            {l s='Customers[1][/1]' sprintf=['[1]' => '<span id="_nb_new_customers_">', '[/1]' => '</span>']}
           </a>
         </li>
         <li class="nav-item">
@@ -39,7 +39,7 @@
             href="#messages-notifications"
             role="tab"
           >
-            {l s='Messages[1][/1]' tags=['<span id="_nb_new_messages_">']}
+            {l s='Messages[1][/1]' sprintf=['[1]' => '<span id="_nb_new_messages_">', '[/1]' => '</span>']}
           </a>
         </li>
       </ul>
@@ -51,7 +51,7 @@
             {l s='No new order for now :('}<br>
             {l
               s='Have you checked your [1][2]abandonned carts[/2][/1]?'
-              tags=['<strong>', '<a href="'|cat:$abandoned_cart_url|cat:'">']
+            sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a href="'|cat:$abandoned_cart_url|cat:'">', '[/2]' => '</a>']
             }<br>
             {$no_order_tip}
           </p>

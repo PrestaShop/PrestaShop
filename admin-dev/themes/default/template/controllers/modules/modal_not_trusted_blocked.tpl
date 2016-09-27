@@ -59,6 +59,6 @@
 
 		<p>{l s='You can search for similar modules on the official marketplace.'}</p>
 
-		<p>{l s="[1]Click here to browse our catalog on PrestaShop Addons[/1]." tags=['<a class="catalog-link" href="#">']}
+		<p>{l s="[1]Click here to browse our catalog on PrestaShop Addons[/1]." sprintf=['[1]' => '<a class="catalog-link" href="#">', '[/1]' => '</a>']}
 	</div>
 </div>
