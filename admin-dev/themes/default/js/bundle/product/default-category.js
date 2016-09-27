@@ -21,7 +21,7 @@ var defaultCategory = (function() {
     'check': function(value) {
       defaultCategoryForm.find('input[value="'+value+'"]').prop('checked', true);
     },
-    
+
     'isChecked': function(value) {
       return defaultCategoryForm.find('input[value="'+value+'"]').is(':checked');
     },

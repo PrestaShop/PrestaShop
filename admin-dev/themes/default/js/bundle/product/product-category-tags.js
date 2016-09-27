@@ -52,7 +52,7 @@ var productCategoriesTags = (function () {
     'manageTagsOnInput': function () {
       var categoriesForm = $('#form_step1_categories');
       var that = this;
-      categoriesForm.on('click', 'input[type=checkbox]', function (event) {
+      categoriesForm.on('change', 'input[type=checkbox]', function (event) {
         var input = $(this);
         if (input.prop('checked') === false) {
           that.removeTag($(this).val());
