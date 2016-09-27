@@ -35,7 +35,10 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
      */
     public function getTranslationDomains()
     {
-        return array('Admin%');
+        return array(
+            '^Admin*',
+            '^Modules\.(.*)\.Admin^Modules\.(.*)\.Admin',
+        );
     }
 
     /**
@@ -43,7 +46,10 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
      */
     public function getFilters()
     {
-        return array('Admin*');
+        return array(
+            'Admin*',
+            '^Modules\.(.*)\.Admin^Modules\.(.*)\.Admin',
+        );
     }
 
     /**

@@ -89,7 +89,8 @@
     "prestashop/statsvisits": "dev-master",
     "prestashop/trackingfront": "dev-master",
     "prestashop/welcome": "dev-master",
-    "prestashop/dashtrends": "dev-master"
+    "prestashop/dashtrends": "dev-master",
+    "beberlei/DoctrineExtensions": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",

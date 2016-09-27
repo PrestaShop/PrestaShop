@@ -84,6 +84,9 @@ doctrine:
         # naming_strategy: doctrine.orm.naming_strategy.underscore
         naming_strategy: prestashop.database.naming_strategy
         auto_mapping: true
+        dql:
+            string_functions:
+                regexp: DoctrineExtensions\Query\Mysql\Regexp
 
 # Swiftmailer Configuration
 swiftmailer:
