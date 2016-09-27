@@ -933,6 +933,7 @@ class LanguageCore extends ObjectModel
         } else {
             $lang_pack = self::getLangDetails($iso);
             self::installSfLanguagePack($lang_pack['locale'], $errors);
+            self::installEmailsLanguagePack($lang_pack, $errors);
         }
 
         return count($errors) ? $errors : true;
@@ -993,6 +994,59 @@ class LanguageCore extends ObjectModel
         }
     }
 
+    public static function installEmailsLanguagePack($lang_pack, &$errors = array())
+    {
+        $folder = _PS_TRANSLATIONS_DIR_.'emails-'.$lang_pack['locale'];
+
+        if (!file_exists($folder.'.zip')) {
+            // @todo Throw exception
+            $errors[] = Tools::displayError('Language pack unavailable.');
+        } else {
+            $zipArchive = new ZipArchive();
+            $zipArchive->open($folder.'.zip');
+            $zipArchive->extractTo($folder);
+
+            $coreMails = array_merge(
+                Tools::scandir($folder.'/core', 'html', '', true),
+                Tools::scandir($folder.'/core', 'txt', '', true)
+            );
+
+            $coreDestPath = _PS_ROOT_DIR_.'/mails/'.$lang_pack['iso_code'];
+            if (!is_dir($coreDestPath)) {
+                mkdir($coreDestPath, 0755, true);
+            }
+
+            foreach ($coreMails as $coreEmail) {
+                if ('.' !== $coreEmail && '..' !== $coreEmail) {
+                    rename($folder.'/core/'.$coreEmail, $coreDestPath.'/'.$coreEmail);
+                }
+            }
+
+            $modules = scandir($folder.'/modules');
+            foreach ($modules as $module) {
+                if ('.' !== $module && '..' !== $module) {
+                    $moduleDestPath = _PS_ROOT_DIR_.'/modules/'.$module.'/mails/'.$lang_pack['iso_code'];
+                    $moduleMails = array_merge(
+                        Tools::scandir($folder.'/modules/'.$module, 'html', '', true),
+                        Tools::scandir($folder.'/modules/'.$module, 'txt', '', true)
+                    );
+
+                    if (!is_dir($moduleDestPath)) {
+                        mkdir($moduleDestPath, 0755, true);
+                    }
+                    foreach ($moduleMails as $moduleEmail) {
+                        rename(
+                            $folder.'/modules/'.$module.'/'.$moduleEmail,
+                            $moduleDestPath.'/'.$moduleEmail
+                        );
+                    }
+                }
+            }
+
+            Tools::deleteDirectory($folder);
+        }
+    }
+
     public static function installLanguagePack($iso, $params, &$errors = array())
     {
         $file = _PS_TRANSLATIONS_DIR_.(string) $iso.'.gzip';
@@ -1042,7 +1096,9 @@ class LanguageCore extends ObjectModel
             AdminTranslationsController::addNewTabs((string) $iso, $files_list);
         }
 
+        $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
+        self::installEmailsLanguagePack($lang_pack, $errors);
 
         return count($errors) ? $errors : true;
     }
