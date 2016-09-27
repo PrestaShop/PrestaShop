@@ -191,6 +191,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'id_shop_default' => array('table' => 'p', 'field' => 'id_shop_default'),
             'is_virtual' => array('table' => 'p', 'field' => 'is_virtual'),
             'name' => array('table' => 'pl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH),
+            'link_rewrite' => array('table' => 'pl', 'field' => 'link_rewrite', 'filtering' => self::FILTERING_LIKE_BOTH),
             'active' => array('table' => 'sa', 'field' => 'active', 'filtering' => self::FILTERING_EQUAL_NUMERIC),
             'shopname' => array('table' => 'shop', 'field' => 'name'),
             'id_image' => array('table' => 'image_shop', 'field' => 'id_image'),
@@ -326,6 +327,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 $product['price_final'] = \ToolsCore::displayPrice($product['price_final'], $currency);
             }
             $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
+            $product['image_link'] = \ContextCore::getContext()->link->getImageLink($product['link_rewrite'], $product['id_image']);
         }
 
         // post treatment by hooks
