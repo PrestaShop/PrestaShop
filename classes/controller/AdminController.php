@@ -2054,11 +2054,6 @@ class AdminControllerCore extends Controller
             return;
         }
 
-        $this->getLanguages();
-        $this->initToolbar();
-        $this->initTabModuleList();
-        $this->initPageHeaderToolbar();
-
         if ($this->display == 'edit' || $this->display == 'add') {
             if (!$this->loadObject(true)) {
                 return;
@@ -2089,9 +2084,20 @@ class AdminControllerCore extends Controller
         }
 
         $this->context->smarty->assign(array(
+            'content' => $this->content,
+        ));
+    }
+
+    public function initVariables() {
+        $this->getLanguages();
+
+        $this->initToolbar();
+        $this->initTabModuleList();
+        $this->initPageHeaderToolbar();
+
+        $this->context->smarty->assign(array(
             'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool)_PS_MODE_DEV_,
-            'content' => $this->content,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex.'&token='.$this->token,
             'show_page_header_toolbar' => $this->show_page_header_toolbar,
@@ -2101,7 +2107,6 @@ class AdminControllerCore extends Controller
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
     }
-
     /**
      * Init tab modules list and add button in toolbar
      */
@@ -2826,6 +2831,7 @@ class AdminControllerCore extends Controller
         $this->initProcess();
         $this->initBreadcrumbs();
         $this->initModal();
+        $this->initVariables();
     }
 
     /**
