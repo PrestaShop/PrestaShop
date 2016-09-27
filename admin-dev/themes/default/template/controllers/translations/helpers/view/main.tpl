@@ -65,7 +65,7 @@
 			});
 		});
 	</script>
-  <form method="post" action="index.php/international/translations/list" id="typeTranslationForm" class="form-horizontal">
+  <form method="post" action="{url entity=sf route=admin_international_translations_list }" id="typeTranslationForm" class="form-horizontal">
     <div class="panel">
       <h3>
         <i class="icon-file-text"></i>
@@ -206,7 +206,7 @@
 			</div>
 		</div>
 	</form>
-	<form action="index.php/international/translations/extract" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{url entity=sf route=admin_international_translations_extract_theme }" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-upload"></i>

@@ -1150,6 +1150,22 @@ class LinkCore
                     $params['relative_protocol']
                 );
                 break;
+            case 'sf':
+                if (!array_key_exists('route', $params)) {
+                    throw new \InvalidArgumentException('You need to setup a `route` attribute.');
+                }
+                global $kernel; // sf kernel
+                if ($kernel instanceof Symfony\Component\HttpKernel\HttpKernelInterface) {
+                    $sfRouter = $kernel->getContainer()->get('router');
+
+                    if (array_key_exists('sf-params', $params)) {
+                        return $sfRouter->generate($params['route'], $params['sf-params'], UrlGeneratorInterface::ABSOLUTE_URL);
+                    }
+                    $link = $sfRouter->generate($params['route'], array(), UrlGeneratorInterface::ABSOLUTE_URL);
+                }else{
+                    throw new \InvalidArgumentException('You can\'t use Symfony router in legacy context.');
+                }
+                break;
             default:
                 $link = $context->link->getPageLink(
                     $params['entity'],
