@@ -82,7 +82,9 @@
         <div class="col-lg-4">
           <select name="type" id="type">
             {foreach $translations_type as $type => $array}
-              <option value="{$type}">{$array.name}</option>
+              {if $type !== 'modules' }
+                <option value="{$type}">{$array.name}</option>
+              {/if}
             {/foreach}
           </select>
         </div>
