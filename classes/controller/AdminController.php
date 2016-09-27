@@ -2088,7 +2088,7 @@ class AdminControllerCore extends Controller
         ));
     }
 
-    public function initVariables() {
+    public function initToolbarFlags() {
         $this->getLanguages();
 
         $this->initToolbar();
@@ -2831,7 +2831,7 @@ class AdminControllerCore extends Controller
         $this->initProcess();
         $this->initBreadcrumbs();
         $this->initModal();
-        $this->initVariables();
+        $this->initToolbarFlags();
     }
 
     /**
