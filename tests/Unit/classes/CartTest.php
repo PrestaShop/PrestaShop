@@ -93,9 +93,6 @@ class CartTest extends UnitTestCase
 
         Phake::when($addressFactory)->findOrCreate()->thenReturn($address);
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory', $addressFactory);
-
-        $this->cart = new Cart;
-        $this->cart->id = 1;
     }
 
     public function teardown()
@@ -120,16 +117,21 @@ class CartTest extends UnitTestCase
     {
         $this->setRoundType(Order::ROUND_LINE);
 
+        $this->setUpCart();
+
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
 
-        $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $this->productPriceCalculator->getProducts());
+        $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS,
+            $this->productPriceCalculator->getProducts());
         $this->assertEquals(40.51, $orderTotal);
     }
 
     public function test_getOrderTotal_Round_Total_When_No_Tax()
     {
         $this->setRoundType(Order::ROUND_TOTAL);
+
+        $this->setUpCart();
 
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
@@ -142,10 +144,18 @@ class CartTest extends UnitTestCase
     {
         $this->setRoundType(Order::ROUND_ITEM);
 
+        $this->setUpCart();
+
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
 
         $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $this->productPriceCalculator->getProducts());
         $this->assertEquals(40.52, $orderTotal);
+    }
+
+    protected function setUpCart()
+    {
+        $this->cart = new Cart;
+        $this->cart->id = 1;
     }
 }
