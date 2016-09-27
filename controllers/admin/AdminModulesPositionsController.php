@@ -230,11 +230,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
     public function initContent()
     {
-        parent::initContent();
-
-        $this->initTabModuleList();
         $this->addjqueryPlugin('sortable');
-        $this->initPageHeaderToolbar();
 
         if (array_key_exists('addToHook', $_GET) || array_key_exists('editGraft', $_GET) || (Tools::isSubmit('submitAddToHook') && $this->errors)) {
             $this->display = 'edit';
@@ -246,9 +242,6 @@ class AdminModulesPositionsControllerCore extends AdminController
 
         $this->context->smarty->assign(array(
             'content' => $this->content,
-            'show_page_header_toolbar' => $this->show_page_header_toolbar,
-            'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
     }
 
