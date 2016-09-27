@@ -30,6 +30,7 @@ class LanguageCore extends ObjectModel
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
     const LANGUAGE_GZIP_URL = 'http://translations.prestashop.com/download/lang_packs/gzip/%s/%s.gzip';
     const SF_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/TEMP/%s.zip';
+    const EMAILS_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/emails/%s.zip';
 
     public $id;
 
@@ -960,21 +961,23 @@ class LanguageCore extends ObjectModel
             }
         }
 
-        self::downloadSfLanguagePack($lang_pack['locale'], $errors);
+        self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
+        self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'emails');
 
         return !count($errors);
     }
 
-    public static function downloadSfLanguagePack($locale, &$errors = array())
+    public static function downloadXLFLanguagePack($locale, &$errors = array(), $type = 'sf')
     {
-        $sfFile = _PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip';
-        $content = Tools::file_get_contents(sprintf(self::SF_LANGUAGE_PACK_URL, $locale));
+        $file = _PS_TRANSLATIONS_DIR_.$type.'-'.$locale.'.zip';
+        $url = ('emails' === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
+        $content = Tools::file_get_contents(sprintf($url, $locale));
 
-        if (!is_writable(dirname($sfFile))) {
+        if (!is_writable(dirname($file))) {
             // @todo Throw exception
-            $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$sfFile.')';
+            $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
         } else {
-            @file_put_contents($sfFile, $content);
+            @file_put_contents($file, $content);
         }
     }
 
