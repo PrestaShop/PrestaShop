@@ -57,6 +57,9 @@
     <hook id="displayTop">
       <name>displayTop</name><title>Top of pages</title><description>This hook displays additional elements at the top of your pages</description>
     </hook>
+    <hook id="displayFullWidthTop">
+      <name>displayFullWidthTop</name><title>Top of pages without width limitation.</title><description>This hook displays additional elements at the top of your pages without width limitation.</description>
+    </hook>
     <hook id="displayRightColumnProduct">
       <name>displayRightColumnProduct</name><title>New elements on the product page (right column)</title><description>This hook displays new elements in the right-hand column of the product page</description>
     </hook>
