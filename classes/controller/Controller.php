@@ -541,13 +541,6 @@ abstract class ControllerCore
             $html = $this->context->smarty->fetch($content, null, $this->getLayout());
         }
 
-        if ($this->controller_type === 'modulefront') {
-            // Modules do not know about the layout system,
-            // let's inject their output inside the front-end layout.
-            $this->context->smarty->assign('content', $html);
-            $html = $this->context->smarty->fetch('wrapper.tpl');
-        }
-
         $html = trim($html);
 
         if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout()) {
