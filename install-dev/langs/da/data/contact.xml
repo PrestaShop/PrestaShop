@@ -4,6 +4,6 @@
     <description>Hvis et teknisk problem opstår på denne hjemmeside</description>
   </contact>
   <contact id="Customer_service" name="Kundeservice">
-    <description>For alle spørgsmål om et produkt eller en ordre</description>
+    <description>Spørgsmål vedrørende et produkt eller en ordre</description>
   </contact>
 </entity_contact>
