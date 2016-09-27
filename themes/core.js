@@ -1723,22 +1723,73 @@
 	
 	    var updatePrices = function updatePrices(pricesInCart, $cartOverview, $newCart) {
 	      _jquery2['default'].each(pricesInCart, function (index, priceInCart) {
-	        var productLink = (0, _jquery2['default'])((0, _jquery2['default'])(priceInCart).parents('.product-line-grid')[0]).find('a.label').attr('href');
-	        var productLinkSelector = '.label[href="' + productLink + '"]';
-	        var newProductLink = $newCart.find(productLinkSelector);
-	        var $cartItem = (0, _jquery2['default'])($cartOverview.find(productLinkSelector).parents('.cart-item')[0]);
+	        var productUrl = (0, _jquery2['default'])((0, _jquery2['default'])(priceInCart).parents('.product-line-grid')[0]).find('a.label').attr('href');
+	        var productAnchorSelector = '.label[href="' + productUrl + '"]';
+	        var newProductAnchor = $newCart.find(productAnchorSelector);
+	        var $cartItem = (0, _jquery2['default'])($cartOverview.find(productAnchorSelector).parents('.cart-item')[0]);
+	
+	        if (newProductAnchor.length > 0) {
+	          (function () {
+	            var $newCartItem = newProductAnchor.parents('.cart-item');
+	            var $productCartItems = $cartOverview.find(productAnchorSelector).parents('.cart-item');
+	
+	            _jquery2['default'].each($productCartItems, function (index, productCartItem) {
+	              var $productCartItem = (0, _jquery2['default'])(productCartItem);
+	              // Case when a gift previously added to cart has been removed
+	              if ($productCartItem.find('.gift').length > 0 && 0 === $newCartItem.find('.gift').length) {
+	                $productCartItem.remove();
+	              }
+	            });
+	
+	            if ($newCartItem.find('.gift').length === 1 && $productCartItems.find('.gift').length === 1 && $productCartItems.length > 1) {
+	              // Case when a product added manually has been removed and
+	              // the same product has been given away
+	              var $manuallyAddedProducts = $productCartItems.filter(function (index, productCartItem) {
+	                return (0, _jquery2['default'])(productCartItem).find('.gift').length === 0;
+	              });
+	              $manuallyAddedProducts.remove();
+	            }
+	          })();
+	        }
 	
 	        // Remove cart item if response does not contain current product link
-	        if (0 === newProductLink.length) {
+	        if (0 === newProductAnchor.length) {
 	          $cartItem.remove();
 	
 	          return;
 	        }
 	
-	        var $newCartItem = (0, _jquery2['default'])($newCart.find(productLinkSelector).parents('.cart-item')[0]);
-	        var newPrice = $newCartItem.find(productPriceSelector).text();
+	        var $newCartItem = (0, _jquery2['default'])($newCart.find(productAnchorSelector).parents('.cart-item')[0]);
 	
-	        $cartItem.find(productPriceSelector).text(newPrice);
+	        var newPrice;
+	        if ($newCartItem.find(productPriceSelector).find('.gift').length > 0) {
+	          newPrice = $newCartItem.find(productPriceSelector).html(); // Preserve gift tag
+	          $cartItem.find(productPriceSelector).html(newPrice);
+	        } else {
+	          newPrice = $newCartItem.find(productPriceSelector).text();
+	          $cartItem.find(productPriceSelector).text(newPrice);
+	        }
+	      });
+	    };
+	
+	    var appendGiftProducts = function appendGiftProducts($cartOverview, $newCart) {
+	      $newCart = $newCart.filter('.js-cart');
+	      var $productAnchors = $newCart.find('.label[href]');
+	
+	      _jquery2['default'].each($productAnchors, function (index, productAnchor) {
+	        var $productAnchor = (0, _jquery2['default'])(productAnchor);
+	        var productUrl = $productAnchor.attr('href');
+	        var $cartItems = $cartOverview.find('.cart-items');
+	        var $newCartItem = $productAnchor.parents('.cart-item');
+	
+	        if (0 === $cartItems.find('.label[href="' + productUrl + '"]').length) {
+	          $cartItems.append($productAnchor.parents('.cart-item'));
+	        } else {
+	          var $cartItem = $cartItems.find('.label[href="' + productUrl + '"]').parents('.cart-item');
+	          if ($cartItem.find('.gift').length === 0 && $newCartItem.find('.gift').length > 0) {
+	            $cartItems.append($newCartItem);
+	          }
+	        }
 	      });
 	    };
 	
@@ -1751,6 +1802,7 @@
 	        $cartOverview.replaceWith(resp.cart_detailed);
 	      } else {
 	        updatePrices(pricesInCart, $cartOverview, $newCart);
+	        appendGiftProducts($cartOverview, $newCart);
 	      }
 	
 	      (0, _jquery2['default'])('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
