@@ -59,7 +59,6 @@ class DatabaseTranslationLoader implements LoaderInterface
             ;
         }
 
-
         $translationRepository = $this->entityManager
             ->getRepository('PrestaShopBundle:Translation')
         ;
