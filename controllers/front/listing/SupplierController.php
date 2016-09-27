@@ -144,7 +144,7 @@ class SupplierControllerCore extends ProductListingFrontController
         foreach ($suppliers as $supplier) {
             $suppliers_for_display[$supplier['id_supplier']] = $supplier;
             $suppliers_for_display[$supplier['id_supplier']]['text'] = $supplier['description'];
-            $suppliers_for_display[$supplier['id_supplier']]['image'] = _THEME_SUP_DIR_.$supplier['id_supplier'].'-medium_default.jpg';
+            $suppliers_for_display[$supplier['id_supplier']]['image'] = $this->context->link->getSupplierImageLink($supplier['id_supplier'], 'small_default');
             $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getsupplierLink($supplier['id_supplier']);
             $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1
                 ? $this->trans('%N% products', array('%N%' => $supplier['nb_products']), 'Shop.Theme.Catalog')
