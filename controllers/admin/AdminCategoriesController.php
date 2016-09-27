@@ -282,9 +282,12 @@ class AdminCategoriesControllerCore extends AdminController
                 );
             }
         }
+
         // be able to edit the Home category
         if (count(Category::getCategoriesWithoutParent()) == 1 && !Tools::isSubmit('id_category')
-            && ($this->display == 'view' || empty($this->display))) {
+            && ($this->display == 'view' || empty($this->display))
+            && !empty($this->_category)
+        ) {
             $this->toolbar_btn['edit'] = array(
                 'href' => self::$currentIndex.'&update'.$this->table.'&id_category='.(int)$this->_category->id.'&token='.$this->token,
                 'desc' => $this->trans('Edit', array(), 'Admin.Actions')
@@ -304,7 +307,8 @@ class AdminCategoriesControllerCore extends AdminController
             );
         }
         parent::initToolbar();
-        if ($this->_category->id == (int)Configuration::get('PS_ROOT_CATEGORY') && isset($this->toolbar_btn['new'])) {
+
+        if (!empty($this->_category) && $this->_category->id == (int)Configuration::get('PS_ROOT_CATEGORY') && isset($this->toolbar_btn['new'])) {
             unset($this->toolbar_btn['new']);
         }
         // after adding a category
