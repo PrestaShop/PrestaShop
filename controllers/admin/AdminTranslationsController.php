@@ -101,11 +101,6 @@ class AdminTranslationsControllerCore extends AdminController
      */
     public function initContent()
     {
-        parent::initContent();
-
-        $this->initTabModuleList();
-        $this->initPageHeaderToolbar();
-
         if (!is_null($this->type_selected)) {
             $method_name = 'initForm'.$this->type_selected;
             if (method_exists($this, $method_name)) {
@@ -120,9 +115,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->context->smarty->assign(array(
             'content' => $this->content,
-            'show_page_header_toolbar' => $this->show_page_header_toolbar,
-            'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn));
+        ));
     }
 
     /**
