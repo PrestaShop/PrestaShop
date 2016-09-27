@@ -1152,7 +1152,7 @@ class LinkCore
                 break;
             case 'sf':
                 if (!array_key_exists('route', $params)) {
-                    throw new \InvalidArgumentException("You need to setup a `route` attribute.");
+                    throw new \InvalidArgumentException('You need to setup a `route` attribute.');
                 }
                 global $kernel; // sf kernel
                 if ($kernel instanceof Symfony\Component\HttpKernel\HttpKernelInterface) {
@@ -1163,7 +1163,7 @@ class LinkCore
                     }
                     $link = $sfRouter->generate($params['route'], array(), UrlGeneratorInterface::ABSOLUTE_URL);
                 }else{
-                    throw new \InvalidArgumentException("You can't use Symfony router in legacy context.");
+                    throw new \InvalidArgumentException('You can\'t use Symfony router in legacy context.');
                 }
                 break;
             default:
