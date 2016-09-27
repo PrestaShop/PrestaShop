@@ -175,6 +175,8 @@ class AdminSlipControllerCore extends AdminController
 
     public function initToolbar()
     {
+        parent::initToolbar();
+
         $this->toolbar_btn['save-date'] = array(
             'href' => '#',
             'desc' => $this->trans('Generate PDF', array(), 'Admin.OrdersCustomers.Feature')
