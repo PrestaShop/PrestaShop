@@ -2,5 +2,5 @@
 <entity_group>
   <group id="Visitor" name="Besøgende"/>
   <group id="Guest" name="Gæst"/>
-  <group id="Customer" name="Kunder"/>
+  <group id="Customer" name="Kunde"/>
 </entity_group>
