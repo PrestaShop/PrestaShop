@@ -36,11 +36,10 @@
           <h1>{{ displayName }}<br>
             <small class="version">
               {% if serviceUrl is defined and serviceUrl|length > 0 %}
-                {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
+                {{ 'Service by %author%'|trans({'%author%' : author}, 'Admin.Modules.Feature') }}
               {% else %}
-                {{ 'v%version% by '|trans({ '%version%' : version }, 'Admin.Modules.Feature') }}
+                {{ 'v%version% by %author%'|trans({ '%version%' : version, '%author%' : author }, 'Admin.Modules.Feature') }}
               {% endif %}
-              {{ author }}
             </small>
           </h1>
 

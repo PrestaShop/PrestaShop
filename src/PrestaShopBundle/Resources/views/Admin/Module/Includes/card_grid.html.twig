@@ -36,11 +36,9 @@
       <div class="text-ellipsis xsmall module-version-author-grid">
         {% block addon_version %}
           {% if module.attributes.productType == "service" %}
-            {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
-            <b>{{ module.attributes.author }}</b>
+            {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
           {% else %}
-            {{ 'v%version% - by '|trans({ '%version%' : module.attributes.version }, 'Admin.Modules.Feature') }}
-            <b>{{ module.attributes.author }}</b>
+            {{ 'v%version% - by %author%'|trans({ '%version%' : module.attributes.version, '%author%' : '<b>' ~ module.attributes.author ~ '</b>' }, 'Admin.Modules.Feature')|raw }}
           {% endif %}
         {% endblock %}
       </div>
