@@ -40,16 +40,6 @@ try {
         Tools::redirectAdmin('index.php?controller=AdminLogin&redirect='.$_SERVER['REQUEST_URI']);
     }
 
-    // Set current index
-    // @deprecated global
-    global $currentIndex; // retrocompatibility;
-    $currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
-
-    if ($back = Tools::getValue('back')) {
-        $currentIndex .= '&back='.urlencode($back);
-    }
-    AdminTab::$currentIndex = $currentIndex;
-
     $iso = $context->language->iso_code;
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php')) {
         include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
