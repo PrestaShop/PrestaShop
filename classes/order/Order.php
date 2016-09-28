@@ -2145,6 +2145,7 @@ class OrderCore extends ObjectModel
     {
         $collection = new PrestaShopCollection('order');
         $collection->where('reference', '=', $this->reference);
+        $collection->where('id_cart', '=', $this->id_cart);
         $collection->where('id_order', '<>', $this->id);
         return $collection;
     }
