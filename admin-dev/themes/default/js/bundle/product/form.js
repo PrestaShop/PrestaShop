@@ -1318,7 +1318,6 @@ var attachmentProduct = (function() {
  * images product management
  */
 var imagesProduct = (function() {
-  var id_product = $('#form_id_product').val();
   var dropZoneElem = $('#product-images-dropzone');
   var expanderElem = $('#product-images-container .dropzone-expander');
 
@@ -1387,7 +1386,7 @@ var imagesProduct = (function() {
       });
 
       var dropzoneOptions = {
-        url: dropZoneElem.attr('url-upload') + '/' + id_product,
+        url: dropZoneElem.attr('url-upload'),
         paramName: 'form[file]',
         maxFilesize: dropZoneElem.attr('data-max-size'),
         addRemoveLinks: true,
@@ -1536,7 +1535,7 @@ var formImagesProduct = (function() {
       dropZoneElem.find(".dz-preview.active").removeClass("active");
       dropZoneElem.find(".dz-preview[data-id='"+id+"']").addClass("active");
       $.ajax({
-        url: dropZoneElem.attr('url-update') + '/' + id,
+        url: dropZoneElem.find(".dz-preview[data-id='"+id+"']").attr('url-update'),
         success: function(response) {
           formZoneElem.find('#product-images-form').html(response);
         },
@@ -1549,7 +1548,7 @@ var formImagesProduct = (function() {
     'send': function(id) {
       $.ajax({
         type: 'POST',
-        url: dropZoneElem.attr('url-update') + '/' + id,
+        url: dropZoneElem.find(".dz-preview[data-id='"+id+"']").attr('url-update'),
         data: formZoneElem.find('textarea, input').serialize(),
         beforeSend: function() {
           formZoneElem.find('.actions button').prop('disabled', 'disabled');
@@ -1584,7 +1583,7 @@ var formImagesProduct = (function() {
       modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
         onContinue: function() {
           $.ajax({
-            url: dropZoneElem.attr('url-delete') + '/' + id,
+            url: dropZoneElem.find('.dz-preview[data-id="' + id + '"]').attr('url-delete'),
             complete: function() {
               formZoneElem.find('.close').click();
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
