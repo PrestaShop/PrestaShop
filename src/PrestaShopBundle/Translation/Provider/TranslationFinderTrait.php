@@ -47,10 +47,12 @@ trait TranslationFinderTrait
         }
 
         foreach ($translationFiles as $file) {
-            $domain = strpos($file->getBasename('.xlf'), $locale) !== false ?
-                $file->getBasename('.xlf') :
-                $file->getBasename('.xlf').'.'.$locale
-            ;
+            if (strpos($file->getBasename('.xlf'), $locale) !== false) {
+                $domain = $file->getBasename('.xlf');
+            } else {
+                $domain = $file->getBasename('.xlf').'.'.$locale;
+            }
+
             $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
             $messageCatalogue->addCatalogue($fileCatalogue);
         }

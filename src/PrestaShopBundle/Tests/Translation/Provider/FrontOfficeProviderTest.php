@@ -52,13 +52,22 @@ class FrontOfficeProviderTest extends \PHPUnit_Framework_TestCase
 
         // Check integrity of translations
         $this->assertArrayHasKey('ShopNotificationsWarning.en-US', $expectedReturn->all());
+        $this->assertArrayHasKey('ModulesShoppingCartShop.en-US', $expectedReturn->all());
 
-        // we retrieve only the ShopNotificationsWarning domain, not others
-        $this->assertCount(1, $expectedReturn->all());
-        $translations = $expectedReturn->all('ShopNotificationsWarning.en-US');
+        // we retrieve only the ShopNotificationsWarning and ModulesShoppingCartShop domains, not others
+        $this->assertCount(2, $expectedReturn->all());
 
-        $this->assertCount(6, $translations);
-        $this->assertArrayHasKey('You do not have any vouchers.', $translations);
-        $this->assertSame('You do not have any vouchers.', $translations['You do not have any vouchers.']);
+        $frontTranslations = $expectedReturn->all('ShopNotificationsWarning.en-US');
+        $this->assertCount(6, $frontTranslations);
+        $this->assertArrayHasKey('You do not have any vouchers.', $frontTranslations);
+        $this->assertSame('You do not have any vouchers.', $frontTranslations['You do not have any vouchers.']);
+
+        $moduleTranslations = $expectedReturn->all('ModulesShoppingCartShop.en-US');
+        $this->assertCount(1, $moduleTranslations);
+        $this->assertArrayHasKey('Customers who bought this product also bought:', $moduleTranslations);
+        $this->assertSame(
+            'Customers who bought this product also bought:',
+            $moduleTranslations['Customers who bought this product also bought:']
+        );
     }
 }

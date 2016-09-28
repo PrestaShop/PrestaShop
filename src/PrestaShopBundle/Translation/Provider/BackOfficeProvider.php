@@ -47,7 +47,7 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
     public function getFilters()
     {
         return array(
-            'Admin*',
+            '#^Admin*#',
             '#^Modules(.*)Admin#',
         );
     }
