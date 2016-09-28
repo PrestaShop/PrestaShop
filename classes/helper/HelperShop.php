@@ -50,6 +50,7 @@ class HelperShopCore extends Helper
 
         $tpl = $this->createTemplate('helpers/shops_list/list.tpl');
         $tpl->assign(array(
+            'link' => $context->link,
             'tree' => Shop::getTree(),
             'current_shop_name' => $this->getCurrentShopName(),
             'current_shop_value' => $current_shop_value,

@@ -28,8 +28,8 @@
     <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}">{l s='All shops'}</a></li>
     {foreach key=group_id item=group_data from=$tree}
         {if !isset($multishop_context) || $is_group_context}
-            <li class="group{if $current_shop_value == 'g-'|cat:$group_id} active{/if}{if $multishop_context_group == false} disabled{/if}">
-                <a class="dropdown-item" href="{if $multishop_context_group == false}#{else}{$url|escape:'html':'UTF-8'}g-{$group_id}{/if}">
+            <li class="group{if $current_shop_value == 'g-'|cat:$group_id} active{/if}">
+                <a class="dropdown-item{if $multishop_context_group == false} disabled{/if}" href="{if $multishop_context_group == false}#{else}{$url|escape:'html':'UTF-8'}g-{$group_id}{/if}">
                     {l s='%s group' sprintf=[$group_data['name']|escape:'html':'UTF-8']}
                 </a>
             </li>
@@ -41,12 +41,12 @@
             {foreach key=shop_id item=shop_data from=$group_data['shops']}
                 {if ($shop_data['active'])}
                     <li class="shop{if $current_shop_value == 's-'|cat:$shop_id} active{/if}">
-                        <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}s-{$shop_id}">
+                        <a class="dropdown-item {if $shop_data['uri'] == NULL} disabled{/if}" href="{if $shop_data['uri'] == NULL}#{else}{$url|escape:'html':'UTF-8'}s-{$shop_id}{/if}">
                             {$shop_data['name']}
                         </a>
 
                         {if $shop_data['uri'] == NULL}
-                            <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
+                            <a class="link-shop" href="{$link->getAdminLink('AdminShop', true)|escape:'html':'UTF-8'}" target="_blank">
                                 <i class="material-icons">&#xE869;</i>
                             </a>
                         {else}

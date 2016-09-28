@@ -42,13 +42,13 @@
         {if !isset($multishop_context) || $is_shop_context}
             {foreach key=shop_id item=shop_data from=$group_data['shops']}
                 {if ($shop_data['active'])}
-                    <li class="shop{if $current_shop_value == 's-'|cat:$shop_id} active{/if}">
-                        <a href="{$url|escape:'html':'UTF-8'}s-{$shop_id}">
+                    <li class="shop{if $current_shop_value == 's-'|cat:$shop_id} active{/if}{if $shop_data['uri'] == NULL} disabled{/if}">
+                        <a href="{if $shop_data['uri'] == NULL}#{else}{$url|escape:'html':'UTF-8'}s-{$shop_id}{/if}">
                             {$shop_data['name']}
                         </a>
 
                         {if $shop_data['uri'] == NULL}
-                            <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
+                            <a class="link-shop" href="{$link->getAdminLink('AdminShop', true)|escape:'html':'UTF-8'}" target="_blank">
                                 <i class="material-icons">&#xE869;</i>
                             </a>
                         {else}
