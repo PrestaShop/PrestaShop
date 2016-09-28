@@ -118,6 +118,9 @@
         padding-left: rem(60px);
         @include justify-content(space-between);
       }
+      a.disabled {
+        cursor: not-allowed;
+      }
       a.link-shop {
         text-decoration: none;
         float: right;
@@ -125,6 +128,7 @@
         padding-right: 10px;
         padding-top: 3px;
         i.material-icons {
+          cursor: pointer;
           color: $gray-medium;
           border: solid 1px $gray-light;
           border-radius: rem(3px);
