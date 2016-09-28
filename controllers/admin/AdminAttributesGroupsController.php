@@ -462,13 +462,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
      */
     public function initContent()
     {
-        parent::initContent();
-
-        // toolbar (save, cancel, new, ..) - show toolbar even if combinations are not active
-        $this->initTabModuleList();
-        $this->initToolbar();
-        $this->initPageHeaderToolbar();
-
         if (Combination::isFeatureActive()) {
             if ($this->display == 'edit' || $this->display == 'add') {
                 if (!($this->object = $this->loadObject(true))) {
@@ -497,10 +490,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
             'current' => self::$currentIndex,
             'token' => $this->token,
             'content' => $this->content,
-            'url_post' => self::$currentIndex.'&token='.$this->token,
-            'show_page_header_toolbar' => $this->show_page_header_toolbar,
-            'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
     }
 

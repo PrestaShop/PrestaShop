@@ -226,23 +226,17 @@ class AdminInvoicesControllerCore extends AdminController
 
     public function initContent()
     {
-        parent::initContent();
-
         $this->display = 'edit';
-        $this->initTabModuleList();
-        $this->initToolbar();
-        $this->initPageHeaderToolbar();
+
         $this->content .= $this->initFormByDate();
         $this->content .= $this->initFormByStatus();
+
         $this->table = 'invoice';
+
         $this->content .= $this->renderOptions();
 
         $this->context->smarty->assign(array(
             'content' => $this->content,
-            'url_post' => self::$currentIndex.'&token='.$this->token,
-            'show_page_header_toolbar' => $this->show_page_header_toolbar,
-            'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
     }
 

@@ -275,10 +275,8 @@ class AdminEmailsControllerCore extends AdminController
      */
     public function initContent()
     {
-        $this->initTabModuleList();
-        $this->initToolbar();
-        $this->initPageHeaderToolbar();
         $this->addToolBarModulesListButton();
+
         unset($this->toolbar_btn['save']);
         $back = $this->context->link->getAdminLink('AdminDashboard');
 
@@ -291,10 +289,6 @@ class AdminEmailsControllerCore extends AdminController
 
         $this->context->smarty->assign(array(
             'content' => $this->content,
-            'url_post' => self::$currentIndex.'&token='.$this->token,
-            'show_page_header_toolbar' => $this->show_page_header_toolbar,
-            'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
 
         return parent::initContent();

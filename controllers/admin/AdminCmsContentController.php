@@ -81,9 +81,6 @@ class AdminCmsContentControllerCore extends AdminController
 
     public function initContent()
     {
-        parent::initContent();
-
-        $this->initTabModuleList();
         $this->renderPageHeaderToolbar();
 
         $this->admin_cms_categories->token = $this->token;

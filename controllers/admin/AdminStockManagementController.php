@@ -1045,8 +1045,6 @@ class AdminStockManagementControllerCore extends AdminController
 
                     $helper = new HelperForm();
 
-                    $this->initPageHeaderToolbar();
-
                     // Check if form template has been overriden
                     if (file_exists($this->context->smarty->getTemplateDir(0).'/'.$this->tpl_folder.'form.tpl')) {
                         $helper->tpl = $this->tpl_folder.'form.tpl';
@@ -1094,9 +1092,6 @@ class AdminStockManagementControllerCore extends AdminController
 
                     $this->context->smarty->assign(array(
                         'content' => $this->content,
-                        'show_page_header_toolbar' => $this->show_page_header_toolbar,
-                        'page_header_toolbar_title' => $this->page_header_toolbar_title,
-                        'page_header_toolbar_btn' => $this->page_header_toolbar_btn
                     ));
                 } else {
                     $this->errors[] = Tools::displayError('The specified product is not valid.');
