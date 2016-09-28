@@ -120,7 +120,13 @@
                     </div>
 
                     <div id="product-images-container" class="m-b-2">
-                      <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12" url-upload="{{ path('admin_product_image_upload') }}" url-position="{{ path('admin_product_image_positions') }}" url-update="{{ path('admin_product_image_form') }}" url-delete="{{ path('admin_product_image_delete') }}" data-max-size="{{ 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration }}">
+                      <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12"
+                           url-upload="{{ path('admin_product_image_upload', {'idProduct': id_product}) }}"
+                           url-position="{{ path('admin_product_image_positions') }}"
+                           url-update="{{ path('admin_product_image_form') }}"
+                           url-delete="{{ path('admin_product_image_delete') }}"
+                           data-max-size="{{ 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration }}"
+                      >
                         <div id="product-images-dropzone-error" class="text-danger"></div>
                         <div class="dz-default dz-message openfilemanager">
                             <i class="material-icons">add_a_photo</i><br/>

@@ -1318,7 +1318,6 @@ var attachmentProduct = (function() {
  * images product management
  */
 var imagesProduct = (function() {
-  var id_product = $('#form_id_product').val();
   var dropZoneElem = $('#product-images-dropzone');
   var expanderElem = $('#product-images-container .dropzone-expander');
 
@@ -1387,7 +1386,7 @@ var imagesProduct = (function() {
       });
 
       var dropzoneOptions = {
-        url: dropZoneElem.attr('url-upload') + '/' + id_product,
+        url: dropZoneElem.attr('url-upload'),
         paramName: 'form[file]',
         maxFilesize: dropZoneElem.attr('data-max-size'),
         addRemoveLinks: true,
