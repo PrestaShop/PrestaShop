@@ -35,7 +35,10 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
      */
     public function getTranslationDomains()
     {
-        return array('Shop%');
+        return array(
+            '^Shop*',
+            '^Modules(.*)Shop',
+        );
     }
 
     /**
@@ -43,7 +46,10 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
      */
     public function getFilters()
     {
-        return array('Shop*');
+        return array(
+            '#^Shop*#',
+            '#^Modules(.*)Shop#',
+        );
     }
 
     /**

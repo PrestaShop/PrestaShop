@@ -60,7 +60,7 @@ class BackOfficeProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Download file', $adminTranslations['Download file']);
 
         $moduleTranslations = $expectedReturn->all('ModulesWirePaymentAdmin.en-US');
-        $this->assertCount(14, $moduleTranslations);
+        $this->assertCount(20, $moduleTranslations);
         $this->assertArrayHasKey('No currency has been set for this module.', $moduleTranslations);
         $this->assertSame(
             'No currency has been set for this module.',
