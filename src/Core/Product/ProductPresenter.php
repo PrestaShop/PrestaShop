@@ -479,13 +479,16 @@ class ProductPresenter
 
         //if the attribute's references doesn't exist then get the product's references or unset it
         foreach ($presentedProduct['specific_references'] as $key => $value) {
-            if (null === $value) {
-                if (null !== $product[$key]) {
+            if (empty($value)) {
+                if (!empty($product[$key])) {
                     $presentedProduct['specific_references'][$key] = $product[$key];
                 } else {
                     unset($presentedProduct['specific_references'][$key]);
                 }
             }
+        }
+        if(empty($presentedProduct['specific_references'])){
+            unset($presentedProduct['specific_references']);
         }
 
         return $presentedProduct;
