@@ -55,31 +55,11 @@ class ModuleFrontControllerCore extends FrontController
      */
     public function setTemplate($template, $params = array(), $locale = null)
     {
-        if (!$path = $this->getTemplatePath($template)) {
-            throw new PrestaShopException("Template '$template' not found");
+        if (strpos($template, 'module:') === 0) {
+            $this->template = $template;
+        } else {
+            parent::setTemplate($template, $params, $locale);
         }
-
-        $this->template = $path;
-    }
-
-    /**
-     * Finds and returns module front template that take the highest precedence.
-     *
-     * @param string $template Template filename
-     *
-     * @return string|false
-     */
-    public function getTemplatePath($template)
-    {
-        if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template)) {
-            return _PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template;
-        } elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template)) {
-            return _PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template;
-        } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$this->module->name.'/views/templates/front/'.$template)) {
-            return _PS_MODULE_DIR_.$this->module->name.'/views/templates/front/'.$template;
-        }
-
-        return false;
     }
 
     public function initContent()

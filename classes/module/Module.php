@@ -2214,6 +2214,35 @@ abstract class ModuleCore
     }
 
     /**
+     * Use this method to return the result of a smarty template when assign data only locally with $this->smarty->assign()
+     *
+     * @param string $templatePath relative path the template file, from the module root dir.
+     * @param null $cache_id
+     * @param null $compile_id
+     *
+     * @return mixed
+     */
+    public function fetch($templatePath, $cache_id = null, $compile_id = null)
+    {
+        if ($cache_id !== null) {
+            Tools::enableCache();
+        }
+
+        $template = $this->context->smarty->createTemplate(
+            $templatePath,
+            $cache_id,
+            $compile_id,
+            $this->smarty
+        );
+
+        if ($cache_id !== null) {
+            Tools::restoreCacheSettings();
+        }
+
+        return $template->fetch();
+    }
+
+    /**
      * @param string $template
      * @param string|null $cache_id
      * @param string|null $compile_id
@@ -2229,6 +2258,7 @@ abstract class ModuleCore
                 $this->smarty
             );
         }
+
         return $this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id];
     }
 
@@ -2262,11 +2292,6 @@ abstract class ModuleCore
         } else {
             return null;
         }
-    }
-
-    protected function _getApplicableTemplateDir($template)
-    {
-        return $this->_isTemplateOverloaded($template) ? _PS_THEME_DIR_ : _PS_MODULE_DIR_.$this->name.'/';
     }
 
     public function isCached($template, $cache_id = null, $compile_id = null)
