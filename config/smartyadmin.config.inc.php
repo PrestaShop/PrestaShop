@@ -56,7 +56,7 @@ function smartyTranslate($params, &$smarty)
 {
     $translator = Context::getContext()->getTranslator();
 
-    $htmlEntities = !isset($params['js']);
+    $htmlEntities = !isset($params['html']) && !isset($params['js']);
     $addSlashes = (isset($params['slashes']) || isset($params['js']));
     $isInPDF = isset($params['pdf']);
     $isInModule = isset($params['mod']) && !empty($params['mod']);
