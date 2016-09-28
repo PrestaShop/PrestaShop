@@ -283,6 +283,7 @@ class AdminSearchControllerCore extends AdminController
             'firstname' => array('title' => $this->l('First Name'), 'align' => 'left', 'width' => 150),
             'lastname' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'align' => 'left', 'width' => 'auto'),
             'email' => array('title' => $this->l('Email address'), 'align' => 'left', 'width' => 250),
+            'company' => array('title' => $this->l('Company'), 'align' => 'left', 'width' => 150),
             'birthday' => array('title' => $this->l('Birth date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
             'date_add' => array('title' => $this->l('Registration date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
             'orders' => array('title' => $this->l('Orders'), 'align' => 'center', 'width' => 50),

@@ -736,6 +736,10 @@ class CustomerCore extends ObjectModel
         $sql .= ' UNION ('.$sqlBase.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
         $sql .= ' UNION ('.$sqlBase.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
 
+        if (Configuration::get('PS_B2B_ENABLE')) {
+            $sql .= ' UNION ('.$sqlBase.' WHERE `company` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+        }
+
         if ($limit) {
             $sql .= ' LIMIT 0, '.(int) $limit;
         }
