@@ -103,7 +103,7 @@ exports.config = {
         ui: 'bdd',
         compilers: ['js:babel-register'],
         bail: true,
-        timeout: 8000
+        timeout: 10000
     },
 
     //
