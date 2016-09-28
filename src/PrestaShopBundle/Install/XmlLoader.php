@@ -24,7 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class InstallXmlLoader
+namespace PrestaShopBundle\Install;
+
+use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use PrestashopInstallerException;
+use PrestaShop\PrestaShop\Adapter\Entity\Tag;
+use PrestaShop\PrestaShop\Adapter\Entity\Shop;
+use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
+use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
+use PrestaShop\PrestaShop\Adapter\Entity\Image;
+use PrestaShop\PrestaShop\Adapter\Entity\ImageManager;
+use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
+
+class XmlLoader
 {
     /**
      * @var LanguageList
@@ -373,7 +386,7 @@ class InstallXmlLoader
      * Load an entity XML file
      *
      * @param string $entity
-     * @return SimpleXMLElement
+     * @return \SimpleXMLElement
      */
     protected function loadEntity($entity, $iso = null)
     {
@@ -391,7 +404,7 @@ class InstallXmlLoader
                 throw new PrestashopInstallerException('XML data file '.$entity.'.xml not found');
             }
 
-            $this->cache_xml_entity[$this->path_type][$entity][$iso] = @simplexml_load_file($path, 'InstallSimplexmlElement');
+            $this->cache_xml_entity[$this->path_type][$entity][$iso] = @simplexml_load_file($path, 'SimplexmlElement');
             if (!$this->cache_xml_entity[$this->path_type][$entity][$iso]) {
                 throw new PrestashopInstallerException('XML data file '.$entity.'.xml invalid');
             }
@@ -450,6 +463,7 @@ class InstallXmlLoader
     {
         $xml = $this->loadEntity($entity);
         if ($classname) {
+            $classname = '\\'.$classname;
             // Create entity with ObjectModel class
             $object = new $classname();
             $object->hydrate($data);
@@ -839,7 +853,7 @@ class InstallXmlLoader
             return $info;
         }
 
-        $xml = @simplexml_load_file($this->data_path.$entity.'.xml', 'InstallSimplexmlElement');
+        $xml = @simplexml_load_file($this->data_path.$entity.'.xml', 'SimplexmlElement');
         if (!$xml) {
             return $info;
         }
@@ -909,7 +923,7 @@ class InstallXmlLoader
         if ($this->entityExists($entity)) {
             $xml = $this->loadEntity($entity);
         } else {
-            $xml = new InstallSimplexmlElement('<entity_'.$entity.' />');
+            $xml = new SimplexmlElement('<entity_'.$entity.' />');
         }
         unset($xml->fields);
 
@@ -1012,7 +1026,7 @@ class InstallXmlLoader
                     mkdir($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data');
                 }
 
-                $xml_node = new InstallSimplexmlElement('<entity_'.$entity.' />');
+                $xml_node = new SimplexmlElement('<entity_'.$entity.' />');
                 $this->createXmlEntityNodes($entity, $nodes, $xml_node);
                 $xml_node->asXML($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml');
             }
@@ -1213,7 +1227,7 @@ class InstallXmlLoader
     /**
      * ONLY FOR DEVELOPMENT PURPOSE
      */
-    public function createXmlEntityNodes($entity, array $nodes, SimpleXMLElement $entities)
+    public function createXmlEntityNodes($entity, array $nodes, \SimpleXMLElement $entities)
     {
         $types = array_merge($this->getColumns($entity), $this->getColumns($entity, true));
         foreach ($nodes as $id => $node) {

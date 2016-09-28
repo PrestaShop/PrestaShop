@@ -872,6 +872,8 @@ class LanguageCore extends ObjectModel
             }
         }
 
+        self::loadLanguages();
+
         return true;
     }
 

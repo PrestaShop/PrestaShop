@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShopBundle\Install\System;
+
 /**
  * Step 2 : check system configuration (permissions on folders, PHP version, etc.)
  */
@@ -32,22 +34,21 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     public $tests = array();
 
     /**
-     * @var InstallModelSystem
+     * @var System
      */
     public $model_system;
 
     /**
-     * @see InstallAbstractModel::init()
+     * @see HttpConfigureInterface::init()
      */
     public function init()
     {
-        require_once _PS_INSTALL_MODELS_PATH_.'system.php';
-        $this->model_system = new InstallModelSystem();
+        $this->model_system = new System();
         $this->model_system->setTranslator($this->translator);
     }
 
     /**
-     * @see InstallAbstractModel::processNextStep()
+     * @see HttpConfigureInterface::processNextStep()
      */
     public function processNextStep()
     {
@@ -56,7 +57,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     /**
      * Required tests must be passed to validate this step
      *
-     * @see InstallAbstractModel::validate()
+     * @see HttpConfigureInterface::validate()
      */
     public function validate()
     {

@@ -49,6 +49,9 @@ function ps_1700_right_management()
     
     // Tabs
     $oldAccess = Db::getInstance()->executeS('SELECT a.* FROM `'._DB_PREFIX_.'access_old` a JOIN `'._DB_PREFIX_.'tab` USING (id_tab)');
+    if (empty($oldAccess)) {
+        $oldAccess = array();
+    }
     foreach ($oldAccess as $currOldAccess) {
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
             if (array_key_exists($action, $currOldAccess) && $currOldAccess[$action] == '1') {
@@ -64,6 +67,9 @@ function ps_1700_right_management()
     
     // Modules
     $oldAccess = Db::getInstance()->executeS('SELECT m.* FROM `'._DB_PREFIX_.'module_access_old` m JOIN  `'._DB_PREFIX_.'module` USING (id_module)');
+    if (empty($oldAccess)) {
+        $oldAccess = array();
+    }
     foreach ($oldAccess as $currOldAccess) {
         foreach (array('configure', 'view', 'uninstall') as $action) {
             if (array_key_exists($action, $currOldAccess) && $currOldAccess[$action] == '1') {

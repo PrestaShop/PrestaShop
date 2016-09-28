@@ -39,16 +39,6 @@ ALTER TABLE `PREFIX_module` ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC);
 
 DROP TABLE IF EXISTS `PREFIX_modules_perfs`;
 
-CREATE TABLE `PREFIX_module_history` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_employee` int(10) unsigned NOT NULL,
-  `id_module` int(10) unsigned NOT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_employee` (`id_employee`,`id_module`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
 CREATE TABLE `PREFIX_module_carrier` (
   `id_module`INT(10) unsigned NOT NULL,
   `id_shop`INT(11) unsigned NOT NULL DEFAULT '1',
@@ -194,3 +184,7 @@ DELETE FROM `PREFIX_configuration` WHERE `name` IN (
   'PS_LOGO_MOBILE',
   'SHOP_LOGO_MOBILE_HEIGHT',
   'SHOP_LOGO_MOBILE_WIDTH');
+
+ALTER TABLE `PREFIX_tab` ADD `icon` varchar(32) DEFAULT '';
+
+/* PHP:migrate_tabs_17(); */;

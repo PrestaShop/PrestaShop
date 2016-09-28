@@ -410,6 +410,8 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $attributes = array_merge($attributes, $main_class_attributes);
             } else if (!$skip_main_class_attributes) {
                 $main_class_attributes['warning'] = 'Invalid module class';
+            } else {
+                $disk['is_valid'] = 1;
             }
 
             $this->cache[$name]['attributes'] = $main_class_attributes;

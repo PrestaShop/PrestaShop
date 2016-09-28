@@ -24,7 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
- use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Yaml;
+use PrestaShopBundle\Install\Database;
 
 /**
  * Step 3 : configure database
@@ -32,19 +33,18 @@
 class InstallControllerHttpDatabase extends InstallControllerHttp implements HttpConfigureInterface
 {
     /**
-     * @var InstallModelDatabase
+     * @var Database
      */
     public $model_database;
 
     public function init()
     {
-        require_once _PS_INSTALL_MODELS_PATH_.'database.php';
-        $this->model_database = new InstallModelDatabase();
+        $this->model_database = new Database();
         $this->model_database->setTranslator($this->translator);
     }
 
     /**
-     * @see InstallAbstractModel::processNextStep()
+     * @see HttpConfigureInterface::processNextStep()
      */
     public function processNextStep()
     {
@@ -62,7 +62,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     /**
      * Database configuration must be valid to validate this step
      *
-     * @see InstallAbstractModel::validate()
+     * @see HttpConfigureInterface::validate()
      */
     public function validate()
     {
@@ -133,7 +133,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     }
 
     /**
-     * @see InstallAbstractModel::display()
+     * @see HttpConfigureInterface::display()
      */
     public function display()
     {

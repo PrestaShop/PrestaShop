@@ -116,7 +116,7 @@
   "scripts": {
     "post-install-cmd": [
       "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
-      "PrestaShopBundle\\Utils\\Migrate::migrateSettingsFile",
+      "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
@@ -125,7 +125,7 @@
     ],
     "post-update-cmd": [
       "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
-      "PrestaShopBundle\\Utils\\Migrate::migrateSettingsFile",
+      "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",

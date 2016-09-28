@@ -705,6 +705,8 @@ class ShopCore extends ObjectModel
                     );
                 }
 
+                $row = $row + array('theme_name' => '');
+
                 self::$shops[$row['id_shop_group']]['shops'][$row['id_shop']] = array(
                     'id_shop' =>        $row['id_shop'],
                     'id_shop_group' =>    $row['id_shop_group'],

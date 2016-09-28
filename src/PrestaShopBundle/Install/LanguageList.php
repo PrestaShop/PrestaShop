@@ -24,7 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShopBundle\Install;
+
 use Symfony\Component\Finder\Finder;
+use PrestashopInstallerException;
 
 class LanguageList
 {
@@ -45,7 +48,7 @@ class LanguageList
     public $id;
 
     /**
-     * @var InstallLanguage Default language (english)
+     * @var Language Default language (english)
      */
     protected $default;
 
@@ -67,12 +70,12 @@ class LanguageList
         }
 
         $this->languages = array(
-            self::DEFAULT_ISO => new InstallLanguage(self::DEFAULT_ISO),
+            self::DEFAULT_ISO => new Language(self::DEFAULT_ISO),
         );
 
         // Load other languages
         foreach ((new Finder)->files()->name('language.xml')->in(_PS_INSTALL_LANGS_PATH_) as $langFile) {
-            $this->languages[$langFile->getRelativePath()] = new InstallLanguage($langFile->getRelativePath());
+            $this->languages[$langFile->getRelativePath()] = new Language($langFile->getRelativePath());
         }
         uasort($this->languages, function ($a, $b) {
             $aname = $a->getName();
@@ -110,7 +113,7 @@ class LanguageList
     /**
      * Get current language
      *
-     * @return InstallLanguage
+     * @return Language
      */
     public function getLanguage($iso = null)
     {

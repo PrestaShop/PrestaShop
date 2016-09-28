@@ -25,29 +25,31 @@
  */
 
 use PrestaShop\PrestaShop\Core\Cldr\Update;
+use PrestaShopBundle\Install\Install;
+use PrestaShopBundle\Install\XmlLoader;
 
 class InstallControllerHttpProcess extends InstallControllerHttp implements HttpConfigureInterface
 {
+    /** @var  Install */
     protected $model_install;
     public $process_steps = array();
     public $previous_button = false;
 
     public function init()
     {
-        require_once _PS_INSTALL_MODELS_PATH_.'install.php';
-        $this->model_install = new InstallModelInstall();
+        $this->model_install = new Install();
         $this->model_install->setTranslator($this->translator);
     }
 
     /**
-     * @see InstallAbstractModel::processNextStep()
+     * @see HttpConfigureInterface::processNextStep()
      */
     public function processNextStep()
     {
     }
 
     /**
-     * @see InstallAbstractModel::validate()
+     * @see HttpConfigureInterface::validate()
      */
     public function validate()
     {
@@ -304,7 +306,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     }
 
     /**
-     * @see InstallAbstractModel::display()
+     * @see HttpConfigureInterface::display()
      */
     public function display()
     {
@@ -320,7 +322,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $populate_step = array('key' => 'populateDatabase', 'lang' => $this->translator->trans('Populate database tables', array(), 'Install'));
         if ($low_memory) {
             $populate_step['subtasks'] = array();
-            $xml_loader = new InstallXmlLoader();
+            $xml_loader = new XmlLoader();
             $xml_loader->setTranslator($this->translator);
 
             foreach ($xml_loader->getSortedEntities() as $entity) {
@@ -336,7 +338,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             $fixtures_step = array('key' => 'installFixtures', 'lang' => $this->translator->trans('Install demonstration data', array(), 'Install'));
             if ($low_memory) {
                 $fixtures_step['subtasks'] = array();
-                $xml_loader = new InstallXmlLoader();
+                $xml_loader = new XmlLoader();
                 $xml_loader->setTranslator($this->translator);
                 $xml_loader->setFixturesPath();
 

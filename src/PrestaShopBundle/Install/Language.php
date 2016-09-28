@@ -24,7 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class InstallLanguage
+namespace PrestaShopBundle\Install;
+
+class Language
 {
     public $id;
     public $name;

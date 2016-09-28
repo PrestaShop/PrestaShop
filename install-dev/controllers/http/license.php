@@ -32,7 +32,7 @@ class InstallControllerHttpLicense extends InstallControllerHttp implements Http
     /**
      * Process license form
      *
-     * @see InstallAbstractModel::process()
+     * @see HttpConfigureInterface::process()
      */
     public function processNextStep()
     {
@@ -43,7 +43,7 @@ class InstallControllerHttpLicense extends InstallControllerHttp implements Http
     /**
      * Licence agrement must be checked to validate this step
      *
-     * @see InstallAbstractModel::validate()
+     * @see HttpConfigureInterface::validate()
      */
     public function validate()
     {

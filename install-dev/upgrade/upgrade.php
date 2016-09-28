@@ -1,6 +1,6 @@
 <?php
 
-use PrestaShopBundle\Utils\Migrate;
+use PrestaShopBundle\Install\Upgrade;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
@@ -33,6 +33,62 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 $filePrefix = 'PREFIX_';
 $engineType = 'ENGINE_TYPE';
 define('PS_IN_UPGRADE', 1);
+
+$incompatibleModules = [
+    'bankwire',
+    'blockbanner',
+    'blockcart',
+    'blockcategories',
+    'blockcms',
+    'blockcmsinfo',
+    'blockcontact',
+    'blockcurrencies',
+    'blocklanguages',
+    'blocklayered',
+    'blockmyaccount',
+    'blocknewsletter',
+    'blocksearch',
+    'blocksocial',
+    'blocktopmenu',
+    'blockuserinfo',
+    'cheque',
+    'homefeatured',
+    'homeslider',
+    'onboarding',
+    'socialsharing',
+    'vatnumber',
+    'blockadvertising',
+    'blockbestsellers',
+    'blockcustomerprivacy',
+    'blocklink',
+    'blockmanufacturer',
+    'blocknewproducts',
+    'blockpermanentlinks',
+    'blockrss',
+    'blocksharefb',
+    'blockspecials',
+    'blocksupplier',
+    'blockviewed',
+    'crossselling',
+    'followup',
+    'productscategory',
+    'producttooltip',
+    'mailalert',
+    'blockcontactinfos',
+    'blockfacebook',
+    'blockmyaccountfooter',
+    'blockpaymentlogo',
+    'blockstore',
+    'blocktags',
+    'blockwishlist',
+    'productcomments',
+    'productpaymentlogos',
+    'sendtoafriend',
+    'themeconfigurator'
+];
+
+// remove old unsupported classes
+@unlink(__DIR__.'/../../classes/db/MySQL.php');
 
 // Set execution time and time_limit to infinite if available
 @set_time_limit(0);
@@ -77,15 +133,8 @@ if (!defined('_THEME_NAME_')) {
 }
 
 require_once(dirname(__FILE__).'/../init.php');
-Migrate::migrateSettingsFile();
+Upgrade::migrateSettingsFile();
 require_once(_PS_CONFIG_DIR_.'bootstrap.php');
-
-
-// set logger
-require_once(_PS_INSTALL_PATH_.'upgrade/classes/AbstractLogger.php');
-eval('abstract class AbstractLogger extends AbstractLoggerCore{}');
-require_once(_PS_INSTALL_PATH_.'upgrade/classes/FileLogger.php');
-eval('class FileLogger extends FileLoggerCore{}');
 
 $cacheDir = _PS_ROOT_DIR_.'/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/log/';
 @mkdir($cacheDir, 0777, true);
@@ -135,9 +184,9 @@ if (!defined('_PS_CSS_DIR_')) {
     define('_PS_CSS_DIR_', __PS_BASE_URI__.'css/');
 }
 
-$oldversion = Configuration::get('PS_INSTALL_VERSION');
+$oldversion = Configuration::get('PS_VERSION_DB');
 if (empty($oldversion)) {
-    $oldversion = Configuration::get('PS_VERSION_DB');
+    $oldversion = Configuration::get('PS_INSTALL_VERSION');
 }
 
 $versionCompare =  version_compare(_PS_INSTALL_VERSION_, $oldversion);
@@ -292,33 +341,6 @@ require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
 Context::getContext()->smarty = $smarty;
 
-// Disable the old incompatible modules
-$moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-$moduleManagerRepository = $moduleManagerBuilder->buildRepository();
-$filter = new AddonListFilter();
-$filter->setStatus(AddonListFilterStatus::ON_DISK|AddonListFilterStatus::INSTALLED);
-$list = $moduleManagerRepository->getFilteredList($filter, true);
-/**
- * @var $module \PrestaShop\PrestaShop\Adapter\Module\Module
- */
-foreach ($list as $moduleName => $module) {
-    $moduleInfo = $moduleManagerRepository->getModule($moduleName, true);
-    /** @var \Symfony\Component\HttpFoundation\ParameterBag $attributes */
-    $attributes = $module->attributes;
-    if ($attributes->get('compatibility')) {
-        $maxVersion = $attributes->get('compatibility')->to;
-        if (version_compare($maxVersion, _PS_INSTALL_VERSION_) == -1 && Module::isEnabled($moduleName)) {
-            echo "Disabling module $moduleName. Max supported version : ".$maxVersion."\n";
-            Module::disableAllByName($moduleName);
-        }
-    }
-}
-////
-
-if (isset($_GET['customModule']) and $_GET['customModule'] == 'desactivate') {
-    require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');
-    deactivate_custom_modules();
-}
 $sqlContentVersion = array();
 if (empty($fail_result)) {
     foreach ($neededUpgradeFiles as $version) {
@@ -339,7 +361,52 @@ if (empty($fail_result)) {
     }
 }
 
+$install = new PrestaShopBundle\Install\Install();
+$install->generateSf2ProductionEnv();
+
 if (empty($fail_result)) {
+    Language::loadLanguages();
+
+    if (isset($_GET['customModule']) and $_GET['customModule'] == 'desactivate') {
+        require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');
+        deactivate_custom_modules();
+    }
+
+    // Disable the old incompatible modules
+    $disableModules = function() use ($incompatibleModules)
+    {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
+        $moduleManagerRepository->clearCache();
+
+        $filter = new AddonListFilter();
+        $filter->setStatus(AddonListFilterStatus::ON_DISK|AddonListFilterStatus::INSTALLED);
+
+        $list = $moduleManagerRepository->getFilteredList($filter, true);
+        /**
+         * @var $module \PrestaShop\PrestaShop\Adapter\Module\Module
+         */
+        foreach ($list as $moduleName => $module) {
+            if (in_array($moduleName, $incompatibleModules)) {
+                echo "Uninstalling module $moduleName, not supported in this prestashop version.\n";
+                $module->onUninstall();
+            } else {
+                $moduleInfo = $moduleManagerRepository->getModule($moduleName, true);
+                /** @var \Symfony\Component\HttpFoundation\ParameterBag $attributes */
+                $attributes = $module->attributes;
+                if ($attributes->get('compatibility')) {
+                    $maxVersion = $attributes->get('compatibility')->to;
+                    if (version_compare($maxVersion, _PS_INSTALL_VERSION_) == -1 && Module::isEnabled($moduleName)) {
+                        echo "Disabling module $moduleName. Max supported version : ".$maxVersion."\n";
+                        Module::disableAllByName($moduleName);
+                    }
+                }
+            }
+        }
+        ////
+    };
+    $disableModules();
+
     foreach ($sqlContentVersion as $version => $sqlContent) {
         foreach ($sqlContent as $query) {
             $query = trim($query);
@@ -411,6 +478,27 @@ if (empty($fail_result)) {
     }
     Configuration::loadConfiguration();
 
+    $enableNativeModules = function() {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
+        $moduleManagerRepository->clearCache();
+
+        $catalog = $moduleManagerBuilder::$adminModuleDataProvider->getCatalogModules();
+        foreach ($catalog as $moduleName => $module) {
+            if ($module->categoryName == 'Natif') {
+                if (!$moduleManagerBuilder->build()->isInstalled($moduleName)) {
+                    echo "Installing native module ".$moduleName."\n";
+                    $module = $moduleManagerRepository->getModule($moduleName);
+                    $module->onInstall();
+                } else {
+                    echo "Native module ".$moduleName." already installed\n";
+                }
+            }
+        }
+    };
+
+    $enableNativeModules();
+
 
     // Settings updated, compile and cache directories must be emptied
     $tools_dir = rtrim(_PS_INSTALL_PATH_, '\\/').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'tools'.DIRECTORY_SEPARATOR;
@@ -428,13 +516,6 @@ if (empty($fail_result)) {
                 }
             }
         }
-    }
-
-    // delete cache filesystem if activated
-    $depth = getConfValue('PS_CACHEFS_DIRECTORY_DEPTH');
-    if (defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_  && $depth) {
-        CacheFs::deleteCacheDirectory();
-        CacheFs::createCacheDirectories((int)$depth);
     }
 }
 $result = '<?xml version="1.0" encoding="UTF-8"?>';
