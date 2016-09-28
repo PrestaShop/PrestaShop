@@ -979,6 +979,8 @@ class LanguageCore extends ObjectModel
     public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
         $folder = _PS_TRANSLATIONS_DIR_.'emails-'.$lang_pack['locale'];
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+        $finder = new \Symfony\Component\Finder\Finder();
 
         if (!file_exists($folder.'.zip')) {
             // @todo Throw exception
@@ -988,38 +990,30 @@ class LanguageCore extends ObjectModel
             $zipArchive->open($folder.'.zip');
             $zipArchive->extractTo($folder);
 
-            $coreMails = array_merge(
-                Tools::scandir($folder.'/core', 'html', '', true),
-                Tools::scandir($folder.'/core', 'txt', '', true)
-            );
-
             $coreDestPath = _PS_ROOT_DIR_.'/mails/'.$lang_pack['iso_code'];
-            if (!is_dir($coreDestPath)) {
-                mkdir($coreDestPath, 0755, true);
-            }
+            $fileSystem->mkdir($coreDestPath, 0755);
 
-            foreach ($coreMails as $coreEmail) {
-                if ('.' !== $coreEmail && '..' !== $coreEmail) {
-                    rename($folder.'/core/'.$coreEmail, $coreDestPath.'/'.$coreEmail);
+            if ($fileSystem->exists($folder.'/core')) {
+                foreach ($finder->files()->in($folder.'/core') as $coreEmail) {
+                    $fileSystem->rename(
+                        $coreEmail->getRealpath(),
+                        $coreDestPath.'/'.$coreEmail->getFileName(),
+                        true
+                    );
                 }
             }
 
-            $modules = scandir($folder.'/modules');
-            foreach ($modules as $module) {
-                if ('.' !== $module && '..' !== $module) {
-                    $moduleDestPath = _PS_ROOT_DIR_.'/modules/'.$module.'/mails/'.$lang_pack['iso_code'];
-                    $moduleMails = array_merge(
-                        Tools::scandir($folder.'/modules/'.$module, 'html', '', true),
-                        Tools::scandir($folder.'/modules/'.$module, 'txt', '', true)
-                    );
+            if ($fileSystem->exists($folder.'/modules')) {
+                foreach ($finder->directories()->in($folder.'/modules') as $moduleDirectory) {
+                    $moduleDestPath = _PS_ROOT_DIR_.'/modules/'.$moduleDirectory->getFileName().'/mails/'.$lang_pack['iso_code'];
+                    $fileSystem->mkdir($moduleDestPath, 0755);
 
-                    if (!is_dir($moduleDestPath)) {
-                        mkdir($moduleDestPath, 0755, true);
-                    }
-                    foreach ($moduleMails as $moduleEmail) {
-                        rename(
-                            $folder.'/modules/'.$module.'/'.$moduleEmail,
-                            $moduleDestPath.'/'.$moduleEmail
+                    $findEmails = new \Symfony\Component\Finder\Finder();
+                    foreach ($findEmails->files()->in($moduleDirectory->getRealPath()) as $moduleEmail) {
+                        $fileSystem->rename(
+                            $moduleEmail->getRealpath(),
+                            $moduleDestPath.'/'.$moduleEmail->getFileName(),
+                            true
                         );
                     }
                 }
