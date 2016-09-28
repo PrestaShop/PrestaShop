@@ -746,7 +746,9 @@ class AdminMetaControllerCore extends AdminController
         );
 
         // Directories
-        $tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/');
+        $tab['Directories'] = array('cache/', 'classes/', 'config/', 'controllers/',
+            'css/', 'download/', 'js/', 'localization/', 'log/', 'mails/', 'override/',
+            'pdf/', 'src/', 'tools/', 'translations/', 'upload/', 'vendor/', 'web/', 'webservice/');
 
         // Files
         $disallow_controllers = array(
