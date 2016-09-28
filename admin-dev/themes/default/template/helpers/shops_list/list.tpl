@@ -31,7 +31,7 @@
     {foreach key=group_id item=group_data from=$tree}
         {if !isset($multishop_context) || $is_group_context}
             <li class="group{if $current_shop_value == 'g-'|cat:$group_id} active{/if}{if $multishop_context_group == false} disabled{/if}">
-                <a href="{$url|escape:'html':'UTF-8'}g-{$group_id}">
+                <a href="{if $multishop_context_group == false}#{else}{$url|escape:'html':'UTF-8'}g-{$group_id}{/if}">
                     {l s='%s group' sprintf=[$group_data['name']|escape:'html':'UTF-8']}
                 </a>
             </li>
@@ -44,11 +44,7 @@
                 {if ($shop_data['active'])}
                     <li class="shop{if $current_shop_value == 's-'|cat:$shop_id} active{/if}">
                         <a href="{$url|escape:'html':'UTF-8'}s-{$shop_id}">
-                            {if $multishop_context_group == false}
-                                {$group_data['name']|escape:'html':'UTF-8'|cat:' - ':$shop_data['name']}
-                            {else}
-                                {$shop_data['name']}
-                            {/if}
+                            {$shop_data['name']}
                         </a>
                         <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
                             <i class="mt-eye" aria-hidden="true"></i>
