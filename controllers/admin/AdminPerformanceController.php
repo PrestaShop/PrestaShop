@@ -25,6 +25,8 @@
  */
 
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * @property Configuration $object
@@ -129,9 +131,7 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'smarty_caching_type_filesystem',
                             'value' => 'filesystem',
-                            'label' => $this->l('File System').(is_writable(_PS_CACHE_DIR_.'smarty/cache')
-                                    ? ''
-                                    : ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
+                            'label' => $this->l('File System').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
                         ),
                         array(
                             'id' => 'smarty_caching_type_mysql',
@@ -816,9 +816,20 @@ class AdminPerformanceControllerCore extends AdminController
             }
         }
 
+        $filesystem = new Filesystem();
+        $phpParametersFilepath = _PS_ROOT_DIR_.'/app/config/parameters.php';
+        $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
+            try {
+                $filesystem->dumpFile($destination, '<?php return '.var_export($config, true).';'."\n");
+            } catch (IOException $e) {
+                return false;
+            }
+            return true;
+        };
+
         if ((bool)Tools::getValue('cache_up')) {
             if ($this->access('edit')) {
-                $config = Yaml::parse(_PS_ROOT_DIR_.'/app/config/parameters.yml');
+                $config = require($phpParametersFilepath);
 
                 $cache_active = (bool)Tools::getValue('cache_active');
 
@@ -856,9 +867,9 @@ class AdminPerformanceControllerCore extends AdminController
                 if (!count($this->errors)) {
                     $config['parameters']['ps_cache_enable'] = $cache_active;
                     // If there is not settings file modification or if the backup and replacement of the settings file worked
-                    if (file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($config))) {
+                    if ($exportPhpConfigFile($config, $phpParametersFilepath)) {
                         if (function_exists('opcache_invalidate')) {
-                            opcache_invalidate(_PS_ROOT_DIR_.'/app/config/parameters.yml');
+                            opcache_invalidate($phpParametersFilepath);
                         }
                         $redirectAdmin = true;
                     } else {

@@ -1,8 +1,11 @@
 <?php
 
+use PrestaShopBundle\Utils\Migrate;
+
 $parametersFilepath = __DIR__  . '/parameters.php';
-if (!file_exists($parametersFilepath)) 
-    return;
+if (!file_exists($parametersFilepath)) {
+    Migrate::migrateSettingsFile();
+}
 
 $parameters = require($parametersFilepath);
 

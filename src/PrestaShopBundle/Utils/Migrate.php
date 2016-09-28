@@ -3,6 +3,8 @@
 namespace PrestaShopBundle\Utils;
 
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
 use RandomLib;
 use Composer\Script\Event;
 
@@ -16,66 +18,107 @@ class Migrate
             $event->getIO()->write("Migrating old setting file...");
         }
 
-        if ($event) {
-            $root_dir = realpath('');
-        } else {
-            $root_dir = realpath('../../');
-        }
+        $root_dir = realpath(__DIR__.'/../../../');
 
-        if (file_exists($root_dir.'/app/config/parameters.yml')) {
+
+        $phpParametersFilepath = $root_dir.'/app/config/parameters.php';
+        if (file_exists($phpParametersFilepath)) {
+            if ($event !== null) {
+                $event->getIO()->write("parameters file already exists!");
+                $event->getIO()->write("Finished...");
+            }
             return false;
         }
 
+        $filesystem = new Filesystem();
+        $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
+            try {
+                $filesystem->dumpFile($destination, '<?php return '.var_export($config, true).';'."\n");
+            } catch (IOException $e) {
+                return false;
+            }
+            return true;
+        };
+        $fileMigrated = false;
+        $default_parameters = Yaml::parse(file_get_contents($root_dir.'/app/config/parameters.yml.dist'));
+        require_once $root_dir.'/vendor/paragonie/random_compat/lib/random.php';
+        $key = \Defuse\Crypto\Key::createNewRandomKey();
+        $default_parameters['parameters']['new_cookie_key'] = $key->saveToAsciiSafeString();
         if (file_exists($root_dir.'/'.self::SETTINGS_FILE)) {
             $tmp_settings = file_get_contents($root_dir.'/'.self::SETTINGS_FILE);
-            if (strpos($tmp_settings, '_DB_SERVER_') !== false) {
-                $tmp_settings = preg_replace('/(\'|")\_/', '$1_LEGACY_', $tmp_settings);
-                file_put_contents($root_dir.'/'.self::SETTINGS_FILE, $tmp_settings);
-                include $root_dir.'/'.self::SETTINGS_FILE;
-
-                $factory   = new RandomLib\Factory;
-                $generator = $factory->getLowStrengthGenerator();
-                $secret    = $generator->generateString(56);
-
-                $default_parameters = Yaml::parse($root_dir.'/app/config/parameters.yml.dist');
-
-                if (!defined('_NEW_COOKIE_KEY_')) {
-                    $key = \Defuse\Crypto\Key::createNewRandomKey();
-                    define('_NEW_COOKIE_KEY_', $key->saveToAsciiSafeString());
-                }
-
-                $parameters = array(
-                    'parameters' => array(
-                        'database_host'     => _LEGACY_DB_SERVER_,
-                        'database_port'     => '~',
-                        'database_user'     => _LEGACY_DB_USER_,
-                        'database_password' => _LEGACY_DB_PASSWD_,
-                        'database_name'     => _LEGACY_DB_NAME_,
-                        'database_prefix'   => _LEGACY_DB_PREFIX_,
-                        'database_engine'   => _LEGACY_MYSQL_ENGINE_,
-                        'cookie_key'        => _LEGACY_COOKIE_KEY_,
-                        'cookie_iv'         => _LEGACY_COOKIE_IV_,
-                        'new_cookie_key'    => _NEW_COOKIE_KEY_,
-                        'ps_caching'        => _LEGACY_PS_CACHING_SYSTEM_,
-                        'ps_cache_enable'   => _LEGACY_PS_CACHE_ENABLED_,
-                        'ps_creation_date'  => _LEGACY_PS_CREATION_DATE_,
-                        'secret'            => $secret,
-                        'mailer_transport'  => 'smtp',
-                        'mailer_host'       => '127.0.0.1',
-                        'mailer_user'       => '~',
-                        'mailer_password'   => '~',
-                    ) + $default_parameters['parameters']
-                );
-
-                if (file_put_contents($root_dir.'/app/config/parameters.yml', Yaml::dump($parameters))) {
-                    $settings_content = "<?php\n";
-                    $settings_content .= "//@deprecated 1.7";
-
-                    file_put_contents($root_dir.'/'.self::SETTINGS_FILE, $settings_content);
-                }
-            }
+        } else {
+            $tmp_settings = null;
         }
+
+        if (!file_exists($root_dir.'/app/config/parameters.yml') && $tmp_settings && strpos($tmp_settings, '_DB_SERVER_') !== false) {
+            $tmp_settings = preg_replace('/(\'|")\_/', '$1_LEGACY_', $tmp_settings);
+            $tmp_settings_file = str_replace('/', '/tmp', self::SETTINGS_FILE);
+            file_put_contents($tmp_settings_file, $tmp_settings);
+            include $tmp_settings_file;
+            @unlink($tmp_settings_file);
+            $factory   = new RandomLib\Factory;
+            $generator = $factory->getLowStrengthGenerator();
+            $secret    = $generator->generateString(56);
+
+            if (!defined('_LEGACY_NEW_COOKIE_KEY_')) {
+                define('_LEGACY_NEW_COOKIE_KEY_', $default_parameters['parameters']['new_cookie_key']);
+            }
+
+            $db_server_port = explode(':', _LEGACY_DB_SERVER_);
+            if (count($db_server_port) == 1) {
+                $db_server = $db_server_port[0];
+                $db_port   = 3306;
+            } else {
+                $db_server = $db_server_port[0];
+                $db_port   = $db_server_port[1];
+            }
+
+            $parameters = array(
+                'parameters' => array(
+                    'database_host'     => $db_server,
+                    'database_port'     => $db_port,
+                    'database_user'     => _LEGACY_DB_USER_,
+                    'database_password' => _LEGACY_DB_PASSWD_,
+                    'database_name'     => _LEGACY_DB_NAME_,
+                    'database_prefix'   => _LEGACY_DB_PREFIX_,
+                    'database_engine'   => _LEGACY_MYSQL_ENGINE_,
+                    'cookie_key'        => _LEGACY_COOKIE_KEY_,
+                    'cookie_iv'         => _LEGACY_COOKIE_IV_,
+                    'new_cookie_key'    => _LEGACY_NEW_COOKIE_KEY_,
+                    'ps_caching'        => _LEGACY_PS_CACHING_SYSTEM_,
+                    'ps_cache_enable'   => _LEGACY_PS_CACHE_ENABLED_,
+                    'ps_creation_date'  => _LEGACY_PS_CREATION_DATE_,
+                    'secret'            => $secret,
+                    'mailer_transport'  => 'smtp',
+                    'mailer_host'       => '127.0.0.1',
+                    'mailer_user'       => '',
+                    'mailer_password'   => ''
+                ) + $default_parameters['parameters']
+            );
+        } else if (file_exists($root_dir.'/app/config/parameters.yml')) {
+            $parameters = Yaml::parse(file_get_contents($root_dir.'/app/config/parameters.yml'));
+            if (empty($parameters['parameters'])) {
+                $parameters['parameters'] = array();
+            }
+            // add potentially missing default entries
+            $parameters['parameters'] = $parameters['parameters'] + $default_parameters['parameters'];
+        } else {
+            $parameters = $default_parameters;
+        }
+
+        if (!empty($parameters) && $exportPhpConfigFile($parameters, $phpParametersFilepath)) {
+            $fileMigrated = true;
+            $settings_content = "<?php\n";
+            $settings_content .= "//@deprecated 1.7";
+
+            file_put_contents($root_dir.'/'.self::SETTINGS_FILE, $settings_content);
+            file_put_contents($root_dir.'/app/config/parameters.yml', 'parameters:');
+        }
+
         if ($event !== null) {
+            if (!$fileMigrated) {
+                $event->getIO()->write("No old config file present!");
+            }
             $event->getIO()->write("Finished...");
         }
     }

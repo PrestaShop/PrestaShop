@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 $container_builder = new ContainerBuilder();
 $container = $container_builder->build();
@@ -49,7 +50,12 @@ $yamlParametersFilepath = $configDirectory . '/parameters.yml';
 $filesystem = new Filesystem();
 
 $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
-    return $filesystem->dumpFile($destination, '<?php return ' . var_export($config, true). ';' . "\n");
+    try {
+        $filesystem->dumpFile($destination, '<?php return '.var_export($config, true).';'."\n");
+    } catch (IOException $e) {
+        return false;
+    }
+    return true;
 };
 
 // Bootstrap an application with parameters.yml, which has been installed before PHP parameters file support
@@ -92,7 +98,12 @@ if ($lastParametersModificationTime) {
     define('_DB_PREFIX_',  $config['parameters']['database_prefix']);
     define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
     define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
-    define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
+    if (!defined('PS_IN_UPGRADE')) {
+        define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
+    } else {
+        define('_PS_CACHE_ENABLED_', 0);
+        $config['parameters']['ps_cache_enable'] = 0;
+    }
 
     // Legacy cookie
     if (array_key_exists('cookie_key', $config['parameters'])) {

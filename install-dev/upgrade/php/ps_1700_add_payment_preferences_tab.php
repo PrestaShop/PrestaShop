@@ -24,21 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Cldr\Composer\Hook;
-
-/* Redefine REQUEST_URI */
-$_SERVER['REQUEST_URI'] = '/install/index_cli.php';
-require_once dirname(__FILE__).'/init.php';
-require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
-require_once _PS_INSTALL_PATH_.'classes/datas.php';
-ini_set('memory_limit', '128M');
-try {
-    require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
-    InstallControllerConsole::execute($argc, $argv);
-    echo '-- Installation successful! --'."\n";
-    Hook::init(null);
-    exit(0);
-} catch (PrestashopInstallerException $e) {
-    $e->displayMessage();
+function ps_1700_add_payment_preferences_tab()
+{
+    include_once('add_new_tab.php');
+    // TODO: ajouter les trads ? translations/[fr]/tabs.php et autre ?
+    add_new_tab(
+        'AdminPaymentPreferences',
+        'en:Payment preferences|fr:Préférences de paiement|es:Hola|de:Artung|it:Mama mia',
+        0,
+        false,
+        'AdminParentModules'
+        );
 }
-exit(1);

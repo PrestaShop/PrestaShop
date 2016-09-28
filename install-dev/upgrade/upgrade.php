@@ -1,6 +1,9 @@
 <?php
 
 use PrestaShopBundle\Utils\Migrate;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 
 /**
  * 2007-2015 PrestaShop
@@ -29,6 +32,7 @@ use PrestaShopBundle\Utils\Migrate;
 
 $filePrefix = 'PREFIX_';
 $engineType = 'ENGINE_TYPE';
+define('PS_IN_UPGRADE', 1);
 
 // Set execution time and time_limit to infinite if available
 @set_time_limit(0);
@@ -83,9 +87,10 @@ eval('abstract class AbstractLogger extends AbstractLoggerCore{}');
 require_once(_PS_INSTALL_PATH_.'upgrade/classes/FileLogger.php');
 eval('class FileLogger extends FileLoggerCore{}');
 
-$cacheDir = _PS_ROOT_DIR_.'/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/log/'.@date('Ymd').'_upgrade.log';
+$cacheDir = _PS_ROOT_DIR_.'/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/log/';
+@mkdir($cacheDir, 0777, true);
 $logger = new FileLogger();
-$logger->setFilename($cacheDir);
+$logger->setFilename($cacheDir.@date('Ymd').'_upgrade.log');
 
 if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set('Europe/Paris');
@@ -117,7 +122,6 @@ $requests = '';
 $fail_result = '';
 $warningExist = false;
 
-
 if (!defined('_THEMES_DIR_')) {
     define('_THEMES_DIR_', __PS_BASE_URI__.'themes/');
 }
@@ -131,7 +135,10 @@ if (!defined('_PS_CSS_DIR_')) {
     define('_PS_CSS_DIR_', __PS_BASE_URI__.'css/');
 }
 
-$oldversion = _PS_VERSION_;
+$oldversion = Configuration::get('PS_INSTALL_VERSION');
+if (empty($oldversion)) {
+    $oldversion = Configuration::get('PS_VERSION_DB');
+}
 
 $versionCompare =  version_compare(_PS_INSTALL_VERSION_, $oldversion);
 
@@ -142,7 +149,7 @@ if ($versionCompare == '-1') {
     $logger->logError(sprintf('You already have the %s version.', _PS_INSTALL_VERSION_));
     $fail_result .= '<action result="fail" error="28" />'."\n";
 } elseif ($versionCompare === false) {
-    $logger->logError('There is no older version. Did you delete or rename the app/config/parameters.yml file?');
+    $logger->logError('There is no older version. Did you delete or rename the app/config/parameters.php file?');
     $fail_result .= '<action result="fail" error="29" />'."\n";
 }
 
@@ -195,7 +202,6 @@ if ($versionNumbers != 4) {
 
 $oldversion = implode('.', $arrayVersion);
 // end of fix
-
 $neededUpgradeFiles = array();
 foreach ($upgradeFiles as $version) {
     if (version_compare($version, $oldversion) == 1 and version_compare(_PS_INSTALL_VERSION_, $version) != -1) {
@@ -287,6 +293,29 @@ if (!defined('_PS_SMARTY_FAST_LOAD_')) {
 require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
 Context::getContext()->smarty = $smarty;
+
+// Disable the old incompatible modules
+$moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+$moduleManagerRepository = $moduleManagerBuilder->buildRepository();
+$filter = new AddonListFilter();
+$filter->setStatus(AddonListFilterStatus::ON_DISK|AddonListFilterStatus::INSTALLED);
+$list = $moduleManagerRepository->getFilteredList($filter, true);
+/**
+ * @var $module \PrestaShop\PrestaShop\Adapter\Module\Module
+ */
+foreach($list as $moduleName => $module) {
+    $moduleInfo = $moduleManagerRepository->getModule($moduleName, true);
+    /** @var \Symfony\Component\HttpFoundation\ParameterBag $attributes */
+    $attributes = $module->attributes;
+    if ($attributes->get('compatibility')) {
+        $maxVersion = $attributes->get('compatibility')->to;
+        if (version_compare($maxVersion, _PS_INSTALL_VERSION_) == -1 && Module::isEnabled($moduleName)) {
+            echo "Disabling module $moduleName. Max supported version : ".$maxVersion."\n";
+            Module::disableAllByName($moduleName);
+        }
+    }
+}
+////
 
 if (isset($_GET['customModule']) and $_GET['customModule'] == 'desactivate') {
     require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');

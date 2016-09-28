@@ -19,5 +19,7 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
     ps_caching: CacheMemcache
     ps_cache_enable: true
+    ps_creation_date: ~
+    locale: en-US
     cookie_key: ThisTokenIsNotSoSecretChangeIt
     cookie_iv: ThisTokenIsNotSoSecretChangeIt

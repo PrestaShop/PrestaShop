@@ -89,8 +89,8 @@ class InstallModelInstall extends InstallAbstractModel
         }
 
         $secret = Tools::passwdGen(56);
-        $cookie_key = Tools::passwdGen(56);
-        $cookie_iv = Tools::passwdGen(8);
+        $cookie_key = defined('_COOKIE_KEY_')?_COOKIE_KEY_:Tools::passwdGen(56);
+        $cookie_iv = defined('_COOKIE_IV_')?_COOKIE_IV_:Tools::passwdGen(8);
         $database_port = null;
 
         $splits = preg_split('#:#', $database_host);
@@ -657,7 +657,7 @@ class InstallModelInstall extends InstallAbstractModel
             $employee->firstname = Tools::ucfirst($data['admin_firstname']);
             $employee->lastname = Tools::ucfirst($data['admin_lastname']);
             $employee->email = $data['admin_email'];
-            $employee->passwd = md5(_COOKIE_KEY_.$data['admin_password']);
+            $employee->setWsPasswd($data['admin_password']);
             $employee->last_passwd_gen = date('Y-m-d h:i:s', strtotime('-360 minutes'));
             $employee->bo_theme = 'default';
             $employee->default_tab = 1;

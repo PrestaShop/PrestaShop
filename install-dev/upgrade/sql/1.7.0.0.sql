@@ -22,6 +22,7 @@ ALTER TABLE PREFIX_employee ADD `reset_password_validity` datetime DEFAULT NULL;
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
 
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `passwd` `passwd` varchar(255) NOT NULL;
+ALTER TABLE `PREFIX_employee` CHANGE COLUMN `passwd` `passwd` varchar(255) NOT NULL;
 
 INSERT INTO `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`) VALUES (NULL , NULL , NULL , 'PS_ACTIVE_CRONJOB_EXCHANGE_RATE', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
@@ -58,7 +59,7 @@ ALTER TABLE `PREFIX_product` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '0
 ALTER TABLE `PREFIX_product_shop` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '0' AFTER `available_date`;
 
 /* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
-/* PHP:ps_1701_add_payment_preferences_tab(); */;
+/* PHP:ps_1700_add_payment_preferences_tab(); */;
 UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminPaymentPreferences' LIMIT 1) AND `id_profile` > 1;
 
 UPDATE `PREFIX_quick_access` SET `link` = "product/new" WHERE `link` = "index.php?controller=AdminProducts&addproduct";
@@ -118,6 +119,9 @@ ALTER TABLE `PREFIX_order_detail` ADD `id_customization` INT(10) NULL DEFAULT '0
 ALTER TABLE `PREFIX_customized_data` ADD `id_module` INT(10) NOT NULL DEFAULT '0', ADD `price` DECIMAL(20,6) NOT NULL DEFAULT '0', ADD `weight` DECIMAL(20,6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_customization_field` ADD `is_module` TINYINT(1) NOT NULL DEFAULT '0' ;
 
+ALTER TABLE `PREFIX_lang` ADD `locale` varchar(5) COLLATE utf8_unicode_ci NOT NULL;
+/* PHP:ps_1700_add_locale(); */;
+
 INSERT INTO `PREFIX_configuration` (name, value, date_add, date_upd) VALUES ('PS_MAINTENANCE_TEXT', 'We are currently updating our shop and will be back really soon.&lt;br&gt;Thanks for your patience.', NOW(), NOW());
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) SELECT c.`id_configuration`, l.`id_lang`, c.`value`, NOW() FROM `PREFIX_configuration` c, `PREFIX_lang` l WHERE c.`name` = 'PS_MAINTENANCE_TEXT';
 
@@ -144,7 +148,7 @@ CREATE TABLE `PREFIX_module_access` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 /* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
-/* PHP:ps_1702_right_management(); */;
+/* PHP:ps_1700_right_management(); */;
 
 DROP TABLE `PREFIX_access_old`;
 DROP TABLE `PREFIX_module_access_old`;
@@ -158,6 +162,7 @@ ALTER TABLE `PREFIX_product` ADD KEY state (state, date_upd);
 INSERT INTO  `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`) VALUES (NULL , NULL , NULL ,  'PS_ORDER_RECALCULATE_SHIPPING',  '1',  '0000-00-00 00:00:00',  '0000-00-00 00:00:00');
 
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_STORES_DISPLAY_FOOTER', 'PS_STORES_SIMPLIFIED', 'PS_STORES_CENTER_LAT', 'PS_STORES_CENTER_LONG', 'PS_STORES_DISPLAY_SITEMAP', 'PS_CIPHER_ALGORITHM');
+/* PHP:ps_1700_reset_theme(); */;
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('actionValidateCustomerAddressForm', 'Customer address form validation', 'This hook is called when a customer submit its address form', '1');
 

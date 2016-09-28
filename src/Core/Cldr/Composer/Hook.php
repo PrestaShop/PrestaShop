@@ -42,18 +42,22 @@ class Hook
      * @throws \Exception
      * @throws \PrestaShopDatabaseException
      */
-    public static function init(Event $event)
+    public static function init(Event $event = null)
     {
-        $event->getIO()->write("Init CLDR data download...");
-        $root_dir = realpath('');
+        if ($event) {
+            $event->getIO()->write("Init CLDR data download...");
+        }
+        $root_dir = realpath(__DIR__.'/../../../../');
 
         $cldr_update = new Update($root_dir.'/translations/');
         $cldr_update->init();
 
         // If settings file exist
-        if (file_exists($root_dir.'/config/settings.inc.php')) {
+        if (file_exists($root_dir.'/app/config/parameters.php')) {
             //load prestashop config to get locale env
-            require($root_dir.'/config/config.inc.php');
+            if (!defined('_PS_ROOT_DIR_')) {
+                require_once($root_dir.'/config/config.inc.php');
+            }
 
             //get each defined languages and fetch cldr datas
             $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
@@ -66,7 +70,8 @@ class Hook
                 $cldr_update->fetchLocale($language_code['0'].'-'.strtoupper($language_code[1]));
             }
         }
-
-        $event->getIO()->write("Finished...");
+        if ($event) {
+            $event->getIO()->write("Finished...");
+        }
     }
 }
