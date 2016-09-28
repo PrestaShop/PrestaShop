@@ -367,7 +367,7 @@
                       </fieldset>
                     </div>
 
-                    <div id="virtual_product" data-action="{{ path('admin_product_virtual_save_action') }}" data-action-remove="{{ path('admin_product_virtual_remove_action') }}">
+                    <div id="virtual_product" data-action="{{ path('admin_product_virtual_save_action', { 'idProduct': 1 }) }}" data-action-remove="{{ path('admin_product_virtual_remove_action', {'idProduct': 1}) }}">
 
                       <div class="row">
                         <div class="col-md-4">
@@ -612,7 +612,7 @@
                             <i class="material-icons">add_circle</i>
                             {{ 'Add a specific price'|trans({}, 'Admin.Catalog.Feature') }}
                           </a>
-                          <table id="js-specific-price-list" class="table table-striped hide seo-table" data="{{ path('admin_specific_price_list') }}" data-action-delete="{{ path('admin_delete_specific_price') }}">
+                          <table id="js-specific-price-list" class="table table-striped hide seo-table" data="{{ path('admin_specific_price_list', { 'idProduct': 1 }) }}" data-action-delete="{{ path('admin_delete_specific_price', { 'idSpecificPrice': 1 }) }}">
                             <thead>
                             <tr>
                               <th>{{ 'Rule'|trans({}, 'Admin.Catalog.Feature') }}</th>
@@ -880,7 +880,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div id="supplier_combination_collection" class="col-md-12" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
+                      <div id="supplier_combination_collection" class="col-md-12" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form', { 'idProduct': 1, 'supplierIds': 1}) }}">
                         {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
                       </div>
                     </div>

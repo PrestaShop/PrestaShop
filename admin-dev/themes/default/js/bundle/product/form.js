@@ -232,7 +232,7 @@ var displayFieldsManager = (function() {
           onContinue: function () {
             $.ajax({
               type: 'GET',
-              url: $('#accordion_combinations').attr('data-action-delete-all') + '/' + $('#form_id_product').val(),
+              url: $('#accordion_combinations').attr('data-action-delete-all').replace(/delete-all\/\d+/, 'delete-all/' + $('#form_id_product').val()),
               success: function () {
                 $('#accordion_combinations .combination').remove();
                 displayFieldsManager.refresh();
@@ -403,7 +403,7 @@ var featuresCollection = (function() {
 
         if('' !== $(this).val()) {
           $.ajax({
-            url: $(this).attr('data-action') + '/' + $(this).val(),
+            url: $(this).attr('data-action').replace(/\/\d+/, '/' + $(this).val()),
             success: function(response) {
               $selector.prop('disabled', response.length === 0);
               $selector.empty();
@@ -480,8 +480,11 @@ var supplierCombinations = (function() {
       var suppliers = $('#form_step6_suppliers input[name="form[step6][suppliers][]"]:checked').map(function() {
         return $(this).val();
       }).get();
-      var url = collectionHolder.attr('data-url') + '/' + id_product + (suppliers.length > 0 ? '/' + suppliers.join('-') : '');
-
+      var url = collectionHolder.attr('data-url')
+        .replace(
+          /refresh-product-supplier-combination-form\/\d+\/\d+/,
+          'refresh-product-supplier-combination-form/' + id_product + '/' + (suppliers.length > 0 ? '/' + suppliers.join('-') : '')
+        );
       $.ajax({
         url: url,
         success: function(response) {
@@ -573,9 +576,11 @@ var specificPrices = (function() {
 
   /** Get all specific prices */
   function getAll() {
+    var url = elem.attr('data').replace(/delete\/\d+/, 'delete/' + id_product);
+
     $.ajax({
       type: 'GET',
-      url: elem.attr('data') + '/' + id_product,
+      url: url,
       success: function(specific_prices) {
         var tbody = elem.find('tbody');
         tbody.find('tr').remove();
@@ -598,7 +603,7 @@ var specificPrices = (function() {
             '<td>' + specific_price.impact + '</td>' +
             '<td>' + specific_price.period + '</td>' +
             '<td>' + specific_price.from_quantity + '</td>' +
-            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete') + '/' + specific_price.id_specific_price + '" class="js-delete delete"><i class="material-icons">delete</i></a>' : '') + '</td>' +
+            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete"><i class="material-icons">delete</i></a>' : '') + '</td>' +
             '</tr>';
 
           tbody.append(row);
@@ -664,7 +669,7 @@ var specificPrices = (function() {
   /** refresh combinations list selector for specific price form */
   function refreshCombinationsList() {
     var elem = $('#form_step2_specific_price_sp_id_product_attribute');
-    var url = elem.attr('data-action') + '/' + id_product;
+    var url = elem.attr('data-action').replace(/product-combinations\/\d+/, 'product-combinations/' + id_product);
 
     $.ajax({
       type: 'GET',
@@ -785,7 +790,7 @@ var warehouseCombinations = (function() {
     'refresh': function() {
       var show = $('input#form_step3_advanced_stock_management:checked').size() > 0;
       if (show) {
-        var url = collectionHolder.attr('data-url') + '/' + id_product;
+        var url = collectionHolder.attr('data-url').replace(/\/\d+/, '/' + id_product);
         $.ajax({
           url: url,
           success: function(response) {
@@ -1089,7 +1094,7 @@ var virtualProduct = (function() {
   var getOnDeleteVirtualProductFileHandler = function ($deleteButton) {
     return $.ajax({
       type: 'GET',
-      url: $deleteButton.attr('href') + '/' + id_product,
+      url: $deleteButton.attr('href').replace(/\/\d+/, '/' + id_product),
       success: function () {
         $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
         $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
@@ -1105,10 +1110,11 @@ var virtualProduct = (function() {
         } else {
           $('#virtual_product_content').hide();
 
+          var url = $('#virtual_product').attr('data-action-remove').replace(/remove\/\d+/, 'remove/' + id_product);
           //delete virtual product
           $.ajax({
             type: 'GET',
-            url: $('#virtual_product').attr('data-action-remove') + '/' + id_product,
+            url: url,
             success: function() {
               //empty form
               $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
@@ -1172,7 +1178,7 @@ var virtualProduct = (function() {
 
         $.ajax({
           type: 'POST',
-          url: $('#virtual_product').attr('data-action') + '/' + id_product,
+          url: $('#virtual_product').attr('data-action').replace(/save\/\d+/, 'save/' + id_product),
           data: data,
           contentType: false,
           processData: false,
@@ -1268,7 +1274,7 @@ var attachmentProduct = (function() {
 
         $.ajax({
           type: 'POST',
-          url: $('#form_step6_attachment_product').attr('data-action') + '/' + id_product,
+          url: $('#form_step6_attachment_product').attr('data-action').replace(/\/\d+/, '/' + id_product),
           data: data,
           contentType: false,
           processData: false,

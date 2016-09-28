@@ -129,7 +129,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'required' => false,
             'placeholder' => $this->translator->trans('Apply to all combinations', array(), 'Admin.Catalog.Feature'),
             'label' => $this->translator->trans('Combinations', array(), 'Admin.Catalog.Feature'),
-            'attr' => array('data-action' => $this->router->generate('admin_get_product_combinations')),
+            'attr' => array('data-action' => $this->router->generate('admin_get_product_combinations', ['idProduct' => 1])),
         ))
         ->add('sp_from', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,

@@ -12,8 +12,7 @@ export default function() {
     let currentCount = 0;
     let step = 5;
 
-    let refreshImagesUrl = $jsCombinationsList.attr('data-action-refresh-images') + '/' +
-      $jsCombinationsList.data('id-product');
+    let refreshImagesUrl = $jsCombinationsList.attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $jsCombinationsList.data('id-product'));
 
     $.get(refreshImagesUrl)
       .then(function(response) {
@@ -55,7 +54,7 @@ export default function() {
      * Retrieve URL to get a set of combination forms from data attribute
      * Concatenate ids_product_attribute to load from a slice of idsProductAttribute depending of step and last set
      */
-    let combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-');
+    let combinationUrl = $jsCombinationsList.data('combinations-url').replace(/\/\d+/, '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-'));
 
     let getCombinations = (combinationsImages) => {
       let $jsCombinationsBulkForm = $('#combinations-bulk-form');
@@ -66,7 +65,7 @@ export default function() {
         $('#loading-attribute').before(resp);
         refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount+step));
         currentCount += step;
-        combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-');
+        combinationUrl = $jsCombinationsList.data('combinations-url').replace(/\/\d+/, '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-'));
         if (currentCount < idsCount) {
           getCombinations(combinationsImages);
         } else {
@@ -148,7 +147,8 @@ export default function() {
       success: function(response) {
         $('#accordion_combinations').append(response.form);
         displayFieldsManager.refresh();
-        $.get($('.js-combinations-list').attr('data-action-refresh-images') + '/' + $('.js-combinations-list').data('id-product'))
+        let url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $('.js-combinations-list').data('id-product'));
+        $.get(url)
           .then(function(combinationsImages) {
             refreshImagesCombination(combinationsImages, response.ids_product_attribute);
           });
