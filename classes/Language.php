@@ -28,7 +28,6 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 class LanguageCore extends ObjectModel
 {
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
-    const LANGUAGE_GZIP_URL = 'http://translations.prestashop.com/download/lang_packs/gzip/%s/%s.gzip';
     const SF_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/TEMP/%s.zip';
     const EMAILS_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/emails/%s.zip';
 
@@ -922,13 +921,10 @@ class LanguageCore extends ObjectModel
         }
 
         $errors = array();
-        $file = _PS_TRANSLATIONS_DIR_.(string) $iso.'.gzip';
 
         Language::downloadLanguagePack($iso, $version, $errors);
 
-        if (!file_exists($file)) {
-            $errors[] = Tools::displayError('No language pack is available for your version.');
-        } elseif ($install) {
+        if ($install) {
             Language::installLanguagePack($iso, $params, $errors);
         } else {
             $lang_pack = self::getLangDetails($iso);
@@ -942,24 +938,10 @@ class LanguageCore extends ObjectModel
     public static function downloadLanguagePack($iso, $version, &$errors = array())
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
-        $file = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
 
         $lang_pack = self::getLangDetails($iso);
         if (!$lang_pack) {
             $errors[] = Tools::displayError('Sorry this language is not available');
-        }
-
-        $content = Tools::file_get_contents(
-            sprintf(self::LANGUAGE_GZIP_URL, $version, Tools::strtolower($lang_pack['iso_code']))
-        );
-
-        if (!@file_put_contents($file, $content)) {
-            if (is_writable(dirname($file))) {
-                @unlink($file);
-                @file_put_contents($file, $content);
-            } elseif (!is_writable($file)) {
-                $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
-            }
         }
 
         self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
@@ -1049,41 +1031,6 @@ class LanguageCore extends ObjectModel
 
     public static function installLanguagePack($iso, $params, &$errors = array())
     {
-        $file = _PS_TRANSLATIONS_DIR_.(string) $iso.'.gzip';
-
-        $gz = new \Archive_Tar($file, true);
-        $files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent((string) $iso, $gz));
-        $files_paths = AdminTranslationsController::filesListToPaths($files_list);
-
-        $tmp_array = array();
-
-        foreach ($files_paths as $files_path) {
-            $path = dirname($files_path);
-
-            if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array)) {
-                $error = Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check permissions for %s'), $path);
-                $errors[] = (count($tmp_array) == 0) ? Tools::displayError('The archive cannot be extracted.').' '.$error : $error;
-                $tmp_array[] = $path;
-            }
-        }
-
-        if (defined('_PS_HOST_MODE_')) {
-            $mails_files = array();
-            $other_files = array();
-
-            foreach ($files_list as $key => $data) {
-                if (substr($data['filename'], 0, 5) == 'mails') {
-                    $mails_files[] = $data;
-                }
-            }
-
-            $files_list = array_diff($files_list, $mails_files);
-        }
-
-        if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../')) {
-            $errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), (string) $iso);
-        }
-
         // Clear smarty modules cache
         Tools::clearCache();
 
@@ -1092,8 +1039,6 @@ class LanguageCore extends ObjectModel
         } else {
             // Reset cache
             Language::loadLanguages();
-            AdminTranslationsController::checkAndAddMailsFiles((string) $iso, $files_list);
-            AdminTranslationsController::addNewTabs((string) $iso, $files_list);
         }
 
         $lang_pack = self::getLangDetails($iso);
