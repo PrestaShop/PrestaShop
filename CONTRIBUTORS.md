@@ -299,6 +299,7 @@ GitHub contributors:
 - romainberger
 - runningz
 - Remi Gaillard
+- Robin Rozo
 - s-duval
 - Sacha
 - Sacha FROMENT
