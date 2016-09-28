@@ -242,57 +242,79 @@
 				</ul>
 
 				{* Notifications *}
-				<ul class="header-list navbar-right">
-					<li id="notification" class="dropdown">
-						<a href="javascript:void(0);" class="notification dropdown-toggle notifs">
-							<i class="material-icons">notifications_none</i>
-							<span id="total_notif_number_wrapper" class="notifs_badge">
-								<span id="total_notif_value">0</span>
-							</span>
-						</a>
-						<div class="dropdown-menu notifs_dropdown">
-              <div class="notifications">
-                <ul class="nav nav-tabs" role="tablist">
-                  <li class="nav-item active">
-                    <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders'}<span id="orders_notif_value"></span></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers'}<span id="customers_notif_value"></span></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" data-type="customer_message" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages'}<span id="customer_messages_notif_value"></span></a>
-                  </li>
-                </ul>
-
-                <!-- Tab panes -->
-                <div class="tab-content">
-                  <div class="tab-pane active empty" id="orders-notifications" role="tabpanel">
-                    <p class="no-notification">
-                      {l s='No new order for now :('}<br>
-                      {l s='Have you checked your [1][2]abandonned carts[/2][/1]?' sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a href="'|cat:$abandoned_cart_url|cat:'">', '[/2]' => '</a>']}<br>
-                      {$no_order_tip}
-                    </p>
-                    <div class="notification-elements"></div>
-                  </div>
-                  <div class="tab-pane empty" id="customers-notifications" role="tabpanel">
-                    <p class="no-notification">
-                      {l s='No new customer for now :('}<br>
-                      {$no_customer_tip}
-                    </p>
-                    <div class="notification-elements"></div>
-                  </div>
-                  <div class="tab-pane empty" id="messages-notifications" role="tabpanel">
-                    <p class="no-notification">
-                      {l s='No new message for now.'}<br>
-                      {$no_customer_message_tip}
-                    </p>
-                    <div class="notification-elements"></div>
+        {if $show_new_orders || $show_new_customers || $show_new_messages}
+          <ul class="header-list navbar-right">
+            <li id="notification" class="dropdown">
+              <a href="javascript:void(0);" class="notification dropdown-toggle notifs">
+                <i class="material-icons">notifications_none</i>
+                <span id="total_notif_number_wrapper" class="notifs_badge hide">
+                  <span id="total_notif_value">0</span>
+                </span>
+              </a>
+              <div class="dropdown-menu notifs_dropdown">
+                <div class="notifications">
+                  <ul class="nav nav-tabs" role="tablist">
+                    {$active = "active"}
+                    {if $show_new_orders}
+                      <li class="nav-item {$active}">
+                        <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders'}<span id="orders_notif_value"></span></a>
+                      </li>
+                      {$active = ""}
+                    {/if}
+                    {if $show_new_customers}
+                      <li class="nav-item {$active}">
+                        <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers'}<span id="customers_notif_value"></span></a>
+                      </li>
+                      {$active = ""}
+                    {/if}
+                    {if $show_new_messages}
+                      <li class="nav-item {$active}">
+                        <a class="nav-link" data-toggle="tab" data-type="customer_message" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages'}<span id="customer_messages_notif_value"></span></a>
+                      </li>
+                      {$active = ""}
+                    {/if}
+                  </ul>
+                  
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+                    {$active = "active"}
+                    {if $show_new_orders}
+                      <div class="tab-pane {$active} empty" id="orders-notifications" role="tabpanel">
+                        <p class="no-notification">
+                          {l s='No new order for now :('}<br>
+                          {l s='Have you checked your [1][2]abandonned carts[/2][/1]?' tags=['<strong>', '<a href="'|cat:$abandoned_cart_url|cat:'">']}<br>
+                          {$no_order_tip}
+                        </p>
+                        <div class="notification-elements"></div>
+                      </div>
+                      {$active = ""}
+                    {/if}
+                    {if $show_new_customers}
+                      <div class="tab-pane {$active} empty" id="customers-notifications" role="tabpanel">
+                        <p class="no-notification">
+                          {l s='No new customer for now :('}<br>
+                          {$no_customer_tip}
+                        </p>
+                        <div class="notification-elements"></div>
+                      </div>
+                      {$active = ""}
+                    {/if}
+                    {if $show_new_messages}
+                      <div class="tab-pane {$active} empty" id="messages-notifications" role="tabpanel">
+                        <p class="no-notification">
+                          {l s='No new message for now.'}<br>
+                          {$no_customer_message_tip}
+                        </p>
+                        <div class="notification-elements"></div>
+                      </div>
+                      {$active = ""}
+                    {/if}
                   </div>
                 </div>
               </div>
-						</div>
-					</li>
-				</ul>
+            </li>
+          </ul>
+        {/if}
 
 				{* Shop name *}
 				{if {$base_url}}

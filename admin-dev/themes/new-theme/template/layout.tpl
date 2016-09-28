@@ -27,7 +27,9 @@
 
 
     <div class="component pull-md-right -norightmargin">{include file="components/layout/employee_dropdown.tpl"}</div>
-    <div class="component pull-md-right">{include file="components/layout/notifications_center.tpl"}</div>
+    {if $show_new_orders || $show_new_customers || $show_new_messages}
+      <div class="component pull-md-right">{include file="components/layout/notifications_center.tpl"}</div>
+    {/if}
     <div class="component pull-md-right">{include file="components/layout/shop_list.tpl"}</div>
     {if isset($maintenance_mode) && $maintenance_mode == true}
       <div class="component pull-right">
