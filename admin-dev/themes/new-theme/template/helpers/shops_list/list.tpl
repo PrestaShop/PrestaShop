@@ -44,9 +44,17 @@
                         <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}s-{$shop_id}">
                             {$shop_data['name']}
                         </a>
-                        <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
-                            <i class="mt-eye" aria-hidden="true"></i>
-                        </a>
+
+                        {if $shop_data['uri'] == NULL}
+                            <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
+                                <i class="material-icons">&#xE869;</i>
+                            </a>
+                        {else}
+                            <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
+                                <i class="material-icons">&#xE8F4;</i>
+                              </a>
+                        {/if}
+
                     </li>
                 {/if}
             {/foreach}
