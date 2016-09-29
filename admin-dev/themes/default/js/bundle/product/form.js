@@ -576,7 +576,7 @@ var specificPrices = (function() {
 
   /** Get all specific prices */
   function getAll() {
-    var url = elem.attr('data').replace(/delete\/\d+/, 'delete/' + id_product);
+    var url = elem.attr('data').replace(/list\/\d+/, 'list/' + id_product);
 
     $.ajax({
       type: 'GET',
