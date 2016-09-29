@@ -1,6 +1,9 @@
 {extends file='checkout/_partials/steps/checkout-step.tpl'}
 
 {block name='step_content'}
+
+  {hook h='displayPaymentTop'}
+
   <div class="payment-options">
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
