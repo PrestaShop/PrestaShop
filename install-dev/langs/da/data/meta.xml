@@ -2,9 +2,9 @@
 <entity_meta>
   <meta id="404" id_shop="1">
     <title>404 fejl</title>
-    <description>This page cannot be found</description>
+    <description>Denne side kan ikke findes</description>
     <keywords/>
-    <url_rewrite>page-not-found</url_rewrite>
+    <url_rewrite>side-ikke-fundet</url_rewrite>
   </meta>
   <meta id="best-sales" id_shop="1">
     <title>Mest solgte</title>
@@ -14,9 +14,9 @@
   </meta>
   <meta id="contact" id_shop="1">
     <title>Kontakt os</title>
-    <description>Use our form to contact us</description>
+    <description>Brug vores formular til at kontakte os</description>
     <keywords/>
-    <url_rewrite>contact-us</url_rewrite>
+    <url_rewrite>kontakt-os</url_rewrite>
   </meta>
   <meta id="index" id_shop="1">
     <title/>
@@ -25,22 +25,22 @@
     <url_rewrite/>
   </meta>
   <meta id="manufacturer" id_shop="1">
-    <title>Mærker</title>
-    <description>Manufacturers list</description>
+    <title>Producenter</title>
+    <description>Producenter list</description>
     <keywords/>
-    <url_rewrite>mærker</url_rewrite>
+    <url_rewrite>producenter</url_rewrite>
   </meta>
   <meta id="new-products" id_shop="1">
     <title>Nyheder</title>
-    <description>Our new products</description>
+    <description>Vores nye produkter</description>
     <keywords/>
     <url_rewrite>nyheder</url_rewrite>
   </meta>
   <meta id="password" id_shop="1">
     <title>Glemt din adgangskode</title>
-    <description>Enter the e-mail address you use to sign in to receive an e-mail with a new password</description>
+    <description>Indtast den e-mailadresse, du bruger til at logge på for at modtage en e-mail med et nyt password</description>
     <keywords/>
-    <url_rewrite>password-recovery</url_rewrite>
+    <url_rewrite>gendan-adgangskode</url_rewrite>
   </meta>
   <meta id="prices-drop" id_shop="1">
     <title>Tilbud</title>
@@ -97,16 +97,16 @@
     <url_rewrite>ordrehistorik</url_rewrite>
   </meta>
   <meta id="identity" id_shop="1">
-    <title>Identity</title>
+    <title>Identitet</title>
     <description/>
     <keywords/>
-    <url_rewrite>identity</url_rewrite>
+    <url_rewrite>identitet</url_rewrite>
   </meta>
   <meta id="my-account" id_shop="1">
-    <title>Din-konto</title>
+    <title>Min konto</title>
     <description/>
     <keywords/>
-    <url_rewrite>din-konto</url_rewrite>
+    <url_rewrite>min-konto</url_rewrite>
   </meta>
   <meta id="order-follow" id_shop="1">
     <title>Order follow</title>
