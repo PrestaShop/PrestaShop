@@ -13,8 +13,8 @@
 					</div>
 					<div class="clearfix"></div>
 				</div>
-				<span class="status disabled {(0 == $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates aren't automaticly updated"}</span>
-				<span class="status enabled {(0 != $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are automaticly updated"}</span>
+				<span class="status disabled {(0 == $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are not automatically updated"}</span>
+				<span class="status enabled {(0 != $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are automatically updated"}</span>
 			</div>
 		{/if}
 		<div class="panel">

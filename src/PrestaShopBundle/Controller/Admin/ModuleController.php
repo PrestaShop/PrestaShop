@@ -246,7 +246,7 @@ class ModuleController extends FrameworkBundleAdminController
             } catch (Exception $e) {
                 $response[$module]['status'] = false;
                 $response[$module]['msg'] = $translator->trans(
-                    'Exception thrown by addon %module% on %action%. %error_details%',
+                    'Exception thrown by module %module% on %action%. %error_details%',
                     array(
                             '%action%' => str_replace('_', ' ', $action),
                             '%module%' => $module,
@@ -490,7 +490,7 @@ class ModuleController extends FrameworkBundleAdminController
                     'Admin.Modules.Notification');
             } elseif ($installation_response['status'] === true) {
                 $installation_response['msg'] = $translator->trans(
-                    'Installation of module %module% succeeded',
+                    'Installation of module %module% was successful.',
                     array('%module%' => $module_name),
                     'Admin.Modules.Notification');
                 $installation_response['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');

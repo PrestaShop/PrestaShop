@@ -58,7 +58,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 'align' => 'left'
             ),
             'count_values' => array(
-                'title' => $this->trans('Values count', array(), 'Admin.Catalog.Feature'),
+                'title' => $this->trans('Values', array(), 'Admin.Catalog.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'orderby' => false,

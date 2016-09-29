@@ -138,7 +138,7 @@ class AdminReturnControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'pdf_order_return',
-                    'label' => $this->trans('Return slip', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Returns form', array(), 'Admin.OrdersCustomers.Feature'),
                     'name' => '',
                     'size' => '',
                     'required' => false,

@@ -154,9 +154,9 @@ class ProductOptions extends CommonAbstractType
         ))
         ->add('condition', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(
-                 $this->translator->trans('New', [], 'Admin.Catalog.Feature') => 'new',
-                 $this->translator->trans('Used', [], 'Admin.Catalog.Feature') => 'used',
-                 $this->translator->trans('Refurbished', [], 'Admin.Catalog.Feature') => 'refurbished'
+                 $this->translator->trans('New', [], 'Shop.Theme.Catalog') => 'new',
+                 $this->translator->trans('Used', [], 'Shop.Theme.Catalog') => 'used',
+                 $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog') => 'refurbished'
             ),
             'choices_as_values' => true,
             'required' => true,

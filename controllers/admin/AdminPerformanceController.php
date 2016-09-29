@@ -722,7 +722,7 @@ class AdminPerformanceControllerCore extends AdminController
                 @mkdir($theme_cache_directory, 0777, true);
                 if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory)) {
                     $this->errors[] = $this->trans(
-                        'To use Smart Cache, the directory %directorypath% must be writable.',
+                        'To use Smarty Cache, the directory %directorypath% must be writable.',
                         array(
                             '%directorypath%' => realpath($theme_cache_directory)
                         ),
