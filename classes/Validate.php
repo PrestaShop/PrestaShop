@@ -691,7 +691,7 @@ class ValidateCore
      */
     public static function isUnsignedInt($value)
     {
-        return ((string)(int)$value === (string)$value && $value < 4294967296 && $value >= 0);
+        return $value < 4294967296 && $value >= 0);
     }
 
     /**
