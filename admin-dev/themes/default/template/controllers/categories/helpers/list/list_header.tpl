@@ -39,6 +39,9 @@
 			{/if}
 			{if isset($category.id_category) && $category.id_category == $categories_tree_current_id}
 				{$category.name|escape:'html':'UTF-8'}
+        <a class="edit" href="{$category.edit_link}" title="{l s='Edit' d='Admin.Global'}">
+          &nbsp;<i class="icon-pencil"></i> {l s='Edit' d='Admin.Global'}
+        </a>
 			{else}
 				<a href="{$current|escape:'html':'UTF-8'}{$params_url|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}">{$category.name|escape:'html':'UTF-8'}</a>
 			{/if}
