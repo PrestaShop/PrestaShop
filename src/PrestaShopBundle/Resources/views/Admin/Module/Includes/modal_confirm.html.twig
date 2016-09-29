@@ -23,13 +23,13 @@
               <div class="col-md-12">
                 <p>
                   {% if module_action == 'disable' %}
-                    {{ "You're about to disable %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
+                    {{ "You are about to disable %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
                     <br>
                     <br>
                     {{ "Your current settings will be saved, but the module will no longer be active."|trans({}, 'Admin.Modules.Notification') }}
                   {% endif %}
                   {% if module_action == 'uninstall' %}
-                    {{ "You're about to uninstall %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
+                    {{ "You are about to uninstall %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
                     <br>
                     <br>
                     {{ "This will disable the module and delete all its files. For good."|trans({}, 'Admin.Modules.Notification') }}
