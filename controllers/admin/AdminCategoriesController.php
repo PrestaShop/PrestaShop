@@ -227,6 +227,12 @@ class AdminCategoriesControllerCore extends AdminController
 
 
         $categories_tree = array_reverse($categories_tree);
+        if (!empty($categories_tree)) {
+            $link = Context::getContext()->link;
+            foreach ($categories_tree as $k => $tree) {
+                $categories_tree[$k]['edit_link'] = $link->getAdminLink('AdminCategories', true).'&id_category='.(int)$tree['id_category'].'&updatecategory';
+            }
+        }
 
         $this->tpl_list_vars['categories_tree'] = $categories_tree;
         $this->tpl_list_vars['categories_tree_current_id'] = $this->_category->id;
