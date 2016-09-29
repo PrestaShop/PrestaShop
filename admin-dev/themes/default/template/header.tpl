@@ -347,7 +347,7 @@
 									</li>
 								</ul>
 							{else}
-								<a id="header_shopname" href="{$base_url|escape:'html':'UTF-8'}" class="_blank">{$shop_name}</a>
+								<a id="header_shopname" href="{$base_url|escape:'html':'UTF-8'}" target="_blank">{$shop_name}</a>
 							{/if}
 						</li>
 					</ul>
