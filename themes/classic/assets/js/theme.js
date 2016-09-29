@@ -133,6 +133,9 @@
 	  topMenu.init();
 	  productMinitature.init();
 	  productSelect.init();
+	  (0, _expose$ExposeJQueryJquery2['default'])("#search_filters_wrapper").bind("DOMSubtreeModified", function () {
+	    productMinitature.init();
+	  });
 	});
 
 /***/ },
