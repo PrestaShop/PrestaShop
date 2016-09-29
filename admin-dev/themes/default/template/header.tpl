@@ -335,14 +335,19 @@
                     </a>
                 </span>
               {/if}
-							{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+							{if isset($is_multishop) && $is_multishop && $shop_list &&
+                (isset($multishop_context) &&
+                $multishop_context & Shop::CONTEXT_GROUP ||
+                $multishop_context & Shop::CONTEXT_SHOP ||
+                $multishop_context & Shop::CONTEXT_ALL
+              )}
 								<ul id="header_shop">
 									<li class="dropdown">
 										{$shop_list}
 									</li>
 								</ul>
 							{else}
-								<a id="header_shopname" href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" class="_blank">{$shop_name}</a>
+								<a id="header_shopname" href="{$base_url|escape:'html':'UTF-8'}" class="_blank">{$shop_name}</a>
 							{/if}
 						</li>
 					</ul>

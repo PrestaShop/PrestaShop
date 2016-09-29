@@ -58,6 +58,7 @@ class HelperShopCore extends Helper
             'multishop_context_group' => $context->controller->multishop_context_group,
             'is_shop_context'  => ($context->controller->multishop_context & Shop::CONTEXT_SHOP),
             'is_group_context' => ($context->controller->multishop_context & Shop::CONTEXT_GROUP),
+            'is_all_context' => ($context->controller->multishop_context & Shop::CONTEXT_ALL),
             'shop_context' => $shop_context,
             'url' => $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext='
         ));

@@ -33,7 +33,7 @@
                     {l s='%s group' sprintf=[$group_data['name']|escape:'html':'UTF-8']}
                 </a>
             </li>
-        {else}
+        {elseif !$is_all_context}
             <ul class="group {if $multishop_context_group == false} disabled{/if}">{l s='%s group' sprintf=[$group_data['name']|escape:'html':'UTF-8']}
         {/if}
 
