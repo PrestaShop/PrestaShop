@@ -453,9 +453,13 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                         foreach (array($tr->zipcode_from, $tr->zipcode_to) as $zip_code) {
                             if ($zip_code) {
                                 if (!$country->checkZipCode($zip_code)) {
-                                    $this->errors[] = sprintf(
-                                        $this->trans('The Zip/postal code is invalid. It must be typed as follows: %s for %s.', array(), 'Admin.International.Notification'),
-                                        str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))), $country->name
+                                    $this->errors[] = $this->trans(
+                                        'The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.',
+                                        array(
+                                            '%format%' => str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))),
+                                            '%country%' => $country->name
+                                        ),
+                                        'Admin.International.Notification'
                                     );
                                 }
                             }

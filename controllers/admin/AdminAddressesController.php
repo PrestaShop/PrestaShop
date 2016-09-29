@@ -71,7 +71,7 @@ class AdminAddressesControllerCore extends AdminController
             'firstname' => array('title' => $this->trans('First Name', array(), 'Admin.Global'), 'filter_key' => 'a!firstname'),
             'lastname' => array('title' => $this->trans('Last Name', array(), 'Admin.Global'), 'filter_key' => 'a!lastname'),
             'address1' => array('title' => $this->trans('Address', array(), 'Admin.Global')),
-            'postcode' => array('title' => $this->trans('Zip/Postal Code', array(), 'Admin.Global'), 'align' => 'right'),
+            'postcode' => array('title' => $this->trans('Zip/postal code', array(), 'Admin.Global'), 'align' => 'right'),
             'city' => array('title' => $this->trans('City', array(), 'Admin.Global')),
             'country' => array('title' => $this->trans('Country', array(), 'Admin.Global'), 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
 
@@ -270,7 +270,7 @@ class AdminAddressesControllerCore extends AdminController
             } elseif ($addr_field_item == 'postcode') {
                 $temp_fields[] = array(
                     'type' => 'text',
-                    'label' => $this->trans('Zip/Postal Code', array(), 'Admin.Global'),
+                    'label' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
                     'name' => 'postcode',
                     'col' => '2',
                     'required' => true,
