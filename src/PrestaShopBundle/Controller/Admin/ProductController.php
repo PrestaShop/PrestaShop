@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShopBundle\Form\Admin\Product as ProductForms;
-use PrestaShopBundle\Exception\DataUpdateException;
+use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -331,7 +331,6 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $product->save();
-
         $product->addToCategories([$context->shop->id_category]);
 
         return $this->redirectToRoute('admin_product_form', ['id' => $product->id]);
@@ -401,6 +400,12 @@ class ProductController extends FrameworkBundleAdminController
         $formData = $form->getData();
 
         if ($form->isSubmitted()) {
+            if ($this->isDemoModeEnabled() && $request->isXmlHttpRequest()) {
+                $errorMessage = $this->getDemoModeErrorMessage();
+
+                return new JsonResponse(['error' => [$errorMessage]], 503);
+            }
+
             if ($form->isValid()) {
 
                 // Legacy code. To fix when Object model will change. But report Hooks.
@@ -543,8 +548,11 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $hookDispatcher HookDispatcher */
 
         try {
-
             $hasMessages = $this->container->get('session')->getFlashBag()->has('success');
+
+            if ($this->isDemoModeEnabled()) {
+                throw new UpdateProductException($this->getDemoModeErrorMessage());
+            }
 
             switch ($action) {
                 case 'activate_all':
@@ -592,7 +600,7 @@ class ProductController extends FrameworkBundleAdminController
                     $logger->error('Bulk action from ProductController received a bad parameter.');
                     throw new \Exception('Bad action received from call to ProductController::bulkAction: "' . $action . '"', 2001);
             }
-        } catch (DataUpdateException $due) {
+        } catch (UpdateProductException $due) {
             //TODO : need to translate this with an domain name
             $message = $due->getMessage();
             $this->addFlash('failure', $message);
@@ -657,7 +665,7 @@ class ProductController extends FrameworkBundleAdminController
                     $logger->error('Mass edit action from ProductController received a bad parameter.');
                     throw new \Exception('Bad action received from call to ProductController::massEditAction: "' . $action . '"', 2001);
             }
-        } catch (DataUpdateException $due) {
+        } catch (UpdateProductException $due) {
             //TODO : need to translate with domain name
             $message = $due->getMessage();
             $this->addFlash('failure', $message);
@@ -697,6 +705,10 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $hookDispatcher HookDispatcher */
 
         try {
+            if ($this->isDemoModeEnabled()) {
+                throw new UpdateProductException($this->getDemoModeErrorMessage());
+            }
+
             switch ($action) {
                 case 'delete':
                     $hookDispatcher->dispatchMultiple(['actionAdminDeleteBefore', 'actionAdminProductsControllerDeleteBefore'], $hookEventParameters);
@@ -736,7 +748,7 @@ class ProductController extends FrameworkBundleAdminController
                     $logger->error('Unit action from ProductController received a bad parameter.');
                     throw new \Exception('Bad action received from call to ProductController::unitAction: "' . $action . '"', 2002);
             }
-        } catch (DataUpdateException $due) {
+        } catch (UpdateProductException $due) {
             //TODO : need to translate with a domain name
             $message = $due->getMessage();
             $this->addFlash('failure', $message);

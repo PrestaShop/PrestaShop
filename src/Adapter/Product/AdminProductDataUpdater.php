@@ -26,7 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface;
-use PrestaShopBundle\Exception\DataUpdateException;
+use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
@@ -71,7 +71,7 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         if (count($failedIdList) > 0) {
-            throw new DataUpdateException('product', $failedIdList, 'Cannot change activation state on many requested products', 5004);
+            throw new UpdateProductException('Cannot change activation state on many requested products', 5004);
         }
         return true;
     }
@@ -90,7 +90,7 @@ class AdminProductDataUpdater implements ProductInterface
         $result = (new \ProductCore())->deleteSelection($productIdList);
 
         if ($result === 0) {
-            throw new DataUpdateException('product', $failedIdList, 'Cannot delete many requested products.', 5006);
+            throw new UpdateProductException('Cannot delete many requested products.', 5006);
         }
         return true;
     }
@@ -115,7 +115,7 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         if (count($failedIdList) > 0) {
-            throw new DataUpdateException('product', $failedIdList, 'Cannot duplicate many requested products', 5004);
+            throw new UpdateProductException('Cannot duplicate many requested products', 5004);
         }
         return true;
     }
@@ -135,7 +135,7 @@ class AdminProductDataUpdater implements ProductInterface
         $result = $product->delete();
 
         if ($result === 0) {
-            throw new DataUpdateException('product', $productId, 'Cannot delete the requested product.', 5007);
+            throw new UpdateProductException('Cannot delete the requested product.', 5007);
         }
         return true;
     }
@@ -194,7 +194,7 @@ class AdminProductDataUpdater implements ProductInterface
             }
 
             if (!\Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
-                throw new DataUpdateException('product', $id_product_old, 'An error occurred while copying images.', 5008);
+                throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
                 $this->hookDispatcher->dispatchForParameters('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
                 if (in_array($product->visibility, array('both', 'search')) && \Configuration::get('PS_SEARCH_INDEXATION')) {

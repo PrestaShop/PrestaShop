@@ -182,4 +182,26 @@ class FrameworkBundleAdminController extends Controller
     {
         return $this->container->getParameter('kernel.root_dir') . '/Resources';
     }
+
+    /**
+     * @return mixed
+     */
+    protected function isDemoModeEnabled()
+    {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+
+        return $configuration->get('_PS_MODE_DEMO_');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDemoModeErrorMessage()
+    {
+        return $this->get('translator')->trans(
+            'This functionality has been disabled.',
+            array(),
+            'Admin.Notifications.Error'
+        );
+    }
 }

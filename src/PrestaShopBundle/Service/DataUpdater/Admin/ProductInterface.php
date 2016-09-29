@@ -37,7 +37,7 @@ interface ProductInterface
      *
      * @param array $productListId The ID list of products to (de)activate
      * @param boolean $activate True to activate, false to deactivate.
-     * @throws DataUpdateException If an error occured during update (not really blocking since its just activation flag)
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If an error occured during update (not really blocking since its just activation flag)
      * @return boolean True when succeed.
      */
     public function activateProductIdList(array $productListId, $activate = true);
@@ -46,7 +46,7 @@ interface ProductInterface
      * Do a safe delete on given product IDs
      *
      * @param array $productListId The ID list of products to delete
-     * @throws DataUpdateException If deletion failed (some normal cases can brings this, it's not a Development error)
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If deletion failed (some normal cases can brings this, it's not a Development error)
      * @return boolean True when succeed.
      */
     public function deleteProductIdList(array $productIdList);
@@ -55,7 +55,7 @@ interface ProductInterface
      * Duplicates the given product IDs
      *
      * @param array $productListId The ID list of products to delete
-     * @throws DataUpdateException If duplication failed.
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If duplication failed.
      * @return boolean True when succeed.
      */
     public function duplicateProductIdList(array $productIdList);
@@ -64,7 +64,7 @@ interface ProductInterface
      * Do a safe delete on given product ID
      *
      * @param integer $productId The product ID to delete
-     * @throws DataUpdateException If deletion failed (some normal cases can brings this, it's not a Development error)
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If deletion failed (some normal cases can brings this, it's not a Development error)
      * @return boolean
      */
     public function deleteProduct($productId);
@@ -87,7 +87,7 @@ interface ProductInterface
      *
      * @param array $productList The list of products to sort (keys: ID, values: old positions) The natural order of the array is the new order to update.
      * @param array $filterParams Contains the ID of the category to sort. Take it from AdminProductDataProvider::getPersistedFilterParameters().
-     * @throws DataUpdateException If deletion failed (some normal cases can brings this, it's not a Development error)
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If deletion failed (some normal cases can brings this, it's not a Development error)
      * @return boolean True when succeed.
      */
     public function sortProductIdList(array $productList, $filterParams);

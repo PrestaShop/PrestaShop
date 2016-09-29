@@ -10,7 +10,7 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
-// instanciated to allow call of Legacy classes inside Symfony engine (phpunit tests, console, etc...)
+// instantiated to allow call of Legacy classes from classes in /src and /tests
 require_once(__DIR__.'/../config/defines.inc.php');
 require_once(__DIR__.'/../classes/PrestaShopAutoload.php');
 
