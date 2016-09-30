@@ -24,10 +24,10 @@
 *}
 <script type="text/javascript">
    $(document).ready(function() {
-      
+
       var id_tab_parentmodule = {$id_tab_parentmodule|intval};
       var id_tab_module = {$id_tab_module|intval};
-      
+
       $('tr.child-'+id_tab_parentmodule+' > td > input.view.'+id_tab_module).change( function () {
 
          if (!$(this).prop('checked'))
@@ -37,7 +37,7 @@
                $('#table_module_2 thead th:eq(1) input').trigger('click');
          }
       });
-      
+
       $('tr.child-'+id_tab_parentmodule+' > td > input.edit.'+id_tab_module).change( function () {
 
          if (!$(this).prop('checked'))
@@ -47,7 +47,7 @@
                $('#table_module_2 thead th:eq(2) input').trigger('click');
          }
       });
-      
+
       $('div.productTabs').find('a').each(function() {
          $(this).attr('href', '#');
       });
@@ -62,14 +62,66 @@
       });
 
       $('.ajaxPower').change(function(){
-         var tout = $(this).data('rel').split('||');
-         var id_tab = tout[0];
-         var id_profile = tout[1];
-         var perm = tout[2];
-         var enabled = $(this).is(':checked')? 1 : 0;
-         var tabsize = tout[3];
-         var tabnumber = tout[4];
-         var table = 'table#table_'+id_profile;
+          var tout = $(this).data('rel').split('||');
+          var id_tab = tout[0];
+          var id_profile = tout[1];
+          var perm = tout[2];
+          var enabled = $(this).is(':checked')? 1 : 0;
+          var tabsize = tout[3];
+          var tabnumber = tout[4];
+          var table = 'table#table_'+id_profile;
+
+          var $parentRow = ($(this).parents('tr'));
+          var classes = $parentRow.attr('class');
+
+          var $permissionCheckbox = $(this);
+
+          var targetPermissionType;
+          switch (true) {
+            case $permissionCheckbox.hasClass('view'): targetPermissionType = '.view'; break;
+            case $permissionCheckbox.hasClass('add'): targetPermissionType = '.add'; break;
+            case $permissionCheckbox.hasClass('delete'): targetPermissionType = '.delete'; break;
+            case $permissionCheckbox.hasClass('edit'): targetPermissionType = '.edit'; break;
+          }
+
+          if (enabled && classes) {
+            var subject = 'child';
+            var subjectIndex = classes.indexOf(subject);
+            if (-1 !== subjectIndex) {
+              var subjectIndexes = [];
+
+              while (-1 !== subjectIndex) {
+                subjectIndexes.push(subjectIndex);
+                subjectIndex = classes.indexOf(subject, subjectIndex + 1);
+              }
+
+              subjectIndexes.pop();
+              var classAttribute = subject + '-';
+              var targetClass;
+
+              var $parentPermissions;
+              var $parentPermission;
+
+              while (subjectIndexes.length > 0) {
+                targetClass = new Array(subjectIndexes.length + 1).join(classAttribute);
+                $parentPermissions = $parentRow.prevAll().filter(function (rowIndex, row) {
+                  return $(row).attr('class').match(new RegExp('^' + targetClass + '[0-9]'));
+                });
+                $parentPermission = $($parentPermissions[0]).find(targetPermissionType);
+
+                if (!$parentPermission.prop('checked')) {
+                  $parentPermission.prop('checked', true);
+                }
+
+                subjectIndexes.pop();
+              }
+
+              var $topParent = $($parentRow.prevAll().filter('.parent')[0]).find(targetPermissionType);
+              if (!$topParent.prop('checked')) {
+                $topParent.prop('checked', true);
+              }
+            }
+          }
 
          if (perm == 'all' && $(this).parent().parent().hasClass('parent'))
          {
@@ -213,9 +265,9 @@
       {/foreach}
       {foreach $profiles as $profile}
       <div class="profile-{$profile.id_profile} tab-profile" style="display:{if $profile.id_profile != $current_profile}none{/if}">
-         <div class="row">         
+         <div class="row">
          {if $profile.id_profile != $admin_profile}
-            <div class="col-lg-6">   
+            <div class="col-lg-6">
                <div class="panel">
                   <h3>{l s='Menu'}</h3>
                   <table class="table" id="table_{$profile.id_profile}">
