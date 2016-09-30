@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use Symfony\Component\Debug\Debug;
 
 class FrontControllerCore extends Controller
@@ -155,6 +156,11 @@ class FrontControllerCore extends Controller
     private $templateFinder;
 
     /**
+     * @var object StylesheetManager
+     */
+    protected $stylesheetManager;
+
+    /**
      * Controller constructor.
      *
      * @global bool $useSSL SSL connection flag
@@ -182,6 +188,10 @@ class FrontControllerCore extends Controller
         $this->objectPresenter = new ObjectPresenter();
         $this->cart_presenter = new CartPresenter();
         $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
+        $this->stylesheetManager = new StylesheetManager(
+            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            new ConfigurationAdapter()
+        );
     }
 
     /**
@@ -584,6 +594,7 @@ class FrontControllerCore extends Controller
 
         $this->context->smarty->assign(array(
             'layout' => $this->getLayout(),
+            'stylesheets' => $this->stylesheetManager->getStylesheetList(),
             'css_files' => $this->css_files,
             'js_files' => ($this->getLayout() && (bool) Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
             'js_defer' => (bool) Configuration::get('PS_JS_DEFER'),
@@ -789,26 +800,13 @@ class FrontControllerCore extends Controller
      */
     public function setMedia()
     {
-        $cssFileList = array();
-        $parent = $this->context->shop->theme->get('parent');
-
-        if ($parent && $this->context->shop->theme->get('assets.use_parent_assets')) {
-            $cssFileList = array(
-                _PS_ALL_THEMES_DIR_.$parent.'/assets/css/theme.css',
-                _PS_ALL_THEMES_DIR_.$parent.'/assets/css/custom.css',
-            );
-        }
-
-        $cssFileList = array_merge($cssFileList, array(
-            _THEME_CSS_DIR_.'theme.css',
-            _THEME_CSS_DIR_.'custom.css',
-        ));
+        $this->registerStylesheet('theme-main', '/assets/css/theme.css', 'all', 0);
+        $this->registerStylesheet('theme-custom', '/assets/css/custom.css', 'all', 1000);
 
         if ($this->context->language->is_rtl) {
-            $cssFileList[] = _THEME_CSS_DIR_.'rtl.css';
+            $this->registerStylesheet('theme-rtl', '/assets/css/rtl.css', 'all', 10);
         }
 
-        $this->addCSS($cssFileList);
         $this->addJS(array(
             _THEMES_DIR_.'core.js',
             _THEME_JS_DIR_.'theme.js',
@@ -995,6 +993,13 @@ class FrontControllerCore extends Controller
     public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
     {
         FrontController::addMedia($media_uri, $css_media_type, null, true, $check_path);
+    }
+
+    public function registerStylesheet($id, $relativePath, $media, $position = 50)
+    {
+        $this->stylesheetManager->register($id, $relativePath, $media, $position);
+
+        return $this;
     }
 
     /**

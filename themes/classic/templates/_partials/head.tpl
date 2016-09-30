@@ -18,11 +18,10 @@
 <link rel="icon" type="image/vnd.microsoft.icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
 <link rel="shortcut icon" type="image/x-icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
 
-{if isset($css_files)}
-  {foreach from=$css_files key=css_uri item=media}
-    <link rel="stylesheet" href="{$css_uri}" type="text/css" media="{$media}">
-  {/foreach}
-{/if}
+{block name='stylesheets'}
+  {include file="_partials/stylesheets.tpl" stylesheets=$stylesheets}
+{/block}
+
 {if isset($js_defer) && !$js_defer && isset($js_files) && isset($js_def)}
   {$js_def nofilter}
   {foreach from=$js_files item=js_uri}
