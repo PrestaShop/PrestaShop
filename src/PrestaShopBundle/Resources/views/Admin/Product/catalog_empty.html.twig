@@ -5,11 +5,15 @@
     <div class="m-t-3 emptycatalog-icon">
       <i class="material-icons">add_shopping_cart</i>
     </div>
-    <div class="m-t-1">
-      <a class="btn btn-primary" id="product_empty_list_add_btn" href="{{ path('admin_product_new') }}">{{ 'Add your first product'|trans({}, 'Admin.Catalog.Feature') }}</a>
-    </div>
-    <div class="m-t-1">
-      <a href="{{ import_url }}" class="external-link" id="product_empty_list_go_to_import">{{ 'or import a list of products (filetypes: .csv, .xls, .xlsx, .xlst, .ods, .ots).'|trans({}, 'Admin.Catalog.Feature') }}</a>
-    </div>
+
+    {{ '[1]Add your first product[/1][2]or import a list of products (filetypes: .csv, .xls, .xlsx, .xlst, .ods, .ots).[/2]'|trans({}, 'Admin.Catalog.Feature')|
+      replace({
+      '[1]': '<div class="m-t-1"><a class="btn btn-primary" id="product_empty_list_add_btn" href="'~ path('admin_product_new') ~'">',
+      '[/1]': '</a></div>',
+      '[2]': '<div class="m-t-1"><a href="'~ import_url ~'" class="external-link" id="product_empty_list_go_to_import">',
+      '[/2]': '</a></div>',
+      })|raw
+    }}
+
   </div>
 {% endblock %}
