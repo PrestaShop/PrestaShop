@@ -2970,19 +2970,29 @@ abstract class ModuleCore
                 if (!$override_class->hasProperty($property->getName())) {
                     continue;
                 }
+                $multiline_property_deletion = false;
 
                 // Replace the declaration line by #--remove--#
                 foreach ($override_file as $line_number => &$line_content) {
                     if (preg_match('/(public|private|protected)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content)) {
+                        if(!preg_match("/(.*);$/i",trim($line_content))){
+                            $multiline_property_deletion = true;
+                        }
                         if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 4])) {
                             $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
                         }
                         $line_content = '#--remove--#';
-                        break;
+                    }else if($multiline_property_deletion){
+                        if (preg_match("/(.*);$/i", trim($line_content))) {
+                            $multiline_property_deletion = false;
+                        }
+                        $line_content = '#--remove--#';
+                        if(!$multiline_property_deletion) {
+                            break;
+                        }
                     }
                 }
             }
-
             // Remove properties from override file
             foreach ($module_class->getConstants() as $constant => $value) {
                 if (!$override_class->hasConstant($constant)) {
