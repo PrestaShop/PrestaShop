@@ -10,7 +10,7 @@
     <title>Mest solgte</title>
     <description>Our best sales</description>
     <keywords/>
-    <url_rewrite>best-sales</url_rewrite>
+    <url_rewrite>mest-solgte</url_rewrite>
   </meta>
   <meta id="contact" id_shop="1">
     <title>Kontakt os</title>
@@ -25,20 +25,20 @@
     <url_rewrite/>
   </meta>
   <meta id="manufacturer" id_shop="1">
-    <title>Producenter</title>
-    <description>Producenter list</description>
+    <title>Mærker</title>
+    <description>Mærker list</description>
     <keywords/>
-    <url_rewrite>producenter</url_rewrite>
+    <url_rewrite>maerker</url_rewrite>
   </meta>
   <meta id="new-products" id_shop="1">
     <title>Nyheder</title>
-    <description>Vores nye produkter</description>
+    <description>Vores nye varer</description>
     <keywords/>
     <url_rewrite>nyheder</url_rewrite>
   </meta>
   <meta id="password" id_shop="1">
     <title>Glemt din adgangskode</title>
-    <description>Indtast den e-mailadresse, du bruger til at logge på for at modtage en e-mail med et nyt password</description>
+    <description>Indtast den e-mailadresse, du bruger til at logge på for at modtage en e-mail med en ny adgangskode.</description>
     <keywords/>
     <url_rewrite>gendan-adgangskode</url_rewrite>
   </meta>
@@ -58,7 +58,7 @@
     <title>Leverandører</title>
     <description>Suppliers list</description>
     <keywords/>
-    <url_rewrite>leverandører</url_rewrite>
+    <url_rewrite>leverandoerer</url_rewrite>
   </meta>
   <meta id="address" id_shop="1">
     <title>Adresse</title>
@@ -97,10 +97,10 @@
     <url_rewrite>ordrehistorik</url_rewrite>
   </meta>
   <meta id="identity" id_shop="1">
-    <title>Identitet</title>
+    <title>Mine oplysninger</title>
     <description/>
     <keywords/>
-    <url_rewrite>identitet</url_rewrite>
+    <url_rewrite>mine-oplysninger</url_rewrite>
   </meta>
   <meta id="my-account" id_shop="1">
     <title>Min konto</title>
@@ -109,10 +109,10 @@
     <url_rewrite>min-konto</url_rewrite>
   </meta>
   <meta id="order-follow" id_shop="1">
-    <title>Order follow</title>
+    <title>Følg din bestilling</title>
     <description/>
     <keywords/>
-    <url_rewrite>order-follow</url_rewrite>
+    <url_rewrite>foelg-din-bestilling</url_rewrite>
   </meta>
   <meta id="order-slip" id_shop="1">
     <title>Kreditnota</title>
@@ -130,7 +130,7 @@
     <title>Søg</title>
     <description/>
     <keywords/>
-    <url_rewrite>søg</url_rewrite>
+    <url_rewrite>soeg</url_rewrite>
   </meta>
   <meta id="stores" id_shop="1">
     <title>Butikker</title>
@@ -142,12 +142,12 @@
     <title>Gæstesporing</title>
     <description/>
     <keywords/>
-    <url_rewrite>Gæstesporing</url_rewrite>
+    <url_rewrite>Gaestesporing</url_rewrite>
   </meta>
   <meta id="order-confirmation" id_shop="1">
     <title>Ordrebekræftelse</title>
     <description/>
     <keywords/>
-    <url_rewrite>ordrebekræftelse</url_rewrite>
+    <url_rewrite>ordrebekraeftelse</url_rewrite>
   </meta>
 </entity_meta>
