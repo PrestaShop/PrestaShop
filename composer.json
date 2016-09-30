@@ -9,6 +9,7 @@
     "doctrine/dbal": "~2.5.3",
     "doctrine/common": "~2.5.3",
     "doctrine/orm": "~2.5.3",
+    "ext-intl": "*",
     "ext-zip": "*",
     "geoip2/geoip2": "~2.4.2",
     "doctrine/doctrine-bundle": "1.5.2",
