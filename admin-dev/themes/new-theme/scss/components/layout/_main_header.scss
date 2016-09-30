@@ -94,7 +94,7 @@
         a {
           color: #fff;
         }
-        i.mt-eye:hover::after {
+        i.material-icons:hover {
           color: #fff;
           border: solid 1px #fff;
         }
@@ -118,22 +118,24 @@
         padding-left: rem(60px);
         @include justify-content(space-between);
       }
+      a.disabled {
+        cursor: not-allowed;
+      }
       a.link-shop {
         text-decoration: none;
         float: right;
         padding-left: inherit;
         padding-right: 10px;
         padding-top: 3px;
-        i.mt-eye {
-          &::after {
-            content: "\E8F4";
-            font-family: 'Material Icons';
-            color: $gray-medium;
-            border: solid 1px $gray-light;
-            border-radius: rem(3px);
-            padding: 1px 8px;
-            font-size: 1rem;
-          }
+        i.material-icons {
+          cursor: pointer;
+          color: $gray-medium;
+          border: solid 1px $gray-light;
+          border-radius: rem(3px);
+          padding: 3px 8px;
+          font-size: rem(13px);
+          width: inherit;
+          height: inherit;
         }
       }
     }
