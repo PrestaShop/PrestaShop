@@ -79,7 +79,9 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
     {
-        $request->getSession()->set('_locale', 'fr-FR');
+        $context = $this->get('prestashop.adapter.legacy.context')->getContext();
+        $request->getSession()->set('_locale', $context->language->locale);
+
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
@@ -174,7 +176,7 @@ class ProductController extends FrameworkBundleAdminController
                 null,
                 array(
                     'label' => $translator->trans('Categories', array(), 'Admin.Catalog.Feature'),
-                    'list' => $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(null, $this->get('prestashop.adapter.legacy.context')->getContext()->language->id, false),
+                    'list' => $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(null, $context->language->id, false),
                     'valid_list' => [],
                     'multiple' => false,
                 )

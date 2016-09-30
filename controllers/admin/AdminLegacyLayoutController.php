@@ -73,25 +73,23 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
     public function initContent()
     {
-        parent::initToolbar();
-        parent::initTabModuleList();
-        parent::initPageHeaderToolbar();
-
         $this->addHeaderToolbarBtn();
-
-        parent::initContent();
 
         $this->show_page_header_toolbar = (bool) $this->showContentHeader;
 
-        if ($this->title) {
-            $this->context->smarty->assign(array('title' => $this->title));
-        }
-
         $vars = array(
             'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
+            'debug_mode' => (bool)_PS_MODE_DEV_,
             'headerTabContent' => $this->headerTabContent,
             'content' => '{$content}', //replace content by original smarty tag var
             'enableSidebar' => $this->enableSidebar,
+            'lite_display' => $this->lite_display,
+            'url_post' => self::$currentIndex.'&token='.$this->token,
+            'show_page_header_toolbar' => $this->show_page_header_toolbar,
+            'page_header_toolbar_title' => $this->page_header_toolbar_title,
+            'title' => $this->title ? $this->title : $this->page_header_toolbar_title,
+            'toolbar_btn' => $this->page_header_toolbar_btn,
+            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         );
 
         if (!empty($this->helpLink)) {
