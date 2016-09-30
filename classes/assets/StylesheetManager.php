@@ -43,6 +43,7 @@ class StylesheetManagerCore
         'tty',
         'tv',
     );
+    private $fqdn;
 
     public function __construct(array $directories, ConfigurationInterface $configuration)
     {
@@ -71,7 +72,7 @@ class StylesheetManagerCore
         $this->list[$id] = array(
             'id' => $id,
             'media' => $media,
-            'uri' => $this->getUriFromPath($fullPath),
+            'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
         );
     }
 
@@ -99,5 +100,16 @@ class StylesheetManagerCore
         );
 
         return $uri;
+    }
+
+    private function getFQDN()
+    {
+        if (is_null($this->fqdn)) {
+            $this->fqdn = ($this->configuration->get('PS_SSL_ENABLED'))
+                ? $this->configuration->get('_PS_BASE_URL_SSL_')
+                : $this->configuration->get('_PS_BASE_URL_');
+        }
+
+        return $this->fqdn;
     }
 }
