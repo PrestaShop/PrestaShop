@@ -292,6 +292,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
 
             $product_for_template = $this->getTemplateVarProduct();
+            $productManufacturer = new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id);
+
+            $manufacturerImageUrl = $this->context->link->getManufacturerImageLink($productManufacturer->id);
+            $undefinedImage = $this->context->link->getManufacturerImageLink(null);
+            if ($manufacturerImageUrl === $undefinedImage) {
+                $manufacturerImageUrl = null;
+            }
+            
+            $productBrandUrl = $this->context->link->getManufacturerLink($productManufacturer->id);
 
             $this->context->smarty->assign(array(
                 'priceDisplay' => $priceDisplay,
@@ -301,7 +310,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'accessories' => $accessories,
                 'product' => $product_for_template,
                 'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
-                'product_manufacturer' => new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
+                'product_manufacturer' => $productManufacturer,
+                'manufacturer_image_url' => $manufacturerImageUrl,
+                'product_brand_url' => $productBrandUrl,
             ));
 
             // Assign attribute groups to the template
