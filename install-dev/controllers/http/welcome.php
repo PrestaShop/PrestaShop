@@ -50,7 +50,8 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
             $this->redirect('welcome');
         }
 
-        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_.'/translations/'.$this->session->lang.'.gzip')) {
+        $locale = $this->language->getLanguage($this->session->lang)->locale;
+        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_.'/app/Resources/translations/'.$locale.'/Install.'.$locale.'.xlf')) {
             Language::downloadAndInstallLanguagePack($this->session->lang, _PS_VERSION_, null, false);
             $this->clearCache();
             $this->redirect('welcome');
@@ -79,10 +80,10 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
             $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
             $sf2Refresh->addCacheClear();
             $sf2Refresh->execute();
-        }catch( \Exception $exception) {
+        } catch (\Exception $exception) {
             $finder = new \Symfony\Component\Finder\Finder;
             $fs = new \Symfony\Component\Filesystem\Filesystem();
-            foreach($finder->in(_PS_ROOT_DIR_.'/app/cache') as $file) {
+            foreach ($finder->in(_PS_ROOT_DIR_.'/app/cache') as $file) {
                 $fs->remove($file->getFilename());
             }
         }

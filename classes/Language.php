@@ -28,8 +28,8 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 class LanguageCore extends ObjectModel
 {
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
-    const LANGUAGE_GZIP_URL = 'http://translations.prestashop.com/download/lang_packs/gzip/%s/%s.gzip';
     const SF_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/TEMP/%s.zip';
+    const EMAILS_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/emails/%s.zip';
 
     public $id;
 
@@ -927,17 +927,15 @@ class LanguageCore extends ObjectModel
         }
 
         $errors = array();
-        $file = _PS_TRANSLATIONS_DIR_.(string) $iso.'.gzip';
 
         Language::downloadLanguagePack($iso, $version, $errors);
 
-        if (!file_exists($file)) {
-            $errors[] = Tools::displayError('No language pack is available for your version.');
-        } elseif ($install) {
+        if ($install) {
             Language::installLanguagePack($iso, $params, $errors);
         } else {
             $lang_pack = self::getLangDetails($iso);
             self::installSfLanguagePack($lang_pack['locale'], $errors);
+            self::installEmailsLanguagePack($lang_pack, $errors);
         }
 
         return count($errors) ? $errors : true;
@@ -946,41 +944,29 @@ class LanguageCore extends ObjectModel
     public static function downloadLanguagePack($iso, $version, &$errors = array())
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
-        $file = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
 
         $lang_pack = self::getLangDetails($iso);
         if (!$lang_pack) {
             $errors[] = Tools::displayError('Sorry this language is not available');
         }
 
-        $content = Tools::file_get_contents(
-            sprintf(self::LANGUAGE_GZIP_URL, $version, Tools::strtolower($lang_pack['iso_code']))
-        );
-
-        if (!@file_put_contents($file, $content)) {
-            if (is_writable(dirname($file))) {
-                @unlink($file);
-                @file_put_contents($file, $content);
-            } elseif (!is_writable($file)) {
-                $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
-            }
-        }
-
-        self::downloadSfLanguagePack($lang_pack['locale'], $errors);
+        self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
+        self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'emails');
 
         return !count($errors);
     }
 
-    public static function downloadSfLanguagePack($locale, &$errors = array())
+    public static function downloadXLFLanguagePack($locale, &$errors = array(), $type = 'sf')
     {
-        $sfFile = _PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip';
-        $content = Tools::file_get_contents(sprintf(self::SF_LANGUAGE_PACK_URL, $locale));
+        $file = _PS_TRANSLATIONS_DIR_.$type.'-'.$locale.'.zip';
+        $url = ('emails' === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
+        $content = Tools::file_get_contents(sprintf($url, $locale));
 
-        if (!is_writable(dirname($sfFile))) {
+        if (!is_writable(dirname($file))) {
             // @todo Throw exception
-            $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$sfFile.')';
+            $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
         } else {
-            @file_put_contents($sfFile, $content);
+            @file_put_contents($file, $content);
         }
     }
 
@@ -996,43 +982,55 @@ class LanguageCore extends ObjectModel
         }
     }
 
-    public static function installLanguagePack($iso, $params, &$errors = array())
+    public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
-        $file = _PS_TRANSLATIONS_DIR_.(string) $iso.'.gzip';
+        $folder = _PS_TRANSLATIONS_DIR_.'emails-'.$lang_pack['locale'];
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+        $finder = new \Symfony\Component\Finder\Finder();
 
-        $gz = new \Archive_Tar($file, true);
-        $files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent((string) $iso, $gz));
-        $files_paths = AdminTranslationsController::filesListToPaths($files_list);
+        if (!file_exists($folder.'.zip')) {
+            // @todo Throw exception
+            $errors[] = Tools::displayError('Language pack unavailable.');
+        } else {
+            $zipArchive = new ZipArchive();
+            $zipArchive->open($folder.'.zip');
+            $zipArchive->extractTo($folder);
 
-        $tmp_array = array();
+            $coreDestPath = _PS_ROOT_DIR_.'/mails/'.$lang_pack['iso_code'];
+            $fileSystem->mkdir($coreDestPath, 0755);
 
-        foreach ($files_paths as $files_path) {
-            $path = dirname($files_path);
-
-            if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array)) {
-                $error = Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check permissions for %s'), $path);
-                $errors[] = (count($tmp_array) == 0) ? Tools::displayError('The archive cannot be extracted.').' '.$error : $error;
-                $tmp_array[] = $path;
-            }
-        }
-
-        if (defined('_PS_HOST_MODE_')) {
-            $mails_files = array();
-            $other_files = array();
-
-            foreach ($files_list as $key => $data) {
-                if (substr($data['filename'], 0, 5) == 'mails') {
-                    $mails_files[] = $data;
+            if ($fileSystem->exists($folder.'/core')) {
+                foreach ($finder->files()->in($folder.'/core') as $coreEmail) {
+                    $fileSystem->rename(
+                        $coreEmail->getRealpath(),
+                        $coreDestPath.'/'.$coreEmail->getFileName(),
+                        true
+                    );
                 }
             }
 
-            $files_list = array_diff($files_list, $mails_files);
-        }
+            if ($fileSystem->exists($folder.'/modules')) {
+                foreach ($finder->directories()->in($folder.'/modules') as $moduleDirectory) {
+                    $moduleDestPath = _PS_ROOT_DIR_.'/modules/'.$moduleDirectory->getFileName().'/mails/'.$lang_pack['iso_code'];
+                    $fileSystem->mkdir($moduleDestPath, 0755);
 
-        if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../')) {
-            $errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), (string) $iso);
-        }
+                    $findEmails = new \Symfony\Component\Finder\Finder();
+                    foreach ($findEmails->files()->in($moduleDirectory->getRealPath()) as $moduleEmail) {
+                        $fileSystem->rename(
+                            $moduleEmail->getRealpath(),
+                            $moduleDestPath.'/'.$moduleEmail->getFileName(),
+                            true
+                        );
+                    }
+                }
+            }
 
+            Tools::deleteDirectory($folder);
+        }
+    }
+
+    public static function installLanguagePack($iso, $params, &$errors = array())
+    {
         // Clear smarty modules cache
         Tools::clearCache();
 
@@ -1041,11 +1039,11 @@ class LanguageCore extends ObjectModel
         } else {
             // Reset cache
             Language::loadLanguages();
-            AdminTranslationsController::checkAndAddMailsFiles((string) $iso, $files_list);
-            AdminTranslationsController::addNewTabs((string) $iso, $files_list);
         }
 
+        $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
+        self::installEmailsLanguagePack($lang_pack, $errors);
 
         return count($errors) ? $errors : true;
     }
