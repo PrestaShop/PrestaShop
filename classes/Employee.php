@@ -326,7 +326,7 @@ class EmployeeCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `email` = \''.pSQL($email).'\'
-		'.($active_only ? ' AND `active` = 1' : '')
+		'.($activeOnly ? ' AND `active` = 1' : '')
         .($passwd !== null ? ' AND `passwd` = \''.Tools::hash($passwd).'\'' : ''));
         if (!$result) {
             return false;
