@@ -211,11 +211,11 @@ class AdminProductWrapper
         }
 
         if (($price == '-1') && ((float)$reduction == '0')) {
-            $this->errors[] = 'No reduction value has been submitted';
+            $this->errors[] = $this->translator->trans('No reduction value has been submitted', [], 'Admin.Catalog.Notification');
         } elseif ($to != '0000-00-00 00:00:00' && strtotime($to) < strtotime($from)) {
-            $this->errors[] = 'Invalid date range';
+            $this->errors[] = $this->translator->trans('Invalid date range', [], 'Admin.Catalog.Notification');
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
-            $this->errors[] = 'Submitted reduction value (0-100) is out-of-range';
+            $this->errors[] = $this->translator->trans('Submitted reduction value (0-100) is out-of-range', [], 'Admin.Catalog.Notification');
         } elseif ($this->validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
             $specificPrice = new \SpecificPriceCore();
             $specificPrice->id_product = (int)$id_product;
@@ -234,7 +234,7 @@ class AdminProductWrapper
             $specificPrice->to = $to;
 
             if (!$specificPrice->add()) {
-                $this->errors[] ='An error occurred while updating the specific price.';
+                $this->errors[] = $this->translator->trans('An error occurred while updating the specific price.', [], 'Admin.Catalog.Notification');
             }
         }
 
@@ -397,11 +397,11 @@ class AdminProductWrapper
     public function deleteSpecificPrice($id_specific_price)
     {
         if (!$id_specific_price || !\ValidateCore::isUnsignedId($id_specific_price)) {
-            $error = 'The specific price ID is invalid.';
+            $error = $this->translator->trans('The specific price ID is invalid.', [], 'Admin.Catalog.Notification');
         } else {
             $specificPrice = new \SpecificPriceCore((int)$id_specific_price);
             if (!$specificPrice->delete()) {
-                $error = 'An error occurred while attempting to delete the specific price.';
+                $error = $this->translator->trans('An error occurred while attempting to delete the specific price.', [], 'Admin.Catalog.Notification');
             }
         }
 
@@ -414,7 +414,7 @@ class AdminProductWrapper
 
         return array(
             'status' => 'ok',
-            'message'=> 'Successful deletion'
+            'message'=> $this->translator->trans('Successful deletion', [], 'Admin.Catalog.Notification'),
         );
     }
 

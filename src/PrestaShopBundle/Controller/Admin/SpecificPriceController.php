@@ -83,19 +83,13 @@ class SpecificPriceController extends FrameworkBundleAdminController
     public function addAction(Request $request)
     {
         $response = new JsonResponse();
-        $translator = $this->container->get('translator');
         $idProduct = isset($request->get('form')['id_product']) ? $request->get('form')['id_product'] : null;
 
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
         $errors = $adminProductWrapper->processProductSpecificPrice($idProduct, $request->get('form')['step2']['specific_price']);
 
         if (!empty($errors)) {
-            $translateErrors = [];
-            foreach ($errors as $error) {
-                $translateErrors[] = $translator->trans($error, [], 'AdminProducts');
-            }
-
-            $response->setData(implode(', ', $translateErrors));
+            $response->setData(implode(', ', $errors));
             $response->setStatusCode(400);
         }
 
@@ -113,7 +107,6 @@ class SpecificPriceController extends FrameworkBundleAdminController
     public function deleteAction($idSpecificPrice, Request $request)
     {
         $response = new JsonResponse();
-        $translator = $this->container->get('translator');
 
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
         $res = $adminProductWrapper->deleteSpecificPrice((int) $idSpecificPrice);
@@ -122,7 +115,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
             $response->setStatusCode(400);
         }
 
-        $response->setData($translator->trans($res['message'], [], 'AdminProducts'));
+        $response->setData($res['message']);
         return $response;
     }
 }
