@@ -71,6 +71,10 @@ class ProductImageController extends FrameworkBundleAdminController
         if ($request->isMethod('POST')) {
             if ($form->isValid()) {
                 $return_data = $adminProductWrapper->getInstance()->ajaxProcessaddProductImage($idProduct, 'form', false)[0];
+                $return_data = array_merge($return_data, array(
+                    'url_update' => $this->generateUrl('admin_product_image_form', array('idImage' => $return_data['id'])),
+                    'url_delete' => $this->generateUrl('admin_product_image_delete', array('idImage' => $return_data['id'])),
+                ));
             } else {
                 $error_msg = array();
                 foreach ($form->getErrors() as $key => $error) {

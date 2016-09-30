@@ -1426,6 +1426,8 @@ var imagesProduct = (function() {
 
           //define id image to file preview
           $(file.previewElement).attr('data-id', response.id);
+          $(file.previewElement).attr('url-update', response.url_update);
+          $(file.previewElement).attr('url-delete', response.url_delete);
           $(file.previewElement).addClass('ui-sortable-handle');
           if (response.cover === 1) {
             imagesProduct.updateDisplayCover(response.id);
