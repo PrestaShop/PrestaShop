@@ -28,7 +28,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Modules & Services', array(), 'Admin.Navigation.Menu'),
+                'layoutTitle' => $translator->trans('Module selection', array(), 'Admin.Navigation.Menu'),
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
                 'showContentHeader' => true,
@@ -183,7 +183,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Manage my modules', array(), 'Admin.Modules.Feature'),
+                'layoutTitle' => $translator->trans('Manage installed modules', array(), 'Admin.Modules.Feature'),
                 'modules' => $modules,
                 'topMenuData' => $this->getTopMenuData($categoriesMenu),
                 'requireAddonsSearch' => false,
