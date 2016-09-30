@@ -99,63 +99,6 @@ class MediaCore
     protected static $pattern_keepinline = 'data-keepinline';
 
     /**
-     * Minify JS in HTML
-     *
-     * @param string $htmlContent
-     *
-     * @return bool|mixed
-     */
-    public static function packJSinHTML($htmlContent)
-    {
-        if (strlen($htmlContent) > 0) {
-            $htmlContentCopy = $htmlContent;
-            if (!preg_match('/'.Media::$pattern_keepinline.'/', $htmlContent)) {
-                $htmlContent = preg_replace_callback(
-                    Media::$pattern_js,
-                    array('Media', 'packJSinHTMLpregCallback'),
-                    $htmlContent,
-                    Media::getBackTrackLimit()
-                );
-
-                // If the string is too big preg_replace return an error
-                // In this case, we don't compress the content
-                if (function_exists('preg_last_error') && preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR) {
-                    if (_PS_MODE_DEV_) {
-                        Tools::error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
-                    }
-
-                    return $htmlContentCopy;
-                }
-            }
-
-            return $htmlContent;
-        }
-
-        return false;
-    }
-
-    /**
-     * Minify JS in HTML with regex callback
-     *
-     * @param array $pregMatches
-     *
-     * @return string
-     */
-    public static function packJSinHTMLpregCallback($pregMatches)
-    {
-        if (!(trim($pregMatches[2]))) {
-            return $pregMatches[0];
-        }
-        $pregMatches[1] = $pregMatches[1].'/* <![CDATA[ */';
-        $pregMatches[2] = Media::packJS($pregMatches[2]);
-        $pregMatches[count($pregMatches) - 1] = '/* ]]> */'.$pregMatches[count($pregMatches) - 1];
-        unset($pregMatches[0]);
-        $output = implode('', $pregMatches);
-
-        return $output;
-    }
-
-    /**
      * Minify JS
      *
      * @param string $jsContent

@@ -48,10 +48,6 @@ if (_PS_PARENT_THEME_DIR_) {
 }
 $smarty->registerResource('parent', new SmartyResourceParent($parent_resources));
 
-if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION')) {
-    $smarty->registerFilter('output', 'smartyPackJSinHTML');
-}
-
 $smarty->escape_html = true;
 
 smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');

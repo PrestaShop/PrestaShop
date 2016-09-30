@@ -112,13 +112,4 @@ class MediaCoreTest extends IntegrationTestCase
             array('<script type="application/ld+json">{"@context": https://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>', '<script type="application/ld+json">{"@context": https://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>'),
         );
     }
-
-    /**
-     * @dataProvider isJsInputsProvider
-     */
-    public function testPackJSinHTML($input, $output)
-    {
-        $return = Media::packJSinHTML($input);
-        $this->assertEquals($output, $return, 'packJSinHTML failed for data input='.$input);
-    }
 }
