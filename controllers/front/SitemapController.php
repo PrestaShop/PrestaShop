@@ -112,7 +112,7 @@ class SitemapControllerCore extends FrontController
             $manufacturers = Manufacturer::getLiteManufacturersList($this->context->language->id, 'sitemap');
             $catalog['manufacturer'] = [
                 'id' => 'manufacturer-page',
-                'label' => $this->trans('Manufacturers', array(), 'Shop.Theme.Catalog'),
+                'label' => $this->trans('Brands', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('manufacturer'),
                 'children' => $manufacturers,
             ];

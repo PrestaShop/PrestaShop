@@ -17,7 +17,7 @@
           <th>{l s='Return' d='Shop.Theme.CustomerAccount'}</th>
           <th>{l s='Package status' d='Shop.Theme.CustomerAccount'}</th>
           <th>{l s='Date issued' d='Shop.Theme.CustomerAccount'}</th>
-          <th>{l s='Return slip' d='Shop.Theme.CustomerAccount'}</th>
+          <th>{l s='Returns form' d='Shop.Theme.CustomerAccount'}</th>
         </tr>
       </thead>
       <tbody>
@@ -60,7 +60,7 @@
             </li>
             {if $return.print_url}
               <li>
-                <strong>{l s='Return slip' d='Shop.Theme.CustomerAccount'}</strong>
+                <strong>{l s='Returns form' d='Shop.Theme.CustomerAccount'}</strong>
                 <a href="{$return.print_url}">{l s='Print out' d='Shop.Theme.Actions'}</a>
               </li>
             {/if}

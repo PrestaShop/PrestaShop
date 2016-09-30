@@ -297,7 +297,7 @@ class CartControllerCore extends FrontController
         // Check product quantity availability
         if ($this->id_product_attribute) {
             if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
-                $this->errors[] = $this->trans('There isn\'t enough product in stock', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
             }
         } elseif ($product->hasAttributes()) {
             $minimumQuantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
@@ -306,10 +306,10 @@ class CartControllerCore extends FrontController
             if (!$this->id_product_attribute) {
                 Tools::redirectAdmin($this->context->link->getProductLink($product));
             } elseif (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
-                $this->errors[] = $this->trans('There isn\'t enough product in stock', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
             }
         } elseif (!$product->checkQty($qty_to_check)) {
-            $this->errors[] = $this->trans('There isn\'t enough product in stock', array(), 'Shop.Notifications.Error');
+            $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
         }
 
         // If no errors, process product addition
