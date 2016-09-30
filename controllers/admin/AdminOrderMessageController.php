@@ -49,8 +49,8 @@ class AdminOrderMessageControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Notifications.Info'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
