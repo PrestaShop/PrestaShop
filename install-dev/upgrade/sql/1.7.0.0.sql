@@ -21,6 +21,8 @@ ALTER TABLE PREFIX_employee ADD `reset_password_validity` datetime DEFAULT NULL;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
 
+/*  Need to set the date to null before manipulate the table if the strict mode is enabled on MySQL */
+UPDATE `PREFIX_customer` SET `newsletter_date_add` = NULL WHERE YEAR(newsletter_date_add) = "0000"
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `passwd` `passwd` varchar(255) NOT NULL;
 ALTER TABLE `PREFIX_employee` CHANGE COLUMN `passwd` `passwd` varchar(255) NOT NULL;
 
@@ -51,7 +53,7 @@ CREATE TABLE `PREFIX_module_carrier` (
   `id_shop`INT(11) unsigned NOT NULL DEFAULT '1',
   `id_reference` INT(11) NOT NULL,
   PRIMARY KEY (`id_module`,`id_shop`, `id_reference`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 /* PHP:select_current_payment_modules(); */;
 
 
@@ -70,7 +72,7 @@ ALTER TABLE `PREFIX_product_attribute` ADD `isbn` VARCHAR( 13 ) NULL DEFAULT NUL
 ALTER TABLE `PREFIX_stock` ADD `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
 ALTER TABLE `PREFIX_supply_order_detail` ADD `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
 
-ALTER TABLE `PREFIX_order_invoice` DROP COLUMN `invoice_address` DROP COLUMN `delivery_address`;
+ALTER TABLE `PREFIX_order_invoice` DROP COLUMN `invoice_address`, DROP COLUMN `delivery_address`;
 
 ALTER TABLE `PREFIX_cart_product` CHANGE `id_product_attribute` `id_product_attribute` int(10) unsigned DEFAULT '0';
 
