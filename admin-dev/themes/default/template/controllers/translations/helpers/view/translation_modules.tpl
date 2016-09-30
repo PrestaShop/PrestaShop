@@ -186,7 +186,7 @@
         </div>
         <div class="panel-footer">
           <button type="submit" class="btn btn-default pull-right" id="submitSelect{$type|ucfirst}" name="submitSelect{$type|ucfirst}">
-            <i class="process-icon-edit"></i> {l s='Modify translation'}
+            <i class="process-icon-edit"></i> {l s='Modify translations'}
           </button>
         </div>
       </div>

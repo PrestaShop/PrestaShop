@@ -98,7 +98,7 @@ class AdminGendersControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_gender'] = array(
                 'href' => self::$currentIndex.'&addgender&token='.$this->token,
-                'desc' => $this->l('Add new title', null, null, false),
+                'desc' => $this->l('Add new social title'),
                 'icon' => 'process-icon-new'
             );
         }

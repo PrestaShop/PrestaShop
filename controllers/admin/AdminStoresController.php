@@ -174,7 +174,7 @@ class AdminStoresControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal Code', array(), 'Admin.Global'),
+                    'label' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
                     'name' => 'postcode',
                     'required' => in_array('postcode', $required_fields)
                 ),

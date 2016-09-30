@@ -455,10 +455,10 @@ class AdminCartsControllerCore extends AdminController
             if (isset($product) && $product->id) {
                 if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0) {
                     if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty)) {
-                        $errors[] = $this->trans('There is not enough product in stock.', array(), 'Admin.Catalog.Notification');
+                        $errors[] = $this->trans('There are not enough products in stock.', array(), 'Admin.Catalog.Notification');
                     }
                 } elseif (!$product->checkQty((int)$qty)) {
-                    $errors[] = $this->trans('There is not enough product in stock.', array(), 'Admin.Catalog.Notification');
+                    $errors[] = $this->trans('There are not enough products in stock.', array(), 'Admin.Catalog.Notification');
                 }
                 if (!($id_customization = (int)Tools::getValue('id_customization', 0)) && !$product->hasAllRequiredCustomizableFields()) {
                     $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');

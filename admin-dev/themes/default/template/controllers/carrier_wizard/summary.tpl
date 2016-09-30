@@ -25,7 +25,7 @@
 
 <script type="text/javascript">
 	var summary_translation_undefined = '{l s='[undefined]' js=1}';
-	var summary_translation_meta_informations = '{l s='This carrier is %1$s and the delivery announced is: %2$s.' js=1}';
+	var summary_translation_meta_informations = '{l s='This carrier is %1$s and the transit time is %2$s.' js=1}';
 	var summary_translation_free = '<strong>{l s='free' js=1}</strong>';
 	var summary_translation_paid = '<strong>{l s='not free' js=1}</strong>';
 	var summary_translation_range = '<span class="is_free">{l s='This carrier can deliver orders from %1$s to %2$s.' js=1}</span>';
