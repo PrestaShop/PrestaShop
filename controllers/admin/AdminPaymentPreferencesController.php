@@ -258,7 +258,7 @@ class AdminPaymentPreferencesControllerCore extends AdminController
                           'identifier' => 'id_country',
                           'icon' => 'icon-globe',
                     ),
-                    array('items' => Carrier::getCarriers($this->context->language->id),
+                    array('items' => Carrier::getCarriers($this->context->language->id, false, false, false, null, Carrier::ALL_CARRIERS),
                         'title' => $this->trans('Carrier restrictions', array(), 'Admin.Payment.Feature'),
                         'desc' => $this->trans('Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.', array(), 'Admin.Payment.Help'),
                         'name_id' => 'reference',
