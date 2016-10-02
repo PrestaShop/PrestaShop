@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2016 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
@@ -7,17 +31,31 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 
+/**
+ * Class ProductPresenterFactoryCore
+ */
 class ProductPresenterFactoryCore
 {
     private $context;
     private $taxConfiguration;
 
-    public function __construct(Context $context, TaxConfiguration $taxConfiguration = null)
+    /**
+     * ProductPresenterFactoryCore constructor.
+     *
+     * @param Context                $context
+     * @param \TaxConfiguration|null $taxConfiguration
+     */
+    public function __construct(Context $context, \TaxConfiguration $taxConfiguration = null)
     {
         $this->context = $context;
-        $this->taxConfiguration = (is_null($taxConfiguration)) ? new TaxConfiguration() : $taxConfiguration;
+        $this->taxConfiguration = (is_null($taxConfiguration)) ? new \TaxConfiguration() : $taxConfiguration;
     }
 
+    /**
+     * Get presentation settings
+     *
+     * @return ProductPresentationSettings
+     */
     public function getPresentationSettings()
     {
         $settings = new ProductPresentationSettings();
@@ -32,6 +70,11 @@ class ProductPresenterFactoryCore
         return $settings;
     }
 
+    /**
+     * Get presenter
+     *
+     * @return ProductListingPresenter|ProductPresenter
+     */
     public function getPresenter()
     {
         $imageRetriever = new ImageRetriever(
