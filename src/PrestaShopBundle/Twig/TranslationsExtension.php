@@ -188,9 +188,9 @@ class TranslationsExtension extends \Twig_Extension
         return array(
             'label_edit' => $this->translator->trans('Edit', array(), 'Admin.Actions'),
             'label_reset' => $this->translator->trans('Reset', array(), 'Admin.Actions'),
-            'notification_success' => $this->translator->trans('Translation successfully edited', array(),
+            'notification_success' => $this->translator->trans('Changes stored', array(),
                 'Admin.International.Notification'),
-            'notification_error' => $this->translator->trans('Translation unsuccessfully edited', array(),
+            'notification_error' => $this->translator->trans('Changes could not be stored', array(),
                 'Admin.International.Notification'),
         );
     }
