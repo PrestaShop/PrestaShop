@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class ProfileCore
+ */
 class ProfileCore extends ObjectModel
 {
     /** @var string Name */
@@ -49,32 +52,35 @@ class ProfileCore extends ObjectModel
     *
     * @return array Profiles
     */
-    public static function getProfiles($id_lang)
+    public static function getProfiles($idLang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT p.`id_profile`, `name`
 		FROM `'._DB_PREFIX_.'profile` p
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int)$id_lang.')
+		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int) $idLang.')
 		ORDER BY `id_profile` ASC');
     }
 
     /**
-    * Get the current profile name
-    *
-    * @return string Profile
-    */
-    public static function getProfile($id_profile, $id_lang = null)
+     * Get the current profile name
+     *
+     * @param int  $idProfile Profile ID
+     * @param null $idLang    Language ID
+     *
+     * @return string Profile
+     */
+    public static function getProfile($idProfile, $idLang = null)
     {
-        if (!$id_lang) {
-            $id_lang = Configuration::get('PS_LANG_DEFAULT');
+        if (!$idLang) {
+            $idLang = Configuration::get('PS_LANG_DEFAULT');
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `name`
 			FROM `'._DB_PREFIX_.'profile` p
 			LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
-			WHERE p.`id_profile` = '.(int)$id_profile.'
-			AND pl.`id_lang` = '.(int)$id_lang
+			WHERE p.`id_profile` = '.(int) $idProfile.'
+			AND pl.`id_lang` = '.(int) $idLang
         );
     }
 
@@ -87,55 +93,71 @@ class ProfileCore extends ObjectModel
     {
         if (parent::delete()) {
             return (
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int)$this->id)
-                && Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$this->id)
+                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int) $this->id)
+                && Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int) $this->id)
             );
         }
         return false;
     }
 
-    public static function getProfileAccess($id_profile, $id_tab)
+    /**
+     * Get access profile
+     *
+     * @param int $idProfile Profile ID
+     * @param int $idTab     Tab ID
+     *
+     * @return bool
+     */
+    public static function getProfileAccess($idProfile, $idTab)
     {
         // getProfileAccesses is cached so there is no performance leak
-        $accesses = Profile::getProfileAccesses($id_profile);
-        return (isset($accesses[$id_tab]) ? $accesses[$id_tab] : false);
+        $accesses = Profile::getProfileAccesses($idProfile);
+        return (isset($accesses[$idTab]) ? $accesses[$idTab] : false);
     }
-    
-    public static function getProfileAccesses($id_profile, $type = 'id_tab')
+
+    /**
+     * Get access profiles
+     *
+     * @param int    $idProfile Profile ID
+     * @param string $type      Type
+     *
+     * @return bool
+     */
+    public static function getProfileAccesses($idProfile, $type = 'id_tab')
     {
         if (!in_array($type, array('id_tab', 'class_name'))) {
             return false;
         }
 
-        if (!isset(self::$_cache_accesses[$id_profile])) {
-            self::$_cache_accesses[$id_profile] = array();
+        if (!isset(self::$_cache_accesses[$idProfile])) {
+            self::$_cache_accesses[$idProfile] = array();
         }
 
-        if (!isset(self::$_cache_accesses[$id_profile][$type])) {
-            self::$_cache_accesses[$id_profile][$type] = array();
+        if (!isset(self::$_cache_accesses[$idProfile][$type])) {
+            self::$_cache_accesses[$idProfile][$type] = array();
             // Super admin profile has full auth
-            if ($id_profile == _PS_ADMIN_PROFILE_) {
+            if ($idProfile == _PS_ADMIN_PROFILE_) {
                 self::fillCacheAccesses(
-                    $id_profile,
+                    $idProfile,
                     $type,
                     array(
                         'id_profile' => _PS_ADMIN_PROFILE_,
                         'view' => '1',
                         'add' => '1',
                         'edit' => '1',
-                        'delete' => '1'
+                        'delete' => '1',
                     )
                 );
             } else {
                 self::fillCacheAccesses(
-                    $id_profile,
+                    $idProfile,
                     $type,
                     array(
                         'id_profile' => _PS_ADMIN_PROFILE_,
                         'view' => '0',
                         'add' => '0',
                         'edit' => '0',
-                        'delete' => '0'
+                        'delete' => '0',
                     )
                 );
                 
@@ -147,32 +169,32 @@ class ProfileCore extends ObjectModel
                                     `slug` LIKE "%DELETE" as "delete"
 				FROM `'._DB_PREFIX_.'authorization_role` a
 				LEFT JOIN `'._DB_PREFIX_.'access` j ON j.id_authorization_role = a.id_authorization_role
-				WHERE j.`id_profile` = '.(int)$id_profile);
+				WHERE j.`id_profile` = '.(int) $idProfile);
 
                 foreach ($result as $row) {
-                    $id_tab = self::findIdTabByAuthSlug($row['slug']);
+                    $idTab = self::findIdTabByAuthSlug($row['slug']);
                     
-                    self::$_cache_accesses[$id_profile][$type][$id_tab][array_search('1', $row)] = '1';
+                    self::$_cache_accesses[$idProfile][$type][$idTab][array_search('1', $row)] = '1';
                 }
             }
         }
 
-        return self::$_cache_accesses[$id_profile][$type];
+        return self::$_cache_accesses[$idProfile][$type];
     }
     
     /**
      * 
-     * @param int $id_profile
-     * @param string $type
-     * @param array $cacheData
+     * @param int    $idProfile Profile ID
+     * @param string $type Type
+     * @param array  $cacheData Cached data
      */
-    private static function fillCacheAccesses($id_profile, $type, $cacheData = [])
+    private static function fillCacheAccesses($idProfile, $type, $cacheData = [])
     {
         foreach (Tab::getTabs(Context::getContext()->language->id) as $tab) {
-            self::$_cache_accesses[$id_profile][$type][$tab[$type]] = array_merge(
+            self::$_cache_accesses[$idProfile][$type][$tab[$type]] = array_merge(
                 array(
                     'id_tab' => $tab['id_tab'],
-                    'class_name' => $tab['class_name']
+                    'class_name' => $tab['class_name'],
                 ),
                 $cacheData
             );
