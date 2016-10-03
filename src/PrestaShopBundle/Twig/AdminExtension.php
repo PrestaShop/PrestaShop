@@ -114,12 +114,4 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
 
         return $globals;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'twig_admin_extension';
-    }
 }
