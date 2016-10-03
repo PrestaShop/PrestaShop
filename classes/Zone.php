@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class ZoneCore
+ */
 class ZoneCore extends ObjectModel
 {
     /** @var string Name */
@@ -39,7 +42,7 @@ class ZoneCore extends ObjectModel
         'table' => 'zone',
         'primary' => 'id_zone',
         'fields' => array(
-            'name' =>    array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
         ),
     );
@@ -50,29 +53,33 @@ class ZoneCore extends ObjectModel
      * Get all available geographical zones
      *
      * @param bool $active
-     * @param bool $active_first
+     * @param bool $activeFirst
+     *
      * @return array Zones
      */
-    public static function getZones($active = false, $active_first = false)
+    public static function getZones($active = false, $activeFirst = false)
     {
-        $cache_id = 'Zone::getZones_'.(bool)$active;
-        if (!Cache::isStored($cache_id)) {
+        $cacheId = 'Zone::getZones_'.(bool) $active;
+        if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT *
 				FROM `'._DB_PREFIX_.'zone`
 				'.($active ? 'WHERE active = 1' : '').'
-				ORDER BY '.( $active_first ? '`active` DESC,' : '').' `name` ASC
+				ORDER BY '.($activeFirst ? '`active` DESC,' : '').' `name` ASC
 			');
-            Cache::store($cache_id, $result);
+            Cache::store($cacheId, $result);
+
             return $result;
         }
-        return Cache::retrieve($cache_id);
+
+        return Cache::retrieve($cacheId);
     }
 
     /**
      * Get a zone ID from its default language name
      *
      * @param string $name
+     *
      * @return int id_zone
      */
     public static function getIdByName($name)
@@ -93,12 +100,12 @@ class ZoneCore extends ObjectModel
     {
         if (parent::delete()) {
             // Delete regarding delivery preferences
-            $result = Db::getInstance()->delete('carrier_zone', 'id_zone = '.(int)$this->id);
-            $result &= Db::getInstance()->delete('delivery', 'id_zone = '.(int)$this->id);
+            $result = Db::getInstance()->delete('carrier_zone', 'id_zone = '.(int) $this->id);
+            $result &= Db::getInstance()->delete('delivery', 'id_zone = '.(int) $this->id);
 
             // Update Country & state zone with 0
-            $result &= Db::getInstance()->update('country', array('id_zone' => 0), 'id_zone = '.(int)$this->id);
-            $result &= Db::getInstance()->update('state', array('id_zone' => 0), 'id_zone = '.(int)$this->id);
+            $result &= Db::getInstance()->update('country', array('id_zone' => 0), 'id_zone = '.(int) $this->id);
+            $result &= Db::getInstance()->update('state', array('id_zone' => 0), 'id_zone = '.(int) $this->id);
 
             return $result;
         }
