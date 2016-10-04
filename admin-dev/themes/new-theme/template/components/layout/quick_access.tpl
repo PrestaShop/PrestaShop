@@ -5,8 +5,9 @@
   </span>
   <div class="ps-dropdown-menu dropdown-menu" aria-labelledby="quick-access">
     {foreach $quick_access as $quick}
-      <a href="{$quick.link|escape:'html':'UTF-8'}" class="dropdown-item" data-item="{$quick.name}">{$quick.name}</a></li>
+      <a href="{$admin_folder}/{$quick.link|escape:'html':'UTF-8'}" class="dropdown-item" data-item="{$quick.name}">{$quick.name}</a></li>
     {/foreach}
+    {assign var="position_token" value=$link->getQuickLink($smarty.server['REQUEST_URI'])|strpos:"?_token"}
     <hr>
     {if isset($matchQuickLink)}
       <a
@@ -28,7 +29,7 @@
       data-rand="{1|rand:200}"
       data-icon="{$quick_access_current_link_icon}"
       data-method="add"
-      data-url="{$smarty.server['REQUEST_URI']}"
+      data-url="{$link->getQuickLink($smarty.server['REQUEST_URI'])|substr:0:$position_token}"
       data-post-link="{$link->getAdminLink('AdminQuickAccesses')}"
       data-prompt-text="{l s='Please name this shortcut:' js=1}"
       data-link="{$quick_access_current_link_name|truncate:32}"
