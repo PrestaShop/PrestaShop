@@ -45,9 +45,8 @@ class Theme implements AddonInterface
 
         $attributes['directory'] = rtrim($attributes['directory'], '/').'/';
 
-        $childPreview = $attributes['physical_uri'].'themes/'.$attributes['name'].'/preview.png';
-        if (file_exists($childPreview)) {
-            $attributes['preview'] = $childPreview;
+        if (file_exists(_PS_ALL_THEMES_DIR_.$attributes['name'].'/preview.png')) {
+            $attributes['preview'] = $attributes['physical_uri'].'themes/'.$attributes['name'].'/preview.png';
         }
 
         $this->attributes = new ArrayFinder($attributes);
