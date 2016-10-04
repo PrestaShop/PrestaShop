@@ -82,6 +82,12 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 'icon' => 'process-icon-new'
             );
         }
+        if ($this->display === "edit") {
+            $this->page_header_toolbar_btn['new'] = array(
+                'href' => '#',
+                'desc' => $this->trans('Add a new tax rule', array(), 'Admin.International.Feature')
+            );
+        }
 
         parent::initPageHeaderToolbar();
     }
