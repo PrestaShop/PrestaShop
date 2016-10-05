@@ -360,5 +360,8 @@
     <hook id="displayProductExtraContent">
       <name>displayProductExtraContent</name><title>Display extra content on the product page</title><description>This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.</description>
     </hook>
+    <hook id="displayAfterProductThumbs">
+      <name>displayAfterProductThumbs</name><title>Display extra content below product thums</title><description>This hook displays new elements below product images ex. additonal media</description>
+    </hook>      
   </entities>
 </entity_hook>
