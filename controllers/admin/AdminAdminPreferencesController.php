@@ -93,7 +93,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                 'icon' =>    'icon-cloud-upload',
                 'fields' => array(
                     'PS_ATTACHMENT_MAXIMUM_SIZE' => array(
-                        'title' => $this->trans('Maximum size for attachment', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Maximum size for attached files', array(), 'Admin.AdvParameters.Feature'),
                         'hint' =>  sprintf($this->trans('Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).', array(), 'Admin.AdvParameters.Help'), $upload_mb),
                         'validation' => 'isInt',
                         'cast' => 'intval',
