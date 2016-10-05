@@ -28,4 +28,5 @@
       </ul>
     </div>
   {/block}
+  {hook h='displayAfterProductThumbs'}
 </div>
