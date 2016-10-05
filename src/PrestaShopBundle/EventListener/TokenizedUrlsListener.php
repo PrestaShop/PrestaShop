@@ -86,9 +86,11 @@ class TokenizedUrlsListener
             }
         }
 
-        $token = urldecode($request->query->get('_token', false));
+        if(!empty($_POST) && !empty($_GET)) {
+            $token = urldecode($request->query->get('_token', false));
+        }
 
-        if (false === $token || !$this->tokenManager->isTokenValid(new CsrfToken($this->username, $token))) {
+        if (isset($token) && (false === $token || !$this->tokenManager->isTokenValid(new CsrfToken($this->username, $token)))) {
             // remove token if any
             if (false !== strpos($uri, '_token=')) {
                 $uri = substr($uri, 0, strpos($uri, '_token='));
