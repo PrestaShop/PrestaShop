@@ -1831,22 +1831,32 @@ class AdminControllerCore extends Controller
                         continue;
                     }
                     $quick_access[$index]['link'] = $url;
+
+                    $tokenType = 'token';
+                    $tokenString = (int)$this->context->employee->id;
                 } else {
                     preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
+                    // Legacy controller
                     if (isset($admin_tab[1])) {
                         if (strpos($admin_tab[1], '&')) {
                             $admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
                         }
 
-                        $token = Tools::getAdminToken($admin_tab[1] . (int)Tab::getIdFromClassName($admin_tab[1]) . (int)$this->context->employee->id);
                         $quick_access[$index]['target'] = $admin_tab[1];
-                        $quick_access[$index]['link'] .= '&token=' . $token;
+
+                        $tokenType = 'token';
+                        $tokenString = $admin_tab[1] . (int)Tab::getIdFromClassName($admin_tab[1]) . (int)$this->context->employee->id;
+                    }
+                    // Sf controller
+                     else {
+                         $tokenType = '_token';
+                         $tokenString = (int)$this->context->employee->id;
                     }
                 }
 
-                if (false === strpos($quick_access[$index]['link'], 'token')) {
+                if (false === strpos($quick_access[$index]['link'], $tokenType)) {
                     $separator = strpos($quick_access[$index]['link'], '?') ? '&' : '?';
-                    $quick_access[$index]['link'] .= $separator.'token=' . Tools::getAdminToken($this->context->employee->id);
+                    $quick_access[$index]['link'] .= $separator.$tokenType.'='.Tools::getAdminToken($tokenString);
                 }
             }
         }
