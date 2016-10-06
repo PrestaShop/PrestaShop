@@ -15,6 +15,10 @@
 .product-information {
   font-size: $font-size-lg;
   color: $gray-darker;
+
+  .manufacturer-logo {
+    height: 35px;
+  }
 }
 .input-color {
   position: absolute;
