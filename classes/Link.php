@@ -1041,7 +1041,8 @@ class LinkCore
      */
     public static function getQuickLink($url)
     {
-        // We need to know if we are in Legacy or SF environment
+        // We have to clean token and base url
+        // Legacy environment
         if (Tools::getIsset('token')) {
             $parsedUrl = parse_url($url);
             $output = array();
@@ -1051,6 +1052,19 @@ class LinkCore
             }
 
             return 'index.php?'.http_build_query($output);
+        }
+        // Symfony environment
+        else if (Tools::getIsset('_token')) {
+            // clean http://website.com/admin_dir/ from url
+            $url = str_replace(Context::getContext()->shop->getBaseURI() . array_reverse(explode("/", _PS_ADMIN_DIR_))[0] .'/', '', $url);
+
+            // clean token
+            $url = preg_replace('/_token=[a-zA-Z0-9]+/', '', $url);
+
+            // clean last char if it's ? or &
+            $url = trim($url, "?&");
+
+            return $url;
         }
 
         return str_replace('/'.basename(_PS_ADMIN_DIR_).'/', '', $url);
