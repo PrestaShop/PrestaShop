@@ -125,7 +125,7 @@ class AdminAddressesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Identification Number', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Identification number', array(), 'Admin.OrdersCustomers.Feature'),
                     'name' => 'dni',
                     'required' => false,
                     'col' => '4',
