@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
+ * Class TranslateCore
+ *
  * @since 1.5.0
  */
 class TranslateCore
@@ -53,6 +55,7 @@ class TranslateCore
 
         return ($addslashes ? addslashes($str) : stripslashes($str));
     }
+
     /**
      * Get a translation for an admin controller
      *
@@ -64,13 +67,13 @@ class TranslateCore
      */
     public static function getAdminTranslation($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true, $sprintf = null)
     {
-        static $modules_tabs = null;
+        static $modulesTabs = null;
 
         // @todo remove global keyword in translations files and use static
         global $_LANGADM;
 
-        if ($modules_tabs === null) {
-            $modules_tabs = Tab::getModuleTabList();
+        if ($modulesTabs === null) {
+            $modulesTabs = Tab::getModuleTabList();
         }
 
         if ($_LANGADM == null) {
@@ -83,11 +86,11 @@ class TranslateCore
             }
         }
 
-        if (isset($modules_tabs[strtolower($class)])) {
-            $class_name_controller = $class.'controller';
+        if (isset($modulesTabs[strtolower($class)])) {
+            $classNameController = $class.'controller';
             // if the class is extended by a module, use modules/[module_name]/xx.php lang file
-            if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller)) {
-                return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller, $sprintf, $addslashes);
+            if (class_exists($classNameController) && Module::getModuleNameFromClass($classNameController)) {
+                return Translate::getModuleTranslation(Module::$classInModule[$classNameController], $string, $classNameController, $sprintf, $addslashes);
             }
         }
 
@@ -114,24 +117,25 @@ class TranslateCore
     /**
      * Return the translation for a string if it exists for the base AdminController or for helpers
      *
-     * @param $string string to translate
-     * @param null $key md5 key if already calculated (optional)
-     * @param array $lang_array Global array of admin translations
+     * @param       $string     string to translate
+     * @param null  $key        md5 key if already calculated (optional)
+     * @param array $langArray  Global array of admin translations
+     *
      * @return string translation
      */
-    public static function getGenericAdminTranslation($string, $key = null, &$lang_array)
+    public static function getGenericAdminTranslation($string, $key = null, &$langArray)
     {
         $string = preg_replace("/\\\*'/", "\'", $string);
         if (is_null($key)) {
             $key = md5($string);
         }
 
-        if (isset($lang_array['AdminController'.$key])) {
-            $str = $lang_array['AdminController'.$key];
-        } elseif (isset($lang_array['Helper'.$key])) {
-            $str = $lang_array['Helper'.$key];
-        } elseif (isset($lang_array['AdminTab'.$key])) {
-            $str = $lang_array['AdminTab'.$key];
+        if (isset($langArray['AdminController'.$key])) {
+            $str = $langArray['AdminController'.$key];
+        } elseif (isset($langArray['Helper'.$key])) {
+            $str = $langArray['Helper'.$key];
+        } elseif (isset($langArray['AdminTab'.$key])) {
+            $str = $langArray['AdminTab'.$key];
         } else {
             $str = $string;
         }
@@ -151,17 +155,17 @@ class TranslateCore
     {
         global $_MODULES, $_MODULE, $_LANGADM;
 
-        static $lang_cache = array();
+        static $langCache = array();
         // $_MODULES is a cache of translations for all module.
         // $translations_merged is a cache of wether a specific module's translations have already been added to $_MODULES
-        static $translations_merged = array();
+        static $translationsMerged = array();
 
         $name = $module instanceof Module ? $module->name : $module;
 
         $language = Context::getContext()->language;
 
-        if (!isset($translations_merged[$name]) && isset(Context::getContext()->language)) {
-            $files_by_priority = array(
+        if (!isset($translationsMerged[$name]) && isset(Context::getContext()->language)) {
+            $filesByPriority = array(
                 // Translations in theme
                 _PS_THEME_DIR_.'modules/'.$name.'/translations/'.$language->iso_code.'.php',
                 _PS_THEME_DIR_.'modules/'.$name.'/'.$language->iso_code.'.php',
@@ -170,47 +174,47 @@ class TranslateCore
                 // PrestaShop 1.4 translations
                 _PS_MODULE_DIR_.$name.'/'.$language->iso_code.'.php'
             );
-            foreach ($files_by_priority as $file) {
+            foreach ($filesByPriority as $file) {
                 if (file_exists($file)) {
                     include_once($file);
                     $_MODULES = !empty($_MODULES) ? $_MODULES + $_MODULE : $_MODULE; //we use "+" instead of array_merge() because array merge erase existing values.
                 }
             }
-            $translations_merged[$name] = true;
+            $translationsMerged[$name] = true;
         }
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
 
-        $cache_key = $name.'|'.$string.'|'.$source.'|'.(int)$js;
+        $cacheKey = $name.'|'.$string.'|'.$source.'|'.(int)$js;
 
-        if (!isset($lang_cache[$cache_key])) {
+        if (!isset($langCache[$cacheKey])) {
             if ($_MODULES == null) {
                 if ($sprintf !== null) {
                     $string = Translate::checkAndReplaceArgs($string, $sprintf);
                 }
+
                 return str_replace('"', '&quot;', $string);
             }
 
-            $current_key = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
-            $default_key = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
+            $currentKey = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
+            $defaultKey = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
 
             if ('controller' == substr($source, -10, 10)) {
                 $file = substr($source, 0, -10);
-                $current_key_file = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
-                $default_key_file = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
+                $currentKeyFile = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
+                $defaultKeyFile = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
             }
 
-            if (isset($current_key_file) && !empty($_MODULES[$current_key_file])) {
-                $ret = stripslashes($_MODULES[$current_key_file]);
-            } elseif (isset($default_key_file) && !empty($_MODULES[$default_key_file])) {
-                $ret = stripslashes($_MODULES[$default_key_file]);
-            } elseif (!empty($_MODULES[$current_key])) {
-                $ret = stripslashes($_MODULES[$current_key]);
-            } elseif (!empty($_MODULES[$default_key])) {
-                $ret = stripslashes($_MODULES[$default_key]);
-            }
-            // if translation was not found in module, look for it in AdminController or Helpers
-            elseif (!empty($_LANGADM)) {
+            if (isset($currentKeyFile) && !empty($_MODULES[$currentKeyFile])) {
+                $ret = stripslashes($_MODULES[$currentKeyFile]);
+            } elseif (isset($defaultKeyFile) && !empty($_MODULES[$defaultKeyFile])) {
+                $ret = stripslashes($_MODULES[$defaultKeyFile]);
+            } elseif (!empty($_MODULES[$currentKey])) {
+                $ret = stripslashes($_MODULES[$currentKey]);
+            } elseif (!empty($_MODULES[$defaultKey])) {
+                $ret = stripslashes($_MODULES[$defaultKey]);
+            } elseif (!empty($_LANGADM)) {
+                // if translation was not found in module, look for it in AdminController or Helpers
                 $ret = stripslashes(Translate::getGenericAdminTranslation($string, $key, $_LANGADM));
             } else {
                 $ret = stripslashes($string);
@@ -227,12 +231,13 @@ class TranslateCore
             }
 
             if ($sprintf === null) {
-                $lang_cache[$cache_key] = $ret;
+                $langCache[$cacheKey] = $ret;
             } else {
                 return $ret;
             }
         }
-        return $lang_cache[$cache_key];
+
+        return $langCache[$cacheKey];
     }
 
     /**
@@ -251,14 +256,14 @@ class TranslateCore
             Tools::displayError(sprintf('Invalid iso lang (%s)', Tools::safeOutput($iso)));
         }
 
-        $override_i18n_file = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
-        $i18n_file = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
-        if (file_exists($override_i18n_file)) {
-            $i18n_file = $override_i18n_file;
+        $overrideI18NFile = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
+        $i18NFile = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
+        if (file_exists($overrideI18NFile)) {
+            $i18NFile = $overrideI18NFile;
         }
 
-        if (!include($i18n_file)) {
-            Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18n_file));
+        if (!include($i18NFile)) {
+            Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18NFile));
         }
 
         if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
@@ -282,6 +287,7 @@ class TranslateCore
      *
      * @param $string
      * @param $args
+     *
      * @return string
      */
     public static function checkAndReplaceArgs($string, $args)
@@ -293,6 +299,7 @@ class TranslateCore
 
             return vsprintf($string, $args);
         }
+
         return $string;
     }
 
