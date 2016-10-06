@@ -321,10 +321,6 @@ class MailCore extends ObjectModel
                 include_once($themePath.'mails/'.$iso.'/lang.php');
             } elseif (file_exists(_PS_MAIL_DIR_.$iso.'/lang.php')) {
                 include_once(_PS_MAIL_DIR_.$iso.'/lang.php');
-            } else {
-                Tools::dieOrLog(Tools::displayError('Error - The language file is missing for:').' '.$iso, $die);
-
-                return false;
             }
 
             /* Create mail and attach differents parts */
