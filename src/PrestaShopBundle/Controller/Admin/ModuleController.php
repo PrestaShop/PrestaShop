@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use Symfony\Component\Console\Helper\Helper;
 
 class ModuleController extends FrameworkBundleAdminController
 {
@@ -452,17 +453,23 @@ class ModuleController extends FrameworkBundleAdminController
 
         try {
             $file_uploaded = $request->files->get('file_uploaded');
+            $maxSize = \Tools::getMaxUploadSize();
+            $uploadMaxValue = Helper::formatMemory($maxSize);
             $constraints = array(
-                new Assert\NotNull(),
+                new Assert\NotNull(array(
+                    'message' => 'The file upload has failed, the max size you can actually upload is '.$uploadMaxValue,
+                )),
                 new Assert\File(array(
-                    'maxSize' => ini_get('upload_max_filesize'),
+                    'maxSize' => $maxSize,
                     'mimeTypes' => array(
                         'application/zip',
                         'application/x-gzip',
                         'application/gzip',
                         'application/x-gtar',
                         'application/x-tgz',
-            ), )), );
+                    ), )
+                ),
+            );
 
             $violations = $this->get('validator')->validateValue($file_uploaded, $constraints);
             if (0 !== count($violations)) {
