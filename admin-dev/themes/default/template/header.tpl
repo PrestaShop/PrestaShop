@@ -126,7 +126,7 @@
 							<ul class="dropdown-menu">
 								{foreach $quick_access as $quick}
 									<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
-										<a href="{$quick.link|escape:'html':'UTF-8'}"{if $quick.new_window} class="_blank"{/if}>
+										<a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}>
 											{if isset($quick.icon)}
 												<i class="icon-{$quick.icon} icon-fw"></i>
 											{else}
@@ -151,12 +151,12 @@
 										{l s='Add current page to QuickAccess'}
 									</a>
 								</li>
-                                <li>
-                                    <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
-                                        <i class="icon-cog"></i>
-                                        {l s='Manage quick accesses'}
-                                    </a>
-                                </li>
+                  <li>
+                    <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+                      <i class="icon-cog"></i>
+                      {l s='Manage quick accesses'}
+                    </a>
+                  </li>
 							</ul>
 						</li>
 					</ul>

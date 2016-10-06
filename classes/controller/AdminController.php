@@ -1821,34 +1821,8 @@ class AdminControllerCore extends Controller
         $is_multishop = Shop::isFeatureActive();
 
         // Quick access
-        if ((int)$this->context->employee->id) {
-            $quick_access = QuickAccess::getQuickAccesses($this->context->language->id);
-            foreach ($quick_access as $index => $quick) {
-                if ($quick['link'] == '../' && Shop::getContext() == Shop::CONTEXT_SHOP) {
-                    $url = $this->context->shop->getBaseURL();
-                    if (!$url) {
-                        unset($quick_access[$index]);
-                        continue;
-                    }
-                    $quick_access[$index]['link'] = $url;
-                } else {
-                    preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
-                    if (isset($admin_tab[1])) {
-                        if (strpos($admin_tab[1], '&')) {
-                            $admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
-                        }
-
-                        $token = Tools::getAdminToken($admin_tab[1] . (int)Tab::getIdFromClassName($admin_tab[1]) . (int)$this->context->employee->id);
-                        $quick_access[$index]['target'] = $admin_tab[1];
-                        $quick_access[$index]['link'] .= '&token=' . $token;
-                    }
-                }
-
-                if (false === strpos($quick_access[$index]['link'], 'token')) {
-                    $separator = strpos($quick_access[$index]['link'], '?') ? '&' : '?';
-                    $quick_access[$index]['link'] .= $separator.'token=' . Tools::getAdminToken($this->context->employee->id);
-                }
-            }
+        if ((int) $this->context->employee->id) {
+            $quick_access = QuickAccess::getQuickAccessesWithToken($this->context->language->id, (int) $this->context->employee->id);
         }
 
         $tabs = $this->getTabs();
@@ -1875,7 +1849,7 @@ class AdminControllerCore extends Controller
                 'employee' => $this->context->employee,
                 'search_type' => Tools::getValue('bo_search_type'),
                 'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
-                'quick_access' => $quick_access,
+                'quick_access' => empty($quick_access) ? false : $quick_access,
                 'multi_shop' => Shop::isFeatureActive(),
                 'shop_list' => $helperShop->getRenderedShopList(),
                 'current_shop_name' => $helperShop->getCurrentShopName(),

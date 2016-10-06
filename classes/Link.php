@@ -1036,24 +1036,29 @@ class LinkCore
 
     /**
      * @param string $url
+     * Clean url http://website.com/admin_dir/foo => foo
+     * Remove index.php?
+     * Remove last char if it's ? or &
+     * Remove token if exists
      *
      * @return mixed|string
      */
     public static function getQuickLink($url)
     {
-        // We need to know if we are in Legacy or SF environment
-        if (Tools::getIsset('token')) {
-            $parsedUrl = parse_url($url);
-            $output = array();
-            if (is_array($parsedUrl) && isset($parsedUrl['query'])) {
-                parse_str($parsedUrl['query'], $output);
-                unset($output['token'], $output['conf'], $output['id_quick_access']);
-            }
+        $legacyEnvironment = stripos($url, 'controller');
 
-            return 'index.php?'.http_build_query($output);
-        }
+        $patterns = array(
+            '#'.Context::getContext()->link->getBaseLink().'#',
+            '#'.__PS_BASE_URI__.'#',
+            '#'.basename(_PS_ADMIN_DIR_).'#',
+            '/index.php/',
+            '/_?token=[a-zA-Z0-9]+/'
+        );
 
-        return str_replace('/'.basename(_PS_ADMIN_DIR_).'/', '', $url);
+        $url = preg_replace($patterns, '', $url);
+        $url = trim($url, "?&/");
+
+        return 'index.php'.(!empty($legacyEnvironment) ? '?' : '/').$url;
     }
 
     /**
@@ -1064,11 +1069,8 @@ class LinkCore
     public function matchQuickLink($url)
     {
         $quicklink = $this->getQuickLink($url);
-        if (isset($quicklink) && $quicklink === ($this->getQuickLink($_SERVER['REQUEST_URI']))) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return (isset($quicklink) && $quicklink === ($this->getQuickLink($_SERVER['REQUEST_URI'])));
     }
 
     /**
