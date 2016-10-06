@@ -4,7 +4,7 @@
       <div class="product-manufacturer">
         {if isset($manufacturer_image_url)}
           <a href="{$product_brand_url}">
-            <img src="{$manufacturer_image_url}" class="imgm img-thumbnail" />
+            <img src="{$manufacturer_image_url}" class="imgm img-thumbnail manufacturer-logo" />
           </a>
         {else}
           <label class="label">{l s='Brand' d='Shop.Theme.Catalog'}</label>

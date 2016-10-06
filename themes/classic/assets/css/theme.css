@@ -6663,6 +6663,8 @@ body#checkout {
 .product-information {
   font-size: 0.9375rem;
   color: #414141; }
+  .product-information .manufacturer-logo {
+    height: 35px; }
 
 .input-color {
   position: absolute;
