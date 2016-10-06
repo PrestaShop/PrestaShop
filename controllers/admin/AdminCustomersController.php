@@ -126,16 +126,12 @@ class AdminCustomersControllerCore extends AdminController
             'newsletter' => array(
                 'title' => $this->trans('Newsletter', array(), 'Admin.Global'),
                 'align' => 'text-center',
-                'type' => 'bool',
                 'callback' => 'printNewsIcon',
-                'orderby' => false
             ),
             'optin' => array(
                 'title' => $this->trans('Partner offers', array(), 'Admin.OrdersCustomers.Feature'),
                 'align' => 'text-center',
-                'type' => 'bool',
                 'callback' => 'printOptinIcon',
-                'orderby' => false
             ),
             'date_add' => array(
                 'title' => $this->trans('Registration', array(), 'Admin.OrdersCustomers.Feature'),

@@ -332,8 +332,13 @@ class HelperListCore extends Helper
             }
         }
 
+        $showShopColumn = $this->shopLinkType;
+
+        $isMultiShopActive = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+
         $this->content_tpl->assign(array_merge($this->tpl_vars, array(
-            'shop_link_type' => $this->shopLinkType,
+            'shop_link_type' => $showShopColumn,
+            'multishop_active' => $isMultiShopActive,
             'name' => isset($name) ? $name : null,
             'position_identifier' => $this->position_identifier,
             'identifier' => $this->identifier,
@@ -716,6 +721,8 @@ class HelperListCore extends Helper
             'filters_has_value' => (bool)$has_value
         ));
 
+        $isMultiShopActive = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+
         $this->header_tpl->assign(array_merge(array(
             'ajax' => $ajax,
             'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
@@ -730,6 +737,7 @@ class HelperListCore extends Helper
             'identifier' => $this->identifier,
             'id_cat' => $id_cat,
             'shop_link_type' => $this->shopLinkType,
+            'multishop_active' => $isMultiShopActive,
             'has_actions' => !empty($this->actions),
             'table_id' => isset($this->table_id) ? $this->table_id : null,
             'table_dnd' => isset($table_dnd) ? $table_dnd : null,
