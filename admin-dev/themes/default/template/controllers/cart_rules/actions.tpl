@@ -116,7 +116,12 @@
 </div>
 
 <div id="apply_discount_to_product_special" class="form-group">
- 	<label class="control-label col-lg-3">{l s='Exclude products on special'}</label>
+ 	<label class="control-label col-lg-3">
+    <span class="label-tooltip" data-toggle="tooltip"
+        title="{l s='If enabled, the voucher will not apply to products already on sale.'}">
+    {l s='Exclude discounted products'}
+    </span>
+  </label>
  	<div class="col-lg-9">
  		<span class="switch prestashop-switch fixed-width-lg">
  			<input type="radio" name="reduction_exclude_special" id="reduction_exclude_special_on" value="1"{if $currentTab->getFieldValue($currentObject, 'reduction_exclude_special')|intval} checked="checked"{/if}/>

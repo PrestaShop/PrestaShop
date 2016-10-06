@@ -639,7 +639,7 @@ class CartRuleCore extends ObjectModel
                 }
             }
             if (!$is_ok) {
-                return (!$display_error) ? false : Tools::displayError('You cannot use this voucher on reduced products');
+                return (!$display_error) ? false : Tools::displayError('You cannot use this voucher on products on sale');
             }
         }
 
