@@ -285,7 +285,7 @@
 						</span>
 					</th>
 					{/foreach}
-					{if $shop_link_type}
+					{if $multishop_active && $shop_link_type}
 						<th>
 							<span class="title_box">
 							{if $shop_link_type == 'shop'}
@@ -368,7 +368,7 @@
 						</th>
 					{/foreach}
 
-					{if $shop_link_type}
+					{if $multishop_active && $shop_link_type}
 						<th>--</th>
 					{/if}
 					{if $has_actions || $show_filters}

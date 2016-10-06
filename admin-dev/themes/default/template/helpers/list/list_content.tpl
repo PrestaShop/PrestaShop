@@ -145,7 +145,7 @@
 			{/block}
 		{/foreach}
 
-	{if $shop_link_type}
+	{if $multishop_active && $shop_link_type}
 		<td title="{$tr.shop_name}">
 			{if isset($tr.shop_short_name)}
 				{$tr.shop_short_name}
