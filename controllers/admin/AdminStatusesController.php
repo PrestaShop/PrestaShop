@@ -46,7 +46,7 @@ class AdminStatusesControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = array('delete' => array('text' => $this->trans('Delete selected', array(), 'Admin.Action'), 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')));
+        $this->bulk_actions = array('delete' => array('text' => $this->trans('Delete selected', array(), 'Admin.Actions'), 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')));
     }
 
     public function init()

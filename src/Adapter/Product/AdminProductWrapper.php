@@ -414,7 +414,7 @@ class AdminProductWrapper
 
         return array(
             'status' => 'ok',
-            'message'=> $this->translator->trans('Successful deletion', array(), 'Admin.Notification.Success'),
+            'message'=> $this->translator->trans('Successful deletion', array(), 'Admin.Notifications.Success'),
         );
     }
 
