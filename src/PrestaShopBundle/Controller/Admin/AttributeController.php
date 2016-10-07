@@ -188,7 +188,6 @@ class AttributeController extends FrameworkBundleAdminController
      */
     public function deleteAttributeAction($idProduct, Request $request)
     {
-        $translator = $this->container->get('translator');
         $response = new JsonResponse();
 
         if (!$request->isXmlHttpRequest()) {
@@ -206,7 +205,7 @@ class AttributeController extends FrameworkBundleAdminController
                 $response->setStatusCode(400);
             }
 
-            $response->setData(['message' => $translator->trans($legacyResponse['message'], [], 'AdminProducts')]);
+            $response->setData(['message' => $legacyResponse['message']]);
         }
 
 
@@ -223,7 +222,6 @@ class AttributeController extends FrameworkBundleAdminController
      */
     public function deleteAllAttributeAction($idProduct, Request $request)
     {
-        $translator = $this->container->get('translator');
         $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
         $response = new JsonResponse();
 
@@ -244,7 +242,7 @@ class AttributeController extends FrameworkBundleAdminController
             }
         }
 
-        $response->setData(['message' => $translator->trans($res['message'], [], 'AdminProducts')]);
+        $response->setData(['message' => $res['message']]);
 
         return $response;
     }
