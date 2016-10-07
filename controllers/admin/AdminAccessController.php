@@ -94,6 +94,7 @@ class AdminAccessControllerCore extends AdminController
             'admin_profile' => (int)_PS_ADMIN_PROFILE_,
             'access_edit' => $this->access('edit'),
             'perms' => array('view', 'add', 'edit', 'delete'),
+            'id_perms' => array('view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4),
             'modules' => $modules,
             'link' => $this->context->link
         );
