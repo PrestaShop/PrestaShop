@@ -43,10 +43,10 @@ abstract class AbstractAssetManagerCore
     public function getList()
     {
         uasort($this->list, function ($a, $b) {
-            if ($a['position'] === $b['position']) {
+            if ($a['priority'] === $b['priority']) {
                 return 0;
             }
-            return ($a['position'] < $b['position']) ? -1 : 1;
+            return ($a['priority'] < $b['priority']) ? -1 : 1;
         });
 
         return $this->list;

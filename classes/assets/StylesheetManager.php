@@ -39,14 +39,14 @@ class StylesheetManagerCore extends AbstractAssetManager
         'tv',
     );
 
-    public function register($id, $relativePath, $media, $position = 50)
+    public function register($id, $relativePath, $media, $priority = 50)
     {
         if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $this->getMedia($media), $position);
+            $this->add($id, $fullPath, $this->getMedia($media), $priority);
         }
     }
 
-    protected function add($id, $fullPath, $media, $position)
+    protected function add($id, $fullPath, $media, $priority)
     {
         if (filesize($fullPath) === 0) {
             return;
@@ -56,7 +56,7 @@ class StylesheetManagerCore extends AbstractAssetManager
             'id' => $id,
             'media' => $media,
             'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
-            'position' => $position,
+            'priority' => $priority,
         );
     }
 
