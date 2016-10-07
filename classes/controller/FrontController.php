@@ -161,6 +161,11 @@ class FrontControllerCore extends Controller
     protected $stylesheetManager;
 
     /**
+     * @var object JavascriptManager
+     */
+    protected $javascriptManager;
+
+    /**
      * Controller constructor.
      *
      * @global bool $useSSL SSL connection flag
@@ -189,6 +194,10 @@ class FrontControllerCore extends Controller
         $this->cart_presenter = new CartPresenter();
         $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
         $this->stylesheetManager = new StylesheetManager(
+            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            new ConfigurationAdapter()
+        );
+        $this->javascriptManager = new JavascriptManager(
             array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
             new ConfigurationAdapter()
         );
@@ -595,6 +604,7 @@ class FrontControllerCore extends Controller
         $this->context->smarty->assign(array(
             'layout' => $this->getLayout(),
             'stylesheets' => $this->stylesheetManager->getList(),
+            'javascript' => $this->javascriptManager->getList(),
             'css_files' => $this->css_files,
             'js_files' => ($this->getLayout() && (bool) Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
             'js_defer' => (bool) Configuration::get('PS_JS_DEFER'),
@@ -807,11 +817,9 @@ class FrontControllerCore extends Controller
             $this->registerStylesheet('theme-rtl', '/assets/css/rtl.css', 'all', 10);
         }
 
-        $this->addJS(array(
-            _THEMES_DIR_.'core.js',
-            _THEME_JS_DIR_.'theme.js',
-            _THEME_JS_DIR_.'custom.js',
-        ));
+        $this->registerJavascript('corejs', '/themes/core.js', true, 0);
+        $this->registerJavascript('theme-main', '/assets/js/theme.js', true, 50);
+        $this->registerJavascript('theme-custom', '/assets/js/custom.js', true, 1000);
 
         // Execute Hook FrontController SetMedia
         Hook::exec('actionFrontControllerSetMedia', array());
@@ -1000,7 +1008,9 @@ class FrontControllerCore extends Controller
         $this->stylesheetManager->register($id, $relativePath, $media, $priority);
     }
 
-        return $this;
+    public function registerJavascript($id, $relativePath, $bottom = true, $priority = 50)
+    {
+        $this->javascriptManager->register($id, $relativePath, $bottom, $priority);
     }
 
     /**

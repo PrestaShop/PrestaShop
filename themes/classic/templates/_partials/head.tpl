@@ -22,12 +22,11 @@
   {include file="_partials/stylesheets.tpl" stylesheets=$stylesheets}
 {/block}
 
-{if isset($js_defer) && !$js_defer && isset($js_files) && isset($js_def)}
-  {$js_def nofilter}
-  {foreach from=$js_files item=js_uri}
-    <script type="text/javascript" src="{$js_uri}"></script>
-  {/foreach}
-{/if}
+{block name='javascript_head'}
+  {include file="_partials/javascript.tpl" files=$javascript.head}
+{/block}
+
+{$js_def nofilter}
 
 {block name='hook_header'}
   {$HOOK_HEADER nofilter}
