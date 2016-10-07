@@ -6,6 +6,24 @@ $(document).ready(function () {
   coverImage();
   imageScrollBox();
 
+  $('body').on('change', '#search_filters input[data-search-url]', function (event) {
+      prestashop.emit('updateFacets', event.target.dataset.searchUrl);
+  });
+
+  $('body').on('click', '.js-search-filters-clear-all', function (event) {
+      prestashop.emit('updateFacets', event.target.dataset.searchUrl);
+  });
+
+  $('body').on('click', '.js-search-link', function (event) {
+      event.preventDefault();
+      prestashop.emit('updateFacets',$(event.target).closest('a').get(0).href);
+  });
+
+  $('body').on('change', '#search_filters select', function (event) {
+      const form = $(event.target).closest('form');
+      prestashop.emit('updateFacets', '?' + form.serialize());
+  });
+
   prestashop.on('updatedProduct', function (event) {
     createInputFile();
     coverImage();

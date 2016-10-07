@@ -18,6 +18,7 @@ function updateResults (data) {
     updateDOM(data);
     window.history.pushState(data, undefined, data.current_url);
     window.addEventListener('popstate', onpopstate);
+    prestashop.emit('facetsUpdated');
 }
 
 function handleError () {
@@ -52,21 +53,7 @@ function makeQuery (url) {
 }
 
 $(document).ready(function () {
-    $('body').on('change', '#search_filters input[data-search-url]', function (event) {
-        makeQuery(event.target.dataset.searchUrl);
-    });
-
-    $('body').on('click', '.js-search-filters-clear-all', function (event) {
-        makeQuery(event.target.dataset.searchUrl);
-    });
-
-    $('body').on('click', '.js-search-link', function (event) {
-        event.preventDefault();
-        makeQuery($(event.target).closest('a').get(0).href);
-    });
-
-    $('body').on('change', '#search_filters select', function (event) {
-        const form = $(event.target).closest('form');
-        makeQuery('?' + form.serialize());
+    prestashop.on('updateFacets', (param) => {
+      makeQuery(param);
     });
 });

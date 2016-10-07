@@ -16743,6 +16743,24 @@
 	  coverImage();
 	  imageScrollBox();
 	
+	  (0, _jquery2['default'])('body').on('change', '#search_filters input[data-search-url]', function (event) {
+	    prestashop.emit('updateFacets', event.target.dataset.searchUrl);
+	  });
+	
+	  (0, _jquery2['default'])('body').on('click', '.js-search-filters-clear-all', function (event) {
+	    prestashop.emit('updateFacets', event.target.dataset.searchUrl);
+	  });
+	
+	  (0, _jquery2['default'])('body').on('click', '.js-search-link', function (event) {
+	    event.preventDefault();
+	    prestashop.emit('updateFacets', (0, _jquery2['default'])(event.target).closest('a').get(0).href);
+	  });
+	
+	  (0, _jquery2['default'])('body').on('change', '#search_filters select', function (event) {
+	    var form = (0, _jquery2['default'])(event.target).closest('form');
+	    prestashop.emit('updateFacets', '?' + form.serialize());
+	  });
+	
 	  prestashop.on('updatedProduct', function (event) {
 	    createInputFile();
 	    coverImage();
