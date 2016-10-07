@@ -121,16 +121,21 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Generates a documentation link
      */
-    protected function generateSidebarLink($section, $title = "Documentation")
+    protected function generateSidebarLink($section, $title = false)
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
         $translator = $this->get('translator');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+
+        if (empty($title)) {
+            $title = $translator->trans('Documentation', array(), 'AdminCommon');
+        }
+
         $docLink = urlencode('http://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
             .$section.'?version='._PS_VERSION_.'&country='.$legacyContext->getEmployeeLanguageIso());
 
         return $this->generateUrl('admin_common_sidebar', [
             'url' => $docLink,
-            'title' => $translator->trans($title, [], 'AdminCommon')
+            'title' => $title,
         ]);
     }
 
