@@ -24,13 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use \PrestaShop\PrestaShop\Core\ConfigurationInterface;
-
-class StylesheetManagerCore
+class StylesheetManagerCore extends AbstractAssetManager
 {
-    private $directories;
-    private $configuration;
-    private $list = array();
     private $valid_media = array(
         'all',
         'braille',
@@ -43,13 +38,6 @@ class StylesheetManagerCore
         'tty',
         'tv',
     );
-    private $fqdn;
-
-    public function __construct(array $directories, ConfigurationInterface $configuration)
-    {
-        $this->directories = $directories;
-        $this->configuration = $configuration;
-    }
 
     public function register($id, $relativePath, $media, $position = 50)
     {
@@ -58,19 +46,7 @@ class StylesheetManagerCore
         }
     }
 
-    public function getStylesheetList()
-    {
-        uasort($this->list, function ($a, $b) {
-            if ($a['position'] === $b['position']) {
-                return 0;
-            }
-            return ($a['position'] < $b['position']) ? -1 : 1;
-        });
-
-        return $this->list;
-    }
-
-    private function add($id, $fullPath, $media, $position)
+    protected function add($id, $fullPath, $media, $position)
     {
         if (filesize($fullPath) === 0) {
             return;
@@ -84,40 +60,8 @@ class StylesheetManagerCore
         );
     }
 
-    private function getFullPath($relativePath)
-    {
-        foreach ($this->directories as $baseDir) {
-            $fullPath = realpath($baseDir.'/'.$relativePath);
-            if (is_file($fullPath)) {
-                return $fullPath;
-            }
-        }
-    }
-
     private function getMedia($media)
     {
         return in_array($media, $this->valid_media) ? $media : 'all';
-    }
-
-    private function getUriFromPath($fullPath)
-    {
-        $uri = str_replace(
-            $this->configuration->get('_PS_ROOT_DIR_').'/',
-            $this->configuration->get('__PS_BASE_URI__'),
-            $fullPath
-        );
-
-        return $uri;
-    }
-
-    private function getFQDN()
-    {
-        if (is_null($this->fqdn)) {
-            $this->fqdn = ($this->configuration->get('PS_SSL_ENABLED'))
-                ? $this->configuration->get('_PS_BASE_URL_SSL_')
-                : $this->configuration->get('_PS_BASE_URL_');
-        }
-
-        return $this->fqdn;
     }
 }

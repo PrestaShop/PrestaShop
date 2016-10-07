@@ -594,7 +594,7 @@ class FrontControllerCore extends Controller
 
         $this->context->smarty->assign(array(
             'layout' => $this->getLayout(),
-            'stylesheets' => $this->stylesheetManager->getStylesheetList(),
+            'stylesheets' => $this->stylesheetManager->getList(),
             'css_files' => $this->css_files,
             'js_files' => ($this->getLayout() && (bool) Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
             'js_defer' => (bool) Configuration::get('PS_JS_DEFER'),
