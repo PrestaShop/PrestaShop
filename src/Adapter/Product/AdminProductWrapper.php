@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
  */
 class AdminProductWrapper
 {
-    private $errors = [];
+    private $errors = array();
     private $translator;
     private $legacyContext;
 
@@ -68,7 +68,7 @@ class AdminProductWrapper
     public function processProductAttribute($product, $combinationValues)
     {
         $id_product_attribute = (int)$combinationValues['id_product_attribute'];
-        $images = [];
+        $images = array();
 
         if (!\CombinationCore::isFeatureActive() || $id_product_attribute == 0) {
             return;
@@ -211,11 +211,11 @@ class AdminProductWrapper
         }
 
         if (($price == '-1') && ((float)$reduction == '0')) {
-            $this->errors[] = 'No reduction value has been submitted';
+            $this->errors[] = $this->translator->trans('No reduction value has been submitted', array(), 'Admin.Catalog.Notification');
         } elseif ($to != '0000-00-00 00:00:00' && strtotime($to) < strtotime($from)) {
-            $this->errors[] = 'Invalid date range';
+            $this->errors[] = $this->translator->trans('Invalid date range', array(), 'Admin.Catalog.Notification');
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
-            $this->errors[] = 'Submitted reduction value (0-100) is out-of-range';
+            $this->errors[] = $this->translator->trans('Submitted reduction value (0-100) is out-of-range', array(), 'Admin.Catalog.Notification');
         } elseif ($this->validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
             $specificPrice = new \SpecificPriceCore();
             $specificPrice->id_product = (int)$id_product;
@@ -234,7 +234,7 @@ class AdminProductWrapper
             $specificPrice->to = $to;
 
             if (!$specificPrice->add()) {
-                $this->errors[] ='An error occurred while updating the specific price.';
+                $this->errors[] = $this->translator->trans('An error occurred while updating the specific price.', array(), 'Admin.Catalog.Notification');
             }
         }
 
@@ -278,7 +278,7 @@ class AdminProductWrapper
      */
     public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups)
     {
-        $content = [];
+        $content = array();
         $specific_prices = \SpecificPriceCore::getByProductId((int)$product->id);
 
         $tmp = array();
@@ -317,18 +317,18 @@ class AdminProductWrapper
                 } elseif ($specific_price['reduction'] > 0) {
                     $impact = '- ' . \ToolsCore::displayPrice(\Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
                     if ($specific_price['reduction_tax']) {
-                        $impact .= '(' . $this->translator->trans('Tax incl.', [], 'Admin.Global') . ')';
+                        $impact .= '(' . $this->translator->trans('Tax incl.', array(), 'Admin.Global') . ')';
                     } else {
-                        $impact .= '(' . $this->translator->trans('Tax excl.', [], 'Admin.Global') . ')';
+                        $impact .= '(' . $this->translator->trans('Tax excl.', array(), 'Admin.Global') . ')';
                     }
                 } else {
                     $impact = '--';
                 }
 
                 if ($specific_price['from'] == '0000-00-00 00:00:00' && $specific_price['to'] == '0000-00-00 00:00:00') {
-                    $period = $this->translator->trans('Unlimited', [], 'Admin.Global');
+                    $period = $this->translator->trans('Unlimited', array(), 'Admin.Global');
                 } else {
-                    $period = $this->translator->trans('From', [], 'Admin.Global') . ' ' . ($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00') . '<br />' . $this->translator->trans('to', [], 'Admin.Global') . ' ' . ($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
+                    $period = $this->translator->trans('From', array(), 'Admin.Global') . ' ' . ($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00') . '<br />' . $this->translator->trans('to', array(), 'Admin.Global') . ' ' . ($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
                 }
                 if ($specific_price['id_product_attribute']) {
                     $combination = new \CombinationCore((int)$specific_price['id_product_attribute']);
@@ -339,7 +339,7 @@ class AdminProductWrapper
                     }
                     $attributes_name = rtrim($attributes_name, ' - ');
                 } else {
-                    $attributes_name = $this->translator->trans('All combinations', [], 'Admin.Catalog.Feature');
+                    $attributes_name = $this->translator->trans('All combinations', array(), 'Admin.Catalog.Feature');
                 }
 
                 $rule = new \SpecificPriceRuleCore((int)$specific_price['id_specific_price_rule']);
@@ -367,11 +367,11 @@ class AdminProductWrapper
                         'id_product' => $product->id,
                         'rule_name' => $rule_name,
                         'attributes_name' => $attributes_name,
-                        'shop' => ($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->translator->trans('All shops', [], 'Admin.Global')),
-                        'currency' => ($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->translator->trans('All currencies', [], 'Admin.Global')),
-                        'country' => ($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->translator->trans('All countries', [], 'Admin.Global')),
-                        'group' => ($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->translator->trans('All groups', [], 'Admin.Global')),
-                        'customer' => (isset($customer_full_name) ? $customer_full_name : $this->translator->trans('All customers', [], 'Admin.Global')),
+                        'shop' => ($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->translator->trans('All shops', array(), 'Admin.Global')),
+                        'currency' => ($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->translator->trans('All currencies', array(), 'Admin.Global')),
+                        'country' => ($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->translator->trans('All countries', array(), 'Admin.Global')),
+                        'group' => ($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->translator->trans('All groups', array(), 'Admin.Global')),
+                        'customer' => (isset($customer_full_name) ? $customer_full_name : $this->translator->trans('All customers', array(), 'Admin.Global')),
                         'fixed_price' => $fixed_price,
                         'impact' => $impact,
                         'period' => $period,
@@ -397,11 +397,11 @@ class AdminProductWrapper
     public function deleteSpecificPrice($id_specific_price)
     {
         if (!$id_specific_price || !\ValidateCore::isUnsignedId($id_specific_price)) {
-            $error = 'The specific price ID is invalid.';
+            $error = $this->translator->trans('The specific price ID is invalid.', array(), 'Admin.Catalog.Notification');
         } else {
             $specificPrice = new \SpecificPriceCore((int)$id_specific_price);
             if (!$specificPrice->delete()) {
-                $error = 'An error occurred while attempting to delete the specific price.';
+                $error = $this->translator->trans('An error occurred while attempting to delete the specific price.', array(), 'Admin.Catalog.Notification');
             }
         }
 
@@ -414,7 +414,7 @@ class AdminProductWrapper
 
         return array(
             'status' => 'ok',
-            'message'=> 'Successful deletion'
+            'message'=> $this->translator->trans('Successful deletion', array(), 'Admin.Notification.Success'),
         );
     }
 
