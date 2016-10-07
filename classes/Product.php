@@ -1401,7 +1401,21 @@ class ProductCore extends ObjectModel
             }
         }
 
+
         return $res;
+    }
+
+    public function sortCombinationByAttributePosition($combinations, $langId)
+    {
+        $attributes = [];
+        foreach ($combinations as $combinationId) {
+            $attributeCombination = $this->getAttributeCombinationsById($combinationId, $langId);
+            $attributes[$attributeCombination[0]["position"]][$combinationId] = $attributeCombination[0];
+        }
+
+        ksort($attributes);
+
+        return $attributes;
     }
 
     /**

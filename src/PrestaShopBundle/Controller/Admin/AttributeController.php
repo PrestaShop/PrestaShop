@@ -132,13 +132,8 @@ class AttributeController extends FrameworkBundleAdminController
         //get new created combinations Ids
         $newCombinationIds = array_diff($allCombinationsIds, $existingCombinationsIds);
 
-        $attributes = [];
-        foreach ($newCombinationIds as $combinationId) {
-            $attributeCombination = $product->getAttributeCombinationsById($combinationId, $locales[0]['id_lang']);
-            $attributes[$attributeCombination[0]["position"]][$combinationId] = $attributeCombination[0];
-        }
-
-        ksort($attributes);
+        $attributes = $product->sortCombinationByAttributePosition($newCombinationIds, $locales[0]['id_lang']);
+        $this->ensureProductHasDefaultCombination($product, $attributes);
 
         $response = new JsonResponse();
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
@@ -166,6 +161,21 @@ class AttributeController extends FrameworkBundleAdminController
         }
 
         return $response->create($result);
+    }
+
+    /**
+     * @param \ProductCore $product
+     * @param array $combinations
+     */
+    public function ensureProductHasDefaultCombination(\ProductCore $product, array $combinations)
+    {
+        if (count($combinations)) {
+            $defaultProductAttributeId = $product->getDefaultIdProductAttribute();
+            if (!$defaultProductAttributeId) {
+                list(, $firstAttributeCombination) = each($combinations[0]);
+                $product->setDefaultAttribute($firstAttributeCombination['id_product_attribute']);
+            }
+        }
     }
 
     /**
