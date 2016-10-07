@@ -933,6 +933,21 @@ var form = (function() {
         send($('.product-footer .go-catalog').attr('data-redirect'));
       });
 
+      /** create keyboard event for save & go preview */
+      jwerty.key('ctrl+V', function(e) {
+          e.preventDefault();
+          send($('.product-footer .preview').attr('data-redirect'), $('.product-footer .preview').attr('target'));
+      });
+
+      /** create keyboard event for save & active or desactive product*/
+      jwerty.key('ctrl+O', function(e) {
+        e.preventDefault();
+        if ($('#form_step1_active').prop('checked') == true)
+            $('#form_step1_active').prop('checked', false);
+        else
+            $('#form_step1_active').prop('checked', true);
+      });
+
       elem.submit(function(event) {
         event.preventDefault();
         send();
