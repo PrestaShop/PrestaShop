@@ -491,12 +491,45 @@ class ConfigurationCore extends ObjectModel
                 }
 
                 if ($lang) {
-                    $result &= Db::getInstance()->insert(self::$definition['table'].'_lang', array(
-                        self::$definition['primary'] => $configID,
-                        'id_lang' => (int) $lang,
-                        'value' => pSQL($value, $html),
-                        'date_upd' => date('Y-m-d H:i:s'),
-                    ));
+                    $table = self::$definition['table'].'_lang';
+                    $selectConfiguration = strtr(
+                        'SELECT 1 FROM {{ table }} WHERE id_lang = {{ lang }} '.
+                        'AND `{{ primary_key_column }}` = {{ config_id }}',
+                        array(
+                            '{{ table }}' => _DB_PREFIX_.$table,
+                            '{{ lang }}' => (int) $lang,
+                            '{{ primary_key_column }}' => self::$definition['primary'],
+                            '{{ config_id }}' => $configID
+                        )
+                    );
+                    $configurationExists = count(Db::getInstance()->getRow($selectConfiguration)) > 0;
+                    $now = date('Y-m-d H:i:s');
+                    $sanitizedValue = pSQL($value, $html);
+
+                    if ($configurationExists) {
+                        $condition = strtr(
+                            '`{{ primary_key_column }}` = {{ config_id }} AND '.
+                            'date_upd = "{{ update_date }}" AND '.
+                            'value = "{{ value }}"',
+                            array(
+                                '{{ primary_key_column }}' => self::$definition['primary'],
+                                '{{ config_id }}' => $configID,
+                                '{{ update_date }}' => $now,
+                                '{{ value }}' => $sanitizedValue,
+                            )
+                        );
+                        $result &= Db::getInstance()->update($table, array(
+                            'value' => $sanitizedValue,
+                            'date_upd' => date('Y-m-d H:i:s'),
+                        ), $condition, 1, true);
+                    } else {
+                        $result &= Db::getInstance()->insert($table, array(
+                            self::$definition['primary'] => $configID,
+                            'id_lang' => (int) $lang,
+                            'value' => $sanitizedValue,
+                            'date_upd' => $now
+                        ));
+                    }
                 }
             }
         }
