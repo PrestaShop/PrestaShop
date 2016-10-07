@@ -6,33 +6,6 @@ $(document).ready(function () {
   coverImage();
   imageScrollBox();
 
-  $('body').on(
-    'click',
-    '.product-refresh',
-    function (event, extraParameters) {
-      var $productRefresh = $(this);
-      event.preventDefault();
-
-      let eventType = 'updatedProductCombination';
-      if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
-        eventType = extraParameters.eventType;
-      }
-
-      var query = $(event.target.form).serialize() + '&ajax=1&action=productrefresh';
-      var actionURL = $(event.target.form).attr('action');
-
-      $.post(actionURL, query, null, 'json').then(function(resp) {
-        prestashop.emit('updateProduct', {
-          reason: {
-           productUrl: resp.productUrl
-          },
-          refreshUrl: $productRefresh.data('url-update'),
-          eventType: eventType
-        });
-      });
-    }
-  );
-
   prestashop.on('updatedProduct', function (event) {
     createInputFile();
     coverImage();
