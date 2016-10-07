@@ -784,7 +784,6 @@ class AdminPerformanceControllerCore extends AdminController
                     } else {
                         Configuration::updateValue('PS_MEDIA_SERVERS', 0);
                     }
-                    rewriteSettingsFile($base_urls, null, null);
                     Configuration::updateValue('PS_MEDIA_SERVER_1', Tools::getValue('_MEDIA_SERVER_1_'));
                     Configuration::updateValue('PS_MEDIA_SERVER_2', Tools::getValue('_MEDIA_SERVER_2_'));
                     Configuration::updateValue('PS_MEDIA_SERVER_3', Tools::getValue('_MEDIA_SERVER_3_'));
