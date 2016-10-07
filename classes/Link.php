@@ -1035,13 +1035,13 @@ class LinkCore
     }
 
     /**
-     * @param string $url
      * Clean url http://website.com/admin_dir/foo => foo
      * Remove index.php?
      * Remove last char if it's ? or &
      * Remove token if exists
      *
-     * @return mixed|string
+     * @param string $url
+     * @return string
      */
     public static function getQuickLink($url)
     {
@@ -1052,7 +1052,7 @@ class LinkCore
             '#'.__PS_BASE_URI__.'#',
             '#'.basename(_PS_ADMIN_DIR_).'#',
             '/index.php/',
-            '/_?token=[a-zA-Z0-9]+/'
+            '/_?token=[a-zA-Z0-9\_]+/'
         );
 
         $url = preg_replace($patterns, '', $url);
@@ -1062,15 +1062,15 @@ class LinkCore
     }
 
     /**
-     * @param string $url
-     *
+     * Check if url match with current url
+     * @param $url
      * @return bool
      */
     public function matchQuickLink($url)
     {
-        $quicklink = $this->getQuickLink($url);
+        $quickLink = $this->getQuickLink($url);
 
-        return (isset($quicklink) && $quicklink === ($this->getQuickLink($_SERVER['REQUEST_URI'])));
+        return (isset($quickLink) && $quickLink === ($this->getQuickLink($_SERVER['REQUEST_URI'])));
     }
 
     /**
