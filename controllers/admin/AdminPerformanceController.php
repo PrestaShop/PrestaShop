@@ -52,7 +52,7 @@ class AdminPerformanceControllerCore extends AdminController
     {
         $this->fields_form[0]['form'] = array(
             'legend' => array(
-                'title' => $this->l('Smarty'),
+                'title' => $this->trans('Smarty', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'icon-briefcase'
             ),
             'input' => array(
@@ -62,32 +62,32 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'radio',
-                    'label' => $this->l('Template compilation'),
+                    'label' => $this->trans('Template compilation', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'smarty_force_compile',
                     'values' => array(
                         array(
                             'id' => 'smarty_force_compile_'._PS_SMARTY_NO_COMPILE_,
                             'value' => _PS_SMARTY_NO_COMPILE_,
-                            'label' => $this->l('Never recompile template files'),
-                            'hint' => $this->l('This option should be used in a production environment.')
+                            'label' => $this->trans('Never recompile template files', array(), 'Admin.AdvParameters.Feature'),
+                            'hint' => $this->trans('This option should be used in a production environment.', array(), 'Admin.AdvParameters.Help')
                         ),
                         array(
                             'id' => 'smarty_force_compile_'._PS_SMARTY_CHECK_COMPILE_,
                             'value' => _PS_SMARTY_CHECK_COMPILE_,
-                            'label' => $this->l('Recompile templates if the files have been updated'),
-                            'hint' => $this->l('Templates are recompiled when they are updated. If you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.')
+                            'label' => $this->trans('Recompile templates if the files have been updated', array(), 'Admin.AdvParameters.Feature'),
+                            'hint' => $this->trans('Templates are recompiled when they are updated. If you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.', array(), 'Admin.AdvParameters.Help')
                         ),
                         array(
                             'id' => 'smarty_force_compile_'._PS_SMARTY_FORCE_COMPILE_,
                             'value' => _PS_SMARTY_FORCE_COMPILE_,
-                            'label' => $this->l('Force compilation'),
-                            'hint' => $this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. Note: This should never be used in a production environment.')
+                            'label' => $this->trans('Force compilation', array(), 'Admin.AdvParameters.Feature'),
+                            'hint' => $this->trans('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. Note: This should never be used in a production environment.', array(), 'Admin.AdvParameters.Help')
                         )
                     )
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Cache'),
+                    'label' => $this->trans('Cache', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'smarty_cache',
                     'is_bool' => true,
                     'values' => array(
@@ -102,11 +102,11 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Should be enabled except for debugging.')
+                    'hint' => $this->trans('Should be enabled except for debugging.', array(), 'Admin.AdvParameters.Feature')
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Multi-front optimizations'),
+                    'label' => $this->trans('Multi-front optimizations', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'smarty_local',
                     'is_bool' => true,
                     'values' => array(
@@ -121,39 +121,39 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Should be enabled if you want to avoid to store the smarty cache on NFS.')
+                    'hint' => $this->trans('Should be enabled if you want to avoid to store the smarty cache on NFS.', array(), 'Admin.AdvParameters.Help')
                 ),
                 array(
                     'type' => 'radio',
-                    'label' => $this->l('Caching type'),
+                    'label' => $this->trans('Caching type', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'smarty_caching_type',
                     'values' => array(
                         array(
                             'id' => 'smarty_caching_type_filesystem',
                             'value' => 'filesystem',
-                            'label' => $this->l('File System').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
+                            'label' => $this->trans('File System', array(), 'Admin.AdvParameters.Feature').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->trans('(the directory %s must be writable)', array(), 'Admin.AdvParameters.Notification'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
                         ),
                         array(
                             'id' => 'smarty_caching_type_mysql',
                             'value' => 'mysql',
-                            'label' => $this->l('MySQL')
+                            'label' => $this->trans('MySQL', array(), 'Admin.AdvParameters.Feature')
                         ),
                     )
                 ),
                 array(
                     'type' => 'radio',
-                    'label' => $this->l('Clear cache'),
+                    'label' => $this->trans('Clear cache', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'smarty_clear_cache',
                     'values' => array(
                         array(
                             'id' => 'smarty_clear_cache_never',
                             'value' => 'never',
-                            'label' => $this->l('Never clear cache files'),
+                            'label' => $this->trans('Never clear cache files', array(), 'Admin.AdvParameters.Feature'),
                         ),
                         array(
                             'id' => 'smarty_clear_cache_everytime',
                             'value' => 'everytime',
-                            'label' => $this->l('Clear cache everytime something has been modified'),
+                            'label' => $this->trans('Clear cache everytime something has been modified', array(), 'Admin.AdvParameters.Feature'),
                         ),
                     )
                 ),
@@ -176,13 +176,13 @@ class AdminPerformanceControllerCore extends AdminController
     {
         $this->fields_form[1]['form'] = array(
             'legend' => array(
-                'title' => $this->l('Debug mode'),
+                'title' => $this->trans('Debug mode', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'icon-bug'
             ),
             'input' => array(
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Disable non PrestaShop modules'),
+                    'label' => $this->trans('Disable non PrestaShop modules', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'native_module',
                     'class' => 't',
                     'is_bool' => true,
@@ -198,11 +198,11 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Enable or disable non PrestaShop Modules.')
+                    'hint' => $this->trans('Enable or disable non PrestaShop Modules.', array(), 'Admin.AdvParameters.Feature')
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Disable all overrides'),
+                    'label' => $this->trans('Disable all overrides', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'overrides',
                     'class' => 't',
                     'is_bool' => true,
@@ -218,11 +218,11 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Enable or disable all classes and controllers overrides.')
+                    'hint' => $this->trans('Enable or disable all classes and controllers overrides.', array(), 'Admin.AdvParameters.Feature')
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Debug mode'),
+                    'label' => $this->trans('Debug mode', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'debug_mode',
                     'class' => 't',
                     'is_bool' => true,
@@ -238,7 +238,7 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Enable or disable debug mode.')
+                    'hint' => $this->trans('Enable or disable debug mode.', array(), 'Admin.AdvParameters.Help')
                 ),
             ),
             'submit' => array(
@@ -255,10 +255,10 @@ class AdminPerformanceControllerCore extends AdminController
     {
         $this->fields_form[2]['form'] = array(
             'legend' => array(
-                'title' => $this->l('Optional features'),
+                'title' => $this->trans('Optional features', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'icon-puzzle-piece'
             ),
-            'description' => $this->l('Some features can be disabled in order to improve performance.'),
+            'description' => $this->trans('Some features can be disabled in order to improve performance.', array(), 'Admin.AdvParameters.Help'),
             'input' => array(
                 array(
                     'type' => 'hidden',
@@ -266,7 +266,7 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Combinations'),
+                    'label' => $this->trans('Combinations', array(), 'Admin.Global'),
                     'name' => 'combination',
                     'is_bool' => true,
                     'disabled' => Combination::isCurrentlyUsed(),
@@ -282,12 +282,12 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Choose "No" to disable Product Combinations.'),
-                    'desc' => Combination::isCurrentlyUsed() ? $this->l('You cannot set this parameter to No when combinations are already used by some of your products') : null
+                    'hint' => $this->trans('Choose "No" to disable Product Combinations.', array(), 'Admin.AdvParameters.Help'),
+                    'desc' => Combination::isCurrentlyUsed() ? $this->trans('You cannot set this parameter to No when combinations are already used by some of your products', array(), 'Admin.AdvParameters.Help') : null
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Features'),
+                    'label' => $this->trans('Features', array(), 'Admin.Global'),
                     'name' => 'feature',
                     'is_bool' => true,
                     'values' => array(
@@ -302,11 +302,11 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Choose "No" to disable Product Features.')
+                    'hint' => $this->trans('Choose "No" to disable Product Features.', array(), 'Admin.AdvParameters.Help')
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Customer Groups'),
+                    'label' => $this->trans('Customer Groups', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'customer_group',
                     'is_bool' => true,
                     'disabled' => Group::isCurrentlyUsed(),
@@ -322,7 +322,7 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Choose "No" to disable Customer Groups.')
+                    'hint' => $this->trans('Choose "No" to disable Customer Groups.', array(), 'Admin.AdvParameters.Help')
                 )
             ),
             'submit' => array(
@@ -339,10 +339,10 @@ class AdminPerformanceControllerCore extends AdminController
     {
         $this->fields_form[3]['form'] = array(
             'legend' => array(
-                'title' => $this->l('CCC (Combine, Compress and Cache)'),
+                'title' => $this->trans('CCC (Combine, Compress and Cache)', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'icon-fullscreen'
             ),
-            'description' => $this->l('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'),
+            'description' => $this->trans('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.', array(), 'Admin.AdvParameters.Help'),
             'input' => array(
                 array(
                     'type' => 'hidden',
@@ -350,69 +350,69 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Smart cache for CSS'),
+                    'label' => $this->trans('Smart cache for CSS', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'PS_CSS_THEME_CACHE',
                     'values' => array(
                         array(
                             'id' => 'PS_CSS_THEME_CACHE_1',
                             'value' => 1,
-                            'label' => $this->l('Use CCC for CSS')
+                            'label' => $this->trans('Use CCC for CSS', array(), 'Admin.AdvParameters.Feature')
                         ),
                         array(
                             'id' => 'PS_CSS_THEME_CACHE_0',
                             'value' => 0,
-                            'label' => $this->l('Keep CSS as original')
+                            'label' => $this->trans('Keep CSS as original', array(), 'Admin.AdvParameters.Feature')
                         )
                     )
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Smart cache for JavaScript'),
+                    'label' => $this->trans('Smart cache for JavaScript', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'PS_JS_THEME_CACHE',
                     'values' => array(
                         array(
                             'id' => 'PS_JS_THEME_CACHE_1',
                             'value' => 1,
-                            'label' => $this->l('Use CCC for JavaScript')
+                            'label' => $this->trans('Use CCC for JavaScript', array(), 'Admin.AdvParameters.Feature')
                         ),
                         array(
                             'id' => 'PS_JS_THEME_CACHE_0',
                             'value' => 0,
-                            'label' => $this->l('Keep JavaScript as original')
+                            'label' => $this->trans('Keep JavaScript as original', array(), 'Admin.AdvParameters.Feature')
                         )
                     )
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Compress inline JavaScript in HTML'),
+                    'label' => $this->trans('Compress inline JavaScript in HTML', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'PS_JS_HTML_THEME_COMPRESSION',
                     'values' => array(
                         array(
                             'id' => 'PS_JS_HTML_THEME_COMPRESSION_1',
                             'value' => 1,
-                            'label' => $this->l('Compress inline JavaScript in HTML after "Smarty compile" execution')
+                            'label' => $this->trans('Compress inline JavaScript in HTML after "Smarty compile" execution', array(), 'Admin.AdvParameters.Feature')
                         ),
                         array(
                             'id' => 'PS_JS_HTML_THEME_COMPRESSION_0',
                             'value' => 0,
-                            'label' => $this->l('Keep inline JavaScript in HTML as original')
+                            'label' => $this->trans('Keep inline JavaScript in HTML as original', array(), 'Admin.AdvParameters.Feature')
                         )
                     )
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Move JavaScript to the end'),
+                    'label' => $this->trans('Move JavaScript to the end', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'PS_JS_DEFER',
                     'values' => array(
                         array(
                             'id' => 'PS_JS_DEFER_1',
                             'value' => 1,
-                            'label' => $this->l('Move JavaScript to the end of the HTML document')
+                            'label' => $this->trans('Move JavaScript to the end of the HTML document', array(), 'Admin.AdvParameters.Feature')
                         ),
                         array(
                             'id' => 'PS_JS_DEFER_0',
                             'value' => 0,
-                            'label' => $this->l('Keep JavaScript in HTML at its original position')
+                            'label' => $this->trans('Keep JavaScript in HTML at its original position', array(), 'Admin.AdvParameters.Feature')
                         )
                     )
                 ),
@@ -426,9 +426,9 @@ class AdminPerformanceControllerCore extends AdminController
         if (!defined('_PS_HOST_MODE_')) {
             $this->fields_form[3]['form']['input'][] = array(
                 'type' => 'switch',
-                'label' => $this->l('Apache optimization'),
+                'label' => $this->trans('Apache optimization', array(), 'Admin.AdvParameters.Feature'),
                 'name' => 'PS_HTACCESS_CACHE_CONTROL',
-                'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
+                'hint' => $this->trans('This will add directives to your .htaccess file, which should improve caching and compression.', array(), 'Admin.AdvParameters.Help'),
                 'values' => array(
                     array(
                         'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
@@ -456,10 +456,10 @@ class AdminPerformanceControllerCore extends AdminController
     {
         $this->fields_form[4]['form'] = array(
             'legend' => array(
-                'title' => $this->l('Media servers (use only with CCC)'),
+                'title' => $this->trans('Media servers (use only with CCC)', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'icon-link'
             ),
-            'description' => $this->l('You must enter another domain, or subdomain, in order to use cookieless static content.'),
+            'description' => $this->trans('You must enter another domain, or subdomain, in order to use cookieless static content.', array(), 'Admin.AdvParameters.Feature'),
             'input' => array(
                 array(
                     'type' => 'hidden',
@@ -467,21 +467,21 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Media server #1'),
+                    'label' => $this->trans('Media server #1', array(), 'Admin.AdvParameters.Feature'),
                     'name' => '_MEDIA_SERVER_1_',
-                    'hint' => $this->l('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.')
+                    'hint' => $this->trans('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Media server #2'),
+                    'label' => $this->trans('Media server #2', array(), 'Admin.AdvParameters.Feature'),
                     'name' => '_MEDIA_SERVER_2_',
-                    'hint' => $this->l('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.')
+                    'hint' => $this->trans('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Media server #3'),
+                    'label' => $this->trans('Media server #3', array(), 'Admin.AdvParameters.Feature'),
                     'name' => '_MEDIA_SERVER_3_',
-                    'hint' => $this->l('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.')
+                    'hint' => $this->trans('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
                 ),
             ),
             'submit' => array(
@@ -499,25 +499,40 @@ class AdminPerformanceControllerCore extends AdminController
         $phpdoc_langs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
         $php_lang = in_array($this->context->language->iso_code, $phpdoc_langs) ? $this->context->language->iso_code : 'en';
 
-        $warning_memcache = ' '.$this->l('(you must install the [a]Memcache PECL extension[/a])');
-        $warning_memcache = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">', $warning_memcache);
-        $warning_memcache = str_replace('[/a]', '</a>', $warning_memcache);
+        $warning_memcache = ' '.$this->trans('(you must install the [a]Memcache PECL extension[/a])',
+            array(
+                '[a]' => '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">',
+                '[/a]' => '</a>',
+            ),
+            'Admin.AdvParameters.Notification'
+        );
 
-        $warning_memcached = ' '.$this->l('(you must install the [a]Memcached PECL extension[/a])');
-        $warning_memcached = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcached.installation.php" target="_blank">', $warning_memcached);
-        $warning_memcached = str_replace('[/a]', '</a>', $warning_memcached);
+        $warning_memcached = ' '.$this->trans('(you must install the [a]Memcached PECL extension[/a])',
+            array(
+                '[a]' => '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcached.installation.php" target="_blank">',
+                '[/a]' => '</a>',
+            ),
+            'Admin.AdvParameters.Notification'
+        );
 
-        $warning_apc = ' '.$this->l('(you must install the [a]APC PECL extension[/a])');
-        $warning_apc = str_replace('[a]', '<a href="http://php.net/manual/'.substr($php_lang, 0, 2).'/apc.installation.php" target="_blank">', $warning_apc);
-        $warning_apc = str_replace('[/a]', '</a>', $warning_apc);
+        $warning_apc = ' '.$this->trans('(you must install the [a]APC PECL extension[/a])',
+            array(
+                '[a]' => '<a href="http://php.net/manual/'.substr($php_lang, 0, 2).'/apc.installation.php" target="_blank">',
+                '[/a]' => '</a>',
+            ),
+            'Admin.AdvParameters.Notification'
+        );
 
-        $warning_xcache = ' '.$this->l('(you must install the [a]Xcache extension[/a])');
-        $warning_xcache = str_replace('[a]', '<a href="http://xcache.lighttpd.net" target="_blank">', $warning_xcache);
-        $warning_xcache = str_replace('[/a]', '</a>', $warning_xcache);
+        $warning_xcache = ' '.$this->trans('(you must install the [a]Xcache extension[/a])', array(
+            '[a]' => '<a href="http://xcache.lighttpd.net" target="_blank">',
+            '[/a]' => '</a>',
+            ),
+            'Admin.AdvParameters.Notification'
+        );
 
         $this->fields_form[6]['form'] = array(
             'legend' => array(
-                'title' => $this->l('Caching'),
+                'title' => $this->trans('Caching', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'icon-desktop'
             ),
             'input' => array(
@@ -527,7 +542,7 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Use cache'),
+                    'label' => $this->trans('Use cache', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'cache_active',
                     'is_bool' => true,
                     'values' => array(
@@ -545,28 +560,28 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'radio',
-                    'label' => $this->l('Caching system'),
+                    'label' => $this->trans('Caching system', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'caching_system',
                     'values' => array(
                         array(
                             'id' => 'CacheMemcache',
                             'value' => 'CacheMemcache',
-                            'label' => $this->l('Memcached via PHP::Memcache').(extension_loaded('memcache') ? '' : $warning_memcache)
+                            'label' => $this->trans('Memcached via PHP::Memcache', array(), 'Admin.AdvParameters.Feature').(extension_loaded('memcache') ? '' : $warning_memcache)
                         ),
                         array(
                             'id' => 'CacheMemcached',
                             'value' => 'CacheMemcached',
-                            'label' => $this->l('Memcached via PHP::Memcached').(extension_loaded('memcached') ? '' : $warning_memcached)
+                            'label' => $this->trans('Memcached via PHP::Memcached', array(), 'Admin.AdvParameters.Feature').(extension_loaded('memcached') ? '' : $warning_memcached)
                         ),
                         array(
                             'id' => 'CacheApc',
                             'value' => 'CacheApc',
-                            'label' => $this->l('APC').((extension_loaded('apc') || extension_loaded('apcu'))? '' : $warning_apc)
+                            'label' => $this->trans('APC', array(), 'Admin.AdvParameters.Feature').((extension_loaded('apc') || extension_loaded('apcu'))? '' : $warning_apc)
                         ),
                         array(
                             'id' => 'CacheXcache',
                             'value' => 'CacheXcache',
-                            'label' => $this->l('Xcache').(extension_loaded('xcache') ? '' : $warning_xcache)
+                            'label' => $this->trans('Xcache', array(), 'Admin.AdvParameters.Feature').(extension_loaded('xcache') ? '' : $warning_xcache)
                         ),
 
                     )
@@ -622,7 +637,7 @@ class AdminPerformanceControllerCore extends AdminController
 
         $this->page_header_toolbar_btn['clear_cache'] = array(
             'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1&empty_sf2_cache=1',
-            'desc' => $this->l('Clear cache'),
+            'desc' => $this->trans('Clear cache', array(), 'Admin.AdvParameters.Feature'),
             'icon' => 'process-icon-eraser'
         );
     }
@@ -756,9 +771,9 @@ class AdminPerformanceControllerCore extends AdminController
                         if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
                             Tools::generateHtaccess();
                         } else {
-                            $message = $this->l('Before being able to use this tool, you need to:');
-                            $message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
-                            $message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
+                            $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.AdvParameters.Notification');
+                            $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.AdvParameters.Notification');
+                            $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.AdvParameters.Notification');
                             $this->errors[] = Tools::displayError($message, false);
                             Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
                         }
@@ -804,9 +819,9 @@ class AdminPerformanceControllerCore extends AdminController
                         unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
                         $redirectAdmin = true;
                     } else {
-                        $message = $this->l('Before being able to use this tool, you need to:');
-                        $message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
-                        $message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
+                        $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.AdvParameters.Notification');
+                        $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.AdvParameters.Notification');
+                        $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.AdvParameters.Notification');
                         $this->errors[] = Tools::displayError($message, false);
                         Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
                     }
@@ -909,19 +924,19 @@ class AdminPerformanceControllerCore extends AdminController
             if (!empty($debug_mode_status)) {
                 switch ($debug_mode_status) {
                     case self::DEBUG_MODE_ERROR_COULD_NOT_BACKUP:
-                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not write to file. Make sure that the correct permissions are set on the file %s'), _PS_ROOT_DIR_.'/config/defines.old.php'));
+                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.old.php'));
                         break;
                     case self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
-                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
                         break;
                     case self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS:
-                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not write to file. Make sure that the correct permissions are set on the file %s'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
                         break;
                     case self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
-                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not write to file. Make sure that the correct permissions are set on the file %s'), _PS_ROOT_DIR_.'/config/defines_custom.inc.php'));
+                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines_custom.inc.php'));
                         break;
                     case self::DEBUG_MODE_ERROR_NO_READ_ACCESS:
-                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not read file. Make sure that the correct permissions are set on the file %s'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not read file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
                         break;
                     default:
                         break;
