@@ -250,8 +250,6 @@ $datas = array(
 
 if (version_compare(_PS_INSTALL_VERSION_, '1.6.0.11', '<')) {
     $datas[] = array('_MEDIA_SERVER_1_', defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : '');
-    $datas[] = array('_MEDIA_SERVER_2_', defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : '');
-    $datas[] = array('_MEDIA_SERVER_3_', defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : '');
 }
 
 if (defined('_RIJNDAEL_KEY_')) {
@@ -303,7 +301,7 @@ $list = $moduleManagerRepository->getFilteredList($filter, true);
 /**
  * @var $module \PrestaShop\PrestaShop\Adapter\Module\Module
  */
-foreach($list as $moduleName => $module) {
+foreach ($list as $moduleName => $module) {
     $moduleInfo = $moduleManagerRepository->getModule($moduleName, true);
     /** @var \Symfony\Component\HttpFoundation\ParameterBag $attributes */
     $attributes = $module->attributes;
