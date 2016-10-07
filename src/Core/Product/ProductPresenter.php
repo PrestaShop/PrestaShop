@@ -179,7 +179,7 @@ class ProductPresenter
         return $presentedProduct;
     }
 
-    private function shouldEnableAddToCartButton(array $product)
+    protected function shouldEnableAddToCartButton(array $product)
     {
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
             $shouldShowButton = false;
@@ -428,8 +428,7 @@ class ProductPresenter
         array $product,
         ProductPresentationSettings $settings,
         array $presentedProduct
-    )
-    {
+    ) {
         $presentedProduct['availability_message'] = $this->translator->trans(
             'Last items in stock',
             array(),
@@ -487,7 +486,7 @@ class ProductPresenter
                 }
             }
         }
-        if(empty($presentedProduct['specific_references'])){
+        if (empty($presentedProduct['specific_references'])) {
             unset($presentedProduct['specific_references']);
         }
 

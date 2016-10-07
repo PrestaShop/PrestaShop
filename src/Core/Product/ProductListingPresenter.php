@@ -48,4 +48,13 @@ class ProductListingPresenter extends ProductPresenter
 
         return $presentedProduct;
     }
+
+    protected function shouldEnableAddToCartButton(array $product)
+    {
+        if (isset($product['attributes']) && count($product['attributes']) > 0) {
+            return false;
+        }
+
+        return parent::shouldEnableAddToCartButton($product);
+    }
 }

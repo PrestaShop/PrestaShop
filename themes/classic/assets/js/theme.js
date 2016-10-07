@@ -16743,29 +16743,6 @@
 	  coverImage();
 	  imageScrollBox();
 	
-	  (0, _jquery2['default'])('body').on('click', '.product-refresh', function (event, extraParameters) {
-	    var $productRefresh = (0, _jquery2['default'])(this);
-	    event.preventDefault();
-	
-	    var eventType = 'updatedProductCombination';
-	    if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
-	      eventType = extraParameters.eventType;
-	    }
-	
-	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh';
-	    var actionURL = (0, _jquery2['default'])(event.target.form).attr('action');
-	
-	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      prestashop.emit('updateProduct', {
-	        reason: {
-	          productUrl: resp.productUrl
-	        },
-	        refreshUrl: $productRefresh.data('url-update'),
-	        eventType: eventType
-	      });
-	    });
-	  });
-	
 	  prestashop.on('updatedProduct', function (event) {
 	    createInputFile();
 	    coverImage();
