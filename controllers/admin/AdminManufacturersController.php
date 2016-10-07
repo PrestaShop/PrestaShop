@@ -502,7 +502,7 @@ class AdminManufacturersControllerCore extends AdminController
                 'required' => in_array('company', $required_fields),
                 'maxlength' => 16,
                 'col' => 4,
-                'hint' => $this->trans('Company name for this supplier', array(), 'Admin.Catalog.Help')
+                'hint' => $this->trans('Company name for this brand', array(), 'Admin.Catalog.Help')
             );
         }
 

@@ -129,7 +129,7 @@ class AdminAddressesControllerCore extends AdminController
                     'name' => 'dni',
                     'required' => false,
                     'col' => '4',
-                    'hint' => $this->trans('DNI / NIF / NIE', array(), 'Admin.OrdersCustomers.Feature')
+                    'hint' => $this->trans('The national ID card number of this person, or a unique tax identification number.', array(), 'Admin.OrdersCustomers.Feature')
                 ),
                 array(
                     'type' => 'text',
