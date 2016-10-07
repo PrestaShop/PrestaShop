@@ -139,7 +139,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                     'title' => $this->translator->trans('Recommended PHP parameters', array(), 'Install'),
                     'success' => $this->tests['optional']['success'],
                     'checks' => array(
-                        'new_phpversion' => sprintf($this->translator->trans('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion()),
                         'fopen' => $this->translator->trans('Cannot open external URLs', array(), 'Install'),
                         'gz' => $this->translator->trans('GZIP compression is not activated', array(), 'Install'),
                         'mbstring' => $this->translator->trans('Mbstring extension is not enabled', array(), 'Install'),
