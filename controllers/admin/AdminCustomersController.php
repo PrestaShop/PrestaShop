@@ -40,7 +40,6 @@ class AdminCustomersControllerCore extends AdminController
     {
         $this->bootstrap = true;
         $this->required_database = true;
-        $this->required_fields = array('optin');
         $this->table = 'customer';
         $this->className = 'Customer';
         $this->lang = false;
@@ -50,6 +49,13 @@ class AdminCustomersControllerCore extends AdminController
         $this->allow_export = true;
 
         parent::__construct();
+
+        $this->required_fields = array(
+            array(
+                'name' => 'optin',
+                'label' => $this->trans('Partner offers', array(), 'Admin.OrdersCustomers.Feature')
+            ),
+        );
 
         $this->addRowAction('edit');
         $this->addRowAction('view');
