@@ -46,13 +46,13 @@
         </thead>
         <tbody>
         {foreach $table_fields as $field}
-          {if !in_array($field, $required_class_fields)}
+          {if !in_array($field.name, $required_class_fields)}
           <tr>
             <td class="noborder">
-              <input type="checkbox" name="fieldsBox[]" value="{$field}" {if in_array($field, $required_fields)} checked="checked"{/if} />
+              <input type="checkbox" name="fieldsBox[]" value="{$field.name}" {if in_array($field.name, $required_fields)} checked="checked"{/if} />
             </td>
             <td>
-              {$field}
+              {$field.label}
             </td>
           </tr>
           {/if}
