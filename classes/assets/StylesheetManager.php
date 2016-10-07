@@ -51,19 +51,26 @@ class StylesheetManagerCore
         $this->configuration = $configuration;
     }
 
-    public function register($id, $relativePath, $media, $position)
+    public function register($id, $relativePath, $media, $position = 50)
     {
         if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $this->getMedia($media));
+            $this->add($id, $fullPath, $this->getMedia($media), $position);
         }
     }
 
     public function getStylesheetList()
     {
+        uasort($this->list, function ($a, $b) {
+            if ($a['position'] === $b['position']) {
+                return 0;
+            }
+            return ($a['position'] < $b['position']) ? -1 : 1;
+        });
+
         return $this->list;
     }
 
-    private function add($id, $fullPath, $media)
+    private function add($id, $fullPath, $media, $position)
     {
         if (filesize($fullPath) === 0) {
             return;
@@ -73,6 +80,7 @@ class StylesheetManagerCore
             'id' => $id,
             'media' => $media,
             'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
+            'position' => $position,
         );
     }
 
