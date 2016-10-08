@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class CacheCore
+ */
 abstract class CacheCore
 {
     /**
@@ -36,23 +39,21 @@ abstract class CacheCore
      */
     const SQL_TABLES_NAME = 'tablesCached';
 
-    /**
-     * @var Cache
-     */
+    /** @var \Cache */
     protected static $instance;
 
-    /**
-     * @var array List all keys of cached data and their associated ttl
-     */
+    /** @var array List all keys of cached data and their associated ttl */
     protected $keys = array();
 
     /**
-     * @var array Store list of tables and their associated keys for SQL cache (warning: this var must not be initialized here !)
+     * @var array Store list of tables and their associated keys for SQL cache
+     * (warning: this var must not be initialized here !)
      */
-    protected $sql_tables_cached;
+    protected $sqlTablesCached;
 
     /**
-     * @var array List of blacklisted tables for SQL cache, these tables won't be indexed
+     * @var array List of blacklisted tables for SQL cache,
+     * these tables won't be indexed
      */
     protected $blacklist = array(
         'cart',
@@ -70,17 +71,16 @@ abstract class CacheCore
         'employee',
     );
 
-    /**
-     * @var array Store local cache
-     */
+    /** @var array Store local cache */
     protected static $local = array();
 
     /**
-     * Cache a data
+     * Cache some data
      *
      * @param string $key
-     * @param mixed $value
-     * @param int $ttl
+     * @param mixed  $value
+     * @param int    $ttl
+     *
      * @return bool
      */
     abstract protected function _set($key, $value, $ttl = 0);
@@ -89,6 +89,7 @@ abstract class CacheCore
      * Retrieve a cached data by key
      *
      * @param string $key
+     *
      * @return mixed
      */
     abstract protected function _get($key);
@@ -97,6 +98,7 @@ abstract class CacheCore
      * Check if a data is cached by key
      *
      * @param string $key
+     *
      * @return bool
      */
     abstract protected function _exists($key);
@@ -105,6 +107,7 @@ abstract class CacheCore
      * Delete a data from the cache by key
      *
      * @param string $key
+     *
      * @return bool
      */
     abstract protected function _delete($key);
@@ -122,24 +125,26 @@ abstract class CacheCore
     abstract public function flush();
 
     /**
-     * @return Cache
+     * @return \Cache
      */
     public static function getInstance()
     {
         if (!self::$instance) {
-            $caching_system = _PS_CACHING_SYSTEM_;
-            self::$instance = new $caching_system();
+            $cachingSystem = _PS_CACHING_SYSTEM_;
+            self::$instance = new $cachingSystem();
         }
+
         return self::$instance;
     }
 
     /**
      * Unit testing purpose only
-     * @param $test_instance Cache
+     *
+     * @param \Cache $testInstance Cache
      */
-    public static function setInstanceForTesting($test_instance)
+    public static function setInstanceForTesting($testInstance)
     {
-        self::$instance = $test_instance;
+        self::$instance = $testInstance;
     }
 
     /**
@@ -154,8 +159,9 @@ abstract class CacheCore
      * Store a data in cache
      *
      * @param string $key
-     * @param mixed $value
-     * @param int $ttl
+     * @param mixed  $value
+     * @param int    $ttl
+     *
      * @return bool
      */
     public function set($key, $value, $ttl = 0)
@@ -167,8 +173,10 @@ abstract class CacheCore
 
             $this->keys[$key] = ($ttl == 0) ? 0 : time() + $ttl;
             $this->_writeKeys();
+
             return true;
         }
+
         return false;
     }
 
@@ -176,6 +184,7 @@ abstract class CacheCore
      * Retrieve a data from cache
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function get($key)
@@ -191,6 +200,7 @@ abstract class CacheCore
      * Check if a data is cached
      *
      * @param string $key
+     *
      * @return bool
      */
     public function exists($key)
@@ -204,9 +214,10 @@ abstract class CacheCore
 
     /**
      * Delete one or several data from cache (* joker can be used)
-     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
+     *
      * @return array List of deleted keys
      */
     public function delete($key)
@@ -238,6 +249,7 @@ abstract class CacheCore
         }
 
         $this->_writeKeys();
+
         return $keys;
     }
 
@@ -245,7 +257,9 @@ abstract class CacheCore
      * Store a query in cache
      *
      * @param string $query
-     * @param array $result
+     * @param array  $result
+     *
+     * @return bool Indicates whether the query has been successfully cached
      */
     public function setQuery($query, $result)
     {
@@ -257,10 +271,10 @@ abstract class CacheCore
             $result = array();
         }
 
-        if (is_null($this->sql_tables_cached)) {
-            $this->sql_tables_cached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
-            if (!is_array($this->sql_tables_cached)) {
-                $this->sql_tables_cached = array();
+        if (is_null($this->sqlTablesCached)) {
+            $this->sqlTablesCached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
+            if (!is_array($this->sqlTablesCached)) {
+                $this->sqlTablesCached = array();
             }
         }
 
@@ -273,13 +287,13 @@ abstract class CacheCore
         // Get all table from the query and save them in cache
         if ($tables = $this->getTables($query)) {
             foreach ($tables as $table) {
-                if (!isset($this->sql_tables_cached[$table][$key])) {
+                if (!isset($this->sqlTablesCached[$table][$key])) {
                     $this->adjustTableCacheSize($table);
-                    $this->sql_tables_cached[$table][$key] = true;
+                    $this->sqlTablesCached[$table][$key] = true;
                 }
             }
         }
-        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sqlTablesCached);
     }
 
     /**
@@ -289,18 +303,26 @@ abstract class CacheCore
      */
     protected function adjustTableCacheSize($table)
     {
-        if (isset($this->sql_tables_cached[$table])
-            && count($this->sql_tables_cached[$table]) > 5000) {
+        if (isset($this->sqlTablesCached[$table])
+            && count($this->sqlTablesCached[$table]) > 5000) {
             // make sure the cache doesn't contains too many elements : delete the first 1000
-            $table_buffer = array_slice($this->sql_tables_cached[$table], 0, 1000, true);
-            foreach ($table_buffer as $fs_key => $value) {
-                $this->delete($fs_key);
-                $this->delete($fs_key.'_nrows');
-                unset($this->sql_tables_cached[$table][$fs_key]);
+            $tableBuffer = array_slice($this->sqlTablesCached[$table], 0, 1000, true);
+            foreach ($tableBuffer as $fsKey => $value) {
+                $this->delete($fsKey);
+                $this->delete($fsKey.'_nrows');
+                unset($this->sqlTablesCached[$table][$fsKey]);
             }
         }
     }
 
+    /**
+     * Get tables from string
+     *
+     * @param string $string
+     *
+     * @return array|bool Table names
+     *                    `false` if nothing found
+     */
     protected function getTables($string)
     {
         if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.'[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res)) {
@@ -309,6 +331,7 @@ abstract class CacheCore
                     $res[1][] = $table;
                 }
             }
+
             return array_unique($res[1]);
         } else {
             return false;
@@ -326,25 +349,25 @@ abstract class CacheCore
             return;
         }
 
-        if (is_null($this->sql_tables_cached)) {
-            $this->sql_tables_cached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
-            if (!is_array($this->sql_tables_cached)) {
-                $this->sql_tables_cached = array();
+        if (is_null($this->sqlTablesCached)) {
+            $this->sqlTablesCached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
+            if (!is_array($this->sqlTablesCached)) {
+                $this->sqlTablesCached = array();
             }
         }
 
         if ($tables = $this->getTables($query)) {
             foreach ($tables as $table) {
-                if (isset($this->sql_tables_cached[$table])) {
-                    foreach (array_keys($this->sql_tables_cached[$table]) as $fs_key) {
-                        $this->delete($fs_key);
-                        $this->delete($fs_key.'_nrows');
+                if (isset($this->sqlTablesCached[$table])) {
+                    foreach (array_keys($this->sqlTablesCached[$table]) as $fsKey) {
+                        $this->delete($fsKey);
+                        $this->delete($fsKey.'_nrows');
                     }
-                    unset($this->sql_tables_cached[$table]);
+                    unset($this->sqlTablesCached[$table]);
                 }
             }
         }
-        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sqlTablesCached);
     }
 
     /**
@@ -360,9 +383,18 @@ abstract class CacheCore
                 return true;
             }
         }
+
         return false;
     }
 
+    /**
+     * Store a value
+     *
+     * @param string $key   Key
+     * @param mixed  $value Value
+     *
+     * @return void
+     */
     public static function store($key, $value)
     {
         // PHP is not efficient at storing array
@@ -374,21 +406,46 @@ abstract class CacheCore
         Cache::$local[$key] = $value;
     }
 
+    /**
+     * Retrieve a value by key
+     *
+     * @param string $key Key
+     *
+     * @return mixed|null Value
+     */
     public static function retrieve($key)
     {
         return isset(Cache::$local[$key]) ? Cache::$local[$key] : null;
     }
 
+    /**
+     * Retrieve all values from cache
+     *
+     * @return array Values
+     */
     public static function retrieveAll()
     {
         return Cache::$local;
     }
 
+    /**
+     * Check if the value is stored
+     *
+     * @param string $key Key
+     *
+     * @return bool Indicates whether the value is stored
+     */
     public static function isStored($key)
     {
         return isset(Cache::$local[$key]);
     }
 
+    /**
+     * Clean a key or multiple keys
+     * You can use a wildcard (*)
+     *
+     * @param string $key
+     */
     public static function clean($key)
     {
         if (strpos($key, '*') !== false) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,32 +19,34 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * This class require PECL Memcache extension
+ * This class requires the PECL Memcache extension
  *
  */
 class CacheMemcacheCore extends Cache
 {
-    /**
-     * @var Memcache
-     */
+    /** @var \Memcache */
     protected $memcache;
 
-    /**
-     * @var bool Connection status
-     */
+    /** @var bool Connection status */
     protected $is_connected = false;
 
+    /**
+     * CacheMemcacheCore constructor
+     */
     public function __construct()
     {
         $this->connect();
     }
 
+    /**
+     * CacheMemcacheCore destructor
+     */
     public function __destruct()
     {
         $this->close();
@@ -52,6 +54,8 @@ class CacheMemcacheCore extends Cache
 
     /**
      * Connect to memcache server
+     *
+     * @return void
      */
     public function connect()
     {
@@ -66,7 +70,7 @@ class CacheMemcacheCore extends Cache
             return;
         }
         foreach ($servers as $server) {
-            $this->memcache->addServer($server['ip'], $server['port'], true, (int)$server['weight']);
+            $this->memcache->addServer($server['ip'], $server['port'], true, (int) $server['weight']);
         }
 
         $this->is_connected = true;
@@ -80,6 +84,7 @@ class CacheMemcacheCore extends Cache
         if (!$this->is_connected) {
             return false;
         }
+
         return $this->memcache->set($key, $value, 0, $ttl);
     }
 
@@ -91,6 +96,7 @@ class CacheMemcacheCore extends Cache
         if (!$this->is_connected) {
             return false;
         }
+
         return $this->memcache->get($key);
     }
 
@@ -102,6 +108,7 @@ class CacheMemcacheCore extends Cache
         if (!$this->is_connected) {
             return false;
         }
+
         return ($this->memcache->get($key) !== false);
     }
 
@@ -113,6 +120,7 @@ class CacheMemcacheCore extends Cache
         if (!$this->is_connected) {
             return false;
         }
+
         return $this->memcache->delete($key);
     }
 
@@ -124,6 +132,7 @@ class CacheMemcacheCore extends Cache
         if (!$this->is_connected) {
             return false;
         }
+
         return true;
     }
 
@@ -135,6 +144,7 @@ class CacheMemcacheCore extends Cache
         if (!$this->is_connected) {
             return false;
         }
+
         return $this->memcache->flush();
     }
 
@@ -142,8 +152,9 @@ class CacheMemcacheCore extends Cache
      * Store a data in cache
      *
      * @param string $key
-     * @param mixed $value
-     * @param int $ttl
+     * @param mixed  $value
+     * @param int    $ttl
+     *
      * @return bool
      */
     public function set($key, $value, $ttl = 0)
@@ -155,6 +166,7 @@ class CacheMemcacheCore extends Cache
      * Retrieve a data from cache
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function get($key)
@@ -166,6 +178,7 @@ class CacheMemcacheCore extends Cache
      * Check if a data is cached
      *
      * @param string $key
+     *
      * @return bool
      */
     public function exists($key)
@@ -175,9 +188,10 @@ class CacheMemcacheCore extends Cache
 
     /**
      * Delete one or several data from cache (* joker can be used, but avoid it !)
-     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
+     *
      * @return bool
      */
     public function delete($key)
@@ -191,17 +205,17 @@ class CacheMemcacheCore extends Cache
             $pattern = str_replace('\\*', '.*', preg_quote($key));
             $servers = $this->getMemcachedServers();
             if (is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats')) {
-                $all_slabs = $this->memcache->getStats('slabs');
+                $allSlabs = $this->memcache->getStats('slabs');
             }
 
-            if (isset($all_slabs) && is_array($all_slabs)) {
-                foreach ($all_slabs as $server => $slabs) {
+            if (isset($allSlabs) && is_array($allSlabs)) {
+                foreach ($allSlabs as $server => $slabs) {
                     if (is_array($slabs)) {
-                        foreach (array_keys($slabs) as $i => $slab_id) {
+                        foreach (array_keys($slabs) as $i => $slabId) {
                             // $slab_id is not an int but a string, using the key instead ?
 
                             if (is_int($i)) {
-                                $dump = $this->memcache->getStats('cachedump', (int)$i);
+                                $dump = $this->memcache->getStats('cachedump', (int) $i);
                                 if ($dump) {
                                     foreach ($dump as $entries) {
                                         if ($entries) {
@@ -219,6 +233,7 @@ class CacheMemcacheCore extends Cache
                 }
             }
         }
+
         return true;
     }
 
@@ -232,6 +247,7 @@ class CacheMemcacheCore extends Cache
         if (!$this->is_connected) {
             return false;
         }
+
         return $this->memcache->close();
     }
 
@@ -239,12 +255,23 @@ class CacheMemcacheCore extends Cache
      * Add a memcache server
      *
      * @param string $ip
-     * @param int $port
-     * @param int $weight
+     * @param int    $port
+     * @param int    $weight
+     *
+     * @return bool Indicates whether the server was successfully added
      */
     public static function addServer($ip, $port, $weight)
     {
-        return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'memcached_servers (ip, port, weight) VALUES(\''.pSQL($ip).'\', '.(int)$port.', '.(int)$weight.')', false);
+        return Db::getInstance()->insert(
+            'memcached_servers',
+            array(
+                'ip' => pSQL($ip),
+                'port' => (int) $port,
+                'weight' => (int) $weight,
+            ),
+            false,
+            false
+        );
     }
 
     /**
@@ -254,16 +281,27 @@ class CacheMemcacheCore extends Cache
      */
     public static function getMemcachedServers()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'memcached_servers', true, false);
+        $sql = new DbQuery();
+        $sql->select('ms.*');
+        $sql->from('memcached_servers', 'ms');
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
     }
 
     /**
      * Delete a memcache server
      *
-     * @param int $id_server
+     * @param int $idServer
+     *
+     * @return bool Indicates whether the server was successfully deleted
      */
-    public static function deleteServer($id_server)
+    public static function deleteServer($idServer)
     {
-        return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'memcached_servers WHERE id_memcached_server='.(int)$id_server);
+        return Db::getInstance()->delete(
+            'memcached_servers',
+            '`id_memcached_server` = '.(int) $idServer,
+            0,
+            false
+        );
     }
 }

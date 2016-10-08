@@ -47,9 +47,10 @@ class CacheApcCore extends Cache
 
     /**
      * Delete one or several data from cache (* joker can be used, but avoid it !)
-     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key Cache key
+     *
      * @return bool Whether the key was deleted
      */
     public function delete($key)
@@ -61,8 +62,8 @@ class CacheApcCore extends Cache
         } else {
             $pattern = str_replace('\\*', '.*', preg_quote($key));
 
-            $cache_info = (($this->apcu) ? apcu_cache_info('') : apc_cache_info(''));
-            foreach ($cache_info['cache_list'] as $entry) {
+            $cacheInfo = (($this->apcu) ? apcu_cache_info('') : apc_cache_info(''));
+            foreach ($cacheInfo['cache_list'] as $entry) {
                 if (isset($entry['key'])) {
                     $key = $entry['key'];
                 } else {
@@ -73,6 +74,7 @@ class CacheApcCore extends Cache
                 }
             }
         }
+
         return true;
     }
 
@@ -99,7 +101,7 @@ class CacheApcCore extends Cache
     {
         if (!function_exists('apc_exists') && !function_exists('apcu_exists')) {
             // We're dealing with APC < 3.1.4; use this boolean wrapper as a fallback:
-            return (bool)apc_fetch($key);
+            return (bool) apc_fetch($key);
         } else {
             return (($this->apcu) ? apcu_exists($key) : apc_exists($key));
         }
@@ -131,10 +133,11 @@ class CacheApcCore extends Cache
     /**
      * Store data in the cache
      *
-     * @param string $key Cache Key
-     * @param mixed $value Value
-     * @param int $ttl Time to live in the cache
-     *                 0 = unlimited
+     * @param string $key   Cache Key
+     * @param mixed  $value Value
+     * @param int    $ttl   Time to live in the cache
+     *                      0 = unlimited
+     *
      * @return bool Whether the data was successfully stored
      */
     public function set($key, $value, $ttl = 0)
@@ -157,6 +160,7 @@ class CacheApcCore extends Cache
      * Check if data has been cached
      *
      * @param string $key Cache key
+     *
      * @return bool Whether the data has been cached
      */
     public function exists($key)
