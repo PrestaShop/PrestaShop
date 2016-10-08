@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
+ * Class RiskCore
+ *
  * @since 1.5.0
  */
 class RiskCore extends ObjectModel
@@ -41,38 +43,41 @@ class RiskCore extends ObjectModel
         'multilang' => true,
         'fields' => array(
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
-            'color' =>  array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
-            'percent' => array('type' => self::TYPE_INT, 'validate' => 'isPercentage')
+            'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
+            'percent' => array('type' => self::TYPE_INT, 'validate' => 'isPercentage'),
         ),
     );
 
+    /**
+     * Get fields
+     *
+     * @return mixed
+     */
     public function getFields()
     {
         $this->validateFields();
-        $fields['id_risk'] = (int)$this->id_risk;
+        $fields['id_risk'] = (int) $this->id_risk;
         $fields['color'] = pSQL($this->color);
-        $fields['percent'] = (int)$this->percent;
+        $fields['percent'] = (int) $this->percent;
+
         return $fields;
     }
 
     /**
-     * Check then return multilingual fields for database interaction
+     * Get Risks
      *
-     * @return array Multilingual fields
+     * @param int|null $idLang Language ID
+     *
+     * @return PrestaShopCollection
      */
-    public function getTranslationsFieldsChild()
+    public static function getRisks($idLang = null)
     {
-        $this->validateFieldsLang();
-        return $this->getTranslationsFields(array('name'));
-    }
-
-    public static function getRisks($id_lang = null)
-    {
-        if (is_null($id_lang)) {
-            $id_lang = Context::getContext()->language->id;
+        if (is_null($idLang)) {
+            $idLang = Context::getContext()->language->id;
         }
 
-        $risks = new PrestaShopCollection('Risk', $id_lang);
+        $risks = new PrestaShopCollection('Risk', $idLang);
+
         return $risks;
     }
 }
