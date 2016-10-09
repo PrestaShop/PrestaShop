@@ -215,6 +215,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->l('Name'),
                     'name' => 'name',
+                    'class' => 'copyMeta2friendlyURL',
                     'required' => true,
                     'lang' => true,
                     'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
