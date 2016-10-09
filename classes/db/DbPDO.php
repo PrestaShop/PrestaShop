@@ -367,10 +367,11 @@ class DbPDOCore extends Db
         $result = $this->link->query($sql);
         if (!$result) {
             $value = 'MyISAM';
-        }
-        $row = $result->fetch();
-        if (!$row || strtolower($row['Value']) != 'yes') {
-            $value = 'MyISAM';
+        } else {
+            $row = $result->fetch();
+            if (!$row || strtolower($row['Value']) != 'yes') {
+                $value = 'MyISAM';
+            }
         }
 
         /* MySQL >= 5.6 */
