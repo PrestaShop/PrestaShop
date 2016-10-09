@@ -1216,46 +1216,46 @@ class AdminTranslationsControllerCore extends AdminController
     {
         switch ($type_translation) {
             case 'front':
-                    // Parsing file in Front office
-                    $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
+                // Parsing file in Front office
+                $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
                 break;
 
             case 'back':
-                    // Parsing file in Back office
-                    if ($type_file == 'php') {
-                        $regex = '/this->l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
-                    } elseif ($type_file == 'specific') {
-                        $regex = '/Translate::getAdminTranslation\((\')'._PS_TRANS_PATTERN_.'\'(?:,.*)*\)/U';
-                    } else {
-                        $regex = '/\{l\s*s\s*=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?.*\}/U';
-                    }
+                // Parsing file in Back office
+                if ($type_file == 'php') {
+                    $regex = '/this->l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
+                } elseif ($type_file == 'specific') {
+                    $regex = '/Translate::getAdminTranslation\((\')'._PS_TRANS_PATTERN_.'\'(?:,.*)*\)/U';
+                } else {
+                    $regex = '/\{l\s*s\s*=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?.*\}/U';
+                }
                 break;
 
             case 'errors':
-                    // Parsing file for all errors syntax
-                    $regex = '/Tools::displayError\((\')'._PS_TRANS_PATTERN_.'\'(,\s*(.+))?\)/U';
+                // Parsing file for all errors syntax
+                $regex = '/Tools::displayError\((\')'._PS_TRANS_PATTERN_.'\'(,\s*(.+))?\)/U';
                 break;
 
             case 'modules':
-                    // Parsing modules file
-                    if ($type_file == 'php') {
-                        $regex = '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
-                    } else {
-                        // In tpl file look for something that should contain mod='module_name' according to the documentation
-                        $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1.*\s+mod=\''.$module_name.'\'.*\}/U';
-                    }
+                // Parsing modules file
+                if ($type_file == 'php') {
+                    $regex = '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
+                } else {
+                    // In tpl file look for something that should contain mod='module_name' according to the documentation
+                    $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1.*\s+mod=\''.$module_name.'\'.*\}/U';
+                }
                 break;
 
             case 'pdf':
-                    // Parsing PDF file
-                    if ($type_file == 'php') {
-                        $regex = array(
-                            '/HTMLTemplate.*::l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U',
-                            '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U'
-                        );
-                    } else {
-                        $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
-                    }
+                // Parsing PDF file
+                if ($type_file == 'php') {
+                    $regex = array(
+                        '/HTMLTemplate.*::l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U',
+                        '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U'
+                    );
+                } else {
+                    $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
+                }
                 break;
         }
 
@@ -1855,6 +1855,8 @@ class AdminTranslationsControllerCore extends AdminController
         $name_var = $this->translations_informations[$this->type_selected]['var'];
         $GLOBALS[$name_var] = $this->fileExists();
         $missing_translations_back = array();
+        $missing_translations_found = array();
+        $tab_array = array();
 
         // Get all types of file (PHP, TPL...) and a list of files to parse by folder
         $files_per_directory = $this->getFileToParseByTypeTranslation();
@@ -1894,8 +1896,11 @@ class AdminTranslationsControllerCore extends AdminController
                                 $tabs_array[$prefix_key][$key]['trad'] = '';
                                 if (!isset($missing_translations_back[$prefix_key])) {
                                     $missing_translations_back[$prefix_key] = 1;
-                                } else {
+                                    $missing_translations_found[$prefix_key] = array();
+                                    $missing_translations_found[$prefix_key][] = $key;
+                                } elseif (!in_array($key, $missing_translations_found[$prefix_key])) {
                                     $missing_translations_back[$prefix_key]++;
+                                    $missing_translations_found[$prefix_key][] = $key;
                                 }
                             }
                         }
@@ -1925,8 +1930,11 @@ class AdminTranslationsControllerCore extends AdminController
                                 $tabs_array[$prefix_key][$key]['trad'] = '';
                                 if (!isset($missing_translations_back[$prefix_key])) {
                                     $missing_translations_back[$prefix_key] = 1;
-                                } else {
+                                    $missing_translations_found[$prefix_key] = array();
+                                    $missing_translations_found[$prefix_key][] = $key;
+                                } elseif(!in_array($key, $missing_translations_found[$prefix_key])) {
                                     $missing_translations_back[$prefix_key]++;
+                                    $missing_translations_found[$prefix_key][] = $key;
                                 }
                             }
                         }
@@ -1999,12 +2007,15 @@ class AdminTranslationsControllerCore extends AdminController
                                     $new_lang[$english_string]['trad'] = '';
                                     if (!isset($missing_translations_back[$prefix_key])) {
                                         $missing_translations_back[$prefix_key] = 1;
-                                    } else {
+                                        $missing_translations_found[$prefix_key] = array();
+                                        $missing_translations_found[$prefix_key][] = $english_string;
+                                    } elseif (!in_array($english_string, $missing_translations_found[$prefix_key])) {
                                         $missing_translations_back[$prefix_key]++;
+                                        $missing_translations_found[$prefix_key][] = $english_string;
                                     }
                                 }
                             }
-                            $new_lang[$english_string]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
+                            $new_lang[$english_string]['use_sprintf'] = $this->checkIfKeyUseSprintf($english_string);
                         }
                     }
                     if (isset($tabs_array[$prefix_key])) {
@@ -2680,9 +2691,9 @@ class AdminTranslationsControllerCore extends AdminController
                 foreach (scandir($dir) as $file) {
                     if (!in_array($file, self::$ignore_folder)) {
                         $files_to_copy_iso[] = array(
-                                "from" => $dir.$file,
-                                "to" => str_replace((strpos($dir, _PS_CORE_DIR_) !== false) ? _PS_CORE_DIR_ : _PS_ROOT_DIR_, _PS_ROOT_DIR_.'/themes/'.$current_theme, $dir).$file
-                            );
+                            "from" => $dir.$file,
+                            "to" => str_replace((strpos($dir, _PS_CORE_DIR_) !== false) ? _PS_CORE_DIR_ : _PS_ROOT_DIR_, _PS_ROOT_DIR_.'/themes/'.$current_theme, $dir).$file
+                        );
                     }
                 }
             }
