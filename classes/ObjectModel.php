@@ -923,13 +923,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * Checks if multilingual object field values are valid before database interaction.
      *
      * @param bool $die
-     * @param bool $error_return
+     * @param bool $errorReturn
      *
      * @return bool|string True, false or error message.
      * @throws PrestaShopException
      */
-    public function validateFieldsLang($die = true, $error_return = false)
+    public function validateFieldsLang($die = true, $errorReturn = false)
     {
+        $defaultLang = (int) Configuration::get('PS_LANG_DEFAULT');
         foreach ($this->def['fields'] as $field => $data) {
             if (empty($data['lang'])) {
                 continue;
@@ -943,8 +944,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
 
             // The value for the default must always be set, so we put an empty string if it does not exists
-            if (!isset($values[Configuration::get('PS_LANG_DEFAULT')])) {
-                $values[Configuration::get('PS_LANG_DEFAULT')] = '';
+            if (!isset($values[$defaultLang])) {
+                $values[$defaultLang] = '';
             }
 
             foreach ($values as $id_lang => $value) {
@@ -957,7 +958,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     if ($die) {
                         throw new PrestaShopException($message);
                     }
-                    return $error_return ? $message : false;
+                    return $errorReturn ? $message : false;
                 }
             }
         }
