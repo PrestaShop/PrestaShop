@@ -274,8 +274,10 @@ class AdminModulesPositionsControllerCore extends AdminController
             }
         }
         ksort($module_instances);
-        $hooks = Hook::getHooks(false, true);
+        $hooks = Hook::getHooks(false, false);
         foreach ($hooks as $key => $hook) {
+            $hooks[$key]['position'] = Hook::isDisplayHookName($hook['name']);
+
             // Get all modules for this hook or only the filtered module
             $hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->display_key);
             $hooks[$key]['module_count'] = count($hooks[$key]['modules']);
