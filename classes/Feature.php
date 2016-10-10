@@ -173,7 +173,14 @@ class FeatureCore extends ObjectModel
                 '`'.$this->def['primary'].'` = '.(int)$this->id.' AND `id_lang` = '.(int)$field['id_lang']
             );
         }
-        Hook::exec('actionFeatureSave', array('id_feature' => $this->id));
+
+        if ($result) {
+            $result &= parent::update($nullValues);
+            if ($result) {
+                Hook::exec('actionFeatureSave', array('id_feature' => $this->id));
+            }
+        }
+
         return $result;
     }
 
