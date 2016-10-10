@@ -1003,7 +1003,7 @@ class FrontControllerCore extends Controller
         FrontController::addMedia($media_uri, $css_media_type, null, true, $check_path);
     }
 
-    public function registerStylesheet($id, $relativePath, $media, $priority = 50)
+    public function registerStylesheet($id, $relativePath, $media = 'all', $priority = 50)
     {
         $this->stylesheetManager->register($id, $relativePath, $media, $priority);
     }
