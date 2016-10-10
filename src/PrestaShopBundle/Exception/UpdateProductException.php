@@ -28,30 +28,6 @@ namespace PrestaShopBundle\Exception;
 /**
  * Exception thrown when an update of a data in the repository (DB) failed.
  */
-class DataUpdateException extends \Exception
+class UpdateProductException extends \Exception
 {
-    /**
-     * @var string
-     */
-    public $dataType;
-    /**
-     * @var \integer[]|null
-     */
-    public $failedIds;
-
-    /**
-     * Constructor
-     *
-     * @param string $datatype
-     * @param integer[] $failedIds
-     * @param string $message optional
-     * @param integer $code optional
-     * @param Exception $previous optional
-     */
-    public function __construct($dataType, $failedIds = null, $message = null, $code = null, \Exception $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-        $this->dataType = $dataType;
-        $this->failedIds = $failedIds;
-    }
 }

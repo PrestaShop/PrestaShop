@@ -73,8 +73,11 @@ class CombinationController extends Controller
         $combinations = $modelMapper->getAttributesResume();
 
         $combinationList = array();
-        foreach ($combinations as $combination) {
-            $combinationList[] = ['id' => $combination['id_product_attribute'], 'name' => $combination['attribute_designation']];
+
+        if (is_array($combinations)) {
+            foreach ($combinations as $combination) {
+                $combinationList[] = ['id' => $combination['id_product_attribute'], 'name' => $combination['attribute_designation']];
+            }
         }
 
         $response->setData($combinationList);

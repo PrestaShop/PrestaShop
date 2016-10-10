@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Tests\Service\DataProvider\MarketPlace;
+namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Service\DataProvider\MarketPlace;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Phake;

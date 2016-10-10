@@ -207,6 +207,10 @@ class ModuleController extends FrameworkBundleAdminController
 
         $response = array();
         if (method_exists($moduleManager, $action)) {
+            if ($this->isDemoModeEnabled()) {
+                return $this->getDisabledFunctionalityResponse($request);
+            }
+
             // ToDo : Check if allowed to call this action
             try {
                 if ($action == 'uninstall') {
@@ -290,6 +294,23 @@ class ModuleController extends FrameworkBundleAdminController
         } else {
             return $this->redirect($this->generateUrl('admin_module_catalog'));
         }
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return JsonResponse
+     */
+    protected function getDisabledFunctionalityResponse($request)
+    {
+        $module = $request->get('module_name');
+        $content = array(
+            $module => array(
+                'status' => false,
+                'msg' => $this->getDemoModeErrorMessage(),
+            ),
+        );
+
+        return new JsonResponse($content);
     }
 
     public function notificationAction()
@@ -449,6 +470,13 @@ class ModuleController extends FrameworkBundleAdminController
         $translator = $this->get('translator');
         $moduleManager = $this->get('prestashop.module.manager');
         $moduleZipManager = $this->get('prestashop.module.zip.manager');
+
+        if ($this->isDemoModeEnabled()) {
+            return new JsonResponse(array(
+                'status' => false,
+                'msg' => $this->getDemoModeErrorMessage(),
+            ));
+        }
 
         try {
             $file_uploaded = $request->files->get('file_uploaded');
