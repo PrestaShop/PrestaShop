@@ -59,6 +59,14 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider isBirthDateProvider
+     */
+    public function testIsBirthDate($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isBirthDate($input));
+    }
+
+    /**
      * @dataProvider isMd5DataProvider
      */
     public function testIsMd5($expected, $input)
@@ -98,16 +106,16 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected, Validate::isOptFloat($input));
     }
-        
-        // --- providers ---
 
-        public function isIp2LongDataProvider()
-        {
-            return array(
+    // --- providers ---
+
+    public function isIp2LongDataProvider()
+    {
+        return array(
             array(false, 'toto'),
             array(true, '123')
         );
-        }
+    }
 
     public function isMd5DataProvider()
     {
@@ -146,6 +154,18 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
             array(false, 'john.doe@prestashop'),
             array(false, 123456789),
             array(false, false),
+        );
+    }
+
+    public function isBirthDateProvider()
+    {
+        return array(
+            array(true, '1991-04-19'),
+            array(true, '2015-03-22'),
+            array(true, '1945-07-25'),
+            array(false, '2020-03-19'),
+            array(false, '1991-03-33'),
+            array(false, '1991-15-19'),
         );
     }
 
