@@ -148,7 +148,13 @@ class HelperListCore extends Helper
         $this->_list = $list;
         $this->fields_list = $fields_display;
 
-        $this->orderBy = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderBy);
+        $patternsOrderBy = array(
+            '/^([a-z _]*!)/Ui',     // remove a. for example
+            '/^([a-z _]*\.)/Ui',    // remove a! for example
+            '/`/',                  // remove ` char
+        );
+        $this->orderBy = preg_replace($patternsOrderBy, '', $this->orderBy);
+
         $this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
 
         $this->tpl->assign(array(
