@@ -90,28 +90,28 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         if ($this->session->shop_name && !Validate::isGenericName($this->session->shop_name)) {
             $this->errors['shop_name'] = $this->translator->trans('Invalid shop name', array(), 'Install');
         } elseif (strlen($this->session->shop_name) > 64) {
-            $this->errors['shop_name'] = $this->translator->trans('The field %shop_name% is limited to %limit% characters', array('limit' => 64, 'shop_name' => $this->translator->trans('shop name', array(), 'Install')), 'Install');
+            $this->errors['shop_name'] = $this->translator->trans('The field %field% is limited to %limit% characters', array('%limit%' => 64, '%field%' => $this->translator->trans('shop name', array(), 'Install')), 'Install');
         }
 
         // Check admin name
         if ($this->session->admin_firstname && !Validate::isName($this->session->admin_firstname)) {
             $this->errors['admin_firstname'] = $this->translator->trans('Your firstname contains some invalid characters', array(), 'Install');
         } elseif (strlen($this->session->admin_firstname) > 32) {
-            $this->errors['admin_firstname'] = $this->translator->trans('The field %field% is limited to %d characters', array('field' => $this->translator->trans('firstname', array(), 'Install'), 'limit' => 32), 'Install');
+            $this->errors['admin_firstname'] = $this->translator->trans('The field %field% is limited to %limit% characters', array('%field%' => $this->translator->trans('firstname', array(), 'Install'), '%limit%' => 32), 'Install');
         }
 
         if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname)) {
             $this->errors['admin_lastname'] = $this->translator->trans('Your lastname contains some invalid characters');
         } elseif (strlen($this->session->admin_lastname) > 32) {
-            $this->errors['admin_lastname'] = $this->translator->trans('The field %s is limited to %d characters', array('%field%' => $this->translator->trans('lastname', array(), 'Install'), '%limit%' => 32), 'Install');
+            $this->errors['admin_lastname'] = $this->translator->trans('The field %field% is limited to %limit% characters', array('%field%' => $this->translator->trans('lastname', array(), 'Install'), '%limit%' => 32), 'Install');
         }
 
         // Check passwords
         if ($this->session->admin_password) {
             if (!Validate::isPasswdAdmin($this->session->admin_password)) {
-                $this->errors['admin_password'] = $this->translator->trans('The password is incorrect (alphanumeric string with at least 8 characters)', array(), 'Install');
+                $this->errors['admin_password'] = $this->translator->trans('The password is incorrect (must be alphanumeric string with at least 8 characters)', array(), 'Install');
             } elseif ($this->session->admin_password != $this->session->admin_password_confirm) {
-                $this->errors['admin_password'] = $this->translator->trans('Password and its confirmation are different', array(), 'Install');
+                $this->errors['admin_password'] = $this->translator->trans('The password and its confirmation are different', array(), 'Install');
             }
         }
 
