@@ -175,13 +175,13 @@ DELETE FROM `PREFIX_hook` WHERE `name` IN ('displayProductTab', 'displayProductT
 
 DELETE FROM `PREFIX_hook_alias` WHERE `name` IN ('displayProductTab', 'displayProductTabContent', 'displayBeforePayment');
 
-INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayCarrierExtraContent', 'Display additionnal content for a carrier (e.g pickup points)', 'This hook calls only the module related to the carrier, in order to add options when needed.', '1');
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayCarrierExtraContent', 'Display additional content for a carrier (e.g pickup points)', 'This hook calls only the module related to the carrier, in order to add options when needed.', '1');
 
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_CACHEFS_DIRECTORY_DEPTH';
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_CART_REDIRECT';
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_HTML_THEME_COMPRESSION', 'PS_JS_HTML_THEME_COMPRESSION');
 
-INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('validateCustomerFormFields', 'Customer registration form validation', 'This hook is called to a module when it has sent addtionnal fields with additionalCustomerFormFields', '1');
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('validateCustomerFormFields', 'Customer registration form validation', 'This hook is called to a module when it has sent additional fields with additionalCustomerFormFields', '1');
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayProductExtraContent', 'Display extra content on the product page', 'This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.', '1');
 
