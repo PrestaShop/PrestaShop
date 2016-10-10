@@ -33,7 +33,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'requireBulkActions' => false,
                 'showContentHeader' => true,
                 'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($translator->trans('AdminModules', array(), 'AdminCommon')),
+                'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
             ));
     }
@@ -189,7 +189,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => true,
                 'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($translator->trans('AdminModules', array(), 'AdminCommon')),
+                'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => true,
             ));
     }
@@ -341,7 +341,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => false,
                 'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($translator->trans('AdminModules', array(), 'AdminCommon')),
+                'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
         ));
     }

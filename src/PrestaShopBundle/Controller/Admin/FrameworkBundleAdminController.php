@@ -127,7 +127,7 @@ class FrameworkBundleAdminController extends Controller
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
         if (empty($title)) {
-            $title = $translator->trans('Documentation', array(), 'AdminCommon');
+            $title = $translator->trans('Help', array(), 'Admin.Global');
         }
 
         $docLink = urlencode('http://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'

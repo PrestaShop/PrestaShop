@@ -218,7 +218,7 @@ class ProductController extends FrameworkBundleAdminController
                 'import_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminImport', true, ['import_type' => 'products']),
                 'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
                 'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($translator->trans('AdminProducts', array(), 'AdminCommon')),
+                'help_link' => $this->generateSidebarLink('AdminProducts'),
             )
         );
     }
@@ -515,7 +515,7 @@ class ProductController extends FrameworkBundleAdminController
             'preview_link' => $preview_url,
             'preview_link_deactivate' => $preview_url_deactive,
             'stats_link' => $legacyContextService->getAdminLink('AdminStats', true, ['module' => 'statsproduct', 'id_product' => $id]),
-            'help_link' => $this->generateSidebarLink($translator->trans('AdminProducts', array(), 'AdminCommon')),
+            'help_link' => $this->generateSidebarLink('AdminProducts'),
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
             'attribute_groups' => $attributeGroups,
