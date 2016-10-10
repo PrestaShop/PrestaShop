@@ -363,7 +363,10 @@ class ConfigurationTestCore
 
     public static function test_openssl()
     {
-        return function_exists('openssl_encrypt');
+        return extension_loaded('openssl') &&
+            in_array(\Defuse\Crypto\Core::CIPHER_METHOD, openssl_get_cipher_methods()) &&
+            function_exists('openssl_encrypt')
+        ;
     }
 
     public static function test_sessions()
