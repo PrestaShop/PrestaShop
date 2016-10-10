@@ -99,7 +99,7 @@ class AdminInvoicesControllerCore extends AdminController
                     ),
                     'PS_INVOICE_LEGAL_FREE_TEXT' => array(
                         'title' => $this->trans('Legal free text', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('Use this field to show additional information on the invoice, below the payment methods summary (like specific legal informations).', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).', array(), 'Admin.OrdersCustomers.Help'),
                         'size' => 50,
                         'type' => 'textareaLang',
                     ),
