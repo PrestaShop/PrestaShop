@@ -360,5 +360,8 @@
     <hook id="displayProductExtraContent">
       <name>displayProductExtraContent</name><title>Display extra content on the product page</title><description>This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.</description>
     </hook>
+    <hook id="clearModulesCache">
+      <name>clearModulesCache</name><title>Delete cache for modules</title><description>This hook is used to delete cache for modules.</description>
+    </hook>
   </entities>
 </entity_hook>

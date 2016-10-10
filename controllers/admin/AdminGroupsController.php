@@ -456,6 +456,7 @@ class AdminGroupsControllerCore extends AdminController
             $this->updateCategoryReduction();
             $object = parent::processSave();
             $this->updateRestrictions();
+            Hook::exec('clearModulesCache');
             return $object;
         }
     }
