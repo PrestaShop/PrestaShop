@@ -483,7 +483,7 @@ var supplierCombinations = (function() {
       var url = collectionHolder.attr('data-url')
         .replace(
           /refresh-product-supplier-combination-form\/\d+\/\d+/,
-          'refresh-product-supplier-combination-form/' + id_product + '/' + (suppliers.length > 0 ? '/' + suppliers.join('-') : '')
+          'refresh-product-supplier-combination-form/' + id_product + (suppliers.length > 0 ? '/' + suppliers.join('-') : '')
         );
       $.ajax({
         url: url,
