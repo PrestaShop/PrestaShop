@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class UpgraderCore
+ */
 class UpgraderCore
 {
     const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
@@ -50,6 +53,11 @@ class UpgraderCore
     public $changelog;
     public $md5;
 
+    /**
+     * UpgraderCore constructor.
+     *
+     * @param bool $autoload
+     */
     public function __construct($autoload = false)
     {
         $this->rss_version_link = _PS_API_URL_.'/xml/upgrader.xml';
@@ -90,6 +98,10 @@ class UpgraderCore
             return false;
         }
     }
+
+    /**
+     * @return bool
+     */
     public function isLastVersion()
     {
         if (empty($this->link)) {
@@ -107,26 +119,26 @@ class UpgraderCore
     public function checkPSVersion($force = false)
     {
         if (class_exists('Configuration')) {
-            $last_check = Configuration::get('PS_LAST_VERSION_CHECK');
+            $lastCheck = Configuration::get('PS_LAST_VERSION_CHECK');
         } else {
-            $last_check = 0;
+            $lastCheck = 0;
         }
         // if we use the autoupgrade process, we will never refresh it
         // except if no check has been done before
-        if ($force || ($last_check < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))) {
+        if ($force || ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))) {
             libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
             if ($feed = @simplexml_load_file($this->rss_version_link)) {
-                $this->version_name = (string)$feed->version->name;
-                $this->version_num = (string)$feed->version->num;
-                $this->link = (string)$feed->download->link;
-                $this->md5 = (string)$feed->download->md5;
-                $this->changelog = (string)$feed->download->changelog;
-                $this->autoupgrade = (int)$feed->autoupgrade;
-                $this->autoupgrade_module = (int)$feed->autoupgrade_module;
-                $this->autoupgrade_last_version = (string)$feed->autoupgrade_last_version;
-                $this->autoupgrade_module_link = (string)$feed->autoupgrade_module_link;
-                $this->desc = (string)$feed->desc;
-                $config_last_version = array(
+                $this->version_name = (string) $feed->version->name;
+                $this->version_num = (string) $feed->version->num;
+                $this->link = (string) $feed->download->link;
+                $this->md5 = (string) $feed->download->md5;
+                $this->changelog = (string) $feed->download->changelog;
+                $this->autoupgrade = (int) $feed->autoupgrade;
+                $this->autoupgrade_module = (int) $feed->autoupgrade_module;
+                $this->autoupgrade_last_version = (string) $feed->autoupgrade_last_version;
+                $this->autoupgrade_module_link = (string) $feed->autoupgrade_module_link;
+                $this->desc = (string) $feed->desc;
+                $configLastVersion = array(
                     'name' => $this->version_name,
                     'num' => $this->version_num,
                     'link' => $this->link,
@@ -136,10 +148,10 @@ class UpgraderCore
                     'autoupgrade_last_version' => $this->autoupgrade_last_version,
                     'autoupgrade_module_link' => $this->autoupgrade_module_link,
                     'changelog' => $this->changelog,
-                    'desc' => $this->desc
+                    'desc' => $this->desc,
                 );
                 if (class_exists('Configuration')) {
-                    Configuration::updateValue('PS_LAST_VERSION', serialize($config_last_version));
+                    Configuration::updateValue('PS_LAST_VERSION', serialize($configLastVersion));
                     Configuration::updateValue('PS_LAST_VERSION_CHECK', time());
                 }
             }
@@ -151,6 +163,7 @@ class UpgraderCore
         // false otherwise
         if (version_compare(_PS_VERSION_, $this->version_num, '<')) {
             $this->need_upgrade = true;
+
             return array('name' => $this->version_name, 'link' => $this->link);
         } else {
             return false;
@@ -164,39 +177,40 @@ class UpgraderCore
      */
     public function loadFromConfig()
     {
-        $last_version_check = Tools::unSerialize(Configuration::get('PS_LAST_VERSION'));
-        if ($last_version_check) {
-            if (isset($last_version_check['name'])) {
-                $this->version_name = $last_version_check['name'];
+        $lastVersionCheck = Tools::unSerialize(Configuration::get('PS_LAST_VERSION'));
+        if ($lastVersionCheck) {
+            if (isset($lastVersionCheck['name'])) {
+                $this->version_name = $lastVersionCheck['name'];
             }
-            if (isset($last_version_check['num'])) {
-                $this->version_num = $last_version_check['num'];
+            if (isset($lastVersionCheck['num'])) {
+                $this->version_num = $lastVersionCheck['num'];
             }
-            if (isset($last_version_check['link'])) {
-                $this->link = $last_version_check['link'];
+            if (isset($lastVersionCheck['link'])) {
+                $this->link = $lastVersionCheck['link'];
             }
-            if (isset($last_version_check['autoupgrade'])) {
-                $this->autoupgrade = $last_version_check['autoupgrade'];
+            if (isset($lastVersionCheck['autoupgrade'])) {
+                $this->autoupgrade = $lastVersionCheck['autoupgrade'];
             }
-            if (isset($last_version_check['autoupgrade_module'])) {
-                $this->autoupgrade_module = $last_version_check['autoupgrade_module'];
+            if (isset($lastVersionCheck['autoupgrade_module'])) {
+                $this->autoupgrade_module = $lastVersionCheck['autoupgrade_module'];
             }
-            if (isset($last_version_check['autoupgrade_last_version'])) {
-                $this->autoupgrade_last_version = $last_version_check['autoupgrade_last_version'];
+            if (isset($lastVersionCheck['autoupgrade_last_version'])) {
+                $this->autoupgrade_last_version = $lastVersionCheck['autoupgrade_last_version'];
             }
-            if (isset($last_version_check['autoupgrade_module_link'])) {
-                $this->autoupgrade_module_link = $last_version_check['autoupgrade_module_link'];
+            if (isset($lastVersionCheck['autoupgrade_module_link'])) {
+                $this->autoupgrade_module_link = $lastVersionCheck['autoupgrade_module_link'];
             }
-            if (isset($last_version_check['md5'])) {
-                $this->md5 = $last_version_check['md5'];
+            if (isset($lastVersionCheck['md5'])) {
+                $this->md5 = $lastVersionCheck['md5'];
             }
-            if (isset($last_version_check['desc'])) {
-                $this->desc = $last_version_check['desc'];
+            if (isset($lastVersionCheck['desc'])) {
+                $this->desc = $lastVersionCheck['desc'];
             }
-            if (isset($last_version_check['changelog'])) {
-                $this->changelog = $last_version_check['changelog'];
+            if (isset($lastVersionCheck['changelog'])) {
+                $this->changelog = $lastVersionCheck['changelog'];
             }
         }
+
         return $this;
     }
 
@@ -216,6 +230,7 @@ class UpgraderCore
                 $this->browseXmlAndCompare($checksum->ps_root_dir[0]);
             }
         }
+
         return $this->changed_files;
     }
 
@@ -244,6 +259,7 @@ class UpgraderCore
     }
 
     /** populate $this->missing_files with $path
+     *
      * @param string $path filepath to add, relative to _PS_ROOT_DIR_
      */
     protected function addMissingFile($path)
@@ -252,48 +268,68 @@ class UpgraderCore
         $this->missing_files[] = $path;
     }
 
-    protected function browseXmlAndCompare($node, &$current_path = array(), $level = 1)
+    /**
+     * @param       $node
+     * @param array $currentPath
+     * @param int   $level
+     */
+    protected function browseXmlAndCompare($node, &$currentPath = array(), $level = 1)
     {
         foreach ($node as $key => $child) {
             /** @var SimpleXMLElement $child */
             if (is_object($child) && $child->getName() == 'dir') {
-                $current_path[$level] = (string)$child['name'];
-                $this->browseXmlAndCompare($child, $current_path, $level + 1);
+                $currentPath[$level] = (string) $child['name'];
+                $this->browseXmlAndCompare($child, $currentPath, $level + 1);
             } elseif (is_object($child) && $child->getName() == 'md5file') {
                 // We will store only relative path.
                 // absolute path is only used for file_exists and compare
-                $relative_path = '';
+                $relativePath = '';
                 for ($i = 1; $i < $level; $i++) {
-                    $relative_path .= $current_path[$i].'/';
+                    $relativePath .= $currentPath[$i].'/';
                 }
-                $relative_path .= (string)$child['name'];
-                $fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$relative_path;
+                $relativePath .= (string)$child['name'];
+                $fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$relativePath;
 
                 $fullpath = str_replace('ps_root_dir', _PS_ROOT_DIR_, $fullpath);
 
                     // replace default admin dir by current one
                 $fullpath = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $fullpath);
                 if (!file_exists($fullpath)) {
-                    $this->addMissingFile($relative_path);
-                } elseif (!$this->compareChecksum($fullpath, (string)$child)) {
-                    $this->addChangedFile($relative_path);
+                    $this->addMissingFile($relativePath);
+                } elseif (!$this->compareChecksum($fullpath, (string) $child)) {
+                    $this->addChangedFile($relativePath);
                 }
                     // else, file is original (and ok)
             }
         }
     }
 
-    protected function compareChecksum($path, $original_sum)
+    /**
+     * Compare checksum
+     *
+     * @param string $path
+     * @param string $originalSum
+     *
+     * @return bool
+     */
+    protected function compareChecksum($path, $originalSum)
     {
-        if (md5_file($path) == $original_sum) {
+        if (md5_file($path) == $originalSum) {
             return true;
         }
+
         return false;
     }
 
+    /**
+     * Is this an authentic PrestaShop version?
+     *
+     * @return bool
+     */
     public function isAuthenticPrestashopVersion()
     {
         $this->getChangedFilesList();
+
         return !$this->version_is_modified;
     }
 }
