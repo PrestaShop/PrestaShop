@@ -86,7 +86,7 @@ class QuickAccessCore extends ObjectModel
             $quick['link'] = Context::getContext()->link->getQuickLink($quick['link']);
             $tokenString = $idEmployee;
 
-            if ($quick['link'] == '../' && Shop::getContext() == Shop::CONTEXT_SHOP) {
+            if ('../' === $quick['link'] && Shop::getContext() == Shop::CONTEXT_SHOP) {
                 $url = Context::getContext()->shop->getBaseURL();
                 if (!$url) {
                     unset($quickAccess[$index]);
