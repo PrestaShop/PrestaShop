@@ -16,7 +16,7 @@
 
         {if $level1.icon != ''}
 
-          <li class="link-levelone {if $level1.current}-active{/if}">
+          <li class="link-levelone {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
             <a href="{$level1Href}" class="link" >
               <i class="material-icons">{$level1.icon}</i> <span>{$level1Name}</span>
             </a>
@@ -24,7 +24,7 @@
 
         {else}
 
-          <li class="category-title {if $level1.current}-active{/if}">
+          <li class="category-title {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
               <span class="title">{$level1Name}</span>
           </li>
 
@@ -38,7 +38,7 @@
                   {$level2Name = $level2.class_name|escape:'html':'UTF-8'}
                 {/if}
 
-                <li class="link-levelone {if $level2.current}-active{/if}">
+                <li class="link-levelone {if $level2.current}-active{/if}" data-submenu="{$level2.id_tab}">
                   <a href="{$level2Href}" class="link">
                     <i class="material-icons">{$level2.icon}</i> <span>{$level2Name}</span>
                   </a>
@@ -54,7 +54,7 @@
                               {$level3Name = $level3.class_name|escape:'html':'UTF-8'}
                             {/if}
 
-                            <li class="link-leveltwo {if $level3.current}-active{/if}">
+                            <li class="link-leveltwo {if $level3.current}-active{/if}" data-submenu="{$level3.id_tab}">
                               <a href="{$level3Href}" class="link"> {$level3Name}
                               </a>
                             </li>
