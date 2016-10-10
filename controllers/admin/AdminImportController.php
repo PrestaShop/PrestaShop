@@ -1827,8 +1827,10 @@ class AdminImportControllerCore extends AdminController
             );
         }
 
-        if (!$valid_link || !($match_ref || $force_ids) || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang]))) {
+        if (!$valid_link || !(is_array($product->link_rewrite) && count($product->link_rewrite))) {
             $product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
+        } else {
+            $product->link_rewrite[(int)$id_lang] = $link_rewrite;
         }
 
         // replace the value of separator by coma
