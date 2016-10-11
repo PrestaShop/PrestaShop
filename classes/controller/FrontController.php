@@ -814,9 +814,9 @@ class FrontControllerCore extends Controller
             $this->registerStylesheet('theme-rtl', '/assets/css/rtl.css', 'all', 10);
         }
 
-        $this->registerJavascript('corejs', '/themes/core.js', true, 0);
-        $this->registerJavascript('theme-main', '/assets/js/theme.js', true, 50);
-        $this->registerJavascript('theme-custom', '/assets/js/custom.js', true, 1000);
+        $this->registerJavascript('corejs', '/themes/core.js', 'bottom', 0);
+        $this->registerJavascript('theme-main', '/assets/js/theme.js', 'bottom', 50);
+        $this->registerJavascript('theme-custom', '/assets/js/custom.js', 'bottom', 1000);
 
         // Execute Hook FrontController SetMedia
         Hook::exec('actionFrontControllerSetMedia', array());
@@ -944,12 +944,12 @@ class FrontControllerCore extends Controller
         return;
     }
 
-    public function registerStylesheet($id, $relativePath, $media = 'all', $priority = 50)
+    public function registerStylesheet($id, $relativePath, $media = AbstractAssetManager::DEFAULT_MEDIA, $priority = AbstractAssetManager::DEFAULT_PRIORITY)
     {
         $this->stylesheetManager->register($id, $relativePath, $media, $priority);
     }
 
-    public function registerJavascript($id, $relativePath, $bottom = true, $priority = 50)
+    public function registerJavascript($id, $relativePath, $bottom = AbstractAssetManagerCore::JS_BOTTOM, $priority = AbstractAssetManager::DEFAULT_PRIORITY)
     {
         $this->javascriptManager->register($id, $relativePath, $bottom, $priority);
     }

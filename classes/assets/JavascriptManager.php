@@ -32,10 +32,10 @@ class JavascriptManagerCore extends AbstractAssetManager
         'bottom' => array()
     );
 
-    public function register($id, $relativePath, $bottom = true, $position = 50)
+    public function register($id, $relativePath, $bottom = self::JS_BOTTOM, $priority = self::DEFAULT_PRIORITY)
     {
         if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $bottom, $position);
+            $this->add($id, $fullPath, $bottom, $priority);
         }
     }
 

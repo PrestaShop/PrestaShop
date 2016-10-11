@@ -39,7 +39,7 @@ class StylesheetManagerCore extends AbstractAssetManager
         'tv',
     );
 
-    public function register($id, $relativePath, $media = 'all', $priority = 50)
+    public function register($id, $relativePath, $media = self::DEFAULT_MEDIA, $priority = self::DEFAULT_PRIORITY)
     {
         if ($fullPath = $this->getFullPath($relativePath)) {
             $this->add($id, $fullPath, $this->getMedia($media), $priority);
@@ -62,6 +62,6 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     private function getMedia($media)
     {
-        return in_array($media, $this->valid_media) ? $media : 'all';
+        return in_array($media, $this->valid_media) ? $media : self::DEFAULT_MEDIA;
     }
 }

@@ -34,6 +34,10 @@ abstract class AbstractAssetManagerCore
     protected $list = array();
     protected $fqdn;
 
+    const DEFAULT_MEDIA = 'all';
+    const DEFAULT_PRIORITY = 50;
+    const JS_BOTTOM = true;
+
     public function __construct(array $directories, ConfigurationInterface $configuration)
     {
         $this->directories = $directories;
