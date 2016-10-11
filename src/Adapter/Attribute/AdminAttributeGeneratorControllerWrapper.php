@@ -70,11 +70,13 @@ class AdminAttributeGeneratorControllerWrapper
             return false;
         }
 
+        $translator = $this->container->get('translator');
+
         if ($idProduct && \ValidateCore::isUnsignedId($idProduct) && \ValidateCore::isLoadedObject($product = new \ProductCore($idProduct))) {
             if (($depends_on_stock = \StockAvailableCore::dependsOnStock($idProduct)) && \StockAvailableCore::getQuantityAvailableByProduct($idProduct, $idAttribute)) {
                 return array(
                     'status' => 'error',
-                    'message'=> 'It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.'
+                    'message'=> $translator->trans('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.', array(), 'Admin.Catalog.Notification'),
                 );
             } else {
                 $product->deleteAttributeCombination((int)$idAttribute);
@@ -90,19 +92,19 @@ class AdminAttributeGeneratorControllerWrapper
                 if ($depends_on_stock && !\StockCore::deleteStockByIds($idProduct, $idAttribute)) {
                     return array(
                         'status' => 'error',
-                        'message'=> 'Error while deleting the stock'
+                        'message'=> $translator->trans('Error while deleting the stock', array(), 'Admin.Catalog.Notification'),
                     );
                 } else {
                     return array(
                         'status' => 'ok',
-                        'message'=> 'Successful deletion'
+                        'message'=> $translator->trans('Successful deletion', array(), 'Admin.Catalog.Notification'),
                     );
                 }
             }
         } else {
             return array(
                 'status' => 'error',
-                'message'=> 'You cannot delete this attribute.'
+                'message'=> $translator->trans('You cannot delete this attribute.', array(), 'Admin.Catalog.Notification'),
             );
         }
     }
