@@ -103,7 +103,7 @@ class CombinationDataProvider
             'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->context->getContext()->currency->iso_code),
             'final_price' => $this->tools->bcadd($product->price, $combination['price'], CommonAbstractType::PRESTASHOP_DECIMALS),
             'attribute_priceTI' => '',
-            'attribute_ecotax' => $combination['ecotax'],
+            'attribute_ecotax' => \Tools::ps_round($combination['ecotax'] * (1 + \Tax::getProductEcotaxRate() / 100), 2),
             'attribute_weight_impact' => $attribute_weight_impact,
             'attribute_weight' => $combination['weight'],
             'attribute_unit_impact' => $attribute_unity_price_impact,

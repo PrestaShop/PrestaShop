@@ -417,6 +417,12 @@ class ProductController extends FrameworkBundleAdminController
                 foreach ((array)$postData as $postKey => $postValue) {
                     if (preg_match('/^combination_.*/', $postKey)) {
                         $combinations[$postKey] = $postValue;
+                        if (0 < (float) $combinations[$postKey]['attribute_ecotax']) {
+                            $combinations[$postKey]['attribute_ecotax'] = \Tools::ps_round(
+                                $combinations[$postKey]['attribute_ecotax'] / (1 + \Tax::getProductEcotaxRate() / 100),
+                                2
+                            );
+                        }
                     }
                 }
 

@@ -4473,7 +4473,7 @@ class ProductCore extends ObjectModel
         if (isset(self::$_pricesLevel2[$id_product . '-' . $id_shop][$row['id_product_attribute']]['attribute_ecotax'])) {
             $cached_combination_ecotax = self::$_pricesLevel2[$id_product . '-' . $id_shop][$row['id_product_attribute']]['attribute_ecotax'];
 
-            if ((float)$cached_combination_ecotax > 0) {
+            if (0 < (float) $cached_combination_ecotax) {
                 $row['ecotax'] = $cached_combination_ecotax;
             }
         }
