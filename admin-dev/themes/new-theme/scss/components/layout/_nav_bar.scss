@@ -23,6 +23,7 @@
 
 .link-levelone {
   $padding-size: rem(20px);
+  display: block;
   > .link {
     @include single-line-block($size-navbar-link-height);
     font-size: rem(12px);
