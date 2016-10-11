@@ -4,9 +4,9 @@
         <div class="hide alert alert-danger">{{ notification_error }}</div>
     </div>
     <p><strong>Translation key:</strong> <verbatim>{{ translation_key }}</verbatim></p>
-    <div class="form-group row">
+    <div class="form-group row{% if not is_translated %} has-warning{% endif %}">
         <div class="col-lg-12">
-            <textarea class="form-control" rows="3" name="translation_value">{{ edited_translation_value }}</textarea>
+            <textarea class="form-control{% if not is_translated %} form-control-warning{% endif %}" rows="3" name="translation_value">{{ edited_translation_value }}</textarea>
         </div>
         <input type="hidden" name="domain" value="{{ domain }}"/>
         <input type="hidden" name="locale" value="{{ locale }}"/>
