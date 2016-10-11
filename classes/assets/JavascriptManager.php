@@ -27,32 +27,44 @@
 
 class JavascriptManagerCore extends AbstractAssetManager
 {
-    protected $list = array(
-        'head' => array(),
-        'bottom' => array()
-    );
+    protected $list;
 
-    public function register($id, $relativePath, $bottom = self::JS_BOTTOM, $priority = self::DEFAULT_PRIORITY)
+    protected $valid_position = ['head', 'bottom'];
+
+    public function register($id, $relativePath, $position = self::DEFAULT_JS_POSITION, $priority = self::DEFAULT_PRIORITY, $inline = false)
     {
         if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $bottom, $priority);
+            $this->add($id, $fullPath, $position, $priority, $inline);
         }
     }
 
-    protected function add($id, $fullPath, $bottom, $priority)
+    protected function getDefaultList()
+    {
+        $default = [];
+        foreach ($this->valid_position as $position) {
+            $default[$position] = [
+                'external' => [],
+                'inline' => [],
+            ];
+        }
+
+        return $default;
+    }
+
+    protected function add($id, $fullPath, $position, $priority, $inline)
     {
         if (filesize($fullPath) === 0) {
             return;
         }
 
-        if (!is_int($priority)) {
-            $priority = self::DEFAULT_PRIORITY;
-        }
+        $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
+        $position = $this->getSanitizedPosition($position);
+        $type = ($inline) ? 'inline' : 'external';
 
-        $position = $bottom ? 'bottom' : 'head';
-
-        $this->list[$position][$id] = array(
+        $this->list[$position][$type][$id] = array(
             'id' => $id,
+            'type' => $type,
+            'path' => $fullPath,
             'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
             'priority' => $priority,
         );
@@ -60,15 +72,40 @@ class JavascriptManagerCore extends AbstractAssetManager
 
     public function getList()
     {
-        foreach ($this->list as &$sublist) {
-            uasort($sublist, function ($a, $b) {
-                if ($a['priority'] === $b['priority']) {
-                    return 0;
-                }
-                return ($a['priority'] < $b['priority']) ? -1 : 1;
-            });
-        }
+        $this->sortList();
+        $this->addInlinedJavascriptContent();
 
         return $this->list;
+    }
+
+    private function addInlinedJavascriptContent()
+    {
+        foreach ($this->valid_position as $position) {
+            foreach ($this->list[$position]['inline'] as &$item) {
+                $item['content'] =
+                    '/* ---- '.$item['id'].' @ '.$item['path'].' ---- */'."\r\n".
+                    file_get_contents($item['path']);
+            }
+        }
+    }
+
+    private function getSanitizedPosition($position)
+    {
+        return in_array($position, $this->valid_position, true) ? $position : self::DEFAULT_JS_POSITION;
+    }
+
+    private function sortList()
+    {
+        foreach ($this->valid_position as $position) {
+            foreach ($this->list[$position] as $type => $items) {
+                uasort($items, function ($a, $b) {
+                    if ($a['priority'] === $b['priority']) {
+                        return 0;
+                    }
+                    return ($a['priority'] < $b['priority']) ? -1 : 1;
+                });
+                $this->list[$position][$type] = $items;
+            }
+        }
     }
 }

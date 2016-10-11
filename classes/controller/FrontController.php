@@ -823,7 +823,7 @@ class FrontControllerCore extends Controller
                 $this->registerStylesheet($css['id'], $css['path'], $css['media'], $css['priority']);
             }
             foreach ($assets['js'] as $js) {
-                $this->registerJavascript($js['id'], $js['path'], $js['bottom'], $js['priority']);
+                $this->registerJavascript($js['id'], $js['path'], $js['bottom'], $js['priority'], $js['inline']);
             }
         }
 
@@ -958,9 +958,9 @@ class FrontControllerCore extends Controller
         $this->stylesheetManager->register($id, $relativePath, $media, $priority);
     }
 
-    public function registerJavascript($id, $relativePath, $bottom = AbstractAssetManagerCore::JS_BOTTOM, $priority = AbstractAssetManager::DEFAULT_PRIORITY)
+    public function registerJavascript($id, $relativePath, $bottom = AbstractAssetManager::DEFAULT_JS_POSITION, $priority = AbstractAssetManager::DEFAULT_PRIORITY, $inline = false)
     {
-        $this->javascriptManager->register($id, $relativePath, $bottom, $priority);
+        $this->javascriptManager->register($id, $relativePath, $bottom, $priority, $inline);
     }
 
     /**

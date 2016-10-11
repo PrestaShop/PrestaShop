@@ -36,25 +36,18 @@ abstract class AbstractAssetManagerCore
 
     const DEFAULT_MEDIA = 'all';
     const DEFAULT_PRIORITY = 50;
-    const JS_BOTTOM = true;
+    const DEFAULT_JS_POSITION = 'bottom';
 
     public function __construct(array $directories, ConfigurationInterface $configuration)
     {
         $this->directories = $directories;
         $this->configuration = $configuration;
+
+        $this->list = $this->getDefaultList();
     }
 
-    public function getList()
-    {
-        uasort($this->list, function ($a, $b) {
-            if ($a['priority'] === $b['priority']) {
-                return 0;
-            }
-            return ($a['priority'] < $b['priority']) ? -1 : 1;
-        });
-
-        return $this->list;
-    }
+    abstract protected function getDefaultList();
+    abstract protected function getList();
 
     protected function getFullPath($relativePath)
     {

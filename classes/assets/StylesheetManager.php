@@ -39,11 +39,23 @@ class StylesheetManagerCore extends AbstractAssetManager
         'tv',
     );
 
+    protected function getDefaultList()
+    {
+        return [];
+    }
+
     public function register($id, $relativePath, $media = self::DEFAULT_MEDIA, $priority = self::DEFAULT_PRIORITY)
     {
         if ($fullPath = $this->getFullPath($relativePath)) {
             $this->add($id, $fullPath, $media, $priority);
         }
+    }
+
+    public function getList()
+    {
+        $this->sortList();
+
+        return $this->list;
     }
 
     protected function add($id, $fullPath, $media, $priority)
@@ -60,8 +72,9 @@ class StylesheetManagerCore extends AbstractAssetManager
 
         $this->list[$id] = array(
             'id' => $id,
-            'media' => $media,
+            'path' => $fullPath,
             'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
+            'media' => $media,
             'priority' => $priority,
         );
     }
@@ -69,5 +82,15 @@ class StylesheetManagerCore extends AbstractAssetManager
     private function getSanitizedMedia($media)
     {
         return in_array($media, $this->valid_media) ? $media : self::DEFAULT_MEDIA;
+    }
+
+    private function sortList()
+    {
+        uasort($this->list, function ($a, $b) {
+            if ($a['priority'] === $b['priority']) {
+                return 0;
+            }
+            return ($a['priority'] < $b['priority']) ? -1 : 1;
+        });
     }
 }

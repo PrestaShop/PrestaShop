@@ -23,7 +23,7 @@
 {/block}
 
 {block name='javascript_head'}
-  {include file="_partials/javascript.tpl" files=$javascript.head}
+  {include file="_partials/javascript.tpl" javascript=$javascript.head}
 {/block}
 
 {$js_def nofilter}

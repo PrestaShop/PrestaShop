@@ -223,10 +223,13 @@ class Theme implements AddonInterface
                 continue;
             }
             if (!isset($entry['bottom'])) {
-                $entry['bottom'] = \AbstractAssetManager::JS_BOTTOM;
+                $entry['bottom'] = \AbstractAssetManager::DEFAULT_JS_POSITION;
             }
             if (!isset($entry['priority'])) {
                 $entry['priority'] = \AbstractAssetManager::DEFAULT_PRIORITY;
+            }
+            if (!isset($entry['inline'])) {
+                $entry['inline'] = false;
             }
         }
 
