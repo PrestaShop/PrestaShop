@@ -100,16 +100,23 @@ class CartControllerCore extends FrontController
             return;
         }
 
+        $productsInCart = $this->context->cart->getProducts();
+        $updatedProducts = array_filter($productsInCart, array($this, 'productInCartMatchesCriteria'));
+        list(, $updatedProduct) = each($updatedProducts);
+        $productQuantity = $updatedProduct['quantity'];
+
         if (!$this->errors) {
             $this->ajaxDie(Tools::jsonEncode([
                 'success' => true,
                 'id_product' => $this->id_product,
-                'id_product_attribute' => $this->id_product_attribute
+                'id_product_attribute' => $this->id_product_attribute,
+                'quantity' => $productQuantity,
             ]));
         } else {
             $this->ajaxDie(Tools::jsonEncode([
                 'hasError' => true,
                 'errors' => $this->errors,
+                'quantity' => $productQuantity,
             ]));
         }
     }
@@ -277,10 +284,7 @@ class CartControllerCore extends FrontController
 
         if (is_array($cart_products)) {
             foreach ($cart_products as $cart_product) {
-                if ((!isset($this->id_product_attribute) ||
-                    ($cart_product['id_product_attribute'] == $this->id_product_attribute &&
-                    $cart_product['id_customization'] == $this->customization_id)) &&
-                    (isset($this->id_product) && $cart_product['id_product'] == $this->id_product)) {
+                if ($this->productInCartMatchesCriteria($cart_product)) {
                     $qty_to_check = $cart_product['cart_quantity'];
 
                     if (Tools::getValue('op', 'up') == 'down') {
@@ -347,6 +351,20 @@ class CartControllerCore extends FrontController
 
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
+    }
+
+    /**
+     * @param $productInCart
+     * @return bool
+     */
+    function productInCartMatchesCriteria($productInCart) {
+        return (
+            !isset($this->id_product_attribute) ||
+            (
+                $productInCart['id_product_attribute'] == $this->id_product_attribute &&
+                $productInCart['id_customization'] == $this->customization_id
+            )
+        ) && isset($this->id_product) && $productInCart['id_product'] == $this->id_product;
     }
 
     public function getTemplateVarPage()
