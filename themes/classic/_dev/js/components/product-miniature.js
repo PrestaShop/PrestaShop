@@ -9,7 +9,7 @@ export default class ProductMinitature {
       let $new = $(element).find('.new');
       if($percent.length){
         $new.css('top', $percent.height() * 2 + FLAG_MARGIN);
-        $percent.css('top',-$('.thumbnail-container').height() + $('.product-description').height() + FLAG_MARGIN);
+        $percent.css('top',-$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height() + FLAG_MARGIN);
       }
       if($onsale.length){
         $percent.css('top', parseFloat($percent.css('top')) + $onsale.height() + FLAG_MARGIN);
