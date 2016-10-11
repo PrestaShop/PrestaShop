@@ -219,6 +219,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
+                    'class' => 'copyMeta2friendlyURL',
                     'required' => true,
                     'lang' => true,
                     'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
