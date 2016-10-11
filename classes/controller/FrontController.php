@@ -928,7 +928,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
+     * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
      */
     public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false, $check_path = true)
     {
@@ -974,15 +974,28 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->registerStylesheet() instead
+     * @deprecated 1.7 This function shouldn't be used, use $this->registerStylesheet() instead
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
     {
-        Tools::displayAsDeprecated(
-            'This function has no effect in PrestaShop 1.7 theme, use $this->registerStylesheet() instead'
+        PrestaShopLogger::addLog(
+            'A module uses FrontController::addCSS() method, it should use $this->registerStylesheet() instead',
+            3,
+            null,
+            null,
+            null,
+            true
         );
 
-        return;
+        if (!is_array($css_uri)) {
+            $css_uri = (array) $css_uri;
+        }
+
+        foreach ($css_uri as $legacy_uri) {
+            if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
+                $this->registerStylesheet(sha1($uri), $uri, $css_media_type, 80);
+            }
+        }
     }
 
     /**
@@ -990,11 +1003,24 @@ class FrontControllerCore extends Controller
      */
     public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
     {
-        Tools::displayAsDeprecated(
-            'This function has no effect in PrestaShop 1.7 theme, use $this->unregisterStylesheet() instead'
+        PrestaShopLogger::addLog(
+            'A module uses FrontController::removeCSS() method, it should use $this->unregisterStylesheet() instead',
+            3,
+            null,
+            null,
+            null,
+            true
         );
 
-        return;
+        if (!is_array($css_uri)) {
+            $css_uri = (array) $css_uri;
+        }
+
+        foreach ($css_uri as $legacy_uri) {
+            if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
+                $this->unregisterStylesheet(sha1($uri));
+            }
+        }
     }
 
     /**
@@ -1002,11 +1028,24 @@ class FrontControllerCore extends Controller
      */
     public function addJS($js_uri, $check_path = true)
     {
-        Tools::displayAsDeprecated(
-            'This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() instead'
+        PrestaShopLogger::addLog(
+            'A module uses FrontController::addJS() method, it should use $this->registerJavascript() instead',
+            3,
+            null,
+            null,
+            null,
+            true
         );
 
-        return;
+        if (!is_array($js_uri)) {
+            $js_uri = (array) $js_uri;
+        }
+
+        foreach ($js_uri as $legacy_uri) {
+            if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
+                $this->registerJavascript(sha1($uri), $uri, 'bottom', 80);
+            }
+        }
     }
 
     /**
@@ -1014,15 +1053,29 @@ class FrontControllerCore extends Controller
      */
     public function removeJS($js_uri, $check_path = true)
     {
-        Tools::displayAsDeprecated(
-            'This function has no effect in PrestaShop 1.7 theme, use $this->unregisterJavascript() instead'
+        PrestaShopLogger::addLog(
+            'A module uses FrontController::removeJS() method, it should use $this->unregisterJavascript() instead',
+            3,
+            null,
+            null,
+            null,
+            true
         );
 
-        return;
+        if (!is_array($js_uri)) {
+            $js_uri = (array) $js_uri;
+        }
+
+        foreach ($js_uri as $legacy_uri) {
+            if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
+                $this->unregisterJavascript(sha1($uri));
+            }
+        }
     }
 
     /**
-     * @deprecated 1.7
+     * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
+     *                  Have a look at the /themes/_core folder.
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
     {
@@ -1030,8 +1083,6 @@ class FrontControllerCore extends Controller
             'This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core
             on every theme. Have a look at the /themes/_core folder.'
         );
-
-        return;
     }
 
     /**
@@ -1735,5 +1786,18 @@ class FrontControllerCore extends Controller
     public function getRestrictedCountry()
     {
         return $this->restrictedCountry;
+    }
+
+    public function getAssetUriFromLegacyDeprecatedMethod($legacy_uri)
+    {
+        $success = preg_match('/modules\/.*/', $legacy_uri, $matches);
+        if (!$success) {
+            Tools::displayAsDeprecated(
+                'Backward compatiblity for this method couldn\'t be handled. Use $this->registerJavascript() instead'
+            );
+            return false;
+        } else {
+            return $matches[0];
+        }
     }
 }
