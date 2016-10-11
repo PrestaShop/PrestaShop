@@ -42,7 +42,7 @@ class StylesheetManagerCore extends AbstractAssetManager
     public function register($id, $relativePath, $media = self::DEFAULT_MEDIA, $priority = self::DEFAULT_PRIORITY)
     {
         if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $this->getMedia($media), $priority);
+            $this->add($id, $fullPath, $media, $priority);
         }
     }
 
@@ -50,6 +50,12 @@ class StylesheetManagerCore extends AbstractAssetManager
     {
         if (filesize($fullPath) === 0) {
             return;
+        }
+
+        $media = $this->getSanitizedMedia($media);
+
+        if (!is_int($priority)) {
+            $priority = self::DEFAULT_PRIORITY;
         }
 
         $this->list[$id] = array(
@@ -60,7 +66,7 @@ class StylesheetManagerCore extends AbstractAssetManager
         );
     }
 
-    private function getMedia($media)
+    private function getSanitizedMedia($media)
     {
         return in_array($media, $this->valid_media) ? $media : self::DEFAULT_MEDIA;
     }

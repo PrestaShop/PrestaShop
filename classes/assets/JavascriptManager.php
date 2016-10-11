@@ -45,6 +45,10 @@ class JavascriptManagerCore extends AbstractAssetManager
             return;
         }
 
+        if (!is_int($priority)) {
+            $priority = self::DEFAULT_PRIORITY;
+        }
+
         $position = $bottom ? 'bottom' : 'head';
 
         $this->list[$position][$id] = array(
