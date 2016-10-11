@@ -86,7 +86,7 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     private function getSanitizedMedia($media)
     {
-        return in_array($media, $this->valid_media) ? $media : self::DEFAULT_MEDIA;
+        return in_array($media, $this->valid_media, true) ? $media : self::DEFAULT_MEDIA;
     }
 
     private function sortList()
