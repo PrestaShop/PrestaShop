@@ -186,11 +186,11 @@ class TranslationsExtension extends \Twig_Extension
     protected function getSharedEditFormViewProperties()
     {
         return array(
-            'label_edit' => $this->translator->trans('Edit', array(), 'Admin.Actions'),
+            'label_edit' => $this->translator->trans('Update', array(), 'Admin.Actions'),
             'label_reset' => $this->translator->trans('Reset', array(), 'Admin.Actions'),
-            'notification_success' => $this->translator->trans('Translation successfully edited', array(),
+            'notification_success' => $this->translator->trans('Translation successfully updated', array(),
                 'Admin.International.Notification'),
-            'notification_error' => $this->translator->trans('Translation unsuccessfully edited', array(),
+            'notification_error' => $this->translator->trans('Translation unsuccessfully updated', array(),
                 'Admin.International.Notification'),
         );
     }
