@@ -1046,6 +1046,9 @@ class ProductCore extends ObjectModel
         }
 
         Db::getInstance()->insert('category_product', $product_cats);
+
+        Cache::clean('Product::getProductCategories_'.(int)$this->id);
+
         return true;
     }
 
@@ -1085,6 +1088,9 @@ class ProductCore extends ObjectModel
         }
 
         SpecificPriceRule::applyAllRules(array((int)$this->id));
+
+        Cache::clean('Product::getProductCategories_'.(int)$this->id);
+
         return true;
     }
 
@@ -1110,7 +1116,11 @@ class ProductCore extends ObjectModel
                 self::cleanPositions((int)$row['id_category'], (int)$row['position']);
             }
         }
+
         SpecificPriceRule::applyAllRules(array((int)$this->id));
+
+        Cache::clean('Product::getProductCategories_'.(int)$this->id);
+
         return $return;
     }
 
@@ -1136,6 +1146,8 @@ class ProductCore extends ObjectModel
                 $return &= self::cleanPositions((int)$row['id_category'], (int)$row['position']);
             }
         }
+
+        Cache::clean('Product::getProductCategories_'.(int)$this->id);
 
         return $return;
     }
