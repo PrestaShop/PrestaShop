@@ -1,8 +1,8 @@
 admin_feature_get_feature_values:
-    path:     /get-feature-values/{id}
+    path:     /get-feature-values/{idFeature}
     methods:  [GET]
     defaults:
-        id: 0
+        idFeature: 0
         _controller: PrestaShopBundle:Admin/Feature:getFeatureValues
     requirements:
-        id: \d+
+        idFeature: \d+
