@@ -17211,7 +17211,7 @@
 	        var $new = (0, _jquery2['default'])(element).find('.new');
 	        if ($percent.length) {
 	          $new.css('top', $percent.height() * 2 + FLAG_MARGIN);
-	          $percent.css('top', -(0, _jquery2['default'])('.thumbnail-container').height() + (0, _jquery2['default'])('.product-description').height() + FLAG_MARGIN);
+	          $percent.css('top', -(0, _jquery2['default'])(element).find('.thumbnail-container').height() + (0, _jquery2['default'])(element).find('.product-description').height() + FLAG_MARGIN);
 	        }
 	        if ($onsale.length) {
 	          $percent.css('top', parseFloat($percent.css('top')) + $onsale.height() + FLAG_MARGIN);
