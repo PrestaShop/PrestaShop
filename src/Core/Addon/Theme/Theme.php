@@ -222,14 +222,17 @@ class Theme implements AddonInterface
                 unset($js[$key]);
                 continue;
             }
-            if (!isset($entry['bottom'])) {
-                $entry['bottom'] = \AbstractAssetManager::DEFAULT_JS_POSITION;
+            if (!isset($entry['position'])) {
+                $entry['position'] = \AbstractAssetManager::DEFAULT_JS_POSITION;
             }
             if (!isset($entry['priority'])) {
                 $entry['priority'] = \AbstractAssetManager::DEFAULT_PRIORITY;
             }
             if (!isset($entry['inline'])) {
                 $entry['inline'] = false;
+            }
+            if (!isset($entry['attribute'])) {
+                $entry['attribute'] = false;
             }
         }
 

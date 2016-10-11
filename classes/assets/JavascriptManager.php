@@ -30,11 +30,17 @@ class JavascriptManagerCore extends AbstractAssetManager
     protected $list;
 
     protected $valid_position = ['head', 'bottom'];
+    protected $valid_attribute = ['async', 'defer'];
 
-    public function register($id, $relativePath, $position = self::DEFAULT_JS_POSITION, $priority = self::DEFAULT_PRIORITY, $inline = false)
-    {
+    public function register($id,
+        $relativePath,
+        $position = self::DEFAULT_JS_POSITION,
+        $priority = self::DEFAULT_PRIORITY,
+        $inline = false,
+        $attribute = null
+    ) {
         if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $position, $priority, $inline);
+            $this->add($id, $fullPath, $position, $priority, $inline, $attribute);
         }
     }
 
@@ -64,7 +70,7 @@ class JavascriptManagerCore extends AbstractAssetManager
         return $default;
     }
 
-    protected function add($id, $fullPath, $position, $priority, $inline)
+    protected function add($id, $fullPath, $position, $priority, $inline, $attribute)
     {
         if (filesize($fullPath) === 0) {
             return;
@@ -72,6 +78,7 @@ class JavascriptManagerCore extends AbstractAssetManager
 
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $position = $this->getSanitizedPosition($position);
+        $attribute = $this->getSanitizedAttribute($attribute);
         $type = ($inline) ? 'inline' : 'external';
 
         $this->list[$position][$type][$id] = array(
@@ -80,6 +87,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             'path' => $fullPath,
             'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
             'priority' => $priority,
+            'attribute' => $attribute,
         );
     }
 
@@ -105,6 +113,11 @@ class JavascriptManagerCore extends AbstractAssetManager
     private function getSanitizedPosition($position)
     {
         return in_array($position, $this->valid_position, true) ? $position : self::DEFAULT_JS_POSITION;
+    }
+
+    private function getSanitizedAttribute($attribute)
+    {
+        return in_array($attribute, $this->valid_attribute, true) ? $attribute : '';
     }
 
     private function sortList()

@@ -823,7 +823,7 @@ class FrontControllerCore extends Controller
                 $this->registerStylesheet($css['id'], $css['path'], $css['media'], $css['priority']);
             }
             foreach ($assets['js'] as $js) {
-                $this->registerJavascript($js['id'], $js['path'], $js['bottom'], $js['priority'], $js['inline']);
+                $this->registerJavascript($js['id'], $js['path'], $js['bottom'], $js['priority'], $js['inline'], $js['attribute']);
             }
         }
 
@@ -981,14 +981,15 @@ class FrontControllerCore extends Controller
         }
 
         $default_params = [
-            'bottom' => AbstractAssetManager::DEFAULT_JS_POSITION,
+            'position' => AbstractAssetManager::DEFAULT_JS_POSITION,
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
+            'attributes' => null,
         ];
 
         $params = array_merge($default_params, $params);
 
-        $this->javascriptManager->register($id, $relativePath, $params['bottom'], $params['priority'], $params['inline']);
+        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes']);
     }
 
     public function unregisterJavascript($id)
