@@ -310,19 +310,25 @@ class AdminCustomerThreadsControllerCore extends AdminController
     {
         if ($id_customer_thread = (int)Tools::getValue('id_customer_thread')) {
             if (($id_contact = (int)Tools::getValue('id_contact'))) {
-                Db::getInstance()->execute('
+                $result = Db::getInstance()->execute('
 					UPDATE '._DB_PREFIX_.'customer_thread
-					SET id_contact = '.(int)$id_contact.'
-					WHERE id_customer_thread = '.(int)$id_customer_thread
+					SET id_contact = '.$id_contact.'
+					WHERE id_customer_thread = '.$id_customer_thread
                 );
+                if ($result) {
+                    $this->object->id_contact = $id_contact;
+                }
             }
             if ($id_status = (int)Tools::getValue('setstatus')) {
                 $status_array = array(1 => 'open', 2 => 'closed', 3 => 'pending1', 4 => 'pending2');
-                Db::getInstance()->execute('
+                $result = Db::getInstance()->execute('
 					UPDATE '._DB_PREFIX_.'customer_thread
 					SET status = "'.$status_array[$id_status].'"
-					WHERE id_customer_thread = '.(int)$id_customer_thread.' LIMIT 1
+					WHERE id_customer_thread = '.$id_customer_thread.' LIMIT 1
 				');
+                if ($result) {
+                    $this->object->status = $status_array[$id_status];
+                }
             }
             if (isset($_POST['id_employee_forward'])) {
                 $messages = Db::getInstance()->getRow('
