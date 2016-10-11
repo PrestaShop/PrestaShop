@@ -39,10 +39,12 @@ class TranslationsExtension extends \Twig_Extension
     public $logger;
 
     private $container;
+    private $router;
 
-    public function __construct($container)
+    public function __construct($container, $router)
     {
         $this->container = $container;
+        $this->router = $router;
     }
 
     /**
@@ -193,6 +195,7 @@ class TranslationsExtension extends \Twig_Extension
     protected function getSharedEditFormViewProperties()
     {
         return array(
+            'action' => $this->router->generate('admin_international_translations_edit'),
             'label_edit' => $this->translator->trans('Update', array(), 'Admin.Actions'),
             'label_reset' => $this->translator->trans('Reset', array(), 'Admin.Actions'),
             'notification_success' => $this->translator->trans('Translation successfully updated', array(),
@@ -219,6 +222,7 @@ class TranslationsExtension extends \Twig_Extension
                 'domain' => $domain,
                 'edited_translation_value' => $translationValue,
                 'is_translated' => '' !== $translationValue,
+                'action' => $properties['action'],
                 'label_edit' => $properties['label_edit'],
                 'label_reset' => $properties['label_reset'],
                 'locale' => $locale,
