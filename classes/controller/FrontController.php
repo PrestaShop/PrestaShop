@@ -958,9 +958,19 @@ class FrontControllerCore extends Controller
         $this->stylesheetManager->register($id, $relativePath, $media, $priority);
     }
 
+    public function unregisterStylesheet($id)
+    {
+        $this->stylesheetManager->unregisterById($id);
+    }
+
     public function registerJavascript($id, $relativePath, $bottom = AbstractAssetManager::DEFAULT_JS_POSITION, $priority = AbstractAssetManager::DEFAULT_PRIORITY, $inline = false)
     {
         $this->javascriptManager->register($id, $relativePath, $bottom, $priority, $inline);
+    }
+
+    public function unregisterJavascript($id)
+    {
+        $this->javascriptManager->unregisterById($id);
     }
 
     /**

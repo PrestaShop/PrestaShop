@@ -38,6 +38,19 @@ class JavascriptManagerCore extends AbstractAssetManager
         }
     }
 
+    public function unregisterById($idToRemove)
+    {
+        foreach ($this->valid_position as $position) {
+            foreach ($this->list[$position] as $type => $null) {
+                foreach ($this->list[$position][$type] as $id => $item) {
+                    if ($idToRemove === $id) {
+                        unset($this->list[$position][$type]);
+                    }
+                }
+            }
+        }
+    }
+
     protected function getDefaultList()
     {
         $default = [];

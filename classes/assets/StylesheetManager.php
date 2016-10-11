@@ -51,6 +51,11 @@ class StylesheetManagerCore extends AbstractAssetManager
         }
     }
 
+    public function unregisterById($id)
+    {
+        unset($this->list[$id]);
+    }
+
     public function getList()
     {
         $this->sortList();
