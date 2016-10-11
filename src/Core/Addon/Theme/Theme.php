@@ -88,6 +88,14 @@ class Theme implements AddonInterface
         return $modulesToEnable;
     }
 
+    public function getPageSpecificAssets($pageId)
+    {
+        return [
+            'css' => $this->getPageSpecificCss($pageId),
+            'js' => $this->getPageSpecificJs($pageId),
+        ];
+    }
+
     public function onInstall()
     {
         return true;
@@ -177,5 +185,51 @@ class Theme implements AddonInterface
     public function getLayoutRelativePathForPage($page)
     {
         return 'layouts/'.$this->getLayoutNameForPage($page).'.tpl';
+    }
+
+    private function getPageSpecificCss($pageId)
+    {
+        $css = array_merge(
+            (array) $this->get('assets.css.all'),
+            (array) $this->get('assets.css.'.$pageId)
+        );
+        foreach ($css as $key => &$entry) {
+            // Required parameters
+            if (!isset($entry['id']) || !isset($entry['path'])) {
+                unset($css[$key]);
+                continue;
+            }
+            if (!isset($entry['media'])) {
+                $entry['media'] = \AbstractAssetManager::DEFAULT_MEDIA;
+            }
+            if (!isset($entry['priority'])) {
+                $entry['priority'] = \AbstractAssetManager::DEFAULT_PRIORITY;
+            }
+        }
+
+        return $css;
+    }
+
+    private function getPageSpecificJs($pageId)
+    {
+        $js = array_merge(
+            (array) $this->get('assets.js.all'),
+            (array) $this->get('assets.js.'.$pageId)
+        );
+        foreach ($js as $key => &$entry) {
+            // Required parameters
+            if (!isset($entry['id']) || !isset($entry['path'])) {
+                unset($js[$key]);
+                continue;
+            }
+            if (!isset($entry['bottom'])) {
+                $entry['bottom'] = \AbstractAssetManager::JS_BOTTOM;
+            }
+            if (!isset($entry['priority'])) {
+                $entry['priority'] = \AbstractAssetManager::DEFAULT_PRIORITY;
+            }
+        }
+
+        return $js;
     }
 }

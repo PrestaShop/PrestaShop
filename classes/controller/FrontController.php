@@ -818,6 +818,15 @@ class FrontControllerCore extends Controller
         $this->registerJavascript('theme-main', '/assets/js/theme.js', 'bottom', 50);
         $this->registerJavascript('theme-custom', '/assets/js/custom.js', 'bottom', 1000);
 
+        if (!empty($assets = $this->context->shop->theme->getPageSpecificAssets($this->php_self))) {
+            foreach ($assets['css'] as $css) {
+                $this->registerStylesheet($css['id'], $css['path'], $css['media'], $css['priority']);
+            }
+            foreach ($assets['js'] as $js) {
+                $this->registerJavascript($js['id'], $js['path'], $js['bottom'], $js['priority']);
+            }
+        }
+
         // Execute Hook FrontController SetMedia
         Hook::exec('actionFrontControllerSetMedia', array());
 
