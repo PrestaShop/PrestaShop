@@ -382,23 +382,6 @@ class AdminPerformanceControllerCore extends AdminController
                         )
                     )
                 ),
-                array(
-                    'type' => 'switch',
-                    'label' => $this->trans('Move JavaScript to the end', array(), 'Admin.AdvParameters.Feature'),
-                    'name' => 'PS_JS_DEFER',
-                    'values' => array(
-                        array(
-                            'id' => 'PS_JS_DEFER_1',
-                            'value' => 1,
-                            'label' => $this->trans('Move JavaScript to the end of the HTML document', array(), 'Admin.AdvParameters.Feature')
-                        ),
-                        array(
-                            'id' => 'PS_JS_DEFER_0',
-                            'value' => 0,
-                            'label' => $this->trans('Keep JavaScript in HTML at its original position', array(), 'Admin.AdvParameters.Feature')
-                        )
-                    )
-                ),
 
             ),
             'submit' => array(
@@ -430,7 +413,6 @@ class AdminPerformanceControllerCore extends AdminController
         $this->fields_value['PS_CSS_THEME_CACHE'] = Configuration::get('PS_CSS_THEME_CACHE');
         $this->fields_value['PS_JS_THEME_CACHE'] = Configuration::get('PS_JS_THEME_CACHE');
         $this->fields_value['PS_HTACCESS_CACHE_CONTROL'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
-        $this->fields_value['PS_JS_DEFER'] = Configuration::get('PS_JS_DEFER');
         $this->fields_value['ccc_up'] = 1;
     }
 
@@ -729,7 +711,6 @@ class AdminPerformanceControllerCore extends AdminController
 
                 if (!Configuration::updateValue('PS_CSS_THEME_CACHE', (int)Tools::getValue('PS_CSS_THEME_CACHE')) ||
                     !Configuration::updateValue('PS_JS_THEME_CACHE', (int)Tools::getValue('PS_JS_THEME_CACHE')) ||
-                    !Configuration::updateValue('PS_JS_DEFER', (int)Tools::getValue('PS_JS_DEFER')) ||
                     !Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL'))) {
                     $this->errors[] = $this->trans('Unknown error.', array(), 'Admin.Notifications.Error');
                 } else {
