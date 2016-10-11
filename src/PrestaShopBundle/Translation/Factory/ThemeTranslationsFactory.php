@@ -80,7 +80,7 @@ class ThemeTranslationsFactory implements TranslationsFactoryInterface
                 ;
 
                 $translations[$domain][$translationKey] = array(
-                    'xlf' => $translations[$domain][$translationKey],
+                    'xlf' => $translationKey != $translationValue ? $translations[$domain][$translationKey] : '',
                     'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
                 );
             }
