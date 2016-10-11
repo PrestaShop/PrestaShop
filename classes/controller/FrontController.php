@@ -953,9 +953,20 @@ class FrontControllerCore extends Controller
         return;
     }
 
-    public function registerStylesheet($id, $relativePath, $media = AbstractAssetManager::DEFAULT_MEDIA, $priority = AbstractAssetManager::DEFAULT_PRIORITY)
+    public function registerStylesheet($id, $relativePath, $params = array())
     {
-        $this->stylesheetManager->register($id, $relativePath, $media, $priority);
+        if (!is_array($params)) {
+            $params = array();
+        }
+
+        $default_params = [
+            'media' => AbstractAssetManager::DEFAULT_MEDIA,
+            'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
+        ];
+
+        $params = array_merge($default_params, $params);
+
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority']);
     }
 
     public function unregisterStylesheet($id)
@@ -963,9 +974,21 @@ class FrontControllerCore extends Controller
         $this->stylesheetManager->unregisterById($id);
     }
 
-    public function registerJavascript($id, $relativePath, $bottom = AbstractAssetManager::DEFAULT_JS_POSITION, $priority = AbstractAssetManager::DEFAULT_PRIORITY, $inline = false)
+    public function registerJavascript($id, $relativePath, $params = array())
     {
-        $this->javascriptManager->register($id, $relativePath, $bottom, $priority, $inline);
+        if (!is_array($params)) {
+            $params = array();
+        }
+
+        $default_params = [
+            'bottom' => AbstractAssetManager::DEFAULT_JS_POSITION,
+            'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
+            'inline' => false,
+        ];
+
+        $params = array_merge($default_params, $params);
+
+        $this->javascriptManager->register($id, $relativePath, $params['bottom'], $params['priority'], $params['inline']);
     }
 
     public function unregisterJavascript($id)
