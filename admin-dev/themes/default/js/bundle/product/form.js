@@ -1546,6 +1546,7 @@ var formImagesProduct = (function() {
         url: dropZoneElem.find(".dz-preview[data-id='"+id+"']").attr('url-update'),
         success: function(response) {
           formZoneElem.find('#product-images-form').html(response);
+          form.switchLanguage($('#form_switch_language').val());
         },
         complete: function() {
           toggleColDropzone(false);
