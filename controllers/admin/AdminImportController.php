@@ -1788,14 +1788,6 @@ class AdminImportControllerCore extends AdminController
             }
 
             $product->id_category = array_values(array_unique($product->id_category));
-
-            // Will update default category if category column is not ignored AND if there is categories that are set in the import file row.
-            if (isset($product->id_category[0])) {
-                $product->id_category_default = (int)$product->id_category[0];
-            } else {
-                $defaultProductShop = new Shop($product->id_shop_default);
-                $product->id_category_default = Category::getRootCategory(null, Validate::isLoadedObject($defaultProductShop)?$defaultProductShop:null)->id;
-            }
         }
 
         // Will update default category if there is none set here. Home if no category at all.
