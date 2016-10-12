@@ -92,8 +92,9 @@ $(document).ready(function () {
       const minimalProductQuantity = parseInt(resp.product_minimal_quantity, 10);
       const quantityInputSelector = '#quantity_wanted';
       let quantityInput = $(quantityInputSelector);
+      const quantity_wanted = quantityInput.val();
 
-      if (!isNaN(minimalProductQuantity) && resp.product_has_combinations && eventType !== 'updatedProductQuantity') {
+      if (!isNaN(minimalProductQuantity) && quantity_wanted < minimalProductQuantity && eventType !== 'updatedProductQuantity') {
         quantityInput.attr('min', minimalProductQuantity);
         quantityInput.val(minimalProductQuantity);
       }
