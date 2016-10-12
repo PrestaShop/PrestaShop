@@ -44,7 +44,7 @@ $(document).ready(() => {
   topMenu.init();
   productMinitature.init();
   productSelect.init();
-  $("#search_filters_wrapper").bind("DOMSubtreeModified", function() {
+  $("#products").bind("DOMSubtreeModified", function() {
     productMinitature.init();
   });
 });

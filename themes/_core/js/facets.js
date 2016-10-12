@@ -2,23 +2,10 @@ import $ from 'jquery';
 
 let pendingQuery = false;
 
-function updateDOM ({rendered_products, rendered_facets}) {
-    $('#products').replaceWith(rendered_products);
-    $('#search_filters').replaceWith(rendered_facets);
-}
-
-const onpopstate = e => {
-    if (e.state && e.state.rendered_products) {
-        updateDOM(e.state);
-    }
-};
-
 function updateResults (data) {
     pendingQuery = false;
-    updateDOM(data);
+    prestashop.emit('updateProductList', data);
     window.history.pushState(data, undefined, data.current_url);
-    window.addEventListener('popstate', onpopstate);
-    prestashop.emit('facetsUpdated');
 }
 
 function handleError () {

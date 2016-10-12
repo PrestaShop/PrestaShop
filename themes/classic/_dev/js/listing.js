@@ -86,4 +86,16 @@ $(document).ready(() => {
     $('#content-wrapper').removeClass('hidden-sm-down');
     $('#footer').removeClass('hidden-sm-down');
   });
+
+  prestashop.on('updateProductList', (data) => {
+    updateProductListDOM(data);
+  });
 });
+
+function updateProductListDOM (data) {
+  $('#search_filters').replaceWith(data.rendered_facets);
+  $('#js-active-search-filters').replaceWith(data.rendered_active_filters);
+  $('#js-product-list-top').replaceWith(data.rendered_products_top);
+  $('#js-product-list').replaceWith(data.rendered_products);
+  $('#js-product-list-bottom').replaceWith(data.rendered_products_bottom);
+}
