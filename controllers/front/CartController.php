@@ -77,7 +77,7 @@ class CartControllerCore extends FrontController
         parent::initContent();
 
         $presenter = new CartPresenter();
-        $presented_cart = $presenter->present($this->context->cart);
+        $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
 
         $this->context->smarty->assign([
             'cart' => $presented_cart,

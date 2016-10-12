@@ -42,14 +42,6 @@ class CartPresenter implements PresenterInterface
 
     private function presentProduct(array $rawProduct)
     {
-        $presenter = new ProductListingPresenter(
-            $this->imageRetriever,
-            $this->link,
-            $this->priceFormatter,
-            new ProductColorsRetriever(),
-            $this->translator
-        );
-
         $settings = new ProductPresentationSettings();
 
         $settings->catalog_mode = Configuration::isCatalogMode();
@@ -117,6 +109,14 @@ class CartPresenter implements PresenterInterface
         );
 
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
+
+        $presenter = new ProductListingPresenter(
+            $this->imageRetriever,
+            $this->link,
+            $this->priceFormatter,
+            new ProductColorsRetriever(),
+            $this->translator
+        );
 
         return $presenter->present(
             $settings,
@@ -236,12 +236,23 @@ class CartPresenter implements PresenterInterface
         }, $products);
     }
 
-    public function present($cart)
+    /**
+     * @param $cart
+     * @param bool $shouldSeparateGifts
+     * @return array
+     * @throws \Exception
+     */
+    public function present($cart, $shouldSeparateGifts = false)
     {
         if (!is_a($cart, 'Cart')) {
             throw new \Exception('CartPresenter can only present instance of Cart');
         }
-        $rawProducts = $cart->getProducts(true);
+
+        if ($shouldSeparateGifts) {
+            $rawProducts = $cart->getProductsWithSeparatedGifts();
+        } else {
+            $rawProducts = $cart->getProducts(true);
+        }
 
         $products = array_map(array($this, 'presentProduct'), $rawProducts);
         $products = $this->addCustomizedData($products, $cart);
@@ -250,7 +261,7 @@ class CartPresenter implements PresenterInterface
         $productsTotalExcludingTax = $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
-        $total_discount = $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
+        $total_discount = $cart->getDiscountSubtotalWithoutGifts();
 
         $subtotals['products'] = array(
             'type' => 'products',
@@ -410,6 +421,10 @@ class CartPresenter implements PresenterInterface
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
+
+            if (array_key_exists('gift_product', $cartVoucher) && $cartVoucher['gift_product']) {
+                $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
+            }
 
             if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'].'%';

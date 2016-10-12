@@ -75,10 +75,30 @@
       <div class="col-md-10 col-xs-6">
         <div class="row">
           <div class="col-md-6 col-xs-6 qty">
-            <input class="js-cart-line-product-quantity" data-down-url="{$product.down_quantity_url}" data-up-url="{$product.up_quantity_url}" data-update-url="{$product.update_quantity_url}" data-product-id="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
+            {if isset($product.is_gift) && $product.is_gift}
+              <span class="gift-quantity">{$product.quantity}</span>
+            {else}
+              <input class="js-cart-line-product-quantity"
+                     data-down-url="{$product.down_quantity_url}"
+                     data-up-url="{$product.up_quantity_url}"
+                     data-update-url="{$product.update_quantity_url}"
+                     data-product-id="{$product.id_product}"
+                     type="text"
+                     value="{$product.quantity}"
+                     name="product-quantity-spin"
+              />
+            {/if}
           </div>
           <div class="col-md-6 col-xs-2 price">
-            <span class="product-price"><strong>{$product.total}</strong></span>
+            <span class="product-price">
+              <strong>
+                {if isset($product.is_gift) && $product.is_gift}
+                  <span class="gift">{l s='Gift' d='Shop.Theme.Checkout'}</span>
+                {else}
+                  {$product.total}
+                {/if}
+              </strong>
+            </span>
           </div>
         </div>
       </div>
@@ -93,7 +113,9 @@
               data-id-product-attribute   = "{$product.id_product_attribute|escape:'javascript'}"
               data-id-customization   	  = "{$product.id_customization|escape:'javascript'}"
           >
+            {if !isset($product.is_gift) || !$product.is_gift}
             <i class="material-icons pull-xs-left">delete</i>
+            {/if}
           </a>
           {hook h='displayCartExtraProductActions' product=$product}
         </div>
