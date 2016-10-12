@@ -23,10 +23,8 @@
 {/block}
 
 {block name='javascript_head'}
-  {include file="_partials/javascript.tpl" javascript=$javascript.head}
+  {include file="_partials/javascript.tpl" javascript=$javascript.head vars=$js_custom_vars}
 {/block}
-
-{$js_def nofilter}
 
 {block name='hook_header'}
   {$HOOK_HEADER nofilter}

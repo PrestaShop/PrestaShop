@@ -605,12 +605,30 @@ class FrontControllerCore extends Controller
             'layout' => $this->getLayout(),
             'stylesheets' => $this->stylesheetManager->getList(),
             'javascript' => $this->javascriptManager->getList(),
+            'js_custom_vars' => Media::getJsDef(),
             'notifications' => $this->prepareNotifications(),
         ));
 
         $this->smartyOutputContent($this->template);
 
         return true;
+    }
+
+    protected function smartyOutputContent($content)
+    {
+        $this->context->cookie->write();
+
+        $html = '';
+
+        if (is_array($content)) {
+            foreach ($content as $tpl) {
+                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
+            }
+        } else {
+            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+        }
+
+        echo trim($html);
     }
 
     protected function prepareNotifications()

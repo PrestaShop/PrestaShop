@@ -541,23 +541,7 @@ abstract class ControllerCore
             $html = $this->context->smarty->fetch($content, null, $this->getLayout());
         }
 
-        $html = trim($html);
-
-        if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout()) {
-            $html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
-
-            $this->context->smarty->assign(array(
-                $js_tag => Media::getJsDef(),
-                'js_files' =>  array(),
-                'js_inline' => array(),
-            ));
-
-            $javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
-
-            echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).(empty($this->ajax) ? '</body></html>' : '');
-        } else {
-            echo $html;
-        }
+        echo trim($html);
     }
 
     /**
