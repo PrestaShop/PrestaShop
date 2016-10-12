@@ -2792,6 +2792,15 @@ abstract class ModuleCore
 
             // Make a reflection of the override class and the module override class
             $override_file = file($override_path);
+            if (empty($override_file)) {
+                // class_index was out of sync, so we just create a new override on the fly
+                $override_file = array(
+                    "<?php\n",
+                    "class {$classname} extends {$classname}Core\n",
+                    "{\n",
+                    "}\n",
+                );
+            }
             $override_file = array_diff($override_file, array("\n"));
             eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
             $override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
