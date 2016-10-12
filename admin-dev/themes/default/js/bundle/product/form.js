@@ -1719,9 +1719,9 @@ var priceCalculation = (function() {
         var price = priceCalculation.normalizePrice($(this).val());
 
         if ($(this).attr('id') === 'form_step1_price_shortcut') {
-          $('#form_step2_price').val(price);
+          $('#form_step2_price').val(price).change();
         } else {
-          $('#form_step1_price_shortcut').val(price);
+          $('#form_step1_price_shortcut').val(price).change();
         }
 
         priceCalculation.taxInclude();
@@ -1732,9 +1732,9 @@ var priceCalculation = (function() {
         var price = priceCalculation.normalizePrice($(this).val());
 
         if ($(this).attr('id') === 'form_step1_price_ttc_shortcut') {
-          $('#form_step2_price_ttc').val(price);
+          $('#form_step2_price_ttc').val(price).change();
         } else {
-          $('#form_step1_price_ttc_shortcut').val(price);
+          $('#form_step1_price_ttc_shortcut').val(price).change();
         }
 
         priceCalculation.taxExclude();
@@ -1786,8 +1786,8 @@ var priceCalculation = (function() {
       var newPrice = priceWithTaxes + ecotaxIncluded;
       newPrice = truncateDecimals(newPrice, 6);
 
-      priceTTCElem.val(newPrice);
-      priceTTCShorcutElem.val(newPrice);
+      priceTTCElem.val(newPrice).change();
+      priceTTCShorcutElem.val(newPrice).change();
     },
     'taxExclude': function() {
       var price = this.normalizePrice(priceTTCElem.val());
@@ -1796,8 +1796,8 @@ var priceCalculation = (function() {
       var newPrice = ps_round(removeTaxes(ps_round(price - getEcotaxTaxIncluded(), displayPricePrecision), rates, computation_method), displayPricePrecision);
       newPrice = truncateDecimals(newPrice, 6);
 
-      priceHTElem.val(newPrice);
-      priceHTShortcutElem.val(newPrice);
+      priceHTElem.val(newPrice).change();
+      priceHTShortcutElem.val(newPrice).change();
     },
     'impactTaxInclude': function(obj) {
       var price = this.normalizePrice(obj.val());
