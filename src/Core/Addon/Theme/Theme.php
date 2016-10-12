@@ -205,6 +205,9 @@ class Theme implements AddonInterface
             if (!isset($entry['priority'])) {
                 $entry['priority'] = \AbstractAssetManager::DEFAULT_PRIORITY;
             }
+            if (!isset($entry['inline'])) {
+                $entry['inline'] = false;
+            }
         }
 
         return $css;

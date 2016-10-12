@@ -980,11 +980,12 @@ class FrontControllerCore extends Controller
         $default_params = [
             'media' => AbstractAssetManager::DEFAULT_MEDIA,
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
+            'inline' => false,
         ];
 
         $params = array_merge($default_params, $params);
 
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority']);
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline']);
     }
 
     public function unregisterStylesheet($id)

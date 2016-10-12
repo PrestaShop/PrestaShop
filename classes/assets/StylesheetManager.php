@@ -41,13 +41,16 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     protected function getDefaultList()
     {
-        return [];
+        return [
+            'external' => [],
+            'inline' => [],
+        ];
     }
 
-    public function register($id, $relativePath, $media = self::DEFAULT_MEDIA, $priority = self::DEFAULT_PRIORITY)
+    public function register($id, $relativePath, $media = self::DEFAULT_MEDIA, $priority = self::DEFAULT_PRIORITY, $inline = false)
     {
         if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $media, $priority);
+            $this->add($id, $fullPath, $media, $priority, $inline);
         }
     }
 
@@ -59,24 +62,27 @@ class StylesheetManagerCore extends AbstractAssetManager
     public function getList()
     {
         $this->sortList();
+        $this->addInlinedStyleContent();
 
         return $this->list;
     }
 
-    protected function add($id, $fullPath, $media, $priority)
+    protected function add($id, $fullPath, $media, $priority, $inline)
     {
         if (filesize($fullPath) === 0) {
             return;
         }
 
         $media = $this->getSanitizedMedia($media);
+        $type = ($inline) ? 'inline' : 'external';
 
         if (!is_int($priority)) {
             $priority = self::DEFAULT_PRIORITY;
         }
 
-        $this->list[$id] = array(
+        $this->list[$type][$id] = array(
             'id' => $id,
+            'type' => $type,
             'path' => $fullPath,
             'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
             'media' => $media,
@@ -91,11 +97,26 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     private function sortList()
     {
-        uasort($this->list, function ($a, $b) {
-            if ($a['priority'] === $b['priority']) {
-                return 0;
-            }
-            return ($a['priority'] < $b['priority']) ? -1 : 1;
-        });
+        foreach ($this->list as $type => &$items) {
+            uasort(
+                $items,
+                function ($a, $b) {
+                    if ($a['priority'] === $b['priority']) {
+                        return 0;
+                    }
+
+                    return ($a['priority'] < $b['priority']) ? -1 : 1;
+                }
+            );
+        }
+    }
+
+    private function addInlinedStyleContent()
+    {
+        foreach ($this->list['inline'] as &$item) {
+            $item['content'] =
+                '/* ---- '.$item['id'].' @ '.$item['path'].' ---- */'."\r\n".
+                file_get_contents($item['path']);
+        }
     }
 }
