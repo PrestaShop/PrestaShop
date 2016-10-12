@@ -825,23 +825,23 @@ class FrontControllerCore extends Controller
      */
     public function setMedia()
     {
-        $this->registerStylesheet('theme-main', '/assets/css/theme.css', 'all', 0);
-        $this->registerStylesheet('theme-custom', '/assets/css/custom.css', 'all', 1000);
+        $this->registerStylesheet('theme-main', '/assets/css/theme.css', ['media' => 'all', 'priority' => 0]);
+        $this->registerStylesheet('theme-custom', '/assets/css/custom.css', ['media' => 'all', 'priority' => 1000]);
 
         if ($this->context->language->is_rtl) {
-            $this->registerStylesheet('theme-rtl', '/assets/css/rtl.css', 'all', 10);
+            $this->registerStylesheet('theme-rtl', '/assets/css/rtl.css', ['media' => 'all', 'priority' => 10]);
         }
 
-        $this->registerJavascript('corejs', '/themes/core.js', 'bottom', 0);
-        $this->registerJavascript('theme-main', '/assets/js/theme.js', 'bottom', 50);
-        $this->registerJavascript('theme-custom', '/assets/js/custom.js', 'bottom', 1000);
+        $this->registerJavascript('corejs', '/themes/core.js', ['position' => 'bottom', 'priority' => 0]);
+        $this->registerJavascript('theme-main', '/assets/js/theme.js', ['position' => 'bottom', 'priority' => 50]);
+        $this->registerJavascript('theme-custom', '/assets/js/custom.js', ['position' => 'bottom', 'priority' => 1000]);
 
         if (!empty($assets = $this->context->shop->theme->getPageSpecificAssets($this->php_self))) {
             foreach ($assets['css'] as $css) {
-                $this->registerStylesheet($css['id'], $css['path'], $css['media'], $css['priority']);
+                $this->registerStylesheet($css['id'], $css['path'], $css);
             }
             foreach ($assets['js'] as $js) {
-                $this->registerJavascript($js['id'], $js['path'], $js['bottom'], $js['priority'], $js['inline'], $js['attribute']);
+                $this->registerJavascript($js['id'], $js['path'], $js);
             }
         }
 
@@ -1036,7 +1036,7 @@ class FrontControllerCore extends Controller
 
         foreach ($css_uri as $legacy_uri) {
             if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
-                $this->registerStylesheet(sha1($uri), $uri, $css_media_type, 80);
+                $this->registerStylesheet(sha1($uri), $uri, ['media' => $css_media_type, 'priority' => 80]);
             }
         }
     }
@@ -1086,7 +1086,7 @@ class FrontControllerCore extends Controller
 
         foreach ($js_uri as $legacy_uri) {
             if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
-                $this->registerJavascript(sha1($uri), $uri, 'bottom', 80);
+                $this->registerJavascript(sha1($uri), $uri, ['position' => 'bottom', 'priority' => 80]);
             }
         }
     }
