@@ -1056,7 +1056,7 @@ abstract class PaymentModuleCore extends Module
 
         if (Tools::file_exists_cache($default_mail_template_path)) {
             $this->context->smarty->assign('list', $var);
-            return $this->context->smarty->fetch($default_mail_template_path);
+            return $this->context->smarty->fetch($default_mail_template_path,null,null,null,false,true,true);
         }
         return '';
     }
