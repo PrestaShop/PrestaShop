@@ -491,7 +491,7 @@ var AdminModuleController = function() {
 
     // @see: dropzone.js
     Dropzone.options.importDropzone = {
-      url: 'import',
+      url: 'import' + window.location.search,
       acceptedFiles: '.zip, .tar',
       // The name that will be used to transfer the file
       paramName: 'file_uploaded',
