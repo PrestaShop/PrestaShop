@@ -1079,6 +1079,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = utf8_encode($message);
                         $message = quoted_printable_decode($message);
                         $message = nl2br($message);
+                        $message = Tools::substr($message, 0, (int) CustomerMessage::$definition['fields']['message']['size']);
+
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
                         if (empty($message) || !Validate::isCleanHtml($message)) {
