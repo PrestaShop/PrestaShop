@@ -637,7 +637,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         foreach ($files as $file) {
             // Check if file is a file theme
-            if (preg_match('#^translations\/'.$iso_code.'\/tabs.php#Ui', $file['filename'], $matches) && Validate::isLanguageIsoCode($iso_code)) {
+            if (preg_match('#translations\/'.$iso_code.'\/tabs.php#Ui', $file['filename'], $matches) && Validate::isLanguageIsoCode($iso_code)) {
                 // Include array width new translations tabs
                 $_TABS = array();
                 clearstatcache();
