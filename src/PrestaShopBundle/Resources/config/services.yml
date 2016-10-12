@@ -153,10 +153,6 @@ services:
     prestashop.adapter.data_provider.customer:
         class: PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider
 
-    prestashop.adapter.data_provider.addon:
-        class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
-        arguments: ['@prestashop.addons.client_api']
-
     prestashop.adapter.data_provider.combination:
         class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
 
@@ -232,7 +228,7 @@ services:
     prestashop.core.module.updater:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
         arguments:
-            - "@prestashop.adapter.data_provider.addon"
+            - "@prestashop.core.admin.data_provider.addons_interface"
             - "@prestashop.adapter.admin.data_provider.module"
 
     # Repositories
