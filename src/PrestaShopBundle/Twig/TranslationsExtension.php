@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Twig;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\RouterInterface;
+
 class TranslationsExtension extends \Twig_Extension
 {
     /**
@@ -41,7 +44,7 @@ class TranslationsExtension extends \Twig_Extension
     private $container;
     private $router;
 
-    public function __construct($container, $router)
+    public function __construct(ContainerInterface $container, RouterInterface $router)
     {
         $this->container = $container;
         $this->router = $router;
