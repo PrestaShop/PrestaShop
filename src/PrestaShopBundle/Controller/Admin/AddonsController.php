@@ -21,6 +21,7 @@ class AddonsController extends Controller
     {
         $addonsProvider = $this->container->get('prestashop.core.admin.data_provider.addons_interface');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $translator = $this->container->get('translator');
         $response = new JsonResponse();
 
         // Parameters needed in order to authenticate the merchant : login and password
@@ -44,7 +45,9 @@ class AddonsController extends Controller
         } catch (Exception $e) {
             $response->setData([
                 'success' => 0,
-                'message' => $e->getMessage(),
+                'message' => $translator->trans('PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.',
+                        array(),
+                        'Admin.Notifications.Error'),
             ]);
         }
 
