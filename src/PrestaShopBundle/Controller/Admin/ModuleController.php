@@ -523,9 +523,12 @@ class ModuleController extends FrameworkBundleAdminController
                     'Admin.Modules.Notification');
                 $installation_response['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
             } else {
+                $error = $moduleManager->getError($file_uploaded->getPathname());
                 $installation_response['msg'] = $translator->trans(
-                    'Installation of module %module% failed.',
-                    array('%module%' => $module_name),
+                    'Installation of module %module% failed. %error%',
+                    array(
+                        '%module%' => $module_name,
+                        '%error%' => $error, ),
                     'Admin.Modules.Notification');
             }
 

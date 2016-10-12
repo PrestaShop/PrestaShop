@@ -433,12 +433,19 @@ class ModuleManager implements AddonManagerInterface
      */
     public function getError($name)
     {
+        $message = null;
         $module = $this->moduleRepository->getModule($name);
         if ($module->hasValidInstance()) {
             $errors = $module->getInstance()->getErrors();
-            return array_pop($errors);
+            $message = array_pop($errors);
         }
 
-        return null;
+        if (empty($message)) {
+            $message = $this->translator->trans('Unfortunately, the module did not return additional details.',
+                array(),
+                'Admin.Modules.Notification');
+        }
+        
+        return $message;
     }
 }
