@@ -146,7 +146,7 @@ class AdminTrackingControllerCore extends AdminController
             'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
             'reference' => array('title' => $this->l('Reference')),
             'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs', 'filter_key' => 'a!active')
         );
 
         $this->clearFilters();
@@ -190,7 +190,7 @@ class AdminTrackingControllerCore extends AdminController
             'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
             'reference' => array('title' => $this->l('Reference')),
             'name' => array('title' => $this->l('Name')),
-            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs', 'filter_key' => 'a!active')
         );
         $this->clearFilters();
 
