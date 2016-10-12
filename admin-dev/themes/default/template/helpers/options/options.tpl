@@ -104,9 +104,9 @@
 												{if is_array($field['hint'])}
 													{foreach $field['hint'] as $hint}
 														{if is_array($hint)}
-															{$hint.text}
+															{$hint.text|escape:'html':'UTF-8'}
 														{else}
-															{$hint}
+															{$hint|escape:'html':'UTF-8'}
 														{/if}
 													{/foreach}
 												{else}
