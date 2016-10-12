@@ -79,79 +79,27 @@ class AdminCmsContentControllerCore extends AdminController
         return self::$category;
     }
 
-    public function initContent()
+    public function initProcess()
     {
-        $this->renderPageHeaderToolbar();
-
-        $this->admin_cms_categories->token = $this->token;
-        $this->admin_cms->token = $this->token;
-
-        if ($this->display == 'edit_category') {
-            $this->content .= $this->admin_cms_categories->renderForm();
-        } elseif ($this->display == 'edit_page') {
-            $this->content .= $this->admin_cms->renderForm();
-        } elseif ($this->display == 'view_page') {
-            $fixme = 'fixme';
-        }// @FIXME
-        else {
-            $id_cms_category = (int)Tools::getValue('id_cms_category');
-            if (!$id_cms_category) {
-                $id_cms_category = 1;
-            }
-
-            // CMS categories breadcrumb
-            $cms_tabs = array('cms_category', 'cms');
-            // Cleaning links
-            $cat_bar_index = self::$currentIndex;
-            foreach ($cms_tabs as $tab) {
-                if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) {
-                    $cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
-                }
-            }
-            $this->context->smarty->assign(array(
-                'cms_breadcrumb' => Tools::getPath($cat_bar_index, $id_cms_category, '', '', 'cms'),
-                'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
-                'page_header_toolbar_title' => $this->toolbar_title,
-            ));
-
-            $this->content .= $this->admin_cms_categories->renderList();
-            $this->admin_cms->id_cms_category = $id_cms_category;
-            $this->content .= $this->admin_cms->renderList();
+        if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && count($this->admin_cms_categories->errors))
+            || Tools::isSubmit('updatecms_category')
+            || Tools::isSubmit('addcms_category')) {
+            $this->display = 'edit_category';
+        } elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->admin_cms->errors))
+            || Tools::isSubmit('updatecms')
+            || Tools::isSubmit('addcms')) {
+            $this->display = 'edit_page';
+        } else {
+            $this->display = 'list';
         }
-
-        $this->context->smarty->assign(array(
-            'content' => $this->content
-        ));
     }
 
-    public function renderPageHeaderToolbar()
+    public function initContent()
     {
         $id_cms_category = (int)Tools::getValue('id_cms_category');
-        $id_cms_page = Tools::getValue('id_cms');
 
         if (!$id_cms_category) {
             $id_cms_category = 1;
-        }
-
-        $cms_category = new CMSCategory($id_cms_category);
-
-        if ($this->display == 'edit_category') {
-            if (Tools::getValue('addcms_category') !== false) {
-                $this->toolbar_title[] = $this->trans('Add new', array(), 'Admin.Actions');
-            } else {
-                $this->toolbar_title[] = $this->trans('Edit: %name%', array('%name' => $cms_category->name[$this->context->employee->id_lang]), 'Admin.Design.Feature');
-            }
-        } elseif ($this->display == 'edit_page') {
-            $this->toolbar_title[] = $cms_category->name[$this->context->employee->id_lang];
-
-            if (Tools::getValue('addcms') !== false) {
-                $this->toolbar_title[] = $this->trans('Add new', array(), 'Admin.Actions');
-            } elseif ($id_cms_page) {
-                $cms_page = new CMS($id_cms_page);
-                $this->toolbar_title[] = $this->trans('Edit: %meta_title%', array('%meta_title%' => $cms_page->meta_title[$this->context->employee->id_lang]), 'Admin.Design.Feature');
-            }
-        } else {
-            $this->toolbar_title[] = $this->trans('CMS', array(), 'Admin.Design.Feature');
         }
 
         if ($this->display == 'list') {
@@ -175,11 +123,39 @@ class AdminCmsContentControllerCore extends AdminController
             $this->show_page_header_toolbar = true;
         }
 
-        $template = $this->context->smarty->createTemplate(
-            $this->context->smarty->getTemplateDir(0).DIRECTORY_SEPARATOR
-            .'page_header_toolbar.tpl', $this->context->smarty);
+        $this->admin_cms_categories->token = $this->token;
+        $this->admin_cms->token = $this->token;
+
+        if ($this->display == 'edit_category') {
+            $this->content .= $this->admin_cms_categories->renderForm();
+        } elseif ($this->display == 'edit_page') {
+            $this->content .= $this->admin_cms->renderForm();
+        } elseif ($this->display == 'list') {
+            $id_cms_category = (int)Tools::getValue('id_cms_category');
+            if (!$id_cms_category) {
+                $id_cms_category = 1;
+            }
+
+            // CMS categories breadcrumb
+            $cms_tabs = array('cms_category', 'cms');
+            // Cleaning links
+            $cat_bar_index = self::$currentIndex;
+            foreach ($cms_tabs as $tab) {
+                if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) {
+                    $cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
+                }
+            }
+            $this->context->smarty->assign(array(
+                'cms_breadcrumb' => Tools::getPath($cat_bar_index, $id_cms_category, '', '', 'cms'),
+            ));
+
+            $this->content .= $this->admin_cms_categories->renderList();
+            $this->admin_cms->id_cms_category = $id_cms_category;
+            $this->content .= $this->admin_cms->renderList();
+        }
 
         $this->context->smarty->assign(array(
+            'content' => $this->content,
             'show_page_header_toolbar' => $this->show_page_header_toolbar,
             'title' => $this->page_header_toolbar_title,
             'toolbar_btn' => $this->page_header_toolbar_btn,
@@ -188,25 +164,43 @@ class AdminCmsContentControllerCore extends AdminController
         ));
     }
 
+    public function initToolbarTitle()
+    {
+        $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
+
+        $id_cms_category = (int)Tools::getValue('id_cms_category');
+        if ($id_cms_category && $id_cms_category !==1) {
+            $cms_category = new CMSCategory($id_cms_category);
+        }
+        $id_cms_page = Tools::getValue('id_cms');
+
+
+        if ($this->display == 'edit_category') {
+            if (Tools::getValue('addcms_category') !== false) {
+                $this->toolbar_title[] = $this->trans('Add new category', array(), 'Admin.Design.Feature');
+            } else {
+                if (isset($cms_category)) {
+                    $this->toolbar_title[] = $this->trans('Edit category: %name%', array('%name%' => $cms_category->name[$this->context->employee->id_lang]), 'Admin.Design.Feature');
+                }
+            }
+        } elseif ($this->display == 'edit_page') {
+            if (Tools::getValue('addcms') !== false) {
+                $this->toolbar_title[] = $this->trans('Add new page', array(), 'Admin.Design.Feature');
+            } elseif ($id_cms_page) {
+                $cms_page = new CMS($id_cms_page);
+                $this->toolbar_title[] = $this->trans('Edit page: %meta_title%', array('%meta_title%' => $cms_page->meta_title[$this->context->employee->id_lang]), 'Admin.Design.Feature');
+            }
+        } elseif ($this->display == 'list' && isset($cms_category)) {
+            $this->toolbar_title[] = $this->trans('Category: %category%', array('%category%' => $cms_category->name[$this->context->employee->id_lang]), 'Admin.Design.Feature');
+        }
+    }
+
     public function postProcess()
     {
         $this->admin_cms->postProcess();
         $this->admin_cms_categories->postProcess();
 
         parent::postProcess();
-
-        if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && count($this->admin_cms_categories->errors))
-            || Tools::isSubmit('updatecms_category')
-            || Tools::isSubmit('addcms_category')) {
-            $this->display = 'edit_category';
-        } elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->admin_cms->errors))
-            || Tools::isSubmit('updatecms')
-            || Tools::isSubmit('addcms')) {
-            $this->display = 'edit_page';
-        } else {
-            $this->display = 'list';
-            $this->id_cms_category = (int)Tools::getValue('id_cms_category');
-        }
 
         if (isset($this->admin_cms->errors)) {
             $this->errors = array_merge($this->errors, $this->admin_cms->errors);
