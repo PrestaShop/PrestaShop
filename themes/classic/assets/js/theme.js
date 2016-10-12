@@ -133,7 +133,7 @@
 	  topMenu.init();
 	  productMinitature.init();
 	  productSelect.init();
-	  (0, _expose$ExposeJQueryJquery2['default'])("#search_filters_wrapper").bind("DOMSubtreeModified", function () {
+	  (0, _expose$ExposeJQueryJquery2['default'])("#products").bind("DOMSubtreeModified", function () {
 	    productMinitature.init();
 	  });
 	});
@@ -12832,7 +12832,37 @@
 	    (0, _jquery2['default'])('#content-wrapper').removeClass('hidden-sm-down');
 	    (0, _jquery2['default'])('#footer').removeClass('hidden-sm-down');
 	  });
+
+	  (0, _jquery2['default'])('body').on('change', '#search_filters input[data-search-url]', function (event) {
+	    _prestashop2['default'].emit('updateFacets', event.target.dataset.searchUrl);
+	  });
+
+	  (0, _jquery2['default'])('body').on('click', '.js-search-filters-clear-all', function (event) {
+	    _prestashop2['default'].emit('updateFacets', event.target.dataset.searchUrl);
+	  });
+
+	  (0, _jquery2['default'])('body').on('click', '.js-search-link', function (event) {
+	    event.preventDefault();
+	    _prestashop2['default'].emit('updateFacets', (0, _jquery2['default'])(event.target).closest('a').get(0).href);
+	  });
+
+	  (0, _jquery2['default'])('body').on('change', '#search_filters select', function (event) {
+	    var form = (0, _jquery2['default'])(event.target).closest('form');
+	    _prestashop2['default'].emit('updateFacets', '?' + form.serialize());
+	  });
+
+	  _prestashop2['default'].on('updateProductList', function (data) {
+	    updateProductListDOM(data);
+	  });
 	});
+
+	function updateProductListDOM(data) {
+	  (0, _jquery2['default'])('#search_filters').replaceWith(data.rendered_facets);
+	  (0, _jquery2['default'])('#js-active-search-filters').replaceWith(data.rendered_active_filters);
+	  (0, _jquery2['default'])('#js-product-list-top').replaceWith(data.rendered_products_top);
+	  (0, _jquery2['default'])('#js-product-list').replaceWith(data.rendered_products);
+	  (0, _jquery2['default'])('#js-product-list-bottom').replaceWith(data.rendered_products_bottom);
+	}
 
 /***/ },
 /* 70 */
@@ -16742,24 +16772,6 @@
 	  createInputFile();
 	  coverImage();
 	  imageScrollBox();
-	
-	  (0, _jquery2['default'])('body').on('change', '#search_filters input[data-search-url]', function (event) {
-	    prestashop.emit('updateFacets', event.target.dataset.searchUrl);
-	  });
-	
-	  (0, _jquery2['default'])('body').on('click', '.js-search-filters-clear-all', function (event) {
-	    prestashop.emit('updateFacets', event.target.dataset.searchUrl);
-	  });
-	
-	  (0, _jquery2['default'])('body').on('click', '.js-search-link', function (event) {
-	    event.preventDefault();
-	    prestashop.emit('updateFacets', (0, _jquery2['default'])(event.target).closest('a').get(0).href);
-	  });
-	
-	  (0, _jquery2['default'])('body').on('change', '#search_filters select', function (event) {
-	    var form = (0, _jquery2['default'])(event.target).closest('form');
-	    prestashop.emit('updateFacets', '?' + form.serialize());
-	  });
 	
 	  prestashop.on('updatedProduct', function (event) {
 	    createInputFile();

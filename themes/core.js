@@ -2153,26 +2153,10 @@
 	
 	var pendingQuery = false;
 	
-	function updateDOM(_ref) {
-	    var rendered_products = _ref.rendered_products;
-	    var rendered_facets = _ref.rendered_facets;
-	
-	    (0, _jquery2['default'])('#products').replaceWith(rendered_products);
-	    (0, _jquery2['default'])('#search_filters').replaceWith(rendered_facets);
-	}
-	
-	var onpopstate = function onpopstate(e) {
-	    if (e.state && e.state.rendered_products) {
-	        updateDOM(e.state);
-	    }
-	};
-	
 	function updateResults(data) {
 	    pendingQuery = false;
-	    updateDOM(data);
+	    prestashop.emit('updateProductList', data);
 	    window.history.pushState(data, undefined, data.current_url);
-	    window.addEventListener('popstate', onpopstate);
-	    prestashop.emit('facetsUpdated');
 	}
 	
 	function handleError() {
