@@ -40,7 +40,6 @@ class ConfigurationTestCore
         '/pdf/order-return.tpl',
         '/translations/export/index.php',
         '/webservice/dispatcher.php',
-        '/upload/index.php',
         '/index.php',
         '/vendor/autoload.php',
     );
