@@ -47,7 +47,6 @@ class ConfigurationTestCore
         '/themes/default-bootstrap/css/global.css',
         '/translations/export/index.php',
         '/webservice/dispatcher.php',
-        '/upload/index.php',
         '/index.php'
     );
 
