@@ -546,7 +546,8 @@ class ProductController extends FrameworkBundleAdminController
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
             'attribute_groups' => $attributeGroups,
-            'max_upload_size' => \Tools::formatBytes(UploadedFile::getMaxFilesize())
+            'max_upload_size' => \Tools::formatBytes(UploadedFile::getMaxFilesize()),
+            'is_shop_context' => $this->container->get('prestashop.adapter.shop.context')->isShopContext(),
         );
     }
 
