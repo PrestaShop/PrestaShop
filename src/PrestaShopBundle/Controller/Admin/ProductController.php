@@ -219,6 +219,7 @@ class ProductController extends FrameworkBundleAdminController
                 'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
+                'is_shop_context' => $this->container->get('prestashop.adapter.shop.context')->isShopContext(),
             )
         );
     }
@@ -293,6 +294,7 @@ class ProductController extends FrameworkBundleAdminController
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
             'has_category_filter' => $productProvider->isCategoryFiltered(),
+            'is_shop_context' => $this->container->get('prestashop.adapter.shop.context')->isShopContext(),
         );
         if ($view != 'full') {
             return $this->render('PrestaShopBundle:Admin:Product/list_' . $view . '.html.twig', array_merge($vars, [
