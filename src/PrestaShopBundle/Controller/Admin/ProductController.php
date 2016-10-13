@@ -392,16 +392,48 @@ class ProductController extends FrameworkBundleAdminController
             ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
             ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
             ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo')
-            ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions')
-            ->getForm();
+            ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
+
+        // Prepare combination form (fake but just to validate the form)
+        $combinations = $modelMapper->getAttributesResume();
+        if (is_array($combinations)) {
+            foreach ($combinations as $combination) {
+                $form->add('combination_'.$combination['id_product_attribute'], 'PrestaShopBundle\Form\Admin\Product\ProductCombination');
+            }
+        }
+
+        $form = $form->getForm();
 
         $formBulkCombinations = $this->createForm('PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk', null, array(
             'iso_code' => $this->get('prestashop.adapter.legacy.context')->getContext()->currency->iso_code,
             'price_display_precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_'),
         ));
 
+        // Legacy code. To fix when Object model will change. But report Hooks.
+        $postData = $request->request->all();
+        $combinationsList = array();
+        if (!empty($postData)) {
+            foreach ((array)$postData as $postKey => $postValue) {
+                if (preg_match('/^combination_.*/', $postKey)) {
+                    $combinationsList[$postKey] = $postValue;
+                    $postData['form'][$postKey] = $postValue; // need to validate the form
+                }
+            }
+
+            // Duplicate Request to be a valid form (like it was real) with postData modified ..
+            $request = $request->duplicate(
+                $request->query->all(),
+                $postData,
+                $request->attributes->all(),
+                $request->cookies->all(),
+                $request->files->all(),
+                $request->server->all()
+            );
+        }
+
         $form->handleRequest($request);
         $formData = $form->getData();
+        $formData['step3']['combinations'] = $combinationsList;
 
         if ($form->isSubmitted()) {
             if ($this->isDemoModeEnabled() && $request->isXmlHttpRequest()) {
@@ -411,18 +443,6 @@ class ProductController extends FrameworkBundleAdminController
             }
 
             if ($form->isValid()) {
-
-                // Legacy code. To fix when Object model will change. But report Hooks.
-                $postData = $request->request->all();
-                $combinations = array();
-
-                foreach ((array)$postData as $postKey => $postValue) {
-                    if (preg_match('/^combination_.*/', $postKey)) {
-                        $combinations[$postKey] = $postValue;
-                    }
-                }
-
-                $formData['step3']['combinations'] = $combinations;
 
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
