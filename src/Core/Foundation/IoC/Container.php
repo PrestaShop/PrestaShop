@@ -75,7 +75,7 @@ class Container
     public function resolveClassName($className)
     {
         $colonPos = strpos($className, ':');
-        if (0 !== $colonPos) {
+        if (0 !== $colonPos && false !== $colonPos) {
             $alias = substr($className, 0, $colonPos);
             if ($this->knowsNamespaceAlias($alias)) {
                 $class = ltrim(substr($className, $colonPos + 1), '\\');
