@@ -84,6 +84,7 @@ after_script:
   - google-chrome --version
 
 after_failure:
+  - openssl version
   - curl http://localhost/prestashop.unit.test/
   - cat /etc/apache2/envvars
   - cat /etc/apache2/sites-available/prestashop.conf

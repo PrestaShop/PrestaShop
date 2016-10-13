@@ -128,8 +128,8 @@ if ($lastParametersModificationTime) {
         define('_NEW_COOKIE_KEY_', $config['parameters']['new_cookie_key']);
     } else {
         // Define cookie key if missing to prevent failure in composer post-install script
-        $key = \Defuse\Crypto\Key::createNewRandomKey();
-        define('_NEW_COOKIE_KEY_', $key->saveToAsciiSafeString());
+        $key = PhpEncryption::createNewRandomKey();
+        define('_NEW_COOKIE_KEY_', $key);
     }
 
     define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);

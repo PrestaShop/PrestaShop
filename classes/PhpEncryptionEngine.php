@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,15 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * Class PhpEncryptionCore for openSSL 1.0.1+.
- */
-class PhpEncryptionCore
-{
-    const ENGINE = 'PhpEncryptionEngine';
-    const LEGACY_ENGINE = 'PhpEncryptionLegacyEngine';
+use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Encoding;
+use Defuse\Crypto\Key;
 
-    private static $engine;
+/**
+ * Class PhpEncryption engine for openSSL 1.0.1+
+ */
+class PhpEncryptionEngineCore
+{
+    protected $key;
+
     /**
      * PhpEncryptionCore constructor.
      *
@@ -41,12 +43,11 @@ class PhpEncryptionCore
      */
     public function __construct($hexString)
     {
-        $engineClass = self::resolveEngineToUse();
-        $this->engine = new $engineClass($hexString);
+        $this->key = self::loadFromAsciiSafeString($hexString);
     }
 
     /**
-     * Encrypt the plaintext.
+     * Encrypt the plaintext
      *
      * @param string $plaintext Plaintext
      *
@@ -54,37 +55,42 @@ class PhpEncryptionCore
      */
     public function encrypt($plaintext)
     {
-        return $this->engine->encrypt($plaintext);
+        return Crypto::encrypt($plaintext, $this->key);
     }
 
     /**
-     * Decrypt the cipher text.
+     * Decrypt the cipher text
      *
      * @param string $cipherText Cipher text
      *
      * @return bool|string Plaintext
      *                     `false` if unable to decrypt
-     *
      * @throws Exception
      */
     public function decrypt($cipherText)
     {
-        return $this->engine->decrypt($cipherText);
+        try {
+            $plaintext = Crypto::decrypt($cipherText, $this->key);
+        } catch (Exception $e) {
+            if ($e instanceof \Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException) {
+                return false;
+            }
+
+            throw $e;
+        }
+
+        return $plaintext;
     }
 
     /**
      * @param $header
      * @param $bytes
-     *
      * @return string
-     *
      * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
      */
     public static function saveBytesToChecksummedAsciiSafeString($header, $bytes)
     {
-        $engine = self::resolveEngineToUse();
-
-        return $engine::saveBytesToChecksummedAsciiSafeString($header, $bytes);
+        return Encoding::saveBytesToChecksummedAsciiSafeString($header, $bytes);
     }
 
     /**
@@ -92,20 +98,16 @@ class PhpEncryptionCore
      */
     public static function createNewRandomKey()
     {
-        $engine = self::resolveEngineToUse();
+        $key = Key::createNewRandomKey();
 
-        return $engine::createNewRandomKey();
+        return $key->saveToAsciiSafeString();
     }
 
     /**
-     * Choose which engine use regarding the OpenSSL cipher methods available.
+     * @param $hexString
      */
-    public static function resolveEngineToUse()
+    public static function loadFromAsciiSafeString($hexString)
     {
-        if (false === in_array(\Defuse\Crypto\Core::CIPHER_METHOD, openssl_get_cipher_methods())) {
-            return self::LEGACY_ENGINE;
-        }
-
-        return self::ENGINE;
+        return Key::loadFromAsciiSafeString($hexString);
     }
 }
