@@ -950,7 +950,7 @@
     <div class="product-footer">
       <div class="col-lg-5">
         <a
-          href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+          href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}"
           class="btn btn-invisible btn-lg delete"
           data-toggle="tooltip"
           id="product_form_delete_btn"
@@ -989,7 +989,7 @@
           type="button"
           class="btn btn-tertiary-outline btn-submit hidden-xs uppercase duplicate"
           id="product_form_save_duplicate_btn"
-          data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+          data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
           data-toggle="tooltip"
           title="{{ 'Save and duplicate this product, then go to the new product: CTRL+D'|trans({}, 'Admin.Catalog.Help') }}"
           >
@@ -1044,7 +1044,7 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenu">
               <a
                class="dropdown-item duplicate js-btn-save"
-               href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+               href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
               >
               {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
               </a>

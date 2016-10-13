@@ -554,7 +554,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param Request $request
      * @param string $action The action to apply on the selected products
      * @throws \Exception If action not properly set or unknown.
-     * @return void (redirection)
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function bulkAction(Request $request, $action)
     {
@@ -631,10 +631,6 @@ class ProductController extends FrameworkBundleAdminController
             $logger->warning($message);
         }
 
-        // redirect after success
-        if ($request->request->has('redirect_url')) {
-            return $this->redirect($request->request->get('redirect_url'), 302);
-        }
         return new Response(json_encode(array('result' => 'ok')));
     }
 
@@ -644,7 +640,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param Request $request
      * @param string $action The action to apply on the selected products
      * @throws \Exception If action not properly set or unknown.
-     * @return void (redirection)
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function massEditAction(Request $request, $action)
     {
@@ -696,13 +692,8 @@ class ProductController extends FrameworkBundleAdminController
             $logger->warning($message);
         }
 
-        // redirect after success
-        if ($request->request->has('redirect_url')) {
-            return $this->redirect($request->request->get('redirect_url'), 302);
-        } else {
-            $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
-            return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
-        }
+        $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
+        return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
     }
 
     /**
@@ -712,7 +703,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $action The action to apply on the selected product
      * @param integer $id The product ID to apply the action on.
      * @throws \Exception If action not properly set or unknown.
-     * @return void (redirection)
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function unitAction(Request $request, $action, $id)
     {
@@ -779,13 +770,8 @@ class ProductController extends FrameworkBundleAdminController
             $logger->warning($message);
         }
 
-        // redirect after success
-        if ($request->request->has('redirect_url')) {
-            return $this->redirect($request->get('redirect_url'), 302);
-        } else {
-            $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
-            return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
-        }
+        $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
+        return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
     }
 
     /**
