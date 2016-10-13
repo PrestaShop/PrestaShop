@@ -84,7 +84,7 @@ class Migrate
                     'database_engine'   => _LEGACY_MYSQL_ENGINE_,
                     'cookie_key'        => _LEGACY_COOKIE_KEY_,
                     'cookie_iv'         => _LEGACY_COOKIE_IV_,
-                    'new_cookie_key'    => _LEGACY_NEW_COOKIE_KEY_,
+                    'cookie_key_2'      => _COOKIE_KEY_2_,
                     'ps_caching'        => _LEGACY_PS_CACHING_SYSTEM_,
                     'ps_cache_enable'   => _LEGACY_PS_CACHE_ENABLED_,
                     'ps_creation_date'  => _LEGACY_PS_CREATION_DATE_,

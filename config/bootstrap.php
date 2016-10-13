@@ -121,12 +121,12 @@ if ($lastParametersModificationTime) {
     }
 
     // New cookie
-    if (array_key_exists('new_cookie_key', $config['parameters'])) {
-        define('_NEW_COOKIE_KEY_', $config['parameters']['new_cookie_key']);
+    if (array_key_exists('cookie_key_2', $config['parameters'])) {
+        define('_COOKIE_KEY_2_', $config['parameters']['cookie_key_2']);
     } else {
         // Define cookie key if missing to prevent failure in composer post-install script
         $key = \Defuse\Crypto\Key::createNewRandomKey();
-        define('_NEW_COOKIE_KEY_', $key->saveToAsciiSafeString());
+        define('_COOKIE_KEY_2_', $key->saveToAsciiSafeString());
     }
 
     define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);

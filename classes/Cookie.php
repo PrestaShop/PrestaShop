@@ -81,7 +81,7 @@ class CookieCore
             $asciiSafeString = \Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString('ps17', str_pad('', 32, __FILE__));
             $this->cipherTool = new PhpEncryption($asciiSafeString);
         }
-        $this->cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
+        $this->cipherTool = new PhpEncryption(_COOKIE_KEY_2_);
 
         $this->_secure = (bool)$secure;
 
