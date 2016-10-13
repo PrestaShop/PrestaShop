@@ -210,6 +210,7 @@ services:
 
     prestashop.twig.extension.translation:
         class: PrestaShopBundle\Twig\TranslationsExtension
+        arguments: ["@service_container", "@router"]
         properties:
             logger: "@logger"
             translator: "@translator"

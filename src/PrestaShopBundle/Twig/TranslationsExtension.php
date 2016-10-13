@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Twig;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\RouterInterface;
+
 class TranslationsExtension extends \Twig_Extension
 {
     /**
@@ -37,6 +40,15 @@ class TranslationsExtension extends \Twig_Extension
      * @var \Psr\Log\LoggerInterface
      */
     public $logger;
+
+    private $container;
+    private $router;
+
+    public function __construct(ContainerInterface $container, RouterInterface $router)
+    {
+        $this->container = $container;
+        $this->router = $router;
+    }
 
     /**
      * Returns a list of functions to add to the existing list.
@@ -186,11 +198,12 @@ class TranslationsExtension extends \Twig_Extension
     protected function getSharedEditFormViewProperties()
     {
         return array(
-            'label_edit' => $this->translator->trans('Edit', array(), 'Admin.Actions'),
+            'action' => $this->router->generate('admin_international_translations_edit'),
+            'label_edit' => $this->translator->trans('Update', array(), 'Admin.Actions'),
             'label_reset' => $this->translator->trans('Reset', array(), 'Admin.Actions'),
-            'notification_success' => $this->translator->trans('Translation successfully edited', array(),
+            'notification_success' => $this->translator->trans('Translation successfully updated', array(),
                 'Admin.International.Notification'),
-            'notification_error' => $this->translator->trans('Translation unsuccessfully edited', array(),
+            'notification_error' => $this->translator->trans('Translation unsuccessfully updated', array(),
                 'Admin.International.Notification'),
         );
     }
@@ -207,16 +220,18 @@ class TranslationsExtension extends \Twig_Extension
         $defaultTranslationValue = $this->getDefaultTranslationValue($properties['translation_key'], $domain, $locale,
             $translationValue);
 
-        return $this->render('form-edit-message.html.twig', array(
-                'default_translation_value' => htmlspecialchars($defaultTranslationValue, ENT_QUOTES),
+        return $this->container->get('templating')->render('PrestaShopBundle:Admin:Translations/include/form-edit-message.html.twig', array(
+                'default_translation_value' => $defaultTranslationValue,
                 'domain' => $domain,
                 'edited_translation_value' => $translationValue,
+                'is_translated' => '' !== $translationValue,
+                'action' => $properties['action'],
                 'label_edit' => $properties['label_edit'],
                 'label_reset' => $properties['label_reset'],
                 'locale' => $locale,
                 'notification_error' => $properties['notification_error'],
                 'notification_success' => $properties['notification_success'],
-                'translation_key' => htmlspecialchars($properties['translation_key'], ENT_QUOTES),
+                'translation_key' => $properties['translation_key'],
                 'hash' => $this->getTranslationHash($domain, $properties['translation_key']),
             )
         );
