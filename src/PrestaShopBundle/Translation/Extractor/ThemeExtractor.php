@@ -50,14 +50,17 @@ class ThemeExtractor
 
     private $overrideFromDatabase = false;
 
-    public function __construct(
-        SmartyExtractor $smartyExtractor,
-        ThemeProvider $themeProvider
-    )
+    public function __construct(SmartyExtractor $smartyExtractor)
     {
         $this->smartyExtractor = $smartyExtractor;
-        $this->themeProvider = $themeProvider;
         $this->dumpers[] = new XliffFileDumper();
+    }
+
+    public function setThemeProvider(ThemeProvider $themeProvider)
+    {
+        $this->themeProvider = $themeProvider;
+
+        return $this;
     }
 
     public function extract(Theme $theme, $locale = 'en-US')
@@ -68,7 +71,7 @@ class ThemeExtractor
 
         $options = array('path' => $themeDirectory);
         $this->smartyExtractor->extract($themeDirectory, $this->catalog);
-        
+
         if ($this->overrideFromDatabase) {
             $this->overrideFromDatabase($theme->getName(), $locale, $this->catalog);
         }
@@ -85,9 +88,13 @@ class ThemeExtractor
 
         throw new \LogicException(sprintf('The format %s is not supported.', $this->format));
     }
-    
+
     private function overrideFromDatabase($themeName, $locale, &$catalogue)
     {
+        if (is_null($this->themeProvider)) {
+            throw new \Exception('Theme provider is required.');
+        }
+
         $databaseCatalogue = $this->themeProvider
             ->setLocale($locale)
             ->setThemeName($themeName)

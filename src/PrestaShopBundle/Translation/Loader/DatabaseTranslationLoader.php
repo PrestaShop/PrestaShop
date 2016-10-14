@@ -37,7 +37,7 @@ class DatabaseTranslationLoader implements LoaderInterface
     protected $entityManager;
 
     /**
-     * @param EntityManagerInterface $em
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -47,7 +47,7 @@ class DatabaseTranslationLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $locale, $domain = 'messages')
+    public function load($resource, $locale, $domain = 'messages', $theme = null)
     {
         $lang = $this->entityManager
             ->getRepository('PrestaShopBundle:Lang')
@@ -63,6 +63,15 @@ class DatabaseTranslationLoader implements LoaderInterface
             ->where('t.lang =:lang')
             ->setParameter('lang', $lang)
         ;
+
+        if (!is_null($theme)) {
+            $queryBuilder
+                ->andWhere('t.theme = :theme')
+                ->setParameter('theme', $theme)
+            ;
+        } else {
+            $queryBuilder->andWhere('t.theme IS NULL');
+        }
 
         if ($domain !== '*') {
             $queryBuilder->andWhere('REGEXP(t.domain, :domain) = true')

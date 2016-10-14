@@ -1,6 +1,7 @@
 parameters:
-    translations_dir: "%kernel.root_dir%/Resources/translations"
-    themes_dir: "%kernel.root_dir%/../themes"
+    translations_dir:         "%kernel.root_dir%/Resources/translations"
+    themes_translations_dir:  "%kernel.cache_dir%/themes"
+    themes_dir:               "%kernel.root_dir%/../themes"
 
 services:
 # CORE ADMIN (prestashop.core.admin.*)
@@ -115,6 +116,8 @@ services:
     prestashop.translation.theme_translations_factory:
         class: PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory
         arguments: ['@prestashop.translation.theme_provider']
+        calls:
+            - [ addProvider, ['@prestashop.translation.frontoffice_provider']]
 
     ps.theme_translations_factory:
         alias: "prestashop.translation.theme_translations_factory"
@@ -156,4 +159,9 @@ services:
         class: PrestaShopBundle\Translation\Provider\ThemeProvider
         arguments:
             - "@prestashop.translations.database_loader"
-            - "%themes_dir%"
+            - "%themes_translations_dir%"
+        properties:
+            themeResourcesDirectory:  "%themes_dir%"
+            filesystem:               "@filesystem"
+            themeRepository:          "@prestashop.core.admin.theme.repository"
+            themeExtractor:           "@prestashop.translations.theme_extractor"

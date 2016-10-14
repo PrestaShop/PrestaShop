@@ -345,23 +345,20 @@ class ContextCore
         if (null === $this->translator) {
             $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_, false);
             $this->translator->addLoader('xlf', new XliffFileLoader());
-            $this->translator->addLoader('db', new SqlTranslationLoader());
 
-            $locations = array(_PS_ROOT_DIR_.'/app/Resources/translations');
-
+            $sqlTranslationLoader = new SqlTranslationLoader();
             if (!is_null($this->shop)) {
-                $activeThemeLocation = _PS_ROOT_DIR_.'/themes/'.$this->shop->theme_name.'/translations';
-                if (is_dir($activeThemeLocation)) {
-                    $locations[] = $activeThemeLocation;
-                }
+                $sqlTranslationLoader->setTheme($this->shop->theme);
             }
+
+            $this->translator->addLoader('db', $sqlTranslationLoader);
 
             $finder = Finder::create()
                 ->files()
                 ->filter(function (\SplFileInfo $file) {
                     return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
                 })
-                ->in($locations)
+                ->in($this->getTranslationResourcesDirectories())
             ;
 
             foreach ($finder as $file) {
@@ -375,5 +372,22 @@ class ContextCore
         }
 
         return $this->translator;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getTranslationResourcesDirectories()
+    {
+        $locations = array(_PS_ROOT_DIR_ . '/app/Resources/translations');
+
+        if (!is_null($this->shop)) {
+            $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
+            if (is_dir($activeThemeLocation)) {
+                $locations[] = $activeThemeLocation;
+            }
+        }
+
+        return $locations;
     }
 }

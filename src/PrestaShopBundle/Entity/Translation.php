@@ -7,8 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Translation.
  *
- * @ORM\Table(indexes={@ORM\Index(name="key", columns={"domain"})})
- * @ORM\Entity(repositoryClass="TranslationRepository")
+ * @ORM\Table(
+ *     indexes={@ORM\Index(name="key", columns={"domain"})},
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="theme", columns={"theme", "id_lang", "domain"})}
+ * )
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TranslationRepository")
  */
 class Translation
 {
@@ -49,6 +52,13 @@ class Translation
      * @ORM\Column(name="domain", type="string")
      */
     private $domain;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="theme", type="string", nullable=true)
+     */
+    private $theme;
 
     /**
      * Get id.
@@ -136,6 +146,26 @@ class Translation
     public function setDomain($domain)
     {
         $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+
+    /**
+     * @param $theme
+     *
+     * @return \PrestaShopBundle\Entity\Translation
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
 
         return $this;
     }

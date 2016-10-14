@@ -29,11 +29,29 @@ namespace PrestaShopBundle\Translation\Loader;
 
 use Exception;
 use Db;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class SqlTranslationLoader implements LoaderInterface
 {
+    /**
+     * @var  Theme
+     */
+    protected $theme;
+
+    /**
+     * @param $theme
+     * @return $this
+     */
+    public function setTheme(Theme $theme)
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -50,18 +68,36 @@ class SqlTranslationLoader implements LoaderInterface
             throw new Exception(sprintf('Language not found in database: %s', $locale));
         }
 
-        $translations = Db::getInstance()->executeS('
+        $selectTranslationsQuery = '
             SELECT `key`, `translation`, `domain`
             FROM `'._DB_PREFIX_.'translation`
             WHERE `id_lang` = '.$localeResult['id_lang']
-        );
+        ;
+        $translations = Db::getInstance()->executeS($selectTranslationsQuery);
 
         $catalogue = new MessageCatalogue($locale);
+        $this->addTranslationsToCatalogue($translations, $catalogue);
 
-        foreach ($translations as $translation) {
-            $catalogue->set($translation['key'], $translation['translation'], $translation['domain']);
+        if (!is_null($this->theme)) {
+            $selectThemeTranslationsQuery =
+                $selectTranslationsQuery."\n".
+                "AND theme = '".$this->theme->getName()."'"
+            ;
+            $themeTranslations = Db::getInstance()->executeS($selectThemeTranslationsQuery);
+            $this->addTranslationsToCatalogue($themeTranslations, $catalogue);
         }
 
         return $catalogue;
+    }
+
+    /**
+     * @param $translations
+     * @param $catalogue
+     */
+    protected function addTranslationsToCatalogue($translations, MessageCatalogueInterface $catalogue)
+    {
+        foreach ($translations as $translation) {
+            $catalogue->set($translation['key'], $translation['translation'], $translation['domain']);
+        }
     }
 }

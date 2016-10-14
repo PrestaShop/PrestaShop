@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Tests\Translation\Provider;
 
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ThemeProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,6 +42,7 @@ class ThemeProviderTest extends \PHPUnit_Framework_TestCase
 
         self::$resourcesDir = __DIR__.'/../../resources/themes/fakeTheme2';
         $this->provider = new ThemeProvider($loader, self::$resourcesDir);
+        $this->provider->filesystem = new Filesystem();
     }
 
     public function testGetMessageCatalogue()
