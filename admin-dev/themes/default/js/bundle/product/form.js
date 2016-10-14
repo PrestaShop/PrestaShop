@@ -936,16 +936,15 @@ var form = (function() {
       /** create keyboard event for save & go preview */
       jwerty.key('ctrl+V', function(e) {
           e.preventDefault();
-          send($('.product-footer .preview').attr('data-redirect'), $('.product-footer .preview').attr('target'));
+          var productFooter = $('.product-footer .preview');
+          send(productFooter.attr('data-redirect'), productFooter.attr('target'));
       });
 
       /** create keyboard event for save & active or desactive product*/
       jwerty.key('ctrl+O', function(e) {
         e.preventDefault();
-        if ($('#form_step1_active').prop('checked') == true)
-            $('#form_step1_active').prop('checked', false);
-        else
-            $('#form_step1_active').prop('checked', true);
+        var step1CheckBox = $('#form_step1_active');
+        step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
       });
 
       elem.submit(function(event) {
