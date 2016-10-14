@@ -129,7 +129,7 @@ class ModuleController extends FrameworkBundleAdminController
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $shopService = $this->get('prestashop.adapter.shop.context');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
-        $themeRepository = $this->get('prestashop.core.admin.theme.repository');
+        $themeRepository = $this->get('prestashop.core.addon.theme.repository');
 
         // Retrieve current shop
         $shopID = $shopService->getContextShopID();
