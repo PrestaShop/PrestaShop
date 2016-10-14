@@ -16862,19 +16862,22 @@
 	 * Attach Bootstrap TouchSpin event handlers
 	 */
 	function createSpin() {
-	  (0, _jquery2['default'])(spinnerSelector).TouchSpin({
-	    verticalbuttons: true,
-	    verticalupclass: 'material-icons touchspin-up',
-	    verticaldownclass: 'material-icons touchspin-down',
-	    buttondown_class: 'btn btn-touchspin js-touchspin js-increase-product-quantity',
-	    buttonup_class: 'btn btn-touchspin js-touchspin js-decrease-product-quantity',
-	    min: 1,
-	    max: 1000000
+	  _jquery2['default'].each((0, _jquery2['default'])(spinnerSelector), function (index, spinner) {
+	    (0, _jquery2['default'])(spinner).TouchSpin({
+	      verticalbuttons: true,
+	      verticalupclass: 'material-icons touchspin-up',
+	      verticaldownclass: 'material-icons touchspin-down',
+	      buttondown_class: 'btn btn-touchspin js-touchspin js-increase-product-quantity',
+	      buttonup_class: 'btn btn-touchspin js-touchspin js-decrease-product-quantity',
+	      min: parseInt((0, _jquery2['default'])(spinner).attr('min'), 10),
+	      max: 1000000
+	    });
 	  });
 	}
 	
 	(0, _jquery2['default'])(document).ready(function () {
 	  var productLineInCartSelector = '.js-cart-line-product-quantity';
+	  var promises = [];
 	
 	  _prestashop2['default'].on('updateCart', function () {
 	    (0, _jquery2['default'])('.quickview').modal('hide');
@@ -16884,12 +16887,12 @@
 	
 	  var $body = (0, _jquery2['default'])('body');
 	
-	  function isTouchSpin($target) {
-	    return $target.hasClass('bootstrap-touchspin-up') || $target.hasClass('bootstrap-touchspin-down');
+	  function isTouchSpin(namespace) {
+	    return namespace === 'on.startupspin' || namespace === 'on.startdownspin';
 	  }
 	
-	  function shouldIncreaseProductQuantity($target) {
-	    return $target.hasClass('bootstrap-touchspin-up');
+	  function shouldIncreaseProductQuantity(namespace) {
+	    return namespace === 'on.startupspin';
 	  }
 	
 	  function findCartLineProductQuantityInput($target) {
@@ -16921,8 +16924,8 @@
 	    return camelizedSubject;
 	  }
 	
-	  function parseCartAction($target) {
-	    if (!isTouchSpin($target)) {
+	  function parseCartAction($target, namespace) {
+	    if (!isTouchSpin(namespace)) {
 	      return {
 	        url: $target.attr('href'),
 	        type: camelize($target.data('link-action'))
@@ -16935,7 +16938,7 @@
 	    }
 	
 	    var cartAction = {};
-	    if (shouldIncreaseProductQuantity($target)) {
+	    if (shouldIncreaseProductQuantity(namespace)) {
 	      cartAction = {
 	        url: $input.data('up-url'),
 	        type: 'increaseProductQuantity'
@@ -16950,11 +16953,24 @@
 	    return cartAction;
 	  }
 	
+	  var abortPreviousRequests = function abortPreviousRequests() {
+	    var promise;
+	    while (promises.length > 0) {
+	      promise = promises.pop();
+	      promise.abort();
+	    }
+	  };
+	
+	  var getTouchSpinInput = function getTouchSpinInput($button) {
+	    return (0, _jquery2['default'])($button.parents('.bootstrap-touchspin').find('input'));
+	  };
+	
 	  var handleCartAction = function handleCartAction(event) {
 	    event.preventDefault();
 	
 	    var $target = (0, _jquery2['default'])(event.currentTarget);
-	    var cartAction = parseCartAction($target);
+	
+	    var cartAction = parseCartAction($target, event.namespace);
 	    var requestData = {
 	      ajax: '1',
 	      action: 'update'
@@ -16964,13 +16980,18 @@
 	      return;
 	    }
 	
-	    _jquery2['default'].post(cartAction.url, requestData, null, 'json').then(function (resp) {
-	      if (resp.hasError) {
-	        var $quantityInput = (0, _jquery2['default'])($target.parents('.bootstrap-touchspin').find('input'));
-	        $quantityInput.val($quantityInput.attr('value'));
-	
-	        return;
+	    abortPreviousRequests();
+	    _jquery2['default'].ajax({
+	      url: cartAction.url,
+	      method: 'POST',
+	      data: requestData,
+	      dataType: 'json',
+	      beforeSend: function beforeSend(jqXHR) {
+	        promises.push(jqXHR);
 	      }
+	    }).then(function (resp) {
+	      var $quantityInput = getTouchSpinInput($target);
+	      $quantityInput.val(resp.quantity);
 	
 	      // Refresh cart preview
 	      _prestashop2['default'].emit('updateCart', {
@@ -16985,7 +17006,53 @@
 	    });
 	  };
 	
-	  $body.on('click', '.js-cart .js-touchspin, [data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', handleCartAction);
+	  $body.on('click', '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', handleCartAction);
+	
+	  (0, _jquery2['default'])(spinnerSelector).on('touchspin.on.startdownspin', handleCartAction);
+	  (0, _jquery2['default'])(spinnerSelector).on('touchspin.on.startupspin', handleCartAction);
+	
+	  function sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target) {
+	    abortPreviousRequests();
+	
+	    return _jquery2['default'].ajax({
+	      url: updateQuantityInCartUrl,
+	      method: 'POST',
+	      data: requestData,
+	      dataType: 'json',
+	      beforeSend: function beforeSend(jqXHR) {
+	        promises.push(jqXHR);
+	      }
+	    }).then(function (resp) {
+	      $target.val(resp.quantity);
+	
+	      var dataset;
+	      if ($target) {
+	        dataset = $target.dataset;
+	      } else {
+	        dataset = null;
+	      }
+	
+	      // Refresh cart preview
+	      _prestashop2['default'].emit('updateCart', {
+	        reason: dataset
+	      });
+	    }).fail(function (resp) {
+	      _prestashop2['default'].emit('handleError', { eventType: 'updateProductQuantityInCart', resp: resp });
+	    });
+	  }
+	
+	  function getRequestData(quantity) {
+	    return {
+	      ajax: '1',
+	      qty: Math.abs(quantity),
+	      action: 'update',
+	      op: getQuantityChangeType(quantity)
+	    };
+	  }
+	
+	  function getQuantityChangeType($quantity) {
+	    return $quantity > 0 ? 'up' : 'down';
+	  }
 	
 	  function updateProductQuantityInCart(event) {
 	    var $target = (0, _jquery2['default'])(event.currentTarget);
@@ -17006,29 +17073,9 @@
 	      return;
 	    }
 	
-	    var dir = qty > 0 ? 'up' : 'down';
+	    var requestData = getRequestData(qty);
 	
-	    var requestData = {
-	      ajax: '1',
-	      qty: Math.abs(qty),
-	      action: 'update',
-	      op: dir
-	    };
-	
-	    _jquery2['default'].post(updateQuantityInCartUrl, requestData, null, 'json').then(function (resp) {
-	      if (resp.hasError) {
-	        $target.val(baseValue);
-	
-	        return;
-	      }
-	
-	      // Refresh cart preview
-	      _prestashop2['default'].emit('updateCart', {
-	        reason: $target.dataset
-	      });
-	    }).fail(function (resp) {
-	      _prestashop2['default'].emit('handleError', { eventType: 'updateProductQuantityInCart', resp: resp });
-	    });
+	    sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target);
 	  }
 	
 	  $body.on('focusout', productLineInCartSelector, function (event) {

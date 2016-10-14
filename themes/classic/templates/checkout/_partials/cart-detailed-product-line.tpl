@@ -78,14 +78,16 @@
             {if isset($product.is_gift) && $product.is_gift}
               <span class="gift-quantity">{$product.quantity}</span>
             {else}
-              <input class="js-cart-line-product-quantity"
-                     data-down-url="{$product.down_quantity_url}"
-                     data-up-url="{$product.up_quantity_url}"
-                     data-update-url="{$product.update_quantity_url}"
-                     data-product-id="{$product.id_product}"
-                     type="text"
-                     value="{$product.quantity}"
-                     name="product-quantity-spin"
+              <input
+                class="js-cart-line-product-quantity"
+                data-down-url="{$product.down_quantity_url}"
+                data-up-url="{$product.up_quantity_url}"
+                data-update-url="{$product.update_quantity_url}"
+                data-product-id="{$product.id_product}"
+                type="text"
+                value="{$product.quantity}"
+                name="product-quantity-spin"
+                min="{$product.minimal_quantity}"
               />
             {/if}
           </div>
