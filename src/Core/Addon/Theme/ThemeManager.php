@@ -291,8 +291,10 @@ class ThemeManager implements AddonManagerInterface
 
     private function installFromZip($source)
     {
-        $sandboxPath = $this->getSandboxPath();
+        $finderClass = get_class($this->finder);
+        $this->finder = $finderClass::create();
 
+        $sandboxPath = $this->getSandboxPath();
         Tools::ZipExtract($source, $sandboxPath);
 
         $directories = $this->finder->directories()
