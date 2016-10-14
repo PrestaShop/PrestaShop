@@ -6,6 +6,18 @@ services:
     finder:
         class: Symfony\Component\Finder\Finder
         shared: false
+        
+    guzzle.cache.provider:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments:
+            - "%kernel.cache_dir%/guzzle"
+        
+    guzzle.cache:
+        class: Csa\Bundle\GuzzleBundle\GuzzleHttp\Cache\DoctrineAdapter
+        arguments:
+            - "@guzzle.cache.provider"
+            - "%prestashop.addons.api_client.ttl%"
+        shared: false
 
     main.warmer.cache_warmer:
         class: PrestaShopBundle\Cache\CacheWarmer

@@ -44,3 +44,8 @@ monolog:
 
 #swiftmailer:
 #    delivery_address: me@example.com
+
+prestashop:
+    addons:
+        api_client:
+            ttl: 300 # 5min
