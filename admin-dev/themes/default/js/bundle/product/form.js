@@ -1777,24 +1777,28 @@ var priceCalculation = (function() {
 
       return price;
     },
-    'taxInclude': function() {
-      var price = this.normalizePrice(priceHTElem.val());
+    'addCurrentTax': function (price) {
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
       var priceWithTaxes = new Number(ps_round(addTaxes(price, rates, computation_method), displayPricePrecision));
       var ecotaxIncluded = new Number(getEcotaxTaxIncluded());
-      var newPrice = priceWithTaxes + ecotaxIncluded;
-      newPrice = truncateDecimals(newPrice, 6);
+
+      return priceWithTaxes + ecotaxIncluded;
+    },
+    'taxInclude': function() {
+      var newPrice = truncateDecimals(this.addCurrentTax(this.normalizePrice(priceHTElem.val())), 6);
 
       priceTTCElem.val(newPrice).change();
       priceTTCShorcutElem.val(newPrice).change();
     },
-    'taxExclude': function() {
-      var price = this.normalizePrice(priceTTCElem.val());
+    'removeCurrentTax': function (price) {
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
-      var newPrice = ps_round(removeTaxes(ps_round(price - getEcotaxTaxIncluded(), displayPricePrecision), rates, computation_method), displayPricePrecision);
-      newPrice = truncateDecimals(newPrice, 6);
+
+      return ps_round(removeTaxes(ps_round(price - getEcotaxTaxIncluded(), displayPricePrecision), rates, computation_method), displayPricePrecision);
+    },
+    'taxExclude': function() {
+      var newPrice = truncateDecimals(this.removeCurrentTax(this.normalizePrice(priceTTCElem.val())), 6);
 
       priceHTElem.val(newPrice).change();
       priceHTShortcutElem.val(newPrice).change();

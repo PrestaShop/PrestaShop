@@ -50,6 +50,17 @@ export default function() {
       refreshDefaultImage();
     });
 
+    $('#product_combination_bulk_impact_on_price_ti, #product_combination_bulk_impact_on_price_te').keyup(function () {
+      var self = $(this);
+      var price = priceCalculation.normalizePrice(self.val());
+
+      if ('product_combination_bulk_impact_on_price_ti' === self.attr('id')) {
+        $('#product_combination_bulk_impact_on_price_te').val(priceCalculation.removeCurrentTax(price)).change();
+      } else {
+        $('#product_combination_bulk_impact_on_price_ti').val(priceCalculation.addCurrentTax(price)).change();
+      }
+    });
+
     /*
      * Retrieve URL to get a set of combination forms from data attribute
      * Concatenate ids_product_attribute to load from a slice of idsProductAttribute depending of step and last set
