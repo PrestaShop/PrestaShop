@@ -56,7 +56,7 @@
 	<div class="btn-toolbar">
 		<ul class="nav nav-pills pull-right">
 			<li>
-				<a id="desc-module-back" class="toolbar_btn" href="javascript: window.history.back();" title="{l s='Back'}">
+				<a id="desc-module-back" class="toolbar_btn" href="{url entity='sf' route='admin_module_manage'}">
 					<i class="process-icon-back"></i>
 					<div>{l s='Back'}</div>
 				</a>
