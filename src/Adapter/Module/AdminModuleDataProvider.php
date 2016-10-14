@@ -25,8 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
@@ -56,7 +56,7 @@ class AdminModuleDataProvider implements ModuleInterface
     public function __construct(
         $languageISO,
         Router $router = null,
-        AddonsDataProvider $addonsDataProvider,
+        AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider
     ) {
         $this->languageISO = $languageISO;
@@ -152,7 +152,11 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['upgrade']
                     );
                 }
-            } elseif (!$addon->attributes->has('origin') || $addon->disk->get('is_present') == true || in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'))) {
+            } elseif (
+                !$addon->attributes->has('origin') ||
+                $addon->disk->get('is_present') == true ||
+                in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'))
+            ) {
                 $url_active = 'install';
                 unset(
                     $urls['uninstall'],
@@ -177,6 +181,11 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $addons;
+    }
+
+    public function getModuleAttributesById($moduleId)
+    {
+        return (array) $this->addonsDataProvider->request('module', array('id_module' => $moduleId));
     }
 
     protected function applyModuleFilters(array $modules, array $filters)

@@ -430,6 +430,31 @@ class ModuleRepository implements ModuleRepositoryInterface
         return new Module($attributes, $disk, $database);
     }
 
+    public function getModuleAttributes($name)
+    {
+        $module = $this->getModule($name);
+
+        return $module->attributes;
+    }
+
+    /**
+     * @param $moduleId
+     * @return Module
+     */
+    public function getModuleById($moduleId)
+    {
+        $moduleAttributes = $this->adminModuleProvider->getModuleAttributesById($moduleId);
+        $attributes = $this->getModuleAttributes($moduleAttributes['name']);
+
+        foreach ($attributes->all() as $name => $value) {
+            if (!array_key_exists($name, $moduleAttributes)) {
+                $moduleAttributes[$name] = $value;
+            }
+        }
+
+        return new Module($moduleAttributes);
+    }
+
     /**
      * Instanciate every module present in the modules folder.
      *

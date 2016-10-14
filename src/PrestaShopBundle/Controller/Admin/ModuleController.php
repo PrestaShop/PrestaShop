@@ -668,15 +668,20 @@ class ModuleController extends FrameworkBundleAdminController
 
     public function getModuleCartAction($moduleId)
     {
-        $module = (array) $this->get('prestashop.adapter.data_provider.addon')->request('module', array('id_module' => $moduleId));
+        $adminModuleRepository = $this->get('prestashop.core.admin.module.repository');
+        $module = $adminModuleRepository->getModuleById($moduleId);
 
-        $moduleAdapter = new Module($module);
-        $addonsProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $addOnsAdminDataProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $addOnsAdminDataProvider->generateAddonsUrls(array($module));
+
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+        $moduleToPresent = $modulePresenter->present($module);
 
-        $addonsProvider->generateAddonsUrls(array($moduleAdapter));
-        $moduleToPresent = $modulePresenter->present($moduleAdapter);
-
-        return $this->render('@PrestaShop/Admin/Module/Includes/modal_read_more_content.html.twig', array('module' => $moduleToPresent));
+        return $this->render(
+            '@PrestaShop/Admin/Module/Includes/modal_read_more_content.html.twig',
+            array(
+                'module' => $moduleToPresent,
+            )
+        );
     }
 }

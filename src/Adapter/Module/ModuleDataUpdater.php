@@ -25,8 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleDataUpdater
@@ -34,7 +33,7 @@ class ModuleDataUpdater
     private $addonsDataProvider;
     private $adminModuleDataProvider;
 
-    public function __construct(AddonsDataProvider $addonsDataProvider, AdminModuleDataProvider $adminModuleDataProvider)
+    public function __construct(AddonsInterface $addonsDataProvider, AdminModuleDataProvider $adminModuleDataProvider)
     {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
