@@ -27,9 +27,12 @@ var AdminModuleController = function() {
    * @type {Array}
    */
   this.modulesList = [];
+  this.addonsCardGrid = null;
+  this.addonsCardList = null;
 
   // Selectors into vars to make it easier to change them while keeping same code logic
   this.moduleItemGridSelector = '.module-item-grid';
+  this.moduleItemListSelector = '.module-item-list';
   this.categorySelectorLabelSelector = '.module-category-selector-label';
   this.categorySelector = '.module-category-selector';
   this.categoryItemSelector = '.module-category-menu';
@@ -65,6 +68,7 @@ var AdminModuleController = function() {
   // Selectors for Module Import and Addons connect
   this.addonsConnectModalBtnSelector = '#page-header-desc-configuration-addons_connect';
   this.addonsLogoutModalBtnSelector = '#page-header-desc-configuration-addons_logout';
+  this.addonsImportModalBtnSelector = '#page-header-desc-configuration-add_module';
   this.dropZoneModalSelector = '#module-modal-import';
   this.dropZoneImportZoneSelector = '#importDropzone';
   this.addonsConnectModalSelector = '#module-modal-addons-connect';
@@ -134,11 +138,10 @@ var AdminModuleController = function() {
   };
 
   this.onModuleDisabled = function() {
-    var globalModuleSelector = this.getModuleGlobalSelector();
     var moduleItemSelector = this.getModuleItemSelector();
     var self = this;
 
-    $(globalModuleSelector).each(function() {
+    $('.modules-list').each(function() {
       var totalForCurrentSelector = $(this).find(moduleItemSelector+':visible').length;
       self.updateTotalResults(totalForCurrentSelector, $(this));
     });
@@ -175,7 +178,7 @@ var AdminModuleController = function() {
 
         var stylesheet = document.styleSheets[0];
         var stylesheetRule = '{display: none}';
-        var moduleGlobalSelector = self.getModuleGlobalSelector();
+        var moduleGlobalSelector = '.modules-list';
         var requiredSelectorCombination = moduleGlobalSelector + ', .module-sorting-menu ';
 
         if (stylesheet.insertRule) {
@@ -197,6 +200,7 @@ var AdminModuleController = function() {
           });
           $(requiredSelectorCombination).fadeIn(800);
           $('[data-toggle="popover"]').popover();
+          self.initCurrentDisplay();
           self.fetchModulesList();
         });
 
@@ -243,6 +247,8 @@ var AdminModuleController = function() {
         $this.remove();
       });
     });
+    self.addonsCardGrid = $(this.addonItemGridSelector);
+    self.addonsCardList = $(this.addonItemListSelector);
     this.updateModuleVisibility();
   };
 
@@ -302,6 +308,13 @@ var AdminModuleController = function() {
           currentModule.container.append(currentModule.domObject);
         }
       }
+    }
+    if (this.currentTagsList.length) {
+        if ('grid' === this.currentDisplay) {
+            $(".modules-list").append(this.addonsCardGrid);
+        } else {
+            $(".modules-list").append(this.addonsCardList);
+        }
     }
 
     this.updateTotalResults();
@@ -416,7 +429,7 @@ var AdminModuleController = function() {
   };
 
   this.initAddModuleAction = function () {
-    var addModuleButton = $('#page-header-desc-configuration-add_module');
+    var addModuleButton = $(this.addonsImportModalBtnSelector);
     addModuleButton.attr('data-toggle', 'modal');
     addModuleButton.attr('data-target', this.dropZoneModalSelector);
   };
@@ -549,11 +562,7 @@ var AdminModuleController = function() {
   };
 
   this.loadVariables = function () {
-    if ($('.modules-list').length) {
-      this.currentDisplay = 'list';
-    } else {
-      this.currentDisplay = 'grid';
-    }
+    this.initCurrentDisplay();
 
     // If index.php found in the current URL, we need it also in the baseAdminDir
     //noinspection JSUnresolvedVariable
@@ -566,13 +575,7 @@ var AdminModuleController = function() {
   this.getModuleItemSelector = function () {
     return this.currentDisplay == 'grid'
       ? this.moduleItemGridSelector
-      : '.module-item-list';
-  };
-
-  this.getModuleGlobalSelector = function () {
-    return this.currentDisplay == 'grid'
-      ? '.modules-grid'
-      : '.modules-list';
+      : this.moduleItemListSelector;
   };
 
   this.getBulkActionSelectedSelector = function () {
@@ -624,6 +627,15 @@ var AdminModuleController = function() {
       $(self.categoryItemSelector+'[data-category-ref="'+refCategory+'"]').click();
     });
   };
+  
+  this.initCurrentDisplay = function() {
+    var currentDisplaySwitch = $('.module-sort-active');
+    if (currentDisplaySwitch.length) {
+      this.currentDisplay = currentDisplaySwitch.attr('data-switch');
+    } else {
+      this.currentDisplay = 'list';
+    }
+  }
 
   this.initSortingDropdown = function () {
     var self = this;
@@ -762,7 +774,8 @@ var AdminModuleController = function() {
         modulesCount
       );
 
-      $('.module-addons-search').toggle(modulesCount === 0);
+      $(this.addonItemGridSelector).toggle(modulesCount !== (this.modulesList.length/2));
+      $(this.addonItemListSelector).toggle(modulesCount !== (this.modulesList.length/2));
       if (modulesCount === 0) {
         $('.module-addons-search-link').attr(
           'href',

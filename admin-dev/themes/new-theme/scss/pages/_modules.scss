@@ -149,7 +149,6 @@
 * Addons Module Cast (List view)
 **/
 .module-addons-item-list {
-  margin-top: 0.25em;
   display: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -159,11 +158,9 @@
   user-select: none;
   cursor: pointer;
 
-  > .module-addons-item-wrapper-list {
-    display: table-cell;
+  .module-addons-item-wrapper-list {
     vertical-align: middle;
     text-align: center;
-    font-size: 20px;
 
     > .module-icon-addons-exit-list {
       > img {
