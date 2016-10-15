@@ -39,6 +39,9 @@
             <div class="clearfix"></div>
           </div>
         </div>
+        <div class="col-xs-12">
+          {hook h='displayFullWidthTop'}
+        </div>
       </div>
       <div id="mobile_top_menu_wrapper" class="row hidden-md-up" style="display:none;">
         <div class="js-top-menu mobile" id="_mobile_top_menu"></div>
