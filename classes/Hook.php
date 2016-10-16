@@ -70,12 +70,14 @@ class HookCore extends ObjectModel
     );
 
     /**
-     * @deprecated 1.5.0
-     */
-    protected static $_hook_modules_cache = null;
-
-    /**
-     * @deprecated 1.5.0
+     * Adds current Hook as a new Object to the database
+     *
+     * @param bool $autoDate   Automatically set `date_upd` and `date_add` columns
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the Hook has been successfully added
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     protected static $_hook_modules_cache_exec = null;
 
@@ -104,12 +106,20 @@ class HookCore extends ObjectModel
 
     const MODULE_LIST_BY_HOOK_KEY = 'hook_module_exec_list_';
 
-    public function add($autodate = true, $null_values = false)
+    public function add($autoDate = true, $nullValues = false)
     {
         Cache::clean('hook_idsbyname');
-        return parent::add($autodate, $null_values);
+
+        return parent::add($autoDate, $nullValues);
     }
 
+    /**
+     * Normalize hook name
+     *
+     * @param string $hookName
+     *
+     * @return string
+     */
     public static function normalizeHookName($hookName)
     {
         if (strtolower($hookName) == 'displayheader') {
@@ -119,29 +129,38 @@ class HookCore extends ObjectModel
         if (isset($hookAliasList[strtolower($hookName)])) {
             return $hookAliasList[strtolower($hookName)];
         }
+
         return $hookName;
     }
 
-    public static function isDisplayHookName($hook_name)
+    /**
+     * Is diplay hook name
+     *
+     * @param string $hookName
+     *
+     * @return bool
+     */
+    public static function isDisplayHookName($hookName)
     {
-        $hook_name = strtolower(self::normalizeHookName($hook_name));
+        $hookName = strtolower(self::normalizeHookName($hookName));
 
-        if ($hook_name === 'header' || $hook_name === 'displayheader') {
+        if ($hookName === 'header' || $hookName === 'displayheader') {
             // this hook is to add resources to the <head> section of the page
             // so it doesn't display anything by itself
             return false;
         }
 
-        return strpos($hook_name, 'display') === 0;
+        return strpos($hookName, 'display') === 0;
     }
 
     /**
      * Return Hooks List
      *
      * @param bool $position
+     *
      * @return array Hooks List
      */
-    public static function getHooks($position = false, $only_display_hooks = false)
+    public static function getHooks($position = false, $onlyDisplayHooks = false)
     {
         $hooks = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT * FROM `'._DB_PREFIX_.'hook` h
@@ -149,7 +168,7 @@ class HookCore extends ObjectModel
 			ORDER BY `name`'
         );
 
-        if ($only_display_hooks) {
+        if ($onlyDisplayHooks) {
             return array_filter($hooks, function ($hook) {
                 return self::isDisplayHookName($hook['name']);
             });
@@ -161,20 +180,21 @@ class HookCore extends ObjectModel
     /**
      * Return hook ID from name
      *
-     * @param string $hook_name Hook name
+     * @param string $hookName Hook name
+     *
      * @return int Hook ID
      */
-    public static function getIdByName($hook_name)
+    public static function getIdByName($hookName)
     {
-        $hook_name = strtolower($hook_name);
-        if (!Validate::isHookName($hook_name)) {
+        $hookName = strtolower($hookName);
+        if (!Validate::isHookName($hookName)) {
             return false;
         }
 
-        $cache_id = 'hook_idsbyname';
-        if (!Cache::isStored($cache_id)) {
+        $cacheId = 'hook_idsbyname';
+        if (!Cache::isStored($cacheId)) {
             // Get all hook ID by name and alias
-            $hook_ids = array();
+            $hookIds = array();
             $db = Db::getInstance();
             $result = $db->ExecuteS('
 			SELECT `id_hook`, `name`
@@ -184,91 +204,100 @@ class HookCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'hook_alias` ha
 			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name', false);
             while ($row = $db->nextRow($result)) {
-                $hook_ids[strtolower($row['name'])] = $row['id_hook'];
+                $hookIds[strtolower($row['name'])] = $row['id_hook'];
             }
-            Cache::store($cache_id, $hook_ids);
+            Cache::store($cacheId, $hookIds);
         } else {
-            $hook_ids = Cache::retrieve($cache_id);
+            $hookIds = Cache::retrieve($cacheId);
         }
 
-        return (isset($hook_ids[$hook_name]) ? $hook_ids[$hook_name] : false);
+        return (isset($hookIds[$hookName]) ? $hookIds[$hookName] : false);
     }
 
     /**
      * Return hook ID from name
      */
-    public static function getNameById($hook_id)
+    public static function getNameById($hookId)
     {
-        $cache_id = 'hook_namebyid_'.$hook_id;
-        if (!Cache::isStored($cache_id)) {
+        $cacheId = 'hook_namebyid_'.$hookId;
+        if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->getValue('
 							SELECT `name`
 							FROM `'._DB_PREFIX_.'hook`
-							WHERE `id_hook` = '.(int)$hook_id);
-            Cache::store($cache_id, $result);
+							WHERE `id_hook` = '.(int) $hookId);
+            Cache::store($cacheId, $result);
+
             return $result;
         }
-        return Cache::retrieve($cache_id);
+
+        return Cache::retrieve($cacheId);
     }
 
     /**
      * Get list of hook alias
      *
-     * @since 1.5.0
      * @return array
+     *
+     * @since 1.5.0
      */
     public static function getHookAliasList()
     {
-        $cache_id = 'hook_alias';
-        if (!Cache::isStored($cache_id)) {
-            $hook_alias_list = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_alias`');
-            $hook_alias = array();
-            if ($hook_alias_list) {
-                foreach ($hook_alias_list as $ha) {
-                    $hook_alias[strtolower($ha['alias'])] = $ha['name'];
+        $cacheId = 'hook_alias';
+        if (!Cache::isStored($cacheId)) {
+            $hookAliasList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_alias`');
+            $hookAlias = array();
+            if ($hookAliasList) {
+                foreach ($hookAliasList as $ha) {
+                    $hookAlias[strtolower($ha['alias'])] = $ha['name'];
                 }
             }
-            Cache::store($cache_id, $hook_alias);
-            return $hook_alias;
+            Cache::store($cacheId, $hookAlias);
+
+            return $hookAlias;
         }
-        return Cache::retrieve($cache_id);
+
+        return Cache::retrieve($cacheId);
     }
 
     /**
      * Return backward compatibility hook name
      *
-     * @since 1.5.0
-     * @param string $hook_name Hook name
+     * @param string $hookName Hook name
+     *
      * @return int Hook ID
+     *
+     * @since 1.5.0
      */
-    public static function getRetroHookName($hook_name)
+    public static function getRetroHookName($hookName)
     {
-        $alias_list = Hook::getHookAliasList();
-        if (isset($alias_list[strtolower($hook_name)])) {
-            return $alias_list[strtolower($hook_name)];
+        $aliasList = Hook::getHookAliasList();
+        if (isset($aliasList[strtolower($hookName)])) {
+            return $aliasList[strtolower($hookName)];
         }
 
-        $retro_hook_name = array_search($hook_name, $alias_list);
-        if ($retro_hook_name === false) {
+        $retroHookName = array_search($hookName, $aliasList);
+        if ($retroHookName === false) {
             return '';
         }
-        return $retro_hook_name;
+
+        return $retroHookName;
     }
 
     /**
      * Get list of all registered hooks with modules
      *
-     * @since 1.5.0
      * @return array
+     *
+     * @since 1.5.0
      */
     public static function getHookModuleList()
     {
-        $cache_id = 'hook_module_list';
-        if (!Cache::isStored($cache_id)) {
+        $cacheId = 'hook_module_list';
+        if (!Cache::isStored($cacheId)) {
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, active
 			FROM `'._DB_PREFIX_.'hook_module` hm
-			STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
+			STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int) Context::getContext()->shop->id.')
 			STRAIGHT_JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
 			ORDER BY hm.position');
             $list = array();
@@ -288,104 +317,123 @@ class HookCore extends ObjectModel
                     'active' => $result['active'],
                 );
             }
-            Cache::store($cache_id, $list);
+            Cache::store($cacheId, $list);
 
-            // @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
-            Hook::$_hook_modules_cache = $list;
             return $list;
         }
 
-        return Cache::retrieve($cache_id);
+        return Cache::retrieve($cacheId);
     }
 
     /**
      * Return Hooks List
      *
-     * @since 1.5.0
-     * @param int $id_hook
-     * @param int $id_module
+     * @param int $idHook
+     * @param int $idModule
+     *
      * @return array Modules List
+     *
+     * @since 1.5.0
      */
-    public static function getModulesFromHook($id_hook, $id_module = null)
+    public static function getModulesFromHook($idHook, $idModule = null)
     {
         $hm_list = Hook::getHookModuleList();
-        $module_list = (isset($hm_list[$id_hook])) ? $hm_list[$id_hook] : array();
+        $module_list = (isset($hm_list[$idHook])) ? $hm_list[$idHook] : array();
 
-        if ($id_module) {
-            return (isset($module_list[$id_module])) ? array($module_list[$id_module]) : array();
+        if ($idModule) {
+            return (isset($module_list[$idModule])) ? array($module_list[$idModule]) : array();
         }
         return $module_list;
     }
 
-    public static function isModuleRegisteredOnHook($module_instance, $hook_name, $id_shop)
+    /**
+     * Is the Module registered on the given Hook?
+     *
+     * @param Module $moduleInstance Module instance
+     * @param string $hookName       Hook name
+     * @param int    $idShop         Shop ID
+     *
+     * @return bool Indicates whether the Module is registered on the given Hook
+     */
+    public static function isModuleRegisteredOnHook($moduleInstance, $hookName, $idShop)
     {
         $prefix = _DB_PREFIX_;
-        $id_hook = (int) Hook::getIdByName($hook_name);
-        $id_shop = (int) $id_shop;
-        $id_module = (int) $module_instance->id;
+        $id_hook = (int) Hook::getIdByName($hookName);
+        $idShop = (int) $idShop;
+        $id_module = (int) $moduleInstance->id;
 
         $sql = "SELECT * FROM {$prefix}hook_module
                   WHERE `id_hook` = {$id_hook}
                   AND `id_module` = {$id_module}
-                  AND `id_shop` = {$id_shop}";
+                  AND `id_shop` = {$idShop}";
 
         $rows = Db::getInstance()->executeS($sql);
+
         return !empty($rows);
     }
 
-    public static function registerHook($module_instance, $hook_name, $shop_list = null)
+    /**
+     * Register Hook
+     *
+     * @param Module     $moduleInstance
+     * @param string     $hookName
+     * @param array|null $shopList
+     *
+     * @return bool
+     * @throws PrestaShopException
+     */
+    public static function registerHook($moduleInstance, $hookName, $shopList = null)
     {
         $return = true;
-        if (is_array($hook_name)) {
-            $hook_names = $hook_name;
+        if (is_array($hookName)) {
+            $hookNames = $hookName;
         } else {
-            $hook_names = array($hook_name);
+            $hookNames = array($hookName);
         }
 
-        foreach ($hook_names as $hook_name) {
+        foreach ($hookNames as $hookName) {
             // Check hook name validation and if module is installed
-            if (!Validate::isHookName($hook_name)) {
+            if (!Validate::isHookName($hookName)) {
                 throw new PrestaShopException('Invalid hook name');
             }
-            if (!isset($module_instance->id) || !is_numeric($module_instance->id)) {
+            if (!isset($moduleInstance->id) || !is_numeric($moduleInstance->id)) {
                 return false;
             }
 
             // Retrocompatibility
-            $hook_name_bak = $hook_name;
-            if ($alias = Hook::getRetroHookName($hook_name)) {
-                $hook_name = $alias;
+            if ($alias = Hook::getRetroHookName($hookName)) {
+                $hookName = $alias;
             }
 
-            Hook::exec('actionModuleRegisterHookBefore', array('object' => $module_instance, 'hook_name' => $hook_name));
+            Hook::exec('actionModuleRegisterHookBefore', array('object' => $moduleInstance, 'hook_name' => $hookName));
             // Get hook id
-            $id_hook = Hook::getIdByName($hook_name);
+            $idHook = Hook::getIdByName($hookName);
 
             // If hook does not exist, we create it
-            if (!$id_hook) {
-                $new_hook = new Hook();
-                $new_hook->name = pSQL($hook_name);
-                $new_hook->title = pSQL($hook_name);
-                $new_hook->add();
-                $id_hook = $new_hook->id;
-                if (!$id_hook) {
+            if (!$idHook) {
+                $newHook = new Hook();
+                $newHook->name = pSQL($hookName);
+                $newHook->title = pSQL($hookName);
+                $newHook->add();
+                $idHook = $newHook->id;
+                if (!$idHook) {
                     return false;
                 }
             }
 
             // If shop lists is null, we fill it with all shops
-            if (is_null($shop_list)) {
-                $shop_list = Shop::getCompleteListOfShopsID();
+            if (is_null($shopList)) {
+                $shopList = Shop::getCompleteListOfShopsID();
             }
 
-            $shop_list_employee = Shop::getShops(true, null, true);
+            $shopListEmployee = Shop::getShops(true, null, true);
 
-            foreach ($shop_list as $shop_id) {
+            foreach ($shopList as $shopId) {
                 // Check if already register
                 $sql = 'SELECT hm.`id_module`
                     FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
-                    WHERE hm.`id_module` = '.(int)$module_instance->id.' AND h.`id_hook` = '.$id_hook.'
-                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)$shop_id;
+                    WHERE hm.`id_module` = '.(int) $moduleInstance->id.' AND h.`id_hook` = '.$idHook.'
+                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int) $shopId;
                 if (Db::getInstance()->getRow($sql)) {
                     continue;
                 }
@@ -393,56 +441,66 @@ class HookCore extends ObjectModel
                 // Get module position in hook
                 $sql = 'SELECT MAX(`position`) AS position
                     FROM `'._DB_PREFIX_.'hook_module`
-                    WHERE `id_hook` = '.(int)$id_hook.' AND `id_shop` = '.(int)$shop_id;
+                    WHERE `id_hook` = '.(int) $idHook.' AND `id_shop` = '.(int) $shopId;
                 if (!$position = Db::getInstance()->getValue($sql)) {
                     $position = 0;
                 }
 
                 // Register module in hook
                 $return &= Db::getInstance()->insert('hook_module', array(
-                    'id_module' => (int)$module_instance->id,
-                    'id_hook' => (int)$id_hook,
-                    'id_shop' => (int)$shop_id,
-                    'position' => (int)($position + 1),
+                    'id_module' => (int) $moduleInstance->id,
+                    'id_hook' => (int) $idHook,
+                    'id_shop' => (int) $shopId,
+                    'position' => (int) ($position + 1),
                 ));
 
-                if (!in_array($shop_id, $shop_list_employee)) {
-                    $where = '`id_module` = '.(int)$module_instance->id.' AND `id_shop` = '.(int)$shop_id;
+                if (!in_array($shopId, $shopListEmployee)) {
+                    $where = '`id_module` = '.(int) $moduleInstance->id.' AND `id_shop` = '.(int) $shopId;
                     $return &= Db::getInstance()->delete('module_shop', $where);
                 }
             }
 
-            Hook::exec('actionModuleRegisterHookAfter', array('object' => $module_instance, 'hook_name' => $hook_name));
+            Hook::exec('actionModuleRegisterHookAfter', array('object' => $moduleInstance, 'hook_name' => $hookName));
         }
+
         return $return;
     }
 
-    public static function unregisterHook($module_instance, $hook_name, $shop_list = null)
+    /**
+     * Unregister Hook
+     *
+     * @param Module     $moduleInstance
+     * @param string     $hookName
+     * @param array|null $shopList
+     *
+     * @return bool
+     */
+    public static function unregisterHook($moduleInstance, $hookName, $shopList = null)
     {
-        if (is_numeric($hook_name)) {
+        if (is_numeric($hookName)) {
             // $hook_name passed it the id_hook
-            $hook_id = $hook_name;
-            $hook_name = Hook::getNameById((int)$hook_id);
+            $hookId = $hookName;
+            $hookName = Hook::getNameById((int) $hookId);
         } else {
-            $hook_id = Hook::getIdByName($hook_name);
+            $hookId = Hook::getIdByName($hookName);
         }
 
-        if (!$hook_id) {
+        if (!$hookId) {
             return false;
         }
 
-        Hook::exec('actionModuleUnRegisterHookBefore', array('object' => $module_instance, 'hook_name' => $hook_name));
+        Hook::exec('actionModuleUnRegisterHookBefore', array('object' => $moduleInstance, 'hook_name' => $hookName));
 
         // Unregister module on hook by id
         $sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
-            WHERE `id_module` = '.(int)$module_instance->id.' AND `id_hook` = '.(int)$hook_id
-            .(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
+            WHERE `id_module` = '.(int)$moduleInstance->id.' AND `id_hook` = '.(int) $hookId
+            .(($shopList) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shopList)).')' : '');
         $result = Db::getInstance()->execute($sql);
 
         // Clean modules position
-        $module_instance->cleanPositions($hook_id, $shop_list);
+        $moduleInstance->cleanPositions($hookId, $shopList);
 
-        Hook::exec('actionModuleUnRegisterHookAfter', array('object' => $module_instance, 'hook_name' => $hook_name));
+        Hook::exec('actionModuleUnRegisterHookAfter', array('object' => $moduleInstance, 'hook_name' => $hookName));
 
         return $result;
     }
@@ -450,23 +508,25 @@ class HookCore extends ObjectModel
     /**
      * Get list of modules we can execute per hook
      *
-     * @since 1.5.0
-     * @param string $hook_name Get list of modules for this hook if given
+     * @param string $hookName Get list of modules for this hook if given
+     *
      * @return array
+     *
+     * @since 1.5.0
      */
-    public static function getHookModuleExecList($hook_name = null)
+    public static function getHookModuleExecList($hookName = null)
     {
         $context = Context::getContext();
-        $cache_id = self::MODULE_LIST_BY_HOOK_KEY.(isset($context->shop->id) ? '_'.$context->shop->id : '').((isset($context->customer)) ? '_'.$context->customer->id : '');
-        if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment' || $hook_name == 'displayPaymentEU' || $hook_name == 'paymentOptions' || $hook_name == 'displayBackOfficeHeader') {
+        $cacheId = self::MODULE_LIST_BY_HOOK_KEY.(isset($context->shop->id) ? '_'.$context->shop->id : '').((isset($context->customer)) ? '_'.$context->customer->id : '');
+        if (!Cache::isStored($cacheId) || $hookName == 'displayPayment' || $hookName == 'displayPaymentEU' || $hookName == 'paymentOptions' || $hookName == 'displayBackOfficeHeader') {
             $frontend = true;
             $groups = array();
-            $use_groups = Group::isFeatureActive();
+            $useGroups = Group::isFeatureActive();
             if (isset($context->employee)) {
                 $frontend = false;
             } else {
                 // Get groups list
-                if ($use_groups) {
+                if ($useGroups) {
                     if (isset($context->customer) && $context->customer->isLogged()) {
                         $groups = $context->customer->getGroups();
                     } elseif (isset($context->customer) && $context->customer->isLogged(true)) {
@@ -481,39 +541,38 @@ class HookCore extends ObjectModel
             $sql = new DbQuery();
             $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module');
             $sql->from('module', 'm');
-            if ($hook_name != 'displayBackOfficeHeader') {
-                $sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & '.(int)Context::getContext()->getDevice()));
+            if ($hookName != 'displayBackOfficeHeader') {
+                $sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & '.(int) Context::getContext()->getDevice()));
                 $sql->innerJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module`');
             }
             $sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
             $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
-            if ($hook_name != 'paymentOptions') {
+            if ($hookName != 'paymentOptions') {
                 $sql->where('h.`name` != "paymentOptions"');
-            }
-            // For payment modules, we check that they are available in the contextual country
-            elseif ($frontend) {
+            } elseif ($frontend) {
+                // For payment modules, we check that they are available in the contextual country
                 if (Validate::isLoadedObject($context->country)) {
-                    $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions")AND (SELECT `id_country` FROM `'._DB_PREFIX_.'module_country` mc WHERE mc.`id_module` = m.`id_module` AND `id_country` = '.(int)$context->country->id.' AND `id_shop` = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
+                    $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions")AND (SELECT `id_country` FROM `'._DB_PREFIX_.'module_country` mc WHERE mc.`id_module` = m.`id_module` AND `id_country` = '.(int) $context->country->id.' AND `id_shop` = '.(int) $context->shop->id.' LIMIT 1) = '.(int) $context->country->id.')');
                 }
                 if (Validate::isLoadedObject($context->currency)) {
-                    $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions") AND (SELECT `id_currency` FROM `'._DB_PREFIX_.'module_currency` mcr WHERE mcr.`id_module` = m.`id_module` AND `id_currency` IN ('.(int)$context->currency->id.', -1, -2) LIMIT 1) IN ('.(int)$context->currency->id.', -1, -2))');
+                    $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions") AND (SELECT `id_currency` FROM `'._DB_PREFIX_.'module_currency` mcr WHERE mcr.`id_module` = m.`id_module` AND `id_currency` IN ('.(int) $context->currency->id.', -1, -2) LIMIT 1) IN ('.(int) $context->currency->id.', -1, -2))');
                 }
                 if (Validate::isLoadedObject($context->cart)) {
                     $carrier = new Carrier($context->cart->id_carrier);
                     if (Validate::isLoadedObject($carrier)) {
-                        $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions") AND (SELECT `id_reference` FROM `'._DB_PREFIX_.'module_carrier` mcar WHERE mcar.`id_module` = m.`id_module` AND `id_reference` = '.(int)$carrier->id_reference.' AND `id_shop` = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$carrier->id_reference.')');
+                        $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions") AND (SELECT `id_reference` FROM `'._DB_PREFIX_.'module_carrier` mcar WHERE mcar.`id_module` = m.`id_module` AND `id_reference` = '.(int) $carrier->id_reference.' AND `id_shop` = '.(int) $context->shop->id.' LIMIT 1) = '.(int) $carrier->id_reference.')');
                     }
                 }
             }
             if (Validate::isLoadedObject($context->shop)) {
-                $sql->where('hm.`id_shop` = '.(int)$context->shop->id);
+                $sql->where('hm.`id_shop` = '.(int) $context->shop->id);
             }
 
             if ($frontend) {
-                if ($use_groups) {
+                if ($useGroups) {
                     $sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
                     if (Validate::isLoadedObject($context->shop)) {
-                        $sql->where('mg.id_shop = '.((int)$context->shop->id).(count($groups) ? ' AND  mg.`id_group` IN ('.implode(', ', $groups).')' : ''));
+                        $sql->where('mg.id_shop = '.((int) $context->shop->id).(count($groups) ? ' AND  mg.`id_group` IN ('.implode(', ', $groups).')' : ''));
                     } elseif (count($groups)) {
                         $sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
                     }
@@ -538,32 +597,30 @@ class HookCore extends ObjectModel
                     );
                 }
             }
-            if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU' && $hook_name != 'paymentOptions' && $hook_name != 'displayBackOfficeHeader') {
-                Cache::store($cache_id, $list);
-                // @todo remove this in 1.6, we keep it in 1.5 for backward compatibility
-                self::$_hook_modules_cache_exec = $list;
+            if ($hookName != 'displayPayment' && $hookName != 'displayPaymentEU' && $hookName != 'paymentOptions' && $hookName != 'displayBackOfficeHeader') {
+                Cache::store($cacheId, $list);
             }
         } else {
-            $list = Cache::retrieve($cache_id);
+            $list = Cache::retrieve($cacheId);
         }
 
         // If hook_name is given, just get list of modules for this hook
-        if ($hook_name) {
-            $retro_hook_name = strtolower(Hook::getRetroHookName($hook_name));
-            $hook_name = strtolower($hook_name);
+        if ($hookName) {
+            $retroHookName = strtolower(Hook::getRetroHookName($hookName));
+            $hookName = strtolower($hookName);
 
             $return = array();
-            $inserted_modules = array();
-            if (isset($list[$hook_name])) {
-                $return = $list[$hook_name];
+            $insertedModules = array();
+            if (isset($list[$hookName])) {
+                $return = $list[$hookName];
             }
             foreach ($return as $module) {
-                $inserted_modules[] = $module['id_module'];
+                $insertedModules[] = $module['id_module'];
             }
-            if (isset($list[$retro_hook_name])) {
-                foreach ($list[$retro_hook_name] as $retro_module_call) {
-                    if (!in_array($retro_module_call['id_module'], $inserted_modules)) {
-                        $return[] = $retro_module_call;
+            if (isset($list[$retroHookName])) {
+                foreach ($list[$retroHookName] as $retroModuleCall) {
+                    if (!in_array($retroModuleCall['id_module'], $insertedModules)) {
+                        $return[] = $retroModuleCall;
                     }
                 }
             }
@@ -577,110 +634,109 @@ class HookCore extends ObjectModel
     /**
      * Execute modules for specified hook
      *
-     * @param string $hook_name Hook Name
-     * @param array $hook_args Parameters for the functions
-     * @param int $id_module Execute hook for this module only
-     * @param bool $array_return If specified, module output will be set by name in an array
-     * @param bool $check_exceptions Check permission exceptions
-     * @param bool $use_push Force change to be refreshed on Dashboard widgets
-     * @param int $id_shop If specified, hook will be execute the shop with this ID
+     * @param string $hookName        Hook Name
+     * @param array  $hookArgs        Parameters for the functions
+     * @param int    $idModule        Execute hook for this module only
+     * @param bool   $arrayReturn     If specified, module output will be set by name in an array
+     * @param bool   $checkExceptions Check permission exceptions
+     * @param bool   $usePush         Force change to be refreshed on Dashboard widgets
+     * @param int    $idShop          If specified, hook will be execute the shop with this ID
      *
      * @throws PrestaShopException
      *
-     * @return string/array modules output
+     * @return string|array modules output
      */
-    public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true,
-                                $use_push = false, $id_shop = null)
+    public static function exec($hookName, $hookArgs = array(), $idModule = null, $arrayReturn = false, $checkExceptions = true, $usePush = false, $idShop = null)
     {
         if (defined('PS_INSTALLATION_IN_PROGRESS')) {
             return;
         }
 
-        static $disable_non_native_modules = null;
-        if ($disable_non_native_modules === null) {
-            $disable_non_native_modules = (bool)Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
+        static $disableNonNativeModules = null;
+        if ($disableNonNativeModules === null) {
+            $disableNonNativeModules = (bool) Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
         }
 
         // Check arguments validity
-        if (($id_module && !is_numeric($id_module)) || !Validate::isHookName($hook_name)) {
+        if (($idModule && !is_numeric($idModule)) || !Validate::isHookName($hookName)) {
             throw new PrestaShopException('Invalid id_module or hook_name');
         }
 
         // If no modules associated to hook_name or recompatible hook name, we stop the function
 
-        if (!$module_list = Hook::getHookModuleExecList($hook_name)) {
+        if (!$moduleList = Hook::getHookModuleExecList($hookName)) {
             return '';
         }
 
         // Check if hook exists
-        if (!$id_hook = Hook::getIdByName($hook_name)) {
+        if (!$idHook = Hook::getIdByName($hookName)) {
             return false;
         }
 
-        if (array_key_exists($hook_name, self::$deprecated_hooks)) {
-            $deprecVersion = isset(self::$deprecated_hooks[$hook_name]['from'])?
-                    self::$deprecated_hooks[$hook_name]['from']:
+        if (array_key_exists($hookName, self::$deprecated_hooks)) {
+            $deprecVersion = isset(self::$deprecated_hooks[$hookName]['from'])?
+                    self::$deprecated_hooks[$hookName]['from']:
                     _PS_VERSION_;
-            Tools::displayAsDeprecated('The hook '. $hook_name .' is deprecated in PrestaShop v.'. $deprecVersion);
+            Tools::displayAsDeprecated('The hook '. $hookName .' is deprecated in PrestaShop v.'. $deprecVersion);
         }
 
         // Store list of executed hooks on this page
-        Hook::$executed_hooks[$id_hook] = $hook_name;
+        Hook::$executed_hooks[$idHook] = $hookName;
 
         $context = Context::getContext();
-        if (!isset($hook_args['cookie']) || !$hook_args['cookie']) {
-            $hook_args['cookie'] = $context->cookie;
+        if (!isset($hookArgs['cookie']) || !$hookArgs['cookie']) {
+            $hookArgs['cookie'] = $context->cookie;
         }
-        if (!isset($hook_args['cart']) || !$hook_args['cart']) {
-            $hook_args['cart'] = $context->cart;
+        if (!isset($hookArgs['cart']) || !$hookArgs['cart']) {
+            $hookArgs['cart'] = $context->cart;
         }
 
-        $retro_hook_name = Hook::getRetroHookName($hook_name);
+        $retroHookName = Hook::getRetroHookName($hookName);
 
         // Look on modules list
         $altern = 0;
-        if ($array_return) {
+        if ($arrayReturn) {
             $output = array();
         } else {
             $output = '';
         }
 
-        if ($disable_non_native_modules && !isset(Hook::$native_module)) {
+        if ($disableNonNativeModules && !isset(Hook::$native_module)) {
             Hook::$native_module = Module::getNativeModuleList();
         }
 
-        $different_shop = false;
-        if ($id_shop !== null && Validate::isUnsignedId($id_shop) && $id_shop != $context->shop->getContextShopID()) {
-            $old_context = $context->shop->getContext();
-            $old_shop = clone $context->shop;
-            $shop = new Shop((int)$id_shop);
+        $differentShop = false;
+        if ($idShop !== null && Validate::isUnsignedId($idShop) && $idShop != $context->shop->getContextShopID()) {
+            $oldContext = $context->shop->getContext();
+            $oldShop = clone $context->shop;
+            $shop = new Shop((int) $idShop);
             if (Validate::isLoadedObject($shop)) {
                 $context->shop = $shop;
                 $context->shop->setContext(Shop::CONTEXT_SHOP, $shop->id);
-                $different_shop = true;
+                $differentShop = true;
             }
         }
 
-        foreach ($module_list as $array) {
+        foreach ($moduleList as $array) {
             // Check errors
-            if ($id_module && $id_module != $array['id_module']) {
+            if ($idModule && $idModule != $array['id_module']) {
                 continue;
             }
 
-            if ((bool)$disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($array['module'], Hook::$native_module)) {
+            if ((bool) $disableNonNativeModules && Hook::$native_module && count(Hook::$native_module) && !in_array($array['module'], Hook::$native_module)) {
                 continue;
             }
 
             // Check permissions
-            if ($check_exceptions) {
+            if ($checkExceptions) {
                 $exceptions = Module::getExceptionsStatic($array['id_module'], $array['id_hook']);
 
                 $controller = Dispatcher::getInstance()->getController();
-                $controller_obj = Context::getContext()->controller;
+                $controllerObj = Context::getContext()->controller;
 
                 //check if current controller is a module controller
-                if (isset($controller_obj->module) && Validate::isLoadedObject($controller_obj->module)) {
-                    $controller = 'module-'.$controller_obj->module->name.'-'.$controller;
+                if (isset($controllerObj->module) && Validate::isLoadedObject($controllerObj->module)) {
+                    $controller = 'module-'.$controllerObj->module->name.'-'.$controller;
                 }
 
                 if (in_array($controller, $exceptions)) {
@@ -688,10 +744,10 @@ class HookCore extends ObjectModel
                 }
 
                 //Backward compatibility of controller names
-                $matching_name = array(
-                    'authentication' => 'auth'
+                $matchingName = array(
+                    'authentication' => 'auth',
                 );
-                if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions)) {
+                if (isset($matchingName[$controller]) && in_array($matchingName[$controller], $exceptions)) {
                     continue;
                 }
                 if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($array['id_module'], 'view', $context->employee)) {
@@ -703,39 +759,39 @@ class HookCore extends ObjectModel
                 continue;
             }
 
-            if ($use_push && !$moduleInstance->allow_push) {
+            if ($usePush && !$moduleInstance->allow_push) {
                 continue;
             }
             // Check which / if method is callable
-            $hook_callable = is_callable(array($moduleInstance, 'hook'.$hook_name));
-            $hook_retro_callable = is_callable(array($moduleInstance, 'hook'.$retro_hook_name));
+            $hookCallable = is_callable(array($moduleInstance, 'hook'.$hookName));
+            $hookRetroCallable = is_callable(array($moduleInstance, 'hook'.$retroHookName));
 
-            if ($hook_callable || $hook_retro_callable) {
-                $hook_args['altern'] = ++$altern;
+            if ($hookCallable || $hookRetroCallable) {
+                $hookArgs['altern'] = ++$altern;
 
-                if ($use_push && isset($moduleInstance->push_filename) && file_exists($moduleInstance->push_filename)) {
+                if ($usePush && isset($moduleInstance->push_filename) && file_exists($moduleInstance->push_filename)) {
                     Tools::waitUntilFileIsModified($moduleInstance->push_filename, $moduleInstance->push_time_limit);
                 }
 
                 // Call hook method
-                if ($hook_callable) {
-                    $display = Hook::coreCallHook($moduleInstance, 'hook'.$hook_name, $hook_args);
-                } elseif ($hook_retro_callable) {
-                    $display = Hook::coreCallHook($moduleInstance, 'hook'.$retro_hook_name, $hook_args);
+                if ($hookCallable) {
+                    $display = Hook::coreCallHook($moduleInstance, 'hook'.$hookName, $hookArgs);
+                } elseif ($hookRetroCallable) {
+                    $display = Hook::coreCallHook($moduleInstance, 'hook'.$retroHookName, $hookArgs);
                 } else {
                     continue;
                 }
 
-                if ($array_return) {
+                if ($arrayReturn) {
                     $output[$moduleInstance->name] = $display;
                 } else {
                     $output .= $display;
                 }
-            } elseif (Hook::isDisplayHookName($hook_name)) {
+            } elseif (Hook::isDisplayHookName($hookName)) {
                 if ($moduleInstance instanceof WidgetInterface) {
-                    $display = Hook::coreRenderWidget($moduleInstance, $hook_name, $hook_args);
+                    $display = Hook::coreRenderWidget($moduleInstance, $hookName, $hookArgs);
 
-                    if ($array_return) {
+                    if ($arrayReturn) {
                         $output[$moduleInstance->name] = $display;
                     } else {
                         $output .= $display;
@@ -744,21 +800,39 @@ class HookCore extends ObjectModel
             }
         }
 
-        if ($different_shop) {
-            $context->shop = $old_shop;
-            $context->shop->setContext($old_context, $shop->id);
+        if ($differentShop && isset($oldShop) && isset($oldContext) && isset($shop)) {
+            $context->shop = $oldShop;
+            $context->shop->setContext($oldContext, $shop->id);
         }
 
         return $output;
     }
 
+    /**
+     * Core call hook
+     *
+     * @param $module
+     * @param $method
+     * @param $params
+     *
+     * @return mixed
+     */
     public static function coreCallHook($module, $method, $params)
     {
         return $module->{$method}($params);
     }
 
-    public static function coreRenderWidget($module, $hook_name, $params)
+    /**
+     * Core render widget
+     *
+     * @param $module
+     * @param $hookName
+     * @param $params
+     *
+     * @return mixed
+     */
+    public static function coreRenderWidget($module, $hookName, $params)
     {
-        return $module->renderWidget($hook_name, $params);
+        return $module->renderWidget($hookName, $params);
     }
 }
