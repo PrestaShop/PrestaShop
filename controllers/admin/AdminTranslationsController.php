@@ -1622,7 +1622,7 @@ class AdminTranslationsControllerCore extends AdminController
         foreach ($arr_mail_content as $group_name => $all_content) {
             foreach ($all_content as $type_content => $mails) {
 
-                if (!in_array($type_content, CONTENT_TYPE_ACCEPTED)) {
+                if (!in_array($type_content, self::CONTENT_TYPE_ACCEPTED)) {
                     throw new PrestaShopException($this->trans('This %type_content% file extension is not accepted.', array('%type_content%' => $type_content), 'Admin.International.Notification'));
                 }
 
