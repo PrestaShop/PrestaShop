@@ -65,33 +65,13 @@ class Context
     }
 
     /**
-     * Get the ShopCore class CONTEXT_GROUP constant value
-     *
-     * @return int
-     */
-    public function getShopContextGroupConstant()
-    {
-        return \ShopCore::CONTEXT_GROUP;
-    }
-
-    /**
      * Get if it's a GroupShop context
      *
      * @return bool
      */
     public function isShopGroupContext()
     {
-        return \ShopCore::getContext() === $this->getShopContextGroupConstant();
-    }
-
-    /**
-     * Get the ShopCore class CONTEXT_SHOP constant value
-     *
-     * @return int
-     */
-    public function getShopContextConstant()
-    {
-        return \ShopCore::CONTEXT_SHOP;
+        return \ShopCore::getContext() === \ShopCore::CONTEXT_GROUP;
     }
 
     /**
@@ -101,17 +81,7 @@ class Context
      */
     public function isShopContext()
     {
-        return \ShopCore::getContext() === $this->getShopContextConstant();
-    }
-
-    /**
-     * Get the ShopCore class CONTEXT_ALL constant value
-     *
-     * @return int
-     */
-    public function getShopContextAllConstant()
-    {
-        return \ShopCore::CONTEXT_ALL;
+        return \ShopCore::getContext() === \ShopCore::CONTEXT_SHOP;
     }
 
     /**
@@ -121,7 +91,7 @@ class Context
      */
     public function isAllContext()
     {
-        return \ShopCore::getContext() === $this->getShopContextAllConstant();
+        return \ShopCore::getContext() === \ShopCore::CONTEXT_ALL;
     }
 
 

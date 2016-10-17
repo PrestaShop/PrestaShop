@@ -93,7 +93,7 @@ class ProductController extends FrameworkBundleAdminController
                 'productOrderby' => $orderBy,
                 'productOrderway' => $sortOrder
             );
-            return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams), 302);
+            return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams));
         }
 
         // If POST, then check/cast POST params formats
@@ -369,7 +369,7 @@ class ProductController extends FrameworkBundleAdminController
         if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
             $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
-            return $this->redirect($legacyUrlGenerator->generate('admin_product_form', array('id' => $id)), 302);
+            return $this->redirect($legacyUrlGenerator->generate('admin_product_form', array('id' => $id)));
         }
 
         $response = new JsonResponse();
@@ -504,7 +504,7 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $warehouseProvider WarehouseDataProvider */
 
         //If context shop is define to a group shop, disable the form
-        if ($legacyContext->shop->getContext() == $shopContext->getShopContextGroupConstant()) {
+        if ($shopContext->isShopGroupContext()) {
             return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig', ['showContentHeader' => false]);
         }
 
@@ -696,7 +696,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
-        return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
+        return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
 
     /**
@@ -744,7 +744,7 @@ class ProductController extends FrameworkBundleAdminController
                     $logger->info('Product duplicated: (from ' . $id . ' to ' . $duplicateProductId . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
                     // stops here and redirect to the new product's page.
-                    return $this->redirectToRoute('admin_product_form', array('id' => $duplicateProductId), 302);
+                    return $this->redirectToRoute('admin_product_form', array('id' => $duplicateProductId));
                 case 'activate':
                     $hookDispatcher->dispatchMultiple(['actionAdminActivateBefore', 'actionAdminProductsControllerActivateBefore'], $hookEventParameters);
                     // Hooks: managed in ProductUpdater
@@ -774,7 +774,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
-        return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
+        return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
 
     /**
@@ -854,7 +854,7 @@ class ProductController extends FrameworkBundleAdminController
         // Then redirect
         $urlGenerator = $this->container->get($use ? 'prestashop.core.admin.url_generator_legacy' : 'prestashop.core.admin.url_generator');
         /* @var $urlGenerator UrlGeneratorInterface */
-        return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
+        return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
 
     /**
