@@ -63,7 +63,6 @@ class ThemeRepository implements AddonRepositoryInterface
         }
 
         $data['directory'] = $dir;
-        $data['physical_uri'] = $this->shop->physical_uri;
 
         return new Theme($data);
     }

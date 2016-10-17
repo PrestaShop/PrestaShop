@@ -38,7 +38,7 @@ class Theme implements AddonInterface
     {
         if (isset($attributes['parent'])) {
             $parentAttributes = Yaml::parse(file_get_contents(_PS_ALL_THEMES_DIR_.'/'.$attributes['parent'].'/config/theme.yml'));
-            $parentAttributes['preview'] = $attributes['physical_uri'].'themes/'.$attributes['parent'].'/preview.png';
+            $parentAttributes['preview'] = 'themes/'.$attributes['parent'].'/preview.png';
             $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/').'/';
             $attributes = array_merge($parentAttributes, $attributes);
         }
@@ -46,7 +46,7 @@ class Theme implements AddonInterface
         $attributes['directory'] = rtrim($attributes['directory'], '/').'/';
 
         if (file_exists(_PS_ALL_THEMES_DIR_.$attributes['name'].'/preview.png')) {
-            $attributes['preview'] = $attributes['physical_uri'].'themes/'.$attributes['name'].'/preview.png';
+            $attributes['preview'] = 'themes/'.$attributes['name'].'/preview.png';
         }
 
         $this->attributes = new ArrayFinder($attributes);
