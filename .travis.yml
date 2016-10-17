@@ -20,6 +20,7 @@ addons:
         - libappindicator1
         - fonts-liberation
     sauce_connect: true
+    firefox: latest
 
 cache:
   directories:
