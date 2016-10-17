@@ -1210,7 +1210,7 @@ class AdminTranslationsControllerCore extends AdminController
                     _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
                     _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
                     _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR),
-                    _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs/' => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'/tabs')
+                    _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs/' => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs/')
                 );
 
                 // Get all files for folders classes/ and override/classes/ recursively
@@ -1330,26 +1330,39 @@ class AdminTranslationsControllerCore extends AdminController
                 'var' => '_LANGADM',
                 'dir' => _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.'/',
                 'file' => 'admin.php',
+                'sf_controller' => true,
             ),
             'themes' => array(
                 'name' => $this->trans('Themes translations', array(), 'Admin.International.Feature'),
                 'var' => '_THEMES',
                 'dir' => '',
                 'file' => '',
+                'sf_controller' => true,
             ),
             'others' => array(
                 'name' => $this->trans('Other translations', array(), 'Admin.International.Feature'),
                 'var' => '_OTHERS',
                 'dir' => '',
                 'file' => '',
+                'sf_controller' => true,
+            ),
+            'mails' => array(
+                'name' => $this->trans('Email templates translations', array(), 'Admin.International.Feature'),
+                'var' => '_LANGMAIL',
+                'dir' => _PS_MAIL_DIR_.$this->lang_selected->iso_code.'/',
+                'file' => 'lang.php',
+                'sf_controller' => false,
             ),
             'modules' => array(
-                'name' => $this->l('Installed modules translations'),
-                'var' => '_MODULES',
                 'dir' => _PS_MODULE_DIR_,
-                'file' => ''
-            ),
+                'file' => '',
+            )
         );
+
+        if (defined('_PS_THEME_SELECTED_DIR_')) {
+            $this->translations_informations['modules']['override'] = array('dir' => _PS_THEME_SELECTED_DIR_.'modules/', 'file' => '');
+            $this->translations_informations['mails']['override'] = array('dir' => _PS_THEME_SELECTED_DIR_.'mails/'.$this->lang_selected->iso_code.'/', 'file' => 'lang.php');
+        };
     }
 
     /**
@@ -2614,22 +2627,26 @@ class AdminTranslationsControllerCore extends AdminController
     public function getModulesHasMails($with_module_name = false)
     {
         $arr_modules = array();
-        foreach (scandir($this->translations_informations['modules']['dir']) as $module_dir) {
-            if (!in_array($module_dir, self::$ignore_folder)) {
-                $dir = false;
-                if ($this->theme_selected && Tools::file_exists_cache($this->translations_informations['modules']['override']['dir'].$module_dir.'/mails/')) {
-                    $dir = $this->translations_informations['modules']['override']['dir'].$module_dir.'/';
-                } elseif (Tools::file_exists_cache($this->translations_informations['modules']['dir'].$module_dir.'/mails/')) {
-                    $dir = $this->translations_informations['modules']['dir'].$module_dir.'/';
-                }
-                if ($dir !== false) {
-                    if ($with_module_name) {
-                        $arr_modules[$module_dir] = $dir;
-                    } else {
-                        if ($this->theme_selected) {
-                            $dir = $this->translations_informations['modules']['dir'].$module_dir.'/';
+        if (array_key_exists('dir', $this->translations_informations['modules'])) {
+            if ($modules_dir = scandir($this->translations_informations['modules']['dir'])) {
+                foreach ($modules_dir as $module_dir) {
+                    if (!in_array($module_dir, self::$ignore_folder)) {
+                        $dir = false;
+                        if ($this->theme_selected && Tools::file_exists_cache($this->translations_informations['modules']['override']['dir'] . $module_dir . '/mails/')) {
+                            $dir = $this->translations_informations['modules']['override']['dir'] . $module_dir . '/';
+                        } elseif (Tools::file_exists_cache($this->translations_informations['modules']['dir'] . $module_dir . '/mails/')) {
+                            $dir = $this->translations_informations['modules']['dir'] . $module_dir . '/';
                         }
-                        $arr_modules[$dir] = scandir($dir);
+                        if ($dir !== false) {
+                            if ($with_module_name) {
+                                $arr_modules[$module_dir] = $dir;
+                            } else {
+                                if ($this->theme_selected) {
+                                    $dir = $this->translations_informations['modules']['dir'] . $module_dir . '/';
+                                }
+                                $arr_modules[$dir] = scandir($dir);
+                            }
+                        }
                     }
                 }
             }
@@ -2713,10 +2730,12 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         foreach ($files_by_directiories['php'] as $dir => $files) {
-            foreach ($files as $file) {
-                // If file exist and is not in ignore_folder, in the next step we check if a folder or mail
-                if (Tools::file_exists_cache($dir.$file) && !in_array($file, self::$ignore_folder)) {
-                    $subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
+            if (!empty($files)) {
+                foreach ($files as $file) {
+                    // If file exist and is not in ignore_folder, in the next step we check if a folder or mail
+                    if (Tools::file_exists_cache($dir . $file) && !in_array($file, self::$ignore_folder)) {
+                        $subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
+                    }
                 }
             }
         }
@@ -2785,12 +2804,16 @@ class AdminTranslationsControllerCore extends AdminController
             }
 
             foreach ($dir_to_copy_iso as $dir) {
-                foreach (scandir($dir) as $file) {
-                    if (!in_array($file, self::$ignore_folder)) {
-                        $files_to_copy_iso[] = array(
-                                "from" => $dir.$file,
-                                "to" => str_replace((strpos($dir, _PS_CORE_DIR_) !== false) ? _PS_CORE_DIR_ : _PS_ROOT_DIR_, _PS_ROOT_DIR_.'/themes/'.$current_theme, $dir).$file
-                            );
+                if (!empty($dir) && is_dir($dir)) {
+                    if ($scanDir = scandir($dir)) {
+                        foreach ($scanDir as $file) {
+                            if (!in_array($file, self::$ignore_folder)) {
+                                $files_to_copy_iso[] = array(
+                                    "from" => $dir . $file,
+                                    "to" => str_replace((strpos($dir, _PS_CORE_DIR_) !== false) ? _PS_CORE_DIR_ : _PS_ROOT_DIR_, _PS_ROOT_DIR_ . '/themes/' . $current_theme, $dir) . $file
+                                );
+                            }
+                        }
                     }
                 }
             }
