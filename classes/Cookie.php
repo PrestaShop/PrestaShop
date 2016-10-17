@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class CookieCore
+ */
 class CookieCore
 {
     /** @var array Contain cookie content in a key => value format */
@@ -60,7 +63,7 @@ class CookieCore
      * @param $name string Cookie name before encrypting
      * @param $path string
      */
-    public function __construct($name, $path = '', $expire = null, $shared_urls = null, $standalone = false, $secure = false)
+    public function __construct($name, $path = '', $expire = null, $sharedUrls = null, $standalone = false, $secure = false)
     {
         $this->_content = array();
         $this->_standalone = $standalone;
@@ -72,7 +75,7 @@ class CookieCore
         $this->_path = rawurlencode($this->_path);
         $this->_path = str_replace('%2F', '/', $this->_path);
         $this->_path = str_replace('%7E', '~', $this->_path);
-        $this->_domain = $this->getDomain($shared_urls);
+        $this->_domain = $this->getDomain($sharedUrls);
         $this->_name = 'PrestaShop-'.md5(($this->_standalone ? '' : _PS_VERSION_).$name.$this->_domain);
         $this->_allow_writing = true;
         $this->_salt = $this->_standalone ? str_pad('', 8, md5('ps'.__FILE__)) : _COOKIE_IV_;
@@ -83,17 +86,28 @@ class CookieCore
         }
         $this->cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
 
-        $this->_secure = (bool)$secure;
+        $this->_secure = (bool) $secure;
 
         $this->update();
     }
 
+    /**
+     * Disallow writing to cookie
+     */
     public function disallowWriting()
     {
         $this->_allow_writing = false;
     }
 
-    protected function getDomain($shared_urls = null)
+    /**
+     * Get cookie domain
+     *
+     * @param string|null $sharedUrls Shared URLs
+     *
+     * @return bool|string Cookie domain
+     *                     `false` if not found
+     */
+    protected function getDomain($sharedUrls = null)
     {
         $r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
 
@@ -111,12 +125,12 @@ class CookieCore
         }
 
         $domain = false;
-        if ($shared_urls !== null) {
-            foreach ($shared_urls as $shared_url) {
-                if ($shared_url != $out[4]) {
+        if ($sharedUrls !== null) {
+            foreach ($sharedUrls as $sharedUrl) {
+                if ($sharedUrl != $out[4]) {
                     continue;
                 }
-                if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,4})?\..{2,3})$/Ui', $shared_url, $res)) {
+                if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,4})?\..{2,3})$/Ui', $sharedUrl, $res)) {
                     $domain = '.'.$res[1];
                     break;
                 }
@@ -125,6 +139,7 @@ class CookieCore
         if (!$domain) {
             $domain = $out[4];
         }
+
         return $domain;
     }
 
@@ -135,6 +150,7 @@ class CookieCore
      */
     public function setExpire($expire)
     {
+
         $this->_expire = (int)($expire);
     }
 
@@ -142,6 +158,7 @@ class CookieCore
      * Magic method wich return cookie data from _content array
      *
      * @param string $key key wanted
+     *
      * @return string value corresponding to the key
      */
     public function __get($key)
@@ -163,8 +180,9 @@ class CookieCore
     /**
      * Magic method which adds data into _content array
      *
-     * @param string $key Access key for the value
-     * @param mixed $value Value corresponding to the key
+     * @param string $key   Access key for the value
+     * @param mixed  $value Value corresponding to the key
+     *
      * @throws Exception
      */
     public function __set($key, $value)
@@ -197,8 +215,9 @@ class CookieCore
     /**
      * Check customer informations saved into cookie and return customer validity
      *
-     * @deprecated as of version 1.5 use Customer::isLogged() instead
      * @return bool customer validity
+     *
+     * @deprecated 1.5.0 Use Customer::isLogged() instead
      */
     public function isLogged($withGuest = false)
     {
@@ -208,9 +227,10 @@ class CookieCore
         }
 
         /* Customer is valid only if it can be load and if cookie password is the same as database one */
-        if ($this->logged == 1 && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int)($this->id_customer), $this->passwd)) {
+        if ($this->logged == 1 && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int) $this->id_customer, $this->passwd)) {
             return true;
         }
+
         return false;
     }
 
@@ -226,7 +246,7 @@ class CookieCore
         /* Employee is valid only if it can be load and if cookie password is the same as database one */
         return ($this->id_employee
             && Validate::isUnsignedId($this->id_employee)
-            && Employee::checkPassword((int)$this->id_employee, $this->passwd)
+            && Employee::checkPassword((int) $this->id_employee, $this->passwd)
             && (!isset($this->_content['remote_addr']) || $this->_content['remote_addr'] == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
         );
     }
@@ -265,6 +285,9 @@ class CookieCore
         $this->_modified = true;
     }
 
+    /**
+     * Make new log entry
+     */
     public function makeNewLog()
     {
         unset($this->_content['id_customer']);
@@ -286,8 +309,8 @@ class CookieCore
             /* Get cookie checksum */
             $tmpTab = explode('¤', $content);
             array_pop($tmpTab);
-            $content_for_checksum = implode('¤', $tmpTab).'¤';
-            $checksum = crc32($this->_salt.$content_for_checksum);
+            $contentForChecksum = implode('¤', $tmpTab).'¤';
+            $checksum = crc32($this->_salt.$contentForChecksum);
             //printf("\$checksum = %s<br />", $checksum);
 
             /* Unserialize cookie content */
@@ -311,7 +334,7 @@ class CookieCore
         }
 
         //checks if the language exists, if not choose the default language
-        if (!$this->_standalone && !Language::getLanguage((int)$this->id_lang)) {
+        if (!$this->_standalone && !Language::getLanguage((int) $this->id_lang)) {
             $this->id_lang = Configuration::get('PS_LANG_DEFAULT');
             // set detect_language to force going through Tools::setCookieLanguage to figure out browser lang
             $this->detect_language = true;
@@ -366,11 +389,13 @@ class CookieCore
 
     /**
      * Save cookie with setcookie()
+     *
+     * @return bool Indicates whether the cookies has been sucessfully written to
      */
     public function write()
     {
         if (!$this->_modified || headers_sent() || !$this->_allow_writing) {
-            return;
+            return false;
         }
 
         $cookie = '';
@@ -392,6 +417,8 @@ class CookieCore
 
     /**
      * Get a family of variables (e.g. "filter_")
+     *
+     * @return array Family of variables
      */
     public function getFamily($origin)
     {
@@ -404,11 +431,12 @@ class CookieCore
                 $result[$key] = $value;
             }
         }
+
         return $result;
     }
 
     /**
-     *
+     * Remove variable family from cookie
      */
     public function unsetFamily($origin)
     {
@@ -418,6 +446,11 @@ class CookieCore
         }
     }
 
+    /**
+     * Get all families
+     *
+     * @return array
+     */
     public function getAll()
     {
         return $this->_content;
