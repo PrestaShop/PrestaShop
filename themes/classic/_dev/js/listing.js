@@ -86,4 +86,34 @@ $(document).ready(() => {
     $('#content-wrapper').removeClass('hidden-sm-down');
     $('#footer').removeClass('hidden-sm-down');
   });
+
+  $('body').on('change', '#search_filters input[data-search-url]', function (event) {
+    prestashop.emit('updateFacets', event.target.dataset.searchUrl);
+  });
+
+  $('body').on('click', '.js-search-filters-clear-all', function (event) {
+    prestashop.emit('updateFacets', event.target.dataset.searchUrl);
+  });
+
+  $('body').on('click', '.js-search-link', function (event) {
+    event.preventDefault();
+    prestashop.emit('updateFacets',$(event.target).closest('a').get(0).href);
+  });
+
+  $('body').on('change', '#search_filters select', function (event) {
+    const form = $(event.target).closest('form');
+    prestashop.emit('updateFacets', '?' + form.serialize());
+  });
+
+  prestashop.on('updateProductList', (data) => {
+    updateProductListDOM(data);
+  });
 });
+
+function updateProductListDOM (data) {
+  $('#search_filters').replaceWith(data.rendered_facets);
+  $('#js-active-search-filters').replaceWith(data.rendered_active_filters);
+  $('#js-product-list-top').replaceWith(data.rendered_products_top);
+  $('#js-product-list').replaceWith(data.rendered_products);
+  $('#js-product-list-bottom').replaceWith(data.rendered_products_bottom);
+}

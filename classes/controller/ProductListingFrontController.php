@@ -435,15 +435,19 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         $search = $this->getProductSearchVariables();
 
+        $rendered_products_top = $this->render('catalog/_partials/products-top', array('listing' => $search));
         $rendered_products = $this->render('catalog/_partials/products', array('listing' => $search));
+        $rendered_products_bottom = $this->render('catalog/_partials/products-bottom', array('listing' => $search));
 
         $data = array(
-            'products' => $search['products'],
+            'rendered_products_top' => $rendered_products_top,
             'rendered_products' => $rendered_products,
-            'rendered_facets' => $search['rendered_facets'],
-            'current_url' => $search['current_url'],
-            'js_enabled' => $search['js_enabled'],
+            'rendered_products_bottom' => $rendered_products_bottom,
         );
+
+        foreach ($search as $key => $value) {
+            $data[$key] = $value;
+        }
 
         return $data;
     }
