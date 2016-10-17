@@ -706,7 +706,7 @@ var AdminModuleController = function() {
       });
 
     } else {
-      console.warning('Request bulk action "' + requestedBulkAction + '" can\'t be performed if you don\'t select at least 1 module');
+      console.warn('Request bulk action "' + requestedBulkAction + '" can\'t be performed if you don\'t select at least 1 module');
       return false;
     }
   };
