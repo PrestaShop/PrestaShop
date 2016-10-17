@@ -45,12 +45,11 @@ var AdminModuleController = function() {
   this.addonItemGridSelector = '.module-addons-item-grid';
   this.addonItemListSelector = '.module-addons-item-list';
   this.bulkActionDropDownSelector = '.module-bulk-actions select';
-  this.checkedBulkActionListSelector = '.module-checkbox-bulk-list:checked';
-  this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid:checked';
+  this.checkedBulkActionListSelector = '.module-checkbox-bulk-list input:checked';
+  this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid input:checked';
   this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid';
   this.bulkActionCheckboxListSelector = '.module-checkbox-bulk-list';
   this.bulkActionCheckboxSelector = '#module-modal-bulk-checkbox';
-  this.selectAllBulkActionSelector = '.module-checkbox-bulk-select-all';
   this.bulkConfirmModalSelector = '#module-modal-bulk-confirm';
   this.bulkConfirmModalActionNameSelector = '#module-modal-bulk-confirm-action-name';
   this.bulkConfirmModalListSelector = '#module-modal-bulk-confirm-list';
@@ -335,6 +334,10 @@ var AdminModuleController = function() {
     var body = $('body');
 
     body.on('change', this.bulkActionDropDownSelector, function() {
+      if (0 === $(self.getBulkCheckboxesCheckedSelector()).length) {
+          $.growl.warning({message: "You need to select at least one module to use the bulk action."});
+          return;
+      }
       self.lastBulkAction = $(this).find(':checked').attr('value');
       var modulesListString = self.buildBulkActionModuleList();
       var actionString = $(this).find(':checked').text().toLowerCase();
@@ -347,10 +350,6 @@ var AdminModuleController = function() {
       $(self.bulkConfirmModalSelector).modal('show');
     });
 
-    body.on('change', this.selectAllBulkActionSelector, function() {
-      self.changeBulkCheckboxesState($(this).is(':checked'));
-    });
-
     body.on('click', this.bulkConfirmModalAckBtnSelector, function(event) {
       event.preventDefault();
       event.stopPropagation();
@@ -360,12 +359,12 @@ var AdminModuleController = function() {
   };
 
   this.buildBulkActionModuleList = function() {
-    var checkBoxesSelector = this.getBulkCheckboxesSelector();
+    var checkBoxesSelector = this.getBulkCheckboxesCheckedSelector();
     var moduleItemSelector = this.getModuleItemSelector();
     var alreadyDoneFlag = 0;
     var htmlGenerated = '';
 
-    $(checkBoxesSelector + ':checked').each(function() {
+    $(checkBoxesSelector).each(function() {
       if (alreadyDoneFlag != 10) {
         var currentElement = $(this).parents(moduleItemSelector);
         htmlGenerated += '- ' + currentElement.attr('data-name') + '<br/>';
@@ -378,14 +377,6 @@ var AdminModuleController = function() {
     });
 
     return htmlGenerated;
-  };
-
-  this.changeBulkCheckboxesState = function (hasToCheck) {
-    var checkBoxesSelector = this.getBulkCheckboxesSelector();
-
-    $(checkBoxesSelector).each(function () {
-      $(this).prop('checked', hasToCheck);
-    });
   };
 
   this.initAddonsConnect = function () {
@@ -560,6 +551,13 @@ var AdminModuleController = function() {
       ? this.bulkActionCheckboxGridSelector
       : this.bulkActionCheckboxListSelector;
   };
+  
+  
+  this.getBulkCheckboxesCheckedSelector = function () {
+    return this.currentDisplay == 'grid'
+      ? this.checkedBulkActionGridSelector
+      : this.checkedBulkActionListSelector;
+  };
 
   this.loadVariables = function () {
     this.initCurrentDisplay();
@@ -576,12 +574,6 @@ var AdminModuleController = function() {
     return this.currentDisplay == 'grid'
       ? this.moduleItemGridSelector
       : this.moduleItemListSelector;
-  };
-
-  this.getBulkActionSelectedSelector = function () {
-    return this.currentDisplay == 'grid'
-      ? this.checkedBulkActionGridSelector
-      : this.checkedBulkActionListSelector;
   };
 
   this.initAddonsSearch = function () {
@@ -674,7 +666,7 @@ var AdminModuleController = function() {
     }
 
     // Loop over all checked bulk checkboxes
-    var bulkActionSelectedSelector = this.getBulkActionSelectedSelector();
+    var bulkActionSelectedSelector = this.getBulkCheckboxesCheckedSelector();
 
     if ($(bulkActionSelectedSelector).length > 0) {
       var bulkModulesTechNames = [];
@@ -706,7 +698,7 @@ var AdminModuleController = function() {
       });
 
     } else {
-      console.warning('Request bulk action "' + requestedBulkAction + '" can\'t be performed if you don\'t select at least 1 module');
+      console.warn('Request bulk action "' + requestedBulkAction + '" can\'t be performed if you don\'t select at least 1 module');
       return false;
     }
   };
