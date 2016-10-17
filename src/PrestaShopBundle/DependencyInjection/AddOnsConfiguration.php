@@ -30,6 +30,13 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class AddOnsConfiguration implements ConfigurationInterface
 {
+    private $resourcesDir;
+
+    public function __construct($resourcesDir)
+    {
+        $this->resourcesDir = $resourcesDir;
+    }
+
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -41,8 +48,8 @@ class AddOnsConfiguration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('api_client')
                             ->children()
-                                ->booleanNode('verify_ssl')
-                                    ->defaultTrue()
+                                ->scalarNode('verify_ssl')
+                                    ->defaultValue($this->resourcesDir.'/cacert.pem')
                                 ->end()
                             ->end()
                         ->end()

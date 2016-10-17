@@ -40,7 +40,9 @@ class PrestaShopExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new AddOnsConfiguration();
+        $resourcesDir = $container->getParameter('kernel.root_dir').'/Resources';
+
+        $configuration = new AddOnsConfiguration($resourcesDir);
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));

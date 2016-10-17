@@ -109,5 +109,7 @@ csa_guzzle:
 
 prestashop:
     addons:
-        api_client:
-            verify_ssl: ~ # true by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage
+        api_client: ~
+        #   verify_ssl: (true|false|path_to_cacert.pem)
+        ##  "addons.api_client.verify_ssl" parameter overrides this value
+        ##  absolute path to "app/Resouces/cacert.pem" by default
