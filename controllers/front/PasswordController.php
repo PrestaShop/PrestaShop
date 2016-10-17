@@ -147,7 +147,7 @@ class PasswordControllerCore extends FrontController
                             return false;
                         }
 
-                        $customer->passwd = $crypto->encrypt($password = Tools::getValue('passwd'), _COOKIE_KEY_);
+                        $customer->passwd = $crypto->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
                         $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 
                         if ($customer->update()) {

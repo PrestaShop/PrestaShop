@@ -442,16 +442,54 @@ class ValidateCore
      *
      * @param string $passwd Password to validate
      * @param int $size
+     *
      * @return bool Validity is ok or not
+     *
+     * @deprecated 1.7.0
      */
     public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
     {
-        return (Tools::strlen($passwd) >= $size && Tools::strlen($passwd) < 255);
+        return self::isPlaintextPassword($passwd, $size);
+    }
+
+    /**
+     * Check if plaintext password is valid
+     * Size is limited by `password_hash()` (72 chars)
+     *
+     * @param string $plaintextPasswd Password to validate
+     * @param int    $size
+     *
+     * @return bool Indicates whether the given string is a valid plaintext password
+     *
+     * @since 1.7.0
+     */
+    public static function isPlaintextPassword($plaintextPasswd, $size = Validate::PASSWORD_LENGTH)
+    {
+        // The password lenght is limited by `password_hash()`
+        return (Tools::strlen($plaintextPasswd) >= $size && Tools::strlen($plaintextPasswd) <= 72);
+    }
+
+    /**
+     * Check if hashed password is valid
+     * PrestaShop supports both MD5 and `PASSWORD_BCRYPT` (PHP API)
+     * The lengths are 32 (MD5) or 60 (`PASSWORD_BCRYPT`)
+     * Anything else is invalid
+     *
+     * @param string $hashedPasswd Password to validate
+     * @param int    $size
+     *
+     * @return bool Indicates whether the given string is a valid hashed password
+     *
+     * @since 1.7.0
+     */
+    public static function isHashedPassword($hashedPasswd)
+    {
+        return (Tools::strlen($hashedPasswd) == 32 || Tools::strlen($hashedPasswd) == 60);
     }
 
     public static function isPasswdAdmin($passwd)
     {
-        return Validate::isPasswd($passwd, Validate::ADMIN_PASSWORD_LENGTH);
+        return Validate::isPlaintextPassword($passwd, Validate::ADMIN_PASSWORD_LENGTH);
     }
 
     /**

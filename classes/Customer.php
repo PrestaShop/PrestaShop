@@ -177,7 +177,7 @@ class CustomerCore extends ObjectModel
             'lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
             'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
             'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
-            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255),
+            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isHashedPassword', 'required' => true, 'size' => 60),
             'last_passwd_gen' => array('type' => self::TYPE_STRING, 'copy_post' => false),
             'id_gender' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'birthday' => array('type' => self::TYPE_DATE, 'validate' => 'isBirthDate'),
@@ -356,39 +356,62 @@ class CustomerCore extends ObjectModel
     /**
      * Return customer instance from its e-mail (optionally check password)
      *
-     * @param string $email  e-mail
-     * @param string $passwd Password is also checked if specified
+     * @param string $email             e-mail
+     * @param string $plaintextPassword Password is also checked if specified
      * @param bool   $ignoreGuest
      *
      * @return bool|Customer|CustomerCore Customer instance
      */
-    public function getByEmail($email, $passwd = null, $ignoreGuest = true)
+    public function getByEmail($email, $plaintextPassword = null, $ignoreGuest = true)
     {
-        if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd))) {
+        if (!Validate::isEmail($email) || ($plaintextPassword && !Validate::isPasswd($plaintextPassword))) {
             die(Tools::displayError());
         }
 
-        $hash = Db::getInstance()->getValue('SELECT `passwd` FROM `'._DB_PREFIX_.'customer` WHERE `email` = \''.pSQL($email).'\'
-            '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
+        $shopGroup = Shop::getGroupFromShop(Shop::getContextShopID(), false);
 
+        $sql = new DbQuery();
+        $sql->select('c.`passwd`');
+        $sql->from('customer', 'c');
+        $sql->where('c.`email` = \''.pSQL($email).'\'');
+        if (Shop::getContext() == Shop::CONTEXT_SHOP && $shopGroup['share_customer']) {
+            $sql->where('c.`id_shop_group` = '.(int) Shop::getContextShopGroupID());
+        } else {
+            $sql->where('c.`id_shop` IN ('.implode(', ', Shop::getContextListShopID(Shop::SHARE_CUSTOMER)).')');
+        }
+
+        if ($ignoreGuest) {
+            $sql->where('c.`is_guest` = 0');
+        }
+        $sql->where('c.`deleted` = 0');
+
+        $passwordHash = Db::getInstance()->getValue($sql);
         try {
+            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
             $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         } catch (CoreException $e) {
             return false;
         }
 
-        if (isset($passwd) && !$crypto->checkHash($passwd, $hash, _COOKIE_KEY_)) {
+        if (isset($plaintextPassword) && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
             return false;
         }
 
-        $result = Db::getInstance()->getRow('
-        SELECT *
-        FROM `'._DB_PREFIX_.'customer`
-        WHERE `email` = \''.pSQL($email).'\'
-        '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
-        '.(isset($passwd) ? 'AND `passwd` = \''.pSQL($hash).'\'' : '').'
-        AND `deleted` = 0
-        '.($ignoreGuest ? ' AND `is_guest` = 0' : ''));
+        $sql = new DbQuery();
+        $sql->select('c.*');
+        $sql->from('customer', 'c');
+        $sql->where('c.`email` = \''.pSQL($email).'\'');
+        if (Shop::getContext() == Shop::CONTEXT_SHOP && $shopGroup['share_customer']) {
+            $sql->where('c.`id_shop_group` = '.(int) Shop::getContextShopGroupID());
+        } else {
+            $sql->where('c.`id_shop` IN ('.implode(', ', Shop::getContextListShopID(Shop::SHARE_CUSTOMER)).')');
+        }
+        if ($ignoreGuest) {
+            $sql->where('c.`is_guest` = 0');
+        }
+        $sql->where('c.`deleted` = 0');
+
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
         if (!$result) {
             return false;
@@ -400,9 +423,8 @@ class CustomerCore extends ObjectModel
                 $this->{$key} = $value;
             }
         }
-
-        if (!$crypto->isFirstHash($passwd, $hash, _COOKIE_KEY_)) {
-            $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
+        if (!$crypto->isFirstHash($plaintextPassword, $passwordHash)) {
+            $this->passwd = $crypto->hash($plaintextPassword);
             $this->update();
         }
 
@@ -695,21 +717,26 @@ class CustomerCore extends ObjectModel
     /**
      * Check if customer password is the right one
      *
-     * @param string $passwd Password
+     * @param int    $idCustomer   Customer ID
+     * @param string $passwordHash Hashed password
+     *
      * @return bool result
      */
-    public static function checkPassword($idCustomer, $passwd)
+    public static function checkPassword($idCustomer, $passwordHash)
     {
         if (!Validate::isUnsignedId($idCustomer)) {
             die(Tools::displayError());
         }
-        $cacheId = 'Customer::checkPassword'.(int) $idCustomer.'-'.$passwd;
+        $cacheId = 'Customer::checkPassword'.(int) $idCustomer.'-'.$passwordHash;
         if (!Cache::isStored($cacheId)) {
-            $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-            SELECT `id_customer`
-            FROM `'._DB_PREFIX_.'customer`
-            WHERE `id_customer` = '.(int) $idCustomer.'
-            AND `passwd` = \''.pSQL($passwd).'\'');
+            $sql = new DbQuery();
+            $sql->select('c.`id_customer`');
+            $sql->from('customer', 'c');
+            $sql->where('c.`id_customer` = '.(int) $idCustomer);
+            $sql->where('c.`passwd` = \''.pSQL($passwordHash).'\'');
+
+            $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+
             Cache::store($cacheId, $result);
 
             return $result;
@@ -1051,9 +1078,15 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
+        $language = new Language($idLang);
+        if (!Validate::isLoadedObject($language)) {
+            $language = Context::getContext()->language;
+        }
+
+        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         $this->is_guest = 0;
-        $this->passwd = $crypto->encrypt($password, _COOKIE_KEY_);
+        $this->passwd = $crypto->hash($password);
         $this->cleanGroups();
         $this->addGroups(array(Configuration::get('PS_CUSTOMER_GROUP')));
         $this->id_default_group = Configuration::get('PS_CUSTOMER_GROUP');
@@ -1063,9 +1096,6 @@ class CustomerCore extends ObjectModel
                 '{lastname}' => $this->lastname,
                 '{email}' => $this->email,
             );
-
-            $language = new Language((int) $idLang);
-
             Mail::Send(
                 (int) $idLang,
                 'guest_to_customer',
@@ -1103,10 +1133,10 @@ class CustomerCore extends ObjectModel
      */
     public function setWsPasswd($passwd)
     {
+        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-
         if ($this->id == 0 || $this->passwd != $passwd) {
-            $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
+            $this->passwd = $crypto->hash($passwd);
         }
 
         return true;
@@ -1194,10 +1224,10 @@ class CustomerCore extends ObjectModel
     public function validateController($htmlentities = true)
     {
         $errors = parent::validateController($htmlentities);
+        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-
         if ($value = Tools::getValue('passwd')) {
-            $this->passwd = $crypto->encrypt($value, _COOKIE_KEY_);
+            $this->passwd = $crypto->hash($value);
         }
 
         return $errors;

@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Cldr;
 
 class AdminControllerCore extends Controller
@@ -3761,7 +3762,9 @@ class AdminControllerCore extends Controller
                 }
                 /* Automatically hash password in MD5 */
                 if ($key == 'passwd' && !empty($value)) {
-                    $value = Tools::hash($value);
+                    /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+                    $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+                    $value = $crypto->hash($value, _COOKIE_KEY_);
                 }
                 $object->{$key} = $value;
             }

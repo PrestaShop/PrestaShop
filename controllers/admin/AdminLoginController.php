@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Adapter\CoreException;
+
 class AdminLoginControllerCore extends AdminController
 {
     public function __construct()
@@ -348,7 +351,10 @@ class AdminLoginControllerCore extends AdminController
         }
 
         if (!count($this->errors)) {
-            $employee->passwd = Tools::hash($reset_password);
+            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+            $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+
+            $employee->passwd = $crypto->hash($reset_password, _COOKIE_KEY_);
             $employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
             $params = array(
