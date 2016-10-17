@@ -126,7 +126,7 @@ services:
     prestashop.translation.backoffice_provider:
         class: PrestaShopBundle\Translation\Provider\BackOfficeProvider
         arguments:
-            - "@prestashop.translations.database_loader"
+            - "@prestashop.translation.database_loader"
             - "%translations_dir%"
         tags:
             - { name: "ps.translation_provider" }
@@ -134,7 +134,7 @@ services:
     prestashop.translation.frontoffice_provider:
         class: PrestaShopBundle\Translation\Provider\FrontOfficeProvider
         arguments:
-            - "@prestashop.translations.database_loader"
+            - "@prestashop.translation.database_loader"
             - "%translations_dir%"
         tags:
             - { name: "ps.translation_provider" }
@@ -142,7 +142,7 @@ services:
     prestashop.translation.mails:
         class: PrestaShopBundle\Translation\Provider\MailsProvider
         arguments:
-            - "@prestashop.translations.database_loader"
+            - "@prestashop.translation.database_loader"
             - "%translations_dir%"
         tags:
             - { name: "ps.translation_provider" }
@@ -150,7 +150,7 @@ services:
     prestashop.translation.others_provider:
             class: PrestaShopBundle\Translation\Provider\OthersProvider
             arguments:
-                - "@prestashop.translations.database_loader"
+                - "@prestashop.translation.database_loader"
                 - "%translations_dir%"
             tags:
                 - { name: "ps.translation_provider" }
@@ -158,10 +158,40 @@ services:
     prestashop.translation.theme_provider:
         class: PrestaShopBundle\Translation\Provider\ThemeProvider
         arguments:
-            - "@prestashop.translations.database_loader"
+            - "@prestashop.translation.database_loader"
             - "%themes_translations_dir%"
         properties:
             themeResourcesDirectory:  "%themes_dir%"
             filesystem:               "@filesystem"
-            themeRepository:          "@prestashop.core.admin.theme.repository"
-            themeExtractor:           "@prestashop.translations.theme_extractor"
+            themeRepository:          "@prestashop.core.addon.theme.repository"
+            themeExtractor:           "@prestashop.translation.theme_extractor"
+
+    # TRANSLATIONS
+    prestashop.translation.database_loader:
+        class: PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - {name: translation.loader, alias: db}
+
+    prestashop.translation.theme_extractor:
+        class: PrestaShopBundle\Translation\Extractor\ThemeExtractor
+        arguments:
+            - "@prestashop.translation.extractor.smarty"
+
+
+    prestashop.translation.dumper.xliff:
+        class: PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper
+
+    prestashop.translation.theme.exporter:
+        class: PrestaShopBundle\Translation\Exporter\ThemeExporter
+        arguments:
+            - "@prestashop.translation.theme_extractor"
+            - "@prestashop.translation.theme_provider"
+            - "@prestashop.core.addon.theme.repository"
+            - "@prestashop.translation.dumper.xliff"
+            - "@prestashop.utils.zip_manager"
+            - "@filesystem"
+        properties:
+            cacheDir: "%kernel.cache_dir%"
+            exportDir: "%kernel.cache_dir%/export"

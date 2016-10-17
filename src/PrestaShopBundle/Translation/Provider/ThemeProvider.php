@@ -112,8 +112,16 @@ class ThemeProvider extends AbstractProvider
     {
         return array(
             $this->getResourceDirectory(),
-            $this->getResourceDirectory($this->themeResourcesDirectory)
+            $this->getThemeResourcesDirectory(),
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function getThemeResourcesDirectory()
+    {
+        return $this->getResourceDirectory($this->themeResourcesDirectory);
     }
 
     /**
@@ -163,5 +171,13 @@ class ThemeProvider extends AbstractProvider
         foreach ($finder->directories()->depth('== 0')->in($translationFilesPath) as $folder) {
             $this->filesystem->remove($folder);
         }
+    }
+
+    /**
+     * @return \Symfony\Component\Translation\MessageCatalogue
+     */
+    public function getThemeCatalogue()
+    {
+        return $this->getCatalogueFromPaths($this->getThemeResourcesDirectory(), $this->locale, '*');
     }
 }

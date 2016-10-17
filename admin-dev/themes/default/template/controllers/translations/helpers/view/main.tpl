@@ -240,7 +240,7 @@
 			</div>
 		</div>
 	</form>
-	<form action="{url entity=sf route=admin_international_translations_extract_theme }" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{url entity=sf route=admin_international_translations_export_theme }" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-upload"></i>

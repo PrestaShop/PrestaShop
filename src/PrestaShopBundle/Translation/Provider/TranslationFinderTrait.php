@@ -32,6 +32,13 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 trait TranslationFinderTrait
 {
+    /**
+     * @param $paths
+     * @param $locale
+     * @param null $pattern
+     * @return MessageCatalogue
+     * @throws \Exception
+     */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
         $messageCatalogue = new MessageCatalogue($locale);

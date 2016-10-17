@@ -100,47 +100,21 @@ class TranslationsController extends FrameworkBundleAdminController
      *
      * @return file to be downloaded
      */
-    public function extractThemeAction(Request $request)
+    public function exportThemeAction(Request $request)
     {
         $themeName = $request->request->get('theme-name');
-        $locale = $this
-            ->getDoctrine()
-            ->getRepository('PrestaShopBundle:Lang')
-            ->findOneByIsoCode($request->request->get('iso_code'))
-            ->getLocale()
-        ;
+        $isoCode = $request->request->get('iso_code');
 
-        $theme = $this->get('prestashop.core.addon.theme.repository')
-            ->getInstanceByName($themeName)
-        ;
+        $langRepository = $this->get('prestashop.core.admin.lang.repository');
+        $locale = $langRepository->getLocaleByIsoCode($isoCode);
 
-        $tmpFolderPath = $this->get('kernel')->getCacheDir().'/'.$themeName.'-tmp';
-        $folderPath = $this->get('kernel')->getCacheDir().'/'.$themeName;
-
-        $zipFile = $folderPath.'.'.$locale.'.zip';
-
-        // create the directories
-        $fs = new Filesystem();
-        $fs->mkdir($folderPath);
-        $fs->mkdir($tmpFolderPath);
-
-        $themeExtractor = $this->get('prestashop.translations.theme_extractor');
-        $themeExtractor
-            ->setThemeProvider($this->get('prestashop.translation.theme_provider'))
-            ->setOutputPath($tmpFolderPath)
-            ->enableOverridingFromDatabase()
-            ->extract($theme, $locale)
-        ;
-
-        Flattenizer::flatten($tmpFolderPath.'/'.$locale, $folderPath.'/'.$locale, $locale);
-
-        $this->get('prestashop.utils.zip_manager')->createArchive($zipFile, $folderPath);
+        $themeExporter = $this->get('prestashop.translation.theme.exporter');
+        $zipFile = $themeExporter->createZipArchive($themeName, $locale);
 
         $response = new BinaryFileResponse($zipFile);
         $response->deleteFileAfterSend(true);
 
-        $fs->remove($tmpFolderPath);
-        $fs->remove($folderPath);
+        $themeExporter->cleanArtifacts($themeName);
 
         return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
     }
