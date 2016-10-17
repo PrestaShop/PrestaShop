@@ -363,10 +363,10 @@ class StockManagerCore implements StockManagerInterface
                         );
 
                         while ($row = Db::getInstance()->nextRow($resource)) {
-                            // break - in FIFO mode, we have to retreive the oldest positive mvts for which there are left quantities
+                            // continue - in FIFO mode, we have to retreive the oldest positive mvts for which there are left quantities
                             if ($warehouse->management_type == 'FIFO') {
                                 if ($row['qty'] == 0) {
-                                    break;
+                                    continue;
                                 }
                             }
 
