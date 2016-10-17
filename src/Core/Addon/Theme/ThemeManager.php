@@ -38,6 +38,7 @@ use Tools;
 use Shop;
 use Employee;
 use Exception;
+use PrestaShopException;
 
 class ThemeManager implements AddonManagerInterface
 {
@@ -297,54 +298,39 @@ class ThemeManager implements AddonManagerInterface
         $sandboxPath = $this->getSandboxPath();
         Tools::ZipExtract($source, $sandboxPath);
 
-        $directories = $this->finder->directories()
-                                    ->in($sandboxPath)
-                                    ->depth('== 0')
-                                    ->exclude(array('__MACOSX'))
-                                    ->ignoreVCS(true);
-
-        if (iterator_count($directories->directories()) > 1) {
-            $this->filesystem->remove($sandboxPath);
-            throw new Exception('Invalid theme zip');
-        }
-
-        $directories = iterator_to_array($directories);
-        $theme_name = basename(current($directories)->getFileName());
-
-        $theme_data = (new Parser())->parse(file_get_contents($sandboxPath.$theme_name.'/config/theme.yml'));
-        $theme_data['directory'] = $sandboxPath.$theme_name;
-        if (!$this->themeValidator->isValid(new Theme($theme_data))) {
+        $theme_data = (new Parser())->parse(file_get_contents($sandboxPath.'/config/theme.yml'));
+        $theme_data['directory'] = $sandboxPath;
+        $theme = new Theme($theme_data);
+        if (!$this->themeValidator->isValid($theme)) {
             $this->filesystem->remove($sandboxPath);
             throw new Exception('This theme is not valid for PrestaShop 1.7');
         }
 
         $module_root_dir = $this->appConfiguration->get('_PS_MODULE_DIR_');
-        $modules_parent_dir = $sandboxPath.$theme_name.'/dependencies/modules';
+        $modules_parent_dir = $sandboxPath.'/dependencies/modules';
         if ($this->filesystem->exists($modules_parent_dir)) {
             $module_dirs = $this->finder->directories()
                                         ->in($modules_parent_dir)
-                                        ->depth('== 0')
-                                        ->exclude($theme_name);
+                                        ->depth('== 0');
 
             foreach (iterator_to_array($module_dirs) as $dir) {
                 $destination = $module_root_dir.basename($dir->getFileName());
                 if (!$this->filesystem->exists($destination)) {
                     $this->filesystem->mkdir($destination);
-                    $this->filesystem->mirror(
-                        $dir->getPathName(),
-                        $destination
-                    );
+                    $this->filesystem->mirror($dir->getPathName(), $destination);
                 }
             }
             $this->filesystem->remove($modules_parent_dir);
         }
 
-        $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme_name;
+        $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme->getName();
+        if (file_exists($themePath)) {
+            throw new PrestaShopException(
+                'There is already a theme named '.$theme->getName().' in your themes/ folder. Remove it if you want to continue.'
+            );
+        }
         $this->filesystem->mkdir($themePath);
-        $this->filesystem->mirror(
-            $sandboxPath.$theme_name,
-            $themePath
-        );
+        $this->filesystem->mirror($sandboxPath, $themePath);
         $this->filesystem->remove($sandboxPath);
     }
 
