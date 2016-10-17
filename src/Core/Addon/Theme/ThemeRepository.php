@@ -39,7 +39,7 @@ class ThemeRepository implements AddonRepositoryInterface
     private $appConfiguration;
     private $shop;
 
-    public function __construct(ConfigurationInterface $configuration, Shop $shop)
+    public function __construct(ConfigurationInterface $configuration, Shop $shop = null)
     {
         $this->appConfiguration = $configuration;
         $this->shop = $shop;
@@ -49,7 +49,10 @@ class ThemeRepository implements AddonRepositoryInterface
     {
         $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$name;
 
-        $jsonConfiguration = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json';
+        $jsonConfiguration = $this->shop
+            ? $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json'
+            : '';
+
         if (file_exists($jsonConfiguration)) {
             $data = $this->getConfigFromFile(
                 $jsonConfiguration,
