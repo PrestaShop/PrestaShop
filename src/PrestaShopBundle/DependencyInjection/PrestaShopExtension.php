@@ -55,6 +55,9 @@ class PrestaShopExtension extends Extension
         }
 
         $container->setParameter('prestashop.addons.api_client.verify_ssl', $verifySsl);
+        if (!$container->hasParameter('prestashop.addons.api_client.ttl')) {
+            $container->setParameter('prestashop.addons.api_client.ttl', $config['addons']['api_client']['ttl']);
+        }
 
         $this->addClassesToCompile(array(
             $container->getDefinition('prestashop.router')->getClass(),
