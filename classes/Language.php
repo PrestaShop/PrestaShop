@@ -58,6 +58,8 @@ class LanguageCore extends ObjectModel
     public $active = true;
 
     protected static $_cache_language_installation = null;
+    protected static $_cache_language_installation_by_locale = null;
+    protected static $_cache_all_language_json = null;
 
     /**
      * @see ObjectModel::$definition
@@ -650,6 +652,30 @@ class LanguageCore extends ObjectModel
         return false;
     }
 
+    public static function getJsonLanguageDetails($locale)
+    {
+        if (self::$_cache_all_language_json === null) {
+            self::$_cache_all_language_json = array();
+            $allLanguages = file_get_contents(_PS_ROOT_DIR_.self::ALL_LANGUAGES_FILE);
+            $allLanguages = json_decode($allLanguages, true);
+
+            if (JSON_ERROR_NONE !== json_last_error()) {
+                throw new \Exception(
+                    sprintf(
+                        'The legacy to standard locales JSON could not be decoded %s',
+                        json_last_error_msg()
+                    )
+                );
+            }
+
+            foreach ($allLanguages as $isoCode => $langDetails) {
+                self::$_cache_all_language_json[$langDetails['locale']] = $langDetails;
+            }
+        }
+
+        return isset(self::$_cache_all_language_json[$locale]) ? self::$_cache_all_language_json[$locale] : false;
+    }
+
     /**
      * Return id from iso code.
      *
@@ -901,6 +927,19 @@ class LanguageCore extends ObjectModel
         }
 
         return isset(self::$_cache_language_installation[$iso_code]) ? self::$_cache_language_installation[$iso_code] : false;
+    }
+    
+    public static function isInstalledByLocale($locale)
+    {
+        if (self::$_cache_language_installation_by_locale === null) {
+            self::$_cache_language_installation_by_locale = array();
+            $result = Db::getInstance()->executeS('SELECT `id_lang`, `locale` FROM `'._DB_PREFIX_.'lang`');
+            foreach ($result as $row) {
+                self::$_cache_language_installation_by_locale[$row['locale']] = $row['id_lang'];
+            }
+        }
+
+        return isset(self::$_cache_language_installation_by_locale[$locale]);
     }
 
     public static function countActiveLanguages($id_shop = null)
