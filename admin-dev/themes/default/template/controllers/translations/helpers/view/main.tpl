@@ -109,7 +109,7 @@
         <div class="col-lg-4">
           <select name="type" id="type">
             {foreach $translations_type as $type => $array}
-                {if $array.name}<option value="{$type}" data-controller="{if $array.sf_controller}sf{else}legacy{/if}" data-choicetheme="{$array.choice_theme}">{$array.name}</option>{/if}
+              {if isset($array.name)}<option value="{$type}" data-controller="{if $array.sf_controller}sf{else}legacy{/if}" data-choicetheme="{$array.choice_theme}">{$array.name}</option>{/if}
             {/foreach}
           </select>
         </div>
