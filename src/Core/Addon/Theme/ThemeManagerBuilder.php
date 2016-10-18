@@ -79,6 +79,7 @@ class ThemeManagerBuilder
 
         return new ThemeRepository(
             new Configuration($shop),
+            new Filesystem(),
             $shop
         );
     }

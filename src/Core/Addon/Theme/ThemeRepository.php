@@ -31,17 +31,20 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Parser;
 use Shop;
 
 class ThemeRepository implements AddonRepositoryInterface
 {
     private $appConfiguration;
+    private $filesystem;
     private $shop;
 
-    public function __construct(ConfigurationInterface $configuration, Shop $shop = null)
+    public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem, Shop $shop = null)
     {
         $this->appConfiguration = $configuration;
+        $this->filesystem = $filesystem;
         $this->shop = $shop;
     }
 
@@ -49,13 +52,15 @@ class ThemeRepository implements AddonRepositoryInterface
     {
         $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$name;
 
-        $jsonConfiguration = $this->shop
-            ? $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json'
-            : '';
+        if ($this->shop) {
+            $jsonConf = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json';
+        } else {
+            $jsonConf = '';
+        }
 
-        if (file_exists($jsonConfiguration)) {
+        if ($this->filesystem->exists($jsonConf)) {
             $data = $this->getConfigFromFile(
-                $jsonConfiguration,
+                $jsonConf,
                 $name
             );
         } else {
@@ -125,7 +130,7 @@ class ThemeRepository implements AddonRepositoryInterface
 
     private function getConfigFromFile($file, $name)
     {
-        if (!file_exists($file)) {
+        if (!$this->filesystem->exists($file)) {
             throw new \PrestaShopException(sprintf('[ThemeRepository] Theme configuration file not found for theme `%s`.', $name));
         }
 

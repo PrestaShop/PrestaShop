@@ -324,7 +324,7 @@ class ThemeManager implements AddonManagerInterface
         }
 
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme->getName();
-        if (file_exists($themePath)) {
+        if ($this->filesystem->exists($themePath)) {
             throw new PrestaShopException(
                 'There is already a theme named '.$theme->getName().' in your themes/ folder. Remove it if you want to continue.'
             );
@@ -347,7 +347,7 @@ class ThemeManager implements AddonManagerInterface
     public function saveTheme($theme)
     {
         $jsonConfigFolder = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$theme->getName();
-        if (!file_exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
+        if (!$this->filesystem->exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
             mkdir($jsonConfigFolder, 0777, true);
         }
 
