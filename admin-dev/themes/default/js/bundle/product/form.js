@@ -833,6 +833,7 @@ var form = (function() {
         $('.btn-submit', elem).attr('disabled', 'disabled');
         $('ul.text-danger').remove();
         $('*.has-danger').removeClass('has-danger');
+        $('#form-nav li.has-error').removeClass('has-error');
       },
       success: function(response) {
         if (redirect) {
@@ -861,13 +862,23 @@ var form = (function() {
           });
           html += '</ul>';
 
-          $('#form_' + key).parent().append(html);
-          $('#form_' + key).parent().addClass('has-danger');
+          if (key.match(/^combination_.*/)) {
+            $('#' + key).parent().addClass('has-danger').append(html);
+          } else {
+            $('#form_' + key).parent().addClass('has-danger').append(html);
+          }
+
         });
 
         /** find first tab with error, then switch to it */
-        var tabIndexError = tabsWithErrors[0].split('_')[0];
-        $('#form-nav li a[href="#' + tabIndexError + '"]').tab('show');
+        tabsWithErrors.sort();
+        $.each(tabsWithErrors, function(key, tabIndex) {
+          if (0 === key) {
+            $('#form-nav li a[href="#' + tabIndex.split('_')[0] + '"]').tab('show');
+          }
+
+          $('#form-nav li a[href="#' + tabIndex.split('_')[0] + '"]').parent().addClass('has-error');
+        });
 
         /** scroll to 1st error */
         if ($('.has-danger').first().offset()) {

@@ -950,7 +950,7 @@
     <div class="product-footer">
       <div class="col-lg-5">
         <a
-          href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+          href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}"
           class="btn btn-invisible btn-lg delete"
           data-toggle="tooltip"
           id="product_form_delete_btn"
@@ -985,16 +985,18 @@
 
       </div>
       <div class="col-lg-6 text-lg-right">
-        <button
-          type="button"
-          class="btn btn-tertiary-outline btn-submit hidden-xs uppercase duplicate"
-          id="product_form_save_duplicate_btn"
-          data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
-          data-toggle="tooltip"
-          title="{{ 'Save and duplicate this product, then go to the new product: CTRL+D'|trans({}, 'Admin.Catalog.Help') }}"
-          >
-          {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
-        </button>
+        {% if is_shop_context %}
+          <button
+            type="button"
+            class="btn btn-tertiary-outline btn-submit hidden-xs uppercase duplicate"
+            id="product_form_save_duplicate_btn"
+            data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
+            data-toggle="tooltip"
+            title="{{ 'Save and duplicate this product, then go to the new product: CTRL+D'|trans({}, 'Admin.Catalog.Help') }}"
+            >
+            {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
+          </button>
+        {% endif %}
         <button
           type="button"
           class="btn btn-tertiary-outline btn-submit hidden-xs uppercase go-catalog"
@@ -1042,12 +1044,14 @@
 
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-              <a
-               class="dropdown-item duplicate js-btn-save"
-               href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
-              >
-              {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
-              </a>
+              {% if is_shop_context %}
+                <a
+                 class="dropdown-item duplicate js-btn-save"
+                 href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
+                >
+                {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
+                </a>
+              {% endif %}
              <a
               class="dropdown-item go-catalog js-btn-save"
               href="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"

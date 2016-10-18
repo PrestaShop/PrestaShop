@@ -357,6 +357,15 @@
     }
   }
 
+  .nav-tabs {
+    .nav-item.has-error {
+      .nav-link {
+        border-top: 3px solid #c45c67;
+        color: #c45c67;
+      }
+    }
+  }
+
   #product-images-form-container {
     min-height: 200px;
     top: 0;
