@@ -101,7 +101,11 @@ class InstallModelInstall extends InstallAbstractModel
             $database_host = implode(':', $splits);
         }
 
-        $key = \Defuse\Crypto\Key::createNewRandomKey();
+        array_walk($parameters['parameters'], function (&$param) {
+            $param = str_replace('%', '%%', $param);
+        });
+        $key = \PhpEncryption::createNewRandomKey();
+
         $parameters = array(
             'parameters' => array(
                 'database_host' => $database_host,
@@ -113,15 +117,12 @@ class InstallModelInstall extends InstallAbstractModel
                 'database_engine' =>  $database_engine,
                 'cookie_key' => $cookie_key,
                 'cookie_iv' =>  $cookie_iv,
-                'new_cookie_key' => $key->saveToAsciiSafeString(),
+                'new_cookie_key' => $key,
                 'ps_creation_date' => date('Y-m-d'),
                 'secret' => $secret,
                 'locale' => $this->language->getLanguage()->getLocale(),
             )
         );
-        array_walk($parameters['parameters'], function (&$param) {
-            $param = str_replace('%', '%%', $param);
-        });
 
         $parameters = array_replace_recursive(
             Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml.dist')),

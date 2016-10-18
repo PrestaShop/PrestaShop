@@ -25,14 +25,16 @@
  */
 
 /**
- * Class PhpEncryptionCore for openSSL 1.0.1+.
+ * Class PhpEncryption engine for openSSL < 0.9.8.
+ *
+ * @doc http://php.net/manual/fr/function.mcrypt-encrypt.php#refsect1-function.mcrypt-encrypt-examples
+ *
+ * This class will be deprecated when web hosting providers will update their version of OpenSSL.
  */
-class PhpEncryptionCore
+class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
 {
-    const ENGINE = 'PhpEncryptionEngine';
-    const LEGACY_ENGINE = 'PhpEncryptionLegacyEngine';
+    protected $key;
 
-    private static $engine;
     /**
      * PhpEncryptionCore constructor.
      *
@@ -41,8 +43,7 @@ class PhpEncryptionCore
      */
     public function __construct($hexString)
     {
-        $engineClass = self::resolveEngineToUse();
-        $this->engine = new $engineClass($hexString);
+        $this->key = substr($hexString, 0, 32);
     }
 
     /**
@@ -54,7 +55,12 @@ class PhpEncryptionCore
      */
     public function encrypt($plaintext)
     {
-        return $this->engine->encrypt($plaintext);
+        $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+        $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
+        $cipherText = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->key, $plaintext, MCRYPT_MODE_CBC, $iv);
+        $cipherText = $iv.$cipherText;
+
+        return base64_encode($cipherText);
     }
 
     /**
@@ -69,43 +75,17 @@ class PhpEncryptionCore
      */
     public function decrypt($cipherText)
     {
-        return $this->engine->decrypt($cipherText);
-    }
+        $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+        $cipherText = base64_decode($cipherText);
+        $ivDec = substr($cipherText, 0, $ivSize);
+        $cipherText = substr($cipherText, $ivSize);
 
-    /**
-     * @param $header
-     * @param $bytes
-     *
-     * @return string
-     *
-     * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
-     */
-    public static function saveBytesToChecksummedAsciiSafeString($header, $bytes)
-    {
-        $engine = self::resolveEngineToUse();
-
-        return $engine::saveBytesToChecksummedAsciiSafeString($header, $bytes);
-    }
-
-    /**
-     * @return string
-     */
-    public static function createNewRandomKey()
-    {
-        $engine = self::resolveEngineToUse();
-
-        return $engine::createNewRandomKey();
-    }
-
-    /**
-     * Choose which engine use regarding the OpenSSL cipher methods available.
-     */
-    public static function resolveEngineToUse()
-    {
-        if (false === in_array(\Defuse\Crypto\Core::CIPHER_METHOD, openssl_get_cipher_methods())) {
-            return self::LEGACY_ENGINE;
-        }
-
-        return self::ENGINE;
+        return trim(mcrypt_decrypt(
+            MCRYPT_RIJNDAEL_128,
+            $this->key,
+            $cipherText,
+            MCRYPT_MODE_CBC,
+            $ivDec
+        ));
     }
 }
