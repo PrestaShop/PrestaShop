@@ -34,6 +34,7 @@ class AdminTranslationsControllerCore extends AdminController
     /** Name of theme by default */
     const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
     const TEXTAREA_SIZED = 70;
+    const CONTENT_TYPE_ACCEPTED = array('txt', 'tpl', 'html');
 
     /** @var string : Link which list all pack of language */
     protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
@@ -1633,6 +1634,11 @@ class AdminTranslationsControllerCore extends AdminController
         // Save each mail content
         foreach ($arr_mail_content as $group_name => $all_content) {
             foreach ($all_content as $type_content => $mails) {
+
+                if (!in_array($type_content, self::CONTENT_TYPE_ACCEPTED)) {
+                    throw new PrestaShopException($this->trans('This %type_content% file extension is not accepted.', array('%type_content%' => $type_content), 'Admin.International.Notification'));
+                }
+
                 foreach ($mails as $mail_name => $content) {
                     $module_name = false;
                     $module_name_pipe_pos = stripos($mail_name, '|');
@@ -1674,7 +1680,17 @@ class AdminTranslationsControllerCore extends AdminController
                         if (!file_exists($path) && !mkdir($path, 0777, true)) {
                             throw new PrestaShopException(sprintf($this->trans('Directory "%s" cannot be created', array(), 'Admin.International.Notification'), dirname($path)));
                         }
-                        file_put_contents($path.$mail_name.'.'.$type_content, Tools::purifyHTML($content, array('{', '}'), true));
+
+                        $content = Tools::purifyHTML($content, array('{', '}'), true);
+
+                        if ($type_content == 'tpl') {
+                            preg_match('/{\s*[^$]+/s', $content, $matches);
+                            if (!empty($matches)) {
+                                throw new PrestaShopException($this->trans('Your email translations contain some invalid HTML and cannot be saved. Please check your content.', array(), 'Admin.International.Notification'));
+                            }
+                        }
+
+                        file_put_contents($path.$mail_name.'.'.$type_content, $content);
                     } else {
                         throw new PrestaShopException($this->trans('Your HTML email templates cannot contain JavaScript code.', array(), 'Admin.International.Notification'));
                     }
