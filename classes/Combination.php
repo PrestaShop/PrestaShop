@@ -136,6 +136,13 @@ class CombinationCore extends ObjectModel
         return true;
     }
 
+    public static function resetEcoTax()
+    {
+        return ObjectModel::updateMultishopTable('combination', array(
+            'ecotax' => 0,
+        ));
+    }
+
     /**
      * Delete from Supplier
      *

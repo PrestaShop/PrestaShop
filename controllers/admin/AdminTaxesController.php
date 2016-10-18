@@ -289,6 +289,7 @@ class AdminTaxesControllerCore extends AdminController
             // Reset ecotax
             if ($value == 0) {
                 Product::resetEcoTax();
+                Combination::resetEcoTax();
             }
 
             Configuration::updateValue('PS_USE_ECOTAX', (int)$value);
