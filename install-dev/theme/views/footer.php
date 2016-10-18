@@ -35,7 +35,7 @@
 		$.each($('li.fail'), function(i, item){
 			errors.push($(this).text().trim());
 		});
-		psuser_assistance.setStep('install_<?php echo addslashes($this->step) ?>', {'error':errors});
+		psuser_assistance.setStep('install_<?php echo addslashes($this->step) ?>', {'error': errors + ' || {"version": "' + ps_version + '"}'});
 		if (errors.length)
 			$('#iframe_help').attr('src', $('#iframe_help').attr('src') + '&errors=' + encodeURI(errors.join(', ')));
 	}

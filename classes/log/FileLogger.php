@@ -39,7 +39,7 @@ class FileLoggerCore extends AbstractLogger
         if (!is_string($message)) {
             $message = print_r($message, true);
         }
-        $formatted_message = '*'.$this->level_value[$level].'* '."\t".date('Y/m/d - H:i:s').': '.$message."\r\n";
+        $formatted_message = '*'.$this->level_value[$level].'* '."\tv"._PS_VERSION_."\t".date('Y/m/d - H:i:s').': '.$message."\r\n";
         return (bool)file_put_contents($this->getFilename(), $formatted_message, FILE_APPEND);
     }
 
