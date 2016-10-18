@@ -263,7 +263,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (!file_exists($path)) {
             if (!mkdir($path, 0777, true)) {
                 $bool &= false;
-                $this->errors[] = sprintf($this->trans('Cannot create the folder "%s". Please check your directory writing permissions.', array(), 'Admin.International.Notification' ), $path);
+                $this->errors[] = sprintf($this->trans('Cannot create the folder "%s". Please check your directory writing permissions.', array(), 'Admin.International.Notification'), $path);
             }
         }
 
@@ -666,7 +666,7 @@ class AdminTranslationsControllerCore extends AdminController
                             }
 
                             if (!Validate::isGenericName($tab->name[(int)$id_lang])) {
-                                $errors[] = sprintf($this->trans('Tab "%s" is not valid', array(), 'Admin.International.Notification'), $tab->name[(int)$id_lang]);
+                                $errors[] = Context::getContext()->getTranslator()->trans('Tab "%s" is not valid', array($tab->name[(int)$id_lang]), 'Admin.International.Notification');
                             } else {
                                 $tab->update();
                             }
@@ -1559,8 +1559,8 @@ class AdminTranslationsControllerCore extends AdminController
                 } else {
                     $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 }
-            } elseif (Tools::isSubmit('submitSelectModules')){
-                $this->redirect(false,false,true);
+            } elseif (Tools::isSubmit('submitSelectModules')) {
+                $this->redirect(false, false, true);
             }
         } catch (PrestaShopException $e) {
             $this->errors[] = $e->getMessage();
@@ -1578,7 +1578,7 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $conf = !$conf ? 4 : $conf;
         $url_base = self::$currentIndex.'&token='.$this->token.'&conf='.$conf;
-        if($modify_translation) {
+        if ($modify_translation) {
             Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&lang='.Tools::getValue('langue').'&type='.$this->type_selected.'&module='.Tools::getValue('module').'&theme='.$this->theme_selected);
         } elseif ($save_and_stay) {
             Tools::redirectAdmin($url_base.'&lang='.$this->lang_selected->iso_code.'&type='.$this->type_selected.'&module='.Tools::getValue('module').'&theme='.$this->theme_selected);
@@ -1637,7 +1637,6 @@ class AdminTranslationsControllerCore extends AdminController
         // Save each mail content
         foreach ($arr_mail_content as $group_name => $all_content) {
             foreach ($all_content as $type_content => $mails) {
-
                 if (!in_array($type_content, self::CONTENT_TYPE_ACCEPTED)) {
                     throw new PrestaShopException($this->trans('This %type_content% file extension is not accepted.', array('%type_content%' => $type_content), 'Admin.International.Notification'));
                 }
