@@ -27,7 +27,7 @@ global $smarty;
 
 $template_dirs = array(_PS_THEME_DIR_.'templates');
 $plugin_dirs = array(_PS_THEME_DIR_.'plugins');
-if (_PARENT_THEME_NAME_) {
+if (_PS_PARENT_THEME_DIR_) {
     $template_dirs[] = _PS_PARENT_THEME_DIR_.'templates';
     $plugin_dirs[] = _PS_PARENT_THEME_DIR_.'plugins';
 }
