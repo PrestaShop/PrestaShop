@@ -570,7 +570,13 @@ class FrontControllerCore extends Controller
      */
     public function getJavascript()
     {
-        return $this->javascriptManager->getList();
+        $jsFileList = $this->javascriptManager->getList();
+
+        if (Configuration::get('PS_JS_THEME_CACHE')) {
+            $jsFileList = $this->cccReducer->reduceJs($jsFileList);
+        }
+
+        return $jsFileList;
     }
 
     /**

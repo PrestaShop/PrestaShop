@@ -76,6 +76,45 @@ class CccReducerCore
         return $cssFileList;
     }
 
+    public function reduceJs($jsFileList)
+    {
+        foreach ($jsFileList as $position => &$list) {
+            $files = array();
+            foreach ($list['external'] as $key => $js) {
+                // We only CCC the file without 'refer' or 'async'
+                if ('' === $js['attribute']) {
+                    $files[] = $js['path'];
+                    unset($list['external'][$key]);
+                }
+            }
+
+            if (empty($files)) {
+                // No file to CCC
+                continue;
+            }
+
+            $cccFilename = $position.'-'.$this->getFileNameIdentifierFromList($files).'.js';
+            $destinationPath = $this->cacheDir.$cccFilename;
+
+            if (!$this->filesystem->exists($destinationPath)) {
+                JsMinifier::minify($files, $destinationPath);
+            }
+
+            $cccItem = [];
+            $cccItem[$position.'-js-ccc'] = [
+                'id' => $position.'-js-ccc',
+                'type' => 'external',
+                'path' => $destinationPath,
+                'uri' => $this->getFQDN().$this->getUriFromPath($destinationPath),
+                'priority' => JavascriptManager::DEFAULT_PRIORITY,
+                'attribute' => '',
+            ];
+            $list['external'] = array_merge($cccItem, $list['external']);
+        }
+
+        return $jsFileList;
+    }
+
     private function getFileNameIdentifierFromList(array $files)
     {
         return substr(sha1(implode('|', $files)), 0, 6);
