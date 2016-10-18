@@ -121,7 +121,7 @@ var AdminModuleCard = function () {
         var url = "//" + window.location.host + element.attr("href");
 
         if (forceDeletion === "true" || forceDeletion === true) {
-          url +="?deletion=true";
+          url +="&deletion=true";
         }
 
         $.ajax({
