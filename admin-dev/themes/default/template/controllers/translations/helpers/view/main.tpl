@@ -30,10 +30,15 @@
 			getE('translation_lang').value = id_lang;
 
       var formTranslation = $('form#typeTranslationForm');
-      if ('legacy' === $('#type option:selected').data('controller')) {
-        formTranslation.attr('action', formTranslation.data('legacyaction'));
+      var typeOption = $('#type option:selected');
+
+      if ('mails' == $('#type option:selected').val()) {
+        typeOption = $('#ps_email_selector select[name="selected-emails"] option:selected');
       }
-      else {
+
+      if ('legacy' === typeOption.data('controller')) {
+        formTranslation.attr('action', formTranslation.data('legacyaction'));
+      } else {
         formTranslation.attr('action', formTranslation.data('sfaction'));
       }
 
@@ -42,16 +47,26 @@
 
 		$(document).ready(function() {
       var themeSelector = $('#ps_theme_selector');
+      var emailSelector = $('#ps_email_selector');
 
       themeSelector.hide();
+      emailSelector.hide();
 
-      $('#type').on('change', function (event) {
-        var selectedValue = $(this).val();
+      $('#type').on('change', function () {
+        if ('mails' === $(this).val()) {
+          emailSelector.show();
+        } else {
+          emailSelector.hide();
+        }
 
-        themeSelector.toggle('themes' === selectedValue);
+        if (1 === $('#type option:selected').data('choicetheme')) {
+          themeSelector.show();
+        } else {
+          themeSelector.hide();
+        }
       });
 
-			$('#modify-translations').click(function(e) {
+			$('#modify-translations').click(function() {
 				var languages = $('#translations-languages option');
 				var i;
 				var selectedLanguage;
@@ -94,8 +109,17 @@
         <div class="col-lg-4">
           <select name="type" id="type">
             {foreach $translations_type as $type => $array}
-                {if $array.name}<option value="{$type}" data-controller="{if $array.sf_controller}sf{else}legacy{/if}">{$array.name}</option>{/if}
+                {if $array.name}<option value="{$type}" data-controller="{if $array.sf_controller}sf{else}legacy{/if}" data-choicetheme="{$array.choice_theme}">{$array.name}</option>{/if}
             {/foreach}
+          </select>
+        </div>
+      </div>
+      <div class="form-group" id="ps_email_selector">
+        <label class="control-label col-lg-3" for="selected-emails">{l s='Select the type of email content'}</label>
+        <div class="col-lg-4">
+          <select name="selected-emails">
+            <option value="subject" data-controller="sf">{l s='Emails subject'}</option>
+            <option value="body" data-controller="legacy">{l s='Emails body'}</option>
           </select>
         </div>
       </div>
