@@ -186,3 +186,5 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayProductExtraContent', 'Display extra content on the product page', 'This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.', '1');
 
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_LOGO_MOBILE', 'SHOP_LOGO_MOBILE_HEIGHT', 'SHOP_LOGO_MOBILE_WIDTH');
+
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES ('displayNavFullWidth', 'Navigation', 'This hook displays full width navigation menu at the top of your pages', '1');

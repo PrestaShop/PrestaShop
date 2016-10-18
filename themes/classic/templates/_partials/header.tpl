@@ -50,4 +50,5 @@
       </div>
     </div>
   </div>
+  {hook h='displayNavFullWidth'}
 {/block}
