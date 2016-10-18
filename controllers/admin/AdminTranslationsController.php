@@ -37,7 +37,7 @@ class AdminTranslationsControllerCore extends AdminController
     const CONTENT_TYPE_ACCEPTED = array('txt', 'tpl', 'html');
 
     /** @var string : Link which list all pack of language */
-    protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
+    protected $link_lang_pack = 'http://i18n.prestashop.com/translations/'._PS_VERSION_.'/available_languages.json';
 
     /** @var int : number of sentence which can be translated */
     protected $total_expression = 0;
@@ -181,18 +181,19 @@ class AdminTranslationsControllerCore extends AdminController
     public function initMain()
     {
         // Block add/update a language
-        $packs_to_install = array();
-        $packs_to_update = array();
+        $packsToInstall = array();
+        $packsToUpdate = array();
         $token = Tools::getAdminToken('AdminLanguages'.(int)Tab::getIdFromClassName('AdminLanguages').(int)$this->context->employee->id);
-        $file_name = $this->link_lang_pack.'?version='._PS_VERSION_;
-        $array_stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 8)));
-        if ($lang_packs = Tools::file_get_contents($file_name, false, $array_stream_context)) {
-            if ($lang_packs != '' && $lang_packs = json_decode($lang_packs, true)) {
-                foreach ($lang_packs as $key => $lang_pack) {
-                    if (!Language::isInstalled($lang_pack['iso_code'])) {
-                        $packs_to_install[$key] = $lang_pack;
+        $arrayStreamContext = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 8)));
+        
+        if ($langPacks = Tools::file_get_contents($this->link_lang_pack, false, $arrayStreamContext)) {
+            if ($langPacks != '' && $langPacks = json_decode($langPacks, true)) {
+                foreach ($langPacks as $locale => $langName) {
+                    $langDetails = Language::getJsonLanguageDetails($locale);
+                    if (!Language::isInstalledByLocale($locale)) {
+                        $packsToInstall[$locale] = $langDetails['name'];
                     } else {
-                        $packs_to_update[$key] = $lang_pack;
+                        $packsToUpdate[$locale] = $langDetails['name'];
                     }
                 }
             }
@@ -204,8 +205,8 @@ class AdminTranslationsControllerCore extends AdminController
             'token' => $this->token,
             'languages' => $this->languages,
             'translations_type' => $this->translations_informations,
-            'packs_to_install' => $packs_to_install,
-            'packs_to_update' => $packs_to_update,
+            'packs_to_install' => $packsToInstall,
+            'packs_to_update' => $packsToUpdate,
             'url_submit' => self::$currentIndex.'&token='.$this->token,
             'themes' => $this->themes,
             'current_theme_name' => $this->context->shop->theme_name,
@@ -803,7 +804,9 @@ class AdminTranslationsControllerCore extends AdminController
                         $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
                         $cldrUpdate->fetchLocale($languageCode[0].'-'.strtoupper($languageCode[1]));
 
-
+                        /**
+                         * @see AdminController::$_conf
+                         */
                         $this->redirect(false, (isset($conf) ? $conf : '15'));
                     }
                 }
@@ -865,76 +868,29 @@ class AdminTranslationsControllerCore extends AdminController
 
     public function submitAddLang()
     {
-        $arr_import_lang = explode('|', Tools::getValue('params_import_language')); /* 0 = Language ISO code, 1 = PS version */
-        if (Validate::isLangIsoCode($arr_import_lang[0])) {
-            $array_stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 10)));
-            $content = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.Tools::strtolower($arr_import_lang[0]).'.gzip', false, $array_stream_context);
-            if ($content) {
-                $file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
-                if ((bool)@file_put_contents($file, $content)) {
-                    $gz = new \Archive_Tar($file, true);
-                    if (_PS_MODE_DEV_) {
-                        $gz->setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);
-                    }
-                    $files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
+        $languageDetails = Language::getJsonLanguageDetails(Tools::getValue('params_import_language'));
+        $isoCode = $languageDetails['iso_code'];
 
-                    if ($error = $gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../')) {
-                        if (is_object($error) && !empty($error->message)) {
-                            $this->errors[] = $this->trans('The archive cannot be extracted.', array(), 'Admin.International.Notification'). ' '.$error->message;
-                        } else {
-                            if (!Language::checkAndAddLanguage($arr_import_lang[0])) {
-                                $conf = 20;
-                            } else {
-                                // Reset cache
-                                Language::loadLanguages();
-                                // Clear smarty modules cache
-                                Tools::clearCache();
+        if (Validate::isLangIsoCode($isoCode)) {
+            if ($success = Language::downloadAndInstallLanguagePack($isoCode, $version = _PS_VERSION_, $params = null, $install = true)) {
+                Language::loadLanguages();
+                Tools::clearCache();
 
-                                AdminTranslationsController::checkAndAddMailsFiles($arr_import_lang[0], $files_list);
-                                if ($tab_errors = AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list)) {
-                                    $this->errors += $tab_errors;
-                                }
-                            }
-                            if (!unlink($file)) {
-                                $this->errors[] = sprintf($this->trans('Cannot delete the archive %s.', array(), 'Admin.International.Notification'), $file);
-                            }
+                // TODO: Update AdminTranslationsController::addNewTabs to install tabs translated
 
-                            //fetch cldr datas for the new imported locale
-                            $languageCode = explode('-', Language::getLanguageCodeByIso($arr_import_lang[0]));
-                            $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-                            $cldrUpdate->fetchLocale($languageCode[0].'-'.Tools::strtoupper($languageCode[1]));
+                $languageCode = explode('-', Language::getLanguageCodeByIso($isoCode));
+                $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+                $cldrUpdate->fetchLocale($languageCode[0].'-'.Tools::strtoupper($languageCode[1]));
 
-                            $this->redirect(false, (isset($conf) ? $conf : '15'));
-                        }
-                    } else {
-                        $this->errors[] = sprintf($this->trans('Cannot decompress the translation file for the following language: %s', array(), 'Admin.International.Notification'), $arr_import_lang[0]);
-                        $checks= array();
-                        foreach ($files_list as $f) {
-                            if (isset($f['filename'])) {
-                                if (is_file(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$f['filename']) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$f['filename'])) {
-                                    $checks[] = dirname($f['filename']);
-                                } elseif (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$f['filename']) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname($f['filename']))) {
-                                    $checks[] = dirname($f['filename']);
-                                }
-                            }
-                        }
-
-                        $checks = array_unique($checks);
-                        foreach ($checks as $check) {
-                            $this->errors[] = sprintf($this->trans('Please check rights for folder and files in %s', array(), 'Admin.Notifications.Error'), $check);
-                        }
-                        if (!unlink($file)) {
-                            $this->errors[] = sprintf($this->trans('Cannot delete the archive %s.', array(), 'Admin.International.Notification'), $file);
-                        }
-                    }
-                } else {
-                    $this->errors[] = $this->trans('The server does not have permissions for writing.', array(), 'Admin.Notifications.Error').' '.sprintf($this->trans('Please check rights for %s', array(), 'Admin.Notifications.Error'), dirname($file));
+                /**
+                 * @see AdminController::$_conf
+                 */
+                $this->redirect(false, '15');
+            } elseif (is_array($success) && count($success) > 0) {
+                foreach ($success as $error) {
+                    $this->errors[] = $error;
                 }
-            } else {
-                $this->errors[] = $this->trans('Language not found.', array(), 'Admin.International.Notification');
             }
-        } else {
-            $this->errors[] = $this->trans('Invalid parameter.', array(), 'Admin.Notifications.Error');
         }
     }
 

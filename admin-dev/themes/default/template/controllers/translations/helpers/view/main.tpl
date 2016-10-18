@@ -171,13 +171,13 @@
 							<div class="col-lg-6">
 								<select id="params_import_language" name="params_import_language" class="chosen">
 								<optgroup label="{l s='Update a language'}">
-									{foreach $packs_to_update as $lang_pack}
-										<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
+									{foreach from=$packs_to_update key=locale item=name}
+										<option value="{$locale}">{$name}</option>
 									{/foreach}
 								</optgroup>
 								<optgroup label="{l s='Add a language'}">
-									{foreach $packs_to_install as $lang_pack}
-										<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
+									{foreach from=$packs_to_install key=locale item=name}
+										<option value="{$locale}">{$name}</option>
 									{/foreach}
 								</optgroup>
 							</select>
