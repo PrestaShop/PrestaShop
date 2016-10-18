@@ -473,6 +473,9 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
+            if (!file_exists(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php')) {
+                continue;
+            }
             try {
                 $module = $this->getModule($moduleName, $skip_main_class_attributes);
                 if ($module instanceof Module) {
