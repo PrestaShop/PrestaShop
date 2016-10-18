@@ -101,6 +101,19 @@ class AdminPaymentControllerCore extends AdminController
                     $module->show_quick_view = true;
                 }
 
+                // Remove all options but 'configure' and install
+                // All other operation should take place in new Module page
+                if (($module->installed && $module->active) || !$module->installed) {
+                    // Unfortunately installed but disabled module will have $module->installed = false
+                    if (strstr($module->optionsHtml[0], 'enable=1')) {
+                        $module->optionsHtml = array();
+                    } else {
+                        $module->optionsHtml = array($module->optionsHtml[0]);
+                    }
+                } else {
+                    $module->optionsHtml = array();
+                }
+
                 if ($module->active) {
                     $active_list[] = $module;
                 } else {

@@ -2345,6 +2345,7 @@ class AdminControllerCore extends Controller
                 }
                 if (isset($module->description_full) && trim($module->description_full) != '') {
                     $module->show_quick_view = true;
+                    $module->optionsHtml = array($module->optionsHtml[0]);
                 }
             }
             $helper = new Helper();
