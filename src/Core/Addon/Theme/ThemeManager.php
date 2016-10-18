@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Parser;
@@ -55,6 +56,7 @@ class ThemeManager implements AddonManagerInterface
         Shop $shop,
         ConfigurationInterface $configuration,
         ThemeValidator $themeValidator,
+        TranslatorInterface $translator,
         Employee $employee,
         Filesystem $filesystem,
         Finder $finder,
@@ -65,6 +67,7 @@ class ThemeManager implements AddonManagerInterface
         $this->shop = $shop;
         $this->appConfiguration = $configuration;
         $this->themeValidator = $themeValidator;
+        $this->translator = $translator;
         $this->employee = $employee;
         $this->filesystem = $filesystem;
         $this->finder = $finder;
@@ -303,7 +306,9 @@ class ThemeManager implements AddonManagerInterface
         $theme = new Theme($theme_data);
         if (!$this->themeValidator->isValid($theme)) {
             $this->filesystem->remove($sandboxPath);
-            throw new Exception('This theme is not valid for PrestaShop 1.7');
+            throw new PrestaShopException(
+                $this->translator->trans('This theme is not valid for PrestaShop 1.7', [], 'Admin.Design.Notification')
+            );
         }
 
         $module_root_dir = $this->appConfiguration->get('_PS_MODULE_DIR_');
@@ -326,7 +331,13 @@ class ThemeManager implements AddonManagerInterface
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme->getName();
         if ($this->filesystem->exists($themePath)) {
             throw new PrestaShopException(
-                'There is already a theme named '.$theme->getName().' in your themes/ folder. Remove it if you want to continue.'
+                $this->translator->trans(
+                    'There is already a theme named '
+                    .$theme->getName()
+                    .' in your themes/ folder. Remove it if you want to continue.',
+                    [],
+                    'Admin.Design.Notification'
+                )
             );
         }
         $this->filesystem->mkdir($themePath);
