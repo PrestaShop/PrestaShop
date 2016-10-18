@@ -1342,14 +1342,6 @@ class AdminTranslationsControllerCore extends AdminController
                 'sf_controller' => true,
                 'choice_theme' => true,
             ),
-            'others' => array(
-                'name' => $this->trans('Other translations', array(), 'Admin.International.Feature'),
-                'var' => '_OTHERS',
-                'dir' => '',
-                'file' => '',
-                'sf_controller' => true,
-                'choice_theme' => false,
-            ),
             'mails' => array(
                 'name' => $this->trans('Email translations', array(), 'Admin.International.Feature'),
                 'var' => '_LANGMAIL',
@@ -1357,6 +1349,14 @@ class AdminTranslationsControllerCore extends AdminController
                 'file' => 'lang.php',
                 'sf_controller' => false,
                 'choice_theme' => true,
+            ),
+            'others' => array(
+                'name' => $this->trans('Other translations', array(), 'Admin.International.Feature'),
+                'var' => '_OTHERS',
+                'dir' => '',
+                'file' => '',
+                'sf_controller' => true,
+                'choice_theme' => false,
             ),
             'modules' => array(
                 'dir' => _PS_MODULE_DIR_,
