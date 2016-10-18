@@ -83,7 +83,8 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
         return $defaultCatalogue;
     }
 
-    /**{@inheritdoc}
+    /**
+     * {@inheritdoc}
      */
     public function getDefaultResourceDirectory()
     {

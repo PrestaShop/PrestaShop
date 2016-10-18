@@ -83,7 +83,8 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
         return $defaultCatalogue;
     }
 
-    /**{@inheritdoc}
+    /**
+     * {@inheritdoc}
      */
     public function getDefaultResourceDirectory()
     {

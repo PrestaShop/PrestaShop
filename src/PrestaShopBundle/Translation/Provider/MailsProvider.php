@@ -81,7 +81,8 @@ class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInter
         return $defaultCatalogue;
     }
 
-    /**{@inheritdoc}
+    /**
+     * {@inheritdoc}
      */
     public function getDefaultResourceDirectory()
     {
