@@ -28,7 +28,16 @@
 		function chooseTypeTranslation(id_lang)
 		{
 			getE('translation_lang').value = id_lang;
-			document.getElementById('typeTranslationForm').submit();
+
+      var formTranslation = $('form#typeTranslationForm');
+      if ('legacy' === $('#type option:selected').data('controller')) {
+        formTranslation.attr('action', formTranslation.data('legacyaction'));
+      }
+      else {
+        formTranslation.attr('action', formTranslation.data('sfaction'));
+      }
+
+      formTranslation.submit();
 		}
 
 		$(document).ready(function() {
@@ -65,7 +74,10 @@
 			});
 		});
 	</script>
-  <form method="post" action="{url entity=sf route=admin_international_translations_list }" id="typeTranslationForm" class="form-horizontal">
+  <form method="post" action="{url entity=sf route=admin_international_translations_list }"
+        data-sfaction="{url entity=sf route=admin_international_translations_list }"
+        data-legacyaction="#"
+        id="typeTranslationForm" class="form-horizontal">
     <div class="panel">
       <h3>
         <i class="icon-file-text"></i>
@@ -82,9 +94,7 @@
         <div class="col-lg-4">
           <select name="type" id="type">
             {foreach $translations_type as $type => $array}
-              {if $type !== 'modules' }
-                <option value="{$type}">{$array.name}</option>
-              {/if}
+                {if $array.name}<option value="{$type}" data-controller="{if $array.sf_controller}sf{else}legacy{/if}">{$array.name}</option>{/if}
             {/foreach}
           </select>
         </div>
