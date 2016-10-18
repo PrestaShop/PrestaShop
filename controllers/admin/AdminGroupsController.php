@@ -80,7 +80,6 @@ class AdminGroupsControllerCore extends AdminController
                 'title' => $this->trans('Show prices', array(), 'Admin.ShopParameters.Feature'),
                 'align' => 'center',
                 'type' => 'bool',
-                'callback' => 'printShowPricesIcon',
                 'orderby' => false
             ),
             'date_add' => array(
@@ -101,6 +100,7 @@ class AdminGroupsControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         $groups = Group::getGroups(Context::getContext()->language->id, true);
+
         if (Shop::isFeatureActive()) {
             $this->fields_options = array(
                 'general' => array(
@@ -562,24 +562,6 @@ class AdminGroupsControllerCore extends AdminController
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
     }
 
-    /**
-     * Print enable / disable icon for show prices option
-     *
-     * @param $id_group integer Group ID
-     * @param $tr array Row data
-     * @return string HTML link and icon
-     */
-    public function printShowPricesIcon($id_group, $tr)
-    {
-        $group = new Group($tr['id_group']);
-        if (!Validate::isLoadedObject($group)) {
-            return;
-        }
-        return '<a class="list-action-enable'.($group->show_prices ? ' action-enabled' : ' action-disabled').'" href="index.php?tab=AdminGroups&amp;id_group='.(int)$group->id.'&amp;changeShowPricesVal&amp;token='.Tools::getAdminTokenLite('AdminGroups').'">
-				'.($group->show_prices ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>').
-            '</a>';
-    }
-
     public function renderList()
     {
         $unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
@@ -606,7 +588,7 @@ class AdminGroupsControllerCore extends AdminController
         return parent::renderList();
     }
 
-    public function displayEditLink($token = null, $id, $name = null)
+    public function displayEditLink($token = null, $id)
     {
         $tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
         if (!array_key_exists('Edit', self::$cache_lang)) {
