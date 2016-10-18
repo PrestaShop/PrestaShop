@@ -28,8 +28,8 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 class LanguageCore extends ObjectModel
 {
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
-    const SF_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/TEMP/%s.zip';
-    const EMAILS_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/emails/%s.zip';
+    const SF_LANGUAGE_PACK_URL = 'http://i18n.prestashop.com/translations/%version%/%locale%/%locale%.zip';
+    const EMAILS_LANGUAGE_PACK_URL = 'http://i18n.prestashop.com/mails/%version%/%locale%/%locale%.zip';
 
     public $id;
 
@@ -960,7 +960,19 @@ class LanguageCore extends ObjectModel
     {
         $file = _PS_TRANSLATIONS_DIR_.$type.'-'.$locale.'.zip';
         $url = ('emails' === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
-        $content = Tools::file_get_contents(sprintf($url, $locale));
+        $content = Tools::file_get_contents(
+            str_replace(
+                array(
+                    '%version%',
+                    '%locale%',
+                ),
+                array(
+                    _PS_VERSION_,
+                    $locale,
+                ),
+                $url
+            )
+        );
 
         if (!is_writable(dirname($file))) {
             // @todo Throw exception
