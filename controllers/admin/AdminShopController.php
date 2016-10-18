@@ -528,7 +528,7 @@ class AdminShopControllerCore extends AdminController
 
         $import_data = array(
             'carrier' => $this->l('Carriers'),
-            'cms' => $this->l('CMS pages'),
+            'cms' => $this->l('Pages'),
             'contact' => $this->l('Contact information'),
             'country' => $this->l('Countries'),
             'currency' => $this->l('Currencies'),
