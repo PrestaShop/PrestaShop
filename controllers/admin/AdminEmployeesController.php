@@ -151,7 +151,11 @@ class AdminEmployeesControllerCore extends AdminController
                 $this->tabs_list[$tab['id_tab']] = $tab;
                 foreach (Tab::getTabs($this->context->language->id, $tab['id_tab']) as $children) {
                     if (Tab::checkTabRights($children['id_tab'])) {
-                        $this->tabs_list[$tab['id_tab']]['children'][] = $children;
+                        foreach (Tab::getTabs($this->context->language->id, $children['id_tab']) as $subchild) {
+                            if (Tab::checkTabRights($subchild['id_tab'])) {
+                                $this->tabs_list[$tab['id_tab']]['children'][] = $subchild;
+                            }
+                        }
                     }
                 }
             }
