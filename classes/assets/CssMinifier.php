@@ -25,38 +25,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use \PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use MatthiasMullie\Minify\CSS;
 
-abstract class AbstractAssetManagerCore
+class CssMinifierCore
 {
-    protected $directories;
-    protected $configuration;
-    protected $list = array();
-
-    const DEFAULT_MEDIA = 'all';
-    const DEFAULT_PRIORITY = 50;
-    const DEFAULT_JS_POSITION = 'bottom';
-
-    use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
-
-    public function __construct(array $directories, ConfigurationInterface $configuration)
+    public static function minify(array $files, $destination)
     {
-        $this->directories = $directories;
-        $this->configuration = $configuration;
+        $minifier = new CSS();
 
-        $this->list = $this->getDefaultList();
-    }
-
-    abstract protected function getDefaultList();
-    abstract protected function getList();
-
-    protected function getFullPath($relativePath)
-    {
-        foreach ($this->directories as $baseDir) {
-            $fullPath = realpath($baseDir.'/'.$relativePath);
-            if (is_file($fullPath)) {
-                return $fullPath;
-            }
+        foreach ($files as $file) {
+            $minifier->add($file);
         }
+
+        return $minifier->minify($destination);
     }
 }

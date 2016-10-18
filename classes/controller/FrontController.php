@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
 
 class FrontControllerCore extends Controller
@@ -166,6 +167,11 @@ class FrontControllerCore extends Controller
     protected $javascriptManager;
 
     /**
+     * @var object CccReducer
+     */
+    protected $cccReducer;
+
+    /**
      * Controller constructor.
      *
      * @global bool $useSSL SSL connection flag
@@ -200,6 +206,11 @@ class FrontControllerCore extends Controller
         $this->javascriptManager = new JavascriptManager(
             array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
             new ConfigurationAdapter()
+        );
+        $this->cccReducer = new CccReducer(
+            _PS_THEME_DIR_.'assets/cache/',
+            new ConfigurationAdapter(),
+            new Filesystem()
         );
     }
 
@@ -541,6 +552,28 @@ class FrontControllerCore extends Controller
     }
 
     /**
+     * @return mixed
+     */
+    public function getStylesheets()
+    {
+        $cssFileList = $this->stylesheetManager->getList();
+
+        if (Configuration::get('PS_CSS_THEME_CACHE')) {
+            $cssFileList = $this->cccReducer->reduceCss($cssFileList);
+        }
+
+        return $cssFileList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJavascript()
+    {
+        return $this->javascriptManager->getList();
+    }
+
+    /**
      * Redirects to redirect_after link.
      *
      * @see $redirect_after
@@ -589,22 +622,10 @@ class FrontControllerCore extends Controller
      */
     public function display()
     {
-        // assign css_files and js_files at the very last time
-        if (is_writable(_PS_THEME_DIR_.'cache')) {
-            // CSS compressor management
-            if (Configuration::get('PS_CSS_THEME_CACHE')) {
-                $this->css_files = Media::cccCss($this->css_files);
-            }
-            //JS compressor management
-            if (Configuration::get('PS_JS_THEME_CACHE')) {
-                $this->js_files = Media::cccJs($this->js_files);
-            }
-        }
-
         $this->context->smarty->assign(array(
             'layout' => $this->getLayout(),
-            'stylesheets' => $this->stylesheetManager->getList(),
-            'javascript' => $this->javascriptManager->getList(),
+            'stylesheets' => $this->getStylesheets(),
+            'javascript' => $this->getJavascript(),
             'js_custom_vars' => Media::getJsDef(),
             'notifications' => $this->prepareNotifications(),
         ));

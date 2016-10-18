@@ -25,38 +25,33 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use \PrestaShop\PrestaShop\Core\ConfigurationInterface;
+namespace PrestaShop\PrestaShop\Adapter\Assets;
 
-abstract class AbstractAssetManagerCore
+trait AssetUrlGeneratorTrait
 {
-    protected $directories;
-    protected $configuration;
-    protected $list = array();
+    protected $fqdn;
 
-    const DEFAULT_MEDIA = 'all';
-    const DEFAULT_PRIORITY = 50;
-    const DEFAULT_JS_POSITION = 'bottom';
-
-    use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
-
-    public function __construct(array $directories, ConfigurationInterface $configuration)
+    protected function getUriFromPath($fullPath)
     {
-        $this->directories = $directories;
-        $this->configuration = $configuration;
+        $uri = str_replace(
+            $this->configuration->get('_PS_ROOT_DIR_').'/',
+            $this->configuration->get('__PS_BASE_URI__'),
+            $fullPath
+        );
 
-        $this->list = $this->getDefaultList();
+        return $uri;
     }
 
-    abstract protected function getDefaultList();
-    abstract protected function getList();
-
-    protected function getFullPath($relativePath)
+    protected function getFQDN()
     {
-        foreach ($this->directories as $baseDir) {
-            $fullPath = realpath($baseDir.'/'.$relativePath);
-            if (is_file($fullPath)) {
-                return $fullPath;
+        if (is_null($this->fqdn)) {
+            if ($this->configuration->get('PS_SSL_ENABLED')) {
+                $this->fqdn = $this->configuration->get('_PS_BASE_URL_SSL_');
+            } else {
+                $this->fqdn = $this->configuration->get('_PS_BASE_URL_');
             }
         }
+
+        return $this->fqdn;
     }
 }
