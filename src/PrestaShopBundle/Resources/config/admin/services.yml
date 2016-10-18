@@ -136,13 +136,21 @@ services:
         tags:
             - { name: "ps.translation_provider" }
 
-    prestashop.translation.others_provider:
-        class: PrestaShopBundle\Translation\Provider\OthersProvider
+    prestashop.translation.mails:
+        class: PrestaShopBundle\Translation\Provider\MailsProvider
         arguments:
             - "@prestashop.translations.database_loader"
             - "%translations_dir%"
         tags:
             - { name: "ps.translation_provider" }
+
+    prestashop.translation.others_provider:
+            class: PrestaShopBundle\Translation\Provider\OthersProvider
+            arguments:
+                - "@prestashop.translations.database_loader"
+                - "%translations_dir%"
+            tags:
+                - { name: "ps.translation_provider" }
 
     prestashop.translation.theme_provider:
         class: PrestaShopBundle\Translation\Provider\ThemeProvider
