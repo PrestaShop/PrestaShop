@@ -365,7 +365,7 @@ class AdminThemesControllerCore extends AdminController
                 'tabs' => array(
                     'logo' => $this->trans('Logo', array(), 'Admin.Global'),
                     'logo2' => $this->trans('Invoice & Email Logos', array(), 'Admin.Design.Feature'),
-                    'icons' => $this->trans('Icons', array(), 'Admin.Design.Feature'),
+                    'icons' => $this->trans('Favicons', array(), 'Admin.Design.Feature'),
                     ),
                 'fields' => array(
                     'PS_LOGO' => array(

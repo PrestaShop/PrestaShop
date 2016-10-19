@@ -301,7 +301,7 @@ class AdminLocalizationControllerCore extends AdminController
             array(
                 'id' => 'groups',
                 'val' => 'groups',
-                'name' => $this->trans('Change the behavior of the taxes displayed to the groups', array(), 'Admin.International.Feature')
+                'name' => $this->trans('Change the behavior of the price display for groups', array(), 'Admin.International.Feature')
             )
         );
 
