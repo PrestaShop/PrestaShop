@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="India" version="1.0">
-	
+
 	<languages>
+	    <language iso_code="ta" />
 	    <language iso_code="en" />
-        </languages>
-	
+  </languages>
+
 	<currencies>
 		<currency name="Indian Rupee" iso_code="INR" iso_code_num="356" sign="₹" blank="1" conversion_rate="60.748205" format="1" decimals="1" />
 	</currencies>
@@ -12,15 +13,15 @@
 		<tax id="1" name="VAT IN 12.5%" rate="12.5" />
 		<tax id="2" name="VAT IN 4%" rate="4" />
 		<tax id="3" name="VAT IN 1%" rate="1" />
-		
+
 		<taxRulesGroup name="IN Standard Rate (12.5%)">
 			<taxRule iso_code_country="in" id_tax="1" />
 		</taxRulesGroup>
-		
+
 		<taxRulesGroup name="IN Reduced Rate (4%)">
 			<taxRule iso_code_country="in" id_tax="2" />
 		</taxRulesGroup>
-		
+
 		<taxRulesGroup name="IN Super Reduced Rate (1%)">
 			<taxRule iso_code_country="in" id_tax="3" />
 		</taxRulesGroup>

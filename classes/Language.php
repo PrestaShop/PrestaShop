@@ -28,8 +28,8 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 class LanguageCore extends ObjectModel
 {
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
-    const SF_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/TEMP/%s.zip';
-    const EMAILS_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/emails/%s.zip';
+    const SF_LANGUAGE_PACK_URL = 'http://i18n.prestashop.com/translations/%version%/%locale%/%locale%.zip';
+    const EMAILS_LANGUAGE_PACK_URL = 'http://i18n.prestashop.com/mails/%version%/%locale%/%locale%.zip';
 
     public $id;
 
@@ -58,6 +58,8 @@ class LanguageCore extends ObjectModel
     public $active = true;
 
     protected static $_cache_language_installation = null;
+    protected static $_cache_language_installation_by_locale = null;
+    protected static $_cache_all_language_json = null;
 
     /**
      * @see ObjectModel::$definition
@@ -113,39 +115,6 @@ class LanguageCore extends ObjectModel
         }
 
         return parent::getFields();
-    }
-
-    /**
-     * Generate translations files.
-     */
-    protected function _generateFiles($newIso = null)
-    {
-        $iso_code = $newIso ? $newIso : $this->iso_code;
-
-        if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code)) {
-            if (@mkdir(_PS_TRANSLATIONS_DIR_.$iso_code)) {
-                @chmod(_PS_TRANSLATIONS_DIR_.$iso_code, 0777);
-            }
-        }
-
-        foreach ($this->translationsFilesAndVars as $file => $var) {
-            $path_file = _PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php';
-            if (!file_exists($path_file)) {
-                if ($file != 'tabs') {
-                    @file_put_contents($path_file, '<?php
-	global $'.$var.';
-	$'.$var.' = array();
-?>');
-                } else {
-                    @file_put_contents($path_file, '<?php
-	$'.$var.' = array();
-	return $'.$var.';
-?>');
-                }
-            }
-
-            @chmod($path_file, 0777);
-        }
     }
 
     /**
@@ -207,9 +176,6 @@ class LanguageCore extends ObjectModel
         if ($only_add) {
             return true;
         }
-
-        // create empty files if they not exists
-        $this->_generateFiles();
 
         // @todo Since a lot of modules are not in right format with their primary keys name, just get true ...
         $this->loadUpdateSQL();
@@ -650,6 +616,30 @@ class LanguageCore extends ObjectModel
         return false;
     }
 
+    public static function getJsonLanguageDetails($locale)
+    {
+        if (self::$_cache_all_language_json === null) {
+            self::$_cache_all_language_json = array();
+            $allLanguages = file_get_contents(_PS_ROOT_DIR_.self::ALL_LANGUAGES_FILE);
+            $allLanguages = json_decode($allLanguages, true);
+
+            if (JSON_ERROR_NONE !== json_last_error()) {
+                throw new \Exception(
+                    sprintf(
+                        'The legacy to standard locales JSON could not be decoded %s',
+                        json_last_error_msg()
+                    )
+                );
+            }
+
+            foreach ($allLanguages as $isoCode => $langDetails) {
+                self::$_cache_all_language_json[$langDetails['locale']] = $langDetails;
+            }
+        }
+
+        return isset(self::$_cache_all_language_json[$locale]) ? self::$_cache_all_language_json[$locale] : false;
+    }
+
     /**
      * Return id from iso code.
      *
@@ -902,6 +892,19 @@ class LanguageCore extends ObjectModel
 
         return isset(self::$_cache_language_installation[$iso_code]) ? self::$_cache_language_installation[$iso_code] : false;
     }
+    
+    public static function isInstalledByLocale($locale)
+    {
+        if (self::$_cache_language_installation_by_locale === null) {
+            self::$_cache_language_installation_by_locale = array();
+            $result = Db::getInstance()->executeS('SELECT `id_lang`, `locale` FROM `'._DB_PREFIX_.'lang`');
+            foreach ($result as $row) {
+                self::$_cache_language_installation_by_locale[$row['locale']] = $row['id_lang'];
+            }
+        }
+
+        return isset(self::$_cache_language_installation_by_locale[$locale]);
+    }
 
     public static function countActiveLanguages($id_shop = null)
     {
@@ -960,7 +963,19 @@ class LanguageCore extends ObjectModel
     {
         $file = _PS_TRANSLATIONS_DIR_.$type.'-'.$locale.'.zip';
         $url = ('emails' === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
-        $content = Tools::file_get_contents(sprintf($url, $locale));
+        $content = Tools::file_get_contents(
+            str_replace(
+                array(
+                    '%version%',
+                    '%locale%',
+                ),
+                array(
+                    _PS_VERSION_,
+                    $locale,
+                ),
+                $url
+            )
+        );
 
         if (!is_writable(dirname($file))) {
             // @todo Throw exception

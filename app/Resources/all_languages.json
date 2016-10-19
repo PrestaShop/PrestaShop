@@ -170,6 +170,15 @@
     "language_code": "et-ee",
     "locale": "et-EE"
   },
+  "eu": {
+    "name": "Basque",
+    "iso_code": "eu",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "eu-es",
+    "locale": "eu-ES"
+  },
   "fa": {
     "name": "فارسى (Persian)",
     "iso_code": "fa",
@@ -404,6 +413,15 @@
     "language_code": "pl-pl",
     "locale": "pl-PL"
   },
+  "pe": {
+    "name": "Español PE (Spanish)",
+    "iso_code": "pe",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "es-pe",
+    "locale": "es-PE"
+  },
   "pt": {
     "name": "Português PT (Portuguese)",
     "iso_code": "pt",
@@ -494,6 +512,15 @@
     "language_code": "sv-se",
     "locale": "sv-SE"
   },
+  "ta": {
+    "name": "Tamil",
+    "iso_code": "ta",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "ta-in",
+    "locale": "ta-IN"
+  },
   "th": {
     "name": "ภาษาไทย (Thai)",
     "iso_code": "th",
@@ -547,6 +574,15 @@
     "is_rtl": "1",
     "language_code": "ur",
     "locale": "ur-PK"
+  },
+  "ve": {
+    "name": "Español VE (Spanish)",
+    "iso_code": "ve",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "es-ve",
+    "locale": "es-VE"
   },
   "vn": {
     "name": "Tiếng Việt (Vietnamese)",

@@ -7,6 +7,7 @@
     <language iso_code="ca"/>
     <language iso_code="es"/>
     <language iso_code="gl"/>
+    <language iso_code="eu"/>
   </languages>
   <taxes>
     <tax id="1" name="IVA ES 21%" rate="21" eu-tax-group="virtual"/>
