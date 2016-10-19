@@ -30,6 +30,8 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
+    const DEFAULT_THEME_NAME = 'classic';
+
     /**
      * {@inheritdoc}
      */
@@ -84,7 +86,19 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
     }
 
     /**
-     * {@inheritdoc}
+     * @param null $themeName
+     * @return MessageCatalogue
+     */
+    public function getDatabaseCatalogue($themeName = null)
+    {
+        if (is_null($themeName)) {
+            $themeName = self::DEFAULT_THEME_NAME;
+        }
+
+        return parent::getDatabaseCatalogue($themeName);
+    }
+
+    /**{@inheritdoc}
      */
     public function getDefaultResourceDirectory()
     {

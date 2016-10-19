@@ -268,6 +268,18 @@ services:
           - "@filesystem"
           - "@finder"
 
+    prestashop.core.admin.translation.repository:
+        class: PrestaShopBundle\Entity\Repository\TranslationRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\Translation
+
+    prestashop.core.admin.lang.repository:
+        class: PrestaShopBundle\Entity\Repository\LangRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\Lang
+
     # Managers
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager
@@ -290,20 +302,6 @@ services:
             - "@filesystem"
             - "@finder"
             - "@translator"
-
-    # TRANSLATIONS
-    prestashop.translations.database_loader:
-        class: PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
-        arguments:
-            - "@doctrine.orm.entity_manager"
-        tags:
-            - {name: translation.loader, alias: db}
-
-    prestashop.translations.theme_extractor:
-        class: PrestaShopBundle\Translation\Extractor\ThemeExtractor
-        arguments:
-          - "@prestashop.translation.extractor.smarty"
-          - "@prestashop.translation.theme_provider"
 
 # Addons API Client
     prestashop.addons.client_api:

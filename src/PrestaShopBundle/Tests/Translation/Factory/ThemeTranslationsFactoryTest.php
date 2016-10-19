@@ -32,10 +32,17 @@ use Symfony\Component\Translation\MessageCatalogue;
 class ThemeTranslationsFactoryTest extends \PHPUnit_Framework_TestCase
 {
     const FAKE_LOCALE = 'ab-CD';
+
     const FAKE_THEME = 'fake-theme';
 
+    /**
+     * @var ThemeTranslationsFactory
+     */
     private $factory;
+
     private $themeProviderMock;
+
+    private $translations;
 
     public function setUp()
     {
@@ -45,21 +52,28 @@ class ThemeTranslationsFactoryTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->factory = new ThemeTranslationsFactory($this->themeProviderMock);
+        $this->factory->addProvider($this->mockFrontOfficeProvider());
     }
 
-    public function testCreateCatalogue()
+    /**
+     * @dataProvider getThemeAndLocale
+     *
+     * @param $theme
+     * @param $locale
+     */
+    public function testCreateCatalogue($theme, $locale)
     {
         $this->themeProviderMock
             ->expects($this->once())
             ->method('setThemeName')
-            ->with(self::FAKE_THEME)
+            ->with($theme)
             ->willReturn($this->themeProviderMock)
         ;
 
         $this->themeProviderMock
             ->expects($this->once())
             ->method('setLocale')
-            ->with(self::FAKE_LOCALE)
+            ->with($locale)
             ->willReturn($this->themeProviderMock)
         ;
 
@@ -68,22 +82,45 @@ class ThemeTranslationsFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getMessageCatalogue')
         ;
 
-        $this->factory->createCatalogue(self::FAKE_THEME, self::FAKE_LOCALE);
+        $this->factory->createCatalogue($theme, $locale);
     }
 
-    public function testCreateTranslationsArray()
+    /**
+     * @return array
+     */
+    public function getThemeAndLocale()
+    {
+        return array(
+            array(
+                self::FAKE_THEME,
+                self::FAKE_LOCALE
+            ),
+            array(
+                'classic',
+                self::FAKE_LOCALE
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider getThemeAndLocale
+     *
+     * @param $theme
+     * @param $locale
+     */
+    public function testCreateTranslationsArray($theme, $locale)
     {
         $this->themeProviderMock
             ->expects($this->once())
             ->method('setThemeName')
-            ->with(self::FAKE_THEME)
+            ->with($theme)
             ->willReturn($this->themeProviderMock)
         ;
 
         $this->themeProviderMock
             ->expects($this->once())
             ->method('setLocale')
-            ->with(self::FAKE_LOCALE)
+            ->with($locale)
             ->willReturn($this->themeProviderMock)
         ;
 
@@ -99,18 +136,13 @@ class ThemeTranslationsFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn($this->getDatabaseCatalogue())
         ;
 
-        $translations = $this->factory->createTranslationsArray(self::FAKE_THEME, self::FAKE_LOCALE);
+        $this->translations = $this->factory->createTranslationsArray($theme, $locale);
 
-        $domain = 'messages.'.self::FAKE_LOCALE;
+        $this->assertTranslationsContainThemeMessages($locale);
 
-        $this->assertInternalType('array', $translations);
-        $this->assertArrayHasKey($domain, $translations);
+        $this->assertTranslationsContainDefaultAndDatabaseMessages($locale);
 
-        $this->assertSame(
-            array(
-                'xlf' => 'Baz',
-                'db' => 'Baz is updated !',
-        ), $translations[$domain]['baz']);
+        $this->assertTranslationsContainCatalogueMessages($locale);
     }
 
     private function getMessageCatalogue()
@@ -137,5 +169,148 @@ class ThemeTranslationsFactoryTest extends \PHPUnit_Framework_TestCase
         $databaseCatalogue->add($messages, 'messages');
 
         return $databaseCatalogue;
+    }
+
+    protected function mockFrontOfficeProvider()
+    {
+        $frontOfficeProviderMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\FrontOfficeProvider')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $frontOfficeProviderMock
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn('front');
+
+        $frontOfficeProviderMock
+            ->expects($this->any())
+            ->method('getXliffCatalogue')
+            ->willReturn(new MessageCatalogue(
+                self::FAKE_LOCALE,
+                array(
+                  'ShopFront.'.self::FAKE_LOCALE => array(
+                      'Add to Cart' => 'Add to CART',
+                      'Remove from Cart' => 'Remove from CART',
+                      'Edit product' => 'Edit it!',
+                  )
+                )
+            ));
+
+        $frontOfficeProviderMock
+            ->expects($this->any())
+            ->method('getDefaultCatalogue')
+            ->willReturn(new MessageCatalogue(
+                self::FAKE_LOCALE,
+                array(
+                    'DefaultDomain.'.self::FAKE_LOCALE => array(
+                        'Default message' => 'Default MESSAGE',
+                        'Default message bis' => 'Bis'
+                    ),
+                    'ShopFront.'.self::FAKE_LOCALE => array(
+                        'Add to Cart' => 'Add to Cart',
+                        'Edit product' => 'Edit it'
+                    )
+                )
+            ));
+
+        $frontOfficeProviderMock
+            ->expects($this->any())
+            ->method('getDatabaseCatalogue')
+            ->willReturn(new MessageCatalogue(
+                self::FAKE_LOCALE,
+                array(
+                    'DefaultDomain' => array(
+                        'Default message bis' => 'Bis override',
+                    ),
+                    'ShopFront' => array(
+                        'Edit product' => 'Edit'
+                    )
+                ) // Domains of database catalogue don't contain locale
+            ));
+
+        return $frontOfficeProviderMock;
+    }
+
+    /**
+     * @param $locale
+     */
+    protected function assertTranslationsContainThemeMessages($locale)
+    {
+        $domain = 'messages.' . $locale;
+
+        $this->assertInternalType('array', $this->translations);
+        $this->assertArrayHasKey($domain, $this->translations);
+
+        $this->assertSame(
+            array(
+                'xlf' => 'Baz',
+                'db' => 'Baz is updated !',
+            ),
+            $this->translations[$domain]['baz']
+        );
+    }
+
+    /**
+     * @param $locale
+     */
+    protected function assertTranslationsContainDefaultAndDatabaseMessages($locale)
+    {
+        $domain = 'DefaultDomain.' . $locale;
+        $this->assertArrayHasKey($domain, $this->translations);
+
+        $this->assertSame(
+            array(
+                'xlf' => 'Default MESSAGE',
+                'db' => '',
+            ),
+            $this->translations[$domain]['Default message'],
+            'It should provide with default translations.'
+        );
+
+        $this->assertSame(
+            array(
+                'xlf' => 'Bis',
+                'db' => 'Bis override',
+            ),
+            $this->translations[$domain]['Default message bis'],
+            'It should provide with default translations and their database overrides.'
+        );
+    }
+
+    /**
+     * @param $locale
+     */
+    protected function assertTranslationsContainCatalogueMessages($locale)
+    {
+        $domain = 'ShopFront.' . $locale;
+        $this->assertArrayHasKey($domain, $this->translations);
+
+        $this->assertSame(
+            array(
+                'xlf' => 'Add to CART',
+                'db' => '',
+            ),
+            $this->translations[$domain]['Add to Cart'],
+            'It should provide with translations from XLIFF catalogue overriding the defaults.'
+        );
+
+        $this->assertSame(
+            array(
+                'xlf' => 'Remove from CART',
+                'db' => '',
+            ),
+            $this->translations[$domain]['Remove from Cart'],
+            'It should provide with translations from XLIFF catalogue.'
+        );
+
+        $this->assertSame(
+            array(
+                'xlf' => 'Edit it!',
+                'db' => 'Edit',
+            ),
+            $this->translations[$domain]['Edit product'],
+            'It should provide with translations from XLIFF catalogue overriding the defaults and database overrides.'
+        );
     }
 }

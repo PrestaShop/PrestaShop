@@ -55,7 +55,7 @@ class ThemeExtractorTest extends KernelTestCase
 
         $this->container = self::$kernel->getContainer();
         $this->filesystem = new Filesystem();
-        $this->themeExtractor = $this->container->get('prestashop.translations.theme_extractor');
+        $this->themeExtractor = $this->container->get('prestashop.translation.theme_extractor');
     }
 
     public function tearDown()

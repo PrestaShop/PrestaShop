@@ -11,10 +11,10 @@
         <input class="btn btn-default btn-sm" type="reset" value="{{ 'Reset'|trans({}, 'Admin.Actions') }}">
     </form>
     <div id="jetsContent">
-        {{ getTranslationsForms(translationsTree)|raw }}
+        {{ getTranslationsForms(translationsTree, theme)|raw }}
     </div>
 </div>
 <div class="translation-page">
-    {{ getTranslationsTree(translationsTree)|raw }}
+    {{ getTranslationsTree(translationsTree, theme)|raw }}
 </div>
 {% endblock %}

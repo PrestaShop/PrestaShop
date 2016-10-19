@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2016 PrestaShop.
  *
@@ -20,36 +19,24 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2015 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\Factory;
+namespace PrestaShopBundle\Entity\Repository;
 
-use Symfony\Component\Translation\MessageCatalogue;
+use Doctrine\ORM\EntityRepository;
 
-interface TranslationsFactoryInterface
+class LangRepository extends EntityRepository
 {
-    const DEFAULT_LOCALE = 'en_US';
-
     /**
-     * Generates extract of global Catalogue, using domain's identifiers.
-     *
-     * @param string $identifier Domain identifier
-     * @param string $locale     Locale identifier
-     *
-     * @return MessageCatalogue
+     * @param $isoCode
+     * @return array
      */
-    public function createCatalogue($identifier, $locale = self::DEFAULT_LOCALE);
-
-    /**
-     * Generates Translation tree in Back Office.
-     *
-     * @param string $domainIdentifier Domain identifier
-     * @param string $locale           Locale identifier
-     *
-     * @return array Translation tree structure
-     */
-    public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE);
+    public function getLocaleByIsoCode($isoCode)
+    {
+        return $this->findOneBy(array('isoCode' => $isoCode))
+            ->getLocale();
+    }
 }

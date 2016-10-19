@@ -36,8 +36,10 @@ abstract class AbstractProvider implements ProviderInterface
     const DEFAULT_LOCALE = 'en-US';
 
     private $databaseLoader;
+
     protected $resourceDirectory;
-    private $locale;
+
+    protected $locale;
 
     public function __construct(LoaderInterface $databaseLoader, $resourceDirectory)
     {
@@ -137,14 +139,15 @@ abstract class AbstractProvider implements ProviderInterface
     /**
      * Get the Catalogue from database only.
      *
+     * @param null $theme
      * @return MessageCatalogue A MessageCatalogue instance
      */
-    public function getDatabaseCatalogue()
+    public function getDatabaseCatalogue($theme = null)
     {
         $databaseCatalogue = new MessageCatalogue($this->locale);
 
         foreach ($this->getTranslationDomains() as $translationDomain) {
-            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain);
+            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $theme);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);

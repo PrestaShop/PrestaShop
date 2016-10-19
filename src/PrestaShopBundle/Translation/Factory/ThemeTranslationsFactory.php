@@ -36,8 +36,11 @@ use PrestaShopBundle\Translation\Provider\ThemeProvider;
  *
  * Returns MessageCatalogue object or Translation tree array.
  */
-class ThemeTranslationsFactory implements TranslationsFactoryInterface
+class ThemeTranslationsFactory extends TranslationsFactory
 {
+    /**
+     * @var ThemeProvider
+     */
     private $themeProvider;
 
     public function __construct(ThemeProvider $themeProvider)
@@ -65,29 +68,78 @@ class ThemeTranslationsFactory implements TranslationsFactoryInterface
         $this->themeProvider
             ->setThemeName($themeName)
             ->setLocale($locale)
+            ->synchronizeTheme();
         ;
 
-        $translations = $this->themeProvider->getXliffCatalogue()->all();
+        $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale);
+        $translations = $this->pushThemeTranslations($translations, $locale);
+
+        ksort($translations);
+
+        return $translations;
+    }
+
+    /**
+     * @param $translations
+     * @param $locale
+     * @return mixed
+     */
+    protected function pushThemeTranslations($translations, $locale)
+    {
+        $themeTranslations = $this->themeProvider->getXliffCatalogue()->all();
         $databaseCatalogue = $this->themeProvider->getDatabaseCatalogue()->all();
 
-        foreach ($translations as $domain => $messages) {
-            $databaseDomain = str_replace('.'.$locale, '', $domain);
+        foreach ($themeTranslations as $domain => $messages) {
+            $databaseDomain = $this->removeLocaleFromDomain($locale, $domain);
 
             foreach ($messages as $translationKey => $translationValue) {
-                $keyExists =
-                    array_key_exists($databaseDomain, $databaseCatalogue) &&
+                $keyExists = array_key_exists($databaseDomain, $databaseCatalogue) &&
                     array_key_exists($translationKey, $databaseCatalogue[$databaseDomain])
                 ;
 
-                $translations[$domain][$translationKey] = array(
-                    'xlf' => $translationKey != $translationValue ? $translations[$domain][$translationKey] : '',
+                $themeTranslations[$domain][$translationKey] = array(
+                    'xlf' => $translationKey != $translationValue ? $themeTranslations[$domain][$translationKey] : '',
                     'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
                 );
             }
         }
 
-        ksort($translations);
+        foreach ($translations as $domain => $messages) {
+            if (!array_key_exists($domain, $themeTranslations)) {
+                $themeTranslations[$domain] = $messages;
 
-        return $translations;
+                continue;
+            }
+
+            foreach ($messages as $translationKey => $translationValues) {
+                if (!array_key_exists($translationKey, $themeTranslations[$domain])) {
+                    $themeTranslations[$domain][$translationKey] = $translationValues;
+                }
+
+            }
+        }
+
+        return $themeTranslations;
+    }
+
+
+    /**
+     * @param $locale
+     * @param $domain
+     * @return mixed
+     */
+    protected function removeLocaleFromDomain($locale, $domain)
+    {
+        return str_replace('.' . $locale, '', $domain);
+    }
+
+    /**
+     * @param $themeName
+     * @param $locale
+     * @return mixed
+     */
+    protected function getFrontTranslationsForThemeAndLocale($themeName, $locale)
+    {
+        return parent::createTranslationsArray('front', $locale, $themeName);
     }
 }

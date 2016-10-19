@@ -41,8 +41,20 @@ class TranslationsExtension extends \Twig_Extension
      */
     public $logger;
 
+    /**
+     * @var ContainerInterface
+     */
     private $container;
+
+    /**
+     * @var RouterInterface
+     */
     private $router;
+
+    /**
+     * @var string
+     */
+    private $theme;
 
     public function __construct(ContainerInterface $container, RouterInterface $router)
     {
@@ -67,13 +79,15 @@ class TranslationsExtension extends \Twig_Extension
      * Returns concatenated edit translation forms.
      *
      * @param array $translationsTree
+     * @param null $themeName
      *
      * @return string
      */
-    public function getTranslationsForms(array $translationsTree)
+    public function getTranslationsForms(array $translationsTree, $themeName = null)
     {
         $output = '';
         $viewProperties = $this->getSharedEditFormViewProperties();
+        $this->theme = $themeName;
 
         foreach ($translationsTree as $topLevelDomain => $tree) {
             $output .= $this->concatenateEditTranslationForm($tree, $viewProperties);
@@ -115,11 +129,14 @@ class TranslationsExtension extends \Twig_Extension
      * Returns a tree of translations key values.
      *
      * @param array $translationsTree
+     * @param null $themeName
      *
      * @return string
      */
-    public function getTranslationsTree(array $translationsTree)
+    public function getTranslationsTree(array $translationsTree, $themeName = null)
     {
+        $this->theme = $themeName;
+
         $output = '';
         end($translationsTree);
         list($lastTranslationDomain) = each($translationsTree);
@@ -220,7 +237,9 @@ class TranslationsExtension extends \Twig_Extension
         $defaultTranslationValue = $this->getDefaultTranslationValue($properties['translation_key'], $domain, $locale,
             $translationValue);
 
-        return $this->container->get('templating')->render('PrestaShopBundle:Admin:Translations/include/form-edit-message.html.twig', array(
+        return $this->container->get('templating')->render(
+            'PrestaShopBundle:Admin:Translations/include/form-edit-message.html.twig',
+            array(
                 'default_translation_value' => $defaultTranslationValue,
                 'domain' => $domain,
                 'edited_translation_value' => $translationValue,
@@ -233,6 +252,7 @@ class TranslationsExtension extends \Twig_Extension
                 'notification_success' => $properties['notification_success'],
                 'translation_key' => $properties['translation_key'],
                 'hash' => $this->getTranslationHash($domain, $properties['translation_key']),
+                'theme' => $this->theme,
             )
         );
     }
