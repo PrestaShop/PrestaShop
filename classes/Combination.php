@@ -218,6 +218,10 @@ class CombinationCore extends ObjectModel
         $result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = '.(int) $this->id);
         $result &= Db::getInstance()->delete('cart_product', '`id_product_attribute` = '.(int) $this->id);
         $result &= Db::getInstance()->delete('product_attribute_image', '`id_product_attribute` = '.(int) $this->id);
+        
+        if ($result) {
+            Hook::exec('actionAttributeCombinationDelete', array('id_product_attribute' => (int)$this->id));
+        }
 
         return $result;
     }
@@ -240,6 +244,9 @@ class CombinationCore extends ObjectModel
 				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
 				VALUES '.implode(',', $sqlValues)
             );
+            if ($result) {
+                Hook::exec('actionAttributeCombinationSave', array('id_product_attribute' => (int)$this->id, 'id_attributes' => $idsAttribute));
+            }
         }
 
         return $result;
