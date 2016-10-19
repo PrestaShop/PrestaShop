@@ -1332,6 +1332,7 @@ class AdminTranslationsControllerCore extends AdminController
                 'dir' => _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.'/',
                 'file' => 'admin.php',
                 'sf_controller' => true,
+                'choice_theme' => false,
             ),
             'themes' => array(
                 'name' => $this->trans('Themes translations', array(), 'Admin.International.Feature'),
@@ -1339,6 +1340,15 @@ class AdminTranslationsControllerCore extends AdminController
                 'dir' => '',
                 'file' => '',
                 'sf_controller' => true,
+                'choice_theme' => true,
+            ),
+            'mails' => array(
+                'name' => $this->trans('Email translations', array(), 'Admin.International.Feature'),
+                'var' => '_LANGMAIL',
+                'dir' => _PS_MAIL_DIR_.$this->lang_selected->iso_code.'/',
+                'file' => 'lang.php',
+                'sf_controller' => false,
+                'choice_theme' => true,
             ),
             'others' => array(
                 'name' => $this->trans('Other translations', array(), 'Admin.International.Feature'),
@@ -1346,13 +1356,7 @@ class AdminTranslationsControllerCore extends AdminController
                 'dir' => '',
                 'file' => '',
                 'sf_controller' => true,
-            ),
-            'mails' => array(
-                'name' => $this->trans('Email templates translations', array(), 'Admin.International.Feature'),
-                'var' => '_LANGMAIL',
-                'dir' => _PS_MAIL_DIR_.$this->lang_selected->iso_code.'/',
-                'file' => 'lang.php',
-                'sf_controller' => false,
+                'choice_theme' => false,
             ),
             'modules' => array(
                 'dir' => _PS_MODULE_DIR_,
@@ -1590,7 +1594,6 @@ class AdminTranslationsControllerCore extends AdminController
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>#title</title>
 </head>
 <body>
     #content
@@ -1659,12 +1662,8 @@ class AdminTranslationsControllerCore extends AdminController
                         // replace correct end of line
                         $content = str_replace("\r\n", PHP_EOL, $content);
 
-                        $title = '';
-                        if (Tools::getValue('title_'.$group_name.'_'.$mail_name)) {
-                            $title = Tools::getValue('title_'.$group_name.'_'.$mail_name);
-                        }
                         $string_mail = $this->getMailPattern();
-                        $content = str_replace(array('#title', '#content'), array($title, $content), $string_mail);
+                        $content = str_replace(array('#content'), array($content), $string_mail);
 
                         // Magic Quotes shall... not.. PASS!
                         if (_PS_MAGIC_QUOTES_GPC_) {
@@ -2594,13 +2593,6 @@ class AdminTranslationsControllerCore extends AdminController
         $name_for_module = $name_for_module ? $name_for_module.'|' : '';
         return '<div class="block-mail" >
                     <div class="mail-form">
-                        <div class="form-group">
-                            <label class="control-label col-lg-3">'.$this->trans('HTML "title" tag', array(), 'Admin.International.Feature').'</label>
-                            <div class="col-lg-9">
-                                <input class="form-control" type="text" name="title_'.$group_name.'_'.$mail_name.'" value="'.(isset($title[$lang]) ? $title[$lang] : '').'" />
-                                <p class="help-block">'.(isset($title['en']) ? $title['en'] : '').'</p>
-                            </div>
-                        </div>
                         <div class="thumbnail email-html-frame" data-email-src="'.$url.'"></div>
                     </div>
                 </div>';
@@ -2764,12 +2756,10 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         $core_mails = $this->getMailFiles($i18n_dir, 'core_mail');
-        $core_mails['subject'] = $this->getSubjectMailContent($i18n_dir);
 
         foreach ($modules_has_mails as $module_name => $module_path) {
             $module_path = rtrim($module_path, '/');
             $module_mails[$module_name] = $this->getMailFiles($module_path.'/mails/'.$this->lang_selected->iso_code.'/', 'module_mail');
-            $module_mails[$module_name]['subject'] = $core_mails['subject'];
             $module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), $module_name, $module_name);
         }
 
@@ -2905,31 +2895,6 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         return $subject_mail;
-    }
-
-    /**
-     * @param $directory : name of directory
-     * @return array
-     */
-    protected function getSubjectMailContent($directory)
-    {
-        $subject_mail_content = array();
-
-        if (Tools::file_exists_cache($directory.'/lang.php')) {
-            // we need to include this even if already included (no include once)
-            include($directory.'/lang.php');
-            foreach ($GLOBALS[$this->translations_informations[$this->type_selected]['var']] as $key => $subject) {
-                $this->total_expression++;
-                $subject = str_replace('\n', ' ', $subject);
-                $subject = str_replace("\\'", "\'", $subject);
-
-                $subject_mail_content[$key]['trad'] = htmlentities($subject, ENT_QUOTES, 'UTF-8');
-                $subject_mail_content[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
-            }
-        } else {
-            $this->errors[] = sprintf($this->trans('Email subject translation file not found in "%s".', array(), 'Admin.International.Notification'), $directory);
-        }
-        return $subject_mail_content;
     }
 
     protected function writeSubjectTranslationFile($sub, $path)

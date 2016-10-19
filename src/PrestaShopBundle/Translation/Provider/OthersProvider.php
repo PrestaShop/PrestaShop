@@ -77,7 +77,8 @@ class OthersProvider extends AbstractProvider implements UseDefaultCatalogueInte
         return $defaultCatalogue;
     }
 
-    /**{@inheritdoc}
+    /**
+     * {@inheritdoc}
      */
     public function getDefaultResourceDirectory()
     {

@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
 
-class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**
      * {@inheritdoc}
@@ -36,8 +36,7 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
     public function getTranslationDomains()
     {
         return array(
-            '^Shop*',
-            '^Modules(.*)Shop',
+            'EmailsSubject*',
         );
     }
 
@@ -47,8 +46,7 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
     public function getFilters()
     {
         return array(
-            '#^Shop*#',
-            '#^Modules(.*)Shop#',
+            '#EmailsSubject*#',
         );
     }
 
@@ -57,7 +55,7 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
      */
     public function getIdentifier()
     {
-        return 'front';
+        return 'mails';
     }
 
     /**
