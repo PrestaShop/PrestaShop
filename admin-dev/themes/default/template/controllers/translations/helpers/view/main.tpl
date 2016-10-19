@@ -118,8 +118,8 @@
         <label class="control-label col-lg-3" for="selected-emails">{l s='Select the type of email content'}</label>
         <div class="col-lg-4">
           <select name="selected-emails">
-            <option value="subject" data-controller="sf">{l s='Emails subject'}</option>
-            <option value="body" data-controller="legacy">{l s='Emails body'}</option>
+            <option value="subject" data-controller="sf">{l s='Subject'}</option>
+            <option value="body" data-controller="legacy">{l s='Body'}</option>
           </select>
         </div>
       </div>
