@@ -566,6 +566,15 @@
     "language_code": "ur",
     "locale": "ur-PK"
   },
+  "ve": {
+    "name": "Español VE (Spanish)",
+    "iso_code": "ve",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "es-ve",
+    "locale": "es-VE"
+  },
   "vn": {
     "name": "Tiếng Việt (Vietnamese)",
     "iso_code": "vn",
