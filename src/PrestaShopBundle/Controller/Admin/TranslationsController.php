@@ -98,7 +98,7 @@ class TranslationsController extends FrameworkBundleAdminController
             ->getLocale()
         ;
 
-        $theme = $this->get('prestashop.core.admin.theme.repository')
+        $theme = $this->get('prestashop.core.addon.theme.repository')
             ->getInstanceByName($themeName)
         ;
 
@@ -389,7 +389,7 @@ class TranslationsController extends FrameworkBundleAdminController
     private function synchronizeTheme($themeName, $locale)
     {
         $theme = $this
-            ->get('prestashop.core.admin.theme.repository')
+            ->get('prestashop.core.addon.theme.repository')
             ->getInstanceByName($themeName)
         ;
 

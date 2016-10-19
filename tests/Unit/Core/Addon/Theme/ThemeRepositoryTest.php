@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Phake;
 use Shop;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ThemeRepositoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,6 +45,7 @@ class ThemeRepositoryTest extends \PHPUnit_Framework_TestCase
         /* @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository */
         $this->repository = new ThemeRepository(
             new Configuration($shop),
+            new Filesystem(),
             $shop
         );
     }

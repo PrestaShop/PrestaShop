@@ -6,12 +6,12 @@ services:
     finder:
         class: Symfony\Component\Finder\Finder
         shared: false
-        
+
     guzzle.cache.provider:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:
             - "%kernel.cache_dir%/guzzle"
-        
+
     guzzle.cache:
         class: Csa\Bundle\GuzzleBundle\GuzzleHttp\Cache\DoctrineAdapter
         arguments:
@@ -254,9 +254,19 @@ services:
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
 
-    prestashop.core.admin.theme.repository:
+    prestashop.core.addon.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
-        arguments: ["@prestashop.adapter.legacy.configuration", "@=service('prestashop.adapter.legacy.context').getContext().shop"]
+        arguments:
+          - "@prestashop.adapter.legacy.configuration"
+          - "@filesystem"
+          - "@=service('prestashop.adapter.legacy.context').getContext().shop"
+
+    prestashop.core.addon.theme.exporter:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter
+        arguments:
+          - "@prestashop.adapter.legacy.configuration"
+          - "@filesystem"
+          - "@finder"
 
     # Managers
     prestashop.adapter.image_manager:

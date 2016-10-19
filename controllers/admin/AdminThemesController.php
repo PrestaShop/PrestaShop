@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
 
 /**
@@ -139,6 +140,11 @@ class AdminThemesControllerCore extends AdminController
                 'desc' => $this->trans('Add new theme', array(), 'Admin.Design.Feature'),
                 'icon' => 'process-icon-new'
             );
+            $this->page_header_toolbar_btn['export_theme'] = array(
+                'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
+                'desc' => $this->trans('Export current theme', array(), 'Admin.Design.Feature'),
+                'icon' => 'process-icon-export'
+            );
 
             if ($this->context->mode) {
                 unset($this->toolbar_btn['new']);
@@ -218,7 +224,19 @@ class AdminThemesControllerCore extends AdminController
      */
     public function postProcess()
     {
-        if (Tools::isSubmit('submitAddconfiguration')) {
+        if ('exporttheme' === Tools::getValue('action')) {
+            $exporter = new ThemeExporter(
+                new \PrestaShop\PrestaShop\Adapter\Configuration($this->context->shop),
+                new \Symfony\Component\Filesystem\Filesystem(),
+                new \Symfony\Component\Finder\Finder()
+            );
+            $path = $exporter->export($this->context->shop->theme);
+            $this->confirmations[] = $this->trans(
+                'Your theme has been correctly exported: %path%',
+                ['%path%' => $path],
+                'Admin.Notifications.Success'
+            );
+        } elseif (Tools::isSubmit('submitAddconfiguration')) {
             try {
                 if ($filename = Tools::getValue('theme_archive_server')) {
                     $path = _PS_ALL_THEMES_DIR_.$filename;
