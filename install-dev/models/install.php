@@ -101,9 +101,6 @@ class InstallModelInstall extends InstallAbstractModel
             $database_host = implode(':', $splits);
         }
 
-        array_walk($parameters['parameters'], function (&$param) {
-            $param = str_replace('%', '%%', $param);
-        });
         $key = \PhpEncryption::createNewRandomKey();
 
         $parameters = array(
@@ -123,6 +120,10 @@ class InstallModelInstall extends InstallAbstractModel
                 'locale' => $this->language->getLanguage()->getLocale(),
             )
         );
+        
+        array_walk($parameters['parameters'], function (&$param) {
+            $param = str_replace('%', '%%', $param);
+        });
 
         $parameters = array_replace_recursive(
             Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml.dist')),
