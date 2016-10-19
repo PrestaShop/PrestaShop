@@ -22,3 +22,7 @@
 </div>
 
 <hr class="top-menu-separator"/>
+
+{% set js_translatable = {
+"Search - placeholder": "Search modules: keyword, name, author..."|trans({}, 'Admin.Modules.Help'),
+}|merge(js_translatable) %}

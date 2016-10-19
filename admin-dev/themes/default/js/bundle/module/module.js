@@ -335,7 +335,7 @@ var AdminModuleController = function() {
 
     body.on('change', this.bulkActionDropDownSelector, function() {
       if (0 === $(self.getBulkCheckboxesCheckedSelector()).length) {
-          $.growl.warning({message: "You need to select at least one module to use the bulk action."});
+          $.growl.warning({message: translate_javascripts['Bulk Action - One module minimum']});
           return;
       }
       self.lastBulkAction = $(this).find(':checked').attr('value');
@@ -605,7 +605,7 @@ var AdminModuleController = function() {
       var menuCategoryToTrigger = $(self.categoryItemSelector+'[data-category-ref="' + refCategory + '"]');
 
       if (!menuCategoryToTrigger.length) {
-        alert('No category with ref ('+refMenu+') seems to exists!');
+        console.warn('No category with ref ('+refMenu+') seems to exist!');
         return false;
       }
 
@@ -661,7 +661,7 @@ var AdminModuleController = function() {
     // Maybe useful to implement this kind of things later if intended to
     // use this functionality elsewhere but "manage my module" section
     if (typeof bulkActionToUrl[requestedBulkAction] === "undefined") {
-      console.error('Request bulk action "'+requestedBulkAction+'" does not exist');
+      $.growl.error({message: translate_javascripts['Bulk Action - Request not found'].replace('[1]', requestedBulkAction)});
       return false;
     }
 
@@ -692,13 +692,15 @@ var AdminModuleController = function() {
           if (urlElement.length > 0) {
             module_card_controller.requestToController(urlActionSegment, urlElement, forceDeletion);
           } else {
-            $.growl.error({message: "Action " + urlActionSegment + " not available for module " + moduleTechName + ". Skipped."});
+            $.growl.error({message: translate_javascripts["Bulk Action - Request not available for module"]
+                        .replace('[1]', urlActionSegment)
+                        .replace('[2]', moduleTechName)});
           }
         }
       });
 
     } else {
-      console.warn('Request bulk action "' + requestedBulkAction + '" can\'t be performed if you don\'t select at least 1 module');
+      console.warn(translate_javascripts['Bulk Action - One module minimum']);
       return false;
     }
   };
@@ -796,7 +798,7 @@ var AdminModuleController = function() {
         self.currentTagsList = [];
         self.updateModuleVisibility();
       },
-      inputPlaceholder: 'Search modules: keyword, name, author...',
+      inputPlaceholder: translate_javascripts['Search - placeholder'],
       closingCross: true,
       context: self,
       clearAllBtn: true,
