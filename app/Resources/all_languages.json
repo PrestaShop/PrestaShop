@@ -413,6 +413,15 @@
     "language_code": "pl-pl",
     "locale": "pl-PL"
   },
+  "pe": {
+    "name": "Español PE (Spanish)",
+    "iso_code": "pe",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "es-pe",
+    "locale": "es-PE"
+  },
   "pt": {
     "name": "Português PT (Portuguese)",
     "iso_code": "pt",
