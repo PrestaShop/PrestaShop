@@ -748,16 +748,14 @@ class AdminPerformanceControllerCore extends AdminController
                     $this->errors[] = $this->trans('Unknown error.', array(), 'Admin.Notifications.Error');
                 } else {
                     $redirectAdmin = true;
-                    if (Configuration::get('PS_HTACCESS_CACHE_CONTROL')) {
-                        if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
-                            Tools::generateHtaccess();
-                        } else {
-                            $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.AdvParameters.Notification');
-                            $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.AdvParameters.Notification');
-                            $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.AdvParameters.Notification');
-                            $this->errors[] = Tools::displayError($message, false);
-                            Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
-                        }
+                    if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
+                        Tools::generateHtaccess();
+                    } else {
+                        $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.AdvParameters.Notification');
+                        $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.AdvParameters.Notification');
+                        $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.AdvParameters.Notification');
+                        $this->errors[] = Tools::displayError($message, false);
+                        Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
                     }
                 }
             } else {
