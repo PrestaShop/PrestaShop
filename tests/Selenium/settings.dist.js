@@ -1,3 +1,4 @@
 module.exports = {
-  baseUrl: 'http://localhost/PrestaShop/'
+  baseUrl: 'http://localhost/PrestaShop/',
+  browserName: 'chrome'
 };
