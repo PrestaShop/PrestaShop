@@ -118,39 +118,6 @@ class LanguageCore extends ObjectModel
     }
 
     /**
-     * Generate translations files.
-     */
-    protected function _generateFiles($newIso = null)
-    {
-        $iso_code = $newIso ? $newIso : $this->iso_code;
-
-        if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code)) {
-            if (@mkdir(_PS_TRANSLATIONS_DIR_.$iso_code)) {
-                @chmod(_PS_TRANSLATIONS_DIR_.$iso_code, 0777);
-            }
-        }
-
-        foreach ($this->translationsFilesAndVars as $file => $var) {
-            $path_file = _PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php';
-            if (!file_exists($path_file)) {
-                if ($file != 'tabs') {
-                    @file_put_contents($path_file, '<?php
-	global $'.$var.';
-	$'.$var.' = array();
-?>');
-                } else {
-                    @file_put_contents($path_file, '<?php
-	$'.$var.' = array();
-	return $'.$var.';
-?>');
-                }
-            }
-
-            @chmod($path_file, 0777);
-        }
-    }
-
-    /**
      * Move translations files after editing language iso code.
      */
     public function moveToIso($newIso)
@@ -209,9 +176,6 @@ class LanguageCore extends ObjectModel
         if ($only_add) {
             return true;
         }
-
-        // create empty files if they not exists
-        $this->_generateFiles();
 
         // @todo Since a lot of modules are not in right format with their primary keys name, just get true ...
         $this->loadUpdateSQL();
