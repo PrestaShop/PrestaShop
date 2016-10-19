@@ -363,5 +363,11 @@
     <hook id="displayProductExtraContent">
       <name>displayProductExtraContent</name><title>Display extra content on the product page</title><description>This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.</description>
     </hook>
+    <hook id="actionDispatcherBefore">
+      <name>actionDispatcherBefore</name><title>Before dispatch</title><description>This hook is called at the beginning of the dispatch method of the Dispatcher</description>
+    </hook>
+    <hook id="actionDispatcherAfter">
+      <name>actionDispatcherAfter</name><title>After dispatch</title><description>This hook is called at the end of the dispatch method of the Dispatcher</description>
+    </hook>
   </entities>
 </entity_hook>
