@@ -1830,11 +1830,16 @@ class AdminProductsControllerCore extends AdminController
             } elseif (!ImageManager::resize($tmpName, $new_path.'.'.$image->image_format)) {
                 $this->errors[] = Tools::displayError('An error occurred while copying the image.');
             } elseif ($method == 'auto') {
+                
                 $imagesTypes = ImageType::getImagesTypes('products');
-                foreach ($imagesTypes as $k => $image_type) {
-                    if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($image_type['name']).'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format)) {
-                        $this->errors[] = Tools::displayError('An error occurred while copying this image:').' '.stripslashes($image_type['name']);
-                    }
+                $imagesToGenerate = array();
+                foreach ($imagesTypes as $imageType) {
+                    $imagesToGenerate[] = array('dest_filename' => $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format,
+                                                 'dest_width'    => $imageType['width'],
+                                                 'dest_height'   => $imageType['height']);
+                }
+                if (!ImageManager::resizeMultiple($tmpName, $imagesToGenerate, $image->image_format)) {
+                    $this->errors[] = Tools::displayError('An error occurred while copying this image:');
                 }
             }
 
@@ -4155,19 +4160,22 @@ class AdminProductsControllerCore extends AdminController
                     $imagesTypes = ImageType::getImagesTypes('products');
                     $generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
 
+                    $imagesToGenerate = array();
                     foreach ($imagesTypes as $imageType) {
-                        if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                            $file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
-                            continue;
-                        }
+                        $imagesToGenerate[] = array('dest_filename' => $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format,
+                                                     'dest_width'    => $imageType['width'],
+                                                     'dest_height'   => $imageType['height']);
 
                         if ($generate_hight_dpi_images) {
-                            if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'2x.'.$image->image_format, (int)$imageType['width']*2, (int)$imageType['height']*2, $image->image_format)) {
-                                $file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
-                                continue;
-                            }
+                            $imagesToGenerate[] = array('dest_filename' => $new_path.'-'.stripslashes($imageType['name']).'2x.'.$image->image_format,
+                                                         'dest_width'    => (int)$imageType['width']*2,
+                                                         'dest_height'   => (int)$imageType['height']*2);
                         }
                     }
+                    if (!ImageManager::resizeMultiple($file['save_path'], $imagesToGenerate, $image->image_format)) {
+                        $this->errors[] = Tools::displayError('An error occurred while copying image:');
+                    }
+                
                 }
 
                 unlink($file['save_path']);

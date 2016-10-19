@@ -551,18 +551,23 @@ class AdminImagesControllerCore extends AdminController
                 $imageObj = new Image($image['id_image']);
                 $existing_img = $dir.$imageObj->getExistingImgPath().'.jpg';
                 if (file_exists($existing_img) && filesize($existing_img)) {
+                    $imagesToGenerate = array();
                     foreach ($type as $imageType) {
                         if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg')) {
-                            if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height'])) {
-                                $this->errors[] = sprintf(Tools::displayError('Original image is corrupt (%s) for product ID %2$d or bad permission on folder'), $existing_img, (int)$imageObj->id_product);
-                            }
+
+                            $imagesToGenerate[] = array('dest_filename' => $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', 
+                                                         'dest_width'    => $imageType['width'],
+                                                         'dest_height'   => $imageType['height']);
 
                             if ($generate_hight_dpi_images) {
-                                if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'2x.jpg', (int)$imageType['width']*2, (int)$imageType['height']*2)) {
-                                    $this->errors[] = sprintf(Tools::displayError('Original image is corrupt (%s) for product ID %2$d or bad permission on folder'), $existing_img, (int)$imageObj->id_product);
-                                }
+                                $imagesToGenerate[] = array('dest_filename' => $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'2x.jpg', 
+                                                             'dest_width'    => (int)$imageType['width']*2,
+                                                             'dest_height'   => (int)$imageType['height']*2);
                             }
                         }
+                    }
+                    if (count($imagesToGenerate) && !ImageManager::resizeMultiple($existing_img, $imagesToGenerate)) {
+                        $this->errors[] = sprintf(Tools::displayError('Original image is corrupt (%s) for product ID %2$d or bad permission on folder'), $existing_img, (int)$imageObj->id_product);
                     }
                 } else {
                     $this->errors[] = sprintf(Tools::displayError('Original image is missing or empty (%1$s) for product ID %2$d'), $existing_img, (int)$imageObj->id_product);

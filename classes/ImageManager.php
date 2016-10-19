@@ -34,6 +34,7 @@ class ImageManagerCore
     const ERROR_FILE_NOT_EXIST = 1;
     const ERROR_FILE_WIDTH     = 2;
     const ERROR_MEMORY_LIMIT   = 3;
+    const ERROR_BAD_ARGS   = 4;
 
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc)
@@ -260,6 +261,147 @@ class ImageManagerCore
         $write_file = ImageManager::write($file_type, $dest_image, $dst_file);
         @imagedestroy($src_image);
         return $write_file;
+    }
+
+    /**
+     * Resize, cut and optimize image on several dimensions to avoid atomic calls to ImageManager::resize and load several time the same picture
+     *
+     * @param string $src_file   Image object from $_FILE
+     * @param array[] $dst_files   Destination files configurations , array of ('dest_filename' => string, 'dest_width' => int | null, 'dest_height' => int | null)
+     * @param string $file_type applyed to all dst_files
+     * @param bool   $force_type applyed to all dst_files
+     * @param int    $error
+     * @param int    $quality
+     * @return bool Operation result
+     */
+    public static function resizeMultiple($src_file, $dst_files, $file_type = 'jpg', $force_type = false, &$error = 0, $quality = 5)
+    {
+        if (!is_array($dst_files)) {
+            return !($error = self::ERROR_BAD_ARGS);
+        }
+        if (PHP_VERSION_ID < 50300) {
+            clearstatcache();
+        } else {
+            clearstatcache(true, $src_file);
+        }
+
+        if (!file_exists($src_file) || !filesize($src_file)) {
+            return !($error = self::ERROR_FILE_NOT_EXIST);
+        }
+
+        list($tmp_width, $tmp_height, $type) = getimagesize($src_file);
+        $rotate = 0;
+        if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
+            $exif = @exif_read_data($src_file);
+
+            if ($exif && isset($exif['Orientation'])) {
+                switch ($exif['Orientation']) {
+                    case 3:
+                        $src_width = $tmp_width;
+                        $src_height = $tmp_height;
+                        $rotate = 180;
+                        break;
+
+                    case 6:
+                        $src_width = $tmp_height;
+                        $src_height = $tmp_width;
+                        $rotate = -90;
+                        break;
+
+                    case 8:
+                        $src_width = $tmp_height;
+                        $src_height = $tmp_width;
+                        $rotate = 90;
+                        break;
+
+                    default:
+                        $src_width = $tmp_width;
+                        $src_height = $tmp_height;
+                }
+            } else {
+                $src_width = $tmp_width;
+                $src_height = $tmp_height;
+            }
+        } else {
+            $src_width = $tmp_width;
+            $src_height = $tmp_height;
+        }
+
+        // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
+        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
+        // because JPG reencoding by GD, even with max quality setting, degrades the image.
+        if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
+            || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$force_type) {
+            $file_type = 'png';
+        }
+
+        if (!$src_width) {
+            return !($error = self::ERROR_FILE_WIDTH);
+        }
+
+        $ps_image_generation_method = Configuration::get('PS_IMAGE_GENERATION_METHOD');
+
+        if (!ImageManager::checkImageMemoryLimit($src_file)) {
+            return !($error = self::ERROR_MEMORY_LIMIT);
+        }
+
+        $src_image = ImageManager::create($type, $src_file);
+        if ($rotate) {
+            $src_image = imagerotate($src_image, $rotate, 0);
+        }
+
+        //generate each wanted format
+        foreach ($dst_files as $dst_params) {
+            $dst_width = isset($dst_params['dest_width']) && $dst_params['dest_width'] ? $dst_params['dest_width'] : $src_width;
+            $dst_height = isset($dst_params['dest_height']) && $dst_params['dest_height'] ? $dst_params['dest_height'] : $src_height;
+            $dst_filename = $dst_params['dest_filename'];
+
+            //ratio image managment
+            $width_diff = $dst_width / $src_width;
+            $height_diff = $dst_height / $src_height;
+            if ($width_diff > 1 && $height_diff > 1) {
+                $next_width = $src_width;
+                $next_height = $src_height;
+            } else {
+                if ($ps_image_generation_method == 2 || (!$ps_image_generation_method && $width_diff > $height_diff)) {
+                    $next_height = $dst_height;
+                    $next_width = round(($src_width * $next_height) / $src_height);
+                    $dst_width = (int)(!$ps_image_generation_method ? $dst_width : $next_width);
+                } else {
+                    $next_width = $dst_width;
+                    $next_height = round($src_height * $dst_width / $src_width);
+                    $dst_height = (int)(!$ps_image_generation_method ? $dst_height : $next_height);
+                }
+            }
+
+            $dest_image = imagecreatetruecolor($dst_width, $dst_height);
+
+            // If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
+            if ($file_type == 'png' && $type == IMAGETYPE_PNG) {
+                imagealphablending($dest_image, false);
+                imagesavealpha($dest_image, true);
+                $transparent = imagecolorallocatealpha($dest_image, 255, 255, 255, 127);
+                imagefilledrectangle($dest_image, 0, 0, $dst_width, $dst_height, $transparent);
+            } else {
+                $white = imagecolorallocate($dest_image, 255, 255, 255);
+                imagefilledrectangle($dest_image, 0, 0, $dst_width, $dst_height, $white);
+            }
+
+            if ($dst_width >= $src_width && $dst_height >= $src_height) {
+                imagecopyresized($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height);
+            } else {
+                ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
+            }
+            $write_file = ImageManager::write($file_type, $dest_image, $dst_filename);
+
+            if (!$write_file) {
+                return $write_file;
+            }
+
+        }
+
+        @imagedestroy($src_image);
+        return true;
     }
 
     public static function imagecopyresampled(&$dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h, $quality = 3)
