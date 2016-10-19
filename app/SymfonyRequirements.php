@@ -513,8 +513,9 @@ class SymfonyRequirements extends RequirementCollection
         if (!empty(ini_get('open_basedir'))) {
             $this->addPhpIniRequirement(
                 'open_basedir',
-                'checkOpenBaseDirValidity',
+                $this->checkOpenBaseDirValidity(),
                 false,
+                'open_basedir should only contains readable and writable paths to allow uploads.',
                 'open_basedir should only contains readable and writable paths to allow uploads.'
             );
         }
@@ -771,17 +772,17 @@ class SymfonyRequirements extends RequirementCollection
         }
     }
 
-    private function checkOpenBaseDirValidity()
+    protected function checkOpenBaseDirValidity()
     {
         $openBaseDir = ini_get('open_basedir');
 
-        if (0 === strpos(strtolower(PHP_OS), 'win')) {
+        if (false !== strpos($openBaseDir, ';')) {
             $separator = ';';
         } else {
             $separator = ':';
         }
 
-        $directories = preg_split($separator, $openBaseDir);
+        $directories = explode($separator, $openBaseDir);
 
         foreach ($directories as $directory) {
             if (!(is_readable($directory) && is_writable($directory))) {
