@@ -682,6 +682,8 @@ class MediaCore
         Configuration::updateValue('PS_CCCJS_VERSION', ++$version);
         $version = (int) Configuration::get('PS_CCCCSS_VERSION');
         Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
+
+        Hook::exec('actionClearCache');
     }
 
     /**
