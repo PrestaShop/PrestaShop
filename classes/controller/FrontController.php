@@ -977,12 +977,10 @@ class FrontControllerCore extends Controller
      */
     public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false, $check_path = true)
     {
-        Tools::displayAsDeprecated(
-            'This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
-            $this->registerStylesheet() to manage your assets.'
-        );
-
-        return;
+        /*
+        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
+        $this->registerStylesheet() to manage your assets.
+         */
     }
 
     /**
@@ -990,12 +988,10 @@ class FrontControllerCore extends Controller
      */
     public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
     {
-        Tools::displayAsDeprecated(
-            'This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
-            $this->registerStylesheet() to manage your assets.'
-        );
-
-        return;
+        /*
+        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
+        $this->registerStylesheet() to manage your assets.
+         */
     }
 
     public function registerStylesheet($id, $relativePath, $params = array())
@@ -1048,14 +1044,10 @@ class FrontControllerCore extends Controller
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
     {
-        PrestaShopLogger::addLog(
-            'A module uses FrontController::addCSS() method, it should use $this->registerStylesheet() instead',
-            3,
-            null,
-            null,
-            null,
-            true
-        );
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        You should use registerStylesheet($id, $path, $params)
+        */
 
         if (!is_array($css_uri)) {
             $css_uri = (array) $css_uri;
@@ -1073,14 +1065,10 @@ class FrontControllerCore extends Controller
      */
     public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
     {
-        PrestaShopLogger::addLog(
-            'A module uses FrontController::removeCSS() method, it should use $this->unregisterStylesheet() instead',
-            3,
-            null,
-            null,
-            null,
-            true
-        );
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        You should use unregisterStylesheet($id)
+        */
 
         if (!is_array($css_uri)) {
             $css_uri = (array) $css_uri;
@@ -1098,14 +1086,10 @@ class FrontControllerCore extends Controller
      */
     public function addJS($js_uri, $check_path = true)
     {
-        PrestaShopLogger::addLog(
-            'A module uses FrontController::addJS() method, it should use $this->registerJavascript() instead',
-            3,
-            null,
-            null,
-            null,
-            true
-        );
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        You should use registerJavascript($id, $path, $params)
+        */
 
         if (!is_array($js_uri)) {
             $js_uri = (array) $js_uri;
@@ -1123,14 +1107,10 @@ class FrontControllerCore extends Controller
      */
     public function removeJS($js_uri, $check_path = true)
     {
-        PrestaShopLogger::addLog(
-            'A module uses FrontController::removeJS() method, it should use $this->unregisterJavascript() instead',
-            3,
-            null,
-            null,
-            null,
-            true
-        );
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        You should use unregisterJavascript($id)
+        */
 
         if (!is_array($js_uri)) {
             $js_uri = (array) $js_uri;
@@ -1149,10 +1129,10 @@ class FrontControllerCore extends Controller
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
     {
-        Tools::displayAsDeprecated(
-            'This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core
-            on every theme. Have a look at the /themes/_core folder.'
-        );
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        jQuery2 is register by the core on every theme. Have a look at the /themes/_core folder.
+        */
     }
 
     /**
