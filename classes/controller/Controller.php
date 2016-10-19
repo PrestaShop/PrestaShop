@@ -561,13 +561,13 @@ abstract class ControllerCore
             $javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
 
             if ($defer) {
-                echo $html.$javascript.(empty($this->ajax) ? '</body></html>' : '');
+                $html .= $javascript.(empty($this->ajax) ? '</body></html>' : '');
             } else {
-                echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).(empty($this->ajax) ? '</body></html>' : '');
+                $html = preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).(empty($this->ajax) ? '</body></html>' : '');
             }
-        } else {
-            echo $html;
         }
+        Hook::exec('actionOutputHTMLBefore',  array('html' => &$html));
+        echo $html;
     }
 
     /**
