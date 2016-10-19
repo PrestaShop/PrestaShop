@@ -1160,13 +1160,25 @@ class FrontControllerCore extends Controller
      */
     public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
     {
-        Tools::displayAsDeprecated(
-            'This function has no effect in PrestaShop 1.7 theme, manage your dependencies in your
-            themes and modules and don\'t rely on PrestaShop embeded libraries. Use $this->registerJavascript() and
-            $this->registerStylesheet() to manage your assets.'
-        );
+        /*
+        This is deprecated in PrestaShop 1.7
+        Manage your dependencies in your themes/modules and don\'t rely on PrestaShop embedded libraries.
+        Use $this->registerJavascript() and $this->registerStylesheet() to manage your assets
+        */
+        if (isset(Media::$jquery_ui_dependencies[$component])) {
+            foreach (Media::$jquery_ui_dependencies[$component]['dependencies'] as $dependency) {
+                $this->addJqueryUI($dependency);
+            }
+        }
 
-        return;
+        // backward compat'
+        $css_theme_path = '/js/jquery/ui/themes/'.$theme.'/jquery.ui.theme.css';
+        $css_path = '/js/jquery/ui/themes/'.$theme.'/jquery.'.$component.'.css';
+        $js_path = '/js/jquery/ui/jquery.'.$component.'.min.js';
+
+        $this->registerStylesheet('legacy-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
+        $this->registerStylesheet('legacy-'.$component, $css_path, ['media' => 'all', 'priority' => 90]);
+        $this->registerJavascript('legacy-'.$component, $js_path, ['position' => 'bottom', 'priority' => 90]);
     }
 
     /**
