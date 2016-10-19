@@ -13,7 +13,12 @@ export default function () {
         let pageIndex;
         let pageLink;
         let pageLinkAnchor;
-        let totalPages = $(nav).parent().find('.page').length;
+        let totalPages = $(nav).parents('.translation-domains').find('.page').length;
+
+        if (totalPages > 10) {
+          $(nav).parent().addClass('relative-position');
+        }
+
         let i;
         for (i = 1; i < totalPages; i++) {
             pageIndex = i + 1;
@@ -26,19 +31,12 @@ export default function () {
         }
     };
 
-    let pushStateToHistory = (url) => {
-        if (!!(history && history.pushState)) {
-            history.pushState({}, document.title, url);
-        }
-    };
-
     // Fix internal navigation to anchors
     // by adding offset of fixed header height
     // @See also http://stackoverflow.com/a/13067009/282073
     let scrollToPreviousPaginationBar = (paginationBar, link) => {
         let paginationBarTop = paginationBar.getBoundingClientRect().top;
         window.scrollTo(window.pageXOffset, window.pageYOffset + paginationBarTop - fixedOffset);
-        pushStateToHistory(location.pathname + $(link).attr('href'));
     };
 
     $('.translation-domain .go-to-pagination-bar').click((event) => {
@@ -48,7 +46,7 @@ export default function () {
         return false;
     });
 
-    $('.translation-domain nav').each((navIndex, nav) => {
+    $('.translation-domains nav').each((navIndex, nav) => {
         addPageLinksToNavigationBar(nav);
 
         let hideActivePageInDomain = (domain) => {
@@ -70,7 +68,7 @@ export default function () {
 
         $(nav).find('.page-item').click((event) => {
             let pageLink = $(event.target);
-            let domain = pageLink.parents('.translation-domain');
+            let domain = pageLink.parents('.translation-domains').find('.translation-forms');
             let pageItem = pageLink.parent();
             let pageIndex = pageItem.data('page-index');
 

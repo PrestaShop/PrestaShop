@@ -2,19 +2,52 @@
 
 {% block content %}
 <div class="search-translation">
-    <h2>{{ 'Search'|trans({}, 'Admin.Actions') }}</h2>
-    <div class="hide alert alert-info">{{ '0 result found'|trans({}, 'Admin.Notifications.Error') }}</div>
-    <label>{{ 'Translation key or value (2 characters at least):'|trans({}, 'Admin.International.Feature') }}</label>
-    <form>
-        <input pattern=".{2,}" type="search" id="jetsSearch">
-        <input class="btn btn-default btn-sm search-button" type="submit" value="{{ 'Search'|trans({}, 'Admin.Actions') }}">
-        <input class="btn btn-default btn-sm" type="reset" value="{{ 'Reset'|trans({}, 'Admin.Actions') }}">
-    </form>
-    <div id="jetsContent">
-        {{ getTranslationsForms(translationsTree, theme)|raw }}
+  <h2>{{ 'Search translations'|trans({}, 'Admin.International.Feature') }}</h2>
+  <div class="summary pull-right">
+    <span data-template="{{ total_translations }}" class="total-translations"></span>
+    <span class="hide separator"> - </span>
+    <span data-template="{{ total_remaining_translations }}" class="total-remaining-translations"></span>
+  </div>
+  <form>
+    <label>{{ '(2 characters at least)'|trans({}, 'Admin.International.Feature') }}</label>
+    <div class="form-inline">
+      <input class="form-control search"
+             pattern=".{2,}"
+             placeholder="{{ 'Search a word or expression, e.g.: \"Order confirmation\"'|trans({}, 'Admin.International.Help') }}"
+             type="search"
+             id="jetsSearch"
+      />
+      <input class="btn btn-primary search-button" type="submit" value="{{ 'Search'|trans({}, 'Admin.Actions') }}" />
+      <input class="btn btn-tertiary-outline" type="reset" value="{{ 'Reset'|trans({}, 'Admin.Actions') }}" />
     </div>
+  </form>
+  <div class="hide alert alert-warning">
+    <i class="material-icons">info_outline</i>
+    <span>{{ 'No results found'|trans({}, 'Admin.Notifications.Error') }}</span>
+  </div>
+  {% include 'PrestaShopBundle:Admin/Translations/include:translations-forms.html.twig' %}
 </div>
-<div class="translation-page">
-    {{ getTranslationsTree(translationsTree, theme)|raw }}
+
+<form method="post" id="messages-fragments" action="{{ path('admin_international_translations_messages_fragments') }}">
+  <input type="hidden" name="lang" value="{{ requestParams.lang }}">
+  <input type="hidden" name="type" value="{{ requestParams.type }}">
+  <input type="hidden" name="theme" value="{{ requestParams.theme }}">
+</form>
+
+<div class="container-fluid">
+  <div class="row">
+    {% include 'PrestaShopBundle:Admin/Translations/include:translations-tree.html.twig' %}
+    <div class="translation-domains col-xs-6">
+      <h1 id="domain">
+        <span class="name"></span>
+        <span class="separator hide">-</span>
+        <span class="missing-translations"></span>
+      </h1>
+      <p class="missing-translations-paragraph"></p>
+      <div class="navbar-container pull-right"></div>
+      <div class="forms-container">
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

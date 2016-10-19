@@ -5,6 +5,8 @@ export default function () {
   $(() => {
     const searchSelector = '.search-translation';
     $(searchSelector + ' form').submit(function (event) {
+      event.preventDefault();
+
       $('#jetsContent form').addClass('hide');
 
       const keywords = $('#jetsSearch').val().toLowerCase();
@@ -20,14 +22,16 @@ export default function () {
         $(jetsSelector).removeClass('hide');
       }
 
-      event.preventDefault();
-
       return false;
     });
 
-    $(searchSelector + ' input[type=reset]').click(function () {
+    $(searchSelector + ' input[type=reset]').click(function (event) {
+      event.preventDefault();
+
       $('#jetsSearch').val('');
       $('#jetsContent form').addClass('hide');
+
+      return false;
     })
   });
 
