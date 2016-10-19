@@ -170,6 +170,15 @@
     "language_code": "et-ee",
     "locale": "et-EE"
   },
+  "eu": {
+    "name": "Basque",
+    "iso_code": "eu",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "eu-es",
+    "locale": "eu-ES"
+  },
   "fa": {
     "name": "فارسى (Persian)",
     "iso_code": "fa",
