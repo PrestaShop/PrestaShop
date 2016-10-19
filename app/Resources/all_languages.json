@@ -512,6 +512,15 @@
     "language_code": "sv-se",
     "locale": "sv-SE"
   },
+  "ta": {
+    "name": "Tamil",
+    "iso_code": "ta",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "ta-in",
+    "locale": "ta-IN"
+  },
   "th": {
     "name": "ภาษาไทย (Thai)",
     "iso_code": "th",
