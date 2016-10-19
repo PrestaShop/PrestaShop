@@ -135,8 +135,8 @@
     <hook id="actionOrderReturn">
       <name>actionOrderReturn</name><title>Returned product</title><description>This hook is displayed when a customer returns a product </description>
     </hook>
-    <hook id="displayProductButtons">
-      <name>displayProductButtons</name><title>Product page actions</title><description>This hook adds new action buttons on the product page</description>
+    <hook id="displayProductAdditionalInfo">
+      <name>displayProductAdditionalInfo</name><title>Product page additional info</title><description>This hook adds additional information on the product page</description>
     </hook>
     <hook id="displayBackOfficeHome">
       <name>displayBackOfficeHome</name><title>Administration panel homepage</title><description>This hook is displayed on the admin panel's homepage</description>

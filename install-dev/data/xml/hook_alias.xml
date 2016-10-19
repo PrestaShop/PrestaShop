@@ -131,7 +131,7 @@
     </hook_alias>
     <hook_alias id="productActions">
       <alias>productActions</alias>
-      <name>displayProductButtons</name>
+      <name>displayProductAdditionalInfo</name>
     </hook_alias>
     <hook_alias id="backOfficeHome">
       <alias>backOfficeHome</alias>
