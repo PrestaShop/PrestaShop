@@ -176,6 +176,9 @@ class ThemeManager implements AddonManagerInterface
 
         $this->saveTheme($theme);
 
+        Tools::clearSmartyCache();
+        Tools::clearCache();
+
         return $this;
     }
 
