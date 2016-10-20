@@ -77,8 +77,10 @@ export default function () {
       $('.summary .separator').removeClass('hide');
     }
 
-    let totalTranslationsMessages = totalTranslationsTemplate.replace('%d', totalTranslations);
-    $('.summary .total-translations').text(totalTranslationsMessages);
+    if (totalTranslationsTemplate) {
+      let totalTranslationsMessages = totalTranslationsTemplate.replace('%d', totalTranslations);
+      $('.summary .total-translations').text(totalTranslationsMessages);
+    }
   })(totalTranslations, allDomainsMissingTranslations);
 
   $('.domain-actions').click((event) => {
