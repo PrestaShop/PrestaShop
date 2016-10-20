@@ -185,7 +185,7 @@
 		<div class="col-lg-9" id="authorized-modules">
 			{foreach $input['values']['auth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.gif" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}" /> {$module->displayName|escape:'html':'UTF-8'}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.png" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}" /> {$module->displayName|escape:'html':'UTF-8'}</label>
 				<div class="input-group col-lg-8">
 					<span class="switch prestashop-switch fixed-width-lg">
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1" checked="checked"/>
@@ -200,7 +200,7 @@
 			{/foreach}
 			{foreach $input['values']['unauth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.gif" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}"/> {$module->displayName|escape:'html':'UTF-8'}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.png" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}"/> {$module->displayName|escape:'html':'UTF-8'}</label>
 				<div class="input-group col-lg-8">
 					<span class="switch prestashop-switch fixed-width-lg">
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1"/>
