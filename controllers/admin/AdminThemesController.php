@@ -266,6 +266,8 @@ class AdminThemesControllerCore extends AdminController
             if (!$isThemeEnabled) {
                 $this->errors[] = $this->theme_manager->getErrors(Tools::getValue('theme_name'));
             } else {
+                Tools::clearSmartyCache();
+                Tools::clearCache();
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
         } elseif (Tools::getValue('action') == 'deleteTheme') {
