@@ -36,7 +36,7 @@ class AdminTranslationsControllerCore extends AdminController
     const TEXTAREA_SIZED = 70;
 
     /** @var string : Link which list all pack of language */
-    protected $link_lang_pack = 'http://i18n.prestashop.com/translations/'._PS_VERSION_.'/available_languages.json';
+    protected $link_lang_pack = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
 
     /** @var int : number of sentence which can be translated */
     protected $total_expression = 0;
@@ -84,6 +84,8 @@ class AdminTranslationsControllerCore extends AdminController
         $this->table = 'translations';
 
         parent::__construct();
+
+        $this->link_lang_pack = str_replace('%ps_version%', _PS_VERSION_, $this->link_lang_pack);
 
         $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                             ->buildRepository()
