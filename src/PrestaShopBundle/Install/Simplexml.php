@@ -24,7 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class InstallSimplexmlElement extends SimpleXMLElement
+namespace PrestaShopBundle\Install;
+
+use DOMDocument;
+
+class SimplexmlElement extends \SimpleXMLElement
 {
     /**
      * Can add SimpleXMLElement values in XML tree

@@ -33,7 +33,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     public $install_type;
 
     /**
-     * @see InstallAbstractModel::processNextStep()
+     * @see HttpConfigureInterface::processNextStep()
      */
     public function processNextStep()
     {
@@ -74,7 +74,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     }
 
     /**
-     * @see InstallAbstractModel::validate()
+     * @see HttpConfigureInterface::validate()
      */
     public function validate()
     {
@@ -236,7 +236,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     }
 
     /**
-     * @see InstallAbstractModel::display()
+     * @see HttpConfigureInterface::display()
      */
     public function display()
     {

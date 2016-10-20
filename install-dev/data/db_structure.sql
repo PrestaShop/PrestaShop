@@ -1032,16 +1032,6 @@ CREATE TABLE `PREFIX_module_carrier` (
   PRIMARY KEY (`id_module`,`id_shop`, `id_reference`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_module_history` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_employee` int(10) unsigned NOT NULL,
-  `id_module` int(10) unsigned NOT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_employee` (`id_employee`,`id_module`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_operating_system` (
   `id_operating_system` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(64) DEFAULT NULL,

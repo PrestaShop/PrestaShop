@@ -23,6 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShopBundle\Install\LanguageList;
+use PrestaShopBundle\Install\AbstractInstall;
+
 abstract class InstallControllerConsole
 {
     /**
@@ -55,9 +59,9 @@ abstract class InstallControllerConsole
     public $language;
 
     /**
-     * @var InstallAbstractModel
+     * @var AbstractInstall
      */
-    public $model;
+    protected $model_install;
 
     /**
      * Validate current step.

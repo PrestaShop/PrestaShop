@@ -76,6 +76,8 @@ class DbMySQLiCore extends Db
             throw new PrestaShopDatabaseException(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
         }
 
+        $this->link->query('SET SESSION sql_mode = \'\'');
+
         return $this->link;
     }
 

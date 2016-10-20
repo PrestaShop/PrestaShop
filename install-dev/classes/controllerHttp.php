@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShopBundle\Install\LanguageList;
+
 class InstallControllerHttp
 {
     /**
@@ -79,7 +81,7 @@ class InstallControllerHttp
     public $previous_button = true;
 
     /**
-     * @var InstallAbstractModel
+     * @var \PrestaShopBundle\Install\AbstractInstall
      */
     public $model;
 

@@ -340,6 +340,7 @@ class AccessCore extends ObjectModel
             throw new \Exception('Cannot find role slug');
         }
 
+        $res = array();
         foreach ($roles as $role) {
             if ($enabled) {
                 $res[] = $this->addAccess($idProfile, $role['id_authorization_role']);
@@ -385,6 +386,7 @@ class AccessCore extends ObjectModel
             WHERE '.implode(' OR ', $whereClauses).'
         ');
 
+        $res = array();
         foreach ($roles as $role) {
             if ($enabled) {
                 $res[] = $this->addModuleAccess($idProfile, $role['id_authorization_role']);

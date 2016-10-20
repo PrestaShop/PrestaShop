@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,45 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+
+namespace PrestaShopBundle\Install;
+
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+use RandomLib;
+use PrestaShop\PrestaShop\Adapter\Entity\FileLogger;
+use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
+use PrestaShop\PrestaShop\Adapter\Entity\Language as EntityLanguage;
+use PrestaShop\PrestaShop\Adapter\Entity\Shop;
+use PrestaShop\PrestaShop\Adapter\Entity\ShopGroup;
+use PrestaShop\PrestaShop\Adapter\Entity\ShopUrl;
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
+use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
+use PrestaShop\PrestaShop\Adapter\Entity\ImageManager;
+use PrestaShop\PrestaShop\Adapter\Entity\Country;
+use PrestaShop\PrestaShop\Adapter\Entity\Group;
+use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
+use PrestaShop\PrestaShop\Adapter\Entity\Employee;
+use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
+use PrestaShop\PrestaShop\Adapter\Entity\Module;
+use PrestaShop\PrestaShop\Adapter\Entity\Search;
+use InstallSession;
+use Composer\Script\Event;
+use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use PrestashopInstallerException;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Yaml\Yaml;
 
-class InstallModelInstall extends InstallAbstractModel
+class Install extends AbstractInstall
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
     const BOOTSTRAP_FILE = 'config/bootstrap.php';
@@ -120,7 +148,7 @@ class InstallModelInstall extends InstallAbstractModel
                 'locale' => $this->language->getLanguage()->getLocale(),
             )
         );
-        
+
         array_walk($parameters['parameters'], function (&$param) {
             $param = str_replace('%', '%%', $param);
         });
@@ -215,11 +243,11 @@ class InstallModelInstall extends InstallAbstractModel
         $allowed_collation = array('utf8_general_ci', 'utf8_unicode_ci');
         $collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
         // Install database structure
-        $sql_loader = new InstallSqlLoader();
+        $sql_loader = new SqlLoader();
         $sql_loader->setMetaData(array(
             'PREFIX_' => _DB_PREFIX_,
             'ENGINE_TYPE' => _MYSQL_ENGINE_,
-            'COLLATION' => (empty($collation_database) || !in_array($collation_database, $allowed_collation)) ? '' : 'COLLATE '.$collation_database
+            'COLLATION' => (empty($collation_database) || !in_array($collation_database, $allowed_collation)) ? '' : 'COLLATE '.$collation_database,
         ));
 
         try {
@@ -247,7 +275,7 @@ class InstallModelInstall extends InstallAbstractModel
      *
      * @return bool
      */
-    private function generateSf2ProductionEnv()
+    public function generateSf2ProductionEnv()
     {
         $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
         $sf2Refresh->addDoctrineSchemaUpdate();
@@ -337,12 +365,12 @@ class InstallModelInstall extends InstallAbstractModel
     public function populateDatabase($entity = null)
     {
         $languages = array();
-        foreach (Language::getLanguages(true) as $lang) {
+        foreach (EntityLanguage::getLanguages(true) as $lang) {
             $languages[$lang['id_lang']] = $lang['iso_code'];
         }
 
         // Install XML data (data/xml/ folder)
-        $xml_loader = new InstallXmlLoader();
+        $xml_loader = new XmlLoader();
         $xml_loader->setLanguages($languages);
 
         if (isset($this->xml_loader_ids) && $this->xml_loader_ids) {
@@ -365,7 +393,7 @@ class InstallModelInstall extends InstallAbstractModel
 
         // Install custom SQL data (db_data.sql file)
         if (file_exists(_PS_INSTALL_DATA_PATH_.'db_data.sql')) {
-            $sql_loader = new InstallSqlLoader();
+            $sql_loader = new SqlLoader();
             $sql_loader->setMetaData(array(
                 'PREFIX_' => _DB_PREFIX_,
                 'ENGINE_TYPE' => _MYSQL_ENGINE_,
@@ -461,24 +489,24 @@ class InstallModelInstall extends InstallAbstractModel
             );
 
             if (InstallSession::getInstance()->safe_mode) {
-                Language::checkAndAddLanguage($iso, false, true, $params_lang);
+                EntityLanguage::checkAndAddLanguage($iso, false, true, $params_lang);
             } else {
                 if (file_exists(_PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip') == false) {
-                    $language = Language::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+                    $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
 
                     if ($language == false) {
                         throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', array('%iso%' => $iso), 'Install'));
                     }
                 }
 
-                Language::installLanguagePack($iso, $params_lang, $errors);
+                EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
             }
 
-            Language::loadLanguages();
+            EntityLanguage::loadLanguages();
 
             Tools::clearCache();
 
-            if (!$id_lang = Language::getIdByIso($iso, true)) {
+            if (!$id_lang = EntityLanguage::getIdByIso($iso, true)) {
                 throw new PrestashopInstallerException($this->translator->trans('Cannot install language "%iso%"', array('%iso%' => ($xml->name ? $xml->name : $iso) ), 'Install'));
             }
 
@@ -532,14 +560,14 @@ class InstallModelInstall extends InstallAbstractModel
     private static $_cache_localization_pack_content = null;
     public function getLocalizationPackContent($version, $country)
     {
-        if (InstallModelInstall::$_cache_localization_pack_content === null || array_key_exists($country, InstallModelInstall::$_cache_localization_pack_content)) {
+        if (Install::$_cache_localization_pack_content === null || array_key_exists($country, Install::$_cache_localization_pack_content)) {
             $localizationWarmer = new LocalizationWarmer($version, $country);
             $localization_file_content  = $localizationWarmer->warmUp(_PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR);
 
-            InstallModelInstall::$_cache_localization_pack_content[$country] = $localization_file_content;
+            Install::$_cache_localization_pack_content[$country] = $localization_file_content;
         }
 
-        return isset(InstallModelInstall::$_cache_localization_pack_content[$country]) ? InstallModelInstall::$_cache_localization_pack_content[$country] : false;
+        return isset(Install::$_cache_localization_pack_content[$country]) ? Install::$_cache_localization_pack_content[$country] : false;
     }
 
     /**
@@ -654,7 +682,7 @@ class InstallModelInstall extends InstallAbstractModel
         $version = substr($version, 0, 2);
         $localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 
-        $locale = new LocalizationPackCore();
+        $locale = new LocalizationPack();
         $locale->loadLocalisationPack($localization_file_content, '', true);
 
         // Create default employee
@@ -893,7 +921,7 @@ class InstallModelInstall extends InstallAbstractModel
         }
 
         Module::updateTranslationsAfterInstall(true);
-        Language::updateModulesTranslations($modules);
+        EntityLanguage::updateModulesTranslations($modules);
 
         return true;
     }
@@ -919,12 +947,12 @@ class InstallModelInstall extends InstallAbstractModel
             }
 
             $xml_loader = new $class();
-            if (!$xml_loader instanceof InstallXmlLoader) {
+            if (!$xml_loader instanceof XmlLoader) {
                 $this->setError($this->translator->trans('"%class%" must be an instance of "InstallXmlLoader"', array('%class%' => $class), 'Install'));
                 return false;
             }
         } else {
-            $xml_loader = new InstallXmlLoader();
+            $xml_loader = new XmlLoader();
         }
 
         // Install XML data (data/xml/ folder)
@@ -934,7 +962,7 @@ class InstallModelInstall extends InstallAbstractModel
         }
 
         $languages = array();
-        foreach (Language::getLanguages(false) as $lang) {
+        foreach (EntityLanguage::getLanguages(false) as $lang) {
             $languages[$lang['id_lang']] = $lang['iso_code'];
         }
         $xml_loader->setLanguages($languages);

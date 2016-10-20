@@ -77,12 +77,7 @@ require_once _PS_INSTALL_PATH_.'install_version.php';
 
 require_once _PS_CORE_DIR_.'/config/alias.php';
 require_once _PS_INSTALL_PATH_.'classes/exception.php';
-require_once _PS_INSTALL_PATH_.'classes/language.php';
-require_once _PS_INSTALL_PATH_.'classes/model.php';
 require_once _PS_INSTALL_PATH_.'classes/session.php';
-require_once _PS_INSTALL_PATH_.'classes/sqlLoader.php';
-require_once _PS_INSTALL_PATH_.'classes/xmlLoader.php';
-require_once _PS_INSTALL_PATH_.'classes/simplexml.php';
 
 @set_time_limit(0);
 if (!@ini_get('date.timezone')) {

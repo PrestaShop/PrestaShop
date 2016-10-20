@@ -59,7 +59,8 @@ class PrestaShopAutoload
     {
         $this->root_dir = _PS_CORE_DIR_.'/';
         $file = PrestaShopAutoload::getCacheFileIndex();
-        if (@filemtime($file) && is_readable($file)) {
+        $stubFile = PrestaShopAutoload::getStubFileIndex();
+        if (@filemtime($file) && is_readable($file) && @filemtime($stubFile) && is_readable($stubFile)) {
             $this->index = include($file);
         } else {
             $this->generateIndex();
@@ -88,6 +89,26 @@ class PrestaShopAutoload
     public static function getCacheFileIndex()
     {
         return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_index.php';
+    }
+
+    /**
+     * Get Namespaced class stub file
+     *
+     * @return string
+     */
+    public static function getNamespacedStubFileIndex()
+    {
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'namespaced_class_stub.php';
+    }
+
+    /**
+     * Get Class stub file
+     *
+     * @return string
+     */
+    public static function getStubFileIndex()
+    {
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_stub.php';
     }
 
     /**
@@ -134,6 +155,9 @@ class PrestaShopAutoload
             // Call directly ProductCore, ShopCore class
             require_once($this->root_dir.$this->index[$className]['path']);
         }
+        if (strpos($className, 'PrestaShop\PrestaShop\Adapter\Entity') !== false) {
+            require_once(self::getNamespacedStubFileIndex());
+        }
     }
 
     /**
@@ -141,17 +165,46 @@ class PrestaShopAutoload
      */
     public function generateIndex()
     {
+        $coreClasses = $this->getClassesFromDir('classes/');
+
         $classes = array_merge(
-            $this->getClassesFromDir('classes/'),
+            $coreClasses,
             $this->getClassesFromDir('controllers/')
         );
 
+        $contentNamespacedStub = '<?php '."\n".'namespace PrestaShop\\PrestaShop\\Adapter\\Entity;'."\n\n";
+
+        foreach($coreClasses as $coreClassName => $coreClass) {
+            if (substr($coreClassName, -4) == 'Core') {
+                $coreClassName = substr($coreClassName, 0, -4);
+                if ($coreClass['type'] != 'interface') {
+                    $contentNamespacedStub .= $coreClass['type'].' '.$coreClassName.' extends \\'.$coreClassName.' {};'."\n";
+                }
+            }
+        }
+
         if ($this->_include_override_path) {
+            $coreOverrideClasses = $this->getClassesFromDir('override/classes/', defined('_PS_HOST_MODE_'));
+            $coreClassesWOOverrides = array_diff_key($coreClasses, $coreOverrideClasses);
+
             $classes = array_merge(
                 $classes,
-                $this->getClassesFromDir('override/classes/', defined('_PS_HOST_MODE_')),
+                $coreOverrideClasses,
                 $this->getClassesFromDir('override/controllers/', defined('_PS_HOST_MODE_'))
             );
+        } else {
+            $coreClassesWOOverrides = $coreClasses;
+        }
+
+        $contentStub = '<?php'."\n\n";
+
+        foreach($coreClassesWOOverrides as $coreClassName => $coreClass) {
+            if (substr($coreClassName, -4) == 'Core') {
+                $coreClassNameNoCore = substr($coreClassName, 0, -4);
+                if ($coreClass['type'] != 'interface') {
+                    $contentStub .= $coreClass['type'].' '.$coreClassNameNoCore.' extends '.$coreClassName.' {};'."\n";
+                }
+            }
         }
 
         ksort($classes);
@@ -163,6 +216,16 @@ class PrestaShopAutoload
 
         if (!$this->dumpFile($filename, $content)) {
             Tools::error_log('Cannot write temporary file '.$filename);
+        }
+
+        $stubFilename = PrestaShopAutoload::getStubFileIndex();
+        if (!$this->dumpFile($stubFilename, $contentStub)) {
+            Tools::error_log('Cannot write temporary file '.$stubFilename);
+        }
+
+        $namespacedStubFilename = PrestaShopAutoload::getNamespacedStubFileIndex();
+        if (!$this->dumpFile($namespacedStubFilename, $contentNamespacedStub)) {
+            Tools::error_log('Cannot write temporary file '.$namespacedStubFilename);
         }
 
         $this->index = $classes;
