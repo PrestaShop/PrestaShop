@@ -34,7 +34,6 @@ class AdminTranslationsControllerCore extends AdminController
     /** Name of theme by default */
     const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
     const TEXTAREA_SIZED = 70;
-    const CONTENT_TYPE_ACCEPTED = array('txt', 'tpl', 'html');
 
     /** @var string : Link which list all pack of language */
     protected $link_lang_pack = 'http://i18n.prestashop.com/translations/'._PS_VERSION_.'/available_languages.json';
@@ -53,6 +52,9 @@ class AdminTranslationsControllerCore extends AdminController
 
     /** @var array : List of folder which must be ignored */
     protected static $ignore_folder = array('.', '..', '.svn', '.git', '.htaccess', 'index.php');
+
+    /** @var array : List of content type accepted for translation mail file */
+    protected static $content_type_accepted = array('txt', 'tpl', 'html');
 
     /** @var array : List of theme by translation type : FRONT, BACK, ERRORS... */
     protected $translations_informations = array();
@@ -185,7 +187,7 @@ class AdminTranslationsControllerCore extends AdminController
         $packsToUpdate = array();
         $token = Tools::getAdminToken('AdminLanguages'.(int)Tab::getIdFromClassName('AdminLanguages').(int)$this->context->employee->id);
         $arrayStreamContext = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 8)));
-        
+
         if ($langPacks = Tools::file_get_contents($this->link_lang_pack, false, $arrayStreamContext)) {
             if ($langPacks != '' && $langPacks = json_decode($langPacks, true)) {
                 foreach ($langPacks as $locale => $langName) {
@@ -1593,7 +1595,7 @@ class AdminTranslationsControllerCore extends AdminController
         // Save each mail content
         foreach ($arr_mail_content as $group_name => $all_content) {
             foreach ($all_content as $type_content => $mails) {
-                if (!in_array($type_content, self::CONTENT_TYPE_ACCEPTED)) {
+                if (!in_array($type_content, self::$content_type_accepted)) {
                     throw new PrestaShopException($this->trans('This %type_content% file extension is not accepted.', array('%type_content%' => $type_content), 'Admin.International.Notification'));
                 }
 
