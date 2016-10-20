@@ -98,7 +98,7 @@ class StylesheetManagerCore extends AbstractAssetManager
     private function sortList()
     {
         foreach ($this->list as $type => &$items) {
-            uasort(
+            Tools::uasort(
                 $items,
                 function ($a, $b) {
                     if ($a['priority'] === $b['priority']) {
