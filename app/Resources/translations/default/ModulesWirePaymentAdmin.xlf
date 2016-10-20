@@ -8,9 +8,9 @@
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:75</note>
       </trans-unit>
-      <trans-unit id="a246a8e9907530c4c36b8b4c37bbc823">
-        <source>Accept payments for your products via bank wire transfer.</source>
-        <target>Accept payments for your products via bank wire transfer.</target>
+      <trans-unit id="cedc96489132776ce19ebc2751f17454">
+        <source>Accept payments by bank transfer.</source>
+        <target>Accept payments by bank transfer.</target>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:76</note>
       </trans-unit>
@@ -44,23 +44,17 @@ File: modules/ps_wirepayment/ps_wirepayment.php:128</note>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:130</note>
       </trans-unit>
-      <trans-unit id="5dd532f0a63d89c5af0243b74732f63c">
-        <source>Contact details</source>
-        <target>Contact details</target>
+      <trans-unit id="8bc212f48680748479bbd322d4d73d3f">
+        <source>Account details</source>
+        <target>Account details</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:278</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:290</note>
       </trans-unit>
       <trans-unit id="857216dd1b374de9bf54068fcd78a8f3">
         <source>Account owner</source>
         <target>Account owner</target>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:284</note>
-      </trans-unit>
-      <trans-unit id="3ec365dd533ddb7ef3d1c111186ce872">
-        <source>Details</source>
-        <target>Details</target>
-        <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:290</note>
       </trans-unit>
       <trans-unit id="6b154cafbab54ba3a1e76a78c290c02a">
         <source>Such as bank branch, IBAN number, BIC, etc.</source>
@@ -80,15 +74,15 @@ File: modules/ps_wirepayment/ps_wirepayment.php:297</note>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:310</note>
       </trans-unit>
-      <trans-unit id="17f7ac8081a041187f3bad0e0951af8c">
-        <source>Reservation delay</source>
-        <target>Reservation delay</target>
+      <trans-unit id="873a2778bdb25b9dcca6de640216c4a9">
+        <source>Reservation period</source>
+        <target>Reservation period</target>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:316</note>
       </trans-unit>
-      <trans-unit id="edac0a7168dedecd72f797573f520d64">
-        <source>Number of days the goods will be reserved</source>
-        <target>Number of days the goods will be reserved</target>
+      <trans-unit id="120cf2b5eab7f28e5fb03b8fb7bbd07b">
+        <source>Number of days the items remain reserved</source>
+        <target>Number of days the items remain reserved</target>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:317</note>
       </trans-unit>
@@ -98,9 +92,9 @@ File: modules/ps_wirepayment/ps_wirepayment.php:317</note>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:322</note>
       </trans-unit>
-      <trans-unit id="08da5fe94b7c94f34cae44924b54110c">
-        <source>Information about the bankwire (processing time, starting of the shipping...)</source>
-        <target>Information about the bankwire (processing time, starting of the shipping...)</target>
+      <trans-unit id="65ed2ab0c7edcccc96fcedaa594f94c6">
+        <source>Information on the bank transfer (processing time, starting of the shipping...)</source>
+        <target>Information on the bank transfer (processing time, starting of the shipping...)</target>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:324</note>
       </trans-unit>
@@ -114,9 +108,9 @@ File: modules/ps_wirepayment/ps_wirepayment.php:324</note>
         <note>Context:
 File: modules/ps_wirepayment/views/templates/hook/infos.tpl:28</note>
       </trans-unit>
-      <trans-unit id="d50299358a963bbcfe5ea0dcecff9fd2">
-        <source>If the client chooses to pay by bank wire, the order's status will change to 'Waiting for Payment.</source>
-        <target>If the client chooses to pay by bank wire, the order's status will change to 'Waiting for Payment.</target>
+      <trans-unit id="cfc0561623b37471f267aa911092b3ac">
+        <source>If the client chooses to pay by bank wire, the order status will change to 'Waiting for Payment'.</source>
+        <target>If the client chooses to pay by bank wire, the order status will change to 'Waiting for Payment'.</target>
         <note>Context:
 File: modules/ps_wirepayment/views/templates/hook/infos.tpl:29</note>
       </trans-unit>

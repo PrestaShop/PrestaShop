@@ -1,75 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminCurrenciesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9289665482a13fc74be054caef49b63e">
-        <source>This currency already exists.</source>
-        <target>This currency already exists.</target>
-        <note>Context:
-File: controllers/admin/AdminCurrenciesController.php:282</note>
-      </trans-unit>
-      <trans-unit id="d9ee7e24ee5e69a35b24365cf2201416">
-        <source>The currency conversion rate can not be equal to 0.</source>
-        <target>The currency conversion rate can not be equal to 0.</target>
-        <note>Context:
-File: controllers/admin/AdminCurrenciesController.php:285</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="34f9488516199cf18114f12369c71a59">
-        <source>Cannot load the localization pack.</source>
-        <target>Cannot load the localization pack.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:190</note>
-      </trans-unit>
-      <trans-unit id="ecb8838ce98cd126849fc083f0070bcd">
-        <source>Please select at least one item to import.</source>
-        <target>Please select at least one item to import.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:194</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="aa28d701be690425c5518b723668f6f7">
-        <source>This ISO code already exists. You cannot create two states with the same ISO code.</source>
-        <target>This ISO code already exists. You cannot create two states with the same ISO code.</target>
-        <note>Context:
-File: controllers/admin/AdminStatesController.php:229</note>
-      </trans-unit>
-      <trans-unit id="dae008137b79aa8e5c0f2aed6d1db503">
-        <source>This state was used in at least one address. It cannot be removed.</source>
-        <target>This state was used in at least one address. It cannot be removed.</target>
-        <note>Context:
-File: controllers/admin/AdminStatesController.php:244</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="45f3b37902e09b041709484fd75cab22">
-        <source>A tax rule already exists for this country/state with tax only behavior.</source>
-        <target>A tax rule already exists for this country/state with tax only behavior.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:430</note>
-      </trans-unit>
-      <trans-unit id="4bec9151cb1dbce78bde01c504963464">
-        <source>The Zip/postal code is invalid. It must be typed as follows: %s for %s.</source>
-        <target>The Zip/postal code is invalid. It must be typed as follows: %s for %s.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:457</note>
-      </trans-unit>
-      <trans-unit id="2ff5095fd8289ccdaeca9c5e7d379fd2">
-        <source>An error has occurred: Cannot save the current tax rule.</source>
-        <target>An error has occurred: Cannot save the current tax rule.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:479</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e07a23e507642ef04f449a7a78f59d38">
@@ -77,6 +7,34 @@ File: controllers/admin/AdminTaxRulesGroupController.php:479</note>
         <target>This ISO code already exists.You cannot create two countries with the same ISO code.</target>
         <note>Context:
 File: controllers/admin/AdminCountriesController.php:409</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCurrenciesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8246d0c794e7db090587c4797b2a234f">
+        <source>You cannot delete the default currency</source>
+        <target>You cannot delete the default currency</target>
+        <note>Context:
+File: controllers/admin/AdminCurrenciesController.php:179</note>
+      </trans-unit>
+      <trans-unit id="7c77e53206853cb381e91e037554faa3">
+        <source>You cannot disable the default currency</source>
+        <target>You cannot disable the default currency</target>
+        <note>Context:
+File: controllers/admin/AdminCurrenciesController.php:195</note>
+      </trans-unit>
+      <trans-unit id="9289665482a13fc74be054caef49b63e">
+        <source>This currency already exists.</source>
+        <target>This currency already exists.</target>
+        <note>Context:
+File: controllers/admin/AdminCurrenciesController.php:282</note>
+      </trans-unit>
+      <trans-unit id="1a93d2c04e8276471b3c198d1ad95098">
+        <source>The currency conversion rate cannot be equal to 0.</source>
+        <target>The currency conversion rate cannot be equal to 0.</target>
+        <note>Context:
+File: controllers/admin/AdminCurrenciesController.php:285</note>
       </trans-unit>
     </body>
   </file>
@@ -102,132 +60,38 @@ File: controllers/admin/AdminGeolocationController.php:110</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ec531fd2b656df91f11e8f94b2bd2f9b">
-        <source>An error occurred while creating archive.</source>
-        <target>An error occurred while creating archive.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:508</note>
-      </trans-unit>
-      <trans-unit id="b10dfa68dec5e313508a4a55eedae7d1">
-        <source>Please select a language and a theme.</source>
-        <target>Please select a language and a theme.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:510</note>
-      </trans-unit>
-      <trans-unit id="02ae08296d544eb7c674182122645631">
-        <source>Tab "%s" is not valid</source>
-        <target>Tab "%s" is not valid</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:670</note>
-      </trans-unit>
-      <trans-unit id="00ab48dc84eab4a3effe37be6dc55392">
-        <source>Validation failed for: %s</source>
-        <target>Validation failed for: %s</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:748</note>
-      </trans-unit>
-      <trans-unit id="022fdb1ef2a4a458114f8cb8aa38c967">
-        <source>Unidentified file found: %s</source>
-        <target>Unidentified file found: %s</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:751</note>
-      </trans-unit>
-      <trans-unit id="9831c9e35b4d39d939363aa5629e00f2">
-        <source>The archive cannot be extracted.</source>
-        <target>The archive cannot be extracted.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:884</note>
-      </trans-unit>
-      <trans-unit id="30a5e2c0c99e2615a1f4eef6162e7674">
-        <source>ISO CODE invalid "%1$s" for the following file: "%2$s"</source>
-        <target>ISO CODE invalid "%1$s" for the following file: "%2$s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:813</note>
-      </trans-unit>
-      <trans-unit id="5cfb10b98dd5a5b3739f5bded1f29747">
-        <source>Cannot delete the archive %s.</source>
-        <target>Cannot delete the archive %s.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:928</note>
-      </trans-unit>
-      <trans-unit id="aa4c405f81d3ec64d488fa7417b26e25">
-        <source>Cannot decompress the translation file for the following language: %s</source>
-        <target>Cannot decompress the translation file for the following language: %s</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:911</note>
-      </trans-unit>
-      <trans-unit id="dd8d1a7c020dcb1563a63baa9830fe5c">
-        <source>Language not found.</source>
-        <target>Language not found.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:935</note>
-      </trans-unit>
-      <trans-unit id="1970e39c8995f0f6c227f94fc01e35dd">
-        <source>Invalid theme "%s"</source>
-        <target>Invalid theme "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1797</note>
-      </trans-unit>
-      <trans-unit id="8b2e38b1190fe7c4546f89769ecd6657">
-        <source>Invalid iso code "%s"</source>
-        <target>Invalid iso code "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1420</note>
-      </trans-unit>
-      <trans-unit id="5154da9633f2cb69c72cdb07b28a102d">
-        <source>Invalid module name "%s"</source>
-        <target>Invalid module name "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1650</note>
-      </trans-unit>
-      <trans-unit id="e2865d85227e45bdc6fb87bf5df2b1f3">
-        <source>Invalid mail name "%s"</source>
-        <target>Invalid mail name "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1654</note>
-      </trans-unit>
-      <trans-unit id="a3c085f0d457ae1104bf59365beb675a">
-        <source>Directory "%s" cannot be created</source>
-        <target>Directory "%s" cannot be created</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1683</note>
-      </trans-unit>
-      <trans-unit id="f1c030f2fd8f1b382a4bffd04af59c2d">
-        <source>Your HTML email templates cannot contain JavaScript code.</source>
-        <target>Your HTML email templates cannot contain JavaScript code.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1687</note>
-      </trans-unit>
-      <trans-unit id="616d8e7e6c0dc755a7e932c4db698317">
-        <source>The module directory must be writable.</source>
-        <target>The module directory must be writable.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2161</note>
-      </trans-unit>
-      <trans-unit id="aae8520eb4046d46fe9c6fb5ca6aacb6">
-        <source>A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s</source>
-        <target>A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2406</note>
-      </trans-unit>
-      <trans-unit id="31370967686edafc2c4ae48d5870f47f">
-        <source>Cannot write language file for email subjects. Path is: %s</source>
-        <target>Cannot write language file for email subjects. Path is: %s</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2939</note>
-      </trans-unit>
-      <trans-unit id="61ca54d9195f5aa91fd0d41968f7e668">
-        <source>Cannot write into the "%s"</source>
-        <target>Cannot write into the "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:3133</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminLanguagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="4749a02e87a1b69cc421bf97c5353956">
+        <source>When you delete a language, all related translations in the database will be deleted. Are you sure you want to proceed?</source>
+        <target>When you delete a language, all related translations in the database will be deleted. Are you sure you want to proceed?</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:103</note>
+      </trans-unit>
+      <trans-unit id="cc83a240095b0a0b6e1840bb7d43830c">
+        <source>When you delete a language, all related translations in the database will be deleted.</source>
+        <target>When you delete a language, all related translations in the database will be deleted.</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:124</note>
+      </trans-unit>
+      <trans-unit id="1214646a8e239537981e729a0f16f3e9">
+        <source>Your .htaccess file must be writable.</source>
+        <target>Your .htaccess file must be writable.</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:126</note>
+      </trans-unit>
+      <trans-unit id="8bd94436fa6738863292fb9823368694">
+        <source>You cannot delete the default language.</source>
+        <target>You cannot delete the default language.</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:336</note>
+      </trans-unit>
+      <trans-unit id="f25eedbf89efbd0cfce488fe01f9c4cb">
+        <source>You cannot delete the language currently in use. Please select a different language.</source>
+        <target>You cannot delete the language currently in use. Please select a different language.</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:338</note>
+      </trans-unit>
       <trans-unit id="2f236f9450ce8714611e468181064659">
         <source>You cannot change the status of the default language.</source>
         <target>You cannot change the status of the default language.</target>
@@ -288,21 +152,341 @@ File: controllers/admin/AdminLanguagesController.php:475</note>
         <note>Context:
 File: controllers/admin/AdminLanguagesController.php:506</note>
       </trans-unit>
+      <trans-unit id="7aa19852b281887173d096f6700cdebf">
+        <source>Iso code is not valid</source>
+        <target>Iso code is not valid</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:533</note>
+      </trans-unit>
+      <trans-unit id="da7e8b45fda5783ed027b88cc33fdfc1">
+        <source>Technical Error: ps_version is not valid</source>
+        <target>Technical Error: ps_version is not valid</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:538</note>
+      </trans-unit>
+      <trans-unit id="29298b5d89d0bbdfa92fb1d6e27188bd">
+        <source>Wrong ISO code, or the selected language pack is unavailable.</source>
+        <target>Wrong ISO code, or the selected language pack is unavailable.</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:550</note>
+      </trans-unit>
+      <trans-unit id="dc2dde59d57d3bfd6881be1392c54280">
+        <source>Technical Error: translation server unreachable.</source>
+        <target>Technical Error: translation server unreachable.</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:554</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53802fa30d7e83f77eccfa376c33e6fa">
+        <source>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</source>
+        <target>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:169</note>
+      </trans-unit>
+      <trans-unit id="34f9488516199cf18114f12369c71a59">
+        <source>Cannot load the localization pack.</source>
+        <target>Cannot load the localization pack.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:190</note>
+      </trans-unit>
+      <trans-unit id="ecb8838ce98cd126849fc083f0070bcd">
+        <source>Please select at least one item to import.</source>
+        <target>Please select at least one item to import.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:194</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="aa28d701be690425c5518b723668f6f7">
+        <source>This ISO code already exists. You cannot create two states with the same ISO code.</source>
+        <target>This ISO code already exists. You cannot create two states with the same ISO code.</target>
+        <note>Context:
+File: controllers/admin/AdminStatesController.php:229</note>
+      </trans-unit>
+      <trans-unit id="dae008137b79aa8e5c0f2aed6d1db503">
+        <source>This state was used in at least one address. It cannot be removed.</source>
+        <target>This state was used in at least one address. It cannot be removed.</target>
+        <note>Context:
+File: controllers/admin/AdminStatesController.php:244</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTaxesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3311c10f0830ae7b6ad64674777c3f34">
+        <source>This tax is currently in use as a tax rule. Are you sure you'd like to continue?</source>
+        <target>This tax is currently in use as a tax rule. Are you sure you'd like to continue?</target>
+        <note>Context:
+File: controllers/admin/AdminTaxesController.php:151</note>
+      </trans-unit>
+      <trans-unit id="8eeccbbbc36b19ed4e82d2eca4055d4d">
+        <source>This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you'd like to continue?</source>
+        <target>This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you'd like to continue?</target>
+        <note>Context:
+File: controllers/admin/AdminTaxesController.php:176</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="45f3b37902e09b041709484fd75cab22">
+        <source>A tax rule already exists for this country/state with tax only behavior.</source>
+        <target>A tax rule already exists for this country/state with tax only behavior.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:436</note>
+      </trans-unit>
+      <trans-unit id="97d8fb4588d1efe9731fd4f82e071924">
+        <source>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</source>
+        <target>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:463</note>
+      </trans-unit>
+      <trans-unit id="2ff5095fd8289ccdaeca9c5e7d379fd2">
+        <source>An error has occurred: Cannot save the current tax rule.</source>
+        <target>An error has occurred: Cannot save the current tax rule.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:489</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bec0779bd472133db9982f210d249a42">
+        <source>Cannot create the folder "%s". Please check your directory writing permissions.</source>
+        <target>Cannot create the folder "%s". Please check your directory writing permissions.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:271</note>
+      </trans-unit>
+      <trans-unit id="102c75f83994f206179912d118b8bc3c">
+        <source>You must select two languages in order to copy data from one to another.</source>
+        <target>You must select two languages in order to copy data from one to another.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:366</note>
+      </trans-unit>
+      <trans-unit id="fc15f62c244c6d8035874d556e6a7f7b">
+        <source>You must select two themes in order to copy data from one to another.</source>
+        <target>You must select two themes in order to copy data from one to another.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:368</note>
+      </trans-unit>
+      <trans-unit id="c4e5aa158727e2041778d545424797da">
+        <source>An error occurred while copying data.</source>
+        <target>An error occurred while copying data.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:370</note>
+      </trans-unit>
+      <trans-unit id="0a7402299bf78a7624da443a12cd78ab">
+        <source>There is nothing to copy (same language and theme).</source>
+        <target>There is nothing to copy (same language and theme).</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:372</note>
+      </trans-unit>
+      <trans-unit id="6b5324e2e711f17c4d3db1f625178e86">
+        <source>Theme(s) not found</source>
+        <target>Theme(s) not found</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:384</note>
+      </trans-unit>
+      <trans-unit id="71e6da3cddad67ae6d48cbeb5246191b">
+        <source>Impossible to create the directory "%s".</source>
+        <target>Impossible to create the directory "%s".</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:395</note>
+      </trans-unit>
+      <trans-unit id="af66446752e8b3d3054f6337afa9fb75">
+        <source>Impossible to copy "%s" to "%s".</source>
+        <target>Impossible to copy "%s" to "%s".</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:397</note>
+      </trans-unit>
+      <trans-unit id="506ea915e7b7f5683f811fd09f0373b4">
+        <source>Impossible to translate "$dest".</source>
+        <target>Impossible to translate "$dest".</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:400</note>
+      </trans-unit>
+      <trans-unit id="c7254dc1193c25493aa0a09df285b43c">
+        <source>A part of the data has been copied but some of the language files could not be found.</source>
+        <target>A part of the data has been copied but some of the language files could not be found.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:407</note>
+      </trans-unit>
+      <trans-unit id="ec531fd2b656df91f11e8f94b2bd2f9b">
+        <source>An error occurred while creating archive.</source>
+        <target>An error occurred while creating archive.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:512</note>
+      </trans-unit>
+      <trans-unit id="b10dfa68dec5e313508a4a55eedae7d1">
+        <source>Please select a language and a theme.</source>
+        <target>Please select a language and a theme.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:514</note>
+      </trans-unit>
+      <trans-unit id="02ae08296d544eb7c674182122645631">
+        <source>Tab "%s" is not valid</source>
+        <target>Tab "%s" is not valid</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:674</note>
+      </trans-unit>
+      <trans-unit id="00ab48dc84eab4a3effe37be6dc55392">
+        <source>Validation failed for: %s</source>
+        <target>Validation failed for: %s</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:752</note>
+      </trans-unit>
+      <trans-unit id="022fdb1ef2a4a458114f8cb8aa38c967">
+        <source>Unidentified file found: %s</source>
+        <target>Unidentified file found: %s</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:755</note>
+      </trans-unit>
+      <trans-unit id="9831c9e35b4d39d939363aa5629e00f2">
+        <source>The archive cannot be extracted.</source>
+        <target>The archive cannot be extracted.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:817</note>
+      </trans-unit>
+      <trans-unit id="30a5e2c0c99e2615a1f4eef6162e7674">
+        <source>ISO CODE invalid "%1$s" for the following file: "%2$s"</source>
+        <target>ISO CODE invalid "%1$s" for the following file: "%2$s"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:819</note>
+      </trans-unit>
+      <trans-unit id="1970e39c8995f0f6c227f94fc01e35dd">
+        <source>Invalid theme "%s"</source>
+        <target>Invalid theme "%s"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1763</note>
+      </trans-unit>
+      <trans-unit id="8b2e38b1190fe7c4546f89769ecd6657">
+        <source>Invalid iso code "%s"</source>
+        <target>Invalid iso code "%s"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1372</note>
+      </trans-unit>
+      <trans-unit id="b399fb01ee4e0a8ec1681fb9bcb31ce0">
+        <source>This %type_content% file extension is not accepted.</source>
+        <target>This %type_content% file extension is not accepted.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1601</note>
+      </trans-unit>
+      <trans-unit id="5154da9633f2cb69c72cdb07b28a102d">
+        <source>Invalid module name "%s"</source>
+        <target>Invalid module name "%s"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1610</note>
+      </trans-unit>
+      <trans-unit id="e2865d85227e45bdc6fb87bf5df2b1f3">
+        <source>Invalid mail name "%s"</source>
+        <target>Invalid mail name "%s"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1614</note>
+      </trans-unit>
+      <trans-unit id="a3c085f0d457ae1104bf59365beb675a">
+        <source>Directory "%s" cannot be created</source>
+        <target>Directory "%s" cannot be created</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1639</note>
+      </trans-unit>
+      <trans-unit id="ccdf1aa6f4cb029f9846e53006115905">
+        <source>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</source>
+        <target>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1647</note>
+      </trans-unit>
+      <trans-unit id="f1c030f2fd8f1b382a4bffd04af59c2d">
+        <source>Your HTML email templates cannot contain JavaScript code.</source>
+        <target>Your HTML email templates cannot contain JavaScript code.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1653</note>
+      </trans-unit>
+      <trans-unit id="d6355ab1d18f77d87dffcf2a55f680e7">
+        <source>Empty string found, please edit: "%s"</source>
+        <target>Empty string found, please edit: "%s"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1796</note>
+      </trans-unit>
+      <trans-unit id="8d3f73d1c4f2384de35da04cc6a7a919">
+        <source>There is an error in template, an empty string has been found. Please edit: "%s"</source>
+        <target>There is an error in template, an empty string has been found. Please edit: "%s"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2065</note>
+      </trans-unit>
+      <trans-unit id="616d8e7e6c0dc755a7e932c4db698317">
+        <source>The module directory must be writable.</source>
+        <target>The module directory must be writable.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2127</note>
+      </trans-unit>
+      <trans-unit id="aae8520eb4046d46fe9c6fb5ca6aacb6">
+        <source>A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s</source>
+        <target>A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2372</note>
+      </trans-unit>
+      <trans-unit id="7cf50c9ffecf05f3befc1134eba0ef45">
+        <source>missing translation(s)</source>
+        <target>missing translation(s)</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2427</note>
+      </trans-unit>
+      <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
+        <source>This expression uses a special syntax:</source>
+        <target>This expression uses a special syntax:</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2450</note>
+      </trans-unit>
+      <trans-unit id="1126cc7046d573e5fd9f631ec792770f">
+        <source>No Subject was found for %s in the database.</source>
+        <target>No Subject was found for %s in the database.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2466</note>
+      </trans-unit>
+      <trans-unit id="a662aa2e6538df75742383c7db8f3bd5">
+        <source>There was a problem getting the mail files.</source>
+        <target>There was a problem getting the mail files.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2506</note>
+      </trans-unit>
+      <trans-unit id="86ec02e176255a2545c850847cdc7218">
+        <source>English language files must exist in %s folder</source>
+        <target>English language files must exist in %s folder</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2507</note>
+      </trans-unit>
+      <trans-unit id="31370967686edafc2c4ae48d5870f47f">
+        <source>Cannot write language file for email subjects. Path is: %s</source>
+        <target>Cannot write language file for email subjects. Path is: %s</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2881</note>
+      </trans-unit>
+      <trans-unit id="61ca54d9195f5aa91fd0d41968f7e668">
+        <source>Cannot write into the "%s"</source>
+        <target>Cannot write into the "%s"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:3080</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a2d797375902a5f9133161289796add7">
-        <source>Translation successfully edited</source>
-        <target>Translation successfully edited</target>
+      <trans-unit id="41ca3d8439f6e8beab7af312714e37f0">
+        <source>Translation successfully updated</source>
+        <target>Translation successfully updated</target>
         <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:187</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:221</note>
       </trans-unit>
-      <trans-unit id="0d1f9c31b56e95d590b51a0dabc65981">
-        <source>Translation unsuccessfully edited</source>
-        <target>Translation unsuccessfully edited</target>
+      <trans-unit id="89f207396aadf538daf591675d55a436">
+        <source>Translation unsuccessfully updated</source>
+        <target>Translation unsuccessfully updated</target>
         <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:189</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:223</note>
       </trans-unit>
     </body>
   </file>

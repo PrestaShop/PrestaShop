@@ -1,33 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
-        <source>The uploaded file is too large.</source>
-        <target>The uploaded file is too large.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:288</note>
-      </trans-unit>
-      <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
-        <source>Invalid file format.</source>
-        <target>Invalid file format.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:304</note>
-      </trans-unit>
-      <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
-        <source>Failed to move uploaded file.</source>
-        <target>Failed to move uploaded file.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:316</note>
-      </trans-unit>
-      <trans-unit id="3cb5c48f468125102a98fe83a277029d">
-        <source>Warning: if no email logo is available, the main logo will be used instead.</source>
-        <target>Warning: if no email logo is available, the main logo will be used instead.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:362</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminCmsCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="29dae1d163226f90bb206b333bbffe1d">
@@ -38,24 +10,24 @@ File: controllers/admin/AdminCmsCategoriesController.php:105</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="68e8d36b17584f88614fb3201925a7ac">
-        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</source>
-        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</target>
+      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
+        <source>No items found</source>
+        <target>No items found</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:696</note>
-      </trans-unit>
-      <trans-unit id="0bedafc96db94da3f85caa7101944eb5">
-        <source>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</source>
-        <target>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:699</note>
+File: controllers/admin/AdminCmsController.php:274</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="20f2087fb2ccaa45caf5984bebbfc1a6">
+        <source>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %s only contains demonstration images, and then delete it.</source>
+        <target>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %s only contains demonstration images, and then delete it.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:338</note>
+      </trans-unit>
       <trans-unit id="5b8cb2aa659c7d6a98b740d2d788c69d">
         <source>Incorrect value for the selected JPEG image compression.</source>
         <target>Incorrect value for the selected JPEG image compression.</target>
@@ -133,6 +105,76 @@ File: controllers/admin/AdminImagesController.php:717</note>
         <target>Error: Some -- or all -- images cannot be moved.</target>
         <note>Context:
 File: controllers/admin/AdminImagesController.php:719</note>
+      </trans-unit>
+      <trans-unit id="cb2f901ceed5c3365d056794a1b5047f">
+        <source>After modification, do not forget to regenerate thumbnails</source>
+        <target>After modification, do not forget to regenerate thumbnails</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:737</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
+        <source>The uploaded file is too large.</source>
+        <target>The uploaded file is too large.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:314</note>
+      </trans-unit>
+      <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
+        <source>Invalid file format.</source>
+        <target>Invalid file format.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:330</note>
+      </trans-unit>
+      <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
+        <source>Failed to move uploaded file.</source>
+        <target>Failed to move uploaded file.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:342</note>
+      </trans-unit>
+      <trans-unit id="3cb5c48f468125102a98fe83a277029d">
+        <source>Warning: if no email logo is available, the main logo will be used instead.</source>
+        <target>Warning: if no email logo is available, the main logo will be used instead.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:388</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="412b4a82ba6153e19f17f490b5f1aa88">
+        <source>This theme is not valid for PrestaShop 1.7</source>
+        <target>This theme is not valid for PrestaShop 1.7</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeManager.php:310</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Theme/ThemeValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="832e8c53e8d05c52c824912c28933917">
+        <source>An error occurred. The information "%s" is missing.</source>
+        <target>An error occurred. The information "%s" is missing.</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeValidator.php:69</note>
+      </trans-unit>
+      <trans-unit id="7d88c564a7f74d56564402cd5e054b13">
+        <source>An error occurred. The template "%s" is missing.</source>
+        <target>An error occurred. The template "%s" is missing.</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeValidator.php:113</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
+        <source>Your theme has been correctly exported: %path%</source>
+        <target>Your theme has been correctly exported: %path%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Command/ExportThemeCommand.php:58</note>
       </trans-unit>
     </body>
   </file>

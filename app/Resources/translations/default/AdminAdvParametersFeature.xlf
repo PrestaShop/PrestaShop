@@ -1,39 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
-        <source>Age</source>
-        <target>Age</target>
-        <note>Context:
-File: controllers/admin/AdminBackupController.php:46</note>
-      </trans-unit>
-      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
-        <source>File size</source>
-        <target>File size</target>
-        <note>Context:
-File: controllers/admin/AdminBackupController.php:48</note>
-      </trans-unit>
-      <trans-unit id="30c210e0173f2ff607cc84dc01ffc1f0">
-        <source>Backup options</source>
-        <target>Backup options</target>
-        <note>Context:
-File: controllers/admin/AdminBackupController.php:58</note>
-      </trans-unit>
-      <trans-unit id="6afc2b40f9acff2a4d1e67f2dfcd8a30">
-        <source>Ignore statistics tables</source>
-        <target>Ignore statistics tables</target>
-        <note>Context:
-File: controllers/admin/AdminBackupController.php:61</note>
-      </trans-unit>
-      <trans-unit id="8859ec81a77f2f2b165bf5ea9858ecfc">
-        <source>Drop existing tables during import</source>
-        <target>Drop existing tables during import</target>
-        <note>Context:
-File: controllers/admin/AdminBackupController.php:69</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminAdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="46f18d3960afc01e5a1a5a0e0e9d571b">
@@ -78,9 +44,9 @@ File: controllers/admin/AdminAdminPreferencesController.php:79</note>
         <note>Context:
 File: controllers/admin/AdminAdminPreferencesController.php:92</note>
       </trans-unit>
-      <trans-unit id="e7fe6b70f4558e23f0254d80f52ae6d8">
-        <source>Maximum size for attachment</source>
-        <target>Maximum size for attachment</target>
+      <trans-unit id="454036c51196464f8d9c84ded5808985">
+        <source>Maximum size for attached files</source>
+        <target>Maximum size for attached files</target>
         <note>Context:
 File: controllers/admin/AdminAdminPreferencesController.php:96</note>
       </trans-unit>
@@ -125,6 +91,994 @@ File: controllers/admin/AdminAdminPreferencesController.php:138</note>
         <target>Show notifications for new messages</target>
         <note>Context:
 File: controllers/admin/AdminAdminPreferencesController.php:145</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
+        <source>Age</source>
+        <target>Age</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:46</note>
+      </trans-unit>
+      <trans-unit id="1908624a0bca678cd26b99bfd405324e">
+        <source>File size</source>
+        <target>File size</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:48</note>
+      </trans-unit>
+      <trans-unit id="30c210e0173f2ff607cc84dc01ffc1f0">
+        <source>Backup options</source>
+        <target>Backup options</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:58</note>
+      </trans-unit>
+      <trans-unit id="6afc2b40f9acff2a4d1e67f2dfcd8a30">
+        <source>Ignore statistics tables</source>
+        <target>Ignore statistics tables</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:61</note>
+      </trans-unit>
+      <trans-unit id="8859ec81a77f2f2b165bf5ea9858ecfc">
+        <source>Drop existing tables during import</source>
+        <target>Drop existing tables during import</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminEmailsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5d6103b662f41b07e10687f03aca8fdc">
+        <source>Recipient</source>
+        <target>Recipient</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:62</note>
+      </trans-unit>
+      <trans-unit id="c7892ebbb139886662c6f2fc8c450710">
+        <source>Subject</source>
+        <target>Subject</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:73</note>
+      </trans-unit>
+      <trans-unit id="7f8c0283f16925caed8e632086b81b9c">
+        <source>Sent</source>
+        <target>Sent</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:75</note>
+      </trans-unit>
+      <trans-unit id="ec76c5b544633d334c7a3f92db1c7efd">
+        <source>Send emails to</source>
+        <target>Send emails to</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:94</note>
+      </trans-unit>
+      <trans-unit id="982bb3f2cc4922620fd3aee7ff15b552">
+        <source>Never send emails (may be useful for testing purposes)</source>
+        <target>Never send emails (may be useful for testing purposes)</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:108</note>
+      </trans-unit>
+      <trans-unit id="e6095b01597caf275fb24fa766fb8a57">
+        <source>Set my own SMTP parameters (for advanced users ONLY)</source>
+        <target>Set my own SMTP parameters (for advanced users ONLY)</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:109</note>
+      </trans-unit>
+      <trans-unit id="970e79a141128a95d3c2f35f622b6710">
+        <source>Send email in HTML format</source>
+        <target>Send email in HTML format</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:118</note>
+      </trans-unit>
+      <trans-unit id="9f1b874f3886d361d6eb6b079639c385">
+        <source>Send email in text format</source>
+        <target>Send email in text format</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:119</note>
+      </trans-unit>
+      <trans-unit id="130c5b3473c57faa76e2a1c54e26f88e">
+        <source>Both</source>
+        <target>Both</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:120</note>
+      </trans-unit>
+      <trans-unit id="c63600a5ac5af840103d0ee9608e7b44">
+        <source>Log Emails</source>
+        <target>Log Emails</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:124</note>
+      </trans-unit>
+      <trans-unit id="c098053744ce979cbd030908105d54fe">
+        <source>Mail domain name</source>
+        <target>Mail domain name</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:136</note>
+      </trans-unit>
+      <trans-unit id="bdd48fb41b9d0a4a1051fa22a87eb5a2">
+        <source>SMTP server</source>
+        <target>SMTP server</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:143</note>
+      </trans-unit>
+      <trans-unit id="a7bfd8847270913b15396380c3627d76">
+        <source>SMTP username</source>
+        <target>SMTP username</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:149</note>
+      </trans-unit>
+      <trans-unit id="3cffa2fabd5519beaf4c2fbd0610899b">
+        <source>SMTP password</source>
+        <target>SMTP password</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:155</note>
+      </trans-unit>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:171</note>
+      </trans-unit>
+      <trans-unit id="099d7d04319e5191b7473e016c55e320">
+        <source>TLS</source>
+        <target>TLS</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:175</note>
+      </trans-unit>
+      <trans-unit id="ea52c36203c5f99c3ce2442d531b1a22">
+        <source>SSL</source>
+        <target>SSL</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:179</note>
+      </trans-unit>
+      <trans-unit id="60aaf44d4b562252c04db7f98497e9aa">
+        <source>Port</source>
+        <target>Port</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:184</note>
+      </trans-unit>
+      <trans-unit id="762160912d2bac8eb64bc00b711d6f6c">
+        <source>Port number to use.</source>
+        <target>Port number to use.</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:185</note>
+      </trans-unit>
+      <trans-unit id="a8a9e7c120e7020435d955d3a0c96471">
+        <source>Test your email configuration</source>
+        <target>Test your email configuration</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:195</note>
+      </trans-unit>
+      <trans-unit id="5f23f9739fa16efc7ddd06bb03096998">
+        <source>Send a test email to</source>
+        <target>Send a test email to</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:199</note>
+      </trans-unit>
+      <trans-unit id="16186ead9220c2a4646402c69109cfa0">
+        <source>Send a test email</source>
+        <target>Send a test email</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:209</note>
+      </trans-unit>
+      <trans-unit id="11812952ae95fbc6ebc323426262bb51">
+        <source>Use PHP's mail() function (recommended; works in most cases)</source>
+        <target>Use PHP's mail() function (recommended; works in most cases)</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:221</note>
+      </trans-unit>
+      <trans-unit id="94fc5d3be31c72a400c50aae395f1f1f">
+        <source>This is a test message. Your server is now configured to send email.</source>
+        <target>This is a test message. Your server is now configured to send email.</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:233</note>
+      </trans-unit>
+      <trans-unit id="e379446940f88886aba80367a10fa4cc">
+        <source>Test message -- Prestashop</source>
+        <target>Test message -- Prestashop</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:234</note>
+      </trans-unit>
+      <trans-unit id="0bb7ea7550d2e7caf5e32329bc7423cd">
+        <source>A test email has been sent to the email address you provided.</source>
+        <target>A test email has been sent to the email address you provided.</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:235</note>
+      </trans-unit>
+      <trans-unit id="4e6ebf3087084e1fda3554d154851ef0">
+        <source>Error: Please check your configuration</source>
+        <target>Error: Please check your configuration</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:236</note>
+      </trans-unit>
+      <trans-unit id="678e00213ce73b9bbdefd0979507436c">
+        <source>This email address is not valid</source>
+        <target>This email address is not valid</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:238</note>
+      </trans-unit>
+      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
+        <source>Erase all</source>
+        <target>Erase all</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:257</note>
+      </trans-unit>
+      <trans-unit id="86c9ce4b2e3b43353a23861c053a594b">
+        <source>Back to the dashboard</source>
+        <target>Back to the dashboard</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:285</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="278c491bdd8a53618c149c4ac790da34">
+        <source>Template</source>
+        <target>Template</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:526</note>
+      </trans-unit>
+      <trans-unit id="6b127dc82937049e45e74aebca783e74">
+        <source>Store contacts</source>
+        <target>Store contacts</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4326</note>
+      </trans-unit>
+      <trans-unit id="0440efe0a9a9bc643eaec7dbdade39df">
+        <source>Supply Orders</source>
+        <target>Supply Orders</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4335</note>
+      </trans-unit>
+      <trans-unit id="9f954c5e16659673382f03fa027772ea">
+        <source>Supply Order Details</source>
+        <target>Supply Order Details</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4340</note>
+      </trans-unit>
+      <trans-unit id="b8495b50f5c172ebad1cc5c615548afa">
+        <source>Ignore this column</source>
+        <target>Ignore this column</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:546</note>
+      </trans-unit>
+      <trans-unit id="97f08a40f22a625d0cbfe03db3349108">
+        <source>Product ID</source>
+        <target>Product ID</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:124</note>
+      </trans-unit>
+      <trans-unit id="fa4ecc0168c2a9e448f469e3835d2a68">
+        <source>Product Reference</source>
+        <target>Product Reference</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:125</note>
+      </trans-unit>
+      <trans-unit id="8ae880593c2afcc7da6d3530513a05d6">
+        <source>Attribute (Name:Type:Position)</source>
+        <target>Attribute (Name:Type:Position)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:127</note>
+      </trans-unit>
+      <trans-unit id="e1b8b0be45098d71aba659e1149ea395">
+        <source>Value (Value:Position)</source>
+        <target>Value (Value:Position)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:130</note>
+      </trans-unit>
+      <trans-unit id="8284ae5df53e6e7ffc1f2cc67ae68765">
+        <source>Supplier reference</source>
+        <target>Supplier reference</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:132</note>
+      </trans-unit>
+      <trans-unit id="52eb5928a34db3e3da7ba52b0644273b">
+        <source>EAN13</source>
+        <target>EAN13</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:240</note>
+      </trans-unit>
+      <trans-unit id="fbd99ad01b92dbafc686772a39e3d065">
+        <source>UPC</source>
+        <target>UPC</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:241</note>
+      </trans-unit>
+      <trans-unit id="ac0b7d0703609cbbfa09b53f8d793d29">
+        <source>Minimal quantity</source>
+        <target>Minimal quantity</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:248</note>
+      </trans-unit>
+      <trans-unit id="5db5f3f0c5f233fbc13f08c052e98281">
+        <source>Default (0 = No, 1 = Yes)</source>
+        <target>Default (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:142</note>
+      </trans-unit>
+      <trans-unit id="e933b93c26b14c12ac7818867e54c5d9">
+        <source>Combination availability date</source>
+        <target>Combination availability date</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:143</note>
+      </trans-unit>
+      <trans-unit id="657645fae83ad1673b25d3c027b77ed8">
+        <source>Choose among product images by position (1,2,3...)</source>
+        <target>Choose among product images by position (1,2,3...)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:145</note>
+      </trans-unit>
+      <trans-unit id="4d2589e1bcd4263cb99927b59f0f88d2">
+        <source>Image URLs (x,y,z...)</source>
+        <target>Image URLs (x,y,z...)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:266</note>
+      </trans-unit>
+      <trans-unit id="7a2ec0911e94664f3dfcc8cbefb0e908">
+        <source>Image alt texts (x,y,z...)</source>
+        <target>Image alt texts (x,y,z...)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:267</note>
+      </trans-unit>
+      <trans-unit id="f8a0fa3674c3336359b77bbe8e942a2c">
+        <source>ID / Name of shop</source>
+        <target>ID / Name of shop</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:494</note>
+      </trans-unit>
+      <trans-unit id="70b8833184afe1b309f4d679acff991e">
+        <source>Advanced Stock Management</source>
+        <target>Advanced Stock Management</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:294</note>
+      </trans-unit>
+      <trans-unit id="53acc0172842523c8a52f50894c6df15">
+        <source>Depends on stock</source>
+        <target>Depends on stock</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:298</note>
+      </trans-unit>
+      <trans-unit id="6416e8cb5fc0a208d94fa7f5a300dbc4">
+        <source>Warehouse</source>
+        <target>Warehouse</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:302</note>
+      </trans-unit>
+      <trans-unit id="fd0dcc6233b026d257763713c133cf72">
+        <source>Active (0/1)</source>
+        <target>Active (0/1)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:477</note>
+      </trans-unit>
+      <trans-unit id="6c7c9fbb27699c4018dc15744547b4a4">
+        <source>Root category (0/1)</source>
+        <target>Root category (0/1)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:193</note>
+      </trans-unit>
+      <trans-unit id="427b6d816d7fdd86cabe48d8180a3cc9">
+        <source>Image URL</source>
+        <target>Image URL</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:492</note>
+      </trans-unit>
+      <trans-unit id="df8ffb90c945e796f2cfd9265325b9c3">
+        <source>Categories (x,y,z...)</source>
+        <target>Categories (x,y,z...)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:226</note>
+      </trans-unit>
+      <trans-unit id="88627291a92931577d427c5fd68f511e">
+        <source>Price tax excluded</source>
+        <target>Price tax excluded</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:227</note>
+      </trans-unit>
+      <trans-unit id="f154d2146a2acf439d955fea9d396ec2">
+        <source>Price tax included</source>
+        <target>Price tax included</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:228</note>
+      </trans-unit>
+      <trans-unit id="8a1cabdfd802aa4ea2ec774feb832a1e">
+        <source>Tax rule ID</source>
+        <target>Tax rule ID</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:229</note>
+      </trans-unit>
+      <trans-unit id="b548dcad953710689b3066823b90f517">
+        <source>On sale (0/1)</source>
+        <target>On sale (0/1)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:231</note>
+      </trans-unit>
+      <trans-unit id="b30690be173bcd4a83df0cd68f89a385">
+        <source>Discount amount</source>
+        <target>Discount amount</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:232</note>
+      </trans-unit>
+      <trans-unit id="5d01d5588119abec82fd8004995de275">
+        <source>Discount percent</source>
+        <target>Discount percent</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:233</note>
+      </trans-unit>
+      <trans-unit id="bfd574f8096a396d831b1c1ac88c75d1">
+        <source>Discount from (yyyy-mm-dd)</source>
+        <target>Discount from (yyyy-mm-dd)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:234</note>
+      </trans-unit>
+      <trans-unit id="48d6c0804dd92fb5463bba154a8a747f">
+        <source>Discount to (yyyy-mm-dd)</source>
+        <target>Discount to (yyyy-mm-dd)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:235</note>
+      </trans-unit>
+      <trans-unit id="6928b30c9f87670d7621fe8f1fef7054">
+        <source>Reference #</source>
+        <target>Reference #</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:236</note>
+      </trans-unit>
+      <trans-unit id="c7d4affd54ce760d4731e21e3aa506fd">
+        <source>Supplier reference #</source>
+        <target>Supplier reference #</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:237</note>
+      </trans-unit>
+      <trans-unit id="7bbdd372c9d171174e3ce1ba9d97d5f6">
+        <source>Additional shipping cost</source>
+        <target>Additional shipping cost</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:250</note>
+      </trans-unit>
+      <trans-unit id="0246175f81454bc445f908bac64f354c">
+        <source>Unit for the price per unit</source>
+        <target>Unit for the price per unit</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:251</note>
+      </trans-unit>
+      <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
+        <source>Price per unit</source>
+        <target>Price per unit</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:252</note>
+      </trans-unit>
+      <trans-unit id="bede52f418b34b1ab0db65f9450bdfc3">
+        <source>Tags (x,y,z...)</source>
+        <target>Tags (x,y,z...)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:255</note>
+      </trans-unit>
+      <trans-unit id="db72e24b402e8baf8df6ca786a59e4de">
+        <source>Rewritten URL</source>
+        <target>Rewritten URL</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:259</note>
+      </trans-unit>
+      <trans-unit id="6be65deefdf4fae21955e2c060815530">
+        <source>Label when backorder allowed</source>
+        <target>Label when backorder allowed</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:261</note>
+      </trans-unit>
+      <trans-unit id="cf7a1f189bbd1f48db0ece1da9cc0802">
+        <source>Available for order (0 = No, 1 = Yes)</source>
+        <target>Available for order (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:262</note>
+      </trans-unit>
+      <trans-unit id="d24a6864b6139a2423c8f3004c8f7751">
+        <source>Product availability date</source>
+        <target>Product availability date</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:263</note>
+      </trans-unit>
+      <trans-unit id="21f7b5b011f253b35340528b7f190282">
+        <source>Product creation date</source>
+        <target>Product creation date</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:264</note>
+      </trans-unit>
+      <trans-unit id="76aeea9f48196068e6b47d46d41e7618">
+        <source>Show price (0 = No, 1 = Yes)</source>
+        <target>Show price (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:265</note>
+      </trans-unit>
+      <trans-unit id="4f5dc004cdd01ec9cf7fbbcf9f812aa7">
+        <source>Delete existing images (0 = No, 1 = Yes)</source>
+        <target>Delete existing images (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:269</note>
+      </trans-unit>
+      <trans-unit id="2fe5beaf842ddac297ade8ef5ba379cc">
+        <source>Feature (Name:Value:Position:Customized)</source>
+        <target>Feature (Name:Value:Position:Customized)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:271</note>
+      </trans-unit>
+      <trans-unit id="446e04d1ed3b8fca04274d7c726a3fd5">
+        <source>Available online only (0 = No, 1 = Yes)</source>
+        <target>Available online only (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:272</note>
+      </trans-unit>
+      <trans-unit id="f53c39de16dea1ee2352ab566702eb27">
+        <source>Customizable (0 = No, 1 = Yes)</source>
+        <target>Customizable (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:274</note>
+      </trans-unit>
+      <trans-unit id="da505e5a6dd5678894aa9f8663bf4db0">
+        <source>Uploadable files (0 = No, 1 = Yes)</source>
+        <target>Uploadable files (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:275</note>
+      </trans-unit>
+      <trans-unit id="6bfdfdf56a73c0726864489f78e4f91b">
+        <source>Text fields (0 = No, 1 = Yes)</source>
+        <target>Text fields (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:276</note>
+      </trans-unit>
+      <trans-unit id="27cb4532e39ccfac2114be6223cf3534">
+        <source>Action when out of stock</source>
+        <target>Action when out of stock</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:277</note>
+      </trans-unit>
+      <trans-unit id="81188f605f25cfc48952bb6b754cf69f">
+        <source>Virtual product (0 = No, 1 = Yes)</source>
+        <target>Virtual product (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:278</note>
+      </trans-unit>
+      <trans-unit id="b3d2db69feecaedff30f1e0bc60206d6">
+        <source>File URL</source>
+        <target>File URL</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:279</note>
+      </trans-unit>
+      <trans-unit id="8b155133fee28ec212ccf75a28e0711e">
+        <source>Expiration date (yyyy-mm-dd)</source>
+        <target>Expiration date (yyyy-mm-dd)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:284</note>
+      </trans-unit>
+      <trans-unit id="58fd2b2308056ad80255a322b305742b">
+        <source>Number of days</source>
+        <target>Number of days</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:286</note>
+      </trans-unit>
+      <trans-unit id="63a293f69541c07a826ac0e8f35e6222">
+        <source>Accessories (x,y,z...)</source>
+        <target>Accessories (x,y,z...)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:305</note>
+      </trans-unit>
+      <trans-unit id="a10d0bff85112a2b35f885a38088cd20">
+        <source>Active  (0/1)</source>
+        <target>Active  (0/1)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:387</note>
+      </trans-unit>
+      <trans-unit id="f323be7152201bfc856e649e84e9d64c">
+        <source>Titles ID (Mr = 1, Ms = 2, else 0)</source>
+        <target>Titles ID (Mr = 1, Ms = 2, else 0)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:347</note>
+      </trans-unit>
+      <trans-unit id="9588fe347c3d1c8b41a762b2de764bf6">
+        <source>Birth date (yyyy-mm-dd)</source>
+        <target>Birth date (yyyy-mm-dd)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:350</note>
+      </trans-unit>
+      <trans-unit id="b884d81a33fb67e1d4fe450b3cbde8d6">
+        <source>Newsletter (0/1)</source>
+        <target>Newsletter (0/1)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:353</note>
+      </trans-unit>
+      <trans-unit id="7a39b81015194bb83112801572292040">
+        <source>Partner offers (0/1)</source>
+        <target>Partner offers (0/1)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:354</note>
+      </trans-unit>
+      <trans-unit id="d6ac7b9d5e3b186f26efc9a5309d8985">
+        <source>Registration date (yyyy-mm-dd)</source>
+        <target>Registration date (yyyy-mm-dd)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:355</note>
+      </trans-unit>
+      <trans-unit id="8ed4a31f87f37636186bd6bdbc646f1f">
+        <source>Groups (x,y,z...)</source>
+        <target>Groups (x,y,z...)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:356</note>
+      </trans-unit>
+      <trans-unit id="b0869dd58b90ec940e91a195d754a155">
+        <source>Default group ID</source>
+        <target>Default group ID</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:357</note>
+      </trans-unit>
+      <trans-unit id="03361eda68f746619c2ae3341eaa2f07">
+        <source>Customer email</source>
+        <target>Customer email</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:388</note>
+      </trans-unit>
+      <trans-unit id="d37c2bf1bd3143847fca087b354f920e">
+        <source>Customer ID</source>
+        <target>Customer ID</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:389</note>
+      </trans-unit>
+      <trans-unit id="3d1c10fcfac7da07fdb8b9f99d1c0901">
+        <source>ID / Name of group shop</source>
+        <target>ID / Name of group shop</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:436</note>
+      </trans-unit>
+      <trans-unit id="783cb853aae6984e51583b3bb80c09d2">
+        <source>Address (2)</source>
+        <target>Address (2)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:480</note>
+      </trans-unit>
+      <trans-unit id="3b0eb7469ba9c95f3a05c4cef1f6aac4">
+        <source>Latitude</source>
+        <target>Latitude</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:485</note>
+      </trans-unit>
+      <trans-unit id="9b4dabc50f0b8ccba1c8981831abdad8">
+        <source>Longitude</source>
+        <target>Longitude</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:486</note>
+      </trans-unit>
+      <trans-unit id="3b0649c72650c313a357338dcdfb64ec">
+        <source>Note</source>
+        <target>Note</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:490</note>
+      </trans-unit>
+      <trans-unit id="f42301fc8497aeb77b516f31b2d57d61">
+        <source>Hours (x,y,z...)</source>
+        <target>Hours (x,y,z...)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:491</note>
+      </trans-unit>
+      <trans-unit id="9b1f5ada3db7e58544806a11099b7103">
+        <source>Supplier ID *</source>
+        <target>Supplier ID *</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:519</note>
+      </trans-unit>
+      <trans-unit id="84560d7d7c4d97c640d09a58491a3677">
+        <source>Lang ID</source>
+        <target>Lang ID</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:520</note>
+      </trans-unit>
+      <trans-unit id="8954e2e0d62b56db3c10df45a7602cd3">
+        <source>Warehouse ID *</source>
+        <target>Warehouse ID *</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:521</note>
+      </trans-unit>
+      <trans-unit id="dfa8db9b8d08689d8a23067e93ef4ef9">
+        <source>Currency ID *</source>
+        <target>Currency ID *</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:522</note>
+      </trans-unit>
+      <trans-unit id="e11d1e5d17a3f9ce34faccbb5cc61394">
+        <source>Supply Order Reference *</source>
+        <target>Supply Order Reference *</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:547</note>
+      </trans-unit>
+      <trans-unit id="f9c5030e9d71a6ba285489576e1d0e3f">
+        <source>Delivery Date (Y-M-D)*</source>
+        <target>Delivery Date (Y-M-D)*</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:524</note>
+      </trans-unit>
+      <trans-unit id="9e57c2dbcacea5e2e8aa3edde11cf976">
+        <source>Discount rate</source>
+        <target>Discount rate</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:525</note>
+      </trans-unit>
+      <trans-unit id="c5d4da7adbd98e284ef9a8733a9ceaf2">
+        <source>Product ID *</source>
+        <target>Product ID *</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:548</note>
+      </trans-unit>
+      <trans-unit id="41b00531a619d5e0f965854e352529f1">
+        <source>Product Attribute ID</source>
+        <target>Product Attribute ID</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:549</note>
+      </trans-unit>
+      <trans-unit id="94fb72f3353fb2507e18fc6748f7a811">
+        <source>Unit Price (tax excl.)*</source>
+        <target>Unit Price (tax excl.)*</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:550</note>
+      </trans-unit>
+      <trans-unit id="f41a10a672cbcdecaad1d2f73f30b1f8">
+        <source>Quantity Expected *</source>
+        <target>Quantity Expected *</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:551</note>
+      </trans-unit>
+      <trans-unit id="6703aa9936582b4381418f7d523370b4">
+        <source>Discount Rate</source>
+        <target>Discount Rate</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:552</note>
+      </trans-unit>
+      <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
+        <source>Tax Rate</source>
+        <target>Tax Rate</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:553</note>
+      </trans-unit>
+      <trans-unit id="2415390fb5052bb8221a93c9fc51b17f">
+        <source>Import .CSV data</source>
+        <target>Import .CSV data</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:796</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminPerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f8d698aea36fcbead2b9d5359ffca76f">
+        <source>Smarty</source>
+        <target>Smarty</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:55</note>
+      </trans-unit>
+      <trans-unit id="770d85a02ce8841bd4dac97b57c7fa17">
+        <source>Template compilation</source>
+        <target>Template compilation</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:65</note>
+      </trans-unit>
+      <trans-unit id="b8b65041a5ab3fa85c620238bbd3f390">
+        <source>Never recompile template files</source>
+        <target>Never recompile template files</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:71</note>
+      </trans-unit>
+      <trans-unit id="a1d2406cf6a671bc87a3eb6b5db3a7fd">
+        <source>Recompile templates if the files have been updated</source>
+        <target>Recompile templates if the files have been updated</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:77</note>
+      </trans-unit>
+      <trans-unit id="624718bb7cbf83ee3b5a78ecade12eac">
+        <source>Force compilation</source>
+        <target>Force compilation</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:83</note>
+      </trans-unit>
+      <trans-unit id="ab0cf104f39708eabd07b8cb67e149ba">
+        <source>Cache</source>
+        <target>Cache</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:90</note>
+      </trans-unit>
+      <trans-unit id="0d6bf1934cab1de045b189eed03c3d42">
+        <source>Should be enabled except for debugging.</source>
+        <target>Should be enabled except for debugging.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:105</note>
+      </trans-unit>
+      <trans-unit id="1c9e9fdb43035d78fc94dd37c357869c">
+        <source>Multi-front optimizations</source>
+        <target>Multi-front optimizations</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:109</note>
+      </trans-unit>
+      <trans-unit id="bfa7e629b4eaa924530242510a50679e">
+        <source>Caching type</source>
+        <target>Caching type</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:128</note>
+      </trans-unit>
+      <trans-unit id="6c202452e44c42e323204da2a3a3c24a">
+        <source>File System</source>
+        <target>File System</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:134</note>
+      </trans-unit>
+      <trans-unit id="62a004b95946bb97541afa471dcca73a">
+        <source>MySQL</source>
+        <target>MySQL</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:139</note>
+      </trans-unit>
+      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
+        <source>Clear cache</source>
+        <target>Clear cache</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:590</note>
+      </trans-unit>
+      <trans-unit id="dbe2df5641344e1d14be812243f91ec5">
+        <source>Never clear cache files</source>
+        <target>Never clear cache files</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:151</note>
+      </trans-unit>
+      <trans-unit id="8a9c2220c57773c2b05e4b800be3ba88">
+        <source>Clear cache everytime something has been modified</source>
+        <target>Clear cache everytime something has been modified</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:156</note>
+      </trans-unit>
+      <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
+        <source>Debug mode</source>
+        <target>Debug mode</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:225</note>
+      </trans-unit>
+      <trans-unit id="0da6a47faba382116423315f9e61b9e2">
+        <source>Disable non PrestaShop modules</source>
+        <target>Disable non PrestaShop modules</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:185</note>
+      </trans-unit>
+      <trans-unit id="edf05af828595f01ae00b209ef0b1e1f">
+        <source>Enable or disable non PrestaShop Modules.</source>
+        <target>Enable or disable non PrestaShop Modules.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:201</note>
+      </trans-unit>
+      <trans-unit id="03a9e6840847f96325b7184d5f3c2769">
+        <source>Disable all overrides</source>
+        <target>Disable all overrides</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:205</note>
+      </trans-unit>
+      <trans-unit id="29826f9f4da3d473c1e4ecf2f6c4ef9f">
+        <source>Enable or disable all classes and controllers overrides.</source>
+        <target>Enable or disable all classes and controllers overrides.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:221</note>
+      </trans-unit>
+      <trans-unit id="010a6cb0eccdea35662ad711d443f2ec">
+        <source>Optional features</source>
+        <target>Optional features</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:258</note>
+      </trans-unit>
+      <trans-unit id="2230223f77c24a72b50f03120db32b1a">
+        <source>Customer Groups</source>
+        <target>Customer Groups</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:309</note>
+      </trans-unit>
+      <trans-unit id="f4efdd180586cba038b52f2471e4075d">
+        <source>CCC (Combine, Compress and Cache)</source>
+        <target>CCC (Combine, Compress and Cache)</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:342</note>
+      </trans-unit>
+      <trans-unit id="c7ceaefb9d7fd3731ae2a28abad2cb95">
+        <source>Smart cache for CSS</source>
+        <target>Smart cache for CSS</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:353</note>
+      </trans-unit>
+      <trans-unit id="241599cb152c7b1116c4d4053a041023">
+        <source>Use CCC for CSS</source>
+        <target>Use CCC for CSS</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:359</note>
+      </trans-unit>
+      <trans-unit id="a80f3ba9da16baa959b8685c8538099d">
+        <source>Keep CSS as original</source>
+        <target>Keep CSS as original</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:364</note>
+      </trans-unit>
+      <trans-unit id="cf00874a93cf1cca317853c54c9f40e3">
+        <source>Smart cache for JavaScript</source>
+        <target>Smart cache for JavaScript</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:370</note>
+      </trans-unit>
+      <trans-unit id="2a50ec18066afb6185ed64e8a69af3aa">
+        <source>Use CCC for JavaScript</source>
+        <target>Use CCC for JavaScript</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:376</note>
+      </trans-unit>
+      <trans-unit id="c469db474a76169ecfbe4d16c0a94646">
+        <source>Keep JavaScript as original</source>
+        <target>Keep JavaScript as original</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:381</note>
+      </trans-unit>
+      <trans-unit id="0b388064aa29e8576990d9eb5da8d43e">
+        <source>Apache optimization</source>
+        <target>Apache optimization</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:395</note>
+      </trans-unit>
+      <trans-unit id="3ffcac2b857b421d5418b748b411265b">
+        <source>Media servers (use only with CCC)</source>
+        <target>Media servers (use only with CCC)</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:423</note>
+      </trans-unit>
+      <trans-unit id="2d29e91503465ed72170623f37458e32">
+        <source>You must enter another domain, or subdomain, in order to use cookieless static content.</source>
+        <target>You must enter another domain, or subdomain, in order to use cookieless static content.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:426</note>
+      </trans-unit>
+      <trans-unit id="3ed7fddd0f381c4fe4683fc9e856dbcf">
+        <source>Media server #1</source>
+        <target>Media server #1</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:434</note>
+      </trans-unit>
+      <trans-unit id="02d56cf7754ce16d7ce0193fbca7c90a">
+        <source>Caching</source>
+        <target>Caching</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:485</note>
+      </trans-unit>
+      <trans-unit id="276e3171a63595e207ec292fce891277">
+        <source>Use cache</source>
+        <target>Use cache</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:495</note>
+      </trans-unit>
+      <trans-unit id="aa7ef82bc75491903bfc4838957265be">
+        <source>Caching system</source>
+        <target>Caching system</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:513</note>
+      </trans-unit>
+      <trans-unit id="bd74be2b0190f4b7f3ef117342771f70">
+        <source>Memcached via PHP::Memcache</source>
+        <target>Memcached via PHP::Memcache</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:519</note>
+      </trans-unit>
+      <trans-unit id="e6f9c14400a56127e7397b4f8afeae10">
+        <source>Memcached via PHP::Memcached</source>
+        <target>Memcached via PHP::Memcached</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:524</note>
+      </trans-unit>
+      <trans-unit id="0e68f753bc601f5d9d04717f95042762">
+        <source>APC</source>
+        <target>APC</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:529</note>
+      </trans-unit>
+      <trans-unit id="38ca568bbe61771c6456a5c7b8d419ee">
+        <source>Xcache</source>
+        <target>Xcache</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:534</note>
       </trans-unit>
     </body>
   </file>

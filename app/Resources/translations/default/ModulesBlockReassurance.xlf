@@ -18,19 +18,19 @@ File: modules/blockreassurance/blockreassurance.php:48</note>
         <source>The block configuration has been updated.</source>
         <target>The block configuration has been updated.</target>
         <note>Context:
-File: modules/blockreassurance/blockreassurance.php:204</note>
+File: modules/blockreassurance/blockreassurance.php:206</note>
       </trans-unit>
       <trans-unit id="8363eee01f4da190a4cef9d26a36750c">
         <source>New reassurance block</source>
         <target>New reassurance block</target>
         <note>Context:
-File: modules/blockreassurance/blockreassurance.php:226</note>
+File: modules/blockreassurance/blockreassurance.php:228</note>
       </trans-unit>
       <trans-unit id="23498d91b6017e5d7f4ddde70daba286">
         <source>ID Shop</source>
         <target>ID Shop</target>
         <note>Context:
-File: modules/blockreassurance/blockreassurance.php:306</note>
+File: modules/blockreassurance/blockreassurance.php:308</note>
       </trans-unit>
       <trans-unit id="4191d7614fb4c4f3e05f0de1b72c1999">
         <source>Security policy (edit with module Customer reassurance)</source>

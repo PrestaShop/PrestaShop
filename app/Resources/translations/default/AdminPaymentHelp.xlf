@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminPaymentPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c4d74515416a5d1be75cfcd3e148e8e5">
+        <source>Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.</source>
+        <target>Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.</target>
+        <note>Context:
+File: controllers/admin/AdminPaymentPreferencesController.php:242</note>
+      </trans-unit>
+      <trans-unit id="b193f3e27f6936fd26746b39aca66587">
+        <source>Please mark each checkbox for the customer group(s), for which you want the payment module(s) to be available.</source>
+        <target>Please mark each checkbox for the customer group(s), for which you want the payment module(s) to be available.</target>
+        <note>Context:
+File: controllers/admin/AdminPaymentPreferencesController.php:249</note>
+      </trans-unit>
+      <trans-unit id="a8fc3e8b2c61a74ac9b50e36604525c8">
+        <source>Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.</source>
+        <target>Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.</target>
+        <note>Context:
+File: controllers/admin/AdminPaymentPreferencesController.php:256</note>
+      </trans-unit>
+      <trans-unit id="27acfbd58a7ff9f12c9ac05dd94733c5">
+        <source>Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.</source>
+        <target>Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.</target>
+        <note>Context:
+File: controllers/admin/AdminPaymentPreferencesController.php:263</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

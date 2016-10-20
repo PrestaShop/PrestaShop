@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminMetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminZonesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
         <note>Context:
-File: controllers/admin/AdminMetaController.php:59</note>
+File: controllers/admin/AdminZonesController.php:64</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminEmailsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="729a51874fe901b092899e9e8b31c97a">
+        <source>Are you sure?</source>
+        <target>Are you sure?</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:258</note>
       </trans-unit>
     </body>
   </file>
@@ -16,13 +26,13 @@ File: controllers/admin/AdminMetaController.php:59</note>
         <source>Are you sure to delete this?</source>
         <target>Are you sure to delete this?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1107</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1133</note>
       </trans-unit>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
         <target>Warning</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1050</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1076</note>
       </trans-unit>
     </body>
   </file>

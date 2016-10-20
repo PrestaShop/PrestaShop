@@ -6,7 +6,7 @@
         <source>[1]For digital goods:[/1] I want immediate access to the digital content and I acknowledge that thereby I lose my right to cancel once the service has begun.[2][1]For services:[/1] I agree to the starting of the service and I acknowledge that I lose my right to cancel once the service has been fully performed.</source>
         <target>[1]For digital goods:[/1] I want immediate access to the digital content and I acknowledge that thereby I lose my right to cancel once the service has begun.[2][1]For services:[/1] I agree to the starting of the service and I acknowledge that I lose my right to cancel once the service has been fully performed.</target>
         <note>Context:
-File: modules/ps_legalcompliance/ps_legalcompliance.php:821</note>
+File: modules/ps_legalcompliance/ps_legalcompliance.php:822</note>
       </trans-unit>
     </body>
   </file>

@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminRangeWeightController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="202e2c65b239cac626deb138a8a9d41b">
-        <source>The range already exists</source>
-        <target>The range already exists</target>
-        <note>Context:
-File: controllers/admin/AdminRangeWeightController.php:143</note>
-      </trans-unit>
-      <trans-unit id="ebc905275cc10a002fef65880432a710">
-        <source>Error: Ranges are overlapping</source>
-        <target>Error: Ranges are overlapping</target>
-        <note>Context:
-File: controllers/admin/AdminRangeWeightController.php:145</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="407ec7ad396ed1f5fc78bc006946af12">
@@ -23,16 +7,6 @@ File: controllers/admin/AdminRangeWeightController.php:145</note>
         <target>An error occurred while updating carrier information.</target>
         <note>Context:
 File: controllers/admin/AdminCarriersController.php:547</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShippingController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e396699601473325509e77ad6f246f29">
-        <source>An error occurred while attempting to update fees (cannot load carrier object).</source>
-        <target>An error occurred while attempting to update fees (cannot load carrier object).</target>
-        <note>Context:
-File: controllers/admin/AdminShippingController.php:173</note>
       </trans-unit>
     </body>
   </file>
@@ -91,6 +65,16 @@ File: controllers/admin/AdminCarrierWizardController.php:858</note>
         <target>An error occurred while saving carrier logo.</target>
         <note>Context:
 File: controllers/admin/AdminCarrierWizardController.php:868</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShippingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e396699601473325509e77ad6f246f29">
+        <source>An error occurred while attempting to update fees (cannot load carrier object).</source>
+        <target>An error occurred while attempting to update fees (cannot load carrier object).</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:173</note>
       </trans-unit>
     </body>
   </file>
