@@ -41,7 +41,7 @@ $color-icons: #6c868e;
   border-radius: 0;
   font-size: rem(12px);
   > li + li::before {
-    padding-right: rem(0px);
+    padding-right: 0;
     padding-left: rem(3px);
   }
   > li > a {
@@ -79,7 +79,7 @@ $color-icons: #6c868e;
   }
   > .nav-item > .nav-link {
     &.active {
-      border-bottom: 1px solid #FFFFFF;
+      border-bottom: rem(1px) solid #FFFFFF;
     }
   }
 }

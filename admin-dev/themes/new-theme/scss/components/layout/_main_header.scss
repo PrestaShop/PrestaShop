@@ -75,8 +75,8 @@
     color: $gray-dark;
     @include single-line-block($size-header-height);
     .selected-item {
-      font-size: 12px;
-      line-height: 17px;
+      font-size: rem(12px);
+      line-height: rem(17px);
     }
   }
   .items-list {
@@ -96,7 +96,7 @@
         }
         i.material-icons:hover {
           color: #fff;
-          border: solid 1px #fff;
+          border: solid rem(1px) #fff;
         }
       }
       a:not(.link-shop) {
@@ -125,14 +125,14 @@
         text-decoration: none;
         float: right;
         padding-left: inherit;
-        padding-right: 10px;
-        padding-top: 3px;
+        padding-right: rem(10px);
+        padding-top: rem(3px);
         i.material-icons {
           cursor: pointer;
           color: $gray-medium;
-          border: solid 1px $gray-light;
+          border: solid rem(1px) $gray-light;
           border-radius: rem(3px);
-          padding: 3px 8px;
+          padding: rem(3px) rem(8px);
           font-size: rem(13px);
           width: inherit;
           height: inherit;
@@ -172,7 +172,7 @@
 }
 .employee-dropdown {
   > .person {
-    border: solid 1px $gray-medium;
+    border: solid rem(1px) $gray-medium;
     margin: rem(8px) rem(30px) 0 0;
     cursor: pointer;
     .material-icons {
@@ -184,26 +184,26 @@
   .dropdown-menu {
     top: rem(30px);
     hr {
-      border-top-width: 2px;
+      border-top-width: rem(2px);
     }
     &::after {
       position: absolute;
-      top: -6px;
-      left: 137px;
+      top: rem(-6px);
+      left: rem(137px);
       display: inline-block;
-      border-right: 6px solid transparent;
-      border-bottom: 6px solid #ffffff;
-      border-left: 6px solid transparent;
+      border-right: rem(6px) solid transparent;
+      border-bottom: rem(6px) solid #ffffff;
+      border-left: rem(6px) solid transparent;
       content: '';
     }
     &::before {
       position: absolute;
-      top: -7px;
-      left: 136px;
+      top: rem(-7px);
+      left: rem(136px);
       display: inline-block;
-      border-right: 7px solid transparent;
-      border-bottom: 7px solid #ccc;
-      border-left: 7px solid transparent;
+      border-right: rem(7px) solid transparent;
+      border-bottom: rem(7px) solid #ccc;
+      border-left: rem(7px) solid transparent;
       border-bottom-color: rgba(0, 0, 0, 0.2);
       content: '';
     }

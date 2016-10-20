@@ -58,7 +58,7 @@
 
         &.active {
           border-top: 0;
-          border-bottom: 2px solid $nav-tabs-active-link-hover-border-color;
+          border-bottom: rem(2px) solid $nav-tabs-active-link-hover-border-color;
           color: $font-color-primary;
         }
 

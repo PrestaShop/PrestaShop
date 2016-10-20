@@ -38,11 +38,11 @@ ul.category-tree {
   li {
     list-style: none;
     background-repeat: no-repeat;
-    background-size: 12px 12px;
-    background-position: 0 3px;
+    background-size: rem(12px) rem(12px);
+    background-position: 0 rem(3px);
     .checkbox,
     .radio {
-      padding-left: 20px;
+      padding-left: rem(20px);
       padding-top: 0;
     }
     > ul {
@@ -52,7 +52,7 @@ ul.category-tree {
 }
 #tree-categories {
   padding: rem(10px);
-  border: $gray-light 1px solid;
+  border: $gray-light rem(1px) solid;
   border-radius: rem(3px);
   .categories-tree-actions {
     display: inline-block;
