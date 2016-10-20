@@ -525,7 +525,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         // Get all email files
         foreach ($files_list as $file) {
-            if (preg_match('#^mails\/([a-z0-9]+)\/#Ui', $file['filename'], $matches)) {
+            if (preg_match('#^(\.\/)?mails\/([a-z0-9]+)\/#Ui', $file['filename'], $matches)) {
                 $slash_pos = strrpos($file['filename'], '/');
                 $mails_new_lang[] = substr($file['filename'], -(strlen($file['filename']) - $slash_pos - 1));
             }
