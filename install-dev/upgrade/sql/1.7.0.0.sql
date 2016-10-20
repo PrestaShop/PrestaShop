@@ -172,6 +172,8 @@ DELETE FROM `PREFIX_hook_alias` WHERE `name` IN (
   'displayBeforePayment');
 
 DELETE FROM `PREFIX_configuration` WHERE `name` IN (
+  '_MEDIA_SERVER_2_',
+  '_MEDIA_SERVER_3_',
   'PS_ORDER_PROCESS_TYPE',
   'PS_ADVANCED_PAYMENT_API',
   'PS_ONE_PHONE_AT_LEAST',

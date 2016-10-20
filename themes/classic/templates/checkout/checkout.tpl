@@ -8,6 +8,7 @@
   </head>
 
   <body id="{$page.page_name}" class="{$page.body_classes|classnames}">
+
     {hook h='displayAfterBodyOpeningTag'}
 
     <header id="header">
@@ -16,11 +17,9 @@
       {/block}
     </header>
 
-
-      {block name='notifications'}
-        {include file='_partials/notifications.tpl'}
-      {/block}
-
+    {block name='notifications'}
+      {include file='_partials/notifications.tpl'}
+    {/block}
 
     <section id="wrapper">
       <div class="container">
@@ -42,11 +41,18 @@
       {/block}
       </div>
     </section>
+
     <footer id="footer">
       {block name='footer'}
         {include file='checkout/_partials/footer.tpl'}
       {/block}
     </footer>
+
+    {hook h='displayBeforeBodyClosingTag'}
+
+    {block name='javascript_bottom'}
+      {include file="_partials/javascript.tpl" javascript=$javascript.bottom}
+    {/block}
 
   </body>
 

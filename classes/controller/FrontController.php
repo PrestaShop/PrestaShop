@@ -26,6 +26,8 @@
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
 
 class FrontControllerCore extends Controller
@@ -155,6 +157,21 @@ class FrontControllerCore extends Controller
     private $templateFinder;
 
     /**
+     * @var object StylesheetManager
+     */
+    protected $stylesheetManager;
+
+    /**
+     * @var object JavascriptManager
+     */
+    protected $javascriptManager;
+
+    /**
+     * @var object CccReducer
+     */
+    protected $cccReducer;
+
+    /**
      * Controller constructor.
      *
      * @global bool $useSSL SSL connection flag
@@ -182,6 +199,19 @@ class FrontControllerCore extends Controller
         $this->objectPresenter = new ObjectPresenter();
         $this->cart_presenter = new CartPresenter();
         $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
+        $this->stylesheetManager = new StylesheetManager(
+            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            new ConfigurationAdapter()
+        );
+        $this->javascriptManager = new JavascriptManager(
+            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            new ConfigurationAdapter()
+        );
+        $this->cccReducer = new CccReducer(
+            _PS_THEME_DIR_.'assets/cache/',
+            new ConfigurationAdapter(),
+            new Filesystem()
+        );
     }
 
     /**
@@ -522,6 +552,34 @@ class FrontControllerCore extends Controller
     }
 
     /**
+     * @return mixed
+     */
+    public function getStylesheets()
+    {
+        $cssFileList = $this->stylesheetManager->getList();
+
+        if (Configuration::get('PS_CSS_THEME_CACHE')) {
+            $cssFileList = $this->cccReducer->reduceCss($cssFileList);
+        }
+
+        return $cssFileList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJavascript()
+    {
+        $jsFileList = $this->javascriptManager->getList();
+
+        if (Configuration::get('PS_JS_THEME_CACHE')) {
+            $jsFileList = $this->cccReducer->reduceJs($jsFileList);
+        }
+
+        return $jsFileList;
+    }
+
+    /**
      * Redirects to redirect_after link.
      *
      * @see $redirect_after
@@ -570,29 +628,34 @@ class FrontControllerCore extends Controller
      */
     public function display()
     {
-        // assign css_files and js_files at the very last time
-        if (is_writable(_PS_THEME_DIR_.'cache')) {
-            // CSS compressor management
-            if (Configuration::get('PS_CSS_THEME_CACHE')) {
-                $this->css_files = Media::cccCss($this->css_files);
-            }
-            //JS compressor management
-            if (Configuration::get('PS_JS_THEME_CACHE')) {
-                $this->js_files = Media::cccJs($this->js_files);
-            }
-        }
-
         $this->context->smarty->assign(array(
             'layout' => $this->getLayout(),
-            'css_files' => $this->css_files,
-            'js_files' => ($this->getLayout() && (bool) Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
-            'js_defer' => (bool) Configuration::get('PS_JS_DEFER'),
+            'stylesheets' => $this->getStylesheets(),
+            'javascript' => $this->getJavascript(),
+            'js_custom_vars' => Media::getJsDef(),
             'notifications' => $this->prepareNotifications(),
         ));
 
         $this->smartyOutputContent($this->template);
 
         return true;
+    }
+
+    protected function smartyOutputContent($content)
+    {
+        $this->context->cookie->write();
+
+        $html = '';
+
+        if (is_array($content)) {
+            foreach ($content as $tpl) {
+                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
+            }
+        } else {
+            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+        }
+
+        echo trim($html);
     }
 
     protected function prepareNotifications()
@@ -789,31 +852,26 @@ class FrontControllerCore extends Controller
      */
     public function setMedia()
     {
-        $cssFileList = array();
-        $parent = $this->context->shop->theme->get('parent');
-
-        if ($parent && $this->context->shop->theme->get('assets.use_parent_assets')) {
-            $cssFileList = array(
-                _PS_ALL_THEMES_DIR_.$parent.'/assets/css/theme.css',
-                _PS_ALL_THEMES_DIR_.$parent.'/assets/css/custom.css',
-            );
-        }
-
-        $cssFileList = array_merge($cssFileList, array(
-            _THEME_CSS_DIR_.'theme.css',
-            _THEME_CSS_DIR_.'custom.css',
-        ));
+        $this->registerStylesheet('theme-main', '/assets/css/theme.css', ['media' => 'all', 'priority' => 0]);
+        $this->registerStylesheet('theme-custom', '/assets/css/custom.css', ['media' => 'all', 'priority' => 1000]);
 
         if ($this->context->language->is_rtl) {
-            $cssFileList[] = _THEME_CSS_DIR_.'rtl.css';
+            $this->registerStylesheet('theme-rtl', '/assets/css/rtl.css', ['media' => 'all', 'priority' => 10]);
         }
 
-        $this->addCSS($cssFileList);
-        $this->addJS(array(
-            _THEMES_DIR_.'core.js',
-            _THEME_JS_DIR_.'theme.js',
-            _THEME_JS_DIR_.'custom.js',
-        ));
+        $this->registerJavascript('corejs', '/themes/core.js', ['position' => 'bottom', 'priority' => 0]);
+        $this->registerJavascript('theme-main', '/assets/js/theme.js', ['position' => 'bottom', 'priority' => 50]);
+        $this->registerJavascript('theme-custom', '/assets/js/custom.js', ['position' => 'bottom', 'priority' => 1000]);
+
+        $assets = $this->context->shop->theme->getPageSpecificAssets($this->php_self);
+        if (!empty($assets)) {
+            foreach ($assets['css'] as $css) {
+                $this->registerStylesheet($css['id'], $css['path'], $css);
+            }
+            foreach ($assets['js'] as $js) {
+                $this->registerJavascript($js['id'], $js['path'], $js);
+            }
+        }
 
         // Execute Hook FrontController SetMedia
         Hook::exec('actionFrontControllerSetMedia', array());
@@ -916,144 +974,192 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Adds a media file(s) (CSS, JS) to page header.
-     *
-     * @param string|array $media_uri      Path to file, or an array of paths like: array(array(uri => media_type), ...)
-     * @param string|null  $css_media_type CSS media type
-     * @param int|null     $offset
-     * @param bool         $remove         If True, removes media files
-     * @param bool         $check_path     If true, checks if files exists
-     *
-     * @return true|void
+     * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
      */
     public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false, $check_path = true)
     {
-        if (!is_array($media_uri)) {
-            if ($css_media_type) {
-                $media_uri = array($media_uri => $css_media_type);
-            } else {
-                $media_uri = array($media_uri);
-            }
-        }
-
-        $list_uri = array();
-        foreach ($media_uri as $file => $media) {
-            if (!Validate::isAbsoluteUrl($media)) {
-                $different = 0;
-                $different_css = 0;
-                $type = 'css';
-                if (!$css_media_type) {
-                    $type = 'js';
-                    $file = $media;
-                }
-                if (strpos($file, __PS_BASE_URI__.'modules/') === 0) {
-                    $override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/modules/', $file, $different);
-                    if (strrpos($override_path, $type.'/'.basename($file)) !== false) {
-                        $override_path_css = str_replace($type.'/'.basename($file), basename($file), $override_path, $different_css);
-                    }
-
-                    if ($different && @filemtime($override_path)) {
-                        $file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/modules/', $file, $different);
-                    } elseif ($different_css && @filemtime($override_path_css)) {
-                        $file = $override_path_css;
-                    }
-                    if ($css_media_type) {
-                        $list_uri[$file] = $media;
-                    } else {
-                        $list_uri[] = $file;
-                    }
-                } else {
-                    $list_uri[$file] = $media;
-                }
-            } else {
-                $list_uri[$file] = $media;
-            }
-        }
-
-        if ($remove) {
-            if ($css_media_type) {
-                return parent::removeCSS($list_uri, $css_media_type);
-            }
-
-            return parent::removeJS($list_uri);
-        }
-
-        if ($css_media_type) {
-            return parent::addCSS($list_uri, $css_media_type, $offset, $check_path);
-        }
-
-        return parent::addJS($list_uri, $check_path);
+        /*
+        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
+        $this->registerStylesheet() to manage your assets.
+         */
     }
 
     /**
-     * Removes media file(s) from page header.
-     *
-     * @param string|array $media_uri      Path to file, or an array paths of like: array(array(uri => media_type), ...)
-     * @param string|null  $css_media_type CSS media type
-     * @param bool         $check_path     If true, checks if files exists
+     * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
      */
     public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
     {
-        FrontController::addMedia($media_uri, $css_media_type, null, true, $check_path);
+        /*
+        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
+        $this->registerStylesheet() to manage your assets.
+         */
+    }
+
+    public function registerStylesheet($id, $relativePath, $params = array())
+    {
+        if (!is_array($params)) {
+            $params = array();
+        }
+
+        $default_params = [
+            'media' => AbstractAssetManager::DEFAULT_MEDIA,
+            'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
+            'inline' => false,
+        ];
+
+        $params = array_merge($default_params, $params);
+
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline']);
+    }
+
+    public function unregisterStylesheet($id)
+    {
+        $this->stylesheetManager->unregisterById($id);
+    }
+
+    public function registerJavascript($id, $relativePath, $params = array())
+    {
+        if (!is_array($params)) {
+            $params = array();
+        }
+
+        $default_params = [
+            'position' => AbstractAssetManager::DEFAULT_JS_POSITION,
+            'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
+            'inline' => false,
+            'attributes' => null,
+        ];
+
+        $params = array_merge($default_params, $params);
+
+        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes']);
+    }
+
+    public function unregisterJavascript($id)
+    {
+        $this->javascriptManager->unregisterById($id);
     }
 
     /**
-     * Add one or several CSS for front, checking if css files are overridden in theme/css/modules/ directory.
-     *
-     * @see Controller::addCSS()
-     *
-     * @param array|string $css_uri        $media_uri Path to file, or an array of paths like: array(array(uri => media_type), ...)
-     * @param string       $css_media_type CSS media type
-     * @param int|null     $offset
-     * @param bool         $check_path     If true, checks if files exists
-     *
-     * @return true|void
+     * @deprecated 1.7 This function shouldn't be used, use $this->registerStylesheet() instead
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
     {
-        return FrontController::addMedia($css_uri, $css_media_type, $offset, false, $check_path);
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        You should use registerStylesheet($id, $path, $params)
+        */
+
+        if (!is_array($css_uri)) {
+            $css_uri = (array) $css_uri;
+        }
+
+        foreach ($css_uri as $legacy_uri) {
+            if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
+                $this->registerStylesheet(sha1($uri), $uri, ['media' => $css_media_type, 'priority' => 80]);
+            }
+        }
     }
 
     /**
-     * Removes CSS file(s) from page header.
-     *
-     * @param array|string $css_uri        $media_uri Path to file, or an array of paths like: array(array(uri => media_type), ...)
-     * @param string       $css_media_type CSS media type
-     * @param bool         $check_path     If true, checks if files exists
+     * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterStylesheet() instead
      */
     public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
     {
-        return FrontController::removeMedia($css_uri, $css_media_type, $check_path);
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        You should use unregisterStylesheet($id)
+        */
+
+        if (!is_array($css_uri)) {
+            $css_uri = (array) $css_uri;
+        }
+
+        foreach ($css_uri as $legacy_uri) {
+            if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
+                $this->unregisterStylesheet(sha1($uri));
+            }
+        }
     }
 
     /**
-     * Add one or several JS files for front, checking if js files are overridden in theme/js/modules/ directory.
-     *
-     * @see Controller::addJS()
-     *
-     * @param array|string $js_uri     Path to file, or an array of paths
-     * @param bool         $check_path If true, checks if files exists
-     *
-     * @return true|void
+     * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() instead
      */
     public function addJS($js_uri, $check_path = true)
     {
-        if (_PS_MODE_DEV_ && Tools::getValue('debug-disable-javascript')) {
-            return;
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        You should use registerJavascript($id, $path, $params)
+        */
+
+        if (!is_array($js_uri)) {
+            $js_uri = (array) $js_uri;
         }
 
-        return Frontcontroller::addMedia($js_uri, null, null, false, $check_path);
+        foreach ($js_uri as $legacy_uri) {
+            if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
+                $this->registerJavascript(sha1($uri), $uri, ['position' => 'bottom', 'priority' => 80]);
+            }
+        }
     }
 
     /**
-     * Removes JS file(s) from page header.
-     *
-     * @param array|string $js_uri     Path to file, or an array of paths
-     * @param bool         $check_path If true, checks if files exists
+     * @deprecated 1.7 This function has no effect in PrestaShop 1.7 theme, use $this->unregisterJavascript() instead
      */
     public function removeJS($js_uri, $check_path = true)
     {
-        return FrontController::removeMedia($js_uri, null, $check_path);
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        You should use unregisterJavascript($id)
+        */
+
+        if (!is_array($js_uri)) {
+            $js_uri = (array) $js_uri;
+        }
+
+        foreach ($js_uri as $legacy_uri) {
+            if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
+                $this->unregisterJavascript(sha1($uri));
+            }
+        }
+    }
+
+    /**
+     * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
+     *                  Have a look at the /themes/_core folder.
+     */
+    public function addJquery($version = null, $folder = null, $minifier = true)
+    {
+        /*
+        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
+        jQuery2 is register by the core on every theme. Have a look at the /themes/_core folder.
+        */
+    }
+
+    /**
+     * @deprecated 1.7
+     */
+    public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
+    {
+        /*
+        This is deprecated in PrestaShop 1.7
+        Manage your dependencies in your themes/modules and don\'t rely on PrestaShop embedded libraries.
+        Use $this->registerJavascript() and $this->registerStylesheet() to manage your assets
+        */
+        if (isset(Media::$jquery_ui_dependencies[$component])) {
+            foreach (Media::$jquery_ui_dependencies[$component]['dependencies'] as $dependency) {
+                $this->addJqueryUI($dependency);
+            }
+        }
+
+        // backward compat'
+        $css_theme_path = '/js/jquery/ui/themes/'.$theme.'/jquery.ui.theme.css';
+        $css_path = '/js/jquery/ui/themes/'.$theme.'/jquery.'.$component.'.css';
+        $js_path = '/js/jquery/ui/jquery.'.$component.'.min.js';
+
+        $this->registerStylesheet('legacy-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
+        $this->registerStylesheet('legacy-'.$component, $css_path, ['media' => 'all', 'priority' => 90]);
+        $this->registerJavascript('legacy-'.$component, $js_path, ['position' => 'bottom', 'priority' => 90]);
     }
 
     /**
@@ -1743,5 +1849,18 @@ class FrontControllerCore extends Controller
     public function getRestrictedCountry()
     {
         return $this->restrictedCountry;
+    }
+
+    public function getAssetUriFromLegacyDeprecatedMethod($legacy_uri)
+    {
+        $success = preg_match('/modules\/.*/', $legacy_uri, $matches);
+        if (!$success) {
+            Tools::displayAsDeprecated(
+                'Backward compatiblity for this method couldn\'t be handled. Use $this->registerJavascript() instead'
+            );
+            return false;
+        } else {
+            return $matches[0];
+        }
     }
 }

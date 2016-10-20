@@ -1998,15 +1998,11 @@ class ToolsCore
 
     public static function getMediaServer($filename)
     {
-        if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_')) {
+        if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_')) {
             if (_MEDIA_SERVER_1_ == '') {
                 self::$_cache_nb_media_servers = 0;
-            } elseif (_MEDIA_SERVER_2_ == '') {
-                self::$_cache_nb_media_servers = 1;
-            } elseif (_MEDIA_SERVER_3_ == '') {
-                self::$_cache_nb_media_servers = 2;
             } else {
-                self::$_cache_nb_media_servers = 3;
+                self::$_cache_nb_media_servers = 1;
             }
         }
 
@@ -2116,15 +2112,8 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
-        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
-            && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
-            && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
-        ) {
-            $medias = array(
-                Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
-                Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
-                Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
-            );
+        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')) {
+            $medias = array(Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'));
         }
 
         $media_domains = '';
@@ -2887,6 +2876,49 @@ exit;
             }
         }
         return false;
+    }
+
+    /**
+     * Fix native uasort see: http://php.net/manual/en/function.uasort.php#114535
+     *
+     * @param $array
+     * @param $cmp_function
+     */
+    public static function uasort(&$array, $cmp_function) {
+        if(count($array) < 2) {
+            return;
+        }
+        $halfway = count($array) / 2;
+        $array1 = array_slice($array, 0, $halfway, TRUE);
+        $array2 = array_slice($array, $halfway, NULL, TRUE);
+
+        self::uasort($array1, $cmp_function);
+        self::uasort($array2, $cmp_function);
+        if(call_user_func($cmp_function, end($array1), reset($array2)) < 1) {
+            $array = $array1 + $array2;
+            return;
+        }
+        $array = array();
+        reset($array1);
+        reset($array2);
+        while(current($array1) && current($array2)) {
+            if(call_user_func($cmp_function, current($array1), current($array2)) < 1) {
+                $array[key($array1)] = current($array1);
+                next($array1);
+            } else {
+                $array[key($array2)] = current($array2);
+                next($array2);
+            }
+        }
+        while(current($array1)) {
+            $array[key($array1)] = current($array1);
+            next($array1);
+        }
+        while(current($array2)) {
+            $array[key($array2)] = current($array2);
+            next($array2);
+        }
+        return;
     }
 
     /**

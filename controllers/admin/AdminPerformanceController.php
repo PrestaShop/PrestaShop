@@ -382,23 +382,6 @@ class AdminPerformanceControllerCore extends AdminController
                         )
                     )
                 ),
-                array(
-                    'type' => 'switch',
-                    'label' => $this->trans('Move JavaScript to the end', array(), 'Admin.AdvParameters.Feature'),
-                    'name' => 'PS_JS_DEFER',
-                    'values' => array(
-                        array(
-                            'id' => 'PS_JS_DEFER_1',
-                            'value' => 1,
-                            'label' => $this->trans('Move JavaScript to the end of the HTML document', array(), 'Admin.AdvParameters.Feature')
-                        ),
-                        array(
-                            'id' => 'PS_JS_DEFER_0',
-                            'value' => 0,
-                            'label' => $this->trans('Keep JavaScript in HTML at its original position', array(), 'Admin.AdvParameters.Feature')
-                        )
-                    )
-                ),
 
             ),
             'submit' => array(
@@ -430,7 +413,6 @@ class AdminPerformanceControllerCore extends AdminController
         $this->fields_value['PS_CSS_THEME_CACHE'] = Configuration::get('PS_CSS_THEME_CACHE');
         $this->fields_value['PS_JS_THEME_CACHE'] = Configuration::get('PS_JS_THEME_CACHE');
         $this->fields_value['PS_HTACCESS_CACHE_CONTROL'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
-        $this->fields_value['PS_JS_DEFER'] = Configuration::get('PS_JS_DEFER');
         $this->fields_value['ccc_up'] = 1;
     }
 
@@ -453,18 +435,6 @@ class AdminPerformanceControllerCore extends AdminController
                     'name' => '_MEDIA_SERVER_1_',
                     'hint' => $this->trans('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
                 ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->trans('Media server #2', array(), 'Admin.AdvParameters.Feature'),
-                    'name' => '_MEDIA_SERVER_2_',
-                    'hint' => $this->trans('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->trans('Media server #3', array(), 'Admin.AdvParameters.Feature'),
-                    'name' => '_MEDIA_SERVER_3_',
-                    'hint' => $this->trans('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
-                ),
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions')
@@ -472,8 +442,6 @@ class AdminPerformanceControllerCore extends AdminController
         );
 
         $this->fields_value['_MEDIA_SERVER_1_'] = Configuration::get('PS_MEDIA_SERVER_1');
-        $this->fields_value['_MEDIA_SERVER_2_'] = Configuration::get('PS_MEDIA_SERVER_2');
-        $this->fields_value['_MEDIA_SERVER_3_'] = Configuration::get('PS_MEDIA_SERVER_3');
     }
 
     public function initFieldsetCaching()
@@ -743,7 +711,6 @@ class AdminPerformanceControllerCore extends AdminController
 
                 if (!Configuration::updateValue('PS_CSS_THEME_CACHE', (int)Tools::getValue('PS_CSS_THEME_CACHE')) ||
                     !Configuration::updateValue('PS_JS_THEME_CACHE', (int)Tools::getValue('PS_JS_THEME_CACHE')) ||
-                    !Configuration::updateValue('PS_JS_DEFER', (int)Tools::getValue('PS_JS_DEFER')) ||
                     !Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL'))) {
                     $this->errors[] = $this->trans('Unknown error.', array(), 'Admin.Notifications.Error');
                 } else {
@@ -768,34 +735,21 @@ class AdminPerformanceControllerCore extends AdminController
                 if (Tools::getValue('_MEDIA_SERVER_1_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_1_'))) {
                     $this->errors[] = $this->trans('Media server #1 is invalid', array(), 'Admin.AdvParameters.Notification');
                 }
-                if (Tools::getValue('_MEDIA_SERVER_2_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_2_'))) {
-                    $this->errors[] = $this->trans('Media server #2 is invalid', array(), 'Admin.AdvParameters.Notification');
-                }
-                if (Tools::getValue('_MEDIA_SERVER_3_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_3_'))) {
-                    $this->errors[] = $this->trans('Media server #3 is invalid', array(), 'Admin.AdvParameters.Notification');
-                }
                 if (!count($this->errors)) {
                     $base_urls = array();
                     $base_urls['_MEDIA_SERVER_1_'] = Tools::getValue('_MEDIA_SERVER_1_');
-                    $base_urls['_MEDIA_SERVER_2_'] = Tools::getValue('_MEDIA_SERVER_2_');
-                    $base_urls['_MEDIA_SERVER_3_'] = Tools::getValue('_MEDIA_SERVER_3_');
-                    if ($base_urls['_MEDIA_SERVER_1_'] || $base_urls['_MEDIA_SERVER_2_'] || $base_urls['_MEDIA_SERVER_3_']) {
+                    if ($base_urls['_MEDIA_SERVER_1_']) {
                         Configuration::updateValue('PS_MEDIA_SERVERS', 1);
                     } else {
                         Configuration::updateValue('PS_MEDIA_SERVERS', 0);
                     }
-                    rewriteSettingsFile($base_urls, null, null);
                     Configuration::updateValue('PS_MEDIA_SERVER_1', Tools::getValue('_MEDIA_SERVER_1_'));
-                    Configuration::updateValue('PS_MEDIA_SERVER_2', Tools::getValue('_MEDIA_SERVER_2_'));
-                    Configuration::updateValue('PS_MEDIA_SERVER_3', Tools::getValue('_MEDIA_SERVER_3_'));
                     Tools::clearSmartyCache();
                     Media::clearCache();
 
                     if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
-                        Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));
+                        Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_']));
                         unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
-                        unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
-                        unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
                         $redirectAdmin = true;
                     } else {
                         $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.AdvParameters.Notification');
