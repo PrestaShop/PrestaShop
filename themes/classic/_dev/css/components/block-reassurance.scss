@@ -6,7 +6,7 @@
     margin-right: rem(10px);
   }
   li{
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: rem(1px) solid rgba(0, 0, 0, 0.1);
 
     &:last-child {
       border: 0;

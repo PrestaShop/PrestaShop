@@ -9,22 +9,22 @@
       overflow: hidden;
     }
     input[type=text] {
-      padding: 11px;
+      padding: rem(11px);
       &:focus {
-        border: 3px $brand-primary solid;
-        padding: 8px 8px 9px;
+        border: rem(3px) $brand-primary solid;
+        padding: rem(8px) rem(8px) 9px;
         outline: 0;
       }
       width: 100%;
     }
     input {
-      height: 42px;
+      height: rem(42px);
     }
   }
   margin-bottom: rem(10px);
 }
 .block-contact {
-  border-left: $gray-light 2px solid;
+  border-left: $gray-light rem(2px) solid;
   padding-left: rem(48px);
   color: $gray;
   .block-contact-title{
@@ -147,7 +147,7 @@
   margin-top: $medium-space;
   padding-top: $medium-space;
   overflow: hidden;
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: rem(2px) rem(2px) rem(11px) 0 rgba(0, 0, 0, 0.3);
   li {
     margin-bottom: rem(5px);
   }
@@ -169,7 +169,7 @@
 @include media-breakpoint-down(sm) {
   .block_newsletter {
     padding-bottom: rem(10px);
-    border-bottom: 1px solid $gray-lighter;
+    border-bottom: rem(1px) solid $gray-lighter;
   }
   .footer-container {
     box-shadow: none;
@@ -185,7 +185,7 @@
       }
       .title {
         padding: rem(10px);
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: rem(1px) solid $gray-lighter;
         cursor: pointer;
         .collapse-icons .remove {
           display: none;
@@ -214,7 +214,7 @@
         margin-bottom: 0;
         > li {
           padding: rem(10px);
-          border-bottom: 1px solid white;
+          border-bottom: rem(1px) solid white;
           font-weight: bold;
           a {
             color: $gray-darker;

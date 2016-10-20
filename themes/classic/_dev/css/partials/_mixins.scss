@@ -3,7 +3,7 @@
     position: relative;
     input[type=text] {
       &:focus {
-        outline: 3px $brand-primary solid;
+        outline: rem(3px) $brand-primary solid;
         color: $gray-darker;
         background: white;
         + button .search {
@@ -11,8 +11,8 @@
         }
       }
       border: none;
-      padding: 10px;
-      min-width: 255px;
+      padding: rem(10px);
+      min-width: rem(255px);
       background: $gray-light;
       color: $gray;
       @include placeholder {
@@ -35,5 +35,5 @@
 }
 
 @mixin box-shadow {
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: rem(2px) rem(2px) rem(11px) 0 rgba(0, 0, 0, 0.1);
 }

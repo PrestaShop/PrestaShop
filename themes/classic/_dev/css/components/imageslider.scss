@@ -1,11 +1,11 @@
 .carousel {
-  box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: rem(1px) rem(1px) rem(7px) 0 rgba(0, 0, 0, 0.15);
   margin-bottom: rem(24px);
   .direction {
     z-index: auto;
   }
   .carousel-inner {
-    height: 340px;
+    height: rem(340px);
   }
   .carousel-item {
     height: 100%;
@@ -15,10 +15,10 @@
     }
     .caption {
       position: absolute;
-      bottom: 28px;
-      left: 90px;
+      bottom: rem(28px);
+      left: rem(90px);
       color: white;
-      max-width: 340px;
+      max-width: rem(340px);
       .caption-description p {
         color: white;
       }

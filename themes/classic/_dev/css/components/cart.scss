@@ -85,19 +85,19 @@
         position: absolute;
         pointer-events: none;
         border-bottom-color:  $brand-danger;
-        border-width: 10px;
-        margin-left: -10px;
+        border-width: rem(10px);
+        margin-left: rem(-10px);
       }
     }
   }
   .promo-input {
     color: $gray-darker;
-    border: $gray 1px solid;
+    border: $gray rem(1px) solid;
     height: rem(40px);
     text-indent: rem(10px);
     width: 60%;
     + button {
-      margin-top: -4px;
+      margin-top: rem(-4px);
       text-transform: capitalize;
     }
   }
@@ -155,7 +155,7 @@
   .bootstrap-touchspin {
     width: rem(68px);
     @include pull-left;
-    box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: rem(2px) rem(2px) rem(3px) 0 rgba(0, 0, 0, 0.15);
     > .form-control,
     > .input-group {
       color: $gray-darker;
@@ -171,7 +171,7 @@
   .cart-line-product-actions,
   .product-price {
     color: $gray-darker;
-    line-height: 36px;
+    line-height: rem(36px);
     .remove-from-cart {
       color: $gray-darker;
       display: inline-block;
@@ -192,7 +192,7 @@
     padding: rem(16px) 0;
   }
   .cart-item {
-    border-bottom: 1px solid $gray-light;
+    border-bottom: rem(1px) solid $gray-light;
     &:last-child {
       border-bottom: 0;
     }
