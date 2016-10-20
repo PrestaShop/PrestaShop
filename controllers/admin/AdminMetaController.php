@@ -484,7 +484,7 @@ class AdminMetaControllerCore extends AdminController
                 fwrite($write_fd, "# Files\n");
                 foreach ($this->rb_data['Files'] as $iso_code => $files) {
                     foreach ($files as $file) {
-                        if (!empty($language_ids)) {
+                        if (!empty($language_ids) && count($language_ids) > 1) {
                             fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
                         } else {
                             fwrite($write_fd, 'Disallow: /'.$file."\n");
@@ -746,7 +746,9 @@ class AdminMetaControllerCore extends AdminController
         );
 
         // Directories
-        $tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/');
+        $tab['Directories'] = array('cache/', 'classes/', 'config/', 'controllers/',
+            'css/', 'download/', 'js/', 'localization/', 'log/', 'mails/', 'modules/', 'override/',
+            'pdf/', 'src/', 'tools/', 'translations/', 'upload/', 'vendor/', 'web/', 'webservice/');
 
         // Files
         $disallow_controllers = array(
@@ -759,7 +761,7 @@ class AdminMetaControllerCore extends AdminController
         // Rewrite files
         $tab['Files'] = array();
         if (Configuration::get('PS_REWRITING_SETTINGS')) {
-            $sql = 'SELECT ml.url_rewrite, l.iso_code
+            $sql = 'SELECT DISTINCT ml.url_rewrite, l.iso_code
 					FROM '._DB_PREFIX_.'meta m
 					INNER JOIN '._DB_PREFIX_.'meta_lang ml ON ml.id_meta = m.id_meta
 					INNER JOIN '._DB_PREFIX_.'lang l ON l.id_lang = ml.id_lang
