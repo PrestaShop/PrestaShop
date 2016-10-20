@@ -61,7 +61,14 @@ class ThemeExporter
 
     private function copyTheme($themeDir, $cacheDir)
     {
-        $this->fileSystem->mirror($themeDir, $cacheDir);
+        $finderClassName = get_class($this->finder);
+        $this->finder = $finderClassName::create();
+        $fileList = $this->finder
+            ->files()
+            ->in($themeDir)
+            ->exclude(['node_modules']);
+
+        $this->fileSystem->mirror($themeDir, $cacheDir, $fileList);
     }
 
     private function copyModuleDependencies(array $moduleList, $cacheDir)
