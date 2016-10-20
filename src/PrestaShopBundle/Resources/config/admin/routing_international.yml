@@ -7,6 +7,14 @@ admin_international_translations_list:
     requirements:
         locale: \w+
 
+admin_international_translations_messages_fragments:
+    path: /translations/messages/fragments
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:messagesFragments
+    requirements:
+        locale: \w+
+
 admin_international_translations_edit:
     path: /translations/edit
     methods:  [POST]

@@ -13,6 +13,8 @@ export default function (search) {
 
   let showFlashMessageOnEdit = (form) => {
     $(form).submit((event) => {
+      event.preventDefault();
+
       let $editTranslationForm = $(event.target);
       let url = $editTranslationForm.attr('action');
 
@@ -41,13 +43,11 @@ export default function (search) {
         }, 4000);
       });
 
-      event.preventDefault();
-
       return false;
     })
   };
 
-  $('.search-translation form, .translation-domain form').each((formIndex, form) => {
+  $('#jetsContent form, .translation-domain form').each((formIndex, form) => {
     showFlashMessageOnEdit(form);
   });
 }

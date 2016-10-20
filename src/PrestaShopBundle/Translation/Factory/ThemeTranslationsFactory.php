@@ -92,6 +92,8 @@ class ThemeTranslationsFactory extends TranslationsFactory
         foreach ($themeTranslations as $domain => $messages) {
             $databaseDomain = $this->removeLocaleFromDomain($locale, $domain);
 
+            $missingTranslations = 0;
+
             foreach ($messages as $translationKey => $translationValue) {
                 $keyExists = array_key_exists($databaseDomain, $databaseCatalogue) &&
                     array_key_exists($translationKey, $databaseCatalogue[$databaseDomain])
@@ -101,7 +103,16 @@ class ThemeTranslationsFactory extends TranslationsFactory
                     'xlf' => $translationKey != $translationValue ? $themeTranslations[$domain][$translationKey] : '',
                     'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
                 );
+
+                if (
+                    empty($themeTranslations[$domain][$translationKey]['xlf']) &&
+                    empty($themeTranslations[$domain][$translationKey]['db'])
+                ) {
+                    $missingTranslations++;
+                }
             }
+
+            $translations[$domain]['__metadata'] = array('missing_translations' => $missingTranslations);
         }
 
         foreach ($translations as $domain => $messages) {

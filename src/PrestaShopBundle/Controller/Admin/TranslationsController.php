@@ -27,11 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Doctrine\Common\Util\Inflector;
-use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestashopBundle\Entity\Translation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,8 +59,54 @@ class TranslationsController extends FrameworkBundleAdminController
 
         return array(
             'translationsTree' => $translationsTree,
-            'theme' => $this->getSelectedTheme($request)
+            'theme' => $this->getSelectedTheme($request),
+            'requestParams' => array(
+                'lang' => $request->get('lang'),
+                'type' => $request->get('type'),
+                'theme' => $request->get('selected-theme'),
+            ),
+            'total_remaining_translations' => $this->get('translator')->trans(
+                '%nb_translations% missing',
+                array('%nb_translations%' => '%d'),
+                'Admin.International.Feature'
+            ),
+            'total_translations' => $this->get('translator')->trans(
+                '%d expressions',
+                array(),
+                'Admin.International.Feature'
+            )
         );
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function messagesFragmentsAction(Request $request)
+    {
+        $theme = $this->getSelectedTheme($request);
+        $catalogue = $this->getTranslationsCatalogue($request);
+        $translationsTree = $this->makeTranslationsTree($catalogue);
+
+        $translationsFormsView = $this->renderView(
+            'PrestaShopBundle:Admin/Translations/include:translations-forms.html.twig',
+            array(
+                'translationsTree' => $translationsTree,
+                'theme' => $theme,
+            )
+        );
+        $translationsTreeView = $this->renderView(
+            'PrestaShopBundle:Admin/Translations/include:translations-tree.html.twig',
+            array(
+                'translationsTree' => $translationsTree,
+                'theme' => $theme,
+            )
+        );
+
+        return new JsonResponse(array(
+            'translations_forms' => $translationsFormsView,
+            'translations_tree' => $translationsTreeView,
+        ));
     }
 
     private function getSelectedTheme(Request $request)
@@ -131,6 +174,9 @@ class TranslationsController extends FrameworkBundleAdminController
 
         $lang = $this->findLanguageByLocale($requestParams['locale']);
 
+        /**
+         * @var \PrestaShopBundle\Entity\Translation $translation
+         */
         $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
             ->findOneBy(array(
                 'lang' => $lang,
@@ -139,14 +185,20 @@ class TranslationsController extends FrameworkBundleAdminController
                 'theme' => $requestParams['theme']
             ));
 
+        $theme = $requestParams['theme'];
+        if (empty($requestParams['theme'])) {
+            $theme = null;
+        }
+
         if (is_null($translation)) {
             $translation = new Translation();
             $translation->setDomain($requestParams['domain']);
             $translation->setLang($lang);
             $translation->setKey(htmlspecialchars_decode($requestParams['translation_key'], ENT_QUOTES));
             $translation->setTranslation($requestParams['translation_value']);
-            $translation->setTheme($requestParams['theme']);
+            $translation->setTheme($theme);
         } else {
+            $translation->setTheme($theme);
             $translation->setTranslation($requestParams['translation_value']);
         }
 
@@ -247,21 +299,50 @@ class TranslationsController extends FrameworkBundleAdminController
             list($basename) = explode('.', $tableisedDomain);
             $parts = array_reverse(explode('_', $basename));
 
+            $totalParts = count($parts);
             $subtree = &$translationsTree;
 
-            while (count($parts) > 0) {
-                $subdomain = ucfirst(array_pop($parts));
-                if (array_key_exists($subdomain, $flippedUnbreakableWords)) {
-                    $subdomain = $flippedUnbreakableWords[$subdomain];
+            if ($totalParts - 2 < 0) {
+                $totalParts = 2;
+                $parts = array($parts[0], 'Admin');
+            }
+
+            $firstDomainPart = $parts[count($parts) - 1];
+
+            $condition = count($parts) > $totalParts - 2;
+            $depth = 0;
+
+            while ($condition) {
+                if ($depth === 1) {
+                    list($subdomain) = explode('.', str_replace(ucfirst($firstDomainPart), '', $domain));
+                    array_pop($parts);
+                } else {
+                    $subdomain = ucfirst(array_pop($parts));
+                    if (array_key_exists($subdomain, $flippedUnbreakableWords)) {
+                        $subdomain = $flippedUnbreakableWords[$subdomain];
+                    }
                 }
 
                 if (!array_key_exists($subdomain, $subtree)) {
                     $subtree[$subdomain] = array();
                 }
                 $subtree = &$subtree[$subdomain];
+
+                $condition = count($parts) > $totalParts - 2;
+                $depth++;
+
+                if ($depth === 2) {
+                    $subtree['__fixed_length_id'] = '_' . sha1($domain);
+                    list($subtree['__domain']) = explode('.', $domain);
+
+                    $subtree['__metadata'] = $messages['__metadata'];
+                    $subtree['__metadata']['domain'] = $subtree['__domain'];
+                    unset($messages['__metadata']);
+                }
             }
 
             $subtree['__messages'] = array($domain => $messages);
+            unset($catalogue[$domain]);
         }
 
         return $translationsTree;
