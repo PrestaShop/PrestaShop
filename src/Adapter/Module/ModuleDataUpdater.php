@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 class ModuleDataUpdater
 {
