@@ -6,25 +6,25 @@
         <source>Share</source>
         <target>Share</target>
         <note>Context:
-File: modules/ps_sharebuttons/ps_sharebuttons.php:160</note>
+File: modules/ps_sharebuttons/ps_sharebuttons.php:162</note>
       </trans-unit>
       <trans-unit id="3746d4aa96f19672260a424d76729dd1">
         <source>Tweet</source>
         <target>Tweet</target>
         <note>Context:
-File: modules/ps_sharebuttons/ps_sharebuttons.php:168</note>
+File: modules/ps_sharebuttons/ps_sharebuttons.php:170</note>
       </trans-unit>
       <trans-unit id="5b2c8bfd1bc974966209b7be1cb51a72">
         <source>Google+</source>
         <target>Google+</target>
         <note>Context:
-File: modules/ps_sharebuttons/ps_sharebuttons.php:176</note>
+File: modules/ps_sharebuttons/ps_sharebuttons.php:178</note>
       </trans-unit>
       <trans-unit id="86709a608bd914b28221164e6680ebf7">
         <source>Pinterest</source>
         <target>Pinterest</target>
         <note>Context:
-File: modules/ps_sharebuttons/ps_sharebuttons.php:184</note>
+File: modules/ps_sharebuttons/ps_sharebuttons.php:186</note>
       </trans-unit>
     </body>
   </file>

@@ -18,13 +18,13 @@ File: modules/ps_customtext/ps_customtext.php:52</note>
         <source>CMS block</source>
         <target>CMS block</target>
         <note>Context:
-File: modules/ps_customtext/ps_customtext.php:153</note>
+File: modules/ps_customtext/ps_customtext.php:156</note>
       </trans-unit>
       <trans-unit id="7ef25f7b93adc8bf024ed532d722f697">
         <source>Text block</source>
         <target>Text block</target>
         <note>Context:
-File: modules/ps_customtext/ps_customtext.php:162</note>
+File: modules/ps_customtext/ps_customtext.php:165</note>
       </trans-unit>
     </body>
   </file>

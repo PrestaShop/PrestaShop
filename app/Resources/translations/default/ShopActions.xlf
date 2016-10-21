@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="themes/StarterTheme/templates/catalog/_partials/products.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7c491b68fcdc8169f7aadfffbafaf47d">
+        <source>Back to top</source>
+        <target>Back to top</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/products.tpl:16</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

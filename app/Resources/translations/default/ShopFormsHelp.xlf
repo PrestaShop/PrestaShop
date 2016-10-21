@@ -6,7 +6,7 @@
         <source>(E.g.: %date_format%)</source>
         <target>(E.g.: %date_format%)</target>
         <note>Context:
-File: classes/form/CustomerFormatter.php:144</note>
+File: classes/form/CustomerFormatter.php:167</note>
       </trans-unit>
     </body>
   </file>
@@ -26,27 +26,33 @@ File: controllers/front/GuestTrackingController.php:96</note>
         <source>your@email.com</source>
         <target>your@email.com</target>
         <note>Context:
-File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:31</note>
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="863cf84b34def228394c03c156bff42c">
+        <source>Select reference</source>
+        <target>Select reference</target>
+        <note>Context:
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:51</note>
       </trans-unit>
       <trans-unit id="d57c24f3fe52d16e7169b912dd647f0d">
         <source>optional</source>
         <target>optional</target>
         <note>Context:
-File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:55</note>
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:70</note>
       </trans-unit>
       <trans-unit id="8307fac59310d028334df0306c7b29ad">
         <source>How can we help?</source>
         <target>How can we help?</target>
         <note>Context:
-File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:65</note>
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:81</note>
       </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d1d39a0b318d866da9abdbbbe98d019e">
-        <source>Don\'t forget to save your customization to be able to add to cart</source>
-        <target>Don\'t forget to save your customization to be able to add to cart</target>
+      <trans-unit id="20f4168399201bd498e52bafeb59b478">
+        <source>Don't forget to save your customization to be able to add to cart</source>
+        <target>Don't forget to save your customization to be able to add to cart</target>
         <note>Context:
 File: themes/classic/templates/catalog/_partials/product-customization.tpl:5</note>
       </trans-unit>

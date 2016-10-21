@@ -1,5 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a43fd5e0338751959686921566de352e">
+        <source>Leave this field blank if there's no change.</source>
+        <target>Leave this field blank if there's no change.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:399</note>
+      </trans-unit>
+      <trans-unit id="f44c07e8b6e19d8ea1e551d181993898">
+        <source>Password should be at least %s characters long.</source>
+        <target>Password should be at least %s characters long.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:400</note>
+      </trans-unit>
+      <trans-unit id="6010127763b917fdc47eb0c50a86a6f6">
+        <source>Enable or disable customer login.</source>
+        <target>Enable or disable customer login.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:431</note>
+      </trans-unit>
+      <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
+        <source>This customer will receive your ads via email.</source>
+        <target>This customer will receive your ads via email.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:453</note>
+      </trans-unit>
+      <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
+        <source>Select all the groups that you would like to apply to this customer.</source>
+        <target>Select all the groups that you would like to apply to this customer.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:479</note>
+      </trans-unit>
+      <trans-unit id="395b64636636e968c756f7514313f760">
+        <source>This group will be the user's default group.</source>
+        <target>This group will be the user's default group.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:492</note>
+      </trans-unit>
+      <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
+        <source>Only the discount for the selected group will be applied to this customer.</source>
+        <target>Only the discount for the selected group will be applied to this customer.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:493</note>
+      </trans-unit>
+      <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
+        <source>Valid characters:</source>
+        <target>Valid characters:</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:549</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminDeliverySlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="67342320cb8798c3a911e0c6d8bd026a">
@@ -46,27 +98,27 @@ File: controllers/admin/AdminSlipController.php:80</note>
   </file>
   <file original="controllers/admin/AdminInvoicesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9d7449f320c1fcb3d74b2c935340a414">
-        <source>If enabled, your customers will receive an invoice for their purchase(s).</source>
-        <target>If enabled, your customers will receive an invoice for their purchase(s).</target>
+      <trans-unit id="60422879211a12247e5da14751a59ac3">
+        <source>If enabled, your customers will receive an invoice for the purchase.</source>
+        <target>If enabled, your customers will receive an invoice for the purchase.</target>
         <note>Context:
 File: controllers/admin/AdminInvoicesController.php:42</note>
       </trans-unit>
-      <trans-unit id="ad7eff349ed76594cc56e2f6ab842429">
-        <source>Show a summary of tax rates when there are several taxes.</source>
-        <target>Show a summary of tax rates when there are several taxes.</target>
+      <trans-unit id="afda8f59762167c6720a8afe24345df1">
+        <source>If required, show the total amount per rate of the corresponding tax.</source>
+        <target>If required, show the total amount per rate of the corresponding tax.</target>
         <note>Context:
 File: controllers/admin/AdminInvoicesController.php:48</note>
       </trans-unit>
-      <trans-unit id="48a7d4c7802b0cc4a14a72a574681592">
-        <source>Adds an image before product name on the invoice</source>
-        <target>Adds an image before product name on the invoice</target>
+      <trans-unit id="0e963c5b7a1b6bb67429c7d0e7f45741">
+        <source>Adds an image in front of the product name on the invoice</source>
+        <target>Adds an image in front of the product name on the invoice</target>
         <note>Context:
 File: controllers/admin/AdminInvoicesController.php:54</note>
       </trans-unit>
-      <trans-unit id="5ebe36b3cffc92f26b3ee7a0306c0154">
-        <source>Prefix used for invoice name (e.g. #IN00001).</source>
-        <target>Prefix used for invoice name (e.g. #IN00001).</target>
+      <trans-unit id="7b87585267aed27676374641013ab66e">
+        <source>Freely definable prefix for invoice number (e.g. #IN00001).</source>
+        <target>Freely definable prefix for invoice number (e.g. #IN00001).</target>
         <note>Context:
 File: controllers/admin/AdminInvoicesController.php:61</note>
       </trans-unit>
@@ -76,9 +128,9 @@ File: controllers/admin/AdminInvoicesController.php:61</note>
         <note>Context:
 File: controllers/admin/AdminInvoicesController.php:90</note>
       </trans-unit>
-      <trans-unit id="fef2f8cb8843f9f7761f833c524220c6">
-        <source>Use this field to display additional text on your invoice, like specific legal information. It will appear below the payment methods summary.</source>
-        <target>Use this field to display additional text on your invoice, like specific legal information. It will appear below the payment methods summary.</target>
+      <trans-unit id="7a490daaa2605a4a5be08b30a0c6fe24">
+        <source>Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).</source>
+        <target>Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).</target>
         <note>Context:
 File: controllers/admin/AdminInvoicesController.php:102</note>
       </trans-unit>
@@ -145,58 +197,6 @@ File: controllers/admin/AdminReturnController.php:137</note>
         <target>The link is only available after validation and before the parcel gets delivered.</target>
         <note>Context:
 File: controllers/admin/AdminReturnController.php:145</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a43fd5e0338751959686921566de352e">
-        <source>Leave this field blank if there's no change.</source>
-        <target>Leave this field blank if there's no change.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:397</note>
-      </trans-unit>
-      <trans-unit id="f44c07e8b6e19d8ea1e551d181993898">
-        <source>Password should be at least %s characters long.</source>
-        <target>Password should be at least %s characters long.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:398</note>
-      </trans-unit>
-      <trans-unit id="6010127763b917fdc47eb0c50a86a6f6">
-        <source>Enable or disable customer login.</source>
-        <target>Enable or disable customer login.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:429</note>
-      </trans-unit>
-      <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
-        <source>This customer will receive your ads via email.</source>
-        <target>This customer will receive your ads via email.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:451</note>
-      </trans-unit>
-      <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
-        <source>Select all the groups that you would like to apply to this customer.</source>
-        <target>Select all the groups that you would like to apply to this customer.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:477</note>
-      </trans-unit>
-      <trans-unit id="395b64636636e968c756f7514313f760">
-        <source>This group will be the user's default group.</source>
-        <target>This group will be the user's default group.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:490</note>
-      </trans-unit>
-      <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
-        <source>Only the discount for the selected group will be applied to this customer.</source>
-        <target>Only the discount for the selected group will be applied to this customer.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:491</note>
-      </trans-unit>
-      <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
-        <source>Valid characters:</source>
-        <target>Valid characters:</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:547</note>
       </trans-unit>
     </body>
   </file>

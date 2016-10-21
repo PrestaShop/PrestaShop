@@ -32,22 +32,6 @@ File: controllers/front/AddressesController.php:57</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="51dd5f555844be1bfa2b9eabdf62f503">
-        <source>A link to reset your password has been sent to your address: %s</source>
-        <target>A link to reset your password has been sent to your address: %s</target>
-        <note>Context:
-File: controllers/front/PasswordController.php:78</note>
-      </trans-unit>
-      <trans-unit id="19b1f74d6e96f3db9805e8d5c9301b7a">
-        <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>
-        <target>Your password has been successfully reset and a confirmation has been sent to your email address: %s</target>
-        <note>Context:
-File: controllers/front/PasswordController.php:153</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="228289d31b9bf52373066156f9b0190e">
@@ -58,23 +42,39 @@ File: controllers/front/GuestTrackingController.php:102</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0c478a7069ab13f446e9e765cffd1550">
-        <source>Message successfully sent</source>
-        <target>Message successfully sent</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:168</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/IdentityController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7c8682d92dfb1522b4cc2975608e582d">
         <source>Information successfully updated.</source>
         <target>Information successfully updated.</target>
         <note>Context:
-File: controllers/front/IdentityController.php:53</note>
+File: controllers/front/IdentityController.php:55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0c478a7069ab13f446e9e765cffd1550">
+        <source>Message successfully sent</source>
+        <target>Message successfully sent</target>
+        <note>Context:
+File: controllers/front/OrderDetailController.php:182</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6e05d9291d7796566bb503890da070bf">
+        <source>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</source>
+        <target>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:93</note>
+      </trans-unit>
+      <trans-unit id="19b1f74d6e96f3db9805e8d5c9301b7a">
+        <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>
+        <target>Your password has been successfully reset and a confirmation has been sent to your email address: %s</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:181</note>
       </trans-unit>
     </body>
   </file>

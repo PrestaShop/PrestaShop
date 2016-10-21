@@ -6,13 +6,13 @@
         <source>Contact information</source>
         <target>Contact information</target>
         <note>Context:
-File: modules/ps_contactinfo/ps_contactinfo.php:44</note>
+File: modules/ps_contactinfo/ps_contactinfo.php:50</note>
       </trans-unit>
       <trans-unit id="3bef52cd2426ac538e6230c70d7b5929">
         <source>Allows you to display additional information about your store's customer service.</source>
         <target>Allows you to display additional information about your store's customer service.</target>
         <note>Context:
-File: modules/ps_contactinfo/ps_contactinfo.php:45</note>
+File: modules/ps_contactinfo/ps_contactinfo.php:51</note>
       </trans-unit>
     </body>
   </file>

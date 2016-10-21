@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_contactinfo/nav.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
         <source>Contact us</source>
         <target>Contact us</target>
         <note>Context:
-File: modules/ps_contactinfo/nav.tpl:26</note>
+File: modules/ps_contactinfo/ps_contactinfo.tpl:27</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="0bda3a05a6be2f106eb4f1da481bc7ce">
         <source>Tel: %phone%</source>
         <target>Tel: %phone%</target>
