@@ -1,10 +1,10 @@
 <?php
 
-use PrestaShopBundle\Utils\Migrate;
+use PrestaShopBundle\Install\Upgrade;
 
 $parametersFilepath = __DIR__  . '/parameters.php';
 if (!file_exists($parametersFilepath)) {
-    Migrate::migrateSettingsFile();
+    Upgrade::migrateSettingsFile();
 }
 
 $parameters = require($parametersFilepath);
