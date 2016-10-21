@@ -320,9 +320,6 @@ class AdminControllerCore extends Controller
     /** @var string */
     protected $display;
 
-    /** @var bool */
-    protected $_includeContainer = true;
-
     /** @var array */
     protected $tab_modules_list = array('default_list' => array(), 'slider_list' => array());
 
