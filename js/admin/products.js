@@ -259,7 +259,6 @@ product_tabs['Combinations'] = new function(){
 				context: document.body,
 				dataType: 'json',
 				context: this,
-				async: false,
 				success: function(data) {
 					// color the selected line
 					parent.siblings().removeClass('selected-line');
@@ -336,7 +335,6 @@ product_tabs['Combinations'] = new function(){
 			context: document.body,
 			dataType: 'json',
 			context: this,
-			async: false,
 			success: function(data) {
 				if (data.status == 'ok')
 				{
@@ -368,7 +366,6 @@ product_tabs['Combinations'] = new function(){
 			context: document.body,
 			dataType: 'json',
 			context: this,
-			async: false,
 			success: function(data) {
 				if (data.status == 'ok')
 				{
@@ -739,7 +736,6 @@ product_tabs['Prices'] = new function(){
 				},
 				dataType: 'json',
 				context: this,
-				async: false,
 				success: function(data) {
 					if (data !== null)
 					{
@@ -1711,7 +1707,6 @@ function ajaxAction (url, action, success_callback, failure_callback){
 		},
 		dataType: 'json',
 		context: this,
-		async: false,
 		success: function(data) {
 			if (data.status == 'ok')
 			{
@@ -1911,6 +1906,5 @@ $(document).ready(function() {
 	$('#product_form').submit(function(e) {
 		$('#selectedCarriers option').attr('selected', 'selected');
 		$('#selectAttachment1 option').attr('selected', 'selected');
-		return true;
 	});
 });

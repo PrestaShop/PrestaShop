@@ -249,9 +249,6 @@
 							required: ""
 						}
 					},
-					submitHandler: function(form) {
-						form.submit();
-					},
 					// override jquery validate plugin defaults for bootstrap 3
 					highlight: function(element) {
 						$(element).closest('.form-group').addClass('has-error');
@@ -317,4 +314,3 @@
 	</div>
 
 {/block}
-
