@@ -204,7 +204,7 @@ class ProductOptions extends CommonAbstractType
         $builder->add('attachment_product', 'PrestaShopBundle\Form\Admin\Product\ProductAttachement', array(
             'required' => false,
             'label' => $this->translator->trans('Attachment', [], 'Admin.Catalog.Feature'),
-            'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action')]
+            'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action', array('idProduct' => 1))]
         ));
 
         //Add attachment selectors
