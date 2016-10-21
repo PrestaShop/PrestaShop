@@ -41,6 +41,7 @@ use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Yaml\Yaml;
 use GuzzleHttp\Client;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 class ModuleManagerBuilder
 {
@@ -127,7 +128,24 @@ class ModuleManagerBuilder
 
     private function __construct()
     {
-        $config = Yaml::parse(file_get_contents(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.yml'));
+        $phpConfigFile = $this->getConfigDir().'/config.php';
+        if (file_exists($phpConfigFile)
+            && filemtime($phpConfigFile) >= filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.yml')) {
+            $config = require($phpConfigFile);
+        } else {
+            $config = Yaml::parse(
+                file_get_contents(
+                    _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.yml'
+                )
+            );
+            try {
+                $filesystem = new Filesystem();
+                $filesystem->dumpFile($phpConfigFile, '<?php return '.var_export($config, true).';'."\n");
+            } catch (IOException $e) {
+                return false;
+            }
+        }
+
         $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
 
         $marketPlaceClient = new ApiClient(

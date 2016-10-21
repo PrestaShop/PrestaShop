@@ -348,13 +348,15 @@ class CartCore extends ObjectModel
     /**
      * Calculate average Tax rate in Cart
      *
-     * @param int $id_cart Cart ID
+     * @param mixed $cart Cart ID or Cart Object
      *
      * @return float Average Tax used in Cart
      */
-    public static function getTaxesAverageUsed($id_cart)
+    public static function getTaxesAverageUsed($cart)
     {
-        $cart = new Cart((int)$id_cart);
+        if (!is_object($cart)) {
+            $cart = new Cart((int)$cart);
+        }
         if (!Validate::isLoadedObject($cart)) {
             die(Tools::displayError());
         }
