@@ -351,7 +351,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         foreach ($modules as $moduleLabel => $modulesPart) {
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart);
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart, str_replace("to_", "", $moduleLabel));
             $modules->{$moduleLabel} = $this->getPresentedProducts($modulesPart);
         }
 
