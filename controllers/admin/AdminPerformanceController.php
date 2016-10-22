@@ -860,7 +860,7 @@ class AdminPerformanceControllerCore extends AdminController
                         $this->errors[] = Tools::displayError(sprintf($this->trans('Error: Could not write to file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.old.php'));
                         break;
                     case self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
-                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: Debug mode is not enabled. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: Could not detect if debug mode is enabled. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
                         break;
                     case self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS:
                         $this->errors[] = Tools::displayError(sprintf($this->trans('Error: Could not write to file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
