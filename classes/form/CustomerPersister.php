@@ -111,8 +111,8 @@ class CustomerPersisterCore
         if ($ok) {
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
-            Hook::exec('actionCustomerAccountAdd', [
-                'newCustomer' => $customer
+            Hook::exec('actionCustomerAccountUpdate', [
+                'customer' => $customer,
             ]);
             if ($guest_to_customer) {
                 $this->sendConfirmationMail($customer);
@@ -167,8 +167,8 @@ class CustomerPersisterCore
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
             $this->sendConfirmationMail($customer);
-            Hook::exec('actionCustomerAccountUpdate', array(
-                'customer' => $customer
+            Hook::exec('actionCustomerAccountAdd', array(
+                'newCustomer' => $customer,
             ));
         }
 
