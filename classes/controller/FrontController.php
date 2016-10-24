@@ -1137,29 +1137,48 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.7
+     * Adds jQuery UI component(s) to queued JS file list
+     *
+     * @param string|array $component
+     * @param string $theme
+     * @param bool $check_dependencies
      */
     public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
     {
-        /*
-        This is deprecated in PrestaShop 1.7
-        Manage your dependencies in your themes/modules and don\'t rely on PrestaShop embedded libraries.
-        Use $this->registerJavascript() and $this->registerStylesheet() to manage your assets
-        */
-        if (isset(Media::$jquery_ui_dependencies[$component])) {
-            foreach (Media::$jquery_ui_dependencies[$component]['dependencies'] as $dependency) {
-                $this->addJqueryUI($dependency);
+        $css_theme_path = '/js/jquery/ui/themes/'.$theme.'/minified/jquery.ui.theme.min.css';
+        $css_path = '/js/jquery/ui/themes/'.$theme.'/minified/jquery-ui.min.css';
+        $js_path = '/js/jquery/ui/jquery-ui.min.js';
+
+        $this->registerStylesheet('jquery-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
+        $this->registerStylesheet('jquery-ui', $css_path, ['media' => 'all', 'priority' => 90]);
+        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 90]);
+    }
+
+
+    /**
+     * Adds jQuery plugin(s) to queued JS file list
+     *
+     * @param string|array $name
+     * @param string null $folder
+     * @param bool $css
+     */
+    public function addJqueryPlugin($name, $folder = null, $css = true)
+    {
+        if (!is_array($name)) {
+            $name = array($name);
+        }
+        if (is_array($name)) {
+            foreach ($name as $plugin) {
+                $plugin_path = Media::getJqueryPluginPath($plugin, $folder);
+
+                if (!empty($plugin_path['js'])) {
+                    $this->registerJavascript($plugin_path['js'], $plugin_path['js'], ['position' => 'bottom', 'priority' => 100]);
+                }
+                if ($css && !empty($plugin_path['css'])) {
+                    $this->registerStylesheet(key($plugin_path['css']), key($plugin_path['css']), ['media' => 'all', 'priority' => 100]);
+                }
             }
         }
-
-        // backward compat'
-        $css_theme_path = '/js/jquery/ui/themes/'.$theme.'/jquery.ui.theme.css';
-        $css_path = '/js/jquery/ui/themes/'.$theme.'/jquery.'.$component.'.css';
-        $js_path = '/js/jquery/ui/jquery.'.$component.'.min.js';
-
-        $this->registerStylesheet('legacy-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
-        $this->registerStylesheet('legacy-'.$component, $css_path, ['media' => 'all', 'priority' => 90]);
-        $this->registerJavascript('legacy-'.$component, $js_path, ['position' => 'bottom', 'priority' => 90]);
     }
 
     /**
@@ -1856,7 +1875,7 @@ class FrontControllerCore extends Controller
         $success = preg_match('/modules\/.*/', $legacy_uri, $matches);
         if (!$success) {
             Tools::displayAsDeprecated(
-                'Backward compatiblity for this method couldn\'t be handled. Use $this->registerJavascript() instead'
+                'Backward compatibility for this method couldn\'t be handled. Use $this->registerJavascript() instead'
             );
             return false;
         } else {
