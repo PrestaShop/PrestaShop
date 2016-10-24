@@ -19,7 +19,8 @@ export default function() {
         if (idsProductAttribute[0] != '') {
           getCombinations(response);
         }
-        $('#create-combinations').click(function() {
+        $('#create-combinations').click(function(event) {
+          event.preventDefault();
           generate();
         });
       });
