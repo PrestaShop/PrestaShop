@@ -334,7 +334,9 @@
 						<ul id="employee_links" class="dropdown-menu">
 							<li>
 								<span class="employee_avatar">
+									{if isset($employee)}
 									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
+									{/if}
 								</span>
 							</li>
 							<li class="text-center text-nowrap">{$employee->firstname} {$employee->lastname}</li>
