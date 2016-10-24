@@ -8,5 +8,3 @@
         {/block}
       </section>
     {/block}
-
-{/block}
