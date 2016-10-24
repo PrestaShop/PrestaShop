@@ -6,9 +6,6 @@
     <field name="description"/>
   </fields>
   <entities>
-    <hook id="displayPayment">
-      <name>displayPayment</name><title>Payment</title><description>This hook displays new elements on the payment page</description>
-    </hook>
     <hook id="actionValidateOrder">
       <name>actionValidateOrder</name><title>New orders</title><description/>
     </hook>
@@ -114,9 +111,6 @@
     <hook id="displayCustomerAccount">
       <name>displayCustomerAccount</name><title>Customer account displayed in Front Office</title><description>This hook displays new elements on the customer account page</description>
     </hook>
-    <hook id="displayCustomerIdentityForm">
-      <name>displayCustomerIdentityForm</name><title>Customer identity form displayed in Front Office</title><description>This hook displays new elements on the form to update a customer identity</description>
-    </hook>
     <hook id="actionOrderSlipAdd">
       <name>actionOrderSlipAdd</name><title>Order slip creation</title><description>This hook is called when a new credit slip is added regarding client order</description>
     </hook>
@@ -171,9 +165,6 @@
     <hook id="displayShoppingCart">
       <name>displayShoppingCart</name><title>Shopping cart - Additional button</title><description>This hook displays new action buttons within the shopping cart</description>
     </hook>
-    <hook id="actionSearch">
-      <name>actionSearch</name><title>Search</title><description/>
-    </hook>
     <hook id="actionCarrierUpdate">
       <name>actionCarrierUpdate</name><title>Carrier Update</title><description>This hook is called when a carrier is updated</description>
     </hook>
@@ -198,9 +189,6 @@
     <hook id="actionCarrierProcess">
       <name>actionCarrierProcess</name><title>Carrier process</title><description/>
     </hook>
-    <hook id="actionOrderDetail">
-      <name>actionOrderDetail</name><title>Order detail</title><description>This hook is used to set the follow-up in Smarty when an order's detail is called</description>
-    </hook>
     <hook id="displayBeforeCarrier">
       <name>displayBeforeCarrier</name><title>Before carriers list</title><description>This hook is displayed before the carrier list in Front Office</description>
     </hook>
@@ -221,9 +209,6 @@
     </hook>
     <hook id="actionCategoryDelete">
       <name>actionCategoryDelete</name><title>Category deletion</title><description>This hook is displayed when a category is deleted</description>
-    </hook>
-    <hook id="actionBeforeAuthentication">
-      <name>actionBeforeAuthentication</name><title>Before authentication</title><description>This hook is displayed before the customer's authentication</description>
     </hook>
     <hook id="displayPaymentTop">
       <name>displayPaymentTop</name><title>Top of payment page</title><description>This hook is displayed at the top of the payment page</description>
@@ -254,9 +239,6 @@
     </hook>
     <hook id="actionProductSave">
       <name>actionProductSave</name><title>Saving products</title><description>This hook is called while saving products</description>
-    </hook>
-    <hook id="actionProductListOverride">
-      <name>actionProductListOverride</name><title>Assign a products list to a category</title><description>This hook assigns a products list to a category</description>
     </hook>
     <hook id="displayAttributeGroupPostProcess">
       <name>displayAttributeGroupPostProcess</name><title>On post-process in admin attribute group</title><description>This hook is called on post-process in admin attribute group</description>
@@ -299,12 +281,6 @@
     </hook>
     <hook id="actionModuleInstallAfter">
       <name>actionModuleInstallAfter</name><title>actionModuleInstallAfter</title><description></description>
-    </hook>
-    <hook id="displayHomeTab">
-      <name>displayHomeTab</name><title>Home Page Tabs</title><description>This hook displays new elements on the homepage tabs</description>
-    </hook>
-    <hook id="displayHomeTabContent">
-      <name>displayHomeTabContent</name><title>Home Page Tabs Content</title><description>This hook displays new elements on the homepage tabs content</description>
     </hook>
     <hook id="displayTopColumn">
       <name>displayTopColumn</name><title>Top column blocks</title><description>This hook displays new elements in the top of columns</description>
