@@ -5,10 +5,6 @@
     <field name="name"/>
   </fields>
   <entities>
-    <hook_alias id="payment">
-      <alias>payment</alias>
-      <name>displayPayment</name>
-    </hook_alias>
     <hook_alias id="newOrder">
       <alias>newOrder</alias>
       <name>actionValidateOrder</name>
@@ -173,10 +169,6 @@
       <alias>shoppingCartExtra</alias>
       <name>displayShoppingCart</name>
     </hook_alias>
-    <hook_alias id="search">
-      <alias>search</alias>
-      <name>actionSearch</name>
-    </hook_alias>
     <hook_alias id="updateCarrier">
       <alias>updateCarrier</alias>
       <name>actionCarrierUpdate</name>
@@ -209,10 +201,6 @@
       <alias>processCarrier</alias>
       <name>actionCarrierProcess</name>
     </hook_alias>
-    <hook_alias id="orderDetail">
-      <alias>orderDetail</alias>
-      <name>actionOrderDetail</name>
-    </hook_alias>
     <hook_alias id="beforeCarrier">
       <alias>beforeCarrier</alias>
       <name>displayBeforeCarrier</name>
@@ -236,10 +224,6 @@
     <hook_alias id="categoryDeletion">
       <alias>categoryDeletion</alias>
       <name>actionCategoryDelete</name>
-    </hook_alias>
-    <hook_alias id="beforeAuthentication">
-      <alias>beforeAuthentication</alias>
-      <name>actionBeforeAuthentication</name>
     </hook_alias>
     <hook_alias id="paymentTop">
       <alias>paymentTop</alias>
@@ -280,10 +264,6 @@
     <hook_alias id="afterSaveProduct">
       <alias>afterSaveProduct</alias>
       <name>actionProductSave</name>
-    </hook_alias>
-    <hook_alias id="productListAssign">
-      <alias>productListAssign</alias>
-      <name>actionProductListOverride</name>
     </hook_alias>
     <hook_alias id="postProcessAttributeGroup">
       <alias>postProcessAttributeGroup</alias>
