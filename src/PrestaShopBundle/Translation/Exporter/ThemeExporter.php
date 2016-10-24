@@ -81,7 +81,22 @@ class ThemeExporter
      */
     public function createZipArchive($themeName, $locale)
     {
+        $archiveParentDirectory = $this->exportCatalogues($themeName, $locale);
+        $zipFilename = $this->makeZipFilename($themeName, $locale);
+        $this->zipManager->createArchive($zipFilename, $archiveParentDirectory);
+
+        return $zipFilename;
+    }
+
+    /**
+     * @param $themeName
+     * @param $locale
+     * @return string
+     */
+    public function exportCatalogues($themeName, $locale)
+    {
         $this->themeProvider->setLocale($locale);
+        $this->themeProvider->setThemeName($themeName);
 
         $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale);
         try {
@@ -110,10 +125,7 @@ class ThemeExporter
 
         $this->renameCatalogues($locale, $archiveParentDirectory);
 
-        $zipFilename = $this->makeZipFilename($themeName, $locale);
-        $this->zipManager->createArchive($zipFilename, $archiveParentDirectory);
-
-        return $zipFilename;
+        return $archiveParentDirectory;
     }
 
     /**
@@ -125,6 +137,9 @@ class ThemeExporter
     {
         $tmpFolderPath = $this->getTemporaryExtractionFolder($themeName);
         $folderPath = $this->getFlattenizationFolder($themeName);
+
+        $this->filesystem->remove($folderPath);
+        $this->filesystem->remove($tmpFolderPath);
 
         $this->filesystem->mkdir($folderPath);
         $this->filesystem->mkdir($tmpFolderPath);
@@ -153,7 +168,11 @@ class ThemeExporter
                 $archiveParentDirectory,
                 $parentDirectoryParts[count($parentDirectoryParts) - 1] . '.' . $locale . '.xlf'
             );
-            $this->filesystem->rename($file->getPathname(), implode('/', $destinationFilenameParts));
+            $destinationFilename = implode('/', $destinationFilenameParts);
+            if ($this->filesystem->exists($destinationFilename)) {
+                $this->filesystem->remove($destinationFilename);
+            }
+            $this->filesystem->rename($file->getPathname(), $destinationFilename);
         }
 
         $this->filesystem->remove($archiveParentDirectory . '/' . $locale);

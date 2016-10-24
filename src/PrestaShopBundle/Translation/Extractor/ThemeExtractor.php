@@ -69,7 +69,10 @@ class ThemeExtractor
         // remove the last "/"
         $themeDirectory = substr($theme->getDirectory(), 0, -1);
 
-        $options = array('path' => $themeDirectory);
+        $options = array(
+            'path' => $themeDirectory,
+            'default_locale' => $locale,
+        );
         $this->smartyExtractor->extract($themeDirectory, $this->catalog);
 
         if ($this->overrideFromDatabase) {
