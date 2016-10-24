@@ -78,10 +78,12 @@ class CategoriesProvider
                     }
                 }
 
-                $categories['categories']->subMenu[$categoryName] = $this->createMenuObject($categoryName,
-                    $categoryName,
-                    $moduleIds
-                );
+                if (count($moduleIds)) {
+                    $categories['categories']->subMenu[$categoryName] = $this->createMenuObject($categoryName,
+                        $categoryName,
+                        $moduleIds
+                    );
+                }
             }
 
             usort($categories['categories']->subMenu, function ($a, $b) {
@@ -104,16 +106,13 @@ class CategoriesProvider
     public function getParentCategory($categoryName)
     {
         foreach ($this->getCategories() as $parentCategory) {
-            if ($parentCategory->name === $categoryName) {
-                return $categoryName;
-            }
-
             foreach ($parentCategory->categories as $childCategory) {
                 if ($childCategory->name === $categoryName) {
                     return $parentCategory->name;
                 }
             }
         }
+        return $categoryName;
     }
 
     /**
