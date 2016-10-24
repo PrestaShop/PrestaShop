@@ -486,18 +486,18 @@ abstract class ControllerCore
         if (!is_array($name)) {
             $name = array($name);
         }
-        if (is_array($name)) {
-            foreach ($name as $plugin) {
-                $plugin_path = Media::getJqueryPluginPath($plugin, $folder);
 
-                if (!empty($plugin_path['js'])) {
-                    $this->addJS($plugin_path['js'], false);
-                }
-                if ($css && !empty($plugin_path['css'])) {
-                    $this->addCSS(key($plugin_path['css']), 'all', null, false);
-                }
+        foreach ($name as $plugin) {
+            $plugin_path = Media::getJqueryPluginPath($plugin, $folder);
+
+            if (!empty($plugin_path['js'])) {
+                $this->addJS($plugin_path['js'], false);
+            }
+            if ($css && !empty($plugin_path['css'])) {
+                $this->addCSS(key($plugin_path['css']), 'all', null, false);
             }
         }
+
     }
 
     /**

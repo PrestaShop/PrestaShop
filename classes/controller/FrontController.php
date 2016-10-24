@@ -1167,24 +1167,23 @@ class FrontControllerCore extends Controller
         if (!is_array($name)) {
             $name = array($name);
         }
-        if (is_array($name)) {
-            foreach ($name as $plugin) {
-                $plugin_path = Media::getJqueryPluginPath($plugin, $folder);
 
-                if (!empty($plugin_path['js'])) {
-                    $this->registerJavascript(
-                        str_replace(_PS_JS_DIR_.'jquery/plugins/', '', $plugin_path['js']),
-                        str_replace(_PS_JS_DIR_, 'js/', $plugin_path['js']),
-                        array('position' => 'bottom', 'priority' => 100)
-                    );
-                }
-                if ($css && !empty($plugin_path['css'])) {
-                    $this->registerStylesheet(
-                        str_replace(_PS_JS_DIR_.'jquery/plugins/', '', key($plugin_path['css'])),
-                        str_replace(_PS_JS_DIR_, 'js/', key($plugin_path['css'])),
-                        array('media' => 'all', 'priority' => 100)
-                    );
-                }
+        foreach ($name as $plugin) {
+            $plugin_path = Media::getJqueryPluginPath($plugin, $folder);
+
+            if (!empty($plugin_path['js'])) {
+                $this->registerJavascript(
+                    str_replace(_PS_JS_DIR_.'jquery/plugins/', '', $plugin_path['js']),
+                    str_replace(_PS_JS_DIR_, 'js/', $plugin_path['js']),
+                    array('position' => 'bottom', 'priority' => 100)
+                );
+            }
+            if ($css && !empty($plugin_path['css'])) {
+                $this->registerStylesheet(
+                    str_replace(_PS_JS_DIR_.'jquery/plugins/', '', key($plugin_path['css'])),
+                    str_replace(_PS_JS_DIR_, 'js/', key($plugin_path['css'])),
+                    array('media' => 'all', 'priority' => 100)
+                );
             }
         }
     }
