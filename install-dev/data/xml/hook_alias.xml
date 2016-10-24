@@ -133,6 +133,10 @@
       <alias>productActions</alias>
       <name>displayProductAdditionalInfo</name>
     </hook_alias>
+    <hook_alias id="productButtons">
+      <alias>displayProductButtons</alias>
+      <name>displayProductAdditionalInfo</name>
+    </hook_alias>
     <hook_alias id="backOfficeHome">
       <alias>backOfficeHome</alias>
       <name>displayBackOfficeHome</name>

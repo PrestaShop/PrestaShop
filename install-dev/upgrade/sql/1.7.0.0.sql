@@ -206,3 +206,4 @@ ALTER TABLE `PREFIX_tab` ADD `icon` varchar(32) DEFAULT '';
 /* PHP:migrate_tabs_17(); */;
 
 UPDATE `PREFIX_hook` SET `name` = 'displayProductAdditionalInfo' WHERE `name` = 'displayProductButtons';
+INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayProductAdditionalInfo', 'displayProductButtons');
