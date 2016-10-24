@@ -218,11 +218,15 @@ class ProductPresenter
         Language $language,
         $canonical = false
     ) {
+        $linkRewrite = isset($product['link_rewrite'])?$product['link_rewrite']:null;
+        $category = isset($product['category'])?$product['category']:null;
+        $ean13 = isset($product['ean13'])?$product['ean13']:null;
+
         return $this->link->getProductLink(
             $product['id_product'],
-            null,
-            null,
-            null,
+            $linkRewrite,
+            $category,
+            $ean13,
             $language->id,
             null,
             (!$canonical) ? $product['id_product_attribute'] : null,
