@@ -81,6 +81,28 @@ class LinkCore
     }
 
     /**
+     * Return a product object from various product format
+     *
+     * @param $product
+     * @param $idLang
+     * @param $idShop
+     * @return Product
+     * @throws PrestaShopException
+     */
+    public function getProductObject($product, $idLang, $idShop) {
+        if (!is_object($product)) {
+            if (is_array($product) && isset($product['id_product'])) {
+                $product = new Product($product['id_product'], false, $idLang, $idShop);
+            } elseif ((int) $product) {
+                $product = new Product((int) $product, false, $idLang, $idShop);
+            } else {
+                throw new PrestaShopException('Invalid product vars');
+            }
+        }
+        return $product;
+    }
+
+    /**
      * Create a link to a product.
      *
      * @param mixed  $product Product object (can be an ID product, but deprecated)
@@ -114,50 +136,73 @@ class LinkCore
 
         $url = $this->getBaseLink($idShop, null, $relativeProtocol).$this->getLangLink($idLang, null, $idShop);
 
+        // Set available keywords
+        $params = array();
+
         if (!is_object($product)) {
             if (is_array($product) && isset($product['id_product'])) {
-                $product = new Product($product['id_product'], false, $idLang, $idShop);
+                $params['id'] = $product['id_product'];
             } elseif ((int) $product) {
-                $product = new Product((int) $product, false, $idLang, $idShop);
+                $params['id'] = $product;
             } else {
                 throw new PrestaShopException('Invalid product vars');
             }
+        } else {
+            $params['id'] = $product->id;
         }
 
-        // Set available keywords
-        $params = array();
-        $params['id'] = $product->id;
         $params['id_product_attribute'] = $ipa;
+        if (!$alias) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
+        }
         $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
+        if (!$ean13) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
+        }
         $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
-        $params['meta_keywords'] = Tools::str2url($product->getFieldByLang('meta_keywords'));
-        $params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
+        if ($dispatcher->hasKeyword('product_rule', $idLang, 'meta_keywords', $idShop)) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
+            $params['meta_keywords'] = Tools::str2url($product->getFieldByLang('meta_keywords'));
+        }
+        if ($dispatcher->hasKeyword('product_rule', $idLang, 'meta_title', $idShop)) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
+            $params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
+        }
 
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'manufacturer', $idShop)) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
             $params['manufacturer'] = Tools::str2url($product->isFullyLoaded ? $product->manufacturer_name : Manufacturer::getNameById($product->id_manufacturer));
         }
 
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'supplier', $idShop)) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
             $params['supplier'] = Tools::str2url($product->isFullyLoaded ? $product->supplier_name : Supplier::getNameById($product->id_supplier));
         }
-
+        
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'price', $idShop)) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
             $params['price'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, null, 6, null, false, true, 1, false, null, null, null, $product->specificPrice);
         }
 
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'tags', $idShop)) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
             $params['tags'] = Tools::str2url($product->getTags($idLang));
         }
 
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'category', $idShop)) {
-            $params['category'] = (!is_null($product->category) && !empty($product->category)) ? Tools::str2url($product->category) : Tools::str2url($category);
+            if (!$category) {
+                $product = $this->getProductObject($product, $idLang, $idShop);
+            }
+            $params['category'] = (!$category) ? $product->category : $category;
         }
 
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'reference', $idShop)) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
             $params['reference'] = Tools::str2url($product->reference);
         }
 
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'categories', $idShop)) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
             $params['category'] = (!$category) ? $product->category : $category;
             $cats = array();
             foreach ($product->getParentCategories($idLang) as $cat) {
@@ -167,6 +212,9 @@ class LinkCore
                 }
             }
             $params['categories'] = implode('/', $cats);
+        }
+        if ($ipa) {
+            $product = $this->getProductObject($product, $idLang, $idShop);
         }
         $anchor = $ipa ? $product->getAnchor((int) $ipa, (bool) $addAnchor) : '';
 
@@ -306,6 +354,28 @@ class LinkCore
     }
 
     /**
+     * Return a category object from various category format
+     *
+     * @param $product
+     * @param $idLang
+     * @return Category
+     * @throws PrestaShopException
+     */
+    public function getCategoryObject($category, $idLang) {
+        if (!is_object($category)) {
+            if (is_array($category) && isset($category['id_category'])) {
+                $category = new Category($category, $idLang);
+            } elseif ((int) $category) {
+                $category = new Category((int) $category, $idLang);
+            } else {
+                throw new PrestaShopException('Invalid category vars');
+            }
+        }
+        return $category;
+    }
+
+
+    /**
      * Create a link to a category.
      *
      * @param mixed  $category        Category object (can be an ID category, but deprecated)
@@ -323,24 +393,24 @@ class LinkCore
         $idShop = null,
         $relativeProtocol = false
     ) {
+        $dispatcher = Dispatcher::getInstance();
+
         if (!$idLang) {
             $idLang = Context::getContext()->language->id;
         }
 
         $url = $this->getBaseLink($idShop, null, $relativeProtocol).$this->getLangLink($idLang, null, $idShop);
 
-        if (!is_object($category)) {
-            $category = new Category($category, $idLang);
-        }
-
         // Set available keywords
         $params = array();
-        $params['id'] = $category->id;
-        $params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
-        $params['meta_keywords'] = Tools::str2url($category->getFieldByLang('meta_keywords'));
-        $params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
 
-        // Selected filters is used by the module blocklayered
+        if (!is_object($category)) {
+            $params['id'] = $category;
+        } else {
+            $params['id'] = $category->id;
+        }
+
+        // Selected filters is used by the module ps_facetedsearch
         $selectedFilters = is_null($selectedFilters) ? '' : $selectedFilters;
 
         if (empty($selectedFilters)) {
@@ -348,6 +418,19 @@ class LinkCore
         } else {
             $rule = 'layered_rule';
             $params['selected_filters'] = $selectedFilters;
+        }
+
+        if (!$alias) {
+            $category = $this->getCategoryObject($category, $idLang);
+        }
+        $params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
+        if ($dispatcher->hasKeyword($rule, $idLang, 'meta_keywords', $idShop)) {
+            $category = $this->getCategoryObject($category, $idLang);
+            $params['meta_keywords'] = Tools::str2url($category->getFieldByLang('meta_keywords'));
+        }
+        if ($dispatcher->hasKeyword($rule, $idLang, 'meta_title', $idShop)) {
+            $category = $this->getCategoryObject($category, $idLang);
+            $params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
         }
 
         return $url.Dispatcher::getInstance()->createUrl($rule, $idLang, $params, $this->allow, '', $idShop);
@@ -665,15 +748,23 @@ class LinkCore
         $notDefault = false;
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
+        static $watermarkLogged = null;
+        static $watermarkHash = null;
+        static $psLegacyImages = null;
+        if ($watermarkLogged === null) {
+            $watermarkLogged = Configuration::get('WATERMARK_LOGGED');
+            $watermarkHash = Configuration::get('WATERMARK_HASH');
+            $psLegacyImages = Configuration::get('PS_LEGACY_IMAGES');
+        }
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
-        if (Configuration::get('WATERMARK_LOGGED') && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
-            $type .= '-'.Configuration::get('WATERMARK_HASH');
+        if ($watermarkLogged && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
+            $type .= '-'.$watermarkHash;
         }
 
         // legacy mode or default image
         $theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').'-'.Context::getContext()->shop->theme_name.'.jpg')) ? '-'.Context::getContext()->shop->theme_name : '');
-        if ((Configuration::get('PS_LEGACY_IMAGES')
+        if (($psLegacyImages
             && (file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').$theme.'.jpg')))
             || ($notDefault = strpos($ids, 'default') !== false)) {
             if ($this->allow == 1 && !$notDefault) {
@@ -986,11 +1077,16 @@ class LinkCore
      */
     protected function getLangLink($idLang = null, Context $context = null, $idShop = null)
     {
+        static $psRewritingSettings = null;
+        if ($psRewritingSettings === null) {
+            $psRewritingSettings = (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, $idShop);
+        }
+
         if (!$context) {
             $context = Context::getContext();
         }
 
-        if ((!$this->allow && in_array($idShop, array($context->shop->id,  null))) || !Language::isMultiLanguageActivated($idShop) || !(int) Configuration::get('PS_REWRITING_SETTINGS', null, null, $idShop)) {
+        if ((!$this->allow && in_array($idShop, array($context->shop->id,  null))) || !Language::isMultiLanguageActivated($idShop) || !$psRewritingSettings) {
             return '';
         }
 

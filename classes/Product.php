@@ -3101,10 +3101,14 @@ class ProductCore extends ObjectModel
                 $ecotax = Tools::convertPrice($ecotax, $id_currency);
             }
             if ($use_tax) {
+                static $psEcotaxTaxRulesGroupId = null;
+                if ($psEcotaxTaxRulesGroupId === null) {
+                    $psEcotaxTaxRulesGroupId = (int) Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID');
+                }
                 // reinit the tax manager for ecotax handling
                 $tax_manager = TaxManagerFactory::getManager(
                     $address,
-                    (int) Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID')
+                    $psEcotaxTaxRulesGroupId
                 );
                 $ecotax_tax_calculator = $tax_manager->getTaxCalculator();
                 $price += $ecotax_tax_calculator->addTaxes($ecotax);
