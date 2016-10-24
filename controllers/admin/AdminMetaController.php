@@ -790,7 +790,8 @@ class AdminMetaControllerCore extends AdminController
 					WHERE l.active = 1 AND m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
             if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
                 foreach ($results as $row) {
-                    $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
+                    $tab['Files'][$row['iso_code']][] = $row['url_rewrite'].'$';
+                    $tab['Files'][$row['iso_code']][] = $row['url_rewrite'].'?';
                 }
             }
         }
