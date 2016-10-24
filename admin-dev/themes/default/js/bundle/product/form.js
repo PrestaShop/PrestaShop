@@ -925,15 +925,27 @@ var form = (function() {
         e.preventDefault();
         send();
       });
+      jwerty.key('cmd+S', function(e) {
+        e.preventDefault();
+        send();
+      });
 
       /** create keyboard event for save & duplicate */
       jwerty.key('ctrl+D', function(e) {
         e.preventDefault();
         send($('.product-footer .duplicate').attr('data-redirect'));
       });
+      jwerty.key('cmd+D', function(e) {
+        e.preventDefault();
+        send($('.product-footer .duplicate').attr('data-redirect'));
+      });
 
       /** create keyboard event for save & new */
       jwerty.key('ctrl+P', function(e) {
+        e.preventDefault();
+        send($('.product-footer .new-product').attr('data-redirect'));
+      });
+      jwerty.key('cmd+P', function(e) {
         e.preventDefault();
         send($('.product-footer .new-product').attr('data-redirect'));
       });
@@ -950,9 +962,19 @@ var form = (function() {
           var productFooter = $('.product-footer .preview');
           send(productFooter.attr('data-redirect'), productFooter.attr('target'));
       });
+      jwerty.key('cmd+V', function(e) {
+        e.preventDefault();
+        var productFooter = $('.product-footer .preview');
+        send(productFooter.attr('data-redirect'), productFooter.attr('target'));
+      });
 
       /** create keyboard event for save & active or desactive product*/
       jwerty.key('ctrl+O', function(e) {
+        e.preventDefault();
+        var step1CheckBox = $('#form_step1_active');
+        step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
+      });
+      jwerty.key('cmd+O', function(e) {
         e.preventDefault();
         var step1CheckBox = $('#form_step1_active');
         step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
