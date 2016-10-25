@@ -34,7 +34,7 @@ body#checkout {
   section.checkout-step {
     @include box-shadow;
     background-color: white;
-    border: 1px $gray-light solid;
+    border: rem(1px) $gray-light solid;
     padding: rem(15px);
     .step-title {
       text-transform: uppercase;
@@ -156,7 +156,7 @@ body#checkout {
       margin-bottom: $small-space;
       &.selected {
         background: white;
-        border: $brand-primary 3px solid;
+        border: $brand-primary rem(3px) solid;
       }
     }
     .address-alias {
@@ -268,7 +268,7 @@ body#checkout {
   #cart-summary-product-list {
     font-size: $font-size-sm;
     img {
-      border: $gray-light 1px solid;
+      border: $gray-light rem(1px) solid;
       width: rem(50px);
     }
     .media-body {
@@ -311,13 +311,13 @@ body#checkout {
       padding: 1rem;
       margin-bottom: 2rem;
       background-color: #fff;
-      border: 3px solid #e5e5e5;
+      border: rem(3px) solid #e5e5e5;
       border-radius: 0;
     }
     .summary-selected-carrier {
       margin-bottom: 0.75rem;
       background-color: #fff;
-      border: 1px solid #e5e5e5;
+      border: rem(1px) solid #e5e5e5;
       border-radius: 0;
       padding: 1rem;
     }
@@ -359,7 +359,7 @@ body#checkout {
   }
 }
 #order-items {
-  border-right: $gray-light 1px solid;
+  border-right: $gray-light rem(1px) solid;
   hr {
     border-top-color: $gray-darker;
   }
@@ -380,7 +380,7 @@ body#checkout {
   .image {
     img {
         width: 100%;
-        border: 1px solid gray-lighter;
+        border: rem(1px) solid gray-lighter;
         margin-bottom: rem(16px);
     }
   }
@@ -454,7 +454,7 @@ body#checkout {
     border-right: 0;
     margin-bottom: rem(40px);
     .card-title {
-      border-bottom: 1px solid $gray-light;
+      border-bottom: rem(1px) solid $gray-light;
       margin-bottom: rem(16px);
       padding-bottom: rem(16px);
     }
@@ -468,7 +468,7 @@ body#checkout {
   #order-details {
     padding-left: rem(15px);
     .card-title {
-      border-bottom: 1px solid $gray-light;
+      border-bottom: rem(1px) solid $gray-light;
       margin-bottom: rem(16px);
       padding-bottom: rem(16px);
     }

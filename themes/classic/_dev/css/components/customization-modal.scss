@@ -1,7 +1,7 @@
 .customization-modal {
   .modal-content {
     border-radius: 0;
-    border: 1px solid $gray-lighter;
+    border: rem(1px) solid $gray-lighter;
     .modal-body {
       padding-top: 0;
       .product-customization-line {
@@ -11,7 +11,7 @@
         }
         padding-bottom: rem(15px);
         padding-top: rem(15px);
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: rem(1px) solid $gray-lighter;
         &:last-child {
           padding-bottom: 0;
           border-bottom: 0;

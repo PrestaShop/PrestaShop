@@ -11,7 +11,7 @@
   }
 
   .active{
-    max-height: 200px;
+    max-height: rem(200px);
     overflow-y: hidden;
     visibility: visible;
   }

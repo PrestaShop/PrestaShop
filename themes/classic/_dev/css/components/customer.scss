@@ -18,7 +18,7 @@
   }
   .label {
     font-weight: 400;
-    border-radius: 3px;
+    border-radius: rem(3px);
     font-size: inherit;
     padding: rem(4px) rem(6px);
     margin: rem(2px);
@@ -96,7 +96,7 @@
 .page-authentication {
   #content {
     @include customer-area-base-box;
-    max-width: 640px;
+    max-width: rem(640px);
     margin: 0 auto;
   }
 }
@@ -119,7 +119,7 @@
       }
     }
     .address-footer {
-      border-top: 1px solid $gray;
+      border-top: rem(1px) solid $gray;
       padding: rem(8px) rem(16px);
       a {
         color: $gray-dark;
@@ -179,7 +179,7 @@
     .history-lines {
       .history-line {
         padding: rem(8px) 0;
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: rem(1px) solid $gray-lighter;
         &:last-child {
           border-bottom: 0;
         }
@@ -188,7 +188,7 @@
           margin: rem(4px) 0;
           padding: rem(4px) rem(6px);
           color: white;
-          border-radius: 3px;
+          border-radius: rem(3px);
         }
       }
     }
@@ -205,13 +205,13 @@
       margin-bottom: rem(16px);
       th {
         &.head-checkbox {
-          width: 30px;
+          width: rem(30px);
         }
       }
       td {
         padding: 1.375rem 0.75rem;
         &.qty {
-          min-width: 125px;
+          min-width: rem(125px);
           .current {
             width: 30%;
             float: left;
@@ -235,9 +235,9 @@
     padding: 0 !important;
     .order-item {
       padding: rem(16px) rem(16px) 0;
-      border-bottom: 1px solid $gray-lighter;
+      border-bottom: rem(1px) solid $gray-lighter;
       .checkbox {
-        width: 30px;
+        width: rem(30px);
         float: left;
         padding: 0 rem(15px);
       }
@@ -266,7 +266,7 @@
   .messages {
     .message {
       margin-top: rem(8px);
-      border-bottom: 1px solid $gray-lighter;
+      border-bottom: rem(1px) solid $gray-lighter;
       &:last-child {
         border-bottom: 0;
       }
@@ -337,13 +337,13 @@
         }
       }
       padding: rem(12px) rem(16px);
-      border-bottom: 1px solid $gray-lighter;
+      border-bottom: rem(1px) solid $gray-lighter;
       .label {
         display: inline-block;
         margin: rem(4px) 0;
         padding: rem(4px) rem(6px);
         color: white;
-        border-radius: 3px;
+        border-radius: rem(3px);
       }
       &:last-child {
         border-bottom: 0;

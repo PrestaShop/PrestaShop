@@ -2,10 +2,10 @@
 
   //@TODO remove this tyniMce hack
   .mce-tinymce iframe {
-    max-height: 400px !important;
+    max-height: rem(400px) !important;
   }
 
-  padding-bottom: 80px;
+  padding-bottom: rem(80px);
 
   .table-fixed {
     table-layout: fixed;
@@ -18,7 +18,7 @@
       border: 0;
     }
     tbody {
-      height: 130px;
+      height: rem(130px);
       overflow-y: auto;
       width: 100%;
     }
@@ -44,9 +44,9 @@
     top: $size-header-height - rem(1px);
     left: $size-navbar-width;
     right: 0;
-    box-shadow: $gray-dark 0 0 10px;
+    box-shadow: $gray-dark 0 0 rem(10px);
     z-index: 400;
-    height: 1px;
+    height: rem(1px);
   }
 
   // Resets
@@ -91,7 +91,7 @@
   }
 
   #bulk-combinations-container {
-    border: solid 1px $gray-light;
+    border: solid rem(1px) $gray-light;
     margin: rem(-17px) rem(15px) rem(15px);
     padding: rem(15px);
     width: 97%;
@@ -104,7 +104,7 @@
   }
 
   .product-footer {
-    box-shadow: $gray-dark 0 0 10px;
+    box-shadow: $gray-dark 0 0 rem(10px);
     position: fixed;
     padding: {
       top: $grid-gutter-width / 2;
@@ -172,7 +172,7 @@
       display: inline-block;
       border: 0;
       padding: 0;
-      margin-top: -6px;
+      margin-top: rem(-6px);
       margin-bottom: 0;
       background-color: transparent;
       max-width: 100%;
@@ -181,23 +181,23 @@
 
   // Combination details form
   #accordion_combinations td.img img {
-    max-width: 50px;
+    max-width: rem(50px);
   }
   #accordion_combinations .combination td.img .fake-img {
     background: $gray-medium;
-    width: 50px;
-    height: 50px;
+    width: rem(50px);
+    height: rem(50px);
   }
   .product-combination-image {
     display: inline-block;
-    border: 1px solid $gray-light;
-    outline: solid 4px $white;
+    border: rem(1px) solid $gray-light;
+    outline: solid rem(4px) $white;
     margin: 0 rem(10px) 0 0;
     border-radius: rem(3px);
   }
 
   .product-combination-image.img-highlight {
-    border: solid 2px $primary;
+    border: solid rem(2px) $primary;
   }
   .product-combination-image input {
     display: none;
@@ -225,10 +225,10 @@
 
   // Dropzone & Image manager
   #product-images-dropzone {
-    height: 340px;
-    min-height: 340px;
+    height: rem(340px);
+    min-height: rem(340px);
     border: none;
-    padding: 5px;
+    padding: rem(5px);
     margin-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -236,42 +236,42 @@
     transition: width 0.5s ease-out, margin 0.5s ease-out;
     z-index: 1;
     &.col-md-8 {
-      border-right: solid 1px $gray-light;
+      border-right: solid rem(1px) $gray-light;
     }
     &.dropzone {
       .dz-preview {
-        width: 130px;
-        height: 130px;
-        border: 1px solid $gray-light;
+        width: rem(130px);
+        height: rem(130px);
+        border: rem(1px) solid $gray-light;
         &.active, &:hover {
-          border: 3px solid $brand-primary;
-          border-radius: 3px;
+          border: rem(3px) solid $brand-primary;
+          border-radius: rem(3px);
         }
         &.openfilemanager {
           text-align: center;
           color: $gray-light;
           div {
             display: inline-block;
-            width: 50px;
-            height: 50px;
+            width: rem(50px);
+            height: rem(50px);
             border-radius: 100%;
-            border: 5px solid $gray-light;
+            border: rem(5px) solid $gray-light;
             position: relative;
             top: 50%;
             transform: translateY(-50%);
             span {
               text-align: center;
               display: inline-block;
-              line-height: 40px;
-              height: 50px;
-              font-size: 30px;
+              line-height: rem(40px);
+              height: rem(50px);
+              font-size: rem(30px);
               font-weight: bold;
             }
           }
         }
         .dz-image {
           border-radius: 0;
-          line-height: 130px;
+          line-height: rem(130px);
           width: 100%;
           height: 100%;
           &.bg {
@@ -280,8 +280,8 @@
             background-position: center center;
           }
           img {
-            max-width: 130px;
-            max-height: 130px;
+            max-width: rem(130px);
+            max-height: rem(130px);
             position: absolute;
             top: 0;
             bottom: 0;
@@ -296,10 +296,10 @@
         }
         .iscover {
           background: $gray-medium;
-          font-size: 12px;
+          font-size: rem(12px);
           color: $white;
           text-align: center;
-          padding: 5px;
+          padding: rem(5px);
           position: absolute;
           z-index: 10;
           bottom: 0;
@@ -344,13 +344,13 @@
         font-weight: bold;
       }
       i {
-        font-size: 60px;
+        font-size: rem(60px);
         color: $gray-light;
         opacity: 0.5;
         filter:alpha(opacity=50);
       }
       small {
-        font-size: 12px;
+        font-size: rem(12px);
         font-style: italic;
         color: $gray-medium;
       }
@@ -360,18 +360,18 @@
   .nav-tabs {
     .nav-item.has-error {
       .nav-link {
-        border-top: 3px solid #c45c67;
+        border-top: rem(3px) solid #c45c67;
         color: #c45c67;
       }
     }
   }
 
   #product-images-form-container {
-    min-height: 200px;
+    min-height: rem(200px);
     top: 0;
     right: 0;
     cursor: default !important;
-    margin: 10px 0 5px 5px;
+    margin: rem(10px) 0 rem(5px) rem(5px);
     float: left;
     position: absolute;
     z-index: 0;
@@ -382,23 +382,23 @@
       z-index: 1;
     }
     .actions {
-      padding-top: 15px;
+      padding-top: rem(15px);
     }
   }
 
   #product-images-container {
-    border: solid 1px $gray-light;
+    border: solid rem(1px) $gray-light;
     display: inline-block;
     width: 100%;
     position: relative;
     .dropzone-expander {
       font-weight: bold;
-      font-size: 12px;
+      font-size: rem(12px);
       color: $gray-medium;
-      padding: 5px 0;
+      padding: rem(5px) 0;
       cursor: pointer;
       display: none;
-      border-top: solid 1px $gray-light;
+      border-top: solid rem(1px) $gray-light;
       span {
         display: none;
       }
@@ -414,7 +414,7 @@
   .twitter-typeahead {
     .tt-menu {
       width: 100%;
-      border: 1px solid $gray-medium;
+      border: rem(1px) solid $gray-medium;
       background: $white;
       padding: rem(5px) 0;
       max-height: rem(312px);
@@ -446,7 +446,7 @@
       right: rem(1px);
     }
     &:hover {
-      border: 2px $brand-primary solid;
+      border: rem(2px) $brand-primary solid;
       > .btn-danger {
         opacity: 1;
         visibility: visible;
@@ -517,7 +517,7 @@
 
   .categories-tree {
     padding: rem(10px);
-    border: $gray-light 1px solid;
+    border: $gray-light rem(1px) solid;
     border-radius: rem(3px);
     .categories-tree-actions {
       text-transform: uppercase;
@@ -566,7 +566,7 @@
     background: $gray-light;
   }
   .seo-table tbody tr td:last-child {
-    box-shadow: -3px 0 10px -3px rgba(0,0,0,0.4);
+    box-shadow: rem(-3px) 0 rem(10px) rem(-3px) rgba(0,0,0,0.4);
   }
 
   .customFieldCollection .delete,
@@ -586,7 +586,7 @@
     margin: 0;
 
     tbody {
-      max-height: 450px;
+      max-height: rem(450px);
       overflow-y: auto;
       display: block;
 
@@ -692,7 +692,7 @@
       bottom: $grid-gutter-width;
     }
     margin-bottom: $grid-gutter-width;
-    border-bottom: 1px solid $gray-light;
+    border-bottom: rem(1px) solid $gray-light;
     background: $gray-soft;
   }
 
@@ -718,18 +718,18 @@
   z-index: 1000;
   cursor: default;
   padding: 0;
-  margin-top: 2px;
+  margin-top: rem(2px);
   list-style: none;
   background-color: #ffffff;
-  border: 1px solid #ccc;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  border: rem(1px) solid #ccc;
+  -webkit-border-radius: rem(5px);
+  -moz-border-radius: rem(5px);
+  border-radius: rem(5px);
+  -webkit-box-shadow: 0 rem(5px) rem(10px) rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 rem(5px) rem(10px) rgba(0, 0, 0, 0.2);
+  box-shadow: 0 rem(5px) rem(10px) rgba(0, 0, 0, 0.2);
   > li {
-    padding: 3px 20px;
+    padding: rem(3px) rem(20px);
     &:hover {
       background: $primary-hover;
       cursor: pointer;
@@ -772,7 +772,7 @@
       }
     }
     .attributes {
-      border-top: 2px solid $gray-light;
+      border-top: rem(2px) solid $gray-light;
       padding: em(7px);
       height: rem(162px);
       overflow-x: hidden;
@@ -849,7 +849,7 @@
       background: $notice;
     }
     .sortable tr:hover {
-      border: $brand-primary 1px solid;
+      border: $brand-primary rem(1px) solid;
       cursor: move;
     }
   }
@@ -870,7 +870,7 @@
 }
 
 #product_reference_field {
-  margin-top: 7px;
+  margin-top: rem(7px);
 }
 
 @media only screen and (min-width: 320px) and (max-width: 1450px) {
@@ -927,7 +927,7 @@
       position: relative;
       .nav-link.active:not(.description-tab) {
         border-top: transparent;
-        border-bottom: 3px solid $brand-primary;
+        border-bottom: rem(3px) solid $brand-primary;
       }
     }
     .right-column {

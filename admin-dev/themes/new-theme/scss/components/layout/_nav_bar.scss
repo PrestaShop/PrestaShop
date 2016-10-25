@@ -77,7 +77,7 @@
     border: none;
   }
   > .link {
-    padding: 0 20px;
+    padding: 0 rem(20px);
   }
   > .link:hover {
     color: $gray-dark-text-hover;
@@ -88,22 +88,22 @@
   color: $gray-dark-title;
   font-weight: bold;
   font-size: rem(12px);
-  padding-left: 10px;
-  padding-right: 10px;
-  margin: 10px 0;
+  padding-left: rem(10px);
+  padding-right: rem(10px);
+  margin: rem(10px) 0;
 
   &::after {
     content: '';
     display: block;
     width: 100%;
-    border-bottom: 1px solid $gray-dark-title;
-    margin-top: -10px;
-    margin-bottom: 19px;
+    border-bottom: rem(1px) solid $gray-dark-title;
+    margin-top: rem(-10px);
+    margin-bottom: rem(19px);
   }
 
   > .title {
     background: $gray-dark;
-    padding-right: 10px;
+    padding-right: rem(10px);
   }
 }
 
@@ -178,7 +178,7 @@
 
   .link-leveltwo {
     > .link {
-      padding: 0 20px;
+      padding: 0 rem(20px);
       text-align: left;
     }
   }

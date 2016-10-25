@@ -17,10 +17,10 @@
   .thumbnail-container {
     position: relative;
     margin-bottom: em(25px);
-    height: 318px;
-    width: 257px;
+    height: rem(318px);
+    width: rem(257px);
     background: white;
-    box-shadow: 0 0 5px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 0 rem(5px) rem(3px) rgba(0,0,0,0.05);
     &:hover {
       @include box-shadow;
       .highlighted-informations {
@@ -33,7 +33,7 @@
         }
       }
       .product-description{
-        box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 -rem(5px) rem(10px) -rem(5px) rgba(0, 0, 0, 0.2);
       }
     }
   }
@@ -66,10 +66,10 @@
     z-index: 0;
     background: white;
     text-align: center;
-    width: 257px;
+    width: rem(257px);
     height: rem(50px);
     padding-top: rem(5px);
-    box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 -rem(5px) rem(10px) -rem(5px) rgba(0, 0, 0, 0.2);
     transition: bottom .3s;
     .quick-view {
       color: $gray-dark;
@@ -84,12 +84,12 @@
     position: absolute;
     z-index: 1;
     background: white;
-    width: 257px;
+    width: rem(257px);
     bottom: 0;
-    height: 70px;
+    height: rem(70px);
   }
   img {
-    margin-left: 4px;
+    margin-left: rem(4px);
   }
 
   .product-miniature {
@@ -167,7 +167,7 @@
     .thumbnail-container {
       @include box-shadow;
       .product-description{
-        box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 -rem(5px) rem(10px) -rem(5px) rgba(0, 0, 0, 0.2);
       }
     }
   }

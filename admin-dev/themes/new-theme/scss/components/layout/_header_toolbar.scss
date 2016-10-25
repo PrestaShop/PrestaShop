@@ -35,18 +35,18 @@
     > .tab {
         display: inline-block;
         float: left;
-        height: 40px;
-        line-height: 40px;
-        padding: 0 10px;
+        height: rem(40px);
+        line-height: rem(40px);
+        padding: 0 rem(10px);
         vertical-align: middle;
         color: #363a41;
         box-sizing: border-box;
-        font-size: 16px;
+        font-size: rem(16px);
         text-decoration: none;
     }
 
     > .current {
-        border-bottom: 3px solid #3ed2f0;
+        border-bottom: rem(3px) solid #3ed2f0;
     }
 }
 
