@@ -27,21 +27,33 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Entity\Repository\LangRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use ZipArchive;
+use PrestaShopBundle\Translation\Exporter\ThemeExporter as TranslationsExporter;
 
 class ThemeExporter
 {
     protected $configuration;
     protected $fileSystem;
     protected $finder;
+    protected $langRepository;
+    protected $translationsExporter;
 
-    public function __construct(ConfigurationInterface $configuration, Filesystem $fileSystem, Finder $finder)
+    public function __construct(
+        ConfigurationInterface $configuration,
+        Filesystem $fileSystem,
+        Finder $finder,
+        LangRepository $langRepository,
+        TranslationsExporter $translationsExporter
+    )
     {
         $this->configuration = $configuration;
         $this->fileSystem = $fileSystem;
         $this->finder = $finder;
+        $this->langRepository = $langRepository;
+        $this->translationsExporter = $translationsExporter;
     }
 
     public function export(Theme $theme)
@@ -50,6 +62,7 @@ class ThemeExporter
 
         $this->copyTheme($theme->getDirectory(), $cacheDir);
         $this->copyModuleDependencies((array) $theme->get('dependencies.modules'), $cacheDir);
+        $this->copyTranslations($theme, $cacheDir);
 
         $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_').'/'.$theme->getName().'.zip';
         $this->createZip($cacheDir, $finalFile);
@@ -83,6 +96,35 @@ class ThemeExporter
 
         foreach ($moduleList as $moduleName) {
             $this->fileSystem->mirror($moduleDir.$moduleName, $dependencyDir.$moduleName);
+        }
+    }
+
+    /**
+     * @param Theme $theme
+     * @param $cacheDir
+     */
+    protected function copyTranslations(Theme $theme, $cacheDir)
+    {
+        $translationsDir = $cacheDir . 'translations';
+
+        $this->fileSystem->remove($translationsDir);
+        $this->fileSystem->mkdir($translationsDir);
+
+        $languages = $this->langRepository->findAll();
+        if (count($languages) > 0) {
+            /**
+             * @var \PrestaShopBundle\Entity\Lang $lang
+             */
+            foreach ($languages as $lang) {
+                $locale = $lang->getLocale();
+                $catalogueDir = $this->translationsExporter->exportCatalogues($theme->getName(), $locale);
+            }
+
+            $catalogueDirParts = explode('/', $catalogueDir);
+            array_pop($catalogueDirParts); // Remove locale
+
+            $cataloguesDir = implode('/', $catalogueDirParts);
+            $this->fileSystem->mirror($cataloguesDir, $translationsDir);
         }
     }
 
