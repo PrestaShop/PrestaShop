@@ -129,7 +129,7 @@
 	{/if}
 	{if $stock_management}<td class="productQuantity product_stock text-center">{$product['current_stock']}</td>{/if}
 	<td class="total_product">
-		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
+		{displayPrice price=($product_price * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 	</td>
 	<td colspan="2" style="display: none;" class="add_product_fields">&nbsp;</td>
 	<td class="cancelCheck standard_refund_fields current-edit" style="display:none">
