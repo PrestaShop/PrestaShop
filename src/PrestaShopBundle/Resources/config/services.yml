@@ -267,6 +267,8 @@ services:
           - "@prestashop.adapter.legacy.configuration"
           - "@filesystem"
           - "@finder"
+          - "@prestashop.core.admin.lang.repository"
+          - "@prestashop.translation.theme.exporter"
 
     prestashop.core.admin.translation.repository:
         class: PrestaShopBundle\Entity\Repository\TranslationRepository
