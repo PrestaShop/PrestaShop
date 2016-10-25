@@ -138,8 +138,6 @@ class AddressCore extends ObjectModel
         ),
     );
 
-    protected $_includeContainer = false;
-
     /** @var array Web service parameters */
     protected $webserviceParameters = array(
         'objectsNodeName' => 'addresses',

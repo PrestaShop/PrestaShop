@@ -40,7 +40,7 @@
 		</div>
 	{/if}
 
-	{if count($errors)} {* @todo what is ??? AND $this->_includeContainer *}
+	{if count($errors)}
 		<div class="alert alert-danger">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{if count($errors) == 1}
