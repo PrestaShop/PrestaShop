@@ -2280,8 +2280,12 @@ abstract class ModuleCore
     protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
     {
         if (!isset($this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id])) {
+            if (false === strpos($template, 'module:')) {
+                $template = $this->getTemplatePath($template);
+            }
+
             $this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id] = $this->context->smarty->createTemplate(
-                $this->getTemplatePath($template),
+                $template,
                 $cache_id,
                 $compile_id,
                 $this->smarty
@@ -2326,8 +2330,10 @@ abstract class ModuleCore
     public function isCached($template, $cache_id = null, $compile_id = null)
     {
         Tools::enableCache();
-        $new_tpl = $this->getTemplatePath($template);
-        $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($new_tpl, $cache_id, $compile_id);
+        if (false === strpos($template, 'module:')) {
+            $template = $this->getTemplatePath($template);
+        }
+        $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($template, $cache_id, $compile_id);
         Tools::restoreCacheSettings();
         return $is_cached;
     }
