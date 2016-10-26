@@ -149,7 +149,10 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES
   ('displayCarrierExtraContent', 'Display additional content for a carrier (e.g pickup points)', 'This hook calls only the module related to the carrier, in order to add options when needed.', '1'),
   ('validateCustomerFormFields', 'Customer registration form validation', 'This hook is called to a module when it has sent additional fields with additionalCustomerFormFields', '1'),
   ('displayProductExtraContent', 'Display extra content on the product page', 'This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.', '1'),
-  ('displayNavFullWidth', 'Navigation', 'This hook displays full width navigation menu at the top of your pages', '1');
+  ('displayNavFullWidth', 'Navigation', 'This hook displays full width navigation menu at the top of your pages', '1'),
+  ('displayAfterBodyOpeningTag', 'Very top of pages', 'Use this hook for advertisement or modals you want to load first.', '1'),
+  ('displayBeforeBodyClosingTag', 'Very bottom of pages', 'Use this hook for your modals or any content you want to load at the very end.', '1');
+
 
 DELETE FROM `PREFIX_hook` WHERE `name` IN (
   'displayProductTab',
