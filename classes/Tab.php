@@ -48,6 +48,9 @@ class TabCore extends ObjectModel
 
     /** @var int hide_host_mode */
     public $hide_host_mode = false;
+    
+    /** @var string Icon font*/
+    public $icon;
 
     const TAB_MODULE_LIST_URL = _PS_TAB_MODULE_LIST_URL_;
 
@@ -65,6 +68,7 @@ class TabCore extends ObjectModel
             'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'hide_host_mode' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'icon' => array('type' => self::TYPE_STRING, 'size' => 64),
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64),
         ),
