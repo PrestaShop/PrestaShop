@@ -67,11 +67,11 @@
 
     </main>
 
-    {hook h='displayBeforeBodyClosingTag'}
-
     {block name='javascript_bottom'}
       {include file="_partials/javascript.tpl" javascript=$javascript.bottom}
     {/block}
+
+    {hook h='displayBeforeBodyClosingTag'}
 
   </body>
 
