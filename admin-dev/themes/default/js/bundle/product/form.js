@@ -1770,8 +1770,12 @@ var priceCalculation = (function() {
         var taxExcludedPrice = priceCalculation.normalizePrice($('#form_step2_price').val());
         var taxIncludedPrice = priceCalculation.normalizePrice($('#form_step2_price_ttc').val());
 
-        $('#final_retail_price_te').text(formatCurrency(parseFloat(taxExcludedPrice)));
-        $('#final_retail_price_ti').text(formatCurrency(parseFloat(taxIncludedPrice)));
+        formatCurrencyCldr(parseFloat(taxExcludedPrice), function(result) {
+          $('#final_retail_price_te').text(result);
+        });
+        formatCurrencyCldr(parseFloat(taxIncludedPrice), function(result) {
+          $('#final_retail_price_ti').text(result);
+        });
       });
 
       /** update HT price and shortcut price field on change */
