@@ -72,6 +72,21 @@ class Refresh
     public function addCacheClear()
     {
         $this->commands[] = array(
+            'command' => 'doctrine:cache:clear-metadata',
+            '--flush' => true,
+        );
+
+        $this->commands[] = array(
+            'command' => 'doctrine:cache:clear-query',
+            '--flush' => true,
+        );
+
+        $this->commands[] = array(
+            'command' => 'doctrine:cache:clear-result',
+            '--flush' => true,
+        );
+
+        $this->commands[] = array(
             'command' => 'cache:clear',
             '--no-warmup' => true,
         );
@@ -82,6 +97,7 @@ class Refresh
      */
     public function addDoctrineSchemaUpdate()
     {
+        $this->addCacheClear();
         $this->commands[] = array(
             'command' => 'doctrine:schema:update',
             '--force' => true,
