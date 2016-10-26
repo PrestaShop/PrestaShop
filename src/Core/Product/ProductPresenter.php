@@ -483,10 +483,10 @@ class ProductPresenter
         //if the attribute's references doesn't exist then get the product's references or unset it
         foreach ($presentedProduct['specific_references'] as $key => $value) {
             if (empty($value)) {
+                $translatedKey = $this->getTranslatedKey($key);
+                unset($presentedProduct['specific_references'][$key]);
                 if (!empty($product[$key])) {
-                    $presentedProduct['specific_references'][$key] = $product[$key];
-                } else {
-                    unset($presentedProduct['specific_references'][$key]);
+                    $presentedProduct['specific_references'][$translatedKey] = $product[$key];
                 }
             }
         }
@@ -599,5 +599,19 @@ class ProductPresenter
             );
         }
         return $presentedProduct;
+    }
+
+    private function getTranslatedKey($key)
+    {
+        switch ($key) {
+            case 'ean13':
+                return $this->translator->trans('ean13', array(), 'Shop.Theme.Catalog');
+            case 'isbn':
+                return $this->translator->trans('isbn', array(), 'Shop.Theme.Catalog');
+            case 'upc':
+                return $this->translator->trans('upc', array(), 'Shop.Theme.Catalog');
+        }
+
+        return $key;
     }
 }
