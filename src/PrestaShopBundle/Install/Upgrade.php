@@ -76,6 +76,15 @@ namespace PrestaShopBundle\Install {
                 return false;
             }
 
+            if (!file_exists($phpParametersFilepath) && !file_exists($root_dir.'/app/config/parameters.yml')
+                && !file_exists($root_dir.'/'.self::SETTINGS_FILE)) {
+                if ($event !== null) {
+                    $event->getIO()->write('No file to migrate!');
+                    $event->getIO()->write('Finished...');
+                }
+                return false;
+            }
+
             $filesystem = new Filesystem();
             $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
                 try {
@@ -166,6 +175,7 @@ namespace PrestaShopBundle\Install {
                 }
                 $event->getIO()->write('Finished...');
             }
+            return true;
         }
     }
 }
