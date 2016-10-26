@@ -129,7 +129,10 @@ var combinations = (function() {
       /** on change price, update price row */
       $(document).on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function() {
         var id_attribute = $(this).closest('.combination-form').attr('data');
-        $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price-display').html(formatCurrency(parseFloat($(this).val())));
+        var attributePrice = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price-display');
+        formatCurrencyCldr(parseFloat($(this).val()), function(result) {
+          attributePrice.html(result);
+        });
       });
 
       /** Combinations fields display management */
