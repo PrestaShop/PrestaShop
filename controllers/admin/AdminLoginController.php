@@ -286,7 +286,7 @@ class AdminLoginControllerCore extends AdminController
             if (
                 Mail::Send(
                     $employee->id_lang,
-                    'employee_password',
+                    'password_query',
                     $this->trans(
                         'Your new password',
                         array(),
