@@ -34,6 +34,7 @@ use Context;
 use Country;
 use Exception;
 use Tools;
+use PhpEncryption;
 
 /**
  * Data provider for new Architecture, about Addons.
@@ -46,9 +47,12 @@ class AddonsDataProvider implements AddonsInterface
 
     private $marketplaceClient;
 
+    private $encryption;
+
     public function __construct(ApiClient $apiClient)
     {
         $this->marketplaceClient = $apiClient;
+        $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
     }
 
     public function downloadModule($module_id)
@@ -241,10 +245,12 @@ class AddonsDataProvider implements AddonsInterface
     protected function getAddonsCredentials()
     {
         $request = Request::createFromGlobals();
+        $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
+        $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
 
         return array(
-           'username_addons' => $request->cookies->get('username_addons'),
-           'password_addons' => $request->cookies->get('password_addons'),
+           'username_addons' => $username,
+           'password_addons' => $password,
         );
     }
 
@@ -252,9 +258,10 @@ class AddonsDataProvider implements AddonsInterface
     public function getAddonsEmail()
     {
         $request = Request::createFromGlobals();
+        $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
 
         return array(
-            'username_addons' => $request->cookies->get('username_addons'),
+            'username_addons' => $username,
         );
     }
 
