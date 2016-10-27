@@ -660,7 +660,10 @@ class MediaCore
             $url = str_replace(_PS_CORE_DIR_.'/', __PS_BASE_URI__, $compressedJsPath);
         }
 
-        return array_merge(array($protocolLink.Tools::getMediaServer($url).$url), $jsExternalFiles);
+        return array_merge(
+            $jsExternalFiles,
+            array($protocolLink.Tools::getMediaServer($url).$url)
+        );
     }
 
     /**
