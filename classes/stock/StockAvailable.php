@@ -441,6 +441,7 @@ class StockAvailableCore extends ObjectModel
 			SELECT SUM(quantity) as quantity
 			FROM '._DB_PREFIX_.'stock_available
 			WHERE id_product = '.(int)$this->id_product.'
+			AND quantity > 0 
 			AND id_product_attribute <> 0 '.
             StockAvailable::addSqlShopRestriction(null, $id_shop)
         );
