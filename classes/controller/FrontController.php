@@ -802,8 +802,13 @@ class FrontControllerCore extends Controller
             if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
                     $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_);
-                    $record = $reader->city(Tools::getRemoteAddr());
-
+                    try {
+                        $remoteAddr = Tools::getRemoteAddr();
+                        $record = $reader->city($remoteAddr);
+                    } catch(\GeoIp2\Exception\AddressNotFoundException $e) {
+                        $record = null;
+                        PrestaShopLogger::addLog("The IP $remoteAddr not found in the GeoIp2 Databse", 2);
+                    }
                     if (is_object($record)) {
                         if (!in_array(strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
