@@ -90,6 +90,10 @@ function bindZipcode()
 function bindStateInputAndUpdate()
 {
 	$('.id_state, .dni, .postcode').css({'display':'none'});
+
+	if (typeof idSelectedCountry !== 'undefined' && idSelectedCountry)
+		$('#id_country option[value=' + idSelectedCountry + ']').prop('selected', true);
+
 	updateState();
 	updateNeedIDNumber();
 	updateZipCode();
