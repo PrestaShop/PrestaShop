@@ -30,6 +30,20 @@ if (!extension_loaded('SimpleXML') || PHP_VERSION_ID < 50400) {
     exit();
 }
 
+if (empty($_COOKIE['process_install'])) {
+    $parametersFilePhp = '../app/config/parameters.php';
+    if (file_exists($parametersFilePhp)) {
+        unlink($parametersFilePhp);
+    }
+
+    $parametersFileYml = '../app/config/parameters.yml';
+    if (file_exists($parametersFileYml)) {
+        unlink($parametersFileYml);
+    }
+
+    setcookie("process_install", "true", time()+3600);
+}
+
 require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php');
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
 
