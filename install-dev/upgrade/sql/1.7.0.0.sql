@@ -157,12 +157,25 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES
 DELETE FROM `PREFIX_hook` WHERE `name` IN (
   'displayProductTab',
   'displayProductTabContent',
-  'displayBeforePayment');
+  'displayBeforePayment',
+  'actionBeforeAuthentication',
+  'actionOrderDetail',
+  'actionProductListOverride',
+  'actionSearch',
+  'displayCustomerIdentityForm',
+  'displayHomeTab',
+  'displayHomeTabContent',
+  'displayPayment');
 
 DELETE FROM `PREFIX_hook_alias` WHERE `name` IN (
+  'beforeAuthentication',
   'displayProductTab',
   'displayProductTabContent',
-  'displayBeforePayment');
+  'displayBeforePayment',
+  'orderDetail',
+  'payment',
+  'productListAssign',
+  'search');
 
 DELETE FROM `PREFIX_configuration` WHERE `name` IN (
   '_MEDIA_SERVER_2_',
