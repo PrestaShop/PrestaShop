@@ -38,7 +38,7 @@ class HookFinder
      * In order to not return wrong things to the caller, we ask for an
      * instance of specific classes.
      * Please note it must implement the function toArray().
-     * 
+     *
      * @var string
      */
     protected $expectedInstanceClasses = array();
@@ -46,21 +46,21 @@ class HookFinder
     /**
      * Because we cannot send the same parameters between two different finders,
      * we need a attribute. It will be sent to the Hook::exec() function.
-     * 
+     *
      * @var array
      */
     protected $params = array();
 
     /**
      * The hook to call.
-     * 
+     *
      * @var string
      */
     protected $hookName;
 
     /**
      * Execute hook specified in params and check if the result matches the expected classes if asked.
-     * 
+     *
      * @return array Content returned by modules
      *
      * @throws \Exception if class doesn't match interface or expected classes
@@ -71,8 +71,11 @@ class HookFinder
         if (!is_array($hookContent)) {
             $hookContent = array();
         }
-        
+
         foreach ($hookContent as $moduleName => $moduleContents) {
+            if (!is_array($moduleContents)) {
+                continue;
+            }
             foreach ($moduleContents as $content) {
                 // Check data returned if asked
                 if (!count($this->expectedInstanceClasses)) {
@@ -91,7 +94,7 @@ class HookFinder
 
     /**
      * Present all extra content for templates, meaning converting them as arrays.
-     * 
+     *
      * @return array
      */
     public function present()
@@ -117,7 +120,7 @@ class HookFinder
     /**
      * This array contains all the classes expected to be returned
      * by the modules on Hook::exec.
-     * 
+     *
      * @return array
      */
     public function getExpectedInstanceClasses()
@@ -148,7 +151,7 @@ class HookFinder
     /**
      * Add an instance of class to be returned by the hook without
      * erasing the other values.
-     * 
+     *
      * @param string|array $expectedInstanceClasses
      *
      * @return \PrestaShopBundle\Service\Hook\Finder
@@ -166,7 +169,7 @@ class HookFinder
 
     /**
      * Replace all expected classes and types.
-     * 
+     *
      * @param array $expectedInstanceClasses
      *
      * @return \PrestaShopBundle\Service\Hook\Finder
@@ -180,7 +183,7 @@ class HookFinder
 
     /**
      * Change the hook to be called.
-     * 
+     *
      * @param string $hookName
      *
      * @return \PrestaShopBundle\Service\Hook\Finder
