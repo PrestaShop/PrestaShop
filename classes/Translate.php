@@ -256,16 +256,6 @@ class TranslateCore
             Tools::displayError(sprintf('Invalid iso lang (%s)', Tools::safeOutput($iso)));
         }
 
-        $overrideI18NFile = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
-        $i18NFile = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
-        if (file_exists($overrideI18NFile)) {
-            $i18NFile = $overrideI18NFile;
-        }
-
-        if (!include($i18NFile)) {
-            Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18NFile));
-        }
-
         if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
             return str_replace('"', '&quot;', $string);
         }
