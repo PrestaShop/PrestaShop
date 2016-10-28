@@ -41,7 +41,7 @@ if (empty($_COOKIE['process_install'])) {
         unlink($parametersFileYml);
     }
 
-    setcookie("process_install", "true", time()+3600);
+    setcookie("process_install", "true");
 }
 
 require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php');

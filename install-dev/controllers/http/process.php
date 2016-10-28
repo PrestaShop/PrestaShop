@@ -302,6 +302,13 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
         $this->session->process_validated = array_merge($this->session->process_validated, array('installTheme' => true));
+
+        // Remove cookie install because install is OK !
+        if (!empty($_COOKIE['process_install'])) {
+            unset($_COOKIE['process_install']);
+            setcookie('process_install', null);
+        }
+
         $this->ajaxJsonAnswer(true);
     }
 
