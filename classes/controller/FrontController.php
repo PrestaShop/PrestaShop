@@ -807,7 +807,7 @@ class FrontControllerCore extends Controller
                         $record = $reader->city($remoteAddr);
                     } catch(\GeoIp2\Exception\AddressNotFoundException $e) {
                         $record = null;
-                        PrestaShopLogger::addLog("The IP $remoteAddr not found in the GeoIp2 Databse", 2);
+                        PrestaShopLogger::addLog("The IP $remoteAddr not found in the GeoIp2 Databse", 3);
                     }
                     if (is_object($record)) {
                         if (!in_array(strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
