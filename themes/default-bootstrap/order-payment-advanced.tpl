@@ -74,7 +74,7 @@
                                 <span class="payment_option_cta">
                                     {$paymentOption->getCallToActionText()}
                                 </span>
-                                <span class="pull-right payment_option_selected">
+                                <span class="pull-right payment_option_selected" style="display: none;">
                                     <i class="icon-check"></i>
                                 </span>
                             </a>
