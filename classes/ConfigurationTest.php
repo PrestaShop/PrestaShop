@@ -77,6 +77,7 @@ class ConfigurationTestCore
                 ),
                 'phpversion' => false,
                 'apache_mod_rewrite' => false,
+                'curl' => false,
                 'gd' => false,
                 'pdo_mysql' => false,
                 'config_dir' => 'config',
@@ -182,6 +183,11 @@ class ConfigurationTestCore
         }
 
         return true;
+    }
+    
+    public static function test_curl()
+    {
+        return extension_loaded('curl');
     }
 
     public static function test_gd()
