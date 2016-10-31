@@ -11,6 +11,7 @@
     "doctrine/common": "~2.5.3",
     "doctrine/orm": "~2.5.3",
     "twig/twig": "~1.26.0",
+    "ext-curl": "*",
     "ext-intl": "*",
     "ext-zip": "*",
     "geoip2/geoip2": "~2.4.2",
