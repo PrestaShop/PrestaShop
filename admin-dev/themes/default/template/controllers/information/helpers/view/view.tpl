@@ -46,9 +46,9 @@
 					};
 
 					if (json.missing.length || json.updated.length)
-						$('#changedFiles').html('<div class="alert alert-warning">{l s='Changed/missing files have been detected.'}</div>');
+						$('#changedFiles').html("<div class=\"alert alert-warning\">{l s='Changed/missing files have been detected.'}</div>");
 					else
-						$('#changedFiles').html('<div class="alert alert-success">{l s='No change has been detected in your files.'}</div>');
+						$('#changedFiles').html("<div class=\"alert alert-success\">{l s='No change has been detected in your files.'}</div>");
 
 					$.each(tab, function(key, lang)
 					{
