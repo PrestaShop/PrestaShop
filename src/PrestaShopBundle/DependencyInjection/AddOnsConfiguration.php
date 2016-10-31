@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\DependencyInjection;
 
+use Composer\CaBundle\CaBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -44,8 +45,8 @@ class AddOnsConfiguration implements ConfigurationInterface
                                 ->integerNode('ttl')
                                     ->defaultValue(0)
                                 ->end()
-                                ->booleanNode('verify_ssl')
-                                    ->defaultTrue()
+                                ->scalarNode('verify_ssl')
+                                    ->defaultValue(CaBundle::getBundledCaBundlePath())
                                 ->end()
                             ->end()
                         ->end()
