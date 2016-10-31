@@ -116,4 +116,9 @@ class Tools
 
         return $Output;
     }
+
+    public function purifyHTML($html, $uri_unescape = null, $allow_style = false)
+    {
+        return \ToolsCore::purifyHTML($html, $uri_unescape, $allow_style);
+    }
 }
