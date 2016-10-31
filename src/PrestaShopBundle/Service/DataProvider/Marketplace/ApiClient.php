@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
+use Tools;
 
 class ApiClient
 {
@@ -50,6 +51,7 @@ class ApiClient
 
     public function setSslVerification($verifySsl)
     {
+        Tools::refreshCACertFile();
         $this->addonsApiClient->setDefaultOption('verify', $verifySsl);
     }
 

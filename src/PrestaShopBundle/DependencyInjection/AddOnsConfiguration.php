@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\DependencyInjection;
 
+use Tools;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -35,6 +36,8 @@ class AddOnsConfiguration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('prestashop');
 
+        Tools::refreshCACertFile();
+
         $rootNode
             ->children()
                 ->arrayNode('addons')
@@ -44,8 +47,8 @@ class AddOnsConfiguration implements ConfigurationInterface
                                 ->integerNode('ttl')
                                     ->defaultValue(0)
                                 ->end()
-                                ->booleanNode('verify_ssl')
-                                    ->defaultTrue()
+                                ->scalarNode('verify_ssl')
+                                    ->defaultValue(_PS_CACHE_CA_CERT_FILE_)
                                 ->end()
                             ->end()
                         ->end()
