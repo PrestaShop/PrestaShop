@@ -6,8 +6,9 @@
 
     {block name='page_header_container'}
       <header class="page-header">
+        <div class="logo"><img src="{$shop.logo}" alt="logo"></div>
         {block name='page_header'}
-          <h1>{block name='page_title'}{$shop_name}{/block}</h1>
+          <h1>{block name='page_title'}{$shop.name}{/block}</h1>
         {/block}
       </header>
     {/block}
@@ -16,7 +17,6 @@
       <section id="content" class="page-content page-restricted">
         {block name='page_content'}
           <h2>{l s='403 Forbidden' d='Shop.Theme'}</h2>
-          <div class="logo"><img src="{$logo_url}" alt="logo"></div>
           <p>{l s='You cannot access this store from your country. We apologize for the inconvenience.' d='Shop.Theme'}</p>
         {/block}
       </section>
