@@ -87,7 +87,7 @@
     border-radius: 0;
   }
 }
-#search_filters {
+#search_filters, #search_filters_brands {
   @include box-shadow;
   margin-bottom: rem(25px);
   background: white;
@@ -109,6 +109,11 @@
         font-size:$font-size-lg;
       }
     }
+  }
+}
+#search_filters_brands {
+  .facet {
+    padding-top: 0;
   }
 }
 .pagination {

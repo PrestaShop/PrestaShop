@@ -12832,30 +12832,30 @@
 	    (0, _jquery2['default'])('#content-wrapper').removeClass('hidden-sm-down');
 	    (0, _jquery2['default'])('#footer').removeClass('hidden-sm-down');
 	  });
-
+	
 	  (0, _jquery2['default'])('body').on('change', '#search_filters input[data-search-url]', function (event) {
 	    _prestashop2['default'].emit('updateFacets', event.target.dataset.searchUrl);
 	  });
-
+	
 	  (0, _jquery2['default'])('body').on('click', '.js-search-filters-clear-all', function (event) {
 	    _prestashop2['default'].emit('updateFacets', event.target.dataset.searchUrl);
 	  });
-
+	
 	  (0, _jquery2['default'])('body').on('click', '.js-search-link', function (event) {
 	    event.preventDefault();
 	    _prestashop2['default'].emit('updateFacets', (0, _jquery2['default'])(event.target).closest('a').get(0).href);
 	  });
-
+	
 	  (0, _jquery2['default'])('body').on('change', '#search_filters select', function (event) {
 	    var form = (0, _jquery2['default'])(event.target).closest('form');
 	    _prestashop2['default'].emit('updateFacets', '?' + form.serialize());
 	  });
-
+	
 	  _prestashop2['default'].on('updateProductList', function (data) {
 	    updateProductListDOM(data);
 	  });
 	});
-
+	
 	function updateProductListDOM(data) {
 	  (0, _jquery2['default'])('#search_filters').replaceWith(data.rendered_facets);
 	  (0, _jquery2['default'])('#js-active-search-filters').replaceWith(data.rendered_active_filters);
