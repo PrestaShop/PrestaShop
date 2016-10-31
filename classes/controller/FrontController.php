@@ -797,7 +797,7 @@ class FrontControllerCore extends Controller
      */
     protected function geolocationManagement($defaultCountry)
     {
-        if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1'))) {
+        if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1'))) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
