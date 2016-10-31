@@ -48,20 +48,21 @@ if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_D
 
 /* No settings file? goto installer... */
 if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && !file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
-    if (file_exists($currentDir.'/../install')) {
-        header('Location: install/');
-    } elseif (file_exists($currentDir.'/../install-dev')) {
-        header('Location: install-dev/');
-    } else {
-        die('Error: "install" directory is missing');
-    }
-    exit;
+    Tools::redirectToInstall();
 }
 
 /* include settings file only if we are not in multi-tenancy mode */
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
+if (defined('_PS_CREATION_DATE_')) {
+    $creationDate = _PS_CREATION_DATE_;
+    if (empty($creationDate)) {
+        Tools::redirectToInstall();
+    }
+} else {
+    Tools::redirectToInstall();
+}
 
 /* Custom config made by users */
 if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
