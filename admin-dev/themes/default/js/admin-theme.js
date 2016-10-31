@@ -287,9 +287,14 @@ $(document).ready(function() {
 	//show footer when reach bottom
 	function animateFooter(){
 		if($(window).scrollTop() + $(window).height() === $(document).height()) {
+			$('div.onboarding-navbar').animate({
+				bottom: "+=50"
+			}, 500, function() {
+			});
 			$('#footer:hidden').removeClass('hide');
 		} else {
 			$('#footer').addClass('hide');
+			$('div.onboarding-navbar').css('bottom', '0px');
 		}
 	}
 
