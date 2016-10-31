@@ -6939,8 +6939,12 @@ body#checkout {
     font-size: 1.125rem; }
   #blockcart-modal .cart-content {
     padding-left: 2.5rem; }
-    #blockcart-modal .cart-content button {
-      margin-right: 0.3125rem; }
+    #blockcart-modal .cart-content .cart-content-btn {
+      display: inline-flex; }
+      #blockcart-modal .cart-content .cart-content-btn button {
+        margin-right: 0.3125rem; }
+      #blockcart-modal .cart-content .cart-content-btn .btn {
+        white-space: inherit; }
   #blockcart-modal .divide-right {
     border-right: #acaaa6 1px solid; }
 
