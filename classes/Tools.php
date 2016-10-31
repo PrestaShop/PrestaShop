@@ -3578,6 +3578,18 @@ exit;
             return Tools::getPath($url_base, $category->id_parent, $path, '', 'cms');
         }
     }
+
+    public static function redirectToInstall()
+    {
+        if (file_exists(dirname(__FILE__).'/../install')) {
+            header('Location: install/');
+        } elseif (file_exists(dirname(__FILE__).'/../install-dev')) {
+            header('Location: install-dev/');
+        } else {
+            die('Error: "install" directory is missing');
+        }
+        exit;
+    }
 }
 
 /**
