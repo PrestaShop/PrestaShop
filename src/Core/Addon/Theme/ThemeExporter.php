@@ -58,7 +58,7 @@ class ThemeExporter
 
     public function export(Theme $theme)
     {
-        $cacheDir = $this->configuration->get('_PS_CACHE_DIR_').'/export-'.$theme->getName().'-'.time().'/';
+        $cacheDir = $this->configuration->get('_PS_CACHE_DIR_').'export-'.$theme->getName().'-'.time().'/';
 
         $this->copyTheme($theme->getDirectory(), $cacheDir);
         $this->copyModuleDependencies((array) $theme->get('dependencies.modules'), $cacheDir);
@@ -120,10 +120,10 @@ class ThemeExporter
                 $catalogueDir = $this->translationsExporter->exportCatalogues($theme->getName(), $locale);
             }
 
-            $catalogueDirParts = explode('/', $catalogueDir);
+            $catalogueDirParts = explode(DIRECTORY_SEPARATOR, $catalogueDir);
             array_pop($catalogueDirParts); // Remove locale
 
-            $cataloguesDir = implode('/', $catalogueDirParts);
+            $cataloguesDir = implode(DIRECTORY_SEPARATOR, $catalogueDirParts);
             $this->fileSystem->mirror($cataloguesDir, $translationsDir);
         }
     }
