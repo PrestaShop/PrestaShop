@@ -43,14 +43,7 @@ class AuthControllerCore extends FrontController
             ;
 
             if (Tools::isSubmit('submitCreate')) {
-                $hookResult = array_reduce(
-                    Hook::exec('actionSubmitAccountBefore', array(), null, true),
-                    function ($carry, $item) {
-                        return $carry && $item;
-                    },
-                    true
-                );
-                if ($hookResult && $register_form->submit()) {
+                if ($register_form->submit()) {
                     $should_redirect = true;
                 }
             }
