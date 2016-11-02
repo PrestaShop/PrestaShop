@@ -345,10 +345,13 @@ class TranslationsExtension extends \Twig_Extension
         }
 
         if ($hasMessagesSubtree) {
-            $output .= $this->render('button-toggle-messages-visibility.html.twig', array(
-                'label_show_messages' => $this->translator->trans('Show messages', array(), 'Admin.International.Feature'),
-                'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'Admin.International.Feature'),
-            ));
+            $output .= $this->container->get('templating')->render(
+                'PrestaShopBundle:Admin:Translations/include/button-toggle-messages-visibility.html.twig',
+                array(
+                    'label_show_messages' => $this->translator->trans('Show messages', array(), 'Admin.International.Feature'),
+                    'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'Admin.International.Feature'),
+                )
+            );
 
             $output .= $this->getNavigation($this->parseDomain($subtree));
         }
@@ -499,7 +502,10 @@ class TranslationsExtension extends \Twig_Extension
      */
     protected function getNavigation($id)
     {
-        return $this->render('pagination-bar.html.twig', array('page_id' => $id));
+        return $this->container->get('templating')->render(
+            'PrestaShopBundle:Admin:Translations/include/pagination-bar.html.twig',
+            array('page_id' => $id)
+        );
     }
 
     /**
