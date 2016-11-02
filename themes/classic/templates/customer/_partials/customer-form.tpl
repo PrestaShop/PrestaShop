@@ -8,6 +8,7 @@
           {form_field field=$field}
         {/block}
       {/foreach}
+      {$hook_create_account_form nofilter}
     {/block}
   </section>
 
