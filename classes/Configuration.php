@@ -502,7 +502,8 @@ class ConfigurationCore extends ObjectModel
                             '{{ config_id }}' => $configID
                         )
                     );
-                    $configurationExists = count(Db::getInstance()->getRow($selectConfiguration)) > 0;
+                    $results = Db::getInstance()->getRow($selectConfiguration);
+                    $configurationExists = is_array($results) && count($results) > 0;
                     $now = date('Y-m-d H:i:s');
                     $sanitizedValue = pSQL($value, $html);
 
