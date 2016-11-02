@@ -6444,27 +6444,43 @@ body#checkout {
     border: none;
     border-radius: 0; }
 
-#search_filters, #search_filters_brands {
+#search_filters,
+#search_filters_brands,
+#search_filters_suppliers {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
   margin-bottom: 1.5625rem;
   background: white;
   padding: 1.5625rem 1.25rem; }
-  #search_filters .facet, #search_filters_brands .facet {
+  #search_filters .facet,
+  #search_filters_brands .facet,
+  #search_filters_suppliers .facet {
     padding-top: 0.625rem; }
-    #search_filters .facet .collapse, #search_filters_brands .facet .collapse {
+    #search_filters .facet .collapse,
+    #search_filters_brands .facet .collapse,
+    #search_filters_suppliers .facet .collapse {
       display: block; }
-    #search_filters .facet .facet-title, #search_filters_brands .facet .facet-title {
+    #search_filters .facet .facet-title,
+    #search_filters_brands .facet .facet-title,
+    #search_filters_suppliers .facet .facet-title {
       color: #acaaa6; }
-    #search_filters .facet .facet-label, #search_filters_brands .facet .facet-label {
+    #search_filters .facet .facet-label,
+    #search_filters_brands .facet .facet-label,
+    #search_filters_suppliers .facet .facet-label {
       margin-bottom: 0; }
-      #search_filters .facet .facet-label a, #search_filters_brands .facet .facet-label a {
+      #search_filters .facet .facet-label a,
+      #search_filters_brands .facet .facet-label a,
+      #search_filters_suppliers .facet .facet-label a {
         margin-top: 0.4375rem;
         color: #414141;
         display: inline-block;
         font-size: 0.9375rem; }
 
-#search_filters_brands .facet {
+#search_filters_brands .facet,
+#search_filters_suppliers .facet {
   padding-top: 0; }
+  #search_filters_brands .facet .facet-label,
+  #search_filters_suppliers .facet .facet-label {
+    margin-bottom: 0.3125rem; }
 
 .pagination {
   width: 100%; }

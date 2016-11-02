@@ -23,11 +23,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<form action="#">
-  <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-    <option value="">{l s='All brands' d='Shop.Theme.Catalog'}</option>
-    {foreach from=$brands item=brand}
-      <option value="{$brand['link']}">{$brand['name']}</option>
-    {/foreach}
-  </select>
-</form>
+<ul>
+  {foreach from=$suppliers item=supplier name=supplier_list}
+    {if $smarty.foreach.supplier_list.iteration <= $text_list_nb}
+      <li class="facet-label">
+        <a href="{$supplier['link']}" title="{$supplier['name']}">
+          {$supplier['name']}
+        </a>
+      </li>
+    {/if}
+  {/foreach}
+</ul>
