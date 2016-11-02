@@ -58,7 +58,7 @@ class ThemeExporter
 
     public function export(Theme $theme)
     {
-        $cacheDir = $this->configuration->get('_PS_CACHE_DIR_').'export-'.$theme->getName().'-'.time().'/';
+        $cacheDir = $this->configuration->get('_PS_CACHE_DIR_').'export-'.$theme->getName().'-'.time().DIRECTORY_SEPARATOR;
 
         $this->copyTheme($theme->getDirectory(), $cacheDir);
         $this->copyModuleDependencies((array) $theme->get('dependencies.modules'), $cacheDir);
