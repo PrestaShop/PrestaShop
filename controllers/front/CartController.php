@@ -145,6 +145,9 @@ class CartControllerCore extends FrontController
         if (Configuration::isCatalogMode()) {
             return;
         }
+
+        $id_product_attribute = (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group'));
+
         $url = $this->context->link->getProductLink(
             $this->id_product,
             null,
@@ -152,7 +155,7 @@ class CartControllerCore extends FrontController
             null,
             $this->context->language->id,
             null,
-            (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
+            $id_product_attribute,
             false,
             false,
             true,
@@ -162,7 +165,8 @@ class CartControllerCore extends FrontController
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode([
             'success' => true,
-            'productUrl' => $url
+            'productUrl' => $url,
+            'id_product_attribute' => $id_product_attribute
         ]));
     }
 

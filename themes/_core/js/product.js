@@ -26,6 +26,7 @@ $(document).ready(function () {
           reason: {
             productUrl: resp.productUrl
           },
+          id_product_attribute: resp.id_product_attribute,
           refreshUrl: $productRefresh.data('url-update'),
           eventType: eventType
         });
