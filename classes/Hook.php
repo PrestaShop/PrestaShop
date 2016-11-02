@@ -610,11 +610,7 @@ class HookCore extends ObjectModel
         // If no modules associated to hook_name or recompatible hook name, we stop the function
 
         if (!$module_list = Hook::getHookModuleExecList($hook_name)) {
-            if ($array_return) {
-                return array();
-            } else {
-                return '';
-            }
+            return '';
         }
 
         // Check if hook exists
