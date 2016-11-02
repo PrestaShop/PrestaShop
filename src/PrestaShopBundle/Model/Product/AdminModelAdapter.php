@@ -312,11 +312,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 //custom value is defined
                 if ($dataFeature['custom_value'][$this->defaultLocale]) {
                     foreach ($this->locales as $locale) {
-                        $form_data['feature_'.$idFeature.'_value'] = null;
+                        $form_data['feature_'.$idFeature.'__value'] = null;
                         $form_data['custom_'.$idFeature.'_'.$locale['id_lang']] = $dataFeature['custom_value'][$locale['id_lang']];
                     }
-                } elseif ($dataFeature['value']) {
-                    $form_data['feature_'.$idFeature.'_value'] = $dataFeature['value'];
+                } elseif (isset($dataFeature['value']) && $dataFeature['value']) {
+                    $form_data['feature_'.$idFeature.'_'.$dataFeature['value'].'_value'] = $dataFeature['value'];
                 }
             }
         }
