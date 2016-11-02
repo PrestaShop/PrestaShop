@@ -94,7 +94,10 @@
     "prestashop/trackingfront": "dev-master",
     "prestashop/welcome": "dev-master",
     "prestashop/dashtrends": "dev-master",
-    "beberlei/DoctrineExtensions": "^1.0"
+    "beberlei/DoctrineExtensions": "^1.0",
+    "symfony/polyfill-php55": "^1.2",
+    "symfony/polyfill-php56": "^1.2",
+    "symfony/polyfill-php70": "^1.2"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",
