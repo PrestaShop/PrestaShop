@@ -87,7 +87,9 @@
     border-radius: 0;
   }
 }
-#search_filters, #search_filters_brands {
+#search_filters,
+#search_filters_brands,
+#search_filters_suppliers {
   @include box-shadow;
   margin-bottom: rem(25px);
   background: white;
@@ -111,9 +113,13 @@
     }
   }
 }
-#search_filters_brands {
+#search_filters_brands,
+#search_filters_suppliers {
   .facet {
     padding-top: 0;
+    .facet-label {
+      margin-bottom: rem(5px);
+    }
   }
 }
 .pagination {
