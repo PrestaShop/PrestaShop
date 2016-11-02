@@ -34,8 +34,8 @@ trait AssetUrlGeneratorTrait
     protected function getUriFromPath($fullPath)
     {
         $uri = str_replace(
-            $this->configuration->get('_PS_ROOT_DIR_').DIRECTORY_SEPARATOR,
-            $this->configuration->get('__PS_BASE_URI__'),
+            $this->configuration->get('_PS_ROOT_DIR_'),
+            rtrim($this->configuration->get('__PS_BASE_URI__'), DIRECTORY_SEPARATOR),
             $fullPath
         );
 
