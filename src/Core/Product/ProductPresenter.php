@@ -497,6 +497,29 @@ class ProductPresenter
         return $presentedProduct;
     }
 
+    /**
+     * Assemble the same features in one array
+     * @param $presentedProduct
+     * @return mixed
+     */
+    public function addFeaturesToDisplay($presentedProduct)
+    {
+        $features = array();
+        foreach ($presentedProduct['features'] as $key => $feature) {
+            if ($key === 0) {
+                $features[0] = $presentedProduct['features'][0];
+            } else {
+                if (array_search($feature['id_feature'], array_column($features, 'id_feature')) !== false) {
+                    $features[array_search($feature['id_feature'], array_column($features, 'id_feature'))]['value'] .= ', ' . $feature['value'];
+                } else {
+                    array_push($features, $feature);
+                }
+            }
+        }
+        $presentedProduct['feature_to_display'] = $features;
+        return $presentedProduct;
+    }
+
     public function present(
         ProductPresentationSettings $settings,
         array $product,
@@ -598,6 +621,10 @@ class ProductPresenter
                 $presentedProduct
             );
         }
+        $presentedProduct = $this->addFeaturesToDisplay(
+            $presentedProduct
+        );
+
         return $presentedProduct;
     }
 
