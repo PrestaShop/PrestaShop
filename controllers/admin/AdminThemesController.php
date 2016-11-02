@@ -224,12 +224,10 @@ class AdminThemesControllerCore extends AdminController
      */
     public function postProcess()
     {
+        global $kernel;
+
         if ('exporttheme' === Tools::getValue('action')) {
-            $exporter = new ThemeExporter(
-                new \PrestaShop\PrestaShop\Adapter\Configuration($this->context->shop),
-                new \Symfony\Component\Filesystem\Filesystem(),
-                new \Symfony\Component\Finder\Finder()
-            );
+            $exporter = $kernel->getContainer()->get('prestashop.core.addon.theme.exporter');
             $path = $exporter->export($this->context->shop->theme);
             $this->confirmations[] = $this->trans(
                 'Your theme has been correctly exported: %path%',
