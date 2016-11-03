@@ -141,7 +141,10 @@
     "phpunit-sf": "php bin/phpunit -c admin-dev/"
   },
   "config": {
-    "bin-dir": "bin"
+    "bin-dir": "bin",
+    "platform": {
+      "php": "5.4.0"
+    }
   },
   "extra": {
     "symfony-app-dir": "app",
