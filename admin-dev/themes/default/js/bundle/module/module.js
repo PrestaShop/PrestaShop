@@ -44,6 +44,12 @@ var AdminModuleController = function() {
   this.categoryGridItemSelector = '.module-category-item';
   this.addonItemGridSelector = '.module-addons-item-grid';
   this.addonItemListSelector = '.module-addons-item-list';
+  
+  // Upgrade All selectors
+  this.upgradeAllSource = '.module_action_menu_upgrade_all';
+  this.upgradeAllTargets = '#modules-list-container-update .module_action_menu_upgrade:visible';
+  
+  // Bulk action selectors
   this.bulkActionDropDownSelector = '.module-bulk-actions select';
   this.checkedBulkActionListSelector = '.module-checkbox-bulk-list input:checked';
   this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid input:checked';
@@ -54,6 +60,8 @@ var AdminModuleController = function() {
   this.bulkConfirmModalActionNameSelector = '#module-modal-bulk-confirm-action-name';
   this.bulkConfirmModalListSelector = '#module-modal-bulk-confirm-list';
   this.bulkConfirmModalAckBtnSelector = '#module-modal-confirm-bulk-ack';
+
+  // Placeholders
   this.placeholderGlobalSelector = '.module-placeholders-wrapper';
   this.placeholderFailureGlobalSelector = '.module-placeholders-failure';
   this.placeholderFailureMsgSelector = '.module-placeholders-failure-msg';
@@ -718,6 +726,13 @@ var AdminModuleController = function() {
       }).done(function () {
         $next.fadeOut();
       });
+    });
+    
+    // "Upgrade All" button handler
+    var that = this;
+    $('body').on('click', this.upgradeAllSource, function(event) {
+        event.preventDefault();
+        $(that.upgradeAllTargets).click();
     });
   };
 

@@ -41,6 +41,9 @@
                       data-title="{{ "Modules to update"|trans({}, 'Admin.Modules.Feature') }}"
                       data-content="{{ "Update these modules to enjoy their latest versions."|trans({}, 'Admin.Modules.Help') }}">
                 </span>
+                {% if modules.to_update|length > 1 %}
+                <a class="btn btn-primary-reverse pull-right btn-primary-outline light-button module_action_menu_upgrade_all" href="#" data-confirm_modal="module-modal-confirm-upgrade-all">Upgrade All</a>
+                {% endif %}
             </div>
             {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules': modules.to_update, 'display_type': 'list', id: 'update' } %}
         </div>
