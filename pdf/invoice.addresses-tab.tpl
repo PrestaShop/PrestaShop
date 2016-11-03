@@ -24,9 +24,21 @@
 *}
 <table id="addresses-tab" cellspacing="0" cellpadding="0">
 	<tr>
-		<td width="33%"><span class="bold"> </span><br/><br/>
-			{if isset($order_invoice)}{$order_invoice->shop_address}{/if}
+  
+		<td width="33%"><span class="bold"> </span><br/>
+			{if isset($order_invoice)}{$order_invoice->shop_address}{/if}<br/><br/>
+ {* Used TCPDF For Generating Barcode
+ *}     
+	<table>
+	<tr>
+		<td width="70%">
+			<tcpdf method="write1DBarcode" params="{$barcode_params}" />
 		</td>
+	</tr>
+	</table>
+  
+		</td>
+    
 		<td width="33%">{if $delivery_address}<span class="bold">{l s='Delivery Address' d='Shop.PDF' pdf='true'}</span><br/><br/>
 				{$delivery_address}
 			{/if}
