@@ -110,19 +110,19 @@ class ImageRetriever
             $type = 'products';
             $getImageURL = 'getImageLink';
             $root = _PS_PROD_IMG_DIR_;
+            $imageFolderPath = implode(DIRECTORY_SEPARATOR, array(
+                rtrim($root, DIRECTORY_SEPARATOR),
+                rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
+            ));
         } else {
             $type = 'categories';
             $getImageURL = 'getCatImageLink';
             $root = _PS_CAT_IMG_DIR_;
+            $imageFolderPath = rtrim($root, DIRECTORY_SEPARATOR);
         }
 
         $urls  = [];
         $image_types = ImageType::getImagesTypes($type, true);
-
-        $imageFolderPath = implode(DIRECTORY_SEPARATOR, [
-            rtrim($root, DIRECTORY_SEPARATOR),
-            rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
-        ]);
 
         $extPath = $imageFolderPath . DIRECTORY_SEPARATOR . 'fileType';
         $ext = @file_get_contents($extPath) ?: 'jpg';
