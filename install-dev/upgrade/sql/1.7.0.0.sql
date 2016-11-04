@@ -101,6 +101,7 @@ ALTER TABLE `PREFIX_cart` ADD `checkout_session_data` MEDIUMTEXT NULL;
 ALTER TABLE `PREFIX_shop` DROP COLUMN `id_theme`;
 ALTER TABLE `PREFIX_cart_product` ADD `id_customization` INT(10) NOT NULL DEFAULT '0' AFTER `id_product_attribute`;
 ALTER TABLE `PREFIX_cart_product` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_cart`, `id_product`, `id_product_attribute`, `id_customization`, `id_address_delivery`);
+ALTER TABLE `PREFIX_feature_product` DROP PRIMARY KEY ,ADD PRIMARY KEY (`id_feature`, `id_product`, `id_feature_value`);
 ALTER TABLE `PREFIX_order_detail` ADD `id_customization` INT(10) NULL DEFAULT '0' AFTER `product_attribute_id`;
 ALTER TABLE `PREFIX_customized_data` ADD `id_module` INT(10) NOT NULL DEFAULT '0', ADD `price` DECIMAL(20,6) NOT NULL DEFAULT '0', ADD `weight` DECIMAL(20,6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_customization_field` ADD `is_module` TINYINT(1) NOT NULL DEFAULT '0' ;
