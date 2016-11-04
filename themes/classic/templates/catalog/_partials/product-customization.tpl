@@ -35,9 +35,13 @@
               <li class="product-customization-item">
                 <label> {$field.label}</label>
                 {if $field.type == 'text'}
-                  <label>{$field.text}</label>
                   <textarea placeholder="{l s='Your message here' d='Shop.Forms.Help'}" class="product-message" maxlength="250" {if $field.required} required {/if} name="{$field.input_name}"></textarea>
                   <small class="pull-xs-right">{l s='250 char. max' d='Shop.Forms.Help'}</small>
+                  {if $field.text !== ''}
+                      <h6 class="customization-message">{l s='Your customization:' d='Shop.Theme.Catalog'}
+                          <label>{$field.text}</label>
+                      </h6>
+                  {/if}
                 {elseif $field.type == 'image'}
                   {if $field.is_customized}
                     <br>
