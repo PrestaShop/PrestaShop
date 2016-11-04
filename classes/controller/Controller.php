@@ -81,6 +81,9 @@ abstract class ControllerCore
     /** @var PrestaShopBundle\Translation\Translator */
     protected $translator;
 
+    /** @var ContainerBuilder legacy container */
+    protected $container;
+
 
     /**
      * Check if the controller is available for the current user/visitor
@@ -108,6 +111,7 @@ abstract class ControllerCore
         if (!defined('_PS_BASE_URL_SSL_')) {
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
+        $this->buildContainer();
     }
 
     /**
@@ -626,7 +630,6 @@ abstract class ControllerCore
         }
 
         /* @deprecated deprecated since 1.6.1.1 */
-        // Hook::exec('actionBeforeAjaxDie', array('controller' => $controller, 'method' => $method, 'value' => $value));
         Hook::exec('actionAjaxDieBefore', array('controller' => $controller, 'method' => $method, 'value' => $value));
 
         /**
@@ -637,5 +640,20 @@ abstract class ControllerCore
         Hook::exec('actionAjaxDie'.$controller.$method.'Before', array('value' => $value));
 
         die($value);
+    }
+
+    /**
+     * Construct the container of dependencies
+     */
+    protected function buildContainer(){}
+
+    public function get($serviceId)
+    {
+        return $this->container->get($serviceId);
+    }
+
+    public function getParameter($parameterId)
+    {
+        return $this->container->getParameter($parameterId);
     }
 }
