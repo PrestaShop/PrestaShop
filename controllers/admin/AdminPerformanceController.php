@@ -1029,22 +1029,22 @@ class AdminPerformanceControllerCore extends AdminController
             $port = (int)Tools::getValue('sPort', 0);
             $type = Tools::getValue('type', '');
 
-            if ($host != '') {
+            if ($host != '' && ($port >= 0 && $port <= 65535)) {
                 $res = 0;
 
                 if ($type == 'memcached') {
                     if (extension_loaded('memcached') &&
-                        (strpos($host, '/') === 0 || @fsockopen($host, $port)) //strpos to check whether the value is path (unix socket)
+                        @fsockopen((($port === 0) ? 'unix:///' : '') . $host, (($port === 0) ? -1 : $port))
                     ) {
                         $memcache = new Memcached();
                         $memcache->addServer($host, $port);
 
-                        $res =  in_array('255.255.255', $memcache->getVersion(), true) === false;
+                        $res = in_array('255.255.255', $memcache->getVersion(), true) === false;
                     }
                 } else {
                     if (function_exists('memcache_get_server_status') &&
                         function_exists('memcache_connect') &&
-                        (strpos($host, 'unix://') === 0 || @fsockopen($host, $port))
+                        @fsockopen($host, (($port === 0) ? -1: $port))
                     ) {
                         $memcache = @memcache_connect($host, $port);
                         $res      = @memcache_get_server_status($memcache, $host, $port);
