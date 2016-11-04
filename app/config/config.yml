@@ -14,8 +14,8 @@ framework:
         version: '1.7.0'
 
     #esi:             ~
-    translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
+    translator:      { fallbacks: ["default"] }
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
