@@ -669,9 +669,12 @@ class ProductPresenter
 
         $presentedProduct['embedded_attributes'] = $this->getProductEmbeddedAttributes($product);
 
-        $presentedProduct = $this->addFeaturesToDisplay(
-            $presentedProduct
-        );
+        // if product has features
+        if (isset($presentedProduct['features'])) {
+            $presentedProduct = $this->addFeaturesToDisplay(
+                $presentedProduct
+            );
+        }
 
         return $presentedProduct;
     }
