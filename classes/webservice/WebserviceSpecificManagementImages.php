@@ -1112,6 +1112,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                             }
                         }
                         @unlink($tmp_name);
+
+                        Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $image->id_product));
+                        
                         $this->imgToDisplay = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format;
                         $this->objOutput->setFieldsToDisplay('full');
                         $this->output = $this->objOutput->renderEntity($image, 1);
