@@ -35,11 +35,11 @@ trait AssetUrlGeneratorTrait
     {
         $uri = str_replace(
             $this->configuration->get('_PS_ROOT_DIR_'),
-            rtrim($this->configuration->get('__PS_BASE_URI__'), DIRECTORY_SEPARATOR),
+            rtrim($this->configuration->get('__PS_BASE_URI__'), '/'),
             $fullPath
         );
 
-        return $uri;
+        return str_replace(DIRECTORY_SEPARATOR, '/', $uri);
     }
 
     protected function getFQDN()
