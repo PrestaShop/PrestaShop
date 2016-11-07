@@ -1308,7 +1308,7 @@ class AdminTranslationsControllerCore extends AdminController
                 'dir' => _PS_MAIL_DIR_.$this->lang_selected->iso_code.'/',
                 'file' => 'lang.php',
                 'sf_controller' => false,
-                'choice_theme' => true,
+                'choice_theme' => false,
             ),
             'others' => array(
                 'name' => $this->trans('Other translations', array(), 'Admin.International.Feature'),
