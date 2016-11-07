@@ -16,12 +16,15 @@
 					</li>
 				{else}
 
-					<li class="{if $level_1.current}active{/if}" id="tab-{$level_1.class_name}" data-submenu="{$level_1.id_tab}">
-						<div class="categorytab">
-							<div class="line"></div>
-							<span>{if $level_1.name eq ''}{$level_1.class_name|escape:'html':'UTF-8'}{else}{$level_1.name|escape:'html':'UTF-8'}{/if}</span>
-						</div>
-					</li>
+          {if $employee->bo_menu}
+            <li class="{if $level_1.current}active{/if}" id="tab-{$level_1.class_name}" data-submenu="{$level_1.id_tab}">
+              <div class="categorytab">
+                <div class="line"></div>
+                <span>{if $level_1.name eq ''}{$level_1.class_name|escape:'html':'UTF-8'}{else}{$level_1.name|escape:'html':'UTF-8'}{/if}</span>
+              </div>
+            </li>
+          {/if}
+
 					{if $level_1.sub_tabs|@count}
 						{foreach $level_1.sub_tabs as $level_2}
 							{if $level_2.active}

@@ -326,6 +326,25 @@ class AdminEmployeesControllerCore extends AdminController
                     'name' => 'name'
                 )
             ),
+            array(
+                'type' => 'radio',
+                'label' => $this->l('Admin menu orientation'),
+                'name' => 'bo_menu',
+                'required' => false,
+                'is_bool' => true,
+                'values' => array(
+                    array(
+                        'id' => 'bo_menu_on',
+                        'value' => 0,
+                        'label' => $this->trans('Yes', array(), 'Admin.Global')
+                    ),
+                    array(
+                        'id' => 'bo_menu_off',
+                        'value' => 1,
+                        'label' => $this->trans('No', array(), 'Admin.Global')
+                    )
+                )
+            ),
         ));
 
         if ((int)$this->access('edit') && !$this->restrict_edition) {
