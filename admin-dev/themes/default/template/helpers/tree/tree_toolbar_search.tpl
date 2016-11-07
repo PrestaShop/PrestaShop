@@ -35,9 +35,13 @@
 {if isset($typeahead_source) && isset($id)}
 
 <script type="text/javascript">
-	$(document).ready(
-		function()
-		{
+	$(function() {
+
+		function startTypeahead() {
+			if (typeof $.typeahead === 'undefined') {
+				setTimeout(startTypeahead, 100);
+				return;
+			}
 			$("#{$id|escape:'html':'UTF-8'}").typeahead(
 			{
 				name: "{$name|escape:'html':'UTF-8'}",
@@ -45,12 +49,14 @@
 				local: [{$typeahead_source}]
 			});
 
-			$("#{$id|escape:'html':'UTF-8'}").keypress(function( event ) {
-				if ( event.which == 13 ) {
+			$("#{$id|escape:'html':'UTF-8'}").keypress(function (event) {
+				if (event.which == 13) {
 					event.stopPropagation();
 				}
 			});
 		}
-	);
+
+		startTypeahead();
+	});
 </script>
 {/if}

@@ -123,7 +123,12 @@
 			}
 		});
 	{/if}
-	$(document).ready(function(){
+	function startTree() {
+		if (typeof $.fn.tree === 'undefined') {
+			setTimeout(startTree, 100);
+			return;
+		}
+
 		$('#{$id|escape:'html':'UTF-8'}').tree('collapseAll');
 		$('#{$id|escape:'html':'UTF-8'}').find(':input[type=radio]').click(treeClickFunc);
 
@@ -151,5 +156,6 @@
 		{else}
 			$('#collapse-all-{$id|escape:'html':'UTF-8'}').hide();
 		{/if}
-	});
+	}
+	startTree();
 </script>
