@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Cldr;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -3760,9 +3759,7 @@ class AdminControllerCore extends Controller
                 }
                 /* Automatically hash password in MD5 */
                 if ($key == 'passwd' && !empty($value)) {
-                    /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-                    $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-                    $value = $crypto->hash($value, _COOKIE_KEY_);
+                    $value = $this->get('hashing')->hash($value, _COOKIE_KEY_);
                 }
                 $object->{$key} = $value;
             }

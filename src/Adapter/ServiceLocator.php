@@ -27,6 +27,11 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
+/**
+ * @internal
+ *
+ * To be removed in 1.7.1.
+ */
 class ServiceLocator
 {
     /**

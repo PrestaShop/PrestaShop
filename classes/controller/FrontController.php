@@ -25,10 +25,12 @@
  */
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
-use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
 
 class FrontControllerCore extends Controller
 {
@@ -1799,7 +1801,7 @@ class FrontControllerCore extends Controller
             $this->makeCustomerFormatter(),
             new CustomerPersister(
                 $this->context,
-                new Hashing(),
+                $this->get('hashing'),
                 $this->getTranslator(),
                 $this->guestAllowed
             ),
@@ -1902,5 +1904,16 @@ class FrontControllerCore extends Controller
         } else {
             return $matches[0];
         }
+    }
+
+    protected function buildContainer()
+    {
+        $container = new ContainerBuilder();
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
+        $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
+        $loader->load(_PS_CONFIG_DIR_.'services/front/services_'. $env .'.yml');
+        $container->compile();
+
+        return $container;
     }
 }
