@@ -1009,11 +1009,12 @@ class FrontControllerCore extends Controller
             'media' => AbstractAssetManager::DEFAULT_MEDIA,
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
+            'server' => 'local',
         ];
 
         $params = array_merge($default_params, $params);
 
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline']);
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server']);
     }
 
     public function unregisterStylesheet($id)
@@ -1032,11 +1033,12 @@ class FrontControllerCore extends Controller
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
             'attributes' => null,
+            'server' => 'local',
         ];
 
         $params = array_merge($default_params, $params);
 
-        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes']);
+        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server']);
     }
 
     public function unregisterJavascript($id)
