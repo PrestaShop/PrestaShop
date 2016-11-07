@@ -134,7 +134,7 @@ class AdminTranslationsControllerCore extends AdminController
         // Create a title for each translation page
         $title = $this->trans('%1$s (Language: %2$s, Theme: %3$s)',
                 array(
-                    '%1$s' => $this->translations_informations[$this->type_selected]['name'],
+                    '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false: $this->translations_informations[$this->type_selected]['name']),
                     '%2$s' => $this->lang_selected->name,
                     '%3$s' => $this->theme_selected ? $this->theme_selected : $this->trans('None', array(), 'Admin.Global'),
                 ),
@@ -232,7 +232,7 @@ class AdminTranslationsControllerCore extends AdminController
     protected function getModuleTranslations()
     {
         global $_MODULE;
-        $name_var = $this->translations_informations[$this->type_selected]['var'];
+        $name_var = (empty($this->translations_informations[$this->type_selected]['var']) ? false: $this->translations_informations[$this->type_selected]['var']);
 
         if (!isset($_MODULE) && !isset($GLOBALS[$name_var])) {
             $GLOBALS[$name_var] = array();
@@ -1020,7 +1020,7 @@ class AdminTranslationsControllerCore extends AdminController
      */
     protected function findAndFillTranslations($files, $theme_name, $module_name, $dir = false)
     {
-        $name_var = $this->translations_informations[$this->type_selected]['var'];
+        $name_var = (empty($this->translations_informations[$this->type_selected]['var']) ? false: $this->translations_informations[$this->type_selected]['var']);
 
         // added for compatibility
         $GLOBALS[$name_var] = array_change_key_case($GLOBALS[$name_var]);
