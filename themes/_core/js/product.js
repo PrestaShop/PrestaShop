@@ -77,6 +77,7 @@ $(document).ready(function () {
       $('.product-variants').replaceWith(resp.product_variants);
       $('.product-discounts').replaceWith(resp.product_discounts);
       $('.images-container').replaceWith(resp.product_cover_thumbnails);
+      $('.product-buttons').replaceWith(resp.product_buttons);
       $('#product-details').replaceWith(resp.product_details);
 
       // Replace all "add to cart" sections but the quantity input in order to keep quantity field intact i.e.
