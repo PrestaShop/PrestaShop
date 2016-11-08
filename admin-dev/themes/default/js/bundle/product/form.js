@@ -403,7 +403,7 @@ var featuresCollection = (function() {
 
         if('' !== $(this).val()) {
           $.ajax({
-            url: $(this).attr('data-action').replace(/\/\d+/, '/' + $(this).val()),
+            url: $(this).attr('data-action').replace(/\/\d+(?=\?.*)/, '/' + $(this).val()),
             success: function(response) {
               $selector.prop('disabled', response.length === 0);
               $selector.empty();
@@ -790,7 +790,7 @@ var warehouseCombinations = (function() {
     'refresh': function() {
       var show = $('input#form_step3_advanced_stock_management:checked').size() > 0;
       if (show) {
-        var url = collectionHolder.attr('data-url').replace(/\/\d+/, '/' + id_product);
+        var url = collectionHolder.attr('data-url').replace(/\/\d+(?=\?.*)/, '/' + id_product);
         $.ajax({
           url: url,
           success: function(response) {
@@ -1119,7 +1119,7 @@ var virtualProduct = (function() {
   var getOnDeleteVirtualProductFileHandler = function ($deleteButton) {
     return $.ajax({
       type: 'GET',
-      url: $deleteButton.attr('href').replace(/\/\d+/, '/' + id_product),
+      url: $deleteButton.attr('href').replace(/\/\d+(?=\?.*)/, '/' + id_product),
       success: function () {
         $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
         $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
@@ -1299,7 +1299,7 @@ var attachmentProduct = (function() {
 
         $.ajax({
           type: 'POST',
-          url: $('#form_step6_attachment_product').attr('data-action').replace(/\/\d+/, '/' + id_product),
+          url: $('#form_step6_attachment_product').attr('data-action').replace(/\/\d+(?=\?.*)/, '/' + id_product),
           data: data,
           contentType: false,
           processData: false,
