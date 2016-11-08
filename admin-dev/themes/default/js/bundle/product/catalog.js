@@ -280,17 +280,7 @@ function bulkProductAction(element, action) {
 
         $('#catalog_deletion_modal').modal('hide');
 
-        // use a progressbar if more 1 item
-        if (items.size() > 1) {
-          return bulkModalAction(items, postUrl, redirectUrl, action);
-        } else {
-          var redirectionInput = $('<input>')
-            .attr('type', 'hidden')
-            .attr('name', 'redirect_url').val(redirectUrl);
-          form.append($(redirectionInput));
-          form.attr('action', postUrl);
-          form.submit();
-        }
+        return bulkModalAction(items, postUrl, redirectUrl, action);
       });
 
       return; // No break, but RETURN, to avoid code after switch block :)
@@ -299,10 +289,7 @@ function bulkProductAction(element, action) {
       postUrl = urlHandler.attr('bulkurl');
       redirectUrl = urlHandler.attr('redirecturl');
 
-      // use a progressbar if more 1 item
-      if (items.size() > 1) {
-        return bulkModalAction(items, postUrl, redirectUrl, action);
-      }
+      return bulkModalAction(items, postUrl, redirectUrl, action);
 
       break;
 
@@ -310,10 +297,7 @@ function bulkProductAction(element, action) {
       postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
       redirectUrl = urlHandler.attr('redirecturl');
 
-      // use a progressbar if more 1 item
-      if (items.size() > 1) {
-        return bulkModalAction(items, postUrl, redirectUrl, action);
-      }
+      return bulkModalAction(items, postUrl, redirectUrl, action);
 
       break;
 
@@ -321,10 +305,7 @@ function bulkProductAction(element, action) {
       postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
       redirectUrl = urlHandler.attr('redirecturl');
 
-      // use a progressbar if more 1 item
-      if (items.size() > 1) {
-        return bulkModalAction(items, postUrl, redirectUrl, action);
-      }
+      return bulkModalAction(items, postUrl, redirectUrl, action);
 
       break;
 
