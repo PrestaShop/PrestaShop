@@ -87,8 +87,8 @@ if (!@ini_get('date.timezone')) {
 
 // Try to improve memory limit if it's under 64M
 $current_memory_limit = psinstall_get_memory_limit();
-if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('64M')) {
-    ini_set('memory_limit', '64M');
+if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('128M')) {
+    ini_set('memory_limit', '128M');
 }
 
 function psinstall_get_octets($option)
