@@ -128,7 +128,7 @@
 														<input type="text"
 															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
 															name="{$name|md5}"
-															value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}"' />
+															value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}" />
 													{else}
 														<textarea rows="{($key|strlen / $textarea_sized)|intval}"
 															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
@@ -152,12 +152,12 @@
 									<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay' d='Admin.Actions'}</button>
 								</div>
 							</div>
-              </form>
 						{/if}
 					{/foreach}
 				{/foreach}
 			{/foreach}
-		{/if}
+    </form>
+	{/if}
 
     <form action="{$url_submit_installed_module|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
       <div class="panel">
