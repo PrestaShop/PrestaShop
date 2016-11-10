@@ -1171,7 +1171,6 @@ class AdminTranslationsControllerCore extends AdminController
                     _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
                     _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
                     _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR),
-                    _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs/' => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs/')
                 );
 
                 // Get all files for folders classes/ and override/classes/ recursively
@@ -2534,7 +2533,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @since 1.4.0.14
      * @param array       $content         With english and language needed contents
      * @param string      $lang            ISO code of the needed language
-     * @param string      $url for         The html page and displaying an outline
+     * @param string      $url             The html page and displaying an outline
      * @param string      $mail_name       Name of the file to translate (same for txt and html files)
      * @param string      $group_name      Group name allow to distinguish each block of mail.
      * @param string|bool $name_for_module Is not false define add a name for distinguish mails module
@@ -3184,7 +3183,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (defined('_PS_HOST_MODE_') && strpos($email, _PS_MAIL_DIR_) !== false) {
             $email_file = $email;
         } elseif (__PS_BASE_URI__ != '/') {
-            $email_file = str_replace(__PS_BASE_URI__, '', _PS_ROOT_DIR_.'/').$email;
+            $email_file = str_replace(__PS_BASE_URI__, _PS_ROOT_DIR_.'/', $email);
         } else {
             $email_file = _PS_ROOT_DIR_.$email;
         }
