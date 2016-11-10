@@ -115,8 +115,9 @@
 						});
 					{/if}
 					{if isset($tab_modules_list)}
-						$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
-							$('#modules_list_container').modal('show');
+						$('.process-icon-modules-list').parent('a').unbind().bind('click', function (event) {
+              event.preventDefault();
+              $('#modules_list_container').modal('show');
 							openModulesList();
 						});
 					{/if}
