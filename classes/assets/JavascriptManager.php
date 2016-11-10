@@ -37,10 +37,15 @@ class JavascriptManagerCore extends AbstractAssetManager
         $position = self::DEFAULT_JS_POSITION,
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
-        $attribute = null
+        $attribute = null,
+        $isUrl = false
     ) {
-        if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $position, $priority, $inline, $attribute);
+        if ($isUrl == false) {
+            if ($fullPath = $this->getFullPath($relativePath)) {
+                $this->add($id, $fullPath, $position, $priority, $inline, $attribute, $isUrl);
+            }
+        } else {
+            $this->add($id, $relativePath, $position, $priority, $inline, $attribute, $isUrl);
         }
     }
 
@@ -70,10 +75,15 @@ class JavascriptManagerCore extends AbstractAssetManager
         return $default;
     }
 
-    protected function add($id, $fullPath, $position, $priority, $inline, $attribute)
+    protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $isUrl)
     {
-        if (filesize($fullPath) === 0) {
-            return;
+        if ($isUrl == true) {
+            $completeUrl = $this->getUriFromPath($fullPath);
+        } else {
+            if (filesize($fullPath) === 0) {
+                return;
+            }
+            $completeUrl = $this->getFQDN().$this->getUriFromPath($fullPath);
         }
 
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
@@ -85,7 +95,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             'id' => $id,
             'type' => $type,
             'path' => $fullPath,
-            'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
+            'uri' => $completeUrl,
             'priority' => $priority,
             'attribute' => $attribute,
         );

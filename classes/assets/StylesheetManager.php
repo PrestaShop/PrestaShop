@@ -47,10 +47,14 @@ class StylesheetManagerCore extends AbstractAssetManager
         ];
     }
 
-    public function register($id, $relativePath, $media = self::DEFAULT_MEDIA, $priority = self::DEFAULT_PRIORITY, $inline = false)
+    public function register($id, $relativePath, $media = self::DEFAULT_MEDIA, $priority = self::DEFAULT_PRIORITY, $inline = false, $isUrl = false)
     {
-        if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $media, $priority, $inline);
+        if ($isUrl == false) {
+            if ($fullPath = $this->getFullPath($relativePath)) {
+                $this->add($id, $fullPath, $media, $priority, $inline, $isUrl);
+            }
+        } else {
+            $this->add($id, $relativePath, $media, $priority, $inline, $isUrl);
         }
     }
 
@@ -67,10 +71,15 @@ class StylesheetManagerCore extends AbstractAssetManager
         return $this->list;
     }
 
-    protected function add($id, $fullPath, $media, $priority, $inline)
+    protected function add($id, $fullPath, $media, $priority, $inline, $isUrl)
     {
-        if (filesize($fullPath) === 0) {
-            return;
+        if ($isUrl == true) {
+            $completeUrl = $this->getUriFromPath($fullPath);
+        } else {
+            if (filesize($fullPath) === 0) {
+                return;
+            }
+            $completeUrl = $this->getFQDN().$this->getUriFromPath($fullPath);
         }
 
         $media = $this->getSanitizedMedia($media);
@@ -84,7 +93,7 @@ class StylesheetManagerCore extends AbstractAssetManager
             'id' => $id,
             'type' => $type,
             'path' => $fullPath,
-            'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
+            'uri' => $completeUrl,
             'media' => $media,
             'priority' => $priority,
         );

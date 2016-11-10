@@ -38,7 +38,6 @@ trait AssetUrlGeneratorTrait
             rtrim($this->configuration->get('__PS_BASE_URI__'), '/'),
             $fullPath
         );
-
         return str_replace(DIRECTORY_SEPARATOR, '/', $uri);
     }
 
@@ -51,7 +50,6 @@ trait AssetUrlGeneratorTrait
                 $this->fqdn = $this->configuration->get('_PS_BASE_URL_');
             }
         }
-
         return $this->fqdn;
     }
 }
