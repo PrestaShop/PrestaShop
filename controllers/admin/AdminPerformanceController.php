@@ -526,6 +526,10 @@ class AdminPerformanceControllerCore extends AdminController
         $warning_apc = str_replace('[a]', '<a href="http://php.net/manual/'.substr($php_lang, 0, 2).'/apc.installation.php" target="_blank">', $warning_apc);
         $warning_apc = str_replace('[/a]', '</a>', $warning_apc);
 
+        $warning_apcu = ' '.$this->l('(you must install the [a]APCu PECL extension[/a])');
+        $warning_apcu = str_replace('[a]', '<a href="http://php.net/manual/'.substr($php_lang, 0, 2).'/apcu.installation.php" target="_blank">', $warning_apcu);
+        $warning_apcu = str_replace('[/a]', '</a>', $warning_apcu);
+
         $warning_xcache = ' '.$this->l('(you must install the [a]Xcache extension[/a])');
         $warning_xcache = str_replace('[a]', '<a href="http://xcache.lighttpd.net" target="_blank">', $warning_xcache);
         $warning_xcache = str_replace('[/a]', '</a>', $warning_xcache);
@@ -585,6 +589,11 @@ class AdminPerformanceControllerCore extends AdminController
                             'id' => 'CacheApc',
                             'value' => 'CacheApc',
                             'label' => $this->l('APC').(extension_loaded('apc') ? '' : $warning_apc)
+                        ),
+                        array(
+                            'id' => 'CacheApcu',
+                            'value' => 'CacheApcu',
+                            'label' => $this->l('APCu').(extension_loaded('apcu') ? '' : $warning_apcu)
                         ),
                         array(
                             'id' => 'CacheXcache',
@@ -917,6 +926,9 @@ class AdminPerformanceControllerCore extends AdminController
                     } elseif ($caching_system == 'CacheApc' && !extension_loaded('apc')) {
                         $this->errors[] = Tools::displayError('To use APC cache, you must install the APC PECL extension on your server.').'
 							<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
+                    } elseif ($caching_system == 'CacheApcu' && !extension_loaded('apcu')) {
+                        $this->errors[] = Tools::displayError('To use APCu cache, you must install the APCu PECL extension on your server.').'
+							<a href="http://fr.php.net/manual/fr/apcu.installation.php">http://fr.php.net/manual/fr/apcu.installation.php</a>';
                     } elseif ($caching_system == 'CacheXcache' && !extension_loaded('xcache')) {
                         $this->errors[] = Tools::displayError('To use Xcache, you must install the Xcache extension on your server.').'
 							<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
