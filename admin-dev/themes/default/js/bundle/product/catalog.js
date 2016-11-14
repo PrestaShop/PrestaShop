@@ -68,7 +68,11 @@ $(document).ready(function() {
 	/*
 	 * Sortable case when ordered by position ASC
 	 */
-	$('tbody.sortable td.placeholder', form).disableSelection();
+
+	$("body").on("mousedown", "tbody.sortable [data-uniturl]", function () {
+		$(this).find('input:checkbox[name="bulk_action_selected_products[]"]').attr("checked", true);
+	});
+
 	$('tbody.sortable', form).sortable({
 		placeholder: 'placeholder',
 		update: function(event, ui) {
