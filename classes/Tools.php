@@ -1943,7 +1943,7 @@ class ToolsCore
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename(url), "w");
+        $localFile = fopen(basename($url), "w");
         if (!$localFile) {
             return false;
         }
