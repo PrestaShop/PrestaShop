@@ -47,16 +47,31 @@
 
 		$(document).ready(function() {
       var themeSelector = $('#ps_theme_selector');
+      var themeCoreOption = themeSelector.find('select[name="selected-theme"] option#core-option');
       var emailSelector = $('#ps_email_selector');
+      var allSelectors = $('select[name="selected-emails"], select[name="selected-theme"], select[name="locale"]');
 
       themeSelector.hide();
       emailSelector.hide();
 
       $('#type').on('change', function () {
+
+        // reset all select
+        allSelectors.each(function () {
+          $(this).prop('selectedIndex',0);
+        });
+
         if ('mails' === $(this).val()) {
           emailSelector.show();
         } else {
           emailSelector.hide();
+        }
+
+        if ('themes' === $(this).val()) {
+          themeSelector.find('select[name="selected-theme"]').prop('selectedIndex',1);
+          themeCoreOption.hide().attr('disabled', true);
+        } else {
+          themeCoreOption.show().attr('disabled', false);
         }
 
         if (1 === $('#type option:selected').data('choicetheme')) {
@@ -65,6 +80,15 @@
           themeSelector.hide();
         }
       });
+
+      $('select[name="selected-emails"]').on('change', function() {
+        if ('subject' === $(this).val()) {
+          themeSelector.hide();
+        } else {
+          themeSelector.show();
+        }
+      });
+
 
 			$('#modify-translations').click(function() {
 				var languages = $('#translations-languages option');
@@ -127,7 +151,7 @@
         <label class="control-label col-lg-3" for="selected-theme">{l s='Select your theme'}</label>
         <div class="col-lg-4">
           <select name="selected-theme">
-              <option value="">{l s='Core (no theme selected)'}</option>
+              <option id="core-option" value="">{l s='Core (no theme selected)'}</option>
             {foreach $themes as $theme}
               <option value="{$theme->getName()}" {if $current_theme_name == $theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
             {/foreach}
