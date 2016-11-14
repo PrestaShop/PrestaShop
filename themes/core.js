@@ -2114,7 +2114,7 @@
 	  var deliveryStepSelector = '#checkout-delivery-step';
 	  var editDeliveryButtonSelector = '.js-edit-delivery';
 	
-	  var updateDeliveryForm = function updateDeliveryForm() {
+	  var updateDeliveryForm = function updateDeliveryForm(event) {
 	    var $deliveryMethodForm = (0, _jquery2['default'])(deliveryFormSelector);
 	    var requestData = $deliveryMethodForm.serialize();
 	    var $inputChecked = (0, _jquery2['default'])(event.currentTarget);
