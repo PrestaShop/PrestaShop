@@ -32,7 +32,7 @@ export default function () {
   let deliveryStepSelector = '#checkout-delivery-step';
   let editDeliveryButtonSelector = '.js-edit-delivery';
 
-  let updateDeliveryForm = () => {
+  let updateDeliveryForm = (event) => {
     let $deliveryMethodForm = $(deliveryFormSelector);
     let requestData = $deliveryMethodForm.serialize();
     let $inputChecked = $(event.currentTarget);
