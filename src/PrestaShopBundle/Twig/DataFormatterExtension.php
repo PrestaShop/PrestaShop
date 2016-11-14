@@ -42,6 +42,7 @@ class DataFormatterExtension extends \Twig_Extension
             new \Twig_SimpleFilter('arrayCast', array($this, 'arrayCast')),
             new \Twig_SimpleFilter('intCast', array($this, 'intCast')),
             new \Twig_SimpleFilter('unsetElement', array($this, 'unsetElement')),
+            new \Twig_SimpleFilter('bqSQL', array($this, 'bqSQL')),
         );
     }
 
@@ -56,6 +57,7 @@ class DataFormatterExtension extends \Twig_Extension
             new \Twig_SimpleFunction('arrayCast', array($this, 'arrayCast')),
             new \Twig_SimpleFunction('intCast', array($this, 'intCast')),
             new \Twig_SimpleFunction('unsetElement', array($this, 'unsetElement')),
+            new \Twig_SimpleFilter('bqSQL', array($this, 'bqSQL')),
         );
     }
 
@@ -94,6 +96,18 @@ class DataFormatterExtension extends \Twig_Extension
     {
         unset($array[$key]);
         return $array;
+    }
+
+    /**
+     * Avoid every possible SQL injection, but should be used with intCast() to maximise the security.
+     *
+     * @param string string A string containing zero, one or more characters.
+     * @return string
+     *
+     */
+    public function bqSQL($array, $key)
+    {
+        return bqSQL($string);
     }
 
     /**
