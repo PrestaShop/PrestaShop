@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
+
 /**
  * Class PhpEncryptionCore for openSSL 1.0.1+.
  */
@@ -42,7 +44,7 @@ class PhpEncryptionCore
     public function __construct($hexString)
     {
         $engineClass = self::resolveEngineToUse();
-        $this->engine = new $engineClass($hexString);
+        self::$engine = new $engineClass($hexString);
     }
 
     /**
@@ -54,7 +56,7 @@ class PhpEncryptionCore
      */
     public function encrypt($plaintext)
     {
-        return $this->engine->encrypt($plaintext);
+        return self::$engine->encrypt($plaintext);
     }
 
     /**
@@ -69,7 +71,7 @@ class PhpEncryptionCore
      */
     public function decrypt($cipherText)
     {
-        return $this->engine->decrypt($cipherText);
+        return self::$engine->decrypt($cipherText);
     }
 
     /**
@@ -89,12 +91,21 @@ class PhpEncryptionCore
 
     /**
      * @return string
+     * @throws Exception
+     *
      */
     public static function createNewRandomKey()
     {
         $engine = self::resolveEngineToUse();
 
-        return $engine::createNewRandomKey();
+        try {
+            $randomKey = $engine::createNewRandomKey();
+        } catch (EnvironmentIsBrokenException $exception) {
+            $buf = $engine::randomCompat();
+            $randomKey = $engine::saveToAsciiSafeString($buf);
+        }
+
+        return $randomKey;
     }
 
     /**
