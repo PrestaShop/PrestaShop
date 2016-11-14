@@ -98,9 +98,10 @@ function process_install(step)
 			}
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function() {
-			install_error(step);
-		}
+		error: function( jqXHR, textStatus ) {
+                    var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
+                    install_error(step, errorMsg);
+                }
 	});
 }
 
@@ -151,9 +152,10 @@ function process_install_subtask(step, current_subtask)
 				install_error(step, (json) ? json.message : '');
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function() {
-			install_error(step);
-		}
+                error: function( jqXHR, textStatus ) {
+                    var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
+                    install_error(step, errorMsg);
+                }
 	});
 }
 
@@ -189,9 +191,7 @@ function install_error(step, errors)
 
 		display += '</ol>';
 		$('#error_process').append(display);
-	}
-
-	if (typeof psuser_assistance != 'undefined') {
+	} else if (typeof psuser_assistance != 'undefined') {
 		psuser_assistance.setStep('install_process_error', {'error': 'No message || {"version": "' + ps_version + '"}'});
 	}
 
