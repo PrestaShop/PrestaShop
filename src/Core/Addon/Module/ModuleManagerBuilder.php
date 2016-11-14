@@ -63,9 +63,7 @@ class ModuleManagerBuilder
     public static $instance = null;
 
     /**
-     * @param null $baseUrl
-     *
-     * @return ModuleManagerBuilder
+     * @return null|ModuleManagerBuilder
      */
     static public function getInstance() {
         if (self::$instance == null) {
@@ -164,6 +162,13 @@ class ModuleManagerBuilder
         }
 
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient);
+
+        $kernelDir = dirname(__FILE__) . '/../../../../app';
+        self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
+        if (_PS_MODE_DEV_) {
+            self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';
+        }
+
         self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
 
         if (is_null(self::$adminModuleDataProvider)) {
