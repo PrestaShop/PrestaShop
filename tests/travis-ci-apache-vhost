@@ -10,11 +10,11 @@
   DocumentRoot /var/www/
   <Directory /var/www/>
     AllowOverride All
-    Require all granted
+    Allow from all
   </Directory>
 
   <Directory /usr/lib/cgi-bin>
-      Require all granted
+    Allow from all
   </Directory>
 
 </VirtualHost>
