@@ -32,6 +32,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOException;
 use RandomLib;
 use Composer\Script\Event;
+use PhpEncryption;
 
 class Upgrade
 {
@@ -68,8 +69,7 @@ class Upgrade
         $fileMigrated = false;
         $default_parameters = Yaml::parse(file_get_contents($root_dir.'/app/config/parameters.yml.dist'));
         require_once $root_dir.'/vendor/paragonie/random_compat/lib/random.php';
-        $key = \Defuse\Crypto\Key::createNewRandomKey();
-        $default_parameters['parameters']['new_cookie_key'] = $key->saveToAsciiSafeString();
+        $default_parameters['parameters']['new_cookie_key'] = PhpEncryption::createNewRandomKey();
         if (file_exists($root_dir.'/'.self::SETTINGS_FILE)) {
             $tmp_settings = file_get_contents($root_dir.'/'.self::SETTINGS_FILE);
         } else {
