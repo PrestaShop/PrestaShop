@@ -30,7 +30,7 @@
 							{if $level_2.active}
 								<li class="maintab {if $level_2.current}active{/if} {if $level_2.sub_tabs|@count}has_submenu{/if}" id="subtab-{$level_2.class_name|escape:'html':'UTF-8'}" data-submenu="{$level_2.id_tab}">
 									<a href="{$level_2.href|escape:'html':'UTF-8'}" class="title {if $level_2.sub_tabs|@count}has_submenu{/if}">
-										<i class="material-icons">{$level_2.icon}</i>
+										{if $level_2.icon}<i class="material-icons">{$level_2.icon}</i>{/if}
 										<span>
 											{if $level_2.name eq ''}{$level_2.class_name|escape:'html':'UTF-8'}{else}{$level_2.name|escape:'html':'UTF-8'}{/if}
 										</span>
