@@ -291,10 +291,13 @@ class AdminStoresControllerCore extends AdminController
         $days[6] = $this->trans('Saturday', array(), 'Admin.ShopParameters.Feature');
         $days[7] = $this->trans('Sunday', array(), 'Admin.ShopParameters.Feature');
 
+        $hours = array();
+
         $hours_temp = json_decode($this->getFieldValue($obj, 'hours'));
-        $hours = [];
-        foreach ($hours_temp as $h) {
-            $hours[] = implode(' | ', $h);
+        if (!empty($hours_temp)) {
+            foreach ($hours_temp as $h) {
+                $hours[] = implode(' | ', $h);
+            }
         }
 
         $this->fields_value = array(
