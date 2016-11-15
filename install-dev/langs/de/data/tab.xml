@@ -4,7 +4,7 @@
   <tab id="Administration" name="Verwaltung"/>
   <tab id="Advanced_Parameters" name="Erweiterte Einstellungen"/>
   <tab id="Attachments" name="Anhänge"/>
-  <tab id="Attributes_and_Values" name="Attribute &amp; Gruppen"/>
+  <tab id="Attributes_and_Values" name="Artikeleigenschaften"/>
   <tab id="Carriers" name="Versanddienste"/>
   <tab id="Cart_Rules" name="Warenkorb Preisregeln"/>
   <tab id="Catalog" name="Katalog"/>
@@ -13,7 +13,7 @@
   <tab id="CMS" name="CMS"/>
   <tab id="CMS_Categories" name="CMS-Kategorien"/>
   <tab id="CMS_Pages" name="CMS-Seiten"/>
-  <tab id="Combinations_Generator" name="Kombinationsgenerator"/>
+  <tab id="Combinations_Generator" name="Varianten-Generator"/>
   <tab id="Configuration" name="Konfiguration"/>
   <tab id="Configuration_Information" name="Konfiguration"/>
   <tab id="Contacts" name="Kontakte"/>
@@ -28,8 +28,8 @@
   <tab id="DB_Backup" name="DB-Sicherung"/>
   <tab id="Delivery_Slips" name="Lieferscheine"/>
   <tab id="E-mail" name="E-Mail"/>
-  <tab id="Employees" name="Mitarbeiter"/>
-  <tab id="Features" name="Produktmerkmale"/>
+  <tab id="Employees" name="Benutzerrechte"/>
+  <tab id="Features" name="Artikelvarianten"/>
   <tab id="General" name="Allgemein"/>
   <tab id="Geolocation" name="Geotargeting"/>
   <tab id="Groups" name="Gruppen"/>
@@ -64,8 +64,8 @@
   <tab id="Preferences_1" name="Voreinstellungen"/>
   <tab id="Preferences" name="Voreinstellungen"/>
   <tab id="Price_Rules" name="Preisregeln"/>
-  <tab id="Products_1" name="Produkte"/>
-  <tab id="Products" name="Produkte"/>
+  <tab id="Products_1" name="Artikel"/>
+  <tab id="Products" name="Artikel"/>
   <tab id="Profiles" name="Profile"/>
   <tab id="Quick_Access" name="Schnellzugriff"/>
   <tab id="Referrers" name="Referrer"/>
@@ -78,7 +78,7 @@
   <tab id="Shop_URLs" name="Shop-URLs"/>
   <tab id="Shopping_Carts" name="Warenkörbe"/>
   <tab id="Shops" name="Shops"/>
-  <tab id="SQL_Manager" name="SQL-Manager"/>
+  <tab id="SQL_Manager" name="SQL-Abfragen"/>
   <tab id="States" name="Bundesländer"/>
   <tab id="Stats" name="Statistiken"/>
   <tab id="Stats_1" name="Statistiken"/>
@@ -90,7 +90,7 @@
   <tab id="Store_Contacts" name="Shopadressen"/>
   <tab id="Suppliers" name="Lieferanten"/>
   <tab id="Supply_orders" name="Lieferaufträge"/>
-  <tab id="Tags" name="Tags"/>
+  <tab id="Tags" name="Stichworte"/>
   <tab id="Tax_Rules" name="Steuerregeln"/>
   <tab id="Taxes" name="Steuersätze"/>
   <tab id="Themes" name="Templates &amp; Vorlagen"/>
@@ -98,6 +98,6 @@
   <tab id="Translations" name="Übersetzungen"/>
   <tab id="Warehouses" name="Lagerort"/>
   <tab id="Webservice" name="Webdienste"/>
-  <tab id="Zones" name="Zonen"/>
-  <tab id="CarrierWizard" name="Carrier"/>
+  <tab id="Zones" name="Gebiete"/>
+  <tab id="CarrierWizard" name="Versanddienst"/>
 </entity_tab>
