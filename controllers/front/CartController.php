@@ -70,7 +70,7 @@ class CartControllerCore extends FrontController
      */
     public function initContent()
     {
-        if (Configuration::isCatalogMode()) {
+        if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show' ) {
             Tools::redirect('index.php');
         }
 
@@ -142,9 +142,6 @@ class CartControllerCore extends FrontController
 
     public function displayAjaxProductRefresh()
     {
-        if (Configuration::isCatalogMode()) {
-            return;
-        }
         $url = $this->context->link->getProductLink(
             $this->id_product,
             null,
