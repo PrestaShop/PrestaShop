@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShopBundle\Service\Cache\Refresh;
 use Symfony\Component\HttpFoundation\Request;
 
 use Composer\CaBundle\CaBundle;
@@ -2810,15 +2811,26 @@ exit;
     }
 
     /**
+     * Clear Symfony cache
+     */
+    public static function clearSf2Cache($env = null)
+    {
+        if (!$env) {
+            $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+        }
+
+        $sf2Refresh = new Refresh($env);
+        $sf2Refresh->addCacheClear();
+        return $sf2Refresh->execute();
+    }
+
+    /**
      * Clear both Smarty and Symfony cache
      */
     public static function clearAllCache()
     {
         Tools::clearSmartyCache();
-
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-        $sf2Refresh->addCacheClear(_PS_MODE_DEV_ ? 'dev' : 'prod');
-        $sf2Refresh->execute();
+        Tools::clearSf2Cache();
     }
 
     public static function clearColorListCache($id_product = false)

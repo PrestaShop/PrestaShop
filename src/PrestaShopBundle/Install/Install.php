@@ -207,18 +207,14 @@ class Install extends AbstractInstall
 
     protected function clearCache()
     {
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh('prod');
-        $sf2Refresh->addCacheClear();
-        $output = $sf2Refresh->execute();
+        $output = Tools::clearSf2Cache('prod');
 
         if (0 !== $output['cache:clear']['exitCode']) {
             $this->setError(explode("\n", $output['cache:clear']['output']));
             return false;
         }
 
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-        $sf2Refresh->addCacheClear();
-        $output = $sf2Refresh->execute();
+        $output = Tools::clearSf2Cache();
 
         if (0 !== $output['cache:clear']['exitCode']) {
             $this->setError(explode("\n", $output['cache:clear']['output']));

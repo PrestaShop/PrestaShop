@@ -576,6 +576,7 @@ class AdminMetaControllerCore extends AdminController
             Tools::enableCache();
             Tools::clearCache($this->context->smarty);
             Tools::restoreCacheSettings();
+            Tools::clearSf2Cache();
         } else {
             Configuration::updateValue('PS_REWRITING_SETTINGS', 0);
             // Message copied/pasted from the information tip
