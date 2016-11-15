@@ -343,7 +343,8 @@ class EmployeeCore extends ObjectModel
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
 
         $passwordHash = $result['passwd'];
-        if (isset($plaintextPassword) && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
+        $shouldCheckPassword = !is_null($plaintextPassword);
+        if ($shouldCheckPassword && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
             return false;
         }
 
@@ -355,7 +356,7 @@ class EmployeeCore extends ObjectModel
             }
         }
 
-        if (!$crypto->isFirstHash($plaintextPassword, $passwordHash)) {
+        if ($shouldCheckPassword && !$crypto->isFirstHash($plaintextPassword, $passwordHash)) {
             $this->passwd = $crypto->hash($plaintextPassword);
 
             $this->update();
