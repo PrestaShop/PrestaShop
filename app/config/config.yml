@@ -115,4 +115,4 @@ prestashop:
     addons:
         api_client:
             ttl: 7200 # 2h
-            verify_ssl: ~ # true by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage
+            # verify_ssl: ~ # Bundle CA by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage

@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
@@ -152,8 +153,8 @@ class ModuleManagerBuilder
             new Client($clientConfig),
             $this->getLanguageIso(),
             $this->getCountryIso(),
-            _PS_VERSION_)
-        ;
+            new Tools()
+        );
 
         if (file_exists($this->getConfigDir().'/parameters.php')) {
             $parameters = require($this->getConfigDir().'/parameters.php');
