@@ -43,12 +43,6 @@ CHANGE COLUMN `total_shipping_tax_excl` `total_shipping_tax_excl` DECIMAL(20,6) 
 CHANGE COLUMN `total_wrapping` `total_wrapping` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
 CHANGE COLUMN `total_wrapping_tax_incl` `total_wrapping_tax_incl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
 CHANGE COLUMN `total_wrapping_tax_excl` `total_wrapping_tax_excl` DECIMAL(20,6) NOT NULL DEFAULT '0.00';
-ALTER IGNORE TABLE `PREFIX_product` CHANGE `ean13` `ean13` BIGINT( 15 ) NULL DEFAULT NULL;
 
-ALTER TABLE `PREFIX_product` CHANGE `ean13` `ean13` VARCHAR( 13 ) NULL DEFAULT NULL;
-
-ALTER IGNORE TABLE `PREFIX_product_attribute` CHANGE `ean13` `ean13` BIGINT( 15 ) NULL DEFAULT NULL;
-
-ALTER TABLE `PREFIX_product_attribute` CHANGE `ean13` `ean13` VARCHAR( 13 ) NULL DEFAULT NULL;
 
 ALTER TABLE `PREFIX_order_slip` ADD `order_slip_type` TINYINT(1) NOT NULL DEFAULT 0 AFTER `partial`;
