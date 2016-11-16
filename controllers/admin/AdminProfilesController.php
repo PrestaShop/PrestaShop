@@ -45,8 +45,8 @@ class AdminProfilesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
@@ -64,7 +64,7 @@ class AdminProfilesControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Profile'),
+                'title' => $this->trans('Profile', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'icon-group'
             ),
             'input' => array(
@@ -97,7 +97,7 @@ class AdminProfilesControllerCore extends AdminController
         /* PrestaShop demo mode*/
 
         if (isset($_GET['delete'.$this->table]) && $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_)) {
-            $this->errors[] = $this->l('For security reasons, you cannot delete the Administrator\'s profile.');
+            $this->errors[] = $this->trans('For security reasons, you cannot delete the Administrator\'s profile.', array(), 'Admin.AdvParameters.Notification');
         } else {
             parent::postProcess();
         }
@@ -108,7 +108,7 @@ class AdminProfilesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_profile'] = array(
                 'href' => self::$currentIndex.'&addprofile&token='.$this->token,
-                'desc' => $this->l('Add new profile', null, null, false),
+                'desc' => $this->trans('Add new profile', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
