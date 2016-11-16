@@ -1539,6 +1539,11 @@ var imagesProduct = (function() {
     },
     'checkDropzoneMode': function() {
       checkDropzoneMode();
+    },
+    'getOlderImageId': function() {
+      return Math.min.apply(Math,$('.dz-preview').map(function(){
+        return $(this).data('id');
+      }));
     }
   };
 })();
@@ -1620,9 +1625,14 @@ var formImagesProduct = (function() {
             url: dropZoneElem.find('.dz-preview[data-id="' + id + '"]').attr('url-delete'),
             complete: function() {
               formZoneElem.find('.close').click();
+              var wasCover = !!dropZoneElem.find('.dz-preview[data-id="' + id + '"] .iscover').length;
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
               $('.images .product-combination-image [value=' + id + ']').parent().remove();
               imagesProduct.checkDropzoneMode();
+              if (true === wasCover) {
+                // The controller will choose the oldest image as the new cover.
+                imagesProduct.updateDisplayCover(imagesProduct.getOlderImageId());
+              }
             }
           });
         }
