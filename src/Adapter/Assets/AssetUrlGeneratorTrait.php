@@ -33,13 +33,12 @@ trait AssetUrlGeneratorTrait
 
     protected function getUriFromPath($fullPath)
     {
-        $uri = str_replace(
-            $this->configuration->get('_PS_ROOT_DIR_'),
-            rtrim($this->configuration->get('__PS_BASE_URI__'), '/'),
-            $fullPath
-        );
+        return str_replace($this->configuration->get('_PS_ROOT_DIR_'), rtrim($this->configuration->get('__PS_BASE_URI__'), '/'), $fullPath);
+    }
 
-        return str_replace(DIRECTORY_SEPARATOR, '/', $uri);
+    protected function getPathFromUri($fullUri)
+    {
+        return str_replace(rtrim($this->configuration->get('__PS_BASE_URI__'), '/'), $this->configuration->get('_PS_ROOT_DIR_'), $fullUri);
     }
 
     protected function getFQDN()

@@ -76,10 +76,6 @@ class JavascriptManagerCore extends AbstractAssetManager
 
     protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server)
     {
-        if ('remote' !== $server && filesize($fullPath) === 0) {
-            return;
-        }
-
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $position = $this->getSanitizedPosition($position);
         $attribute = $this->getSanitizedAttribute($attribute);

@@ -200,11 +200,11 @@ class FrontControllerCore extends Controller
         $this->cart_presenter = new CartPresenter();
         $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
         $this->stylesheetManager = new StylesheetManager(
-            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            array(_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__),
             new ConfigurationAdapter()
         );
         $this->javascriptManager = new JavascriptManager(
-            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            array(_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__),
             new ConfigurationAdapter()
         );
         $this->cccReducer = new CccReducer(
