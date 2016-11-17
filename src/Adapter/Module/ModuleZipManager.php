@@ -154,7 +154,7 @@ class ModuleZipManager
         $sandboxPath = $this->get($source, 'sandboxPath');
         if ($sandboxPath === null) {
             $sandboxPath = _PS_CACHE_DIR_.'sandbox/'.uniqid().'/';
-            $this->filesystem->mkdir($sandboxPath, 0755);
+            $this->filesystem->mkdir($sandboxPath);
             $this->set($source, 'sandboxPath', $sandboxPath);
         }
         return $sandboxPath;
