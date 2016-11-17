@@ -29,7 +29,7 @@
         <a href="{$product.url}" class="thumbnail product-thumbnail">
           <img
             src = "{$product.cover.bySize.home_default.url}"
-            alt = "{$product.cover.legend}"
+            alt = "{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
             data-full-size-image-url = "{$product.cover.large.url}"
           >
         </a>
@@ -46,6 +46,7 @@
               {if $product.has_discount}
                 {hook h='displayProductPriceBlock' product=$product type="old_price"}
 
+                <span class="sr-only">{l s='Regular price' d='Shop.Theme.Catalog'}</span>
                 <span class="regular-price">{$product.regular_price}</span>
                 {if $product.discount_type === 'percentage'}
                   <span class="discount-percentage">{$product.discount_percentage}</span>
@@ -54,6 +55,7 @@
 
               {hook h='displayProductPriceBlock' product=$product type="before_price"}
 
+              <span class="sr-only">{l s='Price' d='Shop.Theme.Catalog'}</span>
               <span itemprop="price" class="price">{$product.price}</span>
 
               {hook h='displayProductPriceBlock' product=$product type='unit_price'}

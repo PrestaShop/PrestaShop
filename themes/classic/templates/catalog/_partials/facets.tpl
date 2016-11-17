@@ -60,13 +60,14 @@
 
             {block name='facet_item_other'}
               <ul id="facet_{$_expand_id}" class="collapse{if !$_collapse} in{/if}">
-                {foreach from=$facet.filters item="filter"}
+                {foreach from=$facet.filters key=filter_key item="filter"}
                   {if $filter.displayed}
                     <li>
-                      <label class="facet-label{if $filter.active} active {/if}">
+                      <label class="facet-label{if $filter.active} active {/if}" for="facet_input_{$_expand_id}_{$filter_key}">
                         {if $facet.multipleSelectionAllowed}
                           <span class="custom-checkbox">
                             <input
+                              id="facet_input_{$_expand_id}_{$filter_key}"
                               data-search-url="{$filter.nextEncodedFacetsURL}"
                               type="checkbox"
                               {if $filter.active } checked {/if}
@@ -82,6 +83,7 @@
                         {else}
                           <span class="custom-checkbox">
                             <input
+                              id="facet_input_{$_expand_id}_{$filter_key}"
                               data-search-url="{$filter.nextEncodedFacetsURL}"
                               type="radio"
                               name="filter {$facet.label}"
