@@ -999,7 +999,7 @@ class FrontControllerCore extends Controller
          */
     }
 
-    public function registerStylesheet($id, $relativePath, $params = array())
+    public function registerStylesheet($id, $relativePath, $params = array(), $urlLibrary = null)
     {
         if (!is_array($params)) {
             $params = array();
@@ -1013,7 +1013,13 @@ class FrontControllerCore extends Controller
 
         $params = array_merge($default_params, $params);
 
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline']);
+        if ($urlLibrary != null) {
+            $isUrl = true;
+            $relativePath = $urlLibrary;
+        } else {
+            $isUrl = false;
+        }
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $isUrl);
     }
 
     public function unregisterStylesheet($id)
@@ -1021,7 +1027,7 @@ class FrontControllerCore extends Controller
         $this->stylesheetManager->unregisterById($id);
     }
 
-    public function registerJavascript($id, $relativePath, $params = array())
+    public function registerJavascript($id, $relativePath, $params = array(), $urlLibrary = null)
     {
         if (!is_array($params)) {
             $params = array();
@@ -1036,7 +1042,13 @@ class FrontControllerCore extends Controller
 
         $params = array_merge($default_params, $params);
 
-        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes']);
+        if ($urlLibrary != null) {
+            $isUrl = true;
+            $relativePath = $urlLibrary;
+        } else {
+            $isUrl = false;
+        }
+        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $isUrl);
     }
 
     public function unregisterJavascript($id)
