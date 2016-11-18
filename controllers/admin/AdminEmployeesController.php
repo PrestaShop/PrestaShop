@@ -260,8 +260,7 @@ class AdminEmployeesControllerCore extends AdminController
                         'Your avatar in PrestaShop 1.6.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.',
                         array(
                             '%url%' => '<a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>',
-                            '%email%' => $obj->email
-
+                            '%email%' => $obj->email,
                         ),
                         'Admin.AdvParameters.Help'
                         )).'
@@ -385,7 +384,7 @@ class AdminEmployeesControllerCore extends AdminController
                     'name' => 'name',
                     'default' => array(
                         'value' => '',
-                        'label' => $this->trans('-- Choose --', array(), 'AdvParameters.Help')
+                        'label' => $this->trans('-- Choose --', array(), 'AdvParameters.Help'),
                     )
                 )
             );
