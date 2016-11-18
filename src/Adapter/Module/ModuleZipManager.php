@@ -32,6 +32,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 use Exception;
 use Tools;
+use ZipArchive;
 
 class ModuleZipManager
 {
@@ -84,11 +85,14 @@ class ModuleZipManager
         }
 
         $sandboxPath = $this->getSandboxPath($source);
-        if (!Tools::ZipExtract($source, $sandboxPath)) {
+        $zip = new ZipArchive();
+        if ($zip->open($source) === false || !$zip->extractTo($sandboxPath) || !$zip->close()) {
             throw new Exception(
                 $this->translator->trans(
-                    'Cannot extract module in %path% to get its name.',
-                    array('%path%' => $sandboxPath),
+                    'Cannot extract module in %path% to get its name. %error%',
+                    array(
+                        '%path%' => $sandboxPath,
+                        '%error%' => $zip->getStatusString()),
                     'Admin.Modules.Notification'));
         }
 
