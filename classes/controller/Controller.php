@@ -229,6 +229,7 @@ abstract class ControllerCore
 
     protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
+        $parameters['legacy'] = 'htmlspecialchars';
         return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
