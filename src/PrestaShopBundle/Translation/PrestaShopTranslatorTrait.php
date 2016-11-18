@@ -39,10 +39,12 @@ trait PrestaShopTranslatorTrait
         }
 
         if (!$this->isSprintfString($id) || empty($parameters)) {
-            return parent::trans($id, $parameters, $domain, $locale);
+            $translated = htmlspecialchars(parent::trans($id, $parameters, $domain, $locale));
+        }else {
+            $translated = vsprintf(parent::trans($id, array(), $domain, $locale), $parameters);
         }
 
-        return vsprintf(parent::trans($id, array(), $domain, $locale), $parameters);
+        return $translated;
     }
 
     /**
