@@ -41,6 +41,7 @@ use CustomerMessage;
 use HistoryController;
 use Order;
 use OrderReturn;
+use ProductDownload;
 use TaxConfiguration;
 use Tools;
 
@@ -116,6 +117,16 @@ class OrderPresenter implements PresenterInterface
             $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price']);
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
             $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price']);
+
+            if ($orderProduct['is_virtual']) {
+                $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
+                $product_download = new ProductDownload($id_product_download);
+                if ($product_download->display_filename != '') {
+                    $orderProduct['download_link'] = $product_download->getTextLink(false, $orderProduct['download_hash'])
+                        . '&id_order=' . (int)$order->id
+                        . '&secure_key=' . $order->secure_key;
+                }
+            }
 
             foreach ($cartProducts['products'] as $cartProduct) {
                 if ($cartProduct['id_product'] === $orderProduct['product_id']) {

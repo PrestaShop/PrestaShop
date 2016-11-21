@@ -35,7 +35,11 @@
     {foreach from=$order.products item=product}
       <tr>
         <td>
-          <strong>{$product.name}</strong><br/>
+          <strong>
+            <a {if isset($product.download_link)}href="{$product.download_link}"{/if}>
+              {$product.name}
+            </a>
+          </strong><br/>
           {if $product.reference}
             {l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}<br/>
           {/if}
