@@ -259,6 +259,7 @@ class MailCore extends ObjectModel
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
             $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
+            $isoArray = array();
             if( $iso ) {
                 $isoArray[] = $iso;
             }
