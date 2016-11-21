@@ -155,7 +155,10 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return $responseArray->modules;
+        if (!empty($responseArray->modules)) {
+            return $responseArray->modules;
+        }
+        return array();
     }
 
     public function getResponse()
