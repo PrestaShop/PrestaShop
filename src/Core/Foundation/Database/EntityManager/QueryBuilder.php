@@ -25,11 +25,13 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager;
 
+use PrestaShopBundle\Database\DatabaseInterface;
+
 class QueryBuilder
 {
     private $db;
 
-    public function __construct(\PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface $db)
+    public function __construct(DatabaseInterface $db)
     {
         $this->db = $db;
     }

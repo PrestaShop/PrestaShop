@@ -25,7 +25,9 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface
+use PrestaShopBundle\Database\DatabaseInterface;
+
+class Database implements DatabaseInterface
 {
     /**
      * Perform a SELECT sql statement
