@@ -314,7 +314,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                         $this->trans('You must define the behavior if an address matches multiple rules:', array(), 'Admin.International.Help').'<br>',
                         $this->trans('- This tax only: Will apply only this tax', array(), 'Admin.International.Help').'<br>',
                         $this->trans('- Combine: Combine taxes (e.g.: 10% + 5% = 15%)', array(), 'Admin.International.Help').'<br>',
-                        $this->trans('- One after another: Apply taxes one after another (e.g.: 0 + 10% = 0 + 5% = 5.5)', array(), 'Admin.International.Help')
+                        $this->trans('- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)', array(), 'Admin.International.Help')
                     )
                 ),
                 array(
