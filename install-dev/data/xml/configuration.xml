@@ -399,7 +399,7 @@
     <value>480</value>
   </configuration>
   <configuration id="PS_RESTRICT_DELIVERED_COUNTRIES" name="PS_RESTRICT_DELIVERED_COUNTRIES">
-    <value>0</value>
+    <value>1</value>
   </configuration>
   <configuration id="PS_SHOW_NEW_ORDERS" name="PS_SHOW_NEW_ORDERS">
     <value>1</value>
