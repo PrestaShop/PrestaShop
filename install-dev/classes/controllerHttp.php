@@ -364,7 +364,7 @@ class InstallControllerHttp
     public function getDocumentationLink()
     {
         /* Link to translated documentation (if available) */
-        return $this->translator->trans('http://doc.prestashop.com/display/PS16/Installing+PrestaShop', array(), 'Install');
+        return $this->translator->trans('http://doc.prestashop.com/display/PS17/Installing+PrestaShop', array(), 'Install');
     }
 
     /**
