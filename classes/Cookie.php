@@ -76,9 +76,6 @@ class CookieCore
         $this->_allow_writing = true;
         $this->_salt = $this->_standalone ? str_pad('', 8, md5('ps'.__FILE__)) : _COOKIE_IV_;
 
-        if ($this->_standalone) {
-            $this->cipherTool = new PhpEncryption(str_pad('', 32, __FILE__));
-        }
         $this->cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
 
         $this->_secure = (bool) $secure;
