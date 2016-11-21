@@ -202,7 +202,7 @@ class CartCore extends ObjectModel
 
         $this->setTaxCalculationMethod();
 
-        $this->configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        $this->configuration = ServiceLocator::get('\\PrestaShopBundle\\Configuration\\ConfigurationInterface');
         $this->addressFactory = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
     }
 

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Configuration\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;

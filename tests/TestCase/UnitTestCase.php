@@ -141,7 +141,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
     {
         $fakeConfiguration = new FakeConfiguration($keys);
         $this->container->bind(
-            '\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface',
+            '\\PrestaShopBundle\\Configuration\\ConfigurationInterface',
             $fakeConfiguration
         );
         return $fakeConfiguration;

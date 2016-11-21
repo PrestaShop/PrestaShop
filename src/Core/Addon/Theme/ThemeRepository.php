@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Configuration\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Parser;
 use Shop;

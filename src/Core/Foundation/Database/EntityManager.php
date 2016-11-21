@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
+use PrestaShopBundle\Configuration\ConfigurationInterface;
+
 class EntityManager
 {
     private $db;
@@ -34,7 +36,7 @@ class EntityManager
 
     public function __construct(
         DatabaseInterface $db,
-        \PrestaShop\PrestaShop\Core\ConfigurationInterface $configuration
+        ConfigurationInterface $configuration
     ) {
         $this->db = $db;
         $this->configuration = $configuration;

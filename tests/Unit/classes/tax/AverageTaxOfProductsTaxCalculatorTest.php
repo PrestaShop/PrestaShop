@@ -35,7 +35,7 @@ class AverageTaxOfProductsTaxCalculatorTest extends UnitTestCase
     public function test_tax_is_split_according_to_share_of_each_tax_rate()
     {
         $db = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface');
-        $configuration = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        $configuration = Phake::mock('\\PrestaShopBundle\\Configuration\\ConfigurationInterface');
 
         $taxCalculator = new AverageTaxOfProductsTaxCalculator($db, $configuration);
 
