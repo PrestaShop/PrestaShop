@@ -68,7 +68,4 @@ $(document).ready(() => {
   topMenu.init();
   productMinitature.init();
   productSelect.init();
-  $("#products").bind("DOMSubtreeModified", function() {
-    productMinitature.init();
-  });
 });
