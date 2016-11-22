@@ -65,6 +65,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
         decorates: prestashop.core.admin.data_provider.addons_interface
         arguments: ['@prestashop.addons.client_api']
+        properties:
+            cacheDir: "%kernel.cache_dir%"
         public: false
 
     prestashop.adapter.admin.data_provider.module:

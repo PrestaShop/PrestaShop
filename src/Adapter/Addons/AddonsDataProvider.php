@@ -49,6 +49,8 @@ class AddonsDataProvider implements AddonsInterface
 
     private $encryption;
 
+    public $cacheDir;
+
     public function __construct(ApiClient $apiClient)
     {
         $this->marketplaceClient = $apiClient;
@@ -73,7 +75,7 @@ class AddonsDataProvider implements AddonsInterface
             }
         }
 
-        $temp_filename = tempnam('', 'mod');
+        $temp_filename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temp_filename, $module_data) !== false) {
             return $this->unZip($temp_filename);
         } else {
