@@ -38,7 +38,7 @@ trait AssetUrlGeneratorTrait
 
     protected function getPathFromUri($fullUri)
     {
-        return str_replace(rtrim($this->configuration->get('__PS_BASE_URI__'), '/'), $this->configuration->get('_PS_ROOT_DIR_'), $fullUri);
+        return $this->configuration->get('_PS_ROOT_DIR_').str_replace(rtrim($this->configuration->get('__PS_BASE_URI__'), '/'), '', $fullUri);
     }
 
     protected function getFQDN()
