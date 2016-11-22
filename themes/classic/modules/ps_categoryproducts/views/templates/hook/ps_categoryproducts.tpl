@@ -22,16 +22,17 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<section class="featured-products clearfix">
-  <h1 class="h1 products-section-title text-uppercase">
-    {l s='Popular Products' d='Shop.Theme.Catalog'}
-  </h1>
+<section class="featured-products clearfix m-t-3">
+  <h2>
+    {if $products|@count == 1}
+      {l s='%s other product in the same category:' sprintf=[$products|@count] d='Shop.Theme.Catalog'}
+    {else}
+      {l s='%s other products in the same category:' sprintf=[$products|@count] d='Shop.Theme.Catalog'}
+    {/if}
+  </h2>
   <div class="products">
-    {foreach from=$products item="product"}
-      {include file="catalog/_partials/miniatures/product.tpl" product=$product}
-    {/foreach}
+      {foreach from=$products item="product"}
+          {include file="catalog/_partials/miniatures/product.tpl" product=$product}
+      {/foreach}
   </div>
-  <a class="all-product-link pull-xs-left pull-md-right h4" href="{$allProductsLink}">
-    {l s='All products' d='Shop.Theme.Catalog'}<i class="material-icons">&#xE315;</i>
-  </a>
 </section>
