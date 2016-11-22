@@ -43,7 +43,7 @@ class AssetsCoreTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->testsPath = realpath(dirname(__FILE__).'/../../resources/assets').'/';
+        $this->testsPath = '/tests/resources/assets/';
 
         $this->stylesheetManager = new \StylesheetManager(
             array($this->testsPath, 'css'),
