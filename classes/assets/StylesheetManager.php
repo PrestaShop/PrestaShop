@@ -42,15 +42,23 @@ class StylesheetManagerCore extends AbstractAssetManager
     protected function getDefaultList()
     {
         return [
-            'external' => [],
-            'inline' => [],
+            'external' => array(),
+            'inline' => array(),
         ];
     }
 
-    public function register($id, $relativePath, $media = self::DEFAULT_MEDIA, $priority = self::DEFAULT_PRIORITY, $inline = false)
-    {
-        if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $media, $priority, $inline);
+    public function register(
+        $id,
+        $relativePath,
+        $media = self::DEFAULT_MEDIA,
+        $priority = self::DEFAULT_PRIORITY,
+        $inline = false,
+        $server = 'local'
+    ) {
+        if ('remote' === $server) {
+            $this->add($id, $relativePath, $media, $priority, $inline, $server);
+        } else if ($fullPath = $this->getFullPath($relativePath)) {
+            $this->add($id, $fullPath, $media, $priority, $inline, $server);
         }
     }
 
@@ -67,26 +75,31 @@ class StylesheetManagerCore extends AbstractAssetManager
         return $this->list;
     }
 
-    protected function add($id, $fullPath, $media, $priority, $inline)
+    protected function add($id, $fullPath, $media, $priority, $inline, $server)
     {
-        if (filesize($fullPath) === 0) {
+        if ('remote' !== $server && filesize($fullPath) === 0) {
             return;
         }
 
+        $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $media = $this->getSanitizedMedia($media);
-        $type = ($inline) ? 'inline' : 'external';
 
-        if (!is_int($priority)) {
-            $priority = self::DEFAULT_PRIORITY;
+        if ('remote' === $server) {
+            $uri = $fullPath;
+            $type = 'external';
+        } else {
+            $uri = $this->getFQDN().$this->getUriFromPath($fullPath);
+            $type = ($inline) ? 'inline' : 'external';
         }
 
         $this->list[$type][$id] = array(
             'id' => $id,
             'type' => $type,
             'path' => $fullPath,
-            'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
+            'uri' => $uri,
             'media' => $media,
             'priority' => $priority,
+            'server' => $server,
         );
     }
 

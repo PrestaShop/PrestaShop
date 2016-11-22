@@ -32,15 +32,32 @@ class JavascriptManagerCore extends AbstractAssetManager
     protected $valid_position = ['head', 'bottom'];
     protected $valid_attribute = ['async', 'defer'];
 
-    public function register($id,
+    protected function getDefaultList()
+    {
+        $default = [];
+        foreach ($this->valid_position as $position) {
+            $default[$position] = [
+                'external' => array(),
+                'inline' => array(),
+            ];
+        }
+
+        return $default;
+    }
+
+    public function register(
+        $id,
         $relativePath,
         $position = self::DEFAULT_JS_POSITION,
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
-        $attribute = null
+        $attribute = null,
+        $server = 'local'
     ) {
-        if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $position, $priority, $inline, $attribute);
+        if ('remote' === $server) {
+            $this->add($id, $relativePath, $position, $priority, $inline, $attribute, $server);
+        } else if ($fullPath = $this->getFullPath($relativePath)) {
+            $this->add($id, $fullPath, $position, $priority, $inline, $attribute, $server);
         }
     }
 
@@ -57,37 +74,32 @@ class JavascriptManagerCore extends AbstractAssetManager
         }
     }
 
-    protected function getDefaultList()
+    protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server)
     {
-        $default = [];
-        foreach ($this->valid_position as $position) {
-            $default[$position] = [
-                'external' => [],
-                'inline' => [],
-            ];
-        }
-
-        return $default;
-    }
-
-    protected function add($id, $fullPath, $position, $priority, $inline, $attribute)
-    {
-        if (filesize($fullPath) === 0) {
+        if ('remote' !== $server && filesize($fullPath) === 0) {
             return;
         }
 
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $position = $this->getSanitizedPosition($position);
         $attribute = $this->getSanitizedAttribute($attribute);
-        $type = ($inline) ? 'inline' : 'external';
+
+        if ('remote' === $server) {
+            $uri = $fullPath;
+            $type = 'external';
+        } else {
+            $uri = $this->getFQDN().$this->getUriFromPath($fullPath);
+            $type = ($inline) ? 'inline' : 'external';
+        }
 
         $this->list[$position][$type][$id] = array(
             'id' => $id,
             'type' => $type,
             'path' => $fullPath,
-            'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
+            'uri' => $uri,
             'priority' => $priority,
             'attribute' => $attribute,
+            'server' => $server,
         );
     }
 
