@@ -1,1 +1,103 @@
-A
+                                         *#&&&&&&&&&&&&.                                         
+                                    #&&&&&&&&&&&&&&&&&&&&&&&&&(                                    
+                                *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*                                
+                              &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&                              
+                           ,&&&&&&&&&&&&&&&&&&&%%#%%%&&&&&&&&&&&&&&&&&&                            
+                          &&&&&&&&&&&&&*****************#&&&&&&&&&&&&&&                          
+                        (&&&&&&&&&&&&*************************&&&&&&&&&&&&(                        
+                       &&&&&&&&&&&%*****************************%&&&&&&&&&&&                       
+                      &&&&&&&&&&%*********************************%&&&&&&&&&&                      
+                     %&&&&&&&&&(********,            *********,    /&&&&&&&&&%                     
+                    *&&&&&&&&&/*******.     .*(((/.    ******   /#* *&&&&&&&&&*                    
+                    &&&&&&&&&(*******  /%%%%%%%%%%%&&&&%,*** *&&&&&&%/&&&&&&&&&                    
+                   *&&&&&&&&%*******/%%%%%%%%%%%%%((&&&&&%#*&&&&&&&&%%%&&&&&&&&                    
+                   &&&&&&&&&/*****(%%%%%%%%%%%%%%#((%&&&&%%%*&&&&&&&(%%&&&&&&&&&                   
+                   &&&&&&&&&*****%%%%%%%%%%%%%#/, @@ %&&%%%%#**&&&&/#%%&&&&&&&&&                   
+                   &&&&&&&&&***&@@@@@@@@@@#/////      @@%%%% ****@@  *@&&&&&&&&&                   
+                   &&&&&&&&&**%@@@@@@@@@@@@@@@@@@#  /@@@%%%  *****/@@@@&&&&&&&&&                   
+                   #&&&&&&&*@@@@@@@@@@@@@@@@@@@@@@@@@%%#   *******@@&&&&&&&&                   
+                    &&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@%%    *********(&&&&&&&&&                    
+                    &&&&&&&&&&@@@@@@@@@@@@@@@&@@@@@@@%     ************%&&&&&&%                    
+                     &&&&&&&&&&@@@@@@@@@@@@@@@@ (@@@.     **************(&&&&&                     
+                      &&&&&&&&&&@@@@@@@@@@@@@@@@@,       ************,,%&&&&&                      
+                       &&&&&&&&&&&@@@@@@@@@@@@@@@@@*     ,,,,,,,,,,,/&&&&&&&                       
+                        &&&&&&&&&&&&@@@@@@@@@@@@@@@@     ,,,,,,,,(&&&&&&&&&                        
+                         &&&&&&&&&(***(@@@@@@@@@@@@@@@#   .,****(&&&&&&&&&                         
+                           &&&&%*****/(((**#@@@@@@@@@@@#**(((/*****%&&&&                           
+                             %*******(((/                 /(((*******%                             
+                               *****/#############((((((((((((/*****                               
+                                   */#############((((((((((((/*                                   
+                                       ###########((((((((((                                       
+                                                                                                   
+                                                                                                   
+                                                                                                   
+.......                              ...                 .****,    **                              
+..   ,....                           ...                ***   **   **                              
+..      .. ......  .......   ....... .....   .........  **.        **,*****.   *******   **.*****, 
+..     ... ...    ..     .. ...      ...   ...     ...   ******.   ***    ** ,**     **, ***    ***
+.........  ...   ........     .....  ...   ..      ...        ***  **     ** **       ** **      **
+..         ...    ...    .        .. ...   ,..     ...  *,     **  **     ** ***     *** ***    ,**
+..         ...     .......  ,......   .....  .........  ********   **     **   *******   ** ****** 
+                                                                                         **  
+                                                                                         
+             --- ===== Installation instructions for PrestaShop 1.7 ===== ---
+
+
+
+=== Prerequirements
+
+You will need:
+
+* PHP 5.4+, with:
+  * allow_url_fopen set to On, 
+  * register_globals set to Off,
+  * magic_quotes_* set to Off,
+  * safe_mode set to Off,
+  * upload_max_filesize set to "16M" (or more).
+* MySQL 5.0+, with:
+  * A database where PrestaShop can store its data tables.
+* At least 128 Mb of RAM for the PHP process.
+
+
+=== Installing PrestaShop
+
+Follow these instructions:
+
+1. Download the latest PrestaShop archive from https://www.prestashop.com/en/download
+2. Unzip the archive on your machine. It should give you 4 files:
+  * This INSTALL.txt file
+  * The prestashop.zip archive, which contains all the necessary files.
+  * The index.html file, which will unzip prestashop.zip for you.
+  * Install_PrestaShop.html, which redirects you to http://doc.prestashop.com/display/PS17/Installing+PrestaShop
+3. Upload at least index.html and prestashop.zip on your web server.
+4. From your web browser, go to the folder where index.html and prestashop.zip have been uploaded. The Zip archive should unzip automatically.
+5. You are redirected to the PrestaShop installer. Simply follow the instructions.
+6. After PrestaShop has successfuly been installed, delete the /install/ folder from your server.
+
+Enjoy your store!
+
+
+
+
+Essential links about PrestaShop:
+
+* User Guide: http://doc.prestashop.com/display/PS17/User+Guide
+* Tech docs (modules & themes): http://developers.prestashop.com/
+* Official blog: https://www.prestashop.com/blog/en/
+* Devteam blog: http://build.prestashop.com/
+* Get community support: http://www.prestashop.com/forums/
+* Get paid support: https://www.prestashop.com/en/support
+* Find modules and themes: http://addons.prestashop.com/
+* Contribute with code: https://github.com/PrestaShop/PrestaShop
+* Contribute with translation: http://crowdin.net/project/prestashop-official
+
+
+
+
+                       PrestaShop - WeCommerce Is Better eCommerce
+
+
+
+
+
+
