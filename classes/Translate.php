@@ -49,7 +49,7 @@ class TranslateCore
         }
         $str = str_replace('"', '&quot;', $str);
 
-        if ($sprintf !== null) {
+        if ($sprintf !== null && (!is_array($sprintf) || !empty($sprintf))) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
 
@@ -189,7 +189,7 @@ class TranslateCore
 
         if (!isset($langCache[$cacheKey])) {
             if ($_MODULES == null) {
-                if ($sprintf !== null) {
+                if ($sprintf !== null && (!is_array($sprintf) || !empty($sprintf))) {
                     $string = Translate::checkAndReplaceArgs($string, $sprintf);
                 }
 
@@ -220,7 +220,7 @@ class TranslateCore
                 $ret = stripslashes($string);
             }
 
-            if ($sprintf !== null) {
+            if ($sprintf !== null && (!is_array($sprintf) || !empty($sprintf))) {
                 $ret = Translate::checkAndReplaceArgs($ret, $sprintf);
             }
 
@@ -265,7 +265,7 @@ class TranslateCore
 
         $str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 
-        if ($sprintf !== null) {
+        if ($sprintf !== null && (!is_array($sprintf) || !empty($sprintf))) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
 
