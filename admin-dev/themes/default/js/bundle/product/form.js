@@ -880,6 +880,22 @@ var form = (function() {
           $('#form-nav li a[href="#' + tabIndex.split('_')[0] + '"]').parent().addClass('has-error');
         });
 
+        if ($('div[class*="translation-label-"].has-danger').length > 0) {
+          var regexLabel = 'translation-label-';
+
+          var translationLabelClass = $.grep($('div[class*="translation-label-"].has-danger').first().attr('class').split(" "), function(v, i){
+            return v.indexOf(regexLabel) === 0;
+          }).join();
+
+          if (translationLabelClass) {
+            var selectValue = translationLabelClass.replace(regexLabel, '');
+
+            if ($('#form_switch_language option[value="' + selectValue + '"]').length > 0) {
+              $('#form_switch_language').val(selectValue).change();
+            }
+          }
+        }
+
         /** scroll to 1st error */
         if ($('.has-danger').first().offset()) {
           $('html, body').animate({
