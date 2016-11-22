@@ -49,9 +49,10 @@ class CccReducerCore
     public function reduceCss($cssFileList)
     {
         $files = array();
-        foreach ($cssFileList['external'] as $css) {
-            if ('all' === $css['media']) {
+        foreach ($cssFileList['external'] as $key => &$css) {
+            if ('all' === $css['media'] && 'local' === $css['server']) {
                 $files[] = $css['path'];
+                unset($cssFileList['external'][$key]);
             }
         }
 
@@ -62,15 +63,13 @@ class CccReducerCore
             CssMinifier::minify($files, $destinationPath);
         }
 
-        $cssFileList['external'] = [
-            'theme-ccc' => [
-                "id" => "theme-ccc",
-                "type" => "external",
-                "path" => $destinationPath,
-                "uri" => $this->getFQDN().$this->getUriFromPath($destinationPath),
-                "media" => "all",
-                "priority" => StylesheetManager::DEFAULT_PRIORITY,
-            ]
+        $cssFileList['external']['theme-ccc'] = [
+            "id" => "theme-ccc",
+            "type" => "external",
+            "path" => $destinationPath,
+            "uri" => $this->getFQDN().$this->getUriFromPath($destinationPath),
+            "media" => "all",
+            "priority" => StylesheetManager::DEFAULT_PRIORITY,
         ];
 
         return $cssFileList;
@@ -82,7 +81,7 @@ class CccReducerCore
             $files = array();
             foreach ($list['external'] as $key => $js) {
                 // We only CCC the file without 'refer' or 'async'
-                if ('' === $js['attribute']) {
+                if ('' === $js['attribute'] && 'local' === $js['server']) {
                     $files[] = $js['path'];
                     unset($list['external'][$key]);
                 }

@@ -99,6 +99,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             'uri' => $uri,
             'priority' => $priority,
             'attribute' => $attribute,
+            'server' => $server,
         );
     }
 

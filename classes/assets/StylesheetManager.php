@@ -99,6 +99,7 @@ class StylesheetManagerCore extends AbstractAssetManager
             'uri' => $uri,
             'media' => $media,
             'priority' => $priority,
+            'server' => $server,
         );
     }
 
