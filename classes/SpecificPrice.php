@@ -211,7 +211,7 @@ class SpecificPriceCore extends ObjectModel
      */
     protected static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
-        $name = Db::getInstance()->escape($field_name);
+        $name = Db::getInstance()->escape($field_name, false, true);
         $query_extra = 'AND `'.$name.'` = 0 ';
         if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
             return $query_extra;
