@@ -1897,7 +1897,7 @@ class ToolsCore
 
         $is_local_file = !preg_match('/^https?:\/\//', $url);
         if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || $is_local_file) {
-            $content = file_get_contents($url, $use_include_path, $stream_context);
+            $content = @file_get_contents($url, $use_include_path, $stream_context);
             if (!in_array($content, array('', false)) || $is_local_file || !$fallback) {
                 return $content;
             }
