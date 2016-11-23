@@ -85,6 +85,7 @@ class ConfigurationTestCore
                 'mails_dir' => 'mails',
                 'openssl' => 'false',
                 'zip' => false,
+                'fileinfo' => false,
             ));
         }
 
@@ -184,7 +185,7 @@ class ConfigurationTestCore
 
         return true;
     }
-    
+
     public static function test_curl()
     {
         return extension_loaded('curl');
@@ -207,6 +208,11 @@ class ConfigurationTestCore
     public static function test_zip()
     {
         return extension_loaded('zip');
+    }
+
+    public static function test_fileinfo()
+    {
+        return extension_loaded('fileinfo');
     }
 
     public static function test_dir($relative_dir, $recursive = false, &$full_report = null)
