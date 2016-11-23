@@ -38,7 +38,10 @@ export default function() {
 
           window.modalConfirmation.create(window.translate_javascripts['Are you sure to delete this?'], null, {
             onContinue: () => {
-              $(e.target).parent().remove();
+              $(e.target).parents('.media').remove();
+
+              // Save current product after its related product has been removed
+              $('#submit').click();
             }
           }).show();
         });
