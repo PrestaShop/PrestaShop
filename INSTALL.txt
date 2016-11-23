@@ -51,8 +51,6 @@ You will need:
 * PHP 5.4+, with:
   * allow_url_fopen set to On, 
   * register_globals set to Off,
-  * magic_quotes_* set to Off,
-  * safe_mode set to Off,
   * upload_max_filesize set to "16M" (or more).
 * MySQL 5.0+, with:
   * A database where PrestaShop can store its data tables.
