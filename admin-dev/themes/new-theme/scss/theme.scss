@@ -1,6 +1,15 @@
 // Tools
 @import "~bourbon/app/assets/stylesheets/bourbon";
-@import "../node_modules/PrestaKit/scss/custom/_variables.scss";
+@import "~PrestaKit/scss/custom/_variables.scss";
+
+@import "font-awesome/font-awesome"; // change $fa-css-prefix: to icon in _variables
+[class^="icon-"], [class^="process-icon-"] {
+  font-family: 'FontAwesome' !important
+}
+[class^="icon-"] {
+  font-size: 14px;
+}
+
 @import "mixins/single_line_block";
 
 // Settings
