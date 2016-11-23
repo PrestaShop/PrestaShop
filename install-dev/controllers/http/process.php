@@ -281,7 +281,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
 
         foreach ($langs as $lang) {
-            $language_code = explode('-', $lang['language_code']);
+            $cldrRepository = \Tools::getCldr(null, $lang['locale']);
+            $language_code = explode('-', $cldrRepository->getCulture());
             if (count($language_code) == 1) {
                 $cldrUpdate->fetchLocale($language_code['0']);
             } else {

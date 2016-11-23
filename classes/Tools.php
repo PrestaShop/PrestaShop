@@ -600,7 +600,7 @@ class ToolsCore
     {
         static $cldr_cache;
         if ($context) {
-            $language_code = $context->language->language_code;
+            $language_code = $context->language->locale;
         }
 
         if (!empty($cldr_cache[$language_code])) {
@@ -1855,8 +1855,8 @@ class ToolsCore
      */
     public static function refreshCACertFile()
     {
-      if ((time() - @filemtime(_PS_CACHE_CA_CERT_FILE_) > 1296000)) {
-          $stream_context = @stream_context_create(
+        if ((time() - @filemtime(_PS_CACHE_CA_CERT_FILE_) > 1296000)) {
+            $stream_context = @stream_context_create(
               array(
                 'http' => array('timeout' => 3),
                 'ssl' => array(
@@ -1864,15 +1864,15 @@ class ToolsCore
                 )
               )
           );
-          $ca_cert_content = @file_get_contents(Tools::CACERT_LOCATION, false, $stream_context);
+            $ca_cert_content = @file_get_contents(Tools::CACERT_LOCATION, false, $stream_context);
 
-          if (
+            if (
               preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) &&
               substr(rtrim($ca_cert_content), -1) == '-'
           ) {
-              file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
-          }
-      }
+                file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
+            }
+        }
     }
 
     public static function file_get_contents(
@@ -1881,8 +1881,7 @@ class ToolsCore
         $stream_context = null,
         $curl_timeout = 5,
         $fallback = false
-    )
-    {
+    ) {
         if ($stream_context == null && preg_match('/^https?:\/\//', $url)) {
             $stream_context = @stream_context_create(
                 array(

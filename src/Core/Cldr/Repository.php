@@ -65,7 +65,7 @@ class Repository
     public function __construct($contextLanguage = null)
     {
         if ($contextLanguage) {
-            $contextLanguage = strtolower(is_object($contextLanguage) ? $contextLanguage->language_code : $contextLanguage);
+            $contextLanguage = strtolower(is_object($contextLanguage) ? $contextLanguage->locale : $contextLanguage);
             $contextLanguage = isset($this->non_iso_relational_language[$contextLanguage]) ? $this->non_iso_relational_language[$contextLanguage] : $contextLanguage;
         }
 
