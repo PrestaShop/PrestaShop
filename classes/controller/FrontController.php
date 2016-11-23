@@ -856,7 +856,7 @@ class FrontControllerCore extends Controller
      */
     public function setMedia()
     {
-        $this->registerStylesheet('theme-main', '/assets/css/theme.css', ['media' => 'all', 'priority' => 0]);
+        $this->registerStylesheet('theme-main', '/assets/css/theme.css', ['media' => 'all', 'priority' => 50]);
         $this->registerStylesheet('theme-custom', '/assets/css/custom.css', ['media' => 'all', 'priority' => 1000]);
 
         if ($this->context->language->is_rtl) {
@@ -1158,6 +1158,22 @@ class FrontControllerCore extends Controller
         $this->registerStylesheet('jquery-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
         $this->registerStylesheet('jquery-ui', $css_path, ['media' => 'all', 'priority' => 90]);
         $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 90]);
+    }
+
+    /**
+     * Add Library not included with classic theme
+     */
+    public function requireAssets(array $libraries)
+    {
+        if (!empty($libraries)) {
+            foreach ($libraries as $library) {
+                if ($assets = PrestashopAssetsLibraries::getAssetsLibraries($library)) {
+                    foreach ($assets as $asset) {
+                        $this->$asset['type']($library, $asset['path'], $asset['params']);
+                    }
+                }
+            }
+        }
     }
 
 
