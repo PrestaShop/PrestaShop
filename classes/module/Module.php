@@ -1277,7 +1277,7 @@ abstract class ModuleCore
 
                     try {
                         $fileContents = _PS_MODULE_DIR_.$module.'/'.$module.'.php';
-                        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP5);
+                        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7);
                         $parser->parse($fileContents);
                     } catch (PhpParser\Error $e) {
                         $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
@@ -2756,7 +2756,7 @@ abstract class ModuleCore
      */
     public function addOverride($classname)
     {
-        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP5);
+        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7);
         $orig_path = $path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
         if (!$path) {
             $path = 'modules'.DIRECTORY_SEPARATOR.$classname.DIRECTORY_SEPARATOR.$classname.'.php';
