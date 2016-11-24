@@ -39,7 +39,7 @@
   <tab id="Delivery_Slips" name="Bons de livraison"/>
   <tab id="E-mail" name="Emails"/>
   <tab id="Employees_1" name="Employés" />
-  <tab id="Employees" name="Employés"/>
+  <tab id="Employees" name="Équipe"/>
   <tab id="Features" name="Caractéristiques"/>
   <tab id="General_1" name="Général" />
   <tab id="General" name="Général"/>
@@ -117,9 +117,9 @@
   <tab id="Tax_Rules" name="Règles de taxes"/>
   <tab id="Taxes" name="Taxes"/>
   <tab id="Themes_Catalog" name="Catalogue de thèmes" />
-  <tab id="Themes" name="Thèmes"/>
+  <tab id="Themes" name="Thème &amp; logo"/>
   <tab id="Titles" name="Titres de civilité"/>
-  <tab id="Traffic" name="Trafic" />
+  <tab id="Traffic" name="Trafic &amp; SEO" />
   <tab id="Translations" name="Traductions"/>
   <tab id="Warehouses" name="Entrepôts"/>
   <tab id="Webservice" name="Service web"/>
