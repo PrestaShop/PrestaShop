@@ -238,6 +238,12 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->moduleUpdaterS
             ->method('upgrade')
             ->willReturn(true);
+        $this->moduleUpdaterS
+            ->method('installTabs')
+            ->willReturn(true);
+        $this->moduleUpdaterS
+            ->method('uninstallTabs')
+            ->willReturn(true);
     }
 
     private function mockModuleRepository()
