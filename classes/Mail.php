@@ -80,7 +80,9 @@ class MailCore extends ObjectModel
      * @param bool   $mode_smtp      SMTP mode (deprecated)
      * @param string $templatePath   Template path
      * @param bool   $die            Die after error
-     * @param string $bcc            Bcc recipient
+     * @param int    $idShop         Shop ID
+     * @param string $bcc            Bcc recipient address. You can use an array of array to send to multiple recipients
+     * @param string $replyTo        Reply-To recipient
      *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
@@ -232,8 +234,15 @@ class MailCore extends ObjectModel
             $toName = (($toName == null || $toName == $to) ? '' : self::mimeEncode($toName));
             $message->addTo($to, $toName);
         }
+
         if (isset($bcc)) {
-            $message->addBcc($bcc);
+            if (is_array($bcc)) {
+                foreach ($bcc as $key => $addr) {
+                    $message->addBcc($addr);
+                }
+            } else {
+                $message->addBcc($bcc);
+            }
         }
 
         try {
