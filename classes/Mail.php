@@ -99,7 +99,8 @@ class MailCore extends ObjectModel
         $die = false,
         $idShop = null,
         $bcc = null,
-        $replyTo = null)
+        $replyTo = null,
+        $replyToName = null)
     {
         if (!$idShop) {
             $idShop = Context::getContext()->shop->id;
@@ -345,7 +346,7 @@ class MailCore extends ObjectModel
             }
 
             if (isset($replyTo) && $replyTo) {
-                $message->setReplyTo($replyTo);
+                $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
 
             $templateVars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $templateVars);
