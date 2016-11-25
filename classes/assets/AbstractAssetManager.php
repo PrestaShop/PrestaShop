@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use \PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Configuration\ConfigurationInterface;
 
 abstract class AbstractAssetManagerCore
 {

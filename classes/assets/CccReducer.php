@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Configuration\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class CccReducerCore

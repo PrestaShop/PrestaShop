@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+
 class PackItemsManager
 {
     /**
@@ -37,12 +39,12 @@ class PackItemsManager
     public function getPackItems($pack, $id_lang = false)
     {
         if ($id_lang === false) {
-            $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+            $configuration = ServiceLocator::get('\\PrestaShopBundle\\Configuration\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
         return \PackCore::getItems($pack->id, $id_lang);
     }
-    
+
     /**
      * Get all Packs that contains the given item in the corresponding declination.
      *
@@ -54,12 +56,12 @@ class PackItemsManager
     public function getPacksContainingItem($item, $item_attribute_id, $id_lang = false)
     {
         if ($id_lang === false) {
-            $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+            $configuration = ServiceLocator::get('\\PrestaShopBundle\\Configuration\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
         return \PackCore::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
     }
-    
+
     /**
      * Is this product a pack?
      *
@@ -70,7 +72,7 @@ class PackItemsManager
     {
         return \PackCore::isPack($product->id);
     }
-    
+
     /**
      * Is this product in a pack?
      * If $id_product_attribute specified, then will restrict search on the given combination,
