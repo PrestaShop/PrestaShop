@@ -79,7 +79,9 @@ class MailCore extends ObjectModel
      * @param bool $mode_smtp SMTP mode (deprecated)
      * @param string $template_path Template path
      * @param bool $die Die after error
-     * @param string $bcc Bcc recipient
+     * @param int $id_shop Shop ID
+     * @param string $bcc Bcc recipient (email address)
+     * @param string $reply_to Email address for setting the Reply-To header
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
     public static function Send($id_lang, $template, $subject, $template_vars, $to,
