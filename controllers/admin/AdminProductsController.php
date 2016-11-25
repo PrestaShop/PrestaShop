@@ -867,10 +867,11 @@ class AdminProductsControllerCore extends AdminController
             // add new objects
             $languages = Language::getLanguages(false);
             foreach ($_POST as $key => $val) {
-                if (preg_match('/^feature_([0-9]+)_value/i', $key, $match)) {
+                if (preg_match('/^feature_([0-9]+)_([0-9]+|)_value/i', $key, $match)) {
                     if ($val) {
                         $product->addFeaturesToDB($match[1], $val);
                     } else {
+                        dump($this->checkFeatures($languages, $match[1]));
                         if ($default_value = $this->checkFeatures($languages, $match[1])) {
                             $id_value = $product->addFeaturesToDB($match[1], 0, 1);
                             foreach ($languages as $language) {
