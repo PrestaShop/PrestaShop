@@ -53,7 +53,7 @@ $(document).ready(function(){
 				url += requestSortProducts ;
 				if (typeof splitData[0] !== 'undefined' && splitData[0])
 				{
-					url += ( requestSortProducts.indexOf('?') < 0 ? '?' : '&') + 'orderby=' + splitData[0] + (splitData[1] ? '&orderway=' + splitData[1] : '');
+					url += ( requestSortProducts.indexOf('?') < 0 ? '?' : '&') + 'orderby=' + splitData[0];
 					if (typeof splitData[1] !== 'undefined' && splitData[1])
 						url += '&orderway=' + splitData[1];
 				}
