@@ -1568,6 +1568,7 @@ class AdminTranslationsControllerCore extends AdminController
 
     protected function getMailPattern()
     {
+        Tools::displayAsDeprecated('Email pattern is no longer used, emails are always saved like they are.');
         // Let the indentation like it.
         return '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
 <html>
@@ -1641,13 +1642,13 @@ class AdminTranslationsControllerCore extends AdminController
                         if (Tools::getValue('title_'.$group_name.'_'.$mail_name)) {
                             $title = Tools::getValue('title_'.$group_name.'_'.$mail_name);
                         }
-                        $string_mail = $this->getMailPattern();
-                        $content = str_replace(array('#title', '#content'), array($title, $content), $string_mail);
 
                         // Magic Quotes shall... not.. PASS!
                         if (_PS_MAGIC_QUOTES_GPC_) {
                             $content = stripslashes($content);
                         }
+
+                        $content = preg_replace('/<title>.*<\/title>/', '<title>'.$title.'</title>', $content);
                     }
 
                     if (Validate::isCleanHTML($content)) {
@@ -1658,7 +1659,7 @@ class AdminTranslationsControllerCore extends AdminController
                         if (!file_exists($path) && !mkdir($path, 0777, true)) {
                             throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($path)));
                         }
-                        file_put_contents($path.$mail_name.'.'.$type_content, Tools::purifyHTML($content, array('{', '}'), true));
+                        file_put_contents($path.$mail_name.'.'.$type_content, $content);
                     } else {
                         throw new PrestaShopException(Tools::displayError('Your HTML email templates cannot contain JavaScript code.'));
                     }
@@ -2490,18 +2491,12 @@ class AdminTranslationsControllerCore extends AdminController
 
     protected function cleanMailContent(&$content, $lang, &$title)
     {
-        // Because TinyMCE don't work correctly with <DOCTYPE>, <html> and <body> tags
         if (stripos($content[$lang], '<body')) {
             $array_lang = $lang != 'en' ? array('en', $lang) : array($lang);
             foreach ($array_lang as $language) {
                 $title[$language] = substr($content[$language], 0, stripos($content[$language], '<body'));
                 preg_match('#<title>([^<]+)</title>#Ui', $title[$language], $matches);
                 $title[$language] = empty($matches[1])?'':$matches[1];
-                // The 2 lines below allow to exlude <body> tag from the content.
-                // This allow to exclude body tag even if attributs are setted.
-                $content[$language] = substr($content[$language], stripos($content[$language], '<body') + 5);
-                $content[$language] = substr($content[$language], stripos($content[$language], '>') + 1);
-                $content[$language] = substr($content[$language], 0, stripos($content[$language], '</body>'));
             }
         }
         $content[$lang] = (isset($content[$lang]) ? Tools::htmlentitiesUTF8(stripslashes($content[$lang])) : '');
