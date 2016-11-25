@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(
  *     indexes={@ORM\Index(name="key", columns={"domain"})},
- *     uniqueConstraints={@ORM\UniqueConstraint(name="theme", columns={"theme", "id_lang", "domain"})}
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="theme", columns={"key", "theme", "id_lang", "domain"})}
  * )
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TranslationRepository")
  */
@@ -27,7 +27,7 @@ class Translation
     /**
      * @var string
      *
-     * @ORM\Column(name="`key`", type="text")
+     * @ORM\Column(name="`key`", type="string")
      */
     private $key;
 
