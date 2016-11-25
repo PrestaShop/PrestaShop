@@ -1,5 +1,7 @@
 <?php
 
+use PrestaShopBundle\Database\DatabaseInterface;
+
 class AverageTaxOfProductsTaxCalculator
 {
     private $id_order;
@@ -8,7 +10,7 @@ class AverageTaxOfProductsTaxCalculator
 
     public $computation_method = 'average_tax_of_products';
 
-    public function __construct(\PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface $db, \PrestaShop\PrestaShop\Core\ConfigurationInterface $configuration)
+    public function __construct(DatabaseInterface $db, \PrestaShop\PrestaShop\Core\ConfigurationInterface $configuration)
     {
         $this->db = $db;
         $this->configuration = $configuration;
