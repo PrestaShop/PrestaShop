@@ -88,6 +88,13 @@ class Tab
     private $hideHostMode;
     
     /**
+     * @var string
+     *
+     * @ORM\Column(name="icon", type="string", length=32)
+     */
+    private $icon;
+    
+    /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="tab")
      */
     private $tabLangs;
@@ -126,6 +133,11 @@ class Tab
     public function getHideHostMode()
     {
         return $this->hideHostMode;
+    }
+    
+    public function getIcon()
+    {
+        return $this->icon;
     }
 
     public function getTabLangs()
