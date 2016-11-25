@@ -302,6 +302,7 @@ class TabCore extends ObjectModel
 
     /**
      * Get tab id from name
+     * @deprecated since version 1.7.1.0, available now in PrestaShopBundle\Entity\Repository\TabRepository::getOneIdByClassName($className)
      *
      * @param string $className
      *

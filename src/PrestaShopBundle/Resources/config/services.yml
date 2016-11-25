@@ -285,6 +285,12 @@ services:
           - "@prestashop.core.admin.lang.repository"
           - "@prestashop.translation.theme.exporter"
 
+    prestashop.core.admin.tab.repository:
+        class: PrestaShopBundle\Entity\Repository\TabRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\Tab
+
     prestashop.core.admin.translation.repository:
         class: PrestaShopBundle\Entity\Repository\TranslationRepository
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
