@@ -44,7 +44,7 @@ var combinations = (function() {
   }
 
   /**
-   * Update final price, regarding the impact on price in combinations table
+   * Update final price, regarding the impactattribute_priceTE on price in combinations table
    * @param {object} elem - The tableau row parent
    */
   function updateFinalPrice(tableRow) {
@@ -54,10 +54,13 @@ var combinations = (function() {
       var priceImpactInput = tableRow.find('.attribute_priceTE');
       var impactOnPrice = priceImpactInput.val() - priceImpactInput.attr('value');
       var actualFinalPriceInput = tableRow.find('.attribute-finalprice span');
+      var uniqId = actualFinalPriceInput.data('uniqid');
       var actualFinalPrice = actualFinalPriceInput.data('price');
 
+      var selector = ' #combination_form_'+uniqId+' span.final-price';
       var finalPrice = new Number(actualFinalPrice) + new Number(impactOnPrice);
       actualFinalPriceInput.html(ps_round(finalPrice, 6));
+      $(selector).html(ps_round(finalPrice, 6));
   }
 
   return {
@@ -97,6 +100,15 @@ var combinations = (function() {
         input.val($(this).val());
 
         /* force the update of final price */
+        updateFinalPrice($(input.parents('tr')[0]));
+      });
+
+      $(document).on('keyup', 'input[id^="combination"][id$="_attribute_priceTI"]', function () {
+        var id_attribute = $(this).closest('.combination-form').attr('data');
+        var input = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price input');
+
+        input.val($(this).val());
+
         updateFinalPrice($(input.parents('tr')[0]));
       });
 
