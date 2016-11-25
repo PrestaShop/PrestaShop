@@ -33,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AttributeLang
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\AttributeLangRepository")
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeLangRepository")
  */
 class AttributeLang
 {

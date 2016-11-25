@@ -33,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Shop
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\ShopRepository")
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ShopRepository")
  */
 class Shop
 {
