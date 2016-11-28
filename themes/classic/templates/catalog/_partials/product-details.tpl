@@ -50,7 +50,11 @@
           <dl class="data-sheet">
             {foreach from=$product.features item=feature}
               <dt class="name">{$feature.name}</dt>
-              <dd class="value">{$feature.value}</dd>
+              {if $feature.id_feature === '4' && isset($product.weight_to_display)}
+                <dd class="value">{$product.weight_to_display}</dd>
+              {else}
+                <dd class="value">{$feature.value}</dd>
+              {/if}
             {/foreach}
           </dl>
         </section>
