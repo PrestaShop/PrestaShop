@@ -62,9 +62,15 @@ class StylesheetManagerCore extends AbstractAssetManager
         }
     }
 
-    public function unregisterById($id)
+    public function unregisterById($idToRemove)
     {
-        unset($this->list[$id]);
+        foreach ($this->list as $type => $null) {
+            foreach ($this->list[$type] as $id => $item) {
+                if ($idToRemove === $id) {
+                    unset($this->list[$type][$id]);
+                }
+            }
+        }
     }
 
     public function getList()
