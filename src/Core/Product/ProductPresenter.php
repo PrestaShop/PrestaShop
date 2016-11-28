@@ -463,6 +463,40 @@ class ProductPresenter
     }
 
     /**
+     * @param array $product
+     * @param array $presentedProduct
+     * @return array
+     */
+    public function AddWeightToDisplay(array $product, array $presentedProduct){
+        $product_weight = $this->getProductWeight($product);
+        foreach ($product['attributes'] as $attribute) {
+            if (isset($attribute['weight']) && 0 !== $attribute['weight']) {
+                $presentedProduct['weight_to_display'] = $attribute['weight'] + $product_weight;
+            } else {
+                $presentedProduct['weight_to_display'] = $product_weight;
+            }
+        }
+
+        return $presentedProduct;
+    }
+
+    /**
+     * @param array $product
+     * @return int
+     */
+    public function getProductWeight(array $product){
+        $product_weight = 0;
+        if (isset($product['features'] )) {
+            foreach ($product['features'] as $feature) {
+                if ( '4' === $feature['id_feature']){
+                    $product_weight = $feature['value'];
+                }
+            }
+        }
+        return $product_weight;
+    }
+
+    /**
      * Add all specific references to product
      * @param array $product
      * @param array $presentedProduct
@@ -477,6 +511,7 @@ class ProductPresenter
             $presentedProduct['specific_references']['id_attribute_group'],
             $presentedProduct['specific_references']['name'],
             $presentedProduct['specific_references']['group'],
+            $presentedProduct['specific_references']['weight'],
             $presentedProduct['specific_references']['reference']
         );
 
@@ -598,6 +633,12 @@ class ProductPresenter
                 $presentedProduct
             );
         }
+
+        $presentedProduct = $this->AddWeightToDisplay(
+            $product,
+            $presentedProduct
+        );
+
         return $presentedProduct;
     }
 
