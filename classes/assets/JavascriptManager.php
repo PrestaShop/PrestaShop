@@ -67,7 +67,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             foreach ($this->list[$position] as $type => $null) {
                 foreach ($this->list[$position][$type] as $id => $item) {
                     if ($idToRemove === $id) {
-                        unset($this->list[$position][$type]);
+                        unset($this->list[$position][$type][$id]);
                     }
                 }
             }
