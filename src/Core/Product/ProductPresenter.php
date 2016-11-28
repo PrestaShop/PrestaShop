@@ -622,22 +622,24 @@ class ProductPresenter
         );
 
         // If product has attributes and it's no added to card
-        if (isset($product['attributes']) && !isset($product['cart_quantity'])) {
-            $presentedProduct = $this->addReferenceToDisplay(
-                $product,
-                $presentedProduct
-            );
+        if (isset($product['attributes'])) {
+            if (!isset($product['cart_quantity'])) {
+                $presentedProduct = $this->addReferenceToDisplay(
+                    $product,
+                    $presentedProduct
+                );
 
-            $presentedProduct = $this->addAttributesSpecificReferences(
+                $presentedProduct = $this->addAttributesSpecificReferences(
+                    $product,
+                    $presentedProduct
+                );
+            }
+            $presentedProduct = $this->AddWeightToDisplay(
                 $product,
                 $presentedProduct
             );
         }
 
-        $presentedProduct = $this->AddWeightToDisplay(
-            $product,
-            $presentedProduct
-        );
 
         return $presentedProduct;
     }
