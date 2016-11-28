@@ -471,7 +471,7 @@ class ProductPresenter
         $product_weight = $this->getProductWeight($product);
         foreach ($product['attributes'] as $attribute) {
             if (isset($attribute['weight']) && 0 !== $attribute['weight']) {
-                $presentedProduct['weight_to_display'] = $attribute['weight'] + $product_weight;
+                $presentedProduct['weight_to_display'] = (float) $attribute['weight'] + $product_weight;
             } else {
                 $presentedProduct['weight_to_display'] = $product_weight;
             }
@@ -489,7 +489,7 @@ class ProductPresenter
         if (isset($product['features'] )) {
             foreach ($product['features'] as $feature) {
                 if ( '4' === $feature['id_feature']){
-                    $product_weight = $feature['value'];
+                    $product_weight = (float) $feature['value'];
                 }
             }
         }
