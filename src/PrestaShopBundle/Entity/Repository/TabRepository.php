@@ -31,6 +31,15 @@ use Doctrine\ORM\EntityRepository;
 class TabRepository extends EntityRepository
 {
     /**
+     * @param $moduleName
+     * @return array
+     */
+    public function findByModule($moduleName)
+    {
+        return $this->findByModule(['module' => $moduleName]);
+    }
+    
+    /**
      * @param $className
      * @return \PrestaShopBundle\Entity\Tab|null
      */

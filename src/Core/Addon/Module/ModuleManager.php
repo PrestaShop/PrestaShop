@@ -229,7 +229,7 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($name);
-        return $module->onInstall() && $this->moduleUpdater->installTabs($module);
+        return $module->onInstall();
     }
 
     /**
@@ -260,7 +260,7 @@ class ModuleManager implements AddonManagerInterface
 
         // Get module instance and uninstall it
         $module = $this->moduleRepository->getModule($name);
-        $result = $module->onUninstall() && $this->moduleUpdater->uninstallTabs($module);
+        $result = $module->onUninstall();
 
         if ($result && (bool)$file_deletion) {
             $result &= $this->removeModuleFromDisk($name);
