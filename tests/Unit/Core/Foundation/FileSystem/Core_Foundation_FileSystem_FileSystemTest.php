@@ -27,8 +27,7 @@
 namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\FileSystem;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
-use \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception;
+use PrestaShopBundle\Filesystem\Filesystem;
 
 class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 {
@@ -37,7 +36,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     public function setup()
     {
-        $this->fs = new FileSystem();
+        $this->fs = new Filesystem();
         $this->fixturesPath = __DIR__ . DIRECTORY_SEPARATOR . 'fixtures';
     }
 
@@ -58,7 +57,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
+     * @expectedException \PrestaShopBundle\Exception\FilesystemException
      */
     public function test_joinPaths_one_path_throws()
     {
@@ -66,7 +65,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
+     * @expectedException \PrestaShopBundle\Exception\FilesystemException
      */
     public function test_joinPaths_zero_path_throws()
     {
@@ -113,7 +112,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     /**
      * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
+     * @expectedException \PrestaShopBundle\Exception\FilesystemException
      */
     public function test_listEntriesRecursively_throws_if_path_does_not_exist()
     {
@@ -122,7 +121,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     /**
      *
-     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
+     * @expectedException \PrestaShopBundle\Exception\FilesystemException
      */
     public function test_listEntriesRecursively_throws_when_path_is_a_file()
     {

@@ -23,8 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
+namespace PrestaShopBundle\Exception;
 
-class Exception extends \Exception
+class FilesystemException extends \Exception
 {
 }
