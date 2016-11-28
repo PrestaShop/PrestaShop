@@ -633,11 +633,11 @@ class ProductPresenter
                     $product,
                     $presentedProduct
                 );
+                $presentedProduct = $this->AddWeightToDisplay(
+                    $product,
+                    $presentedProduct
+                );
             }
-            $presentedProduct = $this->AddWeightToDisplay(
-                $product,
-                $presentedProduct
-            );
         }
 
 
