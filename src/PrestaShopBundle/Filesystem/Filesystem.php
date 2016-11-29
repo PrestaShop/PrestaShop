@@ -23,9 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
+namespace PrestaShopBundle\Filesystem;
 
-class FileSystem
+use PrestaShopBundle\Exception\FilesystemException as Exception;
+
+class Filesystem
 {
     /**
      * Replaces directory separators with the system's native one
@@ -76,7 +78,10 @@ class FileSystem
      * Throws exception if $path is not a file.
      * If $path is a file and not a directory, just gets the file info for it
      * and return it in an array.
-     * @return an array of SplFileInfo object indexed by file path
+     *
+     * @param $path
+     * @return array
+     * @throws Exception
      */
     public function listEntriesRecursively($path)
     {
