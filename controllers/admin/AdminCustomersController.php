@@ -249,7 +249,7 @@ class AdminCustomersControllerCore extends AdminController
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
                     array_pop($this->toolbar_title);
-                    $this->toolbar_title[] = sprintf($this->trans('Information about customer %s', array(), 'Admin.OrdersCustomers.Feature'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+                    $this->toolbar_title[] = sprintf($this->trans('Information about customer %s', array('%s' => Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname), 'Admin.OrdersCustomers.Feature'));
                 }
                 break;
             case 'add':
@@ -257,7 +257,7 @@ class AdminCustomersControllerCore extends AdminController
                 array_pop($this->toolbar_title);
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
-                    $this->toolbar_title[] = sprintf($this->trans('Editing customer %s', array(), 'Admin.OrdersCustomers.Feature'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+                    $this->toolbar_title[] = sprintf($this->trans('Editing customer %s.', array('%s' => Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname), 'Admin.OrdersCustomers.Feature'));
                 } else {
                     $this->toolbar_title[] = $this->trans('Creating a new Customer', array(), 'Admin.OrdersCustomers.Feature');
                 }
@@ -397,7 +397,7 @@ class AdminCustomersControllerCore extends AdminController
                     'required' => ($obj->id ? false : true),
                     'col' => '4',
                     'hint' => ($obj->id ? $this->trans('Leave this field blank if there\'s no change.', array(), 'Admin.OrdersCustomers.Help') :
-                        sprintf($this->trans('Password should be at least %s characters long.', array(), 'Admin.OrdersCustomers.Help'), Validate::PASSWORD_LENGTH))
+                        sprintf($this->trans('Password should be at least %s characters long.', array('%s' => Validate::PASSWORD_LENGTH), 'Admin.OrdersCustomers.Help'))
                 ),
                 array(
                     'type' => 'birthday',
