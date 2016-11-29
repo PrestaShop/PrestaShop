@@ -77,7 +77,7 @@
                             name="filter {$facet.label}"
                             {if $filter.active } checked {/if}
                           >
-                          <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                          <span {if !$js_enabled} class="ps-shown-by-js" {/if}></span>
                         </span>
                       {/if}
 
