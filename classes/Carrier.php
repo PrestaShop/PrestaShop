@@ -203,7 +203,6 @@ class CarrierCore extends ObjectModel
      */
     public function add($autoDate = true, $nullValues = false)
     {
-        $shopId = Context::getContext()->shop->id;
         if ($this->position <= 0) {
             $this->position = Carrier::getHigherPosition() + 1;
         }
@@ -221,7 +220,7 @@ class CarrierCore extends ObjectModel
         Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->def['table'].'` SET `id_reference` = '.
             (int) $this->id.' WHERE `id_carrier` = '.(int) $this->id
         );
-        
+
         foreach (Shop::getContextListShopID() as $shopId) {
             foreach (Module::getPaymentModules() as $module) {
                 Db::getInstance()->execute('
@@ -230,14 +229,6 @@ class CarrierCore extends ObjectModel
                     VALUES ('.(int) $module['id_module'].','.(int) $shopId.','.(int) $this->id.')'
                 );
             }
-        }
-
-        foreach (Module::getPaymentModules() as $module) {
-            Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'module_'.bqSQL('carrier').'`
-				(`id_module`, `id_shop`, `id_'.bqSQL('reference').'`)
-				VALUES ('.(int) $module['id_module'].','.(int) $shopId.','.(int) $this->id.')'
-            );
         }
 
         return true;

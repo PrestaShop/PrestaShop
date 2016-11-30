@@ -77,10 +77,6 @@ class HookFinder
                 continue;
             }
             foreach ($moduleContents as $content) {
-                if (!$content instanceof HookContentClassInterface) {
-                    throw new \Exception('The class returned must implement HookContentClassInterface');
-                }
-
                 // Check data returned if asked
                 if (!count($this->expectedInstanceClasses)) {
                     continue;
