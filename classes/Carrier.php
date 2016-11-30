@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -203,7 +203,6 @@ class CarrierCore extends ObjectModel
      */
     public function add($autoDate = true, $nullValues = false)
     {
-        $shopId = Context::getContext()->shop->id;
         if ($this->position <= 0) {
             $this->position = Carrier::getHigherPosition() + 1;
         }
@@ -222,12 +221,14 @@ class CarrierCore extends ObjectModel
             (int) $this->id.' WHERE `id_carrier` = '.(int) $this->id
         );
 
-        foreach (Module::getPaymentModules() as $module) {
-            Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'module_'.bqSQL('carrier').'`
-				(`id_module`, `id_shop`, `id_'.bqSQL('reference').'`)
-				VALUES ('.(int) $module['id_module'].','.(int) $shopId.','.(int) $this->id.')'
-            );
+        foreach (Shop::getContextListShopID() as $shopId) {
+            foreach (Module::getPaymentModules() as $module) {
+                Db::getInstance()->execute('
+                    INSERT INTO `'._DB_PREFIX_.'module_'.bqSQL('carrier').'`
+                    (`id_module`, `id_shop`, `id_'.bqSQL('reference').'`)
+                    VALUES ('.(int) $module['id_module'].','.(int) $shopId.','.(int) $this->id.')'
+                );
+            }
         }
 
         return true;

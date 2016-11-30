@@ -1,4 +1,7 @@
-<div class="tab-pane fade{if !$product.description} in active{/if}" id="product-details" data-product="{$product|json_encode}">
+<div class="tab-pane fade{if !$product.description} in active{/if}"
+     id="product-details"
+     data-product="{$product.embedded_attributes|json_encode}"
+  >
   {block name='product_reference'}
     {if isset($product_manufacturer->id)}
       <div class="product-manufacturer">

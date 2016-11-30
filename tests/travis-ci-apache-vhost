@@ -14,7 +14,7 @@
   </Directory>
 
   <Directory /usr/lib/cgi-bin>
-      Require all granted
+    Require all granted
   </Directory>
 
 </VirtualHost>
