@@ -82,10 +82,10 @@
          if (parent != 0){
             var $parentelem = $(table + ' .ajaxPower.' + perm + '.' + parent);
             if(!$parentelem.is(':checked')){
-               $parentelem.click();
+               $parentelem.prop("checked", true).change();
             }else{
                if(!$(this).is(':checked') && !getChildren(table, perm, parent, rel))
-                  $parentelem.click();
+                  $parentelem.prop("checked", false).change();
             }
          }
          switch (true) {
