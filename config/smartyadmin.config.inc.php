@@ -62,7 +62,7 @@ function smartyTranslate($params, &$smarty)
     $isInModule = isset($params['mod']) && !empty($params['mod']);
     $sprintf = isset($params['sprintf']) ? $params['sprintf'] : array();
 
-    if (($htmlEntities || $addSlashes) && is_array($sprintf)) {
+    if (($htmlEntities || $addSlashes) && is_array($sprintf) && !empty($sprintf)) {
         $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
     }
 
