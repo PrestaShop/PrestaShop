@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -108,6 +108,10 @@ class HookFinder
 
         foreach ($hookContent as $moduleName => $moduleContents) {
             foreach ($moduleContents as $content) {
+                if (!$content instanceof HookContentClassInterface) {
+                    throw new \Exception('The class returned must implement HookContentClassInterface to be presented');
+                }
+
                 $presentedContent = $content->toArray();
                 $presentedContent['moduleName'] = $moduleName;
                 $presentedContents[] = $presentedContent;

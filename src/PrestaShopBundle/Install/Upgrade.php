@@ -95,6 +95,7 @@ namespace PrestaShopBundle\Install {
 
                 return true;
             };
+
             $fileMigrated = false;
             $default_parameters = Yaml::parse(file_get_contents($root_dir . '/app/config/parameters.yml.dist'));
             $default_parameters['parameters']['new_cookie_key'] = PhpEncryption::createNewRandomKey();
