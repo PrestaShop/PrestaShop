@@ -1479,6 +1479,9 @@ abstract class ModuleCore
         }
 
         foreach ($module_list as $key => &$module) {
+            if (!isset($module->tab)) {
+                $module->tab = 'others';
+            }
             if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist)) {
                 unset($module_list[$key]);
             } elseif (isset($modules_installed[$module->name])) {
