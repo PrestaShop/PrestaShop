@@ -24,6 +24,25 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.1.10 - (2016-11-25)
+####################################
+
+	Fixed bugs:
+
+	[-] MO : (3b0f90b) missing IF for PRODUCT_TAB
+
+	[-] BO : (3979614) Fix admin email translations
+
+
+	Improved/changed features:
+
+	[*] BO : (81d6f5b) Bring back email pattern value in case someone uses it
+
+
+	
+
+
+####################################
 #   v1.6.1.7 - (2016-09-06)
 ####################################
 

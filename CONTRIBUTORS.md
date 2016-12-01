@@ -10,6 +10,7 @@ GitHub contributors:
 - Aleksander Palyan
 - Alessandro Corbelli
 - Alex Even
+- Alex Sampaio
 - Alexander Grosul
 - Alexander Otchenashev
 - Alexandra Even
@@ -49,6 +50,7 @@ GitHub contributors:
 - cam.lafit
 - Captain FLAM
 - Captain-FLAM
+- Casper Olsen
 - ccauw
 - cedricfontaine
 - cedricgeffroy
@@ -159,6 +161,7 @@ GitHub contributors:
 - harelguy
 - hiousi
 - htrex
+- hubiktomas
 - Ian Fung
 - idnovate
 - indesign47
@@ -200,6 +203,7 @@ GitHub contributors:
 - julvernois
 - Jachym Tousek
 - Kamil Szymański
+- Karel Faille
 - Kelly Karnetsky
 - kermes
 - Kevin Granger
@@ -319,6 +323,7 @@ GitHub contributors:
 - Raphael Droz
 - Raphael Malie
 - raulgundin
+- Renaud Sanchez - ChouetteWeb.fr
 - rGaillard
 - Rhys
 - Richard LT
@@ -340,6 +345,7 @@ GitHub contributors:
 - Sarah Lorenzini
 - Seb
 - SebSept
+- Sergio Quinonez
 - Seynaeve
 - sfroment42
 - shaffe-fr
@@ -385,6 +391,7 @@ GitHub contributors:
 - Tom Panier
 - Tomasz Slominski
 - Tomas Votruba
+- tonyyb
 - tucoinfo
 - Tung Dao
 - unlocomqx
@@ -411,6 +418,7 @@ GitHub contributors:
 - zimmi1
 - ZiZuu.com
 - Zollner Robert
+- Sarūnas Jonusas
 
 SVN contributors:
 --------------------------------
