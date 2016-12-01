@@ -201,7 +201,7 @@ class AuthControllerCore extends FrontController
         if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES')) {
             $countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
         } else {
-            $countries = Country::getCountries($this->context->language->id, true);
+            $countries = Country::getCountriesByIdShop((int)Tools::getValue('id_shop'), $this->context->language->id);
         }
         $this->context->smarty->assign(array(
                 'countries' => $countries,
