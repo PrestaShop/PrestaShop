@@ -55,8 +55,16 @@ class PasswordControllerCore extends FrontController
         } else {
             $customer = new Customer();
             $customer->getByEmail($email);
+            if (is_null($customer->email)) {
+                $customer->email = Tools::getValue('email');
+            }
+
             if (!Validate::isLoadedObject($customer)) {
-                $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', array('%email%', $customer->email), 'Shop.Notifications.Success');
+                $this->success[] = $this->trans(
+                    'If this email address has been registered in our shop, you will receive a link to reset your password at %email%.',
+                    array('%email%' => $customer->email),
+                    'Shop.Notifications.Success'
+                );
                 $this->setTemplate('customer/password-infos');
             } elseif (!$customer->active) {
                 $this->errors[] = $this->trans('You cannot regenerate the password for this account.', array(), 'Shop.Notifications.Error');

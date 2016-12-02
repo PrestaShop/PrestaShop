@@ -312,6 +312,7 @@ services:
             - "@csa_guzzle.client.addons_api"
             - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
             - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+            - "@prestashop.adapter.tools"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
 
