@@ -149,7 +149,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 
         $this->_group = 'GROUP BY a.id_product, a.id_product_attribute';
 
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
+        $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
+        $this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
         $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 			a.id_product = pl.id_product
 			AND pl.id_lang = '.(int)$this->context->language->id.'
@@ -208,6 +209,7 @@ class AdminStockInstantStateControllerCore extends AdminController
         if (Tools::isSubmit('id_stock')) {
             // if a product id is submit
 
+            $this->list_no_link = true;
             $this->lang = false;
             $this->table = 'stock';
             $this->list_id = 'details';
@@ -226,7 +228,8 @@ class AdminStockInstantStateControllerCore extends AdminController
             $id_warehouse = Tools::getValue('id_warehouse', -1);
             $this->_select = 'IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
 				w.id_currency, a.price_te';
-            $this->_join = ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON w.id_warehouse = a.id_warehouse';
+            $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
+            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON w.id_warehouse = a.id_warehouse';
             $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 				a.id_product = pl.id_product
 				AND pl.id_lang = '.(int)$this->context->language->id.'
