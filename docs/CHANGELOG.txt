@@ -24,10 +24,6 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
-#   v1.7.0.2 - (2016-11-23)
-####################################
-
-####################################
 #   v1.6.1.1 - (2015-08-20)
 ####################################
 
@@ -273,7 +269,7 @@ Release Notes for PrestaShop 1.6
 	[+] TESTS : Add unit tests for PrestaShop#2867 minifyCSS() && ReplaceByAbsoluteURL()
 
 
-	
+
 
 
 ####################################
@@ -1108,7 +1104,7 @@ Release Notes for PrestaShop 1.6
 	[+] DBQUERY : improve to use SELECT or DELETE syntax.
 
 
-	
+
 
 
 

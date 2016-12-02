@@ -17,7 +17,7 @@ About the 'develop' branch
 
 The 'develop' branch of this repository contains the source code for the latest version of PrestaShop 1.7.
 
-PRESTASHOP 1.7 IS CURRENTLY IN DEVELOPMENT. It is not production ready yet! Learn more about it on [the Build devblog](http://build.prestashop.com/).
+PRESTASHOP 1.7 IS NOW PRODUCTION-READY! Its first stable version, 1.7.0.0, was released on November 7th, 2016. Further updates have been released since then. Learn more about it on [the Build devblog](http://build.prestashop.com/).
 
 To install it, you will need Composer and NPM/Node.js -- during the development phase, at least. See below for more information. The final release will not need Composer/NPM to be installed.
 
