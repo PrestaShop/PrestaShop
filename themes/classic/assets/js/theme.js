@@ -51,6 +51,30 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -77,19 +101,19 @@
 	
 	__webpack_require__(69);
 	
-	__webpack_require__(71);
-	
 	__webpack_require__(72);
 	
-	var _componentsDropDown = __webpack_require__(73);
+	__webpack_require__(73);
+	
+	var _componentsDropDown = __webpack_require__(74);
 	
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 	
-	var _componentsForm = __webpack_require__(74);
+	var _componentsForm = __webpack_require__(75);
 	
 	var _componentsForm2 = _interopRequireDefault(_componentsForm);
 	
-	var _componentsProductMiniature = __webpack_require__(75);
+	var _componentsProductMiniature = __webpack_require__(71);
 	
 	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 	
@@ -133,9 +157,6 @@
 	  topMenu.init();
 	  productMinitature.init();
 	  productSelect.init();
-	  (0, _expose$ExposeJQueryJquery2['default'])("#products").bind("DOMSubtreeModified", function () {
-	    productMinitature.init();
-	  });
 	});
 
 /***/ },
@@ -11808,7 +11829,31 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var require;!function(e){if(true)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var t;t="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,t.flexibility=e()}}(function(){return function e(t,r,l){function n(o,i){if(!r[o]){if(!t[o]){var s="function"==typeof require&&require;if(!i&&s)return require(o,!0);if(f)return f(o,!0);var a=new Error("Cannot find module '"+o+"'");throw a.code="MODULE_NOT_FOUND",a}var c=r[o]={exports:{}};t[o][0].call(c.exports,function(e){var r=t[o][1][e];return n(r?r:e)},c,c.exports,e,t,r,l)}return r[o].exports}for(var f="function"==typeof require&&require,o=0;o<l.length;o++)n(l[o]);return n}({1:[function(e,t,r){t.exports=function(e){var t,r,l,n=-1;if(e.lines.length>1&&"flex-start"===e.style.alignContent)for(t=0;l=e.lines[++n];)l.crossStart=t,t+=l.cross;else if(e.lines.length>1&&"flex-end"===e.style.alignContent)for(t=e.flexStyle.crossSpace;l=e.lines[++n];)l.crossStart=t,t+=l.cross;else if(e.lines.length>1&&"center"===e.style.alignContent)for(t=e.flexStyle.crossSpace/2;l=e.lines[++n];)l.crossStart=t,t+=l.cross;else if(e.lines.length>1&&"space-between"===e.style.alignContent)for(r=e.flexStyle.crossSpace/(e.lines.length-1),t=0;l=e.lines[++n];)l.crossStart=t,t+=l.cross+r;else if(e.lines.length>1&&"space-around"===e.style.alignContent)for(r=2*e.flexStyle.crossSpace/(2*e.lines.length),t=r/2;l=e.lines[++n];)l.crossStart=t,t+=l.cross+r;else for(r=e.flexStyle.crossSpace/e.lines.length,t=e.flexStyle.crossInnerBefore;l=e.lines[++n];)l.crossStart=t,l.cross+=r,t+=l.cross}},{}],2:[function(e,t,r){t.exports=function(e){for(var t,r=-1;line=e.lines[++r];)for(t=-1;child=line.children[++t];){var l=child.style.alignSelf;"auto"===l&&(l=e.style.alignItems),"flex-start"===l?child.flexStyle.crossStart=line.crossStart:"flex-end"===l?child.flexStyle.crossStart=line.crossStart+line.cross-child.flexStyle.crossOuter:"center"===l?child.flexStyle.crossStart=line.crossStart+(line.cross-child.flexStyle.crossOuter)/2:(child.flexStyle.crossStart=line.crossStart,child.flexStyle.crossOuter=line.cross,child.flexStyle.cross=child.flexStyle.crossOuter-child.flexStyle.crossBefore-child.flexStyle.crossAfter)}}},{}],3:[function(e,t,r){t.exports=function l(e,l){var t="row"===l||"row-reverse"===l,r=e.mainAxis;if(r){var n=t&&"inline"===r||!t&&"block"===r;n||(e.flexStyle={main:e.flexStyle.cross,cross:e.flexStyle.main,mainOffset:e.flexStyle.crossOffset,crossOffset:e.flexStyle.mainOffset,mainBefore:e.flexStyle.crossBefore,mainAfter:e.flexStyle.crossAfter,crossBefore:e.flexStyle.mainBefore,crossAfter:e.flexStyle.mainAfter,mainInnerBefore:e.flexStyle.crossInnerBefore,mainInnerAfter:e.flexStyle.crossInnerAfter,crossInnerBefore:e.flexStyle.mainInnerBefore,crossInnerAfter:e.flexStyle.mainInnerAfter,mainBorderBefore:e.flexStyle.crossBorderBefore,mainBorderAfter:e.flexStyle.crossBorderAfter,crossBorderBefore:e.flexStyle.mainBorderBefore,crossBorderAfter:e.flexStyle.mainBorderAfter})}else t?e.flexStyle={main:e.style.width,cross:e.style.height,mainOffset:e.style.offsetWidth,crossOffset:e.style.offsetHeight,mainBefore:e.style.marginLeft,mainAfter:e.style.marginRight,crossBefore:e.style.marginTop,crossAfter:e.style.marginBottom,mainInnerBefore:e.style.paddingLeft,mainInnerAfter:e.style.paddingRight,crossInnerBefore:e.style.paddingTop,crossInnerAfter:e.style.paddingBottom,mainBorderBefore:e.style.borderLeftWidth,mainBorderAfter:e.style.borderRightWidth,crossBorderBefore:e.style.borderTopWidth,crossBorderAfter:e.style.borderBottomWidth}:e.flexStyle={main:e.style.height,cross:e.style.width,mainOffset:e.style.offsetHeight,crossOffset:e.style.offsetWidth,mainBefore:e.style.marginTop,mainAfter:e.style.marginBottom,crossBefore:e.style.marginLeft,crossAfter:e.style.marginRight,mainInnerBefore:e.style.paddingTop,mainInnerAfter:e.style.paddingBottom,crossInnerBefore:e.style.paddingLeft,crossInnerAfter:e.style.paddingRight,mainBorderBefore:e.style.borderTopWidth,mainBorderAfter:e.style.borderBottomWidth,crossBorderBefore:e.style.borderLeftWidth,crossBorderAfter:e.style.borderRightWidth},"content-box"===e.style.boxSizing&&("number"==typeof e.flexStyle.main&&(e.flexStyle.main+=e.flexStyle.mainInnerBefore+e.flexStyle.mainInnerAfter+e.flexStyle.mainBorderBefore+e.flexStyle.mainBorderAfter),"number"==typeof e.flexStyle.cross&&(e.flexStyle.cross+=e.flexStyle.crossInnerBefore+e.flexStyle.crossInnerAfter+e.flexStyle.crossBorderBefore+e.flexStyle.crossBorderAfter));e.mainAxis=t?"inline":"block",e.crossAxis=t?"block":"inline","number"==typeof e.style.flexBasis&&(e.flexStyle.main=e.style.flexBasis+e.flexStyle.mainInnerBefore+e.flexStyle.mainInnerAfter+e.flexStyle.mainBorderBefore+e.flexStyle.mainBorderAfter),e.flexStyle.mainOuter=e.flexStyle.main,e.flexStyle.crossOuter=e.flexStyle.cross,"auto"===e.flexStyle.mainOuter&&(e.flexStyle.mainOuter=e.flexStyle.mainOffset),"auto"===e.flexStyle.crossOuter&&(e.flexStyle.crossOuter=e.flexStyle.crossOffset),"number"==typeof e.flexStyle.mainBefore&&(e.flexStyle.mainOuter+=e.flexStyle.mainBefore),"number"==typeof e.flexStyle.mainAfter&&(e.flexStyle.mainOuter+=e.flexStyle.mainAfter),"number"==typeof e.flexStyle.crossBefore&&(e.flexStyle.crossOuter+=e.flexStyle.crossBefore),"number"==typeof e.flexStyle.crossAfter&&(e.flexStyle.crossOuter+=e.flexStyle.crossAfter)}},{}],4:[function(e,t,r){var l=e("../reduce");t.exports=function(e){if(e.mainSpace>0){var t=l(e.children,function(e,t){return e+parseFloat(t.style.flexGrow)},0);t>0&&(e.main=l(e.children,function(r,l){return"auto"===l.flexStyle.main?l.flexStyle.main=l.flexStyle.mainOffset+parseFloat(l.style.flexGrow)/t*e.mainSpace:l.flexStyle.main+=parseFloat(l.style.flexGrow)/t*e.mainSpace,l.flexStyle.mainOuter=l.flexStyle.main+l.flexStyle.mainBefore+l.flexStyle.mainAfter,r+l.flexStyle.mainOuter},0),e.mainSpace=0)}}},{"../reduce":12}],5:[function(e,t,r){var l=e("../reduce");t.exports=function(e){if(e.mainSpace<0){var t=l(e.children,function(e,t){return e+parseFloat(t.style.flexShrink)},0);t>0&&(e.main=l(e.children,function(r,l){return l.flexStyle.main+=parseFloat(l.style.flexShrink)/t*e.mainSpace,l.flexStyle.mainOuter=l.flexStyle.main+l.flexStyle.mainBefore+l.flexStyle.mainAfter,r+l.flexStyle.mainOuter},0),e.mainSpace=0)}}},{"../reduce":12}],6:[function(e,t,r){var l=e("../reduce");t.exports=function(e){var t;e.lines=[t={main:0,cross:0,children:[]}];for(var r,n=-1;r=e.children[++n];)"nowrap"===e.style.flexWrap||0===t.children.length||"auto"===e.flexStyle.main||e.flexStyle.main-e.flexStyle.mainInnerBefore-e.flexStyle.mainInnerAfter-e.flexStyle.mainBorderBefore-e.flexStyle.mainBorderAfter>=t.main+r.flexStyle.mainOuter?(t.main+=r.flexStyle.mainOuter,t.cross=Math.max(t.cross,r.flexStyle.crossOuter)):e.lines.push(t={main:r.flexStyle.mainOuter,cross:r.flexStyle.crossOuter,children:[]}),t.children.push(r);e.flexStyle.mainLines=l(e.lines,function(e,t){return Math.max(e,t.main)},0),e.flexStyle.crossLines=l(e.lines,function(e,t){return e+t.cross},0),"auto"===e.flexStyle.main&&(e.flexStyle.main=Math.max(e.flexStyle.mainOffset,e.flexStyle.mainLines+e.flexStyle.mainInnerBefore+e.flexStyle.mainInnerAfter+e.flexStyle.mainBorderBefore+e.flexStyle.mainBorderAfter)),"auto"===e.flexStyle.cross&&(e.flexStyle.cross=Math.max(e.flexStyle.crossOffset,e.flexStyle.crossLines+e.flexStyle.crossInnerBefore+e.flexStyle.crossInnerAfter+e.flexStyle.crossBorderBefore+e.flexStyle.crossBorderAfter)),e.flexStyle.crossSpace=e.flexStyle.cross-e.flexStyle.crossInnerBefore-e.flexStyle.crossInnerAfter-e.flexStyle.crossBorderBefore-e.flexStyle.crossBorderAfter-e.flexStyle.crossLines,e.flexStyle.mainOuter=e.flexStyle.main+e.flexStyle.mainBefore+e.flexStyle.mainAfter,e.flexStyle.crossOuter=e.flexStyle.cross+e.flexStyle.crossBefore+e.flexStyle.crossAfter}},{"../reduce":12}],7:[function(e,t,r){function l(t){for(var r,l=-1;r=t.children[++l];)e("./flex-direction")(r,t.style.flexDirection);e("./flex-direction")(t,t.style.flexDirection),e("./order")(t),e("./flexbox-lines")(t),e("./align-content")(t),l=-1;for(var n;n=t.lines[++l];)n.mainSpace=t.flexStyle.main-t.flexStyle.mainInnerBefore-t.flexStyle.mainInnerAfter-t.flexStyle.mainBorderBefore-t.flexStyle.mainBorderAfter-n.main,e("./flex-grow")(n),e("./flex-shrink")(n),e("./margin-main")(n),e("./margin-cross")(n),e("./justify-content")(n,t.style.justifyContent,t);e("./align-items")(t)}t.exports=l},{"./align-content":1,"./align-items":2,"./flex-direction":3,"./flex-grow":4,"./flex-shrink":5,"./flexbox-lines":6,"./justify-content":8,"./margin-cross":9,"./margin-main":10,"./order":11}],8:[function(e,t,r){t.exports=function(e,t,r){var l,n,f,o=r.flexStyle.mainInnerBefore,i=-1;if("flex-end"===t)for(l=e.mainSpace,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter;else if("center"===t)for(l=e.mainSpace/2,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter;else if("space-between"===t)for(n=e.mainSpace/(e.children.length-1),l=0,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter+n;else if("space-around"===t)for(n=2*e.mainSpace/(2*e.children.length),l=n/2,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter+n;else for(l=0,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter}},{}],9:[function(e,t,r){t.exports=function(e){for(var t,r=-1;t=e.children[++r];){var l=0;"auto"===t.flexStyle.crossBefore&&++l,"auto"===t.flexStyle.crossAfter&&++l;var n=e.cross-t.flexStyle.crossOuter;"auto"===t.flexStyle.crossBefore&&(t.flexStyle.crossBefore=n/l),"auto"===t.flexStyle.crossAfter&&(t.flexStyle.crossAfter=n/l),"auto"===t.flexStyle.cross?t.flexStyle.crossOuter=t.flexStyle.crossOffset+t.flexStyle.crossBefore+t.flexStyle.crossAfter:t.flexStyle.crossOuter=t.flexStyle.cross+t.flexStyle.crossBefore+t.flexStyle.crossAfter}}},{}],10:[function(e,t,r){t.exports=function(e){for(var t,r=0,l=-1;t=e.children[++l];)"auto"===t.flexStyle.mainBefore&&++r,"auto"===t.flexStyle.mainAfter&&++r;if(r>0){for(l=-1;t=e.children[++l];)"auto"===t.flexStyle.mainBefore&&(t.flexStyle.mainBefore=e.mainSpace/r),"auto"===t.flexStyle.mainAfter&&(t.flexStyle.mainAfter=e.mainSpace/r),"auto"===t.flexStyle.main?t.flexStyle.mainOuter=t.flexStyle.mainOffset+t.flexStyle.mainBefore+t.flexStyle.mainAfter:t.flexStyle.mainOuter=t.flexStyle.main+t.flexStyle.mainBefore+t.flexStyle.mainAfter;e.mainSpace=0}}},{}],11:[function(e,t,r){var l=/^(column|row)-reverse$/;t.exports=function(e){e.children.sort(function(e,t){return e.style.order-t.style.order||e.index-t.index}),l.test(e.style.flexDirection)&&e.children.reverse()}},{}],12:[function(e,t,r){function l(e,t,r){for(var l=e.length,n=-1;++n<l;)n in e&&(r=t(r,e[n],n));return r}t.exports=l},{}],13:[function(e,t,r){function l(e){i(o(e))}var n=e("./read"),f=e("./write"),o=e("./readAll"),i=e("./writeAll");t.exports=l,t.exports.read=n,t.exports.write=f,t.exports.readAll=o,t.exports.writeAll=i},{"./read":15,"./readAll":16,"./write":17,"./writeAll":18}],14:[function(e,t,r){function l(e,t){var r=String(e).match(f);if(!r)return e;var l=r[1],o=r[2];return"px"===o?1*l:"cm"===o?.3937*l*96:"in"===o?96*l:"mm"===o?.3937*l*96/10:"pc"===o?12*l*96/72:"pt"===o?96*l/72:"rem"===o?16*l:n(e,t)}function n(e,t){o.style.cssText="border:none!important;clip:rect(0 0 0 0)!important;display:block!important;font-size:1em!important;height:0!important;margin:0!important;padding:0!important;position:relative!important;width:"+e+"!important",t.parentNode.insertBefore(o,t.nextSibling);var r=o.offsetWidth;return t.parentNode.removeChild(o),r}t.exports=l;var f=/^([-+]?\d*\.?\d+)(%|[a-z]+)$/,o=document.createElement("div")},{}],15:[function(e,t,r){function l(e){var t={alignContent:"stretch",alignItems:"stretch",alignSelf:"auto",borderBottomWidth:0,borderLeftWidth:0,borderRightWidth:0,borderTopWidth:0,boxSizing:"content-box",display:"inline",flexBasis:"auto",flexDirection:"row",flexGrow:0,flexShrink:1,flexWrap:"nowrap",justifyContent:"flex-start",height:"auto",marginTop:0,marginRight:0,marginLeft:0,marginBottom:0,paddingTop:0,paddingRight:0,paddingLeft:0,paddingBottom:0,maxHeight:"none",maxWidth:"none",minHeight:0,minWidth:0,order:0,position:"static",width:"auto"},r=e instanceof Element;if(r){var l=e.hasAttribute("data-style"),i=l?e.getAttribute("data-style"):e.getAttribute("style")||"";l||e.setAttribute("data-style",i);var a=window.getComputedStyle&&getComputedStyle(e)||{};o(t,a);var c=e.currentStyle||{};n(t,c),f(t,i);for(var y in t)t[y]=s(t[y],e);var x=e.getBoundingClientRect();t.offsetHeight=x.height||e.offsetHeight,t.offsetWidth=x.width||e.offsetWidth}var S={element:e,style:t};return S}function n(e,t){for(var r in e){var l=r in t;if(l)e[r]=t[r];else{var n=r.replace(/[A-Z]/g,"-$&").toLowerCase(),f=n in t;f&&(e[r]=t[n])}}var o="-js-display"in t;o&&(e.display=t["-js-display"])}function f(e,t){for(var r;r=i.exec(t);){var l=r[1].toLowerCase().replace(/-[a-z]/g,function(e){return e.slice(1).toUpperCase()});e[l]=r[2]}}function o(e,t){for(var r in e){var l=r in t;l&&!/^(alignSelf|height|width)$/.test(r)&&(e[r]=t[r])}}t.exports=l;var i=/([^\s:;]+)\s*:\s*([^;]+?)\s*(;|$)/g,s=e("./getComputedLength")},{"./getComputedLength":14}],16:[function(e,t,r){function l(e){var t=[];return n(e,t),t}function n(e,t){for(var r,l=f(e),i=[],s=-1;r=e.childNodes[++s];){var a=3===r.nodeType&&!/^\s*$/.test(r.nodeValue);if(l&&a){var c=r;r=e.insertBefore(document.createElement("flex-item"),c),r.appendChild(c)}var y=r instanceof Element;if(y){var x=n(r,t);if(l){var S=r.style;S.display="inline-block",S.position="absolute",x.style=o(r).style,i.push(x)}}}var m={element:e,children:i};return l&&(m.style=o(e).style,t.push(m)),m}function f(e){var t=e instanceof Element,r=t&&e.getAttribute("data-style"),l=t&&e.currentStyle&&e.currentStyle["-js-display"],n=i.test(r)||s.test(l);return n}t.exports=l;var o=e("../read"),i=/(^|;)\s*display\s*:\s*(inline-)?flex\s*(;|$)/i,s=/^(inline-)?flex$/i},{"../read":15}],17:[function(e,t,r){function l(e){f(e);var t=e.element.style,r="inline"===e.mainAxis?["main","cross"]:["cross","main"];t.boxSizing="content-box",t.display="block",t.position="relative",t.width=n(e.flexStyle[r[0]]-e.flexStyle[r[0]+"InnerBefore"]-e.flexStyle[r[0]+"InnerAfter"]-e.flexStyle[r[0]+"BorderBefore"]-e.flexStyle[r[0]+"BorderAfter"]),t.height=n(e.flexStyle[r[1]]-e.flexStyle[r[1]+"InnerBefore"]-e.flexStyle[r[1]+"InnerAfter"]-e.flexStyle[r[1]+"BorderBefore"]-e.flexStyle[r[1]+"BorderAfter"]);for(var l,o=-1;l=e.children[++o];){var i=l.element.style,s="inline"===l.mainAxis?["main","cross"]:["cross","main"];i.boxSizing="content-box",i.display="block",i.position="absolute","auto"!==l.flexStyle[s[0]]&&(i.width=n(l.flexStyle[s[0]]-l.flexStyle[s[0]+"InnerBefore"]-l.flexStyle[s[0]+"InnerAfter"]-l.flexStyle[s[0]+"BorderBefore"]-l.flexStyle[s[0]+"BorderAfter"])),"auto"!==l.flexStyle[s[1]]&&(i.height=n(l.flexStyle[s[1]]-l.flexStyle[s[1]+"InnerBefore"]-l.flexStyle[s[1]+"InnerAfter"]-l.flexStyle[s[1]+"BorderBefore"]-l.flexStyle[s[1]+"BorderAfter"])),i.top=n(l.flexStyle[s[1]+"Start"]),i.left=n(l.flexStyle[s[0]+"Start"]),i.marginTop=n(l.flexStyle[s[1]+"Before"]),i.marginRight=n(l.flexStyle[s[0]+"After"]),i.marginBottom=n(l.flexStyle[s[1]+"After"]),i.marginLeft=n(l.flexStyle[s[0]+"Before"])}}function n(e){return"string"==typeof e?e:Math.max(e,0)+"px"}t.exports=l;var f=e("../flexbox")},{"../flexbox":7}],18:[function(e,t,r){function l(e){for(var t,r=-1;t=e[++r];)n(t)}t.exports=l;var n=e("../write")},{"../write":17}]},{},[13])(13)});
+	var require;var require;/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
+	!function(e){if(true)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var t;t="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,t.flexibility=e()}}(function(){return function e(t,r,l){function n(o,i){if(!r[o]){if(!t[o]){var s="function"==typeof require&&require;if(!i&&s)return require(o,!0);if(f)return f(o,!0);var a=new Error("Cannot find module '"+o+"'");throw a.code="MODULE_NOT_FOUND",a}var c=r[o]={exports:{}};t[o][0].call(c.exports,function(e){var r=t[o][1][e];return n(r?r:e)},c,c.exports,e,t,r,l)}return r[o].exports}for(var f="function"==typeof require&&require,o=0;o<l.length;o++)n(l[o]);return n}({1:[function(e,t,r){t.exports=function(e){var t,r,l,n=-1;if(e.lines.length>1&&"flex-start"===e.style.alignContent)for(t=0;l=e.lines[++n];)l.crossStart=t,t+=l.cross;else if(e.lines.length>1&&"flex-end"===e.style.alignContent)for(t=e.flexStyle.crossSpace;l=e.lines[++n];)l.crossStart=t,t+=l.cross;else if(e.lines.length>1&&"center"===e.style.alignContent)for(t=e.flexStyle.crossSpace/2;l=e.lines[++n];)l.crossStart=t,t+=l.cross;else if(e.lines.length>1&&"space-between"===e.style.alignContent)for(r=e.flexStyle.crossSpace/(e.lines.length-1),t=0;l=e.lines[++n];)l.crossStart=t,t+=l.cross+r;else if(e.lines.length>1&&"space-around"===e.style.alignContent)for(r=2*e.flexStyle.crossSpace/(2*e.lines.length),t=r/2;l=e.lines[++n];)l.crossStart=t,t+=l.cross+r;else for(r=e.flexStyle.crossSpace/e.lines.length,t=e.flexStyle.crossInnerBefore;l=e.lines[++n];)l.crossStart=t,l.cross+=r,t+=l.cross}},{}],2:[function(e,t,r){t.exports=function(e){for(var t,r=-1;line=e.lines[++r];)for(t=-1;child=line.children[++t];){var l=child.style.alignSelf;"auto"===l&&(l=e.style.alignItems),"flex-start"===l?child.flexStyle.crossStart=line.crossStart:"flex-end"===l?child.flexStyle.crossStart=line.crossStart+line.cross-child.flexStyle.crossOuter:"center"===l?child.flexStyle.crossStart=line.crossStart+(line.cross-child.flexStyle.crossOuter)/2:(child.flexStyle.crossStart=line.crossStart,child.flexStyle.crossOuter=line.cross,child.flexStyle.cross=child.flexStyle.crossOuter-child.flexStyle.crossBefore-child.flexStyle.crossAfter)}}},{}],3:[function(e,t,r){t.exports=function l(e,l){var t="row"===l||"row-reverse"===l,r=e.mainAxis;if(r){var n=t&&"inline"===r||!t&&"block"===r;n||(e.flexStyle={main:e.flexStyle.cross,cross:e.flexStyle.main,mainOffset:e.flexStyle.crossOffset,crossOffset:e.flexStyle.mainOffset,mainBefore:e.flexStyle.crossBefore,mainAfter:e.flexStyle.crossAfter,crossBefore:e.flexStyle.mainBefore,crossAfter:e.flexStyle.mainAfter,mainInnerBefore:e.flexStyle.crossInnerBefore,mainInnerAfter:e.flexStyle.crossInnerAfter,crossInnerBefore:e.flexStyle.mainInnerBefore,crossInnerAfter:e.flexStyle.mainInnerAfter,mainBorderBefore:e.flexStyle.crossBorderBefore,mainBorderAfter:e.flexStyle.crossBorderAfter,crossBorderBefore:e.flexStyle.mainBorderBefore,crossBorderAfter:e.flexStyle.mainBorderAfter})}else t?e.flexStyle={main:e.style.width,cross:e.style.height,mainOffset:e.style.offsetWidth,crossOffset:e.style.offsetHeight,mainBefore:e.style.marginLeft,mainAfter:e.style.marginRight,crossBefore:e.style.marginTop,crossAfter:e.style.marginBottom,mainInnerBefore:e.style.paddingLeft,mainInnerAfter:e.style.paddingRight,crossInnerBefore:e.style.paddingTop,crossInnerAfter:e.style.paddingBottom,mainBorderBefore:e.style.borderLeftWidth,mainBorderAfter:e.style.borderRightWidth,crossBorderBefore:e.style.borderTopWidth,crossBorderAfter:e.style.borderBottomWidth}:e.flexStyle={main:e.style.height,cross:e.style.width,mainOffset:e.style.offsetHeight,crossOffset:e.style.offsetWidth,mainBefore:e.style.marginTop,mainAfter:e.style.marginBottom,crossBefore:e.style.marginLeft,crossAfter:e.style.marginRight,mainInnerBefore:e.style.paddingTop,mainInnerAfter:e.style.paddingBottom,crossInnerBefore:e.style.paddingLeft,crossInnerAfter:e.style.paddingRight,mainBorderBefore:e.style.borderTopWidth,mainBorderAfter:e.style.borderBottomWidth,crossBorderBefore:e.style.borderLeftWidth,crossBorderAfter:e.style.borderRightWidth},"content-box"===e.style.boxSizing&&("number"==typeof e.flexStyle.main&&(e.flexStyle.main+=e.flexStyle.mainInnerBefore+e.flexStyle.mainInnerAfter+e.flexStyle.mainBorderBefore+e.flexStyle.mainBorderAfter),"number"==typeof e.flexStyle.cross&&(e.flexStyle.cross+=e.flexStyle.crossInnerBefore+e.flexStyle.crossInnerAfter+e.flexStyle.crossBorderBefore+e.flexStyle.crossBorderAfter));e.mainAxis=t?"inline":"block",e.crossAxis=t?"block":"inline","number"==typeof e.style.flexBasis&&(e.flexStyle.main=e.style.flexBasis+e.flexStyle.mainInnerBefore+e.flexStyle.mainInnerAfter+e.flexStyle.mainBorderBefore+e.flexStyle.mainBorderAfter),e.flexStyle.mainOuter=e.flexStyle.main,e.flexStyle.crossOuter=e.flexStyle.cross,"auto"===e.flexStyle.mainOuter&&(e.flexStyle.mainOuter=e.flexStyle.mainOffset),"auto"===e.flexStyle.crossOuter&&(e.flexStyle.crossOuter=e.flexStyle.crossOffset),"number"==typeof e.flexStyle.mainBefore&&(e.flexStyle.mainOuter+=e.flexStyle.mainBefore),"number"==typeof e.flexStyle.mainAfter&&(e.flexStyle.mainOuter+=e.flexStyle.mainAfter),"number"==typeof e.flexStyle.crossBefore&&(e.flexStyle.crossOuter+=e.flexStyle.crossBefore),"number"==typeof e.flexStyle.crossAfter&&(e.flexStyle.crossOuter+=e.flexStyle.crossAfter)}},{}],4:[function(e,t,r){var l=e("../reduce");t.exports=function(e){if(e.mainSpace>0){var t=l(e.children,function(e,t){return e+parseFloat(t.style.flexGrow)},0);t>0&&(e.main=l(e.children,function(r,l){return"auto"===l.flexStyle.main?l.flexStyle.main=l.flexStyle.mainOffset+parseFloat(l.style.flexGrow)/t*e.mainSpace:l.flexStyle.main+=parseFloat(l.style.flexGrow)/t*e.mainSpace,l.flexStyle.mainOuter=l.flexStyle.main+l.flexStyle.mainBefore+l.flexStyle.mainAfter,r+l.flexStyle.mainOuter},0),e.mainSpace=0)}}},{"../reduce":12}],5:[function(e,t,r){var l=e("../reduce");t.exports=function(e){if(e.mainSpace<0){var t=l(e.children,function(e,t){return e+parseFloat(t.style.flexShrink)},0);t>0&&(e.main=l(e.children,function(r,l){return l.flexStyle.main+=parseFloat(l.style.flexShrink)/t*e.mainSpace,l.flexStyle.mainOuter=l.flexStyle.main+l.flexStyle.mainBefore+l.flexStyle.mainAfter,r+l.flexStyle.mainOuter},0),e.mainSpace=0)}}},{"../reduce":12}],6:[function(e,t,r){var l=e("../reduce");t.exports=function(e){var t;e.lines=[t={main:0,cross:0,children:[]}];for(var r,n=-1;r=e.children[++n];)"nowrap"===e.style.flexWrap||0===t.children.length||"auto"===e.flexStyle.main||e.flexStyle.main-e.flexStyle.mainInnerBefore-e.flexStyle.mainInnerAfter-e.flexStyle.mainBorderBefore-e.flexStyle.mainBorderAfter>=t.main+r.flexStyle.mainOuter?(t.main+=r.flexStyle.mainOuter,t.cross=Math.max(t.cross,r.flexStyle.crossOuter)):e.lines.push(t={main:r.flexStyle.mainOuter,cross:r.flexStyle.crossOuter,children:[]}),t.children.push(r);e.flexStyle.mainLines=l(e.lines,function(e,t){return Math.max(e,t.main)},0),e.flexStyle.crossLines=l(e.lines,function(e,t){return e+t.cross},0),"auto"===e.flexStyle.main&&(e.flexStyle.main=Math.max(e.flexStyle.mainOffset,e.flexStyle.mainLines+e.flexStyle.mainInnerBefore+e.flexStyle.mainInnerAfter+e.flexStyle.mainBorderBefore+e.flexStyle.mainBorderAfter)),"auto"===e.flexStyle.cross&&(e.flexStyle.cross=Math.max(e.flexStyle.crossOffset,e.flexStyle.crossLines+e.flexStyle.crossInnerBefore+e.flexStyle.crossInnerAfter+e.flexStyle.crossBorderBefore+e.flexStyle.crossBorderAfter)),e.flexStyle.crossSpace=e.flexStyle.cross-e.flexStyle.crossInnerBefore-e.flexStyle.crossInnerAfter-e.flexStyle.crossBorderBefore-e.flexStyle.crossBorderAfter-e.flexStyle.crossLines,e.flexStyle.mainOuter=e.flexStyle.main+e.flexStyle.mainBefore+e.flexStyle.mainAfter,e.flexStyle.crossOuter=e.flexStyle.cross+e.flexStyle.crossBefore+e.flexStyle.crossAfter}},{"../reduce":12}],7:[function(e,t,r){function l(t){for(var r,l=-1;r=t.children[++l];)e("./flex-direction")(r,t.style.flexDirection);e("./flex-direction")(t,t.style.flexDirection),e("./order")(t),e("./flexbox-lines")(t),e("./align-content")(t),l=-1;for(var n;n=t.lines[++l];)n.mainSpace=t.flexStyle.main-t.flexStyle.mainInnerBefore-t.flexStyle.mainInnerAfter-t.flexStyle.mainBorderBefore-t.flexStyle.mainBorderAfter-n.main,e("./flex-grow")(n),e("./flex-shrink")(n),e("./margin-main")(n),e("./margin-cross")(n),e("./justify-content")(n,t.style.justifyContent,t);e("./align-items")(t)}t.exports=l},{"./align-content":1,"./align-items":2,"./flex-direction":3,"./flex-grow":4,"./flex-shrink":5,"./flexbox-lines":6,"./justify-content":8,"./margin-cross":9,"./margin-main":10,"./order":11}],8:[function(e,t,r){t.exports=function(e,t,r){var l,n,f,o=r.flexStyle.mainInnerBefore,i=-1;if("flex-end"===t)for(l=e.mainSpace,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter;else if("center"===t)for(l=e.mainSpace/2,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter;else if("space-between"===t)for(n=e.mainSpace/(e.children.length-1),l=0,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter+n;else if("space-around"===t)for(n=2*e.mainSpace/(2*e.children.length),l=n/2,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter+n;else for(l=0,l+=o;f=e.children[++i];)f.flexStyle.mainStart=l,l+=f.flexStyle.mainOuter}},{}],9:[function(e,t,r){t.exports=function(e){for(var t,r=-1;t=e.children[++r];){var l=0;"auto"===t.flexStyle.crossBefore&&++l,"auto"===t.flexStyle.crossAfter&&++l;var n=e.cross-t.flexStyle.crossOuter;"auto"===t.flexStyle.crossBefore&&(t.flexStyle.crossBefore=n/l),"auto"===t.flexStyle.crossAfter&&(t.flexStyle.crossAfter=n/l),"auto"===t.flexStyle.cross?t.flexStyle.crossOuter=t.flexStyle.crossOffset+t.flexStyle.crossBefore+t.flexStyle.crossAfter:t.flexStyle.crossOuter=t.flexStyle.cross+t.flexStyle.crossBefore+t.flexStyle.crossAfter}}},{}],10:[function(e,t,r){t.exports=function(e){for(var t,r=0,l=-1;t=e.children[++l];)"auto"===t.flexStyle.mainBefore&&++r,"auto"===t.flexStyle.mainAfter&&++r;if(r>0){for(l=-1;t=e.children[++l];)"auto"===t.flexStyle.mainBefore&&(t.flexStyle.mainBefore=e.mainSpace/r),"auto"===t.flexStyle.mainAfter&&(t.flexStyle.mainAfter=e.mainSpace/r),"auto"===t.flexStyle.main?t.flexStyle.mainOuter=t.flexStyle.mainOffset+t.flexStyle.mainBefore+t.flexStyle.mainAfter:t.flexStyle.mainOuter=t.flexStyle.main+t.flexStyle.mainBefore+t.flexStyle.mainAfter;e.mainSpace=0}}},{}],11:[function(e,t,r){var l=/^(column|row)-reverse$/;t.exports=function(e){e.children.sort(function(e,t){return e.style.order-t.style.order||e.index-t.index}),l.test(e.style.flexDirection)&&e.children.reverse()}},{}],12:[function(e,t,r){function l(e,t,r){for(var l=e.length,n=-1;++n<l;)n in e&&(r=t(r,e[n],n));return r}t.exports=l},{}],13:[function(e,t,r){function l(e){i(o(e))}var n=e("./read"),f=e("./write"),o=e("./readAll"),i=e("./writeAll");t.exports=l,t.exports.read=n,t.exports.write=f,t.exports.readAll=o,t.exports.writeAll=i},{"./read":15,"./readAll":16,"./write":17,"./writeAll":18}],14:[function(e,t,r){function l(e,t){var r=String(e).match(f);if(!r)return e;var l=r[1],o=r[2];return"px"===o?1*l:"cm"===o?.3937*l*96:"in"===o?96*l:"mm"===o?.3937*l*96/10:"pc"===o?12*l*96/72:"pt"===o?96*l/72:"rem"===o?16*l:n(e,t)}function n(e,t){o.style.cssText="border:none!important;clip:rect(0 0 0 0)!important;display:block!important;font-size:1em!important;height:0!important;margin:0!important;padding:0!important;position:relative!important;width:"+e+"!important",t.parentNode.insertBefore(o,t.nextSibling);var r=o.offsetWidth;return t.parentNode.removeChild(o),r}t.exports=l;var f=/^([-+]?\d*\.?\d+)(%|[a-z]+)$/,o=document.createElement("div")},{}],15:[function(e,t,r){function l(e){var t={alignContent:"stretch",alignItems:"stretch",alignSelf:"auto",borderBottomWidth:0,borderLeftWidth:0,borderRightWidth:0,borderTopWidth:0,boxSizing:"content-box",display:"inline",flexBasis:"auto",flexDirection:"row",flexGrow:0,flexShrink:1,flexWrap:"nowrap",justifyContent:"flex-start",height:"auto",marginTop:0,marginRight:0,marginLeft:0,marginBottom:0,paddingTop:0,paddingRight:0,paddingLeft:0,paddingBottom:0,maxHeight:"none",maxWidth:"none",minHeight:0,minWidth:0,order:0,position:"static",width:"auto"},r=e instanceof Element;if(r){var l=e.hasAttribute("data-style"),i=l?e.getAttribute("data-style"):e.getAttribute("style")||"";l||e.setAttribute("data-style",i);var a=window.getComputedStyle&&getComputedStyle(e)||{};o(t,a);var c=e.currentStyle||{};n(t,c),f(t,i);for(var y in t)t[y]=s(t[y],e);var x=e.getBoundingClientRect();t.offsetHeight=x.height||e.offsetHeight,t.offsetWidth=x.width||e.offsetWidth}var S={element:e,style:t};return S}function n(e,t){for(var r in e){var l=r in t;if(l)e[r]=t[r];else{var n=r.replace(/[A-Z]/g,"-$&").toLowerCase(),f=n in t;f&&(e[r]=t[n])}}var o="-js-display"in t;o&&(e.display=t["-js-display"])}function f(e,t){for(var r;r=i.exec(t);){var l=r[1].toLowerCase().replace(/-[a-z]/g,function(e){return e.slice(1).toUpperCase()});e[l]=r[2]}}function o(e,t){for(var r in e){var l=r in t;l&&!/^(alignSelf|height|width)$/.test(r)&&(e[r]=t[r])}}t.exports=l;var i=/([^\s:;]+)\s*:\s*([^;]+?)\s*(;|$)/g,s=e("./getComputedLength")},{"./getComputedLength":14}],16:[function(e,t,r){function l(e){var t=[];return n(e,t),t}function n(e,t){for(var r,l=f(e),i=[],s=-1;r=e.childNodes[++s];){var a=3===r.nodeType&&!/^\s*$/.test(r.nodeValue);if(l&&a){var c=r;r=e.insertBefore(document.createElement("flex-item"),c),r.appendChild(c)}var y=r instanceof Element;if(y){var x=n(r,t);if(l){var S=r.style;S.display="inline-block",S.position="absolute",x.style=o(r).style,i.push(x)}}}var m={element:e,children:i};return l&&(m.style=o(e).style,t.push(m)),m}function f(e){var t=e instanceof Element,r=t&&e.getAttribute("data-style"),l=t&&e.currentStyle&&e.currentStyle["-js-display"],n=i.test(r)||s.test(l);return n}t.exports=l;var o=e("../read"),i=/(^|;)\s*display\s*:\s*(inline-)?flex\s*(;|$)/i,s=/^(inline-)?flex$/i},{"../read":15}],17:[function(e,t,r){function l(e){f(e);var t=e.element.style,r="inline"===e.mainAxis?["main","cross"]:["cross","main"];t.boxSizing="content-box",t.display="block",t.position="relative",t.width=n(e.flexStyle[r[0]]-e.flexStyle[r[0]+"InnerBefore"]-e.flexStyle[r[0]+"InnerAfter"]-e.flexStyle[r[0]+"BorderBefore"]-e.flexStyle[r[0]+"BorderAfter"]),t.height=n(e.flexStyle[r[1]]-e.flexStyle[r[1]+"InnerBefore"]-e.flexStyle[r[1]+"InnerAfter"]-e.flexStyle[r[1]+"BorderBefore"]-e.flexStyle[r[1]+"BorderAfter"]);for(var l,o=-1;l=e.children[++o];){var i=l.element.style,s="inline"===l.mainAxis?["main","cross"]:["cross","main"];i.boxSizing="content-box",i.display="block",i.position="absolute","auto"!==l.flexStyle[s[0]]&&(i.width=n(l.flexStyle[s[0]]-l.flexStyle[s[0]+"InnerBefore"]-l.flexStyle[s[0]+"InnerAfter"]-l.flexStyle[s[0]+"BorderBefore"]-l.flexStyle[s[0]+"BorderAfter"])),"auto"!==l.flexStyle[s[1]]&&(i.height=n(l.flexStyle[s[1]]-l.flexStyle[s[1]+"InnerBefore"]-l.flexStyle[s[1]+"InnerAfter"]-l.flexStyle[s[1]+"BorderBefore"]-l.flexStyle[s[1]+"BorderAfter"])),i.top=n(l.flexStyle[s[1]+"Start"]),i.left=n(l.flexStyle[s[0]+"Start"]),i.marginTop=n(l.flexStyle[s[1]+"Before"]),i.marginRight=n(l.flexStyle[s[0]+"After"]),i.marginBottom=n(l.flexStyle[s[1]+"After"]),i.marginLeft=n(l.flexStyle[s[0]+"Before"])}}function n(e){return"string"==typeof e?e:Math.max(e,0)+"px"}t.exports=l;var f=e("../flexbox")},{"../flexbox":7}],18:[function(e,t,r){function l(e){for(var t,r=-1;t=e[++r];)n(t)}t.exports=l;var n=e("../write")},{"../write":17}]},{},[13])(13)});
 
 /***/ },
 /* 9 */
@@ -12577,6 +12622,30 @@
 /* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -12650,6 +12719,30 @@
 /* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -12705,6 +12798,30 @@
 /* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -12734,6 +12851,30 @@
 /* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -12747,6 +12888,10 @@
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
 	__webpack_require__(70);
+	
+	var _componentsProductMiniature = __webpack_require__(71);
+	
+	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 	
 	(0, _jquery2['default'])(document).ready(function () {
 	  _prestashop2['default'].on('clickQuickView', function (elm) {
@@ -12832,36 +12977,39 @@
 	    (0, _jquery2['default'])('#content-wrapper').removeClass('hidden-sm-down');
 	    (0, _jquery2['default'])('#footer').removeClass('hidden-sm-down');
 	  });
-
+	
 	  (0, _jquery2['default'])('body').on('change', '#search_filters input[data-search-url]', function (event) {
 	    _prestashop2['default'].emit('updateFacets', event.target.dataset.searchUrl);
 	  });
-
+	
 	  (0, _jquery2['default'])('body').on('click', '.js-search-filters-clear-all', function (event) {
 	    _prestashop2['default'].emit('updateFacets', event.target.dataset.searchUrl);
 	  });
-
+	
 	  (0, _jquery2['default'])('body').on('click', '.js-search-link', function (event) {
 	    event.preventDefault();
 	    _prestashop2['default'].emit('updateFacets', (0, _jquery2['default'])(event.target).closest('a').get(0).href);
 	  });
-
+	
 	  (0, _jquery2['default'])('body').on('change', '#search_filters select', function (event) {
 	    var form = (0, _jquery2['default'])(event.target).closest('form');
 	    _prestashop2['default'].emit('updateFacets', '?' + form.serialize());
 	  });
-
+	
 	  _prestashop2['default'].on('updateProductList', function (data) {
 	    updateProductListDOM(data);
 	  });
 	});
-
+	
 	function updateProductListDOM(data) {
 	  (0, _jquery2['default'])('#search_filters').replaceWith(data.rendered_facets);
 	  (0, _jquery2['default'])('#js-active-search-filters').replaceWith(data.rendered_active_filters);
 	  (0, _jquery2['default'])('#js-product-list-top').replaceWith(data.rendered_products_top);
 	  (0, _jquery2['default'])('#js-product-list').replaceWith(data.rendered_products);
 	  (0, _jquery2['default'])('#js-product-list-bottom').replaceWith(data.rendered_products_bottom);
+	
+	  var productMinitature = new _componentsProductMiniature2['default']();
+	  productMinitature.init();
 	}
 
 /***/ },
@@ -16759,6 +16907,117 @@
 /* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var ProductMinitature = (function () {
+	  function ProductMinitature() {
+	    _classCallCheck(this, ProductMinitature);
+	  }
+	
+	  _createClass(ProductMinitature, [{
+	    key: 'init',
+	    value: function init() {
+	      (0, _jquery2['default'])('.js-product-miniature').each(function (index, element) {
+	        var FLAG_MARGIN = 10;
+	        var $percent = (0, _jquery2['default'])(element).find('.discount-percentage');
+	        var $onsale = (0, _jquery2['default'])(element).find('.on-sale');
+	        var $new = (0, _jquery2['default'])(element).find('.new');
+	        if ($percent.length) {
+	          $new.css('top', $percent.height() * 2 + FLAG_MARGIN);
+	          $percent.css('top', -(0, _jquery2['default'])(element).find('.thumbnail-container').height() + (0, _jquery2['default'])(element).find('.product-description').height() + FLAG_MARGIN);
+	        }
+	        if ($onsale.length) {
+	          $percent.css('top', parseFloat($percent.css('top')) + $onsale.height() + FLAG_MARGIN);
+	          $new.css('top', $percent.height() * 2 + $onsale.height() + FLAG_MARGIN * 2);
+	        }
+	        if ((0, _jquery2['default'])(element).find('.color').length > 5) {
+	          (function () {
+	            var count = 0;
+	            (0, _jquery2['default'])(element).find('.color').each(function (index, element) {
+	              if (index > 4) {
+	                (0, _jquery2['default'])(element).hide();
+	                count++;
+	              }
+	            });
+	            (0, _jquery2['default'])(element).find('.js-count').append('+' + count);
+	          })();
+	        }
+	      });
+	    }
+	  }]);
+	
+	  return ProductMinitature;
+	})();
+	
+	exports['default'] = ProductMinitature;
+	module.exports = exports['default'];
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -16849,7 +17108,7 @@
 	});
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17113,9 +17372,33 @@
 	});
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
@@ -17173,9 +17456,33 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
@@ -17236,72 +17543,33 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 75 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	var ProductMinitature = (function () {
-	  function ProductMinitature() {
-	    _classCallCheck(this, ProductMinitature);
-	  }
-	
-	  _createClass(ProductMinitature, [{
-	    key: 'init',
-	    value: function init() {
-	      (0, _jquery2['default'])('.js-product-miniature').each(function (index, element) {
-	        var FLAG_MARGIN = 10;
-	        var $percent = (0, _jquery2['default'])(element).find('.discount-percentage');
-	        var $onsale = (0, _jquery2['default'])(element).find('.on-sale');
-	        var $new = (0, _jquery2['default'])(element).find('.new');
-	        if ($percent.length) {
-	          $new.css('top', $percent.height() * 2 + FLAG_MARGIN);
-	          $percent.css('top', -(0, _jquery2['default'])(element).find('.thumbnail-container').height() + (0, _jquery2['default'])(element).find('.product-description').height() + FLAG_MARGIN);
-	        }
-	        if ($onsale.length) {
-	          $percent.css('top', parseFloat($percent.css('top')) + $onsale.height() + FLAG_MARGIN);
-	          $new.css('top', $percent.height() * 2 + $onsale.height() + FLAG_MARGIN * 2);
-	        }
-	        if ((0, _jquery2['default'])(element).find('.color').length > 5) {
-	          (function () {
-	            var count = 0;
-	            (0, _jquery2['default'])(element).find('.color').each(function (index, element) {
-	              if (index > 4) {
-	                (0, _jquery2['default'])(element).hide();
-	                count++;
-	              }
-	            });
-	            (0, _jquery2['default'])(element).find('.js-count').append('+' + count);
-	          })();
-	        }
-	      });
-	    }
-	  }]);
-	
-	  return ProductMinitature;
-	})();
-	
-	exports['default'] = ProductMinitature;
-	module.exports = exports['default'];
-
-/***/ },
 /* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
@@ -17391,6 +17659,30 @@
 /* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
@@ -17411,7 +17703,7 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _dropDown = __webpack_require__(73);
+	var _dropDown = __webpack_require__(74);
 	
 	var _dropDown2 = _interopRequireDefault(_dropDown);
 	
@@ -17494,6 +17786,30 @@
 /* 78 */
 /***/ function(module, exports) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	// Copyright Joyent, Inc. and other Node contributors.
 	//
 	// Permission is hereby granted, free of charge, to any person obtaining a
@@ -17802,6 +18118,30 @@
 /* 79 */
 /***/ function(module, exports) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	"use strict";
 	
 	(function ($) {
@@ -17999,6 +18339,30 @@
 /* 80 */
 /***/ function(module, exports) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	"use strict";
 	
 	(function ($) {
@@ -18139,6 +18503,30 @@
 /* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
