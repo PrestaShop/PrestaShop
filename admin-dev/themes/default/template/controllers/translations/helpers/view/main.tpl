@@ -37,10 +37,13 @@
       }
 
       if ('modules' == $('#type option:selected').val()) {
-        formTranslation.attr(
-          'action',
-          $('#ps_module_selector select[name="selected-modules"] option:selected').data('url-to-translate') + '&lang=' + id_lang
-        );
+        urlToTranslate = $('#ps_module_selector select[name="selected-modules"] option:selected').data('url-to-translate');
+        if ('' !== urlToTranslate) {
+          formTranslation.attr(
+            'action',
+            urlToTranslate + '&lang=' + id_lang
+          );
+        }
       } else {
         if ('legacy' === typeOption.data('controller')) {
           formTranslation.attr('action', formTranslation.data('legacyaction'));

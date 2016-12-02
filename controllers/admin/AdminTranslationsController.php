@@ -207,7 +207,7 @@ class AdminTranslationsControllerCore extends AdminController
         foreach ($this->getListModules() as $module) {
             $modules[$module] = array(
                 'name' => $module,
-                'urlToTranslate' => $this->context->link->getAdminLink(
+                'urlToTranslate' => !$this->isUsingNewTranslationsSystem($module) ? $this->context->link->getAdminLink(
                     'AdminTranslations',
                     true,
                     array(),
@@ -215,7 +215,7 @@ class AdminTranslationsControllerCore extends AdminController
                         'type' => 'modules',
                         'module' => $module,
                     )
-                ),
+                ) : '',
             );
         }
 
@@ -241,6 +241,18 @@ class AdminTranslationsControllerCore extends AdminController
         $this->content .= parent::renderView();
 
         return $this->content;
+    }
+
+    private function isUsingNewTranslationsSystem($moduleName)
+    {
+        $domains = array_keys($this->context->getTranslator()->getCatalogue()->all());
+        $moduleName = preg_replace('/^ps_(\w+)/', '$1', $moduleName);
+
+        if (count(preg_grep('/'.$moduleName.'/i', $domains))) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
