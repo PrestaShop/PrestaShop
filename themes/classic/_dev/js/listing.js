@@ -26,6 +26,8 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 import 'velocity-animate';
 
+import ProductMinitature from './components/product-miniature';
+
 $(document).ready(() => {
   prestashop.on('clickQuickView', function (elm) {
     let data = {
@@ -140,4 +142,8 @@ function updateProductListDOM (data) {
   $('#js-product-list-top').replaceWith(data.rendered_products_top);
   $('#js-product-list').replaceWith(data.rendered_products);
   $('#js-product-list-bottom').replaceWith(data.rendered_products_bottom);
+
+  let productMinitature = new ProductMinitature();
+  productMinitature.init();
+
 }

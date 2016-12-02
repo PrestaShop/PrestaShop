@@ -361,10 +361,21 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $query->getSortOrder()->toString()
         );
 
+        $sort_selected = false;
+        if (!empty($sort_orders)) {
+            foreach ($sort_orders as $order) {
+                if (isset($order['current']) && true === $order['current']) {
+                    $sort_selected = $order['label'];
+                    break;
+                }
+            }
+        }
+
         $searchVariables = array(
             'label' => $this->getListingLabel(),
             'products' => $products,
             'sort_orders' => $sort_orders,
+            'sort_selected' => $sort_selected,
             'pagination' => $pagination,
             'rendered_facets' => $rendered_facets,
             'rendered_active_filters' => $rendered_active_filters,

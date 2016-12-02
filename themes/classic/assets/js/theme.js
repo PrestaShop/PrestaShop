@@ -101,19 +101,19 @@
 	
 	__webpack_require__(59);
 	
-	__webpack_require__(61);
-	
 	__webpack_require__(62);
 	
-	var _componentsDropDown = __webpack_require__(63);
+	__webpack_require__(63);
+	
+	var _componentsDropDown = __webpack_require__(64);
 	
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 	
-	var _componentsForm = __webpack_require__(64);
+	var _componentsForm = __webpack_require__(65);
 	
 	var _componentsForm2 = _interopRequireDefault(_componentsForm);
 	
-	var _componentsProductMiniature = __webpack_require__(65);
+	var _componentsProductMiniature = __webpack_require__(61);
 	
 	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 	
@@ -157,9 +157,6 @@
 	  topMenu.init();
 	  productMinitature.init();
 	  productSelect.init();
-	  (0, _expose$ExposeJQueryJquery2['default'])("#products").bind("DOMSubtreeModified", function () {
-	    productMinitature.init();
-	  });
 	});
 
 /***/ },
@@ -12858,6 +12855,10 @@
 	
 	__webpack_require__(60);
 	
+	var _componentsProductMiniature = __webpack_require__(61);
+	
+	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
+	
 	(0, _jquery2['default'])(document).ready(function () {
 	  _prestashop2['default'].on('clickQuickView', function (elm) {
 	    var data = {
@@ -12972,6 +12973,9 @@
 	  (0, _jquery2['default'])('#js-product-list-top').replaceWith(data.rendered_products_top);
 	  (0, _jquery2['default'])('#js-product-list').replaceWith(data.rendered_products);
 	  (0, _jquery2['default'])('#js-product-list-bottom').replaceWith(data.rendered_products_bottom);
+	
+	  var productMinitature = new _componentsProductMiniature2['default']();
+	  productMinitature.init();
 	}
 
 /***/ },
@@ -16999,6 +17003,93 @@
 	 */
 	'use strict';
 	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var ProductMinitature = (function () {
+	  function ProductMinitature() {
+	    _classCallCheck(this, ProductMinitature);
+	  }
+	
+	  _createClass(ProductMinitature, [{
+	    key: 'init',
+	    value: function init() {
+	      (0, _jquery2['default'])('.js-product-miniature').each(function (index, element) {
+	        var FLAG_MARGIN = 10;
+	        var $percent = (0, _jquery2['default'])(element).find('.discount-percentage');
+	        var $onsale = (0, _jquery2['default'])(element).find('.on-sale');
+	        var $new = (0, _jquery2['default'])(element).find('.new');
+	        if ($percent.length) {
+	          $new.css('top', $percent.height() * 2 + FLAG_MARGIN);
+	          $percent.css('top', -(0, _jquery2['default'])(element).find('.thumbnail-container').height() + (0, _jquery2['default'])(element).find('.product-description').height() + FLAG_MARGIN);
+	        }
+	        if ($onsale.length) {
+	          $percent.css('top', parseFloat($percent.css('top')) + $onsale.height() + FLAG_MARGIN);
+	          $new.css('top', $percent.height() * 2 + $onsale.height() + FLAG_MARGIN * 2);
+	        }
+	        if ((0, _jquery2['default'])(element).find('.color').length > 5) {
+	          (function () {
+	            var count = 0;
+	            (0, _jquery2['default'])(element).find('.color').each(function (index, element) {
+	              if (index > 4) {
+	                (0, _jquery2['default'])(element).hide();
+	                count++;
+	              }
+	            });
+	            (0, _jquery2['default'])(element).find('.js-count').append('+' + count);
+	          })();
+	        }
+	      });
+	    }
+	  }]);
+	
+	  return ProductMinitature;
+	})();
+	
+	exports['default'] = ProductMinitature;
+	module.exports = exports['default'];
+
+/***/ },
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * 2007-2016 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2016 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
+	'use strict';
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	var _jquery = __webpack_require__(4);
@@ -17087,7 +17178,7 @@
 	});
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17351,7 +17442,7 @@
 	});
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17435,7 +17526,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17519,93 +17610,6 @@
 	})();
 	
 	exports['default'] = Form;
-	module.exports = exports['default'];
-
-/***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * 2007-2016 PrestaShop
-	 *
-	 * NOTICE OF LICENSE
-	 *
-	 * This source file is subject to the Open Software License (OSL 3.0)
-	 * that is bundled with this package in the file LICENSE.txt.
-	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
-	 * If you did not receive a copy of the license and are unable to
-	 * obtain it through the world-wide-web, please send an email
-	 * to license@prestashop.com so we can send you a copy immediately.
-	 *
-	 * DISCLAIMER
-	 *
-	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-	 * versions in the future. If you wish to customize PrestaShop for your
-	 * needs please refer to http://www.prestashop.com for more information.
-	 *
-	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2016 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-	 * International Registered Trademark & Property of PrestaShop SA
-	 */
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	var ProductMinitature = (function () {
-	  function ProductMinitature() {
-	    _classCallCheck(this, ProductMinitature);
-	  }
-	
-	  _createClass(ProductMinitature, [{
-	    key: 'init',
-	    value: function init() {
-	      (0, _jquery2['default'])('.js-product-miniature').each(function (index, element) {
-	        var FLAG_MARGIN = 10;
-	        var $percent = (0, _jquery2['default'])(element).find('.discount-percentage');
-	        var $onsale = (0, _jquery2['default'])(element).find('.on-sale');
-	        var $new = (0, _jquery2['default'])(element).find('.new');
-	        if ($percent.length) {
-	          $new.css('top', $percent.height() * 2 + FLAG_MARGIN);
-	          $percent.css('top', -(0, _jquery2['default'])(element).find('.thumbnail-container').height() + (0, _jquery2['default'])(element).find('.product-description').height() + FLAG_MARGIN);
-	        }
-	        if ($onsale.length) {
-	          $percent.css('top', parseFloat($percent.css('top')) + $onsale.height() + FLAG_MARGIN);
-	          $new.css('top', $percent.height() * 2 + $onsale.height() + FLAG_MARGIN * 2);
-	        }
-	        if ((0, _jquery2['default'])(element).find('.color').length > 5) {
-	          (function () {
-	            var count = 0;
-	            (0, _jquery2['default'])(element).find('.color').each(function (index, element) {
-	              if (index > 4) {
-	                (0, _jquery2['default'])(element).hide();
-	                count++;
-	              }
-	            });
-	            (0, _jquery2['default'])(element).find('.js-count').append('+' + count);
-	          })();
-	        }
-	      });
-	    }
-	  }]);
-	
-	  return ProductMinitature;
-	})();
-	
-	exports['default'] = ProductMinitature;
 	module.exports = exports['default'];
 
 /***/ },
@@ -17769,7 +17773,7 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _dropDown = __webpack_require__(63);
+	var _dropDown = __webpack_require__(64);
 	
 	var _dropDown2 = _interopRequireDefault(_dropDown);
 	

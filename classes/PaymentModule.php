@@ -497,9 +497,9 @@ abstract class PaymentModuleCore extends Module
                             'customization' => array()
                         );
 
-                        if (isset($product['unit_price']) && $product['unit_price']) {
-                            $product_var_tpl['unit_price'] = Tools::displayPrice($product['unit_price'], $this->context->currency, false);
-                            $product_var_tpl['unit_price_full'] = Tools::displayPrice($product['unit_price'], $this->context->currency, false)
+                        if (isset($product['price']) && $product['price']) {
+                            $product_var_tpl['unit_price'] = Tools::displayPrice($product['price'], $this->context->currency, false);
+                            $product_var_tpl['unit_price_full'] = Tools::displayPrice($product['price'], $this->context->currency, false)
                                 .' '.$product['unity'];
                         } else {
                             $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
