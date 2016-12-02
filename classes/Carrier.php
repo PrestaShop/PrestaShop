@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -220,7 +220,7 @@ class CarrierCore extends ObjectModel
         Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->def['table'].'` SET `id_reference` = '.
             (int) $this->id.' WHERE `id_carrier` = '.(int) $this->id
         );
-        
+
         foreach (Shop::getContextListShopID() as $shopId) {
             foreach (Module::getPaymentModules() as $module) {
                 Db::getInstance()->execute('

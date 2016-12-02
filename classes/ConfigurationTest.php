@@ -79,11 +79,13 @@ class ConfigurationTestCore
                 'apache_mod_rewrite' => false,
                 'curl' => false,
                 'gd' => false,
+                'json' => false,
                 'pdo_mysql' => false,
                 'config_dir' => 'config',
                 'files' => false,
                 'mails_dir' => 'mails',
                 'openssl' => 'false',
+                'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
             ));
@@ -195,6 +197,11 @@ class ConfigurationTestCore
     {
         return function_exists('imagecreatetruecolor');
     }
+    
+    public static function test_json()
+    {
+        return extension_loaded('json');
+    }
 
     public static function test_gz()
     {
@@ -203,6 +210,11 @@ class ConfigurationTestCore
         }
 
         return false;
+    }
+
+    public static function test_simplexml()
+    {
+        return extension_loaded('SimpleXML');
     }
 
     public static function test_zip()

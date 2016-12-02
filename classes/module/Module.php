@@ -1663,8 +1663,9 @@ abstract class ModuleCore
             }
         }
 
-        if ($modules_list_content === null) {
-            $modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST);
+        $modulesListCacheFilepath = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
+        if ($modules_list_content === null && is_readable($modulesListCacheFilepath)) {
+            $modules_list_content = Tools::file_get_contents($modulesListCacheFilepath);
         }
 
         if ($default_country_modules_list_content === null) {

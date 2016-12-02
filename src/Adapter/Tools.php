@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Tools as LegacyTools;
+
 /**
  * This adapter will complete the new architecture Tools.
  *
@@ -120,5 +122,10 @@ class Tools
     public function purifyHTML($html, $uri_unescape = null, $allow_style = false)
     {
         return \ToolsCore::purifyHTML($html, $uri_unescape, $allow_style);
+    }
+
+    public function refreshCaCertFile()
+    {
+        LegacyTools::refreshCaCertFile();
     }
 }

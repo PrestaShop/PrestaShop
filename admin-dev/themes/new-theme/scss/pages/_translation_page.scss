@@ -275,6 +275,10 @@ $color-active: #25B9D7;
     .form-group {
       margin-bottom: rem(10px);
     }
+
+    .form-control-warning {
+      border-color: $color-error;
+    }
   }
 
   p {
