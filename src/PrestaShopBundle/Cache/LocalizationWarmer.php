@@ -23,64 +23,63 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Cache;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Tools;
 
-class LocalizationWarmer implements CacheWarmerInterface
+/**
+ * Class LocalizationCacheWarmer.
+ *
+ * This cache warmer is also called in bootstrap of the application
+ *
+ * Put in cache localization values to be used in both back and front offices (i.e "17fr.xml")
+ *
+ * Updates the version of file provided by PrestaShop installation.
+ */
+class LocalizationCacheWarmer implements CacheWarmerInterface
 {
+    const API_PRESTASHOP_ENTRY_POINT = 'http://api.prestashop.com/localization/';
+
     private $version;
     private $country;
+    private $filesystem;
 
-    public function __construct($version, $country)
+    public function __construct($country, Filesystem $filesystem)
     {
-        $this->version = $version;
+        $this->version = _PS_VERSION_;
         $this->country = $country;
+        $this->filesystem = $filesystem;
     }
 
     public function warmUp($cacheDir)
     {
-        $fs = new Filesystem();
+        $this->filesystem->mkdir($cacheDir);
 
-        if (is_dir($cacheDir)) {
-            try {
-                $fs->mkdir($cacheDir);
-            } catch (IOExceptionInterface $e) {
-                //@todo: log
-            }
-        }
+        $pathCacheFile = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$this->version.$this->country.'.xml';
 
-        $path_cache_file = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$this->version.$this->country.'.xml';
-
-        if (is_file($path_cache_file)) {
-            $localization_file_content = file_get_contents($path_cache_file);
+        if (is_file($pathCacheFile)) {
+            $localizationFileContent = file_get_contents($pathCacheFile);
         } else {
-            $localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$this->version.'/'.$this->country.'.xml');
-            if (!@simplexml_load_string($localization_file_content)) {
-                $localization_file_content = false;
+            $localizationFileContent = @Tools::file_get_contents(self::API_PRESTASHOP_ENTRY_POINT.$this->version.'/'.$this->country.'.xml');
+            if (!@simplexml_load_string($localizationFileContent)) {
+                $localizationFileContent = false;
             }
-            if (!$localization_file_content) {
-                $localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
+            if (!$localizationFileContent) {
+                $localizationFile = _PS_ROOT_DIR_.'/localization/default.xml';
 
                 if (file_exists(_PS_ROOT_DIR_.'/localization/'.$this->country.'.xml')) {
-                    $localization_file = _PS_ROOT_DIR_.'/localization/'.$this->country.'.xml';
+                    $localizationFile = _PS_ROOT_DIR_.'/localization/'.$this->country.'.xml';
                 }
 
-                $localization_file_content = file_get_contents($localization_file);
+                $localizationFileContent = file_get_contents($localizationFile);
             }
 
-            try {
-                $fs->dumpFile($cacheDir, $localization_file_content);
-            } catch (IOExceptionInterface $e) {
-                //@todo: log
-            }
+            $this->filesystem->dumpFile($cacheDir, $localizationFileContent);
         }
 
-        return $localization_file_content;
+        return $localizationFileContent;
     }
 
     public function isOptional()

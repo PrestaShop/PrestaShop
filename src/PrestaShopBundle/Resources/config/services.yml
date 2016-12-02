@@ -47,11 +47,20 @@ services:
     prestashop.security.role.dynamic_role_hierarchy:
         class:      PrestaShopBundle\Security\Role\DynamicRoleHierarchy
 
-
     prestashop.service.product:
         class: PrestaShopBundle\Service\ProductService
         arguments:
             - "@prestashop.adapter.data_provider.product"
+
+
+    # CACHE WARMERS
+    prestashop.localization.cache_warmer:
+        class: PrestaShopBundle\Cache\LocalizationCacheWarmer
+        arguments:
+          - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+          - "@filesystem"
+        tags:
+            - { name: kernel.cache_warmer }
 
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
