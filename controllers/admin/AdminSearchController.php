@@ -42,6 +42,15 @@ class AdminSearchControllerCore extends AdminController
         $this->context = Context::getContext();
         $this->query = trim(Tools::getValue('bo_query'));
         $searchType = (int)Tools::getValue('bo_search_type');
+        
+        /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product */
+        $action = Tools::getValue('action');
+        if ($action == 'redirectToProduct') {
+            $id_product = (int)Tools::getValue('id_product');
+            $link = $this->context->link->getAdminLink('AdminProducts', false, array('id_product' => $id_product));
+            Tools::redirectAdmin($link);
+        }
+        
         /* Handle empty search field */
         if (!empty($this->query)) {
             if (!$searchType && strlen($this->query) > 1) {
@@ -358,7 +367,9 @@ class AdminSearchControllerCore extends AdminController
                 $helper->actions = array('edit');
                 $helper->show_toolbar = false;
                 $helper->table = 'product';
-                $helper->currentIndex = $this->context->link->getAdminLink('AdminProducts', false);
+                /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product, a better way need to be find */
+                $helper->currentIndex = $this->context->link->getAdminLink('AdminSearch', false);
+                $helper->currentIndex .= '&action=redirectToProduct';
 
                 $query = trim(Tools::getValue('bo_query'));
                 $searchType = (int)Tools::getValue('bo_search_type');
@@ -367,7 +378,7 @@ class AdminSearchControllerCore extends AdminController
                     $helper->currentIndex .= '&bo_query='.$query.'&bo_search_type='.$searchType;
                 }
 
-                $helper->token = Tools::getAdminTokenLite('AdminProducts');
+                $helper->token = Tools::getAdminTokenLite('AdminSearch');
 
                 if ($this->_list['products']) {
                     $view = $helper->generateList($this->_list['products'], $this->fields_list['products']);
