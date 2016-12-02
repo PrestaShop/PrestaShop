@@ -187,12 +187,14 @@ class MailCore extends ObjectModel
                     return false;
                 }
 
-                if (is_array($to_name) && $to_name && is_array($to_name) && Validate::isGenericName($to_name[$key])) {
-                    $to_name = $to_name[$key];
+                if (is_array($to_name) && isset($to_name[$key])) {
+                    $addrName = $to_name[$key];
+                } else {
+                    $addrName = $to_name;
                 }
-
-                $to_name = (($to_name == null || $to_name == $addr) ? '' : self::mimeEncode($to_name));
-                $message->addTo($addr, $to_name);
+                
+                $addrName = (($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ? '' : self::mimeEncode($addrName));
+                $message->addTo($addr, $addrName);
             }
             $to_plugin = $to[0];
         } else {
