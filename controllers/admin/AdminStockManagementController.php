@@ -113,7 +113,7 @@ class AdminStockManagementControllerCore extends AdminController
         // overrides query
         $this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations';
         $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)'.Shop::addSqlAssociation('product_attribute', 'pa', false);
-        $this->_where = 'AND a.is_virtual = 0';
+        $this->_where = 'AND a.is_virtual = 0 AND a.advanced_stock_management = 1 ';
         $this->_group = 'GROUP BY a.id_product';
 
         // displays informations
@@ -839,6 +839,7 @@ class AdminStockManagementControllerCore extends AdminController
             $this->table = 'product_attribute';
             $this->list_id = 'product_attribute';
             $this->_select = 'a.id_product_attribute as id, a.id_product, a.reference, a.ean13, a.upc';
+            $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
             $this->_where = 'AND a.id_product = '.$product_id;
             $this->_group = 'GROUP BY a.id_product_attribute';
 
