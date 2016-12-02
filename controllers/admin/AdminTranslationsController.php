@@ -1323,7 +1323,7 @@ class AdminTranslationsControllerCore extends AdminController
                 'var' => '_MODULES',
                 'dir' => _PS_ROOT_DIR_.'/modules/',
                 'file' => '',
-                'sf_controller' => false,
+                'sf_controller' => true,
                 'choice_theme' => false,
             ),
             'mails' => array(
