@@ -3102,6 +3102,7 @@ abstract class ModuleCore
 
     protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
+        $parameters['legacy'] = 'htmlspecialchars';
         return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
     }
 }
