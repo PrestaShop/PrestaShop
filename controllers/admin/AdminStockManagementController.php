@@ -138,7 +138,8 @@ class AdminStockManagementControllerCore extends AdminController
         $id_product_attribute = (int)Tools::getValue('id_product_attribute');
 
         // gets warehouses
-        $warehouses_add = $warehouses_remove = Warehouse::getWarehousesByProductId($id_product, $id_product_attribute);
+        $warehouses_add = Warehouse::getWarehouses();
+        $warehouses_remove = Warehouse::getWarehousesByProductId($id_product, $id_product_attribute);
 
         // displays warning if no warehouses
         if (!$warehouses_add) {
