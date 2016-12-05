@@ -35,10 +35,10 @@ trait PrestaShopTranslatorTrait
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
         if (null !== $domain) {
-            $domain = preg_replace('/\./', '', $domain);
+            $domain = str_replace('/\.', '', $domain);
         }
 
-        if (!$this->isSprintfString($id) || empty($parameters)) {
+        if (empty($parameters) || !$this->isSprintfString($id)) {
             $translated = parent::trans($id, $parameters, $domain, $locale);
             if (isset($parameters['legacy'])) {
                 $translated = call_user_func($parameters['legacy'],$translated);
@@ -49,17 +49,17 @@ trait PrestaShopTranslatorTrait
 
         return $translated;
     }
-
+    
     /**
      * {@inheritdoc}
      */
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
         if (null !== $domain) {
-            $domain = preg_replace('/\./', '', $domain);
+            $domain = str_replace('.', '', $domain);
         }
 
-        if (!$this->isSprintfString($id)) {
+        if (empty($parameters) || !$this->isSprintfString($id)) {
             return parent::transChoice($id, $number, $parameters, $domain, $locale);
         }
 
