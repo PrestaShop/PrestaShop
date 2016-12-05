@@ -163,7 +163,12 @@ class CartRuleCore extends ObjectModel
             $this->reduction_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
         }
 
-        return parent::update($null_values);
+        if (!parent::update($null_values)) {
+            return false;
+        }
+
+        Configuration::updateGlobalValue('PS_CART_RULE_FEATURE_ACTIVE', CartRule::isCurrentlyUsed($this->def['table'], true));
+        return true;
     }
 
     /**
