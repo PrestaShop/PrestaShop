@@ -2,6 +2,9 @@ imports:
     - { resource: admin/services.yml }
     - { resource: admin/services-form.yml }
 
+parameters:
+    prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\ProductVoter
+
 services:
     finder:
         class: Symfony\Component\Finder\Finder
@@ -45,8 +48,13 @@ services:
         arguments: ["@router"]
 
     prestashop.security.role.dynamic_role_hierarchy:
-        class:      PrestaShopBundle\Security\Role\DynamicRoleHierarchy
+        class: PrestaShopBundle\Security\Role\DynamicRoleHierarchy
 
+    prestashop.security.voter.product:
+        class: "%prestashop.security.voter.product.class%"
+        tags:
+            - { name: security.voter }
+        public: false
 
     prestashop.service.product:
         class: PrestaShopBundle\Service\ProductService
