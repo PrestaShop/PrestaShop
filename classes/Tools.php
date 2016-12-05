@@ -747,6 +747,10 @@ class ToolsCore
             $currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
+        if ($currency_to === null) {
+            $currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        }
+
         if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
             $amount *= $currency_to->conversion_rate;
         } else {
