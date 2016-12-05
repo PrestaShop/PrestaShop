@@ -77,10 +77,6 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     protected function add($id, $fullPath, $media, $priority, $inline, $server)
     {
-        if ('remote' !== $server && filesize($fullPath) === 0) {
-            return;
-        }
-
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $media = $this->getSanitizedMedia($media);
 
