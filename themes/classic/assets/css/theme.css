@@ -6406,9 +6406,20 @@ body#checkout {
       width: 141px;
       height: 180px; }
 
+.products-selection .sort-by-row {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  -js-display: flex;
+  display: flex;
+  align-items: center; }
+
 .products-selection .sort-by {
-  padding-top: 0.625rem;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
   margin-right: -0.9375rem;
   margin-left: 0.9375rem;
   text-align: right; }

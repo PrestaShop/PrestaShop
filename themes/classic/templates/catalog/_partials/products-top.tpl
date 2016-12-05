@@ -31,7 +31,7 @@
     {/if}
   </div>
   <div class="col-md-6">
-    <div class="row">
+    <div class="row sort-by-row">
 
       {block name='sort_by'}
         {include file='catalog/_partials/sort-orders.tpl' sort_orders=$listing.sort_orders}
