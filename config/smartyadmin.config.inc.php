@@ -62,10 +62,6 @@ function smartyTranslate($params, &$smarty)
     $isInModule = isset($params['mod']) && !empty($params['mod']);
     $sprintf = isset($params['sprintf']) ? $params['sprintf'] : array();
 
-    if ($htmlEntities ||  $addSlashes) {
-        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
-    }
-
     if (isset($params['d']) && !empty($params['d'])) {
         if (isset($params['tags'])) {
             $backTrace = debug_backtrace();
@@ -99,6 +95,10 @@ function smartyTranslate($params, &$smarty)
 
                 return $params['s'];
             }
+        }
+
+        if (($htmlEntities || $addSlashes)) {
+            $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
         }
 
         return $translator->trans($params['s'], $sprintf, $params['d']);
