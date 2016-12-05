@@ -1275,19 +1275,11 @@ abstract class ModuleCore
                         $file = substr($file, 0, -2);
                     }
 
-                    // We check any parse error before including the file.
-                    // If (false) is a trick to not load the class with "eval".
-                    // This way require_once will works correctly
-                    // But namespace and use statements need to be removed
-                    $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
-                    $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
                     try {
-                        if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.$content.' }') !== false) {
-                            require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
-                        } else {
-                            throw new ParseError("Parse error");
-                        }
-                    } catch (ParseError $e) {
+                        $fileContents = _PS_MODULE_DIR_.$module.'/'.$module.'.php';
+                        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7);
+                        $parser->parse($fileContents);
+                    } catch (PhpParser\Error $e) {
                         $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
                     }
 
@@ -2767,6 +2759,7 @@ abstract class ModuleCore
      */
     public function addOverride($classname)
     {
+        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7);
         $orig_path = $path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
         if (!$path) {
             $path = 'modules'.DIRECTORY_SEPARATOR.$classname.DIRECTORY_SEPARATOR.$classname.'.php';
@@ -2802,7 +2795,13 @@ abstract class ModuleCore
 
             $module_file = file($path_override);
             $module_file = array_diff($module_file, array("\n"));
-            eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
+            $new_override = preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file));
+            try {
+                $parser->parse($new_override);
+            } catch (PhpParser\Error $e) {
+                throw new Exception(sprintf(Tools::displayError('The override file "%1$s" of the module %2$s is damaged or invalid.'), 'override'.DIRECTORY_SEPARATOR.$path, $this->displayName));
+            }
+            eval($new_override);
             $module_class = new ReflectionClass($classname.'Override'.$uniq);
 
             // Check if none of the methods already exists in the override class
@@ -2872,7 +2871,13 @@ abstract class ModuleCore
                 do {
                     $uniq = uniqid();
                 } while (class_exists($classname.'OverrideOriginal_remove', false));
-                eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
+                $new_override = preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file));
+                try {
+                    $parser->parse($new_override);
+                } catch (PhpParser\Error $e) {
+                    throw new Exception(sprintf(Tools::displayError('The override file "%1$s" of the module %2$s is damaged or invalid.'), 'override'.DIRECTORY_SEPARATOR.$path, $this->displayName));
+                }
+                eval($new_override);
                 $module_class = new ReflectionClass($classname.'Override'.$uniq);
 
                 // For each method found in the override, prepend a comment with the module name and version
