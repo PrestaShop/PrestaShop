@@ -29,7 +29,7 @@
 class SmartyLazyRegister
 {
     protected $registry = array();
-    protected static $instance;
+    protected static $instances = array();
 
     /**
      * Register a function or method to be dynamically called later.
@@ -84,12 +84,14 @@ class SmartyLazyRegister
         }
     }
 
-    public static function getInstance()
+    public static function getInstance($smarty)
     {
-        if (!self::$instance) {
-            self::$instance = new self();
+        $hash = spl_object_hash($smarty);
+
+        if (!isset(self::$instances[$hash])) {
+            self::$instances[$hash] = new self();
         }
 
-        return self::$instance;
+        return self::$instances[$hash];
     }
 }

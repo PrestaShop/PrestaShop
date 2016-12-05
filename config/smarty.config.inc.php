@@ -117,7 +117,7 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
 
     // lazy is better if the function is not called on every page
     if ($lazy) {
-        $lazy_register = SmartyLazyRegister::getInstance();
+        $lazy_register = SmartyLazyRegister::getInstance($smarty);
         if ($lazy_register->isRegistered($params)) {
             return;
         }
