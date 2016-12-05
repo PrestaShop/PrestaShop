@@ -232,7 +232,17 @@ class MailCore extends ObjectModel
             $toName = (($toName == null || $toName == $to) ? '' : self::mimeEncode($toName));
             $message->addTo($to, $toName);
         }
-        if (isset($bcc)) {
+        
+        if (isset($bcc) && is_array($bcc)) {
+            foreach ($bcc as $addr) {
+                $addr = trim($addr);
+                if (!Validate::isEmail($addr)) {
+                    Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
+                    return false;
+                }
+                $message->addBcc($addr);
+            }
+        } elseif (isset($bcc)) {
             $message->addBcc($bcc);
         }
 
