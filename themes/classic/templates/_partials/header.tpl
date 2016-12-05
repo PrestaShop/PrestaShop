@@ -36,7 +36,7 @@
           </div>
           <div class="hidden-md-up text-xs-center mobile">
             <div class="pull-xs-left" id="menu-icon">
-              <i class="material-icons">&#xE5D2;</i>
+              <i class="material-icons d-inline">&#xE5D2;</i>
             </div>
             <div class="pull-xs-right" id="_mobile_cart"></div>
             <div class="pull-xs-right" id="_mobile_user_info"></div>
