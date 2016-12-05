@@ -144,9 +144,10 @@ var AdminModuleCard = function () {
                     var alteredSelector = null;
                     var mainElement = null;
                     if (action == "uninstall") {
-                        jqElementObj.html("");
                         jqElementObj.fadeOut(function() {
-                            $(this).remove();
+                            alteredSelector = _this.getModuleItemSelector().replace('.', '');
+                            mainElement = jqElementObj.parents('.' + alteredSelector).first();
+                            mainElement.remove();
                         });
                         BOEvent.emitEvent("Module Uninstalled", "CustomEvent");
                     } else if (action == "disable") {
