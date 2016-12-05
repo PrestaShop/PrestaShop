@@ -1267,27 +1267,11 @@ abstract class ModuleCore
                     $file_path = _PS_MODULE_DIR_.$module.'/'.$module.'.php';
                     $file = trim(file_get_contents(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
 
-                    if (substr($file, 0, 5) == '<?php') {
-                        $file = substr($file, 5);
-                    }
-
-                    if (substr($file, -2) == '?>') {
-                        $file = substr($file, 0, -2);
-                    }
-
-                    // We check any parse error before including the file.
-                    // If (false) is a trick to not load the class with "eval".
-                    // This way require_once will works correctly
-                    // But namespace and use statements need to be removed
-                    $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
-                    $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
                     try {
-                        if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.$content.' }') !== false) {
-                            require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
-                        } else {
-                            throw new ParseError("Parse error");
-                        }
-                    } catch (ParseError $e) {
+                        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7);
+                        $parser->parse($file);
+                        require_once($file_path);
+                    } catch (PhpParser\Error $e) {
                         $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
                     }
 
