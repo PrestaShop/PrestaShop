@@ -44,9 +44,13 @@
   }
 }
 .products-selection {
+  .sort-by-row {
+    @include display(flex);
+    align-items: center;
+  }
   .sort-by {
-    padding-top: rem(10px);
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
     margin-right: rem(-15px);
     margin-left: rem(15px);
     text-align: right
