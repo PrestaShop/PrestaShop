@@ -2805,6 +2805,18 @@ exit;
         Tools::clearCompile($smarty);
     }
 
+    /**
+     * Clear both Smarty and Symfony cache
+     */
+    public static function clearAllCache()
+    {
+        Tools::clearSmartyCache();
+
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+        $sf2Refresh->addCacheClear(_PS_MODE_DEV_ ? 'dev' : 'prod');
+        $sf2Refresh->execute();
+    }
+
     public static function clearColorListCache($id_product = false)
     {
         // Change template dir if called from the BackOffice
