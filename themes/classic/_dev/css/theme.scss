@@ -183,7 +183,7 @@
       &:last-child {
         content: "/";
         color: $gray-dark;
-        margin: rem(5px);
+        margin: 0;
         &::after {
           content: "";
         }

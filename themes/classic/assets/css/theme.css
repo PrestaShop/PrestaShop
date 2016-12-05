@@ -8057,7 +8057,7 @@ li.product-flag {
       #wrapper .breadcrumb li:last-child {
         content: "/";
         color: #878787;
-        margin: 0.3125rem; }
+        margin: 0; }
         #wrapper .breadcrumb li:last-child::after {
           content: ""; }
       #wrapper .breadcrumb li a {
