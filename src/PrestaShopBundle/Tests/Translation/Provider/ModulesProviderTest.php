@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Tests\Translation\Provider;
 
-use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
+use PrestaShopBundle\Translation\Provider\ModulesProvider;
 
-class FrontOfficeProviderTest extends \PHPUnit_Framework_TestCase
+class ModulesProviderTest extends \PHPUnit_Framework_TestCase
 {
-    // @see /resources/translations/en-US/ShopNotificationsWarning.en-US.xlf
+    // @see /resources/translations/en-US/AdminActions.en-US.xlf
     private $provider;
     private static $resourcesDir;
 
@@ -41,32 +41,26 @@ class FrontOfficeProviderTest extends \PHPUnit_Framework_TestCase
         ;
 
         self::$resourcesDir = __DIR__.'/../../resources/translations';
-        $this->provider = new FrontOfficeProvider($loader, self::$resourcesDir);
+        $this->provider = new ModulesProvider($loader, self::$resourcesDir);
     }
 
     public function testGetMessageCatalogue()
     {
-        // The xliff file contains 6 keys
         $expectedReturn = $this->provider->getMessageCatalogue();
         $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $expectedReturn);
 
         // Check integrity of translations
-        $this->assertArrayHasKey('ShopNotificationsWarning.en-US', $expectedReturn->all());
-        $this->assertArrayHasKey('ModulesShoppingCartShop.en-US', $expectedReturn->all());
+        $this->assertArrayHasKey('ModulesWirePaymentAdmin.en-US', $expectedReturn->all());
+        $this->assertArrayHasKey('ModulesWirePaymentShop.en-US', $expectedReturn->all());
 
-        $this->assertCount(4, $expectedReturn->all());
+        $moduleAdminTranslations = $expectedReturn->all('ModulesCheckPaymentAdmin.en-US');
+        $this->assertCount(9, $moduleAdminTranslations);
+        $this->assertArrayHasKey('Payments by check', $moduleAdminTranslations);
+        $this->assertSame('Payments by check', $moduleAdminTranslations['Payments by check']);
 
-        $frontTranslations = $expectedReturn->all('ShopNotificationsWarning.en-US');
-        $this->assertCount(6, $frontTranslations);
-        $this->assertArrayHasKey('You do not have any vouchers.', $frontTranslations);
-        $this->assertSame('You do not have any vouchers.', $frontTranslations['You do not have any vouchers.']);
-
-        $moduleTranslations = $expectedReturn->all('ModulesShoppingCartShop.en-US');
-        $this->assertCount(1, $moduleTranslations);
-        $this->assertArrayHasKey('Customers who bought this product also bought:', $moduleTranslations);
-        $this->assertSame(
-            'Customers who bought this product also bought:',
-            $moduleTranslations['Customers who bought this product also bought:']
-        );
+        $moduleFrontTranslations = $expectedReturn->all('ModulesCheckPaymentShop.en-US');
+        $this->assertCount(15, $moduleFrontTranslations);
+        $this->assertArrayHasKey('Pay by check', $moduleFrontTranslations);
+        $this->assertSame('Pay by check', $moduleFrontTranslations['Pay by check']);
     }
 }
