@@ -878,7 +878,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (Validate::isLangIsoCode($isoCode)) {
             if ($success = Language::downloadAndInstallLanguagePack($isoCode, $version = _PS_VERSION_, $params = null, $install = true)) {
                 Language::loadLanguages();
-                Tools::clearCache();
+                Tools::clearAllCache();
 
                 // TODO: Update AdminTranslationsController::addNewTabs to install tabs translated
 
@@ -1506,7 +1506,7 @@ class AdminTranslationsControllerCore extends AdminController
                         }
 
                         // Clear modules cache
-                        Tools::clearCache();
+                        Tools::clearAllCache();
 
                         // Redirect
                         if (Tools::getIsset('submitTranslationsModulesAndStay')) {
