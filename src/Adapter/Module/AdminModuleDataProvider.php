@@ -95,7 +95,7 @@ class AdminModuleDataProvider implements ModuleInterface
         return array_keys($this->getCatalogModules($filter));
     }
 
-    public function generateAddonsUrls(array $addons)
+    public function generateAddonsUrls(array $addons, $specific_action = null)
     {
         foreach ($addons as &$addon) {
             $urls = array();
@@ -174,7 +174,11 @@ class AdminModuleDataProvider implements ModuleInterface
             if (count($urls)) {
                 $addon->attributes->set('urls', $urls);
             }
-            $addon->attributes->set('url_active', $url_active);
+            if ($specific_action && array_key_exists($specific_action, $urls)) {
+                $addon->attributes->set('url_active', $specific_action);
+            } else {
+                $addon->attributes->set('url_active', $url_active);
+            }
 
             $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
             $addon->attributes->set('categoryParent', $categoryParent);
