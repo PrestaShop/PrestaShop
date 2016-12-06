@@ -78,6 +78,8 @@ class AdminModulesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
+        // Rely on new module controller for right management
+        $this->id = Tab::getIdFromClassName('AdminModulesSf');
         $this->template = 'content-legacy.tpl';
 
         register_shutdown_function('displayFatalError');
