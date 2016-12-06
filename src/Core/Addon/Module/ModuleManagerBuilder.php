@@ -161,7 +161,9 @@ class ModuleManagerBuilder
             }
         }
 
-        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient);
+        self::$translator = Context::getContext()->getTranslator();
+        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
+        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
         $kernelDir = dirname(__FILE__) . '/../../../../app';
         self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
@@ -179,11 +181,9 @@ class ModuleManagerBuilder
                 self::$categoriesProvider
             );
 
-            self::$translator = Context::getContext()->getTranslator();
             self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
             self::$legacyLogger = new LegacyLogger();
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
-            self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
         }
     }
 
