@@ -62,7 +62,7 @@ class Shop
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_category", type="integer")
+     * @ORM\Column(name="id_category", type="integer", options={"unsigned": true})
      */
     private $idCategory;
 
