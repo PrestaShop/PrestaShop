@@ -1655,6 +1655,7 @@ class AdminControllerCore extends Controller
             $this->context->smarty->assign('url', htmlentities($url));
             return false;
         }
+
         return true;
     }
 
@@ -2730,16 +2731,16 @@ class AdminControllerCore extends Controller
             $this->ajax = '1';
         }
 
-        /* Server Params */
-        $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-        $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+        if (is_null($this->context->link)) {
+            $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+            $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+            $this->context->link = new Link($protocol_link, $protocol_content);
+        }
 
-        $this->context->link = new Link($protocol_link, $protocol_content);
 
         if (isset($_GET['logout'])) {
             $this->context->employee->logout();
         }
-
         if (isset(Context::getContext()->cookie->last_activity)) {
             if ($this->context->cookie->last_activity + 900 < time()) {
                 $this->context->employee->logout();
@@ -2747,20 +2748,16 @@ class AdminControllerCore extends Controller
                 $this->context->cookie->last_activity = time();
             }
         }
-
         if ($this->controller_name != 'AdminLogin' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack())) {
             if (isset($this->context->employee)) {
                 $this->context->employee->logout();
             }
-
             $email = false;
             if (Tools::getValue('email') && Validate::isEmail(Tools::getValue('email'))) {
                 $email = Tools::getValue('email');
             }
-
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect='.$this->controller_name : '').($email ? '&email='.$email : ''));
         }
-
         // Set current index
         $current_index = 'index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
         if ($back = Tools::getValue('back')) {

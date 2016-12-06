@@ -81,6 +81,8 @@ class AdminEmailsControllerCore extends AdminController
             $this->_use_found_rows = false;
         }
 
+        $arr = array();
+
         foreach (Contact::getContacts($this->context->language->id) as $contact) {
             $arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);
         }

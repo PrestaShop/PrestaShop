@@ -6,8 +6,10 @@
          backupGlobals="false"
          colors="true"
          bootstrap="bootstrap.php.cache"
->
-    <testsuites>
+         processIsolation="true"
+  >
+
+  <testsuites>
         <testsuite name="Project Test Suite">
             <directory>../src/*/*Bundle/Tests</directory>
             <directory>../src/*/Bundle/*Bundle/Tests</directory>
@@ -15,11 +17,15 @@
         </testsuite>
     </testsuites>
 
-    <!--
     <php>
-        <server name="KERNEL_DIR" value="/path/to/your/app/" />
+        <env name="kernel.environment" value="test" />
     </php>
-    -->
+
+    <!--<groups>-->
+        <!--<include>-->
+            <!--<group>controller</group>-->
+        <!--</include>-->
+    <!--</groups>-->
 
     <filter>
         <whitelist>
