@@ -77,38 +77,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function getControllersClasses()
     {
         return array(
-//            array('AdminSearchController'),               // prophesize shop theme
-//            array('AdminPaymentController'),              // prophesize shop theme
-//            array('AdminInformationController'),          // prophesize shop theme
-//            array('AdminTabsController'),                 // missing Tab instantiation
-//            array('AdminImportController'),               // missing constant: _PS_CACHING_SYSTEM_
-//            array('AdminModulesController'),              // Fail test
-//            array('AdminDeliverySlipController'),         // Fail test
-//            array('AdminDashboardController'),            // Fail test
-//            array('AdminAttributeGeneratorController'),   // Fail test
-//            array('AdminModulesPositionsController'),     // Fail test
-//            array('AdminAccessController'),               // Fail test
-//            array('AdminSlipController'),                 // Fail test
-//            array('AdminPaymentPreferencesController'),   // Fail test
-//            array('AdminSpecificPriceRuleController'),    // Fail test
-//            array('AdminTrackingController'),             // Fail test
-//            array('AdminInvoicesController'),             // Fail test
-//            array('AdminTranslationsController'),         // Fail test
-//            array('AdminWebserviceController'),           // Fail test
-//            array('AdminLocalizationController'),         // Fail test
-//            array('AdminProductsController'),             // Fail test
-//            array('AdminCountriesController'),            // Fail test
-//            array('AdminSearchConfController'),           // Fail test
-//            array('AdminBackupController'),               // Fail test
-//            array('AdminCarrierWizardController'),        // Fail test
-//            array('AdminPatternsController'),             // Fail test
-//            array('AdminCmsContentController'),           // Call die
-//            array('AdminAddressesController'),            // Die
-//            array('AdminCategoriesController'),           // Die
-//            array('AdminRequestSqlController'),           // Die
-//            array('AdminPdfController'),                  // Die
-//            array('AdminCmsController'),                  // Die
-//            array('AdminPerformanceController'),          // Die
             array('AdminCmsCategoriesController'),
             array('AdminCarriersController'),
             array('AdminPreferencesController'),
@@ -161,16 +129,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             array('AdminTaxRulesGroupController'),
             array('AdminCartsController'),
             array('AdminImagesController'),
-//            array('AdminShopUrlController'),          // Core dump segmentation fault with php 7
-//            array('AdminThemesCatalogController'),
-//            array('AdminThemesController'),
-//            array('AdminStatesController'),
-//            array('AdminLanguagesController'),
-//            array('AdminStatsController'),
-//            array('AdminWarehousesController'),
-//            array('AdminContactsController'),
-//            array('AdminLegacyLayoutController'),
-//            array('AdminPPreferencesController'),
         );
     }
 
