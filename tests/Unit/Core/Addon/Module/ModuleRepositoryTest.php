@@ -345,7 +345,5 @@ class ModuleRepositoryTest extends UnitTestCase
         if ($this->http_host_not_found) {
             unset($_SERVER['HTTP_HOST']);
         }
-
-        $this->moduleRepositoryStub->clearCache();
     }
 }
