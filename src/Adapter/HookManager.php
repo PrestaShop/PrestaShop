@@ -53,11 +53,13 @@ class HookManager
     ) {
         global $kernel;
         if (!is_null($kernel)) {
+            // Ensure Request
+            $hook_args = array_merge(array('request' => $kernel->getContainer()->get('request')), $hook_args);
+
             // If the Symfony kernel is instanciated, we use it for the event fonctionnality
             $hookDispatcher = $kernel->getContainer()->get('prestashop.hook.dispatcher');
             return $hookDispatcher->renderForParameters($hook_name, $hook_args)->getContent();
-        }
-        else {
+        } else {
             try {
                 return \HookCore::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
             } catch (\Exception $e) {

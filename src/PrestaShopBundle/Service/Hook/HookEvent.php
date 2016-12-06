@@ -59,8 +59,14 @@ class HookEvent extends Event
      */
     public function getHookParameters()
     {
-        return array_merge(array(
-            '_ps_version' => _PS_VERSION_
-        ), $this->hookParameters);
+        global $kernel;
+
+        $globalParameters = array('_ps_version' => _PS_VERSION_);
+
+        if (!is_null($kernel)) {
+            $globalParameters['request'] = $kernel->getContainer()->get('request');
+        }
+
+        return array_merge($globalParameters, $this->hookParameters);
     }
 }
