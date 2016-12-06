@@ -38,7 +38,7 @@
 			{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
 			<tr class="product {$bgcolor_class}">
 
-				<td class="product center">
+				<td class="product left">
 					{if empty($order_detail.product_reference)}
 						---
 					{else}
