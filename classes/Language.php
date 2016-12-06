@@ -862,8 +862,11 @@ class LanguageCore extends ObjectModel
         }
 
         $files_copy = array('/en.jpg');
-        foreach (ImageType::getAll() as $alias => $config) {
-            $files_copy[] = '/en-default-'.ImageType::getFormattedName($alias).'.jpg';
+        $imagesType = ImageType::getAll();
+        if (!empty($imagesType)) {
+            foreach ($imagesType as $alias => $config) {
+                $files_copy[] = '/en-default-' . ImageType::getFormattedName($alias) . '.jpg';
+            }
         }
 
         foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to) {
@@ -894,7 +897,7 @@ class LanguageCore extends ObjectModel
 
         return isset(self::$_cache_language_installation[$iso_code]) ? self::$_cache_language_installation[$iso_code] : false;
     }
-    
+
     public static function isInstalledByLocale($locale)
     {
         if (self::$_cache_language_installation_by_locale === null) {
