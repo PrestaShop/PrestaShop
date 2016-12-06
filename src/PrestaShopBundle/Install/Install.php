@@ -720,6 +720,8 @@ class Install extends AbstractInstall
             Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', 0);
         }
 
+        Tools::generateRobotsFile();
+
         return true;
     }
 
