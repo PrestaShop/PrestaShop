@@ -36,10 +36,20 @@
         typeOption = $('#ps_email_selector select[name="selected-emails"] option:selected');
       }
 
-      if ('legacy' === typeOption.data('controller')) {
-        formTranslation.attr('action', formTranslation.data('legacyaction'));
+      if ('modules' == $('#type option:selected').val()) {
+        urlToTranslate = $('#ps_module_selector select[name="selected-modules"] option:selected').data('url-to-translate');
+        if ('' !== urlToTranslate) {
+          formTranslation.attr(
+            'action',
+            urlToTranslate + '&lang=' + id_lang
+          );
+        }
       } else {
-        formTranslation.attr('action', formTranslation.data('sfaction'));
+        if ('legacy' === typeOption.data('controller')) {
+          formTranslation.attr('action', formTranslation.data('legacyaction'));
+        } else {
+          formTranslation.attr('action', formTranslation.data('sfaction'));
+        }
       }
 
       formTranslation.submit();
@@ -49,10 +59,12 @@
       var themeSelector = $('#ps_theme_selector');
       var themeCoreOption = themeSelector.find('select[name="selected-theme"] option#core-option');
       var emailSelector = $('#ps_email_selector');
-      var allSelectors = $('select[name="selected-emails"], select[name="selected-theme"], select[name="locale"]');
+      var moduleSelector = $('#ps_module_selector');
+      var allSelectors = $('select[name="selected-modules"], select[name="selected-emails"], select[name="selected-theme"], select[name="locale"]');
 
       themeSelector.hide();
       emailSelector.hide();
+      moduleSelector.hide();
 
       $('#type').on('change', function () {
 
@@ -65,6 +77,12 @@
           emailSelector.show();
         } else {
           emailSelector.hide();
+        }
+
+        if ('modules' === $(this).val()) {
+          moduleSelector.show();
+        } else {
+          moduleSelector.hide();
         }
 
         if ('themes' === $(this).val()) {
@@ -89,7 +107,6 @@
         }
       });
 
-
 			$('#modify-translations').click(function() {
 				var languages = $('#translations-languages option');
 				var i;
@@ -103,6 +120,12 @@
 					}
 				}
 
+        if ('modules' === $('#type option:selected').val() && '' === $('[name="selected-modules"]').val()) {
+          alert('{l s='Please select a module!'}');
+
+          return;
+        }
+
 				if (0 === selectedLanguage.length) {
 					alert('{l s='Please select your language!'}');
 
@@ -115,7 +138,7 @@
 	</script>
   <form method="post" action="{url entity=sf route=admin_international_translations_list }"
         data-sfaction="{url entity=sf route=admin_international_translations_list }"
-        data-legacyaction="#"
+        data-legacyaction="{$link->getAdminLink('AdminTranslations', true)}"
         id="typeTranslationForm" class="form-horizontal">
     <div class="panel">
       <h3>
@@ -144,6 +167,17 @@
           <select name="selected-emails">
             <option value="subject" data-controller="sf">{l s='Subject'}</option>
             <option value="body" data-controller="legacy">{l s='Body'}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" id="ps_module_selector">
+        <label class="control-label col-lg-3" for="selected-modules">{l s='Select your module'}</label>
+        <div class="col-lg-4">
+          <select name="selected-modules">
+            <option id="no-module" value="">---</option>
+            {foreach $modules as $module}
+              <option value="{$module.name}" data-url-to-translate="{$module.urlToTranslate}">{$module.name}</option>
+            {/foreach}
           </select>
         </div>
       </div>
