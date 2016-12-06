@@ -7,7 +7,7 @@
       <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
     </div>
   {elseif empty($cart.products) }
-    <div class="checkout text-xs-center card-block">
+    <div class="text-xs-center">
       <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
     </div>
   {else}
