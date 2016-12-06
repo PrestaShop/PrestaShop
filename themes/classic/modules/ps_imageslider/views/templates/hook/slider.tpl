@@ -29,15 +29,17 @@
     <ul class="carousel-inner" role="listbox">
       {foreach from=$homeslider.slides item=slide name='homeslider'}
         <li class="carousel-item {if $smarty.foreach.homeslider.first}active{/if}">
-          <figure>
-            <img src="{$slide.image_url}" alt="{$slide.legend|escape}">
-            {if $slide.title || $slide.description}
-              <figcaption class="caption">
-                <h2 class="display-1 text-uppercase">{$slide.title}</h2>
-                <div class="caption-description">{$slide.description nofilter}</div>
-              </figcaption>
-            {/if}
-          </figure>
+          <a href="{$slide.url}">
+            <figure>
+              <img src="{$slide.image_url}" alt="{$slide.legend|escape}">
+              {if $slide.title || $slide.description}
+                <figcaption class="caption">
+                  <h2 class="display-1 text-uppercase">{$slide.title}</h2>
+                  <div class="caption-description">{$slide.description nofilter}</div>
+                </figcaption>
+              {/if}
+            </figure>
+          </a>
         </li>
       {/foreach}
     </ul>
