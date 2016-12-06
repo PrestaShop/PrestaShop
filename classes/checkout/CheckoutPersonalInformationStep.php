@@ -108,6 +108,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                 'login_form' => $this->loginForm->getProxy(),
                 'register_form' => $this->registerForm->getProxy(),
                 'guest_allowed' => $this->getCheckoutSession()->isGuestAllowed(),
+                'empty_cart_on_logout' => !Configuration::get('PS_CART_FOLLOWING'),
             )
         );
     }
