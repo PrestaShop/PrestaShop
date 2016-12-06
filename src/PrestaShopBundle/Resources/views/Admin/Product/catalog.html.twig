@@ -76,6 +76,21 @@
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
 
     <div class="content container-fluid">
+
+      {% if permission_error|length %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <i class="material-icons">error_outline</i>
+            <p>
+              {{ permission_error }}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
       <div class="row">
         <div class="col-md-12">
           <div class="pull-right">

@@ -203,6 +203,22 @@ class AdminTranslationsControllerCore extends AdminController
             }
         }
 
+        $modules = array();
+        foreach ($this->getListModules() as $module) {
+            $modules[$module] = array(
+                'name' => $module,
+                'urlToTranslate' => !$this->isUsingNewTranslationsSystem($module) ? $this->context->link->getAdminLink(
+                    'AdminTranslations',
+                    true,
+                    array(),
+                    array(
+                        'type' => 'modules',
+                        'module' => $module,
+                    )
+                ) : '',
+            );
+        }
+
         $this->tpl_view_vars = array(
             'theme_default' => self::DEFAULT_THEME_NAME,
             'theme_lang_dir' =>_THEME_LANG_DIR_,
@@ -213,6 +229,7 @@ class AdminTranslationsControllerCore extends AdminController
             'packs_to_update' => $packsToUpdate,
             'url_submit' => self::$currentIndex.'&token='.$this->token,
             'themes' => $this->themes,
+            'modules' => $modules,
             'current_theme_name' => $this->context->shop->theme_name,
             'url_create_language' => 'index.php?controller=AdminLanguages&addlang&token='.$token,
         );
@@ -224,6 +241,18 @@ class AdminTranslationsControllerCore extends AdminController
         $this->content .= parent::renderView();
 
         return $this->content;
+    }
+
+    private function isUsingNewTranslationsSystem($moduleName)
+    {
+        $domains = array_keys($this->context->getTranslator()->getCatalogue()->all());
+        $moduleName = preg_replace('/^ps_(\w+)/', '$1', $moduleName);
+
+        if (count(preg_grep('/'.$moduleName.'/i', $domains))) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -878,7 +907,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (Validate::isLangIsoCode($isoCode)) {
             if ($success = Language::downloadAndInstallLanguagePack($isoCode, $version = _PS_VERSION_, $params = null, $install = true)) {
                 Language::loadLanguages();
-                Tools::clearCache();
+                Tools::clearAllCache();
 
                 // TODO: Update AdminTranslationsController::addNewTabs to install tabs translated
 
@@ -1301,6 +1330,14 @@ class AdminTranslationsControllerCore extends AdminController
                 'sf_controller' => true,
                 'choice_theme' => true,
             ),
+            'modules' => array(
+                'name' => $this->trans('Installed modules translations', array(), 'Admin.International.Feature'),
+                'var' => '_MODULES',
+                'dir' => _PS_ROOT_DIR_.'/modules/',
+                'file' => '',
+                'sf_controller' => true,
+                'choice_theme' => false,
+            ),
             'mails' => array(
                 'name' => $this->trans('Email translations', array(), 'Admin.International.Feature'),
                 'var' => '_LANGMAIL',
@@ -1317,10 +1354,6 @@ class AdminTranslationsControllerCore extends AdminController
                 'sf_controller' => true,
                 'choice_theme' => false,
             ),
-            'modules' => array(
-                'dir' => _PS_MODULE_DIR_,
-                'file' => '',
-            )
         );
 
         if (defined('_PS_THEME_SELECTED_DIR_')) {
@@ -1506,7 +1539,7 @@ class AdminTranslationsControllerCore extends AdminController
                         }
 
                         // Clear modules cache
-                        Tools::clearCache();
+                        Tools::clearAllCache();
 
                         // Redirect
                         if (Tools::getIsset('submitTranslationsModulesAndStay')) {

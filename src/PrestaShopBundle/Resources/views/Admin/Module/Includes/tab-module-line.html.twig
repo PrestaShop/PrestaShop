@@ -22,12 +22,17 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
+{%
+  set moduleImage = module.attributes.img is null ?
+    constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo :
+    module.attributes.img
+%}
 <tr>
   <td class="fixed-with-sm center">
     <img
       class="img-thumbnail"
       alt="{{ module.attributes.name }}"
-      src="{{ constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo }}"
+      src="{{ moduleImage }}"
     />
   </td>
   <td>

@@ -1,4 +1,4 @@
-#products,.featured-products,.product-accessories  {
+#products,.featured-products,.product-accessories,.product-miniature  {
   .products {
     @include display(flex);
     @include flex-wrap(wrap);

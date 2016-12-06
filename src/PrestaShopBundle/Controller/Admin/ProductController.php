@@ -27,9 +27,11 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Entity\AdminFilter;
+use PrestaShopBundle\Security\Voter\ProductVoter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
@@ -83,10 +85,10 @@ class ProductController extends FrameworkBundleAdminController
         $request->getSession()->set('_locale', $context->language->locale);
 
         // Redirect to legacy controller (FIXME: temporary behavior)
-        $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
+        $pagePreference = $this->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
         if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
-            $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
+            $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
             $redirectionParams = array(
                 // do not transmit limit & offset: go to the first page when redirecting
@@ -111,13 +113,14 @@ class ProductController extends FrameworkBundleAdminController
             }
         }
 
-        $logger = $this->container->get('logger');
         /* @var $logger LoggerInterface */
+        $logger = $this->get('logger');
 
-        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
         /* @var $productProvider ProductInterfaceProvider */
-        $translator = $this->container->get('translator');
+        $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
+
         /* @var $translator TranslatorInterface */
+        $translator = $this->get('translator');
 
         // get old values from persistence (before the current update)
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
@@ -160,7 +163,7 @@ class ProductController extends FrameworkBundleAdminController
             || ($totalProductCount = $productProvider->countAllProducts()) === 0
         ) {
             // no filter, total filtered == 0, and then total count == 0 too.
-            $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
+            $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
             return $this->render('PrestaShopBundle:Admin/Product:catalog_empty.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'import_url' => $legacyUrlGenerator->generate('AdminImport'),
@@ -176,7 +179,7 @@ class ProductController extends FrameworkBundleAdminController
                 null,
                 array(
                     'label' => $translator->trans('Categories', array(), 'Admin.Catalog.Feature'),
-                    'list' => $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(null, $context->language->id, false),
+                    'list' => $this->get('prestashop.adapter.data_provider.category')->getNestedCategories(null, $context->language->id, false),
                     'valid_list' => [],
                     'multiple' => false,
                 )
@@ -193,6 +196,11 @@ class ProductController extends FrameworkBundleAdminController
                     $persistedFilterParameters[$key] = '';
                 }
             }
+        }
+
+        $permissionError = null;
+        if ($this->get('session')->getFlashBag()->has('permission_error')) {
+            $permissionError = $this->get('session')->getFlashBag()->get('permission_error')[0];
         }
 
         // Template vars injection
@@ -219,7 +227,8 @@ class ProductController extends FrameworkBundleAdminController
                 'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
-                'is_shop_context' => $this->container->get('prestashop.adapter.shop.context')->isShopContext(),
+                'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
+                'permission_error' => $permissionError
             )
         );
     }
@@ -240,11 +249,9 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc', $view = 'full')
     {
-        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
         /* @var $productProvider ProductInterfaceProvider */
-        $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
-        /* @var $legacyContext LegacyContext */
-        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
+        $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $totalCount = 0;
 
         $this->get('prestashop.service.product')->cleanupOldTempProducts();
@@ -294,7 +301,7 @@ class ProductController extends FrameworkBundleAdminController
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
             'has_category_filter' => $productProvider->isCategoryFiltered(),
-            'is_shop_context' => $this->container->get('prestashop.adapter.shop.context')->isShopContext(),
+            'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
         );
         if ($view != 'full') {
             return $this->render('PrestaShopBundle:Admin:Product/list_' . $view . '.html.twig', array_merge($vars, [
@@ -314,13 +321,24 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function newAction()
     {
-        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        if (!$this->isGranted(ProductVoter::CREATE)) {
+            $translator = $this->get('translator');
+            $errorMessage = $translator->trans(
+                'You do not have permission to add this.',
+                array(),
+                'Admin.Notifications.Error'
+            );
+            $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
+
+            return $this->redirectToRoute('admin_product_catalog');
+        }
+
+        $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
+
         /* @var $productProvider ProductInterfaceProvider */
         $contextAdapter = $this->get('prestashop.adapter.legacy.context');
         $context = $contextAdapter->getContext();
-        $toolsAdapter = $this->container->get('prestashop.adapter.tools');
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $translator = $this->container->get('translator');
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
         /** @var \Product $product */
         $product = $productAdapter->getProductInstance();
@@ -350,24 +368,34 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function formAction($id, Request $request)
     {
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $translator = $this->container->get('translator');
+        if (!$this->isGranted(ProductVoter::UPDATE)) {
+            $translator = $this->get('translator');
+            $errorMessage = $translator->trans(
+                'You do not have permission to edit this.',
+                array(),
+                'Admin.Notifications.Error'
+            );
+            $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
 
+            return $this->redirectToRoute('admin_product_catalog');
+        }
+
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct($id);
+
         if (!$product || empty($product->id)) {
             return $this->redirectToRoute('admin_product_catalog');
         }
 
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
-        $legacyContext = $legacyContextService->getContext();
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1 ? true : false;
 
         // Redirect to legacy controller (FIXME: temporary behavior)
-        $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
+        $pagePreference = $this->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
         if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
-            $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
+            $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
             return $this->redirect($legacyUrlGenerator->generate('admin_product_form', array('id' => $id)));
         }
@@ -375,17 +403,17 @@ class ProductController extends FrameworkBundleAdminController
         $response = new JsonResponse();
         $modelMapper = new ProductAdminModelAdapter(
             $product,
-            $this->container->get('prestashop.adapter.legacy.context'),
-            $this->container->get('prestashop.adapter.admin.wrapper.product'),
-            $this->container->get('prestashop.adapter.tools'),
+            $this->get('prestashop.adapter.legacy.context'),
+            $this->get('prestashop.adapter.admin.wrapper.product'),
+            $this->get('prestashop.adapter.tools'),
             $productAdapter,
-            $this->container->get('prestashop.adapter.data_provider.supplier'),
-            $this->container->get('prestashop.adapter.data_provider.warehouse'),
-            $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack'),
-            $this->container->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.data_provider.supplier'),
+            $this->get('prestashop.adapter.data_provider.warehouse'),
+            $this->get('prestashop.adapter.data_provider.feature'),
+            $this->get('prestashop.adapter.data_provider.pack'),
+            $this->get('prestashop.adapter.shop.context')
         );
-        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
 
         $form = $this->createFormBuilder($modelMapper->getFormData())
             ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
@@ -497,10 +525,10 @@ class ProductController extends FrameworkBundleAdminController
             }
         }
 
-        $stockManager = $this->container->get('prestashop.core.data_provider.stock_interface');
+        $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
         /* @var $stockManager StockInterface */
 
-        $warehouseProvider = $this->container->get('prestashop.adapter.data_provider.warehouse');
+        $warehouseProvider = $this->get('prestashop.adapter.data_provider.warehouse');
         /* @var $warehouseProvider WarehouseDataProvider */
 
         //If context shop is define to a group shop, disable the form
@@ -547,7 +575,7 @@ class ProductController extends FrameworkBundleAdminController
             'default_language_iso' => $languages[0]['iso_code'],
             'attribute_groups' => $attributeGroups,
             'max_upload_size' => \Tools::formatBytes(UploadedFile::getMaxFilesize()),
-            'is_shop_context' => $this->container->get('prestashop.adapter.shop.context')->isShopContext(),
+            'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
         );
     }
 
@@ -561,21 +589,28 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function bulkAction(Request $request, $action)
     {
-        $productIdList = $request->request->get('bulk_action_selected_products');
-        $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
-        /* @var $productUpdater ProductInterfaceUpdater */
-        $translator = $this->container->get('translator');
-        /* @var $translator TranslatorInterface */
+        $translator = $this->get('translator');
 
-        $logger = $this->container->get('logger');
+        if ($this->shouldDenyAction($action, '_all')) {
+            $errorMessage = $this->getForbiddenActionMessage($action, '_all');
+            $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
+
+            return $this->redirectToRoute('admin_product_catalog');
+        }
+
+        $productIdList = $request->request->get('bulk_action_selected_products');
+        $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
+        /* @var $productUpdater ProductInterfaceUpdater */
+
+        $logger = $this->get('logger');
         /* @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_list_id' => $productIdList];
-        $hookDispatcher = $this->container->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
         try {
-            $hasMessages = $this->container->get('session')->getFlashBag()->has('success');
+            $hasMessages = $this->get('session')->getFlashBag()->has('success');
 
             if ($this->isDemoModeEnabled()) {
                 throw new UpdateProductException($this->getDemoModeErrorMessage());
@@ -647,17 +682,29 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function massEditAction(Request $request, $action)
     {
-        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
-        /* @var $productProvider ProductInterfaceProvider */
-        $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
-        /* @var $productUpdater ProductInterfaceUpdater */
-        $translator = $this->container->get('translator');
-        /* @var $translator TranslatorInterface */
+        $translator = $this->get('translator');
 
-        $logger = $this->container->get('logger');
+        if (!$this->isGranted(ProductVoter::UPDATE)) {
+            $errorMessage = $translator->trans(
+                'You do not have permission to edit this.',
+                array(),
+                'Admin.Notifications.Error'
+            );
+            $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
+
+            return $this->redirectToRoute('admin_product_catalog');
+        }
+
+        $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterfaceProvider */
+
+        $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
+        /* @var $productUpdater ProductInterfaceUpdater */
+
+        $logger = $this->get('logger');
         /* @var $logger LoggerInterface */
 
-        $hookDispatcher = $this->container->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
         try {
@@ -695,31 +742,37 @@ class ProductController extends FrameworkBundleAdminController
             $logger->warning($message);
         }
 
-        $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
+        $urlGenerator = $this->get('prestashop.core.admin.url_generator');
         return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
 
     /**
      * Do action on one product at a time. Can be used at many places in the controller's page.
      *
-     * @param Request $request
      * @param string $action The action to apply on the selected product
      * @param integer $id The product ID to apply the action on.
      * @throws \Exception If action not properly set or unknown.
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function unitAction(Request $request, $action, $id)
+    public function unitAction($action, $id)
     {
-        $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
-        /* @var $productUpdater ProductInterfaceUpdater */
-        $translator = $this->container->get('translator');
-        /* @var $translator TranslatorInterface */
+        $translator = $this->get('translator');
 
-        $logger = $this->container->get('logger');
+        if ($this->shouldDenyAction($action)) {
+            $errorMessage = $this->getForbiddenActionMessage($action);
+            $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
+
+            return $this->redirectToRoute('admin_product_catalog');
+        }
+
+        $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
+        /* @var $productUpdater ProductInterfaceUpdater */
+
+        $logger = $this->get('logger');
         /* @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_id' => $id];
-        $hookDispatcher = $this->container->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
         try {
@@ -773,7 +826,7 @@ class ProductController extends FrameworkBundleAdminController
             $logger->warning($message);
         }
 
-        $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
+        $urlGenerator = $this->get('prestashop.core.admin.url_generator');
         return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
 
@@ -789,9 +842,9 @@ class ProductController extends FrameworkBundleAdminController
     public function exportAction($_format)
     {
         // init vars
-        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         /* @var $productProvider ProductInterfaceProvider */
-        $csvTools = $this->container->get('prestashop.csv');
+        $csvTools = $this->get('prestashop.csv');
         /* @var $csvTools Csv */
 
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
@@ -839,20 +892,20 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function shouldUseLegacyPagesAction($use)
     {
-        $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
+        $pagePreference = $this->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
         $pagePreference->setTemporaryShouldUseLegacyPage('product', $use);
 
-        $hookDispatcher = $this->container->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
         $hookDispatcher->dispatch('shouldUseLegacyPage', (new HookEvent())->setHookParameters(['page' => 'product', 'use_legacy' => $use]));
 
-        $logger = $this->container->get('logger');
+        $logger = $this->get('logger');
         /* @var $logger LoggerInterface */
         $logger->info('Changed setting to use ' . ($use ? 'legacy' : 'new version') . ' pages for ProductController.');
 
         // Then redirect
-        $urlGenerator = $this->container->get($use ? 'prestashop.core.admin.url_generator_legacy' : 'prestashop.core.admin.url_generator');
+        $urlGenerator = $this->get($use ? 'prestashop.core.admin.url_generator_legacy' : 'prestashop.core.admin.url_generator');
         /* @var $urlGenerator UrlGeneratorInterface */
         return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
@@ -870,7 +923,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         $quantity = urldecode($quantity);
 
-        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         /* @var $productProvider ProductInterfaceProvider */
 
         // we merge empty filter set with given values, to reset the other filters!
@@ -887,20 +940,20 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function renderFieldAction($productId, $step, $fieldName)
     {
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct($productId);
 
         $modelMapper = new ProductAdminModelAdapter(
             $product,
-            $this->container->get('prestashop.adapter.legacy.context'),
-            $this->container->get('prestashop.adapter.admin.wrapper.product'),
-            $this->container->get('prestashop.adapter.tools'),
+            $this->get('prestashop.adapter.legacy.context'),
+            $this->get('prestashop.adapter.admin.wrapper.product'),
+            $this->get('prestashop.adapter.tools'),
             $productAdapter,
-            $this->container->get('prestashop.adapter.data_provider.supplier'),
-            $this->container->get('prestashop.adapter.data_provider.warehouse'),
-            $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack'),
-            $this->container->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.data_provider.supplier'),
+            $this->get('prestashop.adapter.data_provider.warehouse'),
+            $this->get('prestashop.adapter.data_provider.feature'),
+            $this->get('prestashop.adapter.data_provider.pack'),
+            $this->get('prestashop.adapter.shop.context')
         );
 
         $form = $this->createFormBuilder($modelMapper->getFormData());
@@ -931,5 +984,61 @@ class ProductController extends FrameworkBundleAdminController
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step . '_' . $fieldName . '_rendered'
         ]);
+    }
+
+    /**
+     * @param $action
+     * @param string $suffix
+     * @return bool
+     */
+    protected function shouldDenyAction($action, $suffix = '')
+    {
+        return (
+                $action === 'delete' . $suffix && !$this->isGranted(ProductVoter::DELETE)
+            ) || (
+                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
+                !$this->isGranted(ProductVoter::UPDATE)
+            ) || (
+                ($action === 'duplicate' . $suffix) &&
+                (!$this->isGranted(ProductVoter::UPDATE) || !$this->isGranted(ProductVoter::CREATE))
+            )
+        ;
+    }
+
+    /**
+     * @param $action
+     * @param string $suffix
+     * @return string
+     * @throws \Exception
+     */
+    protected function getForbiddenActionMessage($action, $suffix = '')
+    {
+        $translator = $this->get('translator');
+
+        if ($action === 'delete' . $suffix) {
+            return $translator->trans(
+                'You do not have permission to delete this.',
+                array(),
+                'Admin.Notifications.Error'
+            );
+        }
+
+        if ($action === 'deactivate' . $suffix || $action === 'activate' . $suffix) {
+            return $translator->trans(
+                'You do not have permission to edit this.',
+                array(),
+                'Admin.Notifications.Error'
+            );
+        }
+
+        if ($action === 'duplicate' . $suffix) {
+            return $translator->trans(
+                'You do not have permission to add this.',
+                array(),
+                'Admin.Notifications.Error'
+            );
+        }
+
+        throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
     }
 }

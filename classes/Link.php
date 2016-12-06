@@ -89,7 +89,8 @@ class LinkCore
      * @return Product
      * @throws PrestaShopException
      */
-    public function getProductObject($product, $idLang, $idShop) {
+    public function getProductObject($product, $idLang, $idShop)
+    {
         if (!is_object($product)) {
             if (is_array($product) && isset($product['id_product'])) {
                 $product = new Product($product['id_product'], false, $idLang, $idShop);
@@ -178,7 +179,7 @@ class LinkCore
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['supplier'] = Tools::str2url($product->isFullyLoaded ? $product->supplier_name : Supplier::getNameById($product->id_supplier));
         }
-        
+
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'price', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['price'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, null, 6, null, false, true, 1, false, null, null, null, $product->specificPrice);
@@ -361,7 +362,8 @@ class LinkCore
      * @return Category
      * @throws PrestaShopException
      */
-    public function getCategoryObject($category, $idLang) {
+    public function getCategoryObject($category, $idLang)
+    {
         if (!is_object($category)) {
             if (is_array($category) && isset($category['id_category'])) {
                 $category = new Category($category, $idLang);
@@ -670,14 +672,16 @@ class LinkCore
      *
      * @return string url
      */
-    public function getAdminLink($controller, $withToken = true, $sfRouteParams = array())
+    public function getAdminLink($controller, $withToken = true, $sfRouteParams = array(), $params = array())
     {
         // Cannot generate admin link from front
         if (!defined('_PS_ADMIN_DIR_')) {
             return '';
         }
 
-        $params = $withToken ? array('token' => Tools::getAdminTokenLite($controller)) : array();
+        if ($withToken) {
+            $params['token'] = Tools::getAdminTokenLite($controller);
+        }
 
         // Even if URL rewriting is not enabled, the page handled by Symfony must work !
         // For that, we add an 'index.php' in the URL before the route
@@ -801,9 +805,9 @@ class LinkCore
 
         if (file_exists(_PS_SUPP_IMG_DIR_.$idSupplier.(empty($type) ? '.jpg' : '-'.$type.'.jpg'))) {
             $uriPath = _THEME_SUP_DIR_.$idSupplier.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
-        } else if (!empty($type) && file_exists(_PS_SUPP_IMG_DIR_.$idSupplier.'.jpg')) { // !empty($type) because if is empty, is already tested
+        } elseif (!empty($type) && file_exists(_PS_SUPP_IMG_DIR_.$idSupplier.'.jpg')) { // !empty($type) because if is empty, is already tested
             $uriPath = _THEME_SUP_DIR_.$idSupplier.'.jpg';
-        } else if (file_exists(_PS_SUPP_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+        } elseif (file_exists(_PS_SUPP_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
             $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
         } else {
             $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.'.jpg';
@@ -826,9 +830,9 @@ class LinkCore
 
         if (file_exists(_PS_MANU_IMG_DIR_.$idManufacturer.(empty($type) ? '.jpg' : '-'.$type.'.jpg'))) {
             $uriPath = _THEME_MANU_DIR_.$idManufacturer.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
-        } else if (!empty($type) && file_exists(_PS_MANU_IMG_DIR_.$idManufacturer.'.jpg')) { // !empty($type) because if is empty, is already tested
+        } elseif (!empty($type) && file_exists(_PS_MANU_IMG_DIR_.$idManufacturer.'.jpg')) { // !empty($type) because if is empty, is already tested
             $uriPath = _THEME_MANU_DIR_.$idManufacturer.'.jpg';
-        } else if (file_exists(_PS_MANU_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+        } elseif (file_exists(_PS_MANU_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
             $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
         } else {
             $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.'.jpg';
@@ -1260,7 +1264,7 @@ class LinkCore
                         return $sfRouter->generate($params['route'], $params['sf-params'], UrlGeneratorInterface::ABSOLUTE_URL);
                     }
                     $link = $sfRouter->generate($params['route'], array(), UrlGeneratorInterface::ABSOLUTE_URL);
-                }else{
+                } else {
                     throw new \InvalidArgumentException('You can\'t use Symfony router in legacy context.');
                 }
                 break;
