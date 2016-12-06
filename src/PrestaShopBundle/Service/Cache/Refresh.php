@@ -66,8 +66,6 @@ class Refresh
 
     /**
      * Add cache:clear to the execution.
-     *
-     * @param string $env Environment to clear.
      */
     public function addCacheClear()
     {

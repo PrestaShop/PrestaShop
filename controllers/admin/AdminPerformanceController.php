@@ -840,9 +840,7 @@ class AdminPerformanceControllerCore extends AdminController
         if ((bool)Tools::getValue('empty_sf2_cache')) {
             $redirectAdmin = true;
 
-            $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-            $sf2Refresh->addCacheClear(_PS_MODE_DEV_ ? 'dev' : 'prod');
-            $sf2Refresh->execute();
+            Tools::clearSf2Cache();
         }
 
         if (Tools::isSubmit('submitAddconfiguration')) {
