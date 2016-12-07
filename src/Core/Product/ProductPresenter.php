@@ -405,7 +405,7 @@ class ProductPresenter
                     $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
                 } else {
                     if($product['quantity_wanted'] > $product['quantity']) {
-                        $presentedProduct['availability_message'] = 'Out of stock';
+                        $presentedProduct['availability_message'] = $this->translator->trans('We don\'t have enough products in stock', array(), 'Shop.Theme.Catalog');
                         $presentedProduct['availability'] = 'unavailable';
                     } else {
                         $presentedProduct['availability_message'] = $product['available_now'];
