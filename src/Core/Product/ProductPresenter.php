@@ -404,8 +404,13 @@ class ProductPresenter
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
                 } else {
-                    $presentedProduct['availability_message'] = $product['available_now'];
-                    $presentedProduct['availability'] = 'available';
+                    if($product['quantity_wanted'] > $product['quantity']) {
+                        $presentedProduct['availability_message'] = 'Out of stock';
+                        $presentedProduct['availability'] = 'unavailable';
+                    } else {
+                        $presentedProduct['availability_message'] = $product['available_now'];
+                        $presentedProduct['availability'] = 'available';
+                    }
                 }
             } elseif ($product['allow_oosp']) {
                 if ($product['available_later']) {
