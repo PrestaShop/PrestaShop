@@ -207,13 +207,14 @@ class ImageTypeCore extends ObjectModel
     /**
      * Get all image types
      *
-     * @return array|mixed|null
+     * @return array
      */
     public static function getAll()
     {
         $context = Context::getContext();
         if (isset($context->shop->theme)) {
-            return $context->shop->theme->get('image_types');
+            $imagesTypes = $context->shop->theme->get('image_types');
+            return is_array($imagesTypes) ? $imagesTypes : array();
         }
 
         return array();
