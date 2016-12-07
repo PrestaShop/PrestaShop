@@ -1,8 +1,5 @@
 language: php
 
-services:
-  - mysql
-
 addons:
     apt:
         packages:
@@ -19,6 +16,7 @@ cache:
     - $HOME/.npm
 
 sudo: required
+dist: trusty
 group: edge
 
 php:
@@ -46,6 +44,11 @@ before_install:
   - sudo a2ensite prestashop.conf
   - sudo service apache2 restart
   - cp -Rf .composer/* ~/.composer/ & composer global install;
+  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  - sudo dpkg -i google-chrome*.deb
+
+before_script:
+  - export CHROME_BIN=/usr/bin/google-chrome
 
 notifications:
   slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn
@@ -67,6 +70,7 @@ script:
 
 after_script:
   - sudo cat /var/log/apache2/error.log
+  - google-chrome --version
 
 after_failure:
   - openssl version
