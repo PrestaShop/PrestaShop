@@ -98,7 +98,6 @@ class AdminOrdersControllerCore extends AdminController
                 'type' => 'bool',
                 'tmpTableFilter' => true,
                 'orderby' => false,
-                'callback' => 'printNewCustomer'
             ),
             'customer' => array(
                 'title' => $this->trans('Customer', array(), 'Admin.Global'),
@@ -375,11 +374,6 @@ class AdminOrdersControllerCore extends AdminController
         ));
 
         return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
-    }
-
-    public function printNewCustomer($id_order, $tr)
-    {
-        return ($tr['new'] ? $this->trans('Yes', array(), 'Admin.Global') : $this->trans('No', array(), 'Admin.Global'));
     }
 
     public function processBulkUpdateOrderStatus()
