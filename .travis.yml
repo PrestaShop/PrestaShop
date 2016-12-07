@@ -11,7 +11,7 @@ addons:
     sauce_connect: false
 
 cache:
-  directories:
+      directories:
     - $HOME/.composer/cache
 
 sudo: required
@@ -41,8 +41,11 @@ script:
   - php bin/phpunit -c tests/
   - SYMFONY_DEPRECATIONS_HELPER=disabled php bin/phpunit -c tests/phpunit-admin.xml
   - composer phpunit-sf
-  - bash travis-scripts/run-selenium-tests
-  - bash travis-scripts/test-startertheme
+  - composer phpunit-controllers
+  - cd $TRAVIS_BUILD_DIR # because /var/www/prestashop.unit.test (cwd) is about to be deleted
+  - bash ./travis-scripts/restore-backup
+  - bash ./travis-scripts/run-selenium-tests
+  - bash ./travis-scripts/test-startertheme
 
 after_script:
   - sudo cat /var/log/apache2/error.log

@@ -37,16 +37,25 @@ use Tools;
  */
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
+    private $context;
+
     public function setUp()
     {
         $this->declareRequiredConstants();
         $this->requireAliasesFunctions();
 
         $contextProphecy = $this->prophesizeContext();
+
+        $this->context = Context::getContext();
         Context::setInstanceForTesting($contextProphecy->reveal());
 
         $containerProphecy = $this->prophesizeContainer();
         ServiceLocator::setServiceContainerInstance($containerProphecy->reveal());
+    }
+
+    public function tearDown()
+    {
+        Context::setInstanceForTesting($this->context);
     }
 
     /**
@@ -63,10 +72,13 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
          */
         $testedController = new $controllerClass();
 
-        if (!defined('PS_INSTALLATION_IN_PROGRESS')) {
+        if (!defined('_PS_BASE_URL_')) {
             define('_PS_BASE_URL_', '');
             define('__PS_BASE_URI__', '');
             define('_PS_BASE_URL_SSL_', '');
+        }
+
+        if (!defined('PS_INSTALLATION_IN_PROGRESS')) {
             define('PS_INSTALLATION_IN_PROGRESS', true);
         }
 
@@ -77,7 +89,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function getControllersClasses()
     {
         return array(
-            array('AdminCmsCategoriesController'),
             array('AdminCarriersController'),
             array('AdminPreferencesController'),
             array('AdminStatusesController'),
@@ -172,6 +183,8 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $templateEngineProphecy->assign(Argument::any(), Argument::cetera())->willReturn(null);
         $templateEngineProphecy->fetch(Argument::type('string'), Argument::cetera())->willReturn(null);
         $templateEngineProphecy->getTemplateDir(Argument::any())->willReturn(null);
+        $templateEngineProphecy->fetch()->willReturn(null);
+        $templateEngineProphecy->createTemplate(Argument::any(), Argument::cetera())->willReturn($templateEngineProphecy);
 
         return $templateEngineProphecy;
     }
