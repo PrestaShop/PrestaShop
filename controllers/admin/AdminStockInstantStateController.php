@@ -166,6 +166,9 @@ class AdminStockInstantStateControllerCore extends AdminController
 			AND agl.id_lang = '.(int)$this->context->language->id.'
 		)';
 
+        $this->_orderBy = 'name';
+        $this->_orderWay = 'DESC';
+
         if ($this->getCurrentCoverageWarehouse() != -1) {
             $this->_where .= ' AND a.id_warehouse = '.$this->getCurrentCoverageWarehouse();
             self::$currentIndex .= '&id_warehouse='.(int)$this->getCurrentCoverageWarehouse();
@@ -250,6 +253,9 @@ class AdminStockInstantStateControllerCore extends AdminController
                 $this->_where .= ' AND a.id_warehouse = '.(int)$id_warehouse;
             }
 
+            $this->_orderBy = 'name';
+            $this->_orderWay = 'DESC';
+
             $this->_group = 'GROUP BY a.price_te';
 
             self::$currentIndex = self::$currentIndex.'&id_stock='.Tools::getValue('id_stock').'&detailsstock';
@@ -283,11 +289,11 @@ class AdminStockInstantStateControllerCore extends AdminController
 
                 // gets quantities and valuation
                 $query = new DbQuery();
-                $query->select('SUM(physical_quantity) as physical_quantity');
-                $query->select('SUM(usable_quantity) as usable_quantity');
+                $query->select('physical_quantity');
+                $query->select('usable_quantity');
                 $query->select('SUM(price_te * physical_quantity) as valuation');
                 $query->from('stock');
-                $query->where('id_product = '.(int)$item['id_product'].' AND id_product_attribute = '.(int)$item['id_product_attribute']);
+                $query->where('id_stock = '.(int)$item['id_stock'].' AND id_product = '.(int)$item['id_product'].' AND id_product_attribute = '.(int)$item['id_product_attribute']);
 
                 if ($this->getCurrentCoverageWarehouse() != -1) {
                     $query->where('id_warehouse = '.(int)$this->getCurrentCoverageWarehouse());
