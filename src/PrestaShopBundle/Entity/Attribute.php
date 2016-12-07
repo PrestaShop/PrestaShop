@@ -63,7 +63,7 @@ class Attribute
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer")
+     * @ORM\Column(name="position", type="integer", options={"unsigned": true})
      */
     private $position;
 

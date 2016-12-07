@@ -54,7 +54,7 @@ class Lang
     /**
      * @var integer
      *
-     * @ORM\Column(name="active", type="integer")
+     * @ORM\Column(name="active", type="boolean")
      */
     private $active;
 
