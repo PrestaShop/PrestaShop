@@ -135,7 +135,8 @@
     "git-hook-install": "php .github/contrib/install.php",
     "git-hook-uninstall": "php .github/contrib/uninstall.php",
     "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
-    "phpunit-sf": "php bin/phpunit -c admin-dev/"
+    "phpunit-sf": "php bin/phpunit -c admin-dev/",
+    "phpunit-controllers": "php bin/phpunit -c app/"
   },
   "config": {
     "bin-dir": "bin",

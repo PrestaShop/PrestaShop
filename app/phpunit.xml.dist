@@ -21,11 +21,11 @@
         <env name="kernel.environment" value="test" />
     </php>
 
-    <!--<groups>-->
-        <!--<include>-->
-            <!--<group>controller</group>-->
-        <!--</include>-->
-    <!--</groups>-->
+    <groups>
+        <include>
+            <group>controller</group>
+        </include>
+    </groups>
 
     <filter>
         <whitelist>

@@ -140,6 +140,16 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             array('AdminTaxRulesGroupController'),
             array('AdminCartsController'),
             array('AdminImagesController'),
+            array('AdminShopUrlController'),
+            array('AdminThemesCatalogController'),
+            array('AdminThemesController'),
+            array('AdminStatesController'),
+            array('AdminLanguagesController'),
+            array('AdminStatsController'),
+            array('AdminWarehousesController'),
+            array('AdminContactsController'),
+            array('AdminLegacyLayoutController'),
+            array('AdminPPreferencesController'),
         );
     }
 
