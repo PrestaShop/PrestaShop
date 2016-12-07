@@ -34,7 +34,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(
  *     indexes={@ORM\Index(name="key", columns={"domain"})},
- *     uniqueConstraints={@ORM\UniqueConstraint(name="theme", columns={"key", "theme", "id_lang", "domain"})}
  * )
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TranslationRepository")
  */
@@ -43,7 +42,7 @@ class Translation
     /**
      * @var int
      *
-     * @ORM\Column(name="id_translation", type="integer")
+     * @ORM\Column(name="id_translation", type="integer", options={"unsigned": true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -52,14 +51,14 @@ class Translation
     /**
      * @var string
      *
-     * @ORM\Column(name="`key`", type="string")
+     * @ORM\Column(name="`key`", type="text", length=65500)
      */
     private $key;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="translation", type="text")
+     * @ORM\Column(name="translation", type="text", length=65500)
      */
     private $translation;
 
@@ -74,14 +73,14 @@ class Translation
     /**
      * @var string
      *
-     * @ORM\Column(name="domain", type="string")
+     * @ORM\Column(name="domain", type="string", length=80)
      */
     private $domain;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="theme", type="string", nullable=true)
+     * @ORM\Column(name="theme", type="string", length=32, nullable=true)
      */
     private $theme = null;
 
