@@ -139,13 +139,7 @@ class AdminGeolocationControllerCore extends AdminController
     {
         $this->display = 'options';
         if (!$this->isGeoLiteCityAvailable()) {
-            $this->displayWarning($this->trans('In order to use Geolocation, please download [1]this file[/1] and extract it (using Winrar or Gzip) into the /app/Resources/geoip/ directory.',
-                array(
-                    '[1]' => '<a href="http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz" target="_blank">',
-                    '[/1]' => '</a>'
-                ),
-                'Admin.International.Feature'
-            ));
+            $this->displayWarning('In order to use Geolocation, please download <a href="http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz" target="_blank">this file</a> and extract it (using Winrar or Gzip) into the /app/Resources/geoip/ directory.');
             Configuration::updateValue('PS_GEOLOCATION_ENABLED', 0);
         }
 
