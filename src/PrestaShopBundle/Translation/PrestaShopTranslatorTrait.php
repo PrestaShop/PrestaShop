@@ -43,8 +43,12 @@ trait PrestaShopTranslatorTrait
             if (isset($parameters['legacy'])) {
                 $translated = call_user_func($parameters['legacy'],$translated);
             }
-        }else {
+        } else {
             $translated = vsprintf(parent::trans($id, array(), $domain, $locale), $parameters);
+        }
+        $str = str_replace(' ', '', $translated);
+        if (substr_count($str, '<script')) {
+            $translated = htmlspecialchars($translated);
         }
 
         return $translated;
