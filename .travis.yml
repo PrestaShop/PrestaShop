@@ -1,8 +1,5 @@
 language: php
 
-services:
-  - mysql
-
 addons:
     apt:
         packages:
@@ -19,7 +16,7 @@ cache:
     - $HOME/.npm
 
 sudo: required
-group: edge
+dist: trusty
 
 php:
   - 5.4
