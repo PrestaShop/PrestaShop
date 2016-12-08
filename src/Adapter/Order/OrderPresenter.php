@@ -284,7 +284,40 @@ class OrderPresenter implements PresenterInterface
             $orderHistory[$historyId]['contrast'] = (Tools::getBrightness($history['color']) > 128) ? 'dark' : 'bright';
         }
 
+        if (!isset($orderHistory['current'])) {
+            $orderHistory['current'] = $this->getDefaultHistory();
+        }
+
         return $orderHistory;
+    }
+
+    private function getDefaultHistory()
+    {
+        return array(
+            'id_order_state' => '',
+            'invoice' => '',
+            'send_email' => '',
+            'module_name' => '',
+            'color' => '',
+            'unremovable' => '',
+            'hidden' => '',
+            'logable' => '',
+            'delivery' => '',
+            'shipped' => '',
+            'paid' => '',
+            'pdf_invoice' => '',
+            'pdf_delivery' => '',
+            'deleted' => '',
+            'id_order_history' => '',
+            'id_employee' => '',
+            'id_order' => '',
+            'date_add' => '',
+            'employee_firstname' => '',
+            'employee_lastname' => '',
+            'ostate_name' => '',
+            'history_date' => '',
+            'contrast' => '',
+        );
     }
 
     /**
