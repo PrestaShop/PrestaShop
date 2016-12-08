@@ -173,6 +173,9 @@ class AdminStockMvtControllerCore extends AdminController
             self::$currentIndex .= '&id_warehouse='.$id_warehouse;
         }
 
+        $this->_orderBy = 'a.date_add';
+        $this->_orderWay = 'DESC';
+
         // sets the current warehouse
         $this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouseId();
 
