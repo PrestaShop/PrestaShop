@@ -148,10 +148,8 @@ class AdminStockManagementControllerCore extends AdminController
 
         //get currencies list
         $currencies = Currency::getCurrencies();
-        $id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
-        $default_currency = Currency::getCurrency($id_default_currency);
-        if ($default_currency) {
-            $currencies = array_merge(array($default_currency, '-'), $currencies);
+        if (1 < count($currencies)) {
+            array_unshift($currencies, '-');
         }
 
         // switch, in order to display the form corresponding to the current action
