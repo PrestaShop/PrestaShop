@@ -2351,7 +2351,7 @@
 	(0, _jquery2['default'])(document).ready(function () {
 	  (0, _jquery2['default'])('body').on('click', '.quick-view', function (event) {
 	    _prestashop2['default'].emit('clickQuickView', {
-	      dataset: event.target.closest('.js-product-miniature').dataset
+	      dataset: (0, _jquery2['default'])(event.target).closest('.js-product-miniature').data()
 	    });
 	    event.preventDefault();
 	  });
