@@ -60,9 +60,15 @@ function smartyTranslate($params, &$smarty)
     $addSlashes = (isset($params['slashes']) || isset($params['js']));
     $isInPDF = isset($params['pdf']);
     $isInModule = isset($params['mod']) && !empty($params['mod']);
-    $sprintf = isset($params['sprintf']) ? $params['sprintf'] : array();
+    $sprintf = array();
 
-    if (($htmlEntities || $addSlashes) && is_array($sprintf) && !empty($sprintf)) {
+    if (isset($params['sprintf']) && null !== $params['sprintf'] && !is_array($params['sprintf'])) {
+        $sprintf = array($params['sprintf']);
+    } elseif ((isset($params['sprintf']) && null !== $params['sprintf'])) {
+        $sprintf = $params['sprintf'];
+    }
+
+    if (($htmlEntities || $addSlashes)) {
         $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
     }
 
