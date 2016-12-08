@@ -97,8 +97,8 @@ class AddonsDataProvider implements AddonsInterface
      */
     public function request($action, $params = array())
     {
-        if (!self::$is_addons_up) {
-            return false;
+        if (!$this->isAddonsUp()) {
+            throw new Exception('Previous call failed and disabled client.');
         }
 
         // We merge the addons credentials
@@ -127,26 +127,45 @@ class AddonsDataProvider implements AddonsInterface
 
         switch ($action) {
             case 'native' :
-                return $this->marketplaceClient->getNativesModules();
-                break;
+                try {
+                    return $this->marketplaceClient->getNativesModules();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'service':
-                return $this->marketplaceClient->getServices();
-                break;
+                try {
+                    return $this->marketplaceClient->getServices();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'native_all':
-                return $this->marketplaceClient->setIsoCode('all')
-                    ->getNativesModules()
-                ;
-                break;
+                try {
+                    return $this->marketplaceClient->setIsoCode('all')
+                        ->getNativesModules();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'must-have':
-                return $this->marketplaceClient->getMustHaveModules();
-                break;
+                try {
+                    return $this->marketplaceClient->getMustHaveModules();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'must-have-themes':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=must-have-themes';
                 break;
             case 'customer':
-                return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
-                break;
+                try {
+                    return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'customer_themes':
                 $post_data .= '&method=listing&action=customer-themes&username='.urlencode($params['username_addons'])
                     .'&password='.urlencode($params['password_addons']);
@@ -166,8 +185,12 @@ class AddonsDataProvider implements AddonsInterface
                 }
                 break;
             case 'module':
-                return $this->marketplaceClient->getModule($params['id_module']);
-                break;
+                try {
+                    return $this->marketplaceClient->getModule($params['id_module']);
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'hosted_module':
                 $post_data .= '&method=module&id_module='.urlencode((int) $params['id_module']).'&username='.urlencode($params['hosted_email'])
                     .'&password='.urlencode($params['password_addons'])
@@ -183,8 +206,12 @@ class AddonsDataProvider implements AddonsInterface
                 $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
                 break;
             case 'categories':
-                return $this->marketplaceClient->getCategories();
-                break;
+                try {
+                    return $this->marketplaceClient->getCategories();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             default:
                 return false;
         }
@@ -208,10 +235,12 @@ class AddonsDataProvider implements AddonsInterface
             if ($post_query_data['format'] == 'json' && ctype_print($content)) {
                 $json_result = json_decode($content);
                 if ($json_result === false) {
+                    self::$is_addons_up = false;
                     throw new Exception('Cannot decode JSON from Addons');
                 }
 
                 if (!empty($json_result->errors)) {
+                    self::$is_addons_up = false;
                     throw new Exception('Error received from Addons: '.json_encode($json_result->errors));
                 }
 
