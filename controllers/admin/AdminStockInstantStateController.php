@@ -90,14 +90,6 @@ class AdminStockInstantStateControllerCore extends AdminController
                 'orderby' => true,
                 'search' => false,
             ),
-            'real_quantity' => array(
-                'title' => $this->l('Real quantity'),
-                'class' => 'fixed-width-xs',
-                'align' => 'center',
-                'orderby' => false,
-                'search' => false,
-                'hint' => $this->l('Physical quantity (usable) - Client orders + Supply Orders'),
-            ),
         );
 
         $this->addRowAction('details');
@@ -142,6 +134,15 @@ class AdminStockInstantStateControllerCore extends AdminController
      */
     public function renderList()
     {
+        $this->fields_list['real_quantity'] = array(
+            'title' => $this->l('Real quantity'),
+            'class' => 'fixed-width-xs',
+            'align' => 'center',
+            'orderby' => false,
+            'search' => false,
+            'hint' => $this->l('Physical quantity (usable) - Client orders + Supply Orders'),
+        );
+
         // query
         $this->_select = '
 			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
