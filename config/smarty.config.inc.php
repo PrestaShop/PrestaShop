@@ -108,7 +108,7 @@ function smarty_modifier_htmlentitiesUTF8($string)
     return Tools::htmlentitiesUTF8($string);
 }
 
-function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true)
+function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true, $initial_lazy_register = null)
 {
     if (!in_array($type, array('function', 'modifier', 'block'))) {
         return false;
@@ -116,6 +116,10 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
 
     // lazy is better if the function is not called on every page
     if ($lazy) {
+        if (null !== $initial_lazy_register && $initial_lazy_register->isRegistered($params)) {
+            return;
+        }
+
         $lazy_register = SmartyLazyRegister::getInstance($smarty);
         if ($lazy_register->isRegistered($params)) {
             return;
