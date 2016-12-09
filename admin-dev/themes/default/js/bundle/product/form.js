@@ -961,7 +961,7 @@ var form = (function() {
       });
 
       /** create keyboard event for save & go preview */
-      jwerty.key('ctrl+V/cmd+V', function(e) {
+      jwerty.key('ctrl+E/cmd+E', function(e) {
           e.preventDefault();
           var productFooter = $('.product-footer .preview');
           send(productFooter.attr('data-redirect'), productFooter.attr('target'));
