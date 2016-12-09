@@ -1212,9 +1212,9 @@ class AdminStockManagementControllerCore extends AdminController
                         $this->populateQuantityFields(
                             $helper,
                             array(
-                                'id_product' => $id_product,
-                                'id_product_attribute' => $id_product_attribute,
-                                'id_warehouse' => $id_warehouse
+                                'product_id' => $id_product,
+                                'product_attribute_id' => $id_product_attribute,
+                                'warehouse_id' => $id_warehouse
                             )
                         );
                     }
