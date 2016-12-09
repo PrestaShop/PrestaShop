@@ -131,6 +131,7 @@ class ModuleRepositoryTest extends UnitTestCase
                 )),
                 new FakeLogger(),
                 $this->translatorStub,
+                'en'
             )
         );
 

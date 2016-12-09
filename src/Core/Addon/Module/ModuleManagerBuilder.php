@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
+use Doctrine\Common\Cache\FilesystemCache;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -61,6 +62,7 @@ class ModuleManagerBuilder
     public static $addonsDataProvider = null;
     public static $categoriesProvider = null;
     public static $instance = null;
+    public static $cacheProvider = null;
 
     /**
      * @return null|ModuleManagerBuilder
@@ -117,7 +119,9 @@ class ModuleManagerBuilder
                     self::$moduleDataProvider,
                     self::$moduleDataUpdater,
                     self::$legacyLogger,
-                    self::$translator
+                    self::$translator,
+                    Context::getContext()->language->iso_code,
+                    self::$cacheProvider
                 );
             }
         }
@@ -170,6 +174,8 @@ class ModuleManagerBuilder
         if (_PS_MODE_DEV_) {
             self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';
         }
+        
+        self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir.'/doctrine');
 
         self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
 
@@ -178,7 +184,8 @@ class ModuleManagerBuilder
                 $this->getLanguageIso(),
                 $this->getSymfonyRouter(),
                 self::$addonsDataProvider,
-                self::$categoriesProvider
+                self::$categoriesProvider,
+                self::$cacheProvider
             );
 
             self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
