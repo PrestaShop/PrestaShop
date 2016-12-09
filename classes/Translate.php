@@ -172,6 +172,16 @@ class TranslateCore
 
         $language = Context::getContext()->language;
 
+        /*
+         * Native modules working on both 1.6 & 1.7 are translated in messages.xlf
+         * So we need to check in the Symfony catalog for translations
+         */
+        $newTranslation = Context::getContext()->getTranslator()->trans($string, is_array($sprintf) ? $sprintf : array($sprintf));
+
+        if ($string != $newTranslation) {
+            return $newTranslation;
+        }
+
         if (!isset($translationsMerged[$name]) && isset(Context::getContext()->language)) {
             $filesByPriority = array(
                 // Translations in theme
