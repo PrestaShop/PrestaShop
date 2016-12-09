@@ -144,11 +144,11 @@ class AdminStockInstantStateControllerCore extends AdminController
         );
 
         // query
-        $this->_select = '
+        $this->_select = 'IFNULL(pa.ean13, p.ean13) as ean13,
+            IFNULL(pa.upc, p.upc) as upc,
+            IFNULL(pa.reference, p.reference) as reference,
 			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
 			w.id_currency';
-
-        $this->_group = 'GROUP BY a.id_product, a.id_product_attribute';
 
         $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
         $this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
@@ -157,6 +157,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			AND pl.id_lang = '.(int)$this->context->language->id.'
 		)';
         $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = a.id_product_attribute)';
+        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product_attribute = a.id_product_attribute)';
         $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute` atr ON (atr.id_attribute = pac.id_attribute)';
         $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
 			al.id_attribute = pac.id_attribute
@@ -167,8 +168,10 @@ class AdminStockInstantStateControllerCore extends AdminController
 			AND agl.id_lang = '.(int)$this->context->language->id.'
 		)';
 
+        $this->_group = 'GROUP BY a.id_product, a.id_product_attribute';
+
         $this->_orderBy = 'name';
-        $this->_orderWay = 'DESC';
+        $this->_orderWay = 'ASC';
 
         if ($this->getCurrentCoverageWarehouse() != -1) {
             $this->_where .= ' AND a.id_warehouse = '.$this->getCurrentCoverageWarehouse();
@@ -230,7 +233,10 @@ class AdminStockInstantStateControllerCore extends AdminController
             $id_product = $ids[0];
             $id_product_attribute = $ids[1];
             $id_warehouse = Tools::getValue('id_warehouse', -1);
-            $this->_select = 'IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
+            $this->_select = 'IFNULL(pa.ean13, p.ean13) as ean13,
+                IFNULL(pa.upc, p.upc) as upc,
+                IFNULL(pa.reference, p.reference) as reference,
+                IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
 				w.id_currency, a.price_te';
             $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
             $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON w.id_warehouse = a.id_warehouse';
@@ -239,6 +245,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				AND pl.id_lang = '.(int)$this->context->language->id.'
 			)';
             $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = a.id_product_attribute)';
+            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product_attribute = a.id_product_attribute)';
             $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute` atr ON (atr.id_attribute = pac.id_attribute)';
             $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
 				al.id_attribute = pac.id_attribute
@@ -255,7 +262,7 @@ class AdminStockInstantStateControllerCore extends AdminController
             }
 
             $this->_orderBy = 'name';
-            $this->_orderWay = 'DESC';
+            $this->_orderWay = 'ASC';
 
             $this->_group = 'GROUP BY a.price_te';
 
