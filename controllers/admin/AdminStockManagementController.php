@@ -488,6 +488,10 @@ class AdminStockManagementControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'hidden',
+                    'name' => 'id_stock',
+                ),
+                array(
+                    'type' => 'hidden',
                     'name' => 'check',
                 ),
                 array(
@@ -510,12 +514,25 @@ class AdminStockManagementControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
+                    'label' => $this->l('Physical quantity'),
+                    'name' => 'physical_products_quantity',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Usable quantity'),
+                    'name' => 'usable_products_quantity',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
                     'label' => $this->l('Quantity to remove'),
                     'name' => 'quantity',
                     'maxlength' => 6,
                     'required' => true,
                     'hint' => $this->l('Indicate the physical quantity of this product that you want to remove.'),
                 ),
+
                 array(
                     'type' => 'switch',
                     'label' => $this->l('Usable for sale'),
@@ -806,7 +823,10 @@ class AdminStockManagementControllerCore extends AdminController
         }
 
         // Global checks when add / remove / transfer product
-        if ((Tools::isSubmit('addstock') || Tools::isSubmit('removestock') || Tools::isSubmit('transferstock')) && Tools::isSubmit('is_post')) {
+        if (
+            (Tools::isSubmit('addstock') || Tools::isSubmit('removestock') || Tools::isSubmit('transferstock')) &&
+            Tools::isSubmit('is_post')
+        ) {
             // get product ID
             $id_product = (int)Tools::getValue('id_product', 0);
             if ($id_product <= 0) {
@@ -830,6 +850,8 @@ class AdminStockManagementControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('The quantity value is not valid.');
             }
             $quantity = (int)$quantity;
+
+            $id_stock = (int)Tools::getValue('id_stock', 0);
 
             $token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
             $redirect = self::$currentIndex.'&token='.$token;
@@ -921,7 +943,14 @@ class AdminStockManagementControllerCore extends AdminController
 
                 // remove stock
                 $stock_manager = StockManagerFactory::getManager();
-                $removed_products = $stock_manager->removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $usable);
+                $removed_products = $stock_manager->removeProduct(
+                    $id_product,
+                    $id_product_attribute,
+                    $warehouse,
+                    $quantity,
+                    $id_stock_mvt_reason,
+                    $usable
+                );
 
                 if (count($removed_products) > 0) {
                     StockAvailable::synchronize($id_product);
@@ -1082,6 +1111,7 @@ class AdminStockManagementControllerCore extends AdminController
                 // get id product and product attribute if possible
                 $id_product = (int)Tools::getValue('id_product', 0);
                 $id_product_attribute = (int)Tools::getValue('id_product_attribute', 0);
+                $id_stock = (int)Tools::getValue('id_stock', 0);
 
                 $product_is_valid = false;
                 $is_pack = false;
@@ -1157,9 +1187,12 @@ class AdminStockManagementControllerCore extends AdminController
                     $helper->show_cancel_button = true;
                     $helper->back_url = $this->context->link->getAdminLink('AdminStockManagement');
 
+                    $id_warehouse = Tools::getValue('id_warehouse', null);
+
                     $helper->fields_value = array(
                         'id_product' => $id_product,
                         'id_product_attribute' => $id_product_attribute,
+                        'id_stock' => $id_stock,
                         'reference' => $reference,
                         'manufacturer_reference' => $manufacturer_reference,
                         'name' => $name,
@@ -1167,13 +1200,24 @@ class AdminStockManagementControllerCore extends AdminController
                         'upc' => $upc,
                         'check' => md5(_COOKIE_KEY_.$id_product.$id_product_attribute),
                         'quantity' => Tools::getValue('quantity', ''),
-                        'id_warehouse' => Tools::getValue('id_warehouse', ''),
+                        'id_warehouse' => $id_warehouse,
                         'usable' => $this->fields_value['usable'] ? $this->fields_value['usable'] : Tools::getValue('usable', 1),
                         'price' => Tools::getValue('price', (float)Tools::convertPrice($default_wholesale_price, null)),
                         'id_currency' => Tools::getValue('id_currency', ''),
                         'id_stock_mvt_reason' => Tools::getValue('id_stock_mvt_reason', ''),
                         'is_post' => 1,
                     );
+
+                    if ($this->shouldRemoveStock()) {
+                        $this->populateQuantityFields(
+                            $helper,
+                            array(
+                                'id_product' => $id_product,
+                                'id_product_attribute' => $id_product_attribute,
+                                'id_warehouse' => $id_warehouse
+                            )
+                        );
+                    }
 
                     if ($this->display == 'addstock') {
                         $_POST['id_product'] = (int)$id_product;
@@ -1331,5 +1375,31 @@ class AdminStockManagementControllerCore extends AdminController
         }
 
         parent::initProcess();
+    }
+
+    /**
+     * @param HelperForm $helper
+     * @param array $criteria
+     * @throws Exception
+     */
+    protected function populateQuantityFields(HelperForm $helper, array $criteria)
+    {
+        /**
+         * @var \StockManagerCore $stockManager
+         */
+        $stockManager = StockManagerFactory::getManager();
+
+        $helper->fields_value['physical_products_quantity'] = $stockManager->getPhysicalProductQuantities($criteria);
+        $helper->fields_value['usable_products_quantity'] = $stockManager->getUsableProductQuantities($criteria);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function shouldRemoveStock()
+    {
+        $id_stock = (int)Tools::getValue('id_stock', 0);
+
+        return $id_stock > 0;
     }
 }
