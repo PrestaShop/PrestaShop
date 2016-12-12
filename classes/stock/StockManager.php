@@ -198,6 +198,26 @@ class StockManagerCore implements StockManagerInterface
         return true;
     }
 
+
+    public function removeProductQuantityFromStock(
+        Stock $stock,
+        $quantity,
+        $stockMovementReasonId,
+        $usableForSales
+    )
+    {
+        $warehouse = new Warehouse($stock->id_warehouse);
+
+        return $this->removeProduct(
+            $stock->id_product,
+            $stock->id_product_attribute,
+            $warehouse,
+            $quantity,
+            $stockMovementReasonId,
+            $usableForSales
+        );
+    }
+
     /**
      * @see StockManagerInterface::removeProduct()
      *
