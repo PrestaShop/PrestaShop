@@ -282,7 +282,7 @@ class AdminStockManagementControllerCore extends AdminController
             case 'addstock' :
                 $this->displayInformation($this->l('Moving the mouse cursor over the quantity and price fields will give you the details about the last stock movement.'));
                 // fields in the form
-                $this->prepareAddStock($id_product, $id_product_attribute, $warehouses_add);
+                $this->prepareAddStockForm($id_product, $id_product_attribute, $warehouses_add);
             break;
 
             case 'removestock' :
@@ -311,7 +311,7 @@ class AdminStockManagementControllerCore extends AdminController
      * Prepare add stock form
      * @param $warehouses_remove
      */
-    public function prepareAddStock($id_product, $id_product_attribute, $warehouses_add)
+    public function prepareAddStockForm($id_product, $id_product_attribute, $warehouses_add)
     {
         // gets the last stock mvt for this product, so we can display the last unit price te and the last quantity added
         $last_sm_unit_price_te = $this->l('N/A');
@@ -1124,24 +1124,18 @@ class AdminStockManagementControllerCore extends AdminController
 
                 // get id product and product attribute if possible
                 $id_stock = (int)Tools::getValue('id_stock', 0);
+                $id_product = (int)Tools::getValue('id_product', 0);
+                $id_product_attribute = (int)Tools::getValue('id_product_attribute', 0);
+                $id_warehouse = Tools::getValue('id_warehouse', null);
+
                 if (!empty($id_stock)) {
                     $stock = new Stock($id_stock);
                     if (!empty($stock)) {
                         $id_product = (int)$stock->id_product;
                         $id_product_attribute = (int)$stock->id_product_attribute;
                         $warehouse = new Warehouse((int)$stock->id_warehouse);
+                        $id_warehouse = $warehouse->id;
                     }
-                }
-
-                if (empty($id_product)) {
-                    $id_product = (int)Tools::getValue('id_product', 0);
-                    $id_product_attribute = (int)Tools::getValue('id_product_attribute', 0);
-                }
-
-                if (empty($warehouse)) {
-                    $id_warehouse = Tools::getValue('id_warehouse', null);
-                } else {
-                    $id_warehouse = $warehouse->id;
                 }
 
                 $product_is_valid = false;
