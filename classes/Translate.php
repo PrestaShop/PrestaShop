@@ -172,11 +172,19 @@ class TranslateCore
 
         $language = Context::getContext()->language;
 
+        if (!is_array($sprintf) && !is_null($sprintf)) {
+            $sprintf_for_trans = array($sprintf);
+        } elseif (is_null($sprintf)) {
+            $sprintf_for_trans = array();
+        } else {
+            $sprintf_for_trans = $sprintf;
+        }
+
         /*
          * Native modules working on both 1.6 & 1.7 are translated in messages.xlf
          * So we need to check in the Symfony catalog for translations
          */
-        $newTranslation = Context::getContext()->getTranslator()->trans($string, is_array($sprintf) ? $sprintf : array($sprintf));
+        $newTranslation = Context::getContext()->getTranslator()->trans($string, $sprintf_for_trans);
 
         if ($string != $newTranslation) {
             return $newTranslation;
