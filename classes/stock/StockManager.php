@@ -198,26 +198,6 @@ class StockManagerCore implements StockManagerInterface
         return true;
     }
 
-
-    public function removeProductQuantityFromStock(
-        Stock $stock,
-        $quantity,
-        $stockMovementReasonId,
-        $usableForSales
-    )
-    {
-        $warehouse = new Warehouse($stock->id_warehouse);
-
-        return $this->removeProduct(
-            $stock->id_product,
-            $stock->id_product_attribute,
-            $warehouse,
-            $quantity,
-            $stockMovementReasonId,
-            $usableForSales
-        );
-    }
-
     /**
      * @see StockManagerInterface::removeProduct()
      *
@@ -230,6 +210,7 @@ class StockManagerCore implements StockManagerInterface
      * @param int|null      $id_order
      * @param int           $ignore_pack
      * @param Employee|null $employee
+     * @param Stock|null    $stock
      *
      * @return array
      * @throws PrestaShopException
@@ -243,7 +224,8 @@ class StockManagerCore implements StockManagerInterface
         $is_usable = true,
         $id_order = null,
         $ignore_pack = 0,
-        $employee = null
+        $employee = null,
+        Stock $stock = null
     )
     {
         $removedProducts = array();
@@ -322,14 +304,20 @@ class StockManagerCore implements StockManagerInterface
                 $warehouse,
                 $id_product,
                 $id_product_attribute,
-                $is_usable
+                $is_usable,
+                $stock
             );
 
             if ($this->ensureProductQuantityRequestedForRemovalIsValid($quantity, $quantity_in_stock)) {
                 return $removedProducts;
             }
 
-            $stock_collection = $this->getProductStockLinesInWarehouse($id_product, $id_product_attribute, $warehouse);
+            $stock_collection = $this->getProductStockLinesInWarehouse(
+                $id_product,
+                $id_product_attribute,
+                $warehouse,
+                $stock
+            );
 
             /** @var \Countable $stock_collection */
             if (count($stock_collection) <= 0) {
@@ -904,13 +892,23 @@ class StockManagerCore implements StockManagerInterface
      * @param int $id_product_attribute
      * @param int $id_warehouse Optional
      * @param int $price_te Optional
+     * @param Stock $stock Optional
      * @return PrestaShopCollection Collection of Stock
      */
-    protected function getStockCollection($id_product, $id_product_attribute, $id_warehouse = null, $price_te = null)
+    protected function getStockCollection(
+        $id_product,
+        $id_product_attribute,
+        $id_warehouse = null,
+        $price_te = null,
+        Stock $stock = null
+    )
     {
         $stocks = new PrestaShopCollection('Stock');
         $stocks->where('id_product', '=', $id_product);
         $stocks->where('id_product_attribute', '=', $id_product_attribute);
+        if ($stock) {
+            $stocks->where('id_stock', '=', $stock->id);
+        }
         if ($id_warehouse) {
             $stocks->where('id_warehouse', '=', $id_warehouse);
         }
@@ -1025,13 +1023,15 @@ class StockManagerCore implements StockManagerInterface
      * @param $productId
      * @param $productAttributeId
      * @param $shouldHandleUsableQuantity
+     * @param $stock
      * @return int
      */
     protected function computeProductQuantityInStock(
         Warehouse $warehouse,
         $productId,
         $productAttributeId,
-        $shouldHandleUsableQuantity
+        $shouldHandleUsableQuantity,
+        Stock $stock = null
     )
     {
         $productStockCriteria = array(
@@ -1039,15 +1039,21 @@ class StockManagerCore implements StockManagerInterface
             'product_attribute_id' => $productAttributeId,
             'warehouse_id' => $warehouse->id
         );
-        $usableProductQuantityInStock = $this->getUsableProductQuantities($productStockCriteria);
         $physicalProductQuantityInStock = $this->getPhysicalProductQuantities($productStockCriteria);
-        $productQuantityInStock = $physicalProductQuantityInStock - $usableProductQuantityInStock;
+        $usableProductQuantityInStock = $this->getUsableProductQuantities($productStockCriteria);
+
+        if ($stock) {
+            $physicalProductQuantityInStock = $stock->physical_quantity;
+            $usableProductQuantityInStock = $stock->usable_quantity;
+        }
+
+        $productQuantityInStock = $physicalProductQuantityInStock;
 
         if ($shouldHandleUsableQuantity) {
             $productQuantityInStock = $usableProductQuantityInStock;
         }
 
-        return $productQuantityInStock;
+        return (int)$productQuantityInStock;
     }
 
     /**
@@ -1064,11 +1070,17 @@ class StockManagerCore implements StockManagerInterface
      * @param $id_product
      * @param $id_product_attribute
      * @param Warehouse $warehouse
+     * @param Stock $stock
      * @return PrestaShopCollection
      */
-    protected function getProductStockLinesInWarehouse($id_product, $id_product_attribute, Warehouse $warehouse)
+    protected function getProductStockLinesInWarehouse(
+        $id_product,
+        $id_product_attribute,
+        Warehouse $warehouse,
+        Stock $stock = null
+    )
     {
-        $stockLines = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id);
+        $stockLines = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id, null, $stock);
         $stockLines->getAll();
 
         return $stockLines;

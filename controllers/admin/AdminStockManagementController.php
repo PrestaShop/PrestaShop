@@ -616,6 +616,10 @@ class AdminStockManagementControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'hidden',
+                    'name' => 'id_stock',
+                ),
+                array(
+                    'type' => 'hidden',
                     'name' => 'check',
                 ),
                 array(
@@ -947,51 +951,45 @@ class AdminStockManagementControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('removestock') && Tools::isSubmit('is_post')) {
+            $stockAttributes = $this->getStockAttributes();
             // if all is ok, remove stock
             if (count($this->errors) == 0) {
                 $warehouse = new Warehouse($id_warehouse);
 
                 // remove stock
                 $stock_manager = StockManagerFactory::getManager();
-                $removed_products = $stock_manager->removeProductQuantityFromStock(
-                    $stockAttributes['stock'],
+                $removed_products = $stock_manager->removeProduct(
+                    $stockAttributes['product_id'],
+                    $stockAttributes['product_attribute_id'],
+                    $stockAttributes['warehouse'],
                     $quantity,
                     $id_stock_mvt_reason,
-                    $usable
+                    $usable,
+                    $id_order = null,
+                    $ignore_pack = 0,
+                    $employee = null,
+                    $stockAttributes['stock']
                 );
 
                 if (count($removed_products) > 0) {
-                    StockAvailable::synchronize($id_product);
+                    StockAvailable::synchronize($stockAttributes['product_id']);
                     Tools::redirectAdmin($redirect.'&conf=2');
                 } else {
-                    $physical_quantity_in_stock = (int)$stock_manager->getProductPhysicalQuantities(
-                        $id_product,
-                        $id_product_attribute,
-                        array($warehouse->id),
-                        false
-                    );
-                    $usable_quantity_in_stock = (int)$stock_manager->getProductPhysicalQuantities(
-                        $id_product,
-                        $id_product_attribute,
-                        array($warehouse->id),
-                        true
-                    );
-                    $not_usable_quantity = ($physical_quantity_in_stock - $usable_quantity_in_stock);
-                    if ($usable_quantity_in_stock < $quantity) {
-                        $this->errors[] = sprintf(Tools::displayError(
-                            'You don\'t have enough usable quantity. Cannot remove %d items out of %d.'),
+                    $stock = $stockAttributes['stock'];
+
+                    $testedQuantity = (int)$stock->physical_quantity;
+                    $errorMessage = Tools::displayError('You don\'t have enough physical quantity. Cannot remove %d items out of %d.');
+
+                    if ($usable) {
+                        $testedQuantity = (int)$stock->usable_quantity;
+                        $errorMessage = Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d items out of %d.');
+                    }
+
+                    if ($testedQuantity < $quantity) {
+                        $this->errors[] = sprintf(
+                            $errorMessage,
                             (int)$quantity,
-                            (int)$usable_quantity_in_stock
-                        );
-                    } elseif ($not_usable_quantity < $quantity) {
-                        $this->errors[] = sprintf(Tools::displayError(
-                            'You don\'t have enough usable quantity. Cannot remove %d items out of %d.'),
-                            (int)$quantity,
-                            (int)$not_usable_quantity
-                        );
-                    } else {
-                        $this->errors[] = Tools::displayError(
-                            'It is not possible to remove the specified quantity. Therefore no stock was removed.'
+                            (int)$testedQuantity
                         );
                     }
                 }
@@ -999,11 +997,7 @@ class AdminStockManagementControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('transferstock') && Tools::isSubmit('is_post')) {
-            // get source warehouse id
-            $id_warehouse_from = (int)Tools::getValue('id_warehouse_from', 0);
-            if ($id_warehouse_from <= 0 || !Warehouse::exists($id_warehouse_from)) {
-                $this->errors[] = Tools::displayError('The source warehouse is not valid.');
-            }
+            $stockAttributes = $this->getStockAttributes();
 
             // get destination warehouse id
             $id_warehouse_to = (int)Tools::getValue('id_warehouse_to', 0);
@@ -1031,15 +1025,15 @@ class AdminStockManagementControllerCore extends AdminController
                 $stock_manager = StockManagerFactory::getManager();
 
                 $is_transfer = $stock_manager->transferBetweenWarehouses(
-                    $id_product,
-                    $id_product_attribute,
+                    $stockAttributes['product_id'],
+                    $stockAttributes['product_attribute_id'],
                     $quantity,
-                    $id_warehouse_from,
+                    $stockAttributes['warehouse_id'],
                     $id_warehouse_to,
                     $usable_from,
                     $usable_to
                 );
-                StockAvailable::synchronize($id_product);
+                StockAvailable::synchronize($stockAttributes['product_id']);
                 if ($is_transfer) {
                     Tools::redirectAdmin($redirect.'&conf=3');
                 } else {
@@ -1412,27 +1406,27 @@ class AdminStockManagementControllerCore extends AdminController
      */
     protected function getStockAttributes()
     {
-        $id_stock = (int)Tools::getValue('id_stock', 0);
-        $id_product = (int)Tools::getValue('id_product', 0);
-        $id_product_attribute = (int)Tools::getValue('id_product_attribute', 0);
-        $id_warehouse = Tools::getValue('id_warehouse', null);
+        $product_id = (int)Tools::getValue('id_product', 0);
+        $product_attribute_id = (int)Tools::getValue('id_product_attribute', 0);
+        $stock_id = (int)Tools::getValue('id_stock', 0);
         $stock = null;
+        $warehouse_id = Tools::getValue('id_warehouse', null);
         $warehouse = null;
 
-        if ($id_stock > 0) {
-            $stock = new Stock($id_stock);
-            $id_product = (int)$stock->id_product;
-            $id_product_attribute = (int)$stock->id_product_attribute;
+        if ($stock_id > 0) {
+            $stock = new Stock($stock_id);
+            $product_id = (int)$stock->id_product;
+            $product_attribute_id = (int)$stock->id_product_attribute;
             $warehouse = new Warehouse((int)$stock->id_warehouse);
-            $id_warehouse = $warehouse->id;
+            $warehouse_id = $warehouse->id;
         }
 
         return array(
-            'product_id' => $id_product,
-            'product_attribute_id' => $id_product_attribute,
-            'warehouse_id' => $id_warehouse,
-            'stock_id' => $id_stock,
+            'product_id' => $product_id,
+            'product_attribute_id' => $product_attribute_id,
+            'stock_id' => $stock_id,
             'stock' => $stock,
+            'warehouse_id' => $warehouse_id,
             'warehouse' => $warehouse,
         );
     }
