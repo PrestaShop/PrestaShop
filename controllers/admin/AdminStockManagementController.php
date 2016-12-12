@@ -277,173 +277,18 @@ class AdminStockManagementControllerCore extends AdminController
             $this->displayWarning($this->l('You must choose a warehouses before adding stock. See Stock/Warehouses.'));
         }
 
-        //get currencies list
-        $currencies = Currency::getCurrencies();
-        if (1 < count($currencies)) {
-            array_unshift($currencies, '-');
-        }
-
         // switch, in order to display the form corresponding to the current action
         switch ($this->display) {
             case 'addstock' :
-                // gets the last stock mvt for this product, so we can display the last unit price te and the last quantity added
-                $last_sm_unit_price_te = $this->l('N/A');
-                $last_sm_quantity = 0;
-                $last_sm_quantity_is_usable = -1;
-                $last_sm = StockMvt::getLastPositiveStockMvt($id_product, $id_product_attribute);
-
-                // if there is a stock mvt
-                if ($last_sm != false) {
-                    $last_sm_currency = new Currency((int)$last_sm['id_currency']);
-                    $last_sm_quantity = (int)$last_sm['physical_quantity'];
-                    $last_sm_quantity_is_usable = (int)$last_sm['is_usable'];
-                    if (Validate::isLoadedObject($last_sm_currency)) {
-                        $last_sm_unit_price_te = Tools::displayPrice((float)$last_sm['price_te'], $last_sm_currency);
-                    }
-                }
-
                 $this->displayInformation($this->l('Moving the mouse cursor over the quantity and price fields will give you the details about the last stock movement.'));
                 // fields in the form
-                $this->fields_form[]['form'] = array(
-                    'legend' => array(
-                        'title' => $this->l('Add a product to your stock.'),
-                        'icon' => 'icon-long-arrow-up'
-                    ),
-                    'input' => array(
-                        array(
-                            'type' => 'hidden',
-                            'name' => 'is_post',
-                        ),
-                        array(
-                            'type' => 'hidden',
-                            'name' => 'id_product',
-                        ),
-                        array(
-                            'type' => 'hidden',
-                            'name' => 'id_product_attribute',
-                        ),
-                        array(
-                            'type' => 'hidden',
-                            'name' => 'check',
-                        ),
-                        array(
-                            'type' => 'text',
-                            'label' => $this->l('Product reference'),
-                            'name' => 'reference',
-                            'disabled' => true,
-                        ),
-                        array(
-                            'type' => 'text',
-                            'label' => $this->l('EAN-13 or JAN barcode'),
-                            'name' => 'ean13',
-                            'disabled' => true,
-                        ),
-                        array(
-                            'type' => 'text',
-                            'label' => $this->l('UPC barcode'),
-                            'name' => 'upc',
-                            'disabled' => true,
-                        ),
-                        array(
-                            'type' => 'text',
-                            'label' => $this->l('Name'),
-                            'name' => 'name',
-                            'disabled' => true,
-                        ),
-                        array(
-                            'type' => 'text',
-                            'label' => $this->l('Quantity to add'),
-                            'name' => 'quantity',
-                            'maxlength' => 6,
-                            'required' => true,
-                            'hint' => array(
-                                        $this->l('Indicate the physical quantity of this product that you want to add.'),
-                                        $this->l('Last physical quantity added: %s items (usable for sale: %s).'),
-                                        ($last_sm_quantity > 0 ? $last_sm_quantity : $this->l('N/A')),
-                                        ($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->l('Yes') : $this->l('No')) : $this->l('N/A'))),
-                        ),
-                        array(
-                            'type' => 'switch',
-                            'label' => $this->l('Usable for sale?'),
-                            'name' => 'usable',
-                            'required' => true,
-                            'is_bool' => true,
-                            'values' => array(
-                                array(
-                                    'id' => 'active_on',
-                                    'value' => 1,
-                                    'label' => $this->l('Enabled')
-                                ),
-                                array(
-                                    'id' => 'active_off',
-                                    'value' => 0,
-                                    'label' => $this->l('Disabled')
-                                )
-                            ),
-                            'hint' => $this->l('Is this quantity ready to be displayed in your shop, or is it reserved in the warehouse for other purposes?')
-                        ),
-                        array(
-                            'type' => 'select',
-                            'label' => $this->l('Warehouse'),
-                            'name' => 'id_warehouse',
-                            'required' => true,
-                            'options' => array(
-                                'query' => $warehouses_add,
-                                'id' => 'id_warehouse',
-                                'name' => 'name'
-                            ),
-                            'hint' => $this->l('Please select the warehouse that you\'ll be adding products to.')
-                        ),
-                        array(
-                            'type' => 'text',
-                            'label' => $this->l('Unit price (tax excl.)'),
-                            'name' => 'price',
-                            'required' => true,
-                            'size' => 10,
-                            'maxlength' => 10,
-                            'hint' => array(
-                                $this->l('Unit purchase price or unit manufacturing cost for this product (tax excl.).'),
-                                sprintf($this->l('Last unit price (tax excl.): %s.'), $last_sm_unit_price_te),
-                            )
-                        ),
-                        array(
-                            'type' => 'select',
-                            'label' => $this->l('Currency'),
-                            'name' => 'id_currency',
-                            'required' => true,
-                            'options' => array(
-                                'query' => $currencies,
-                                'id' => 'id_currency',
-                                'name' => 'name'
-                            ),
-                            'hint' => $this->l('The currency associated to the product unit price.'),
-                        ),
-                        array(
-                            'type' => 'select',
-                            'label' => $this->l('Label'),
-                            'name' => 'id_stock_mvt_reason',
-                            'required' => true,
-                            'options' => array(
-                                'query' => StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
-                                                                                        array(Configuration::get('PS_STOCK_MVT_TRANSFER_TO')),
-                                                                                        1),
-                                'id' => 'id_stock_mvt_reason',
-                                'name' => 'name'
-                            ),
-                            'hint' => $this->l('Label used in stock movements.'),
-                        ),
-                    ),
-                    'submit' => array(
-                        'title' => $this->l('Add to stock')
-                    )
-                );
-                $this->fields_value['usable'] = 1;
+                $this->prepareAddStock($id_product, $id_product_attribute, $warehouses_add);
             break;
 
             case 'removestock' :
                 $id_stock = (int)Tools::getValue('id_stock');
                 if (!empty($id_stock)) {
-                    $this->prepareRemoveStockForm($warehouses_remove);
+                    $this->prepareRemoveStockForm($id_stock);
                 } else {
                     $this->renderList();
                 }
@@ -452,7 +297,7 @@ class AdminStockManagementControllerCore extends AdminController
             case 'transferstock' :
                 $id_stock = (int)Tools::getValue('id_stock');
                 if (!empty($id_stock)) {
-                    $this->prepareTransferStockForm($warehouses_add, $warehouses_remove);
+                    $this->prepareTransferStockForm($warehouses_add);
                 } else {
                     $this->renderList();
                 }
@@ -463,10 +308,174 @@ class AdminStockManagementControllerCore extends AdminController
     }
 
     /**
+     * Prepare add stock form
+     * @param $warehouses_remove
+     */
+    public function prepareAddStock($id_product, $id_product_attribute, $warehouses_add)
+    {
+        // gets the last stock mvt for this product, so we can display the last unit price te and the last quantity added
+        $last_sm_unit_price_te = $this->l('N/A');
+        $last_sm_quantity = 0;
+        $last_sm_quantity_is_usable = -1;
+        $last_sm = StockMvt::getLastPositiveStockMvt($id_product, $id_product_attribute);
+
+        // if there is a stock mvt
+        if ($last_sm != false) {
+            $last_sm_currency = new Currency((int)$last_sm['id_currency']);
+            $last_sm_quantity = (int)$last_sm['physical_quantity'];
+            $last_sm_quantity_is_usable = (int)$last_sm['is_usable'];
+            if (Validate::isLoadedObject($last_sm_currency)) {
+                $last_sm_unit_price_te = Tools::displayPrice((float)$last_sm['price_te'], $last_sm_currency);
+            }
+        }
+
+        //get currencies list
+        $currencies = Currency::getCurrencies();
+        if (1 < count($currencies)) {
+            array_unshift($currencies, '-');
+        }
+
+        $this->fields_form[]['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Add a product to your stock.'),
+                'icon' => 'icon-long-arrow-up'
+            ),
+            'input' => array(
+                array(
+                    'type' => 'hidden',
+                    'name' => 'is_post',
+                ),
+                array(
+                    'type' => 'hidden',
+                    'name' => 'id_product',
+                ),
+                array(
+                    'type' => 'hidden',
+                    'name' => 'id_product_attribute',
+                ),
+                array(
+                    'type' => 'hidden',
+                    'name' => 'check',
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Product reference'),
+                    'name' => 'reference',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('EAN-13 or JAN barcode'),
+                    'name' => 'ean13',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('UPC barcode'),
+                    'name' => 'upc',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Name'),
+                    'name' => 'name',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Quantity to add'),
+                    'name' => 'quantity',
+                    'maxlength' => 6,
+                    'required' => true,
+                    'hint' => array(
+                        $this->l('Indicate the physical quantity of this product that you want to add.'),
+                        $this->l('Last physical quantity added: %s items (usable for sale: %s).'),
+                        ($last_sm_quantity > 0 ? $last_sm_quantity : $this->l('N/A')),
+                        ($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->l('Yes') : $this->l('No')) : $this->l('N/A'))),
+                ),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Usable for sale?'),
+                    'name' => 'usable',
+                    'required' => true,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'active_on',
+                            'value' => 1,
+                            'label' => $this->l('Enabled')
+                        ),
+                        array(
+                            'id' => 'active_off',
+                            'value' => 0,
+                            'label' => $this->l('Disabled')
+                        )
+                    ),
+                    'hint' => $this->l('Is this quantity ready to be displayed in your shop, or is it reserved in the warehouse for other purposes?')
+                ),
+                array(
+                    'type' => 'select',
+                    'label' => $this->l('Warehouse'),
+                    'name' => 'id_warehouse',
+                    'required' => true,
+                    'options' => array(
+                        'query' => $warehouses_add,
+                        'id' => 'id_warehouse',
+                        'name' => 'name'
+                    ),
+                    'hint' => $this->l('Please select the warehouse that you\'ll be adding products to.')
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Unit price (tax excl.)'),
+                    'name' => 'price',
+                    'required' => true,
+                    'size' => 10,
+                    'maxlength' => 10,
+                    'hint' => array(
+                        $this->l('Unit purchase price or unit manufacturing cost for this product (tax excl.).'),
+                        sprintf($this->l('Last unit price (tax excl.): %s.'), $last_sm_unit_price_te),
+                    )
+                ),
+                array(
+                    'type' => 'select',
+                    'label' => $this->l('Currency'),
+                    'name' => 'id_currency',
+                    'required' => true,
+                    'options' => array(
+                        'query' => $currencies,
+                        'id' => 'id_currency',
+                        'name' => 'name'
+                    ),
+                    'hint' => $this->l('The currency associated to the product unit price.'),
+                ),
+                array(
+                    'type' => 'select',
+                    'label' => $this->l('Label'),
+                    'name' => 'id_stock_mvt_reason',
+                    'required' => true,
+                    'options' => array(
+                        'query' => StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
+                            array(Configuration::get('PS_STOCK_MVT_TRANSFER_TO')),
+                            1),
+                        'id' => 'id_stock_mvt_reason',
+                        'name' => 'name'
+                    ),
+                    'hint' => $this->l('Label used in stock movements.'),
+                ),
+            ),
+            'submit' => array(
+                'title' => $this->l('Add to stock')
+            )
+        );
+        $this->fields_value['usable'] = 1;
+    }
+
+    /**
      * Prepare remove stock form
      * @param $warehouses_remove
      */
-    public function prepareRemoveStockForm($warehouses_remove)
+    public function prepareRemoveStockForm($id_stock)
     {
         $this->fields_form[]['form'] = array(
             'legend' => array(
@@ -514,6 +523,12 @@ class AdminStockManagementControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
+                    'label' => $this->l('Warehouse'),
+                    'name' => 'warehouse_name',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
                     'label' => $this->l('Physical quantity'),
                     'name' => 'physical_products_quantity',
                     'disabled' => true,
@@ -555,18 +570,6 @@ class AdminStockManagementControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Warehouse'),
-                    'name' => 'id_warehouse',
-                    'required' => true,
-                    'options' => array(
-                        'query' => $warehouses_remove,
-                        'id' => 'id_warehouse',
-                        'name' => 'name'
-                    ),
-                    'hint' => $this->l('Select the warehouse you\'d like to remove the product from.')
-                ),
-                array(
-                    'type' => 'select',
                     'label' => $this->l('Label'),
                     'name' => 'id_stock_mvt_reason',
                     'required' => true,
@@ -591,7 +594,7 @@ class AdminStockManagementControllerCore extends AdminController
      * @param $warehouses_add
      * @param $warehouses_remove
      */
-    public function prepareTransferStockForm($warehouses_add, $warehouses_remove)
+    public function prepareTransferStockForm($warehouses_add)
     {
         $this->fields_form[]['form'] = array(
             'legend' => array(
@@ -635,23 +638,29 @@ class AdminStockManagementControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
+                    'label' => $this->l('Warehouse'),
+                    'name' => 'warehouse_name',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Physical quantity'),
+                    'name' => 'physical_products_quantity',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Usable quantity'),
+                    'name' => 'usable_products_quantity',
+                    'disabled' => true,
+                ),
+                array(
+                    'type' => 'text',
                     'label' => $this->l('Quantity to transfer'),
                     'name' => 'quantity',
                     'maxlength' => 6,
                     'required' => true,
                     'hint' => $this->l('Indicate the physical quantity of this product that you want to transfer.')
-                ),
-                array(
-                    'type' => 'select',
-                    'label' => $this->l('Source warehouse'),
-                    'name' => 'id_warehouse_from',
-                    'required' => true,
-                    'options' => array(
-                        'query' => $warehouses_remove,
-                        'id' => 'id_warehouse',
-                        'name' => 'name'
-                    ),
-                    'hint' => $this->l('Select the warehouse you\'d like to transfer the product from.')
                 ),
                 array(
                     'type' => 'switch',
@@ -1105,13 +1114,35 @@ class AdminStockManagementControllerCore extends AdminController
             return false;
         }
 
+        if ( ($this->display == 'removestock' || $this->display == 'transferstock') && !Tools::isSubmit('id_stock') ) {
+            $this->errors[] = Tools::displayError('The specified stock is not valid.');
+        }
+
         // Manage the add stock form
         if ($this->display == 'addstock' || $this->display == 'removestock' || $this->display == 'transferstock') {
-            if (Tools::isSubmit('id_product') || Tools::isSubmit('id_product_attribute')) {
+            if (Tools::isSubmit('id_product') || Tools::isSubmit('id_product_attribute') || Tools::isSubmit('id_stock')) {
+
                 // get id product and product attribute if possible
-                $id_product = (int)Tools::getValue('id_product', 0);
-                $id_product_attribute = (int)Tools::getValue('id_product_attribute', 0);
                 $id_stock = (int)Tools::getValue('id_stock', 0);
+                if (!empty($id_stock)) {
+                    $stock = new Stock($id_stock);
+                    if (!empty($stock)) {
+                        $id_product = (int)$stock->id_product;
+                        $id_product_attribute = (int)$stock->id_product_attribute;
+                        $warehouse = new Warehouse((int)$stock->id_warehouse);
+                    }
+                }
+
+                if (empty($id_product)) {
+                    $id_product = (int)Tools::getValue('id_product', 0);
+                    $id_product_attribute = (int)Tools::getValue('id_product_attribute', 0);
+                }
+
+                if (empty($warehouse)) {
+                    $id_warehouse = Tools::getValue('id_warehouse', null);
+                } else {
+                    $id_warehouse = $warehouse->id;
+                }
 
                 $product_is_valid = false;
                 $is_pack = false;
@@ -1187,8 +1218,6 @@ class AdminStockManagementControllerCore extends AdminController
                     $helper->show_cancel_button = true;
                     $helper->back_url = $this->context->link->getAdminLink('AdminStockManagement');
 
-                    $id_warehouse = Tools::getValue('id_warehouse', null);
-
                     $helper->fields_value = array(
                         'id_product' => $id_product,
                         'id_product_attribute' => $id_product_attribute,
@@ -1198,6 +1227,7 @@ class AdminStockManagementControllerCore extends AdminController
                         'name' => $name,
                         'ean13' => $ean13,
                         'upc' => $upc,
+                        'warehouse_name' => empty($warehouse) ? false: $warehouse->name,
                         'check' => md5(_COOKIE_KEY_.$id_product.$id_product_attribute),
                         'quantity' => Tools::getValue('quantity', ''),
                         'id_warehouse' => $id_warehouse,
@@ -1208,19 +1238,15 @@ class AdminStockManagementControllerCore extends AdminController
                         'is_post' => 1,
                     );
 
-                    if ($this->shouldRemoveStock()) {
-                        $this->populateQuantityFields(
-                            $helper,
-                            array(
-                                'product_id' => $id_product,
-                                'product_attribute_id' => $id_product_attribute,
-                                'warehouse_id' => $id_warehouse
-                            )
-                        );
-                    }
-
                     if ($this->display == 'addstock') {
                         $_POST['id_product'] = (int)$id_product;
+                    }
+
+                    if ($this->display == 'removestock' || $this->display == 'transferstock') {
+                        $helper->fields_value['id_stock'] = $id_stock;
+                        $helper->fields_value['physical_products_quantity'] = $stock->physical_quantity;
+                        $helper->fields_value['usable_products_quantity'] = $stock->usable_quantity;
+                        $helper->fields_value['warehouse_name'] = empty($warehouse) ? false: $warehouse->name;
                     }
 
                     if ($this->display == 'transferstock') {
@@ -1375,31 +1401,5 @@ class AdminStockManagementControllerCore extends AdminController
         }
 
         parent::initProcess();
-    }
-
-    /**
-     * @param HelperForm $helper
-     * @param array $criteria
-     * @throws Exception
-     */
-    protected function populateQuantityFields(HelperForm $helper, array $criteria)
-    {
-        /**
-         * @var \StockManagerCore $stockManager
-         */
-        $stockManager = StockManagerFactory::getManager();
-
-        $helper->fields_value['physical_products_quantity'] = $stockManager->getPhysicalProductQuantities($criteria);
-        $helper->fields_value['usable_products_quantity'] = $stockManager->getUsableProductQuantities($criteria);
-    }
-
-    /**
-     * @return bool
-     */
-    protected function shouldRemoveStock()
-    {
-        $id_stock = (int)Tools::getValue('id_stock', 0);
-
-        return $id_stock > 0;
     }
 }
