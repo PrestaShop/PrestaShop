@@ -51,7 +51,7 @@ class OrderReturnPresenter implements PresenterInterface
         $presentedOrderReturn = $orderReturn;
         $presentedOrderReturn['id'] = $orderReturn['id_order_return'];
 
-        $presentedOrderReturn['return_number'] = $this->prefix.sprintf('#%06d', $orderReturn['id_order_return']);
+        $presentedOrderReturn['return_number'] = $this->prefix.sprintf('%06d', $orderReturn['id_order_return']);
         $presentedOrderReturn['return_date'] = Tools::displayDate($orderReturn['date_add'], null, false);
         $presentedOrderReturn['print_url'] = ($orderReturn['state'] == 2)
             ? $this->link->getPageLink('pdf-order-return', true, null, 'id_order_return='.(int) $orderReturn['id_order_return'])
