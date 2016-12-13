@@ -148,7 +148,9 @@ class ModuleZipManager
         $this->filesystem->mkdir($modulePath);
         $this->filesystem->mirror(
             $sandboxPath.$name,
-            $modulePath
+            $modulePath,
+            null,
+            array('override' => true)
         );
         $this->filesystem->remove($sandboxPath);
     }

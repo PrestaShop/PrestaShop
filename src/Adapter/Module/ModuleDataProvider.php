@@ -25,11 +25,12 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Doctrine\ORM\EntityManager;
+use PhpParser;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleDataProvider
@@ -169,24 +170,10 @@ class ModuleDataProvider
             return false;
         }
 
-
-        $file = trim(file_get_contents($file_path));
-
-        if (substr($file, 0, 5) == '<?php') {
-            $file = substr($file, 5);
-        }
-
-        if (substr($file, -2) == '?>') {
-            $file = substr($file, 0, -2);
-        }
-
-        // We check any parse error before including the file.
-        // If (false) is a trick to not load the class with "eval".
-        // This way require_once will works correctly
-        // But namespace and use statements need to be removed
-        $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
-        $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
-        if (eval('if (false){	'.$content.' }') === false) {
+        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7);
+        try {
+            $parser->parse(file_get_contents($file_path));
+        } catch (PhpParser\Error $exception) {
             $this->logger->critical(
                 $this->translator->trans(
                     'Parse error detected in main class of module %module%!',

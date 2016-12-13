@@ -564,8 +564,7 @@ class ModuleController extends FrameworkBundleAdminController
             );
         } catch (Exception $e) {
             if (isset($module_name)) {
-                $moduleManager->uninstall($module_name);
-                $moduleManager->removeModuleFromDisk($module_name);
+                $moduleManager->disable($module_name);
             }
 
             return new JsonResponse(
