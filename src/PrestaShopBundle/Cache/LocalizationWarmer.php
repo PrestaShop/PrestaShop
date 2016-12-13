@@ -54,7 +54,7 @@ class LocalizationWarmer implements CacheWarmerInterface
             }
         }
 
-        $path_cache_file = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$this->version.$this->country.'.xml';
+        $path_cache_file = $cacheDir.$this->version.$this->country.'.xml';
 
         if (is_file($path_cache_file)) {
             $localization_file_content = file_get_contents($path_cache_file);
@@ -74,7 +74,7 @@ class LocalizationWarmer implements CacheWarmerInterface
             }
 
             try {
-                $fs->dumpFile($cacheDir, $localization_file_content);
+                $fs->dumpFile($path_cache_file, $localization_file_content);
             } catch (IOExceptionInterface $e) {
                 //@todo: log
             }
