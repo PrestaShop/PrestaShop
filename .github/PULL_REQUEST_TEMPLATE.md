@@ -4,10 +4,10 @@ Please take the time to edit the "Answers" rows with the necessary information: 
 
 | Questions     | Answers
 | ------------- | -------------------------------------------------------
-| Branch?       | Use the "develop" branch if you target PrestaShop 1.7; use the "1.6.1.x" branch if you target PrestaShop 1.6 (bugfixes only).
-| Description?  | Please be specific when describing the PR. <br/> Every detail helps: versions, browser/server configuration, specific module/theme, etc.
-| Type?         | bug fix / improvement / new feature
-| Category?     | See [the Category list](http://doc.prestashop.com/display/PS16/How+to+write+a+commit+message#Howtowriteacommitmessage-Category), i.e.: BO
+| Branch        | Use the "develop" branch if you target PrestaShop 1.7; use the "1.6.1.x" branch if you target PrestaShop 1.6 (bugfixes only).
+| Description   | Please be specific when describing the PR. <br/> Every detail helps: versions, browser/server configuration, specific module/theme, etc.
+| Type          | critical issue / bug fix / improvement / new feature
+| Category      | See [the Category list](http://doc.prestashop.com/display/PS16/How+to+write+a+commit+message#Howtowriteacommitmessage-Category), i.e.: BO
 | BC breaks?    | Does it break backward compatibility? yes/no
 | Deprecations? | Does it deprecate an existing feature? yes/no
 | Fixed ticket? | (optional) If this PR fixes a [Forge](http://forge.prestashop.com/) ticket, please add its complete Forge URL.
