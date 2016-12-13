@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,14 +47,17 @@ class AddonsDataProvider implements AddonsInterface
     protected static $is_addons_up = true;
 
     private $marketplaceClient;
+    
+    private $zipManager;
 
     private $encryption;
 
     public $cacheDir;
 
-    public function __construct(ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient, ModuleZipManager $zipManager)
     {
         $this->marketplaceClient = $apiClient;
+        $this->zipManager = $zipManager;
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
     }
 
@@ -77,7 +81,8 @@ class AddonsDataProvider implements AddonsInterface
 
         $temp_filename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temp_filename, $module_data) !== false) {
-            return $this->unZip($temp_filename);
+            $this->zipManager->storeInModulesFolder($temp_filename);
+            return true;
         } else {
             throw new Exception('Cannot store module content in temporary folder !');
         }
@@ -304,24 +309,5 @@ class AddonsDataProvider implements AddonsInterface
     public function isAddonsUp()
     {
         return self::$is_addons_up;
-    }
-
-    protected function unZip($filename)
-    {
-        $zip = new \ZipArchive();
-        $result = false;
-
-        if ($zip->open($filename) === true) {
-            try {
-                $result = $zip->extractTo(_PS_MODULE_DIR_);
-                $zip->close();
-            } catch (Exception $exception) {
-                throw new Exception('Cannot unzip the module', 0, $exception);
-            }
-        } else {
-            throw new Exception('Cannot open the zip file');
-        }
-
-        return $result;
     }
 }

@@ -141,7 +141,7 @@ class ModuleZipManager
      */
     public function storeInModulesFolder($source)
     {
-        $name = $this->get($source, 'name');
+        $name = $this->getName($source);
         $sandboxPath = $this->get($source, 'sandboxPath');
         // Now we are sure to have a valid module, we copy it to the modules folder
         $modulePath = _PS_MODULE_DIR_.$name;
@@ -205,14 +205,10 @@ class ModuleZipManager
         }
 
         if (isset(self::$sources[$source])) {
-            foreach ($this->attributes as $attr) {
-                $this->{$attr} = self::$sources[$source][$attr];
-            }
-        } else {
-            foreach ($this->attributes as $attr) {
-                $this->{$attr} = null;
-                self::$sources[$source][$attr] = null;
-            }
+            return;
+        }
+        foreach ($this->attributes as $attr) {
+            self::$sources[$source][$attr] = null;
         }
     }
 }

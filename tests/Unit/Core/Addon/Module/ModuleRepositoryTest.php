@@ -123,7 +123,7 @@ class ModuleRepositoryTest extends UnitTestCase
             array(
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
-                new ModuleDataUpdater(new AddonsDataProvider($this->apiClientS), new AdminModuleDataProvider(
+                new ModuleDataUpdater($this->addonsDataProviderS, new AdminModuleDataProvider(
                     'en',
                     $this->sfRouter,
                     $this->addonsDataProviderS,
