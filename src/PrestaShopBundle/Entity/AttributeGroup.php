@@ -34,7 +34,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AttributeGroup
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\AttributeGroupRepository")
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeGroupRepository")
  */
 class AttributeGroup
 {

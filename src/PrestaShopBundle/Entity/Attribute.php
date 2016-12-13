@@ -34,7 +34,7 @@ use \Doctrine\Common\Collections\ArrayCollection;
  * Attribute
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\AttributeRepository")
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeRepository")
  */
 class Attribute
 {
