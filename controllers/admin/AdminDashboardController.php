@@ -237,7 +237,8 @@ class AdminDashboardControllerCore extends AdminController
         // 	'Save' => $this->trans('Save', array(), 'Admin.Global')
         // );
 
-        if ($this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
+        $testStatsDateUpdate = $this->context->cookie->__get('stats_date_update');
+        if (!empty($testStatsDateUpdate) && $this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
             switch ($this->context->employee->preselect_date_range) {
                 case 'day':
                     $date_from = date('Y-m-d');
