@@ -117,12 +117,6 @@ class FrontControllerCore extends Controller
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
 
-    /** @var bool If false, does not build left page column content and hides it. */
-    public $display_column_left = true;
-
-    /** @var bool If false, does not build right page column content and hides it. */
-    public $display_column_right = true;
-
     /**
      * True if controller has already been initialized.
      * Prevents initializing controller more than once.
