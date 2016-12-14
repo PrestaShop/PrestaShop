@@ -340,7 +340,7 @@ class ContextCore
      * Setter: Translator
      *
      * @param $translator
-     * @return bool
+     * @return void
      */
     public function setTranslator($translator)
     {
