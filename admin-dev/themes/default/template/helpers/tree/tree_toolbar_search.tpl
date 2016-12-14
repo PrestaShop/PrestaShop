@@ -38,7 +38,7 @@
 	$(function() {
 
 		function startTypeahead() {
-			if (typeof $.typeahead === 'undefined') {
+			if (typeof $.fn.typeahead === 'undefined') {
 				setTimeout(startTypeahead, 100);
 				return;
 			}
