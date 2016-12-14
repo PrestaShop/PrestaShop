@@ -17,7 +17,6 @@ cache:
 
 sudo: required
 dist: trusty
-group: edge
 
 php:
   - 5.4
@@ -78,3 +77,4 @@ after_failure:
   - cat /etc/apache2/envvars
   - cat /etc/apache2/sites-available/prestashop.conf
   - sudo ls -l /var/log/apache2
+  - sudo cat /var/log/apache2/other_vhosts_access.log
