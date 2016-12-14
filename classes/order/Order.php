@@ -1189,9 +1189,13 @@ class OrderCore extends ObjectModel
         if ($number) {
             $sql .= (int)$number;
         } else {
-            $sql .= '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
-			FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
-                ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y') : '').') AS result)';
+            // Find the next number
+            $new_number_sql = 'SELECT (MAX(`number`) + 1) AS new_number
+                FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
+                ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y') : '');
+            $new_number = DB::getInstance()->getValue($new_number_sql);
+            
+            $sql .= (int)$new_number;
         }
 
         $sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
