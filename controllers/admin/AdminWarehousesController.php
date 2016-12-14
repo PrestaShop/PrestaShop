@@ -522,22 +522,42 @@ class AdminWarehousesControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return bool
+     */
     public function initContent()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-            $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
-            return false;
+        if ($this->isAdvancedStockManagementActive()) {
+            return parent::initContent();
         }
-        parent::initContent();
+
+        return false;
     }
 
+    /**
+     * @return bool
+     */
     public function initProcess()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-            $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
-            return false;
+        if ($this->isAdvancedStockManagementActive()) {
+            return parent::initProcess();
         }
-        parent::initProcess();
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isAdvancedStockManagementActive()
+    {
+        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+            return true;
+        }
+
+        $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
+
+        return false;
     }
 
     /**
