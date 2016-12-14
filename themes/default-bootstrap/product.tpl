@@ -527,7 +527,7 @@
 											</div>
 										</div>
 										<div class="s_title_block">
-											<h5 itemprop="name" class="product-name">
+											<h5 class="product-name">
 												<a href="{$accessoryLink|escape:'html':'UTF-8'}">
 													{$accessory.name|truncate:20:'...':true|escape:'html':'UTF-8'}
 												</a>
