@@ -625,12 +625,9 @@ class MediaCore
         $protocol_link = Tools::getCurrentUrlProtocolPrefix();
         //return cached css
         if (!$refresh) {
-            $cached_files = scandir($cache_path);
-            foreach ($cached_files as $file) {
-                if ($file != '.' && $file != '..') {
-                    $css_url = str_replace(_PS_ROOT_DIR_, '', $protocol_link.Tools::getMediaServer('').$cache_path.DIRECTORY_SEPARATOR.$file);
-                    $splitted_css[$css_url] = 'all';
-                }
+            foreach (array_diff(scandir($cache_path), array('..', '.')) as $file) {
+                $css_url = str_replace(_PS_ROOT_DIR_, '', $protocol_link.Tools::getMediaServer('').$cache_path.DIRECTORY_SEPARATOR.$file);
+                $splitted_css[$css_url] = 'all';
             }
             return array('lteIE9' => $splitted_css);
         }
@@ -776,10 +773,8 @@ class MediaCore
     {
         foreach (array(_PS_THEME_DIR_.'cache') as $dir) {
             if (file_exists($dir)) {
-                foreach (scandir($dir) as $file) {
-                    if ($file[0] != '.' && $file != 'index.php') {
-                        Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file, array('index.php'));
-                    }
+                foreach (array_diff(scandir($dir), array('..', '.', 'index.php')) as $file) {
+                    Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file);
                 }
             }
         }
