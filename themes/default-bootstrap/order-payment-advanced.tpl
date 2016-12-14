@@ -67,7 +67,7 @@
         {if $HOOK_ADVANCED_PAYMENT && !$adv_payment_empty}
             {foreach $HOOK_ADVANCED_PAYMENT as $advanced_payment_opt_list}
                 {foreach $advanced_payment_opt_list as $paymentOption}
-                    <div class="col-xs-6 col-md-6">
+                    <div class="col-xs-12 col-md-6">
                         <p class="payment_module pointer-box">
                             <a class="payment_module_adv">
                                 <img class="payment_option_logo" src="{$paymentOption->getLogo()}"/>
