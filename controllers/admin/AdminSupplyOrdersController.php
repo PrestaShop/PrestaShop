@@ -1261,7 +1261,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
                                                 (int)($detail['quantity_expected'] - $detail['quantity_received']),
                                                 Configuration::get('PS_STOCK_MVT_SUPPLY_ORDER'),
                                                 $detail['unit_price_te'],
-                                                true
+                                                true,
+                                                $supply_order->id
                                             )) {
                                                 // Create warehouse_product_location entry if we add stock to a new warehouse
                                                 $id_wpl = (int)WarehouseProductLocation::getIdByProductAndWarehouse($id_product, $id_product_attribute, $id_warehouse);
