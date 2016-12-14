@@ -25,7 +25,7 @@
  */
 
 
-namespace PrestaShopBundle\Entity;
+namespace PrestaShopBundle\Entity\Repository;
 
 /**
  * AttributeRepository
