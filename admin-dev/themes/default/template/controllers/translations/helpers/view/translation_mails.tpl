@@ -129,7 +129,6 @@
 								$.ajax({
 									url:'ajax.php',
 									type: 'POST',
-									async: false,
 									dataType: 'html',
 									data: {
 										getEmailHTML : true,
@@ -141,11 +140,11 @@
 										doc.open();
 										doc.write(result);
 										doc.close();
+										tinySetup(rte_mail_config);
+										// init tinyMCE with special config
 									}
 								});
 
-								// init tinyMCE with special config
-								tinySetup(rte_mail_config);
 							}
 						});
 					})
