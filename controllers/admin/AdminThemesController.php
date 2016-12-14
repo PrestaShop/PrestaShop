@@ -316,15 +316,7 @@ class AdminThemesControllerCore extends AdminController
                 return false;
         }
 
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $ext = array_search(
-            $finfo->file($_FILES['themearchive']['tmp_name']),
-            array(
-                'zip' => 'application/zip',
-            ),
-            true
-        );
-        if ($ext === false) {
+        if ('application/zip' !== $_FILES['themearchive']['type']) {
             $this->errors[] = $this->trans('Invalid file format.', array(), 'Admin.Design.Notification');
             return false;
         }
