@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,15 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author     PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +35,7 @@ use Context;
 use Country;
 use Exception;
 use Tools;
+use PhpEncryption;
 
 /**
  * Data provider for new Architecture, about Addons.
@@ -45,10 +47,18 @@ class AddonsDataProvider implements AddonsInterface
     protected static $is_addons_up = true;
 
     private $marketplaceClient;
+    
+    private $zipManager;
 
-    public function __construct(ApiClient $apiClient)
+    private $encryption;
+
+    public $cacheDir;
+
+    public function __construct(ApiClient $apiClient, ModuleZipManager $zipManager)
     {
         $this->marketplaceClient = $apiClient;
+        $this->zipManager = $zipManager;
+        $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
     }
 
     public function downloadModule($module_id)
@@ -69,9 +79,10 @@ class AddonsDataProvider implements AddonsInterface
             }
         }
 
-        $temp_filename = tempnam('', 'mod');
+        $temp_filename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temp_filename, $module_data) !== false) {
-            return $this->unZip($temp_filename);
+            $this->zipManager->storeInModulesFolder($temp_filename);
+            return true;
         } else {
             throw new Exception('Cannot store module content in temporary folder !');
         }
@@ -91,8 +102,8 @@ class AddonsDataProvider implements AddonsInterface
      */
     public function request($action, $params = array())
     {
-        if (!self::$is_addons_up) {
-            return false;
+        if (!$this->isAddonsUp()) {
+            throw new Exception('Previous call failed and disabled client.');
         }
 
         // We merge the addons credentials
@@ -120,27 +131,46 @@ class AddonsDataProvider implements AddonsInterface
         $end_point = 'api.addons.prestashop.com';
 
         switch ($action) {
-            case 'native' :
-                return $this->marketplaceClient->getNativesModules();
-                break;
+            case 'native':
+                try {
+                    return $this->marketplaceClient->getNativesModules();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'service':
-                return $this->marketplaceClient->getServices();
-                break;
+                try {
+                    return $this->marketplaceClient->getServices();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'native_all':
-                return $this->marketplaceClient->setIsoCode('all')
-                    ->getNativesModules()
-                ;
-                break;
+                try {
+                    return $this->marketplaceClient->setIsoCode('all')
+                        ->getNativesModules();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'must-have':
-                return $this->marketplaceClient->getMustHaveModules();
-                break;
+                try {
+                    return $this->marketplaceClient->getMustHaveModules();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'must-have-themes':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=must-have-themes';
                 break;
             case 'customer':
-                return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
-                break;
+                try {
+                    return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'customer_themes':
                 $post_data .= '&method=listing&action=customer-themes&username='.urlencode($params['username_addons'])
                     .'&password='.urlencode($params['password_addons']);
@@ -160,8 +190,12 @@ class AddonsDataProvider implements AddonsInterface
                 }
                 break;
             case 'module':
-                return $this->marketplaceClient->getModule($params['id_module']);
-                break;
+                try {
+                    return $this->marketplaceClient->getModule($params['id_module']);
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             case 'hosted_module':
                 $post_data .= '&method=module&id_module='.urlencode((int) $params['id_module']).'&username='.urlencode($params['hosted_email'])
                     .'&password='.urlencode($params['password_addons'])
@@ -171,14 +205,18 @@ class AddonsDataProvider implements AddonsInterface
                                 : Configuration::get('PS_SHOP_EMAIL'));
                 $protocols[] = 'https';
                 break;
-            case 'install-modules' :
+            case 'install-modules':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=install-modules';
                 $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
                 break;
             case 'categories':
-                return $this->marketplaceClient->getCategories();
-                break;
+                try {
+                    return $this->marketplaceClient->getCategories();
+                } catch (Exception $e) {
+                    self::$is_addons_up = false;
+                    throw $e;
+                }
             default:
                 return false;
         }
@@ -202,10 +240,12 @@ class AddonsDataProvider implements AddonsInterface
             if ($post_query_data['format'] == 'json' && ctype_print($content)) {
                 $json_result = json_decode($content);
                 if ($json_result === false) {
+                    self::$is_addons_up = false;
                     throw new Exception('Cannot decode JSON from Addons');
                 }
 
                 if (!empty($json_result->errors)) {
+                    self::$is_addons_up = false;
                     throw new Exception('Error received from Addons: '.json_encode($json_result->errors));
                 }
 
@@ -241,10 +281,12 @@ class AddonsDataProvider implements AddonsInterface
     protected function getAddonsCredentials()
     {
         $request = Request::createFromGlobals();
+        $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
+        $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
 
         return array(
-           'username_addons' => $request->cookies->get('username_addons'),
-           'password_addons' => $request->cookies->get('password_addons'),
+           'username_addons' => $username,
+           'password_addons' => $password,
         );
     }
 
@@ -252,9 +294,10 @@ class AddonsDataProvider implements AddonsInterface
     public function getAddonsEmail()
     {
         $request = Request::createFromGlobals();
+        $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
 
         return array(
-            'username_addons' => $request->cookies->get('username_addons'),
+            'username_addons' => $username,
         );
     }
 
@@ -266,24 +309,5 @@ class AddonsDataProvider implements AddonsInterface
     public function isAddonsUp()
     {
         return self::$is_addons_up;
-    }
-
-    protected function unZip($filename)
-    {
-        $zip = new \ZipArchive();
-        $result = false;
-
-        if ($zip->open($filename) === true) {
-            try {
-                $result = $zip->extractTo(_PS_MODULE_DIR_);
-                $zip->close();
-            } catch (Exception $exception) {
-                throw new Exception('Cannot unzip the module', 0, $exception);
-            }
-        } else {
-            throw new Exception('Cannot open the zip file');
-        }
-
-        return $result;
     }
 }

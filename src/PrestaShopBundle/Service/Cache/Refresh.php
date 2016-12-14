@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Service\Cache;
 
@@ -66,11 +66,24 @@ class Refresh
 
     /**
      * Add cache:clear to the execution.
-     *
-     * @param string $env Environment to clear.
      */
     public function addCacheClear()
     {
+        $this->commands[] = array(
+            'command' => 'doctrine:cache:clear-metadata',
+            '--flush' => true,
+        );
+
+        $this->commands[] = array(
+            'command' => 'doctrine:cache:clear-query',
+            '--flush' => true,
+        );
+
+        $this->commands[] = array(
+            'command' => 'doctrine:cache:clear-result',
+            '--flush' => true,
+        );
+
         $this->commands[] = array(
             'command' => 'cache:clear',
             '--no-warmup' => true,
@@ -82,6 +95,7 @@ class Refresh
      */
     public function addDoctrineSchemaUpdate()
     {
+        $this->addCacheClear();
         $this->commands[] = array(
             'command' => 'doctrine:schema:update',
             '--force' => true,

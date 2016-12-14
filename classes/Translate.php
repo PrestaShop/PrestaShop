@@ -49,7 +49,11 @@ class TranslateCore
         }
         $str = str_replace('"', '&quot;', $str);
 
-        if ($sprintf !== null) {
+        if (
+            $sprintf !== null &&
+            (!is_array($sprintf) || !empty($sprintf)) &&
+            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+        ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
 
@@ -107,7 +111,11 @@ class TranslateCore
         }
         $str = str_replace('"', '&quot;', $str);
 
-        if ($sprintf !== null && (!is_array($sprintf) || !empty($sprintf))) {
+        if (
+            $sprintf !== null &&
+            (!is_array($sprintf) || !empty($sprintf)) &&
+            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+        ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
 
@@ -164,6 +172,24 @@ class TranslateCore
 
         $language = Context::getContext()->language;
 
+        if (!is_array($sprintf) && !is_null($sprintf)) {
+            $sprintf_for_trans = array($sprintf);
+        } elseif (is_null($sprintf)) {
+            $sprintf_for_trans = array();
+        } else {
+            $sprintf_for_trans = $sprintf;
+        }
+
+        /*
+         * Native modules working on both 1.6 & 1.7 are translated in messages.xlf
+         * So we need to check in the Symfony catalog for translations
+         */
+        $newTranslation = Context::getContext()->getTranslator()->trans($string, $sprintf_for_trans);
+
+        if ($string != $newTranslation) {
+            return $newTranslation;
+        }
+
         if (!isset($translationsMerged[$name]) && isset(Context::getContext()->language)) {
             $filesByPriority = array(
                 // Translations in theme
@@ -189,7 +215,11 @@ class TranslateCore
 
         if (!isset($langCache[$cacheKey])) {
             if ($_MODULES == null) {
-                if ($sprintf !== null) {
+                if (
+                    $sprintf !== null &&
+                    (!is_array($sprintf) || !empty($sprintf)) &&
+                    !(count($sprintf) === 1 && isset($sprintf['legacy']))
+                ) {
                     $string = Translate::checkAndReplaceArgs($string, $sprintf);
                 }
 
@@ -220,7 +250,11 @@ class TranslateCore
                 $ret = stripslashes($string);
             }
 
-            if ($sprintf !== null) {
+            if (
+                $sprintf !== null &&
+                (!is_array($sprintf) || !empty($sprintf)) &&
+                !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            ) {
                 $ret = Translate::checkAndReplaceArgs($ret, $sprintf);
             }
 
@@ -265,7 +299,11 @@ class TranslateCore
 
         $str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 
-        if ($sprintf !== null) {
+        if (
+            $sprintf !== null &&
+            (!is_array($sprintf) || !empty($sprintf)) &&
+            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+        ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
 

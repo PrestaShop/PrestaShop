@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1267,27 +1267,11 @@ abstract class ModuleCore
                     $file_path = _PS_MODULE_DIR_.$module.'/'.$module.'.php';
                     $file = trim(file_get_contents(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
 
-                    if (substr($file, 0, 5) == '<?php') {
-                        $file = substr($file, 5);
-                    }
-
-                    if (substr($file, -2) == '?>') {
-                        $file = substr($file, 0, -2);
-                    }
-
-                    // We check any parse error before including the file.
-                    // If (false) is a trick to not load the class with "eval".
-                    // This way require_once will works correctly
-                    // But namespace and use statements need to be removed
-                    $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
-                    $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
                     try {
-                        if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.$content.' }') !== false) {
-                            require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
-                        } else {
-                            throw new ParseError("Parse error");
-                        }
-                    } catch (ParseError $e) {
+                        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7);
+                        $parser->parse($file);
+                        require_once($file_path);
+                    } catch (PhpParser\Error $e) {
                         $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
                     }
 
@@ -1479,6 +1463,9 @@ abstract class ModuleCore
         }
 
         foreach ($module_list as $key => &$module) {
+            if (!isset($module->tab)) {
+                $module->tab = 'others';
+            }
             if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist)) {
                 unset($module_list[$key]);
             } elseif (isset($modules_installed[$module->name])) {
@@ -1663,8 +1650,9 @@ abstract class ModuleCore
             }
         }
 
-        if ($modules_list_content === null) {
-            $modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST);
+        $modulesListCacheFilepath = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
+        if ($modules_list_content === null && is_readable($modulesListCacheFilepath)) {
+            $modules_list_content = Tools::file_get_contents($modulesListCacheFilepath);
         }
 
         if ($default_country_modules_list_content === null) {
@@ -3118,6 +3106,7 @@ abstract class ModuleCore
 
     protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
+        $parameters['legacy'] = 'htmlspecialchars';
         return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
     }
 }

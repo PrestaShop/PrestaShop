@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,8 +59,14 @@ class HookEvent extends Event
      */
     public function getHookParameters()
     {
-        return array_merge(array(
-            '_ps_version' => _PS_VERSION_
-        ), $this->hookParameters);
+        global $kernel;
+
+        $globalParameters = array('_ps_version' => _PS_VERSION_);
+
+        if (!is_null($kernel)) {
+            $globalParameters['request'] = $kernel->getContainer()->get('request');
+        }
+
+        return array_merge($globalParameters, $this->hookParameters);
     }
 }

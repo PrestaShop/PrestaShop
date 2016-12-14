@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author     PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
@@ -95,7 +95,7 @@ class AdminModuleDataProvider implements ModuleInterface
         return array_keys($this->getCatalogModules($filter));
     }
 
-    public function generateAddonsUrls(array $addons)
+    public function generateAddonsUrls(array $addons, $specific_action = null)
     {
         foreach ($addons as &$addon) {
             $urls = array();
@@ -174,7 +174,11 @@ class AdminModuleDataProvider implements ModuleInterface
             if (count($urls)) {
                 $addon->attributes->set('urls', $urls);
             }
-            $addon->attributes->set('url_active', $url_active);
+            if ($specific_action && array_key_exists($specific_action, $urls)) {
+                $addon->attributes->set('url_active', $specific_action);
+            } else {
+                $addon->attributes->set('url_active', $url_active);
+            }
 
             $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
             $addon->attributes->set('categoryParent', $categoryParent);

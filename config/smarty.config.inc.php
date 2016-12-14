@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -108,7 +108,7 @@ function smarty_modifier_htmlentitiesUTF8($string)
     return Tools::htmlentitiesUTF8($string);
 }
 
-function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true)
+function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true, $initial_lazy_register = null)
 {
     if (!in_array($type, array('function', 'modifier', 'block'))) {
         return false;
@@ -116,7 +116,11 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
 
     // lazy is better if the function is not called on every page
     if ($lazy) {
-        $lazy_register = SmartyLazyRegister::getInstance();
+        if (null !== $initial_lazy_register && $initial_lazy_register->isRegistered($params)) {
+            return;
+        }
+
+        $lazy_register = SmartyLazyRegister::getInstance($smarty);
         if ($lazy_register->isRegistered($params)) {
             return;
         }

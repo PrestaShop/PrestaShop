@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
@@ -62,9 +63,7 @@ class ModuleManagerBuilder
     public static $instance = null;
 
     /**
-     * @param null $baseUrl
-     *
-     * @return ModuleManagerBuilder
+     * @return null|ModuleManagerBuilder
      */
     static public function getInstance() {
         if (self::$instance == null) {
@@ -152,8 +151,8 @@ class ModuleManagerBuilder
             new Client($clientConfig),
             $this->getLanguageIso(),
             $this->getCountryIso(),
-            _PS_VERSION_)
-        ;
+            new Tools()
+        );
 
         if (file_exists($this->getConfigDir().'/parameters.php')) {
             $parameters = require($this->getConfigDir().'/parameters.php');
@@ -162,7 +161,16 @@ class ModuleManagerBuilder
             }
         }
 
-        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient);
+        self::$translator = Context::getContext()->getTranslator();
+        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
+        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
+
+        $kernelDir = dirname(__FILE__) . '/../../../../app';
+        self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
+        if (_PS_MODE_DEV_) {
+            self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';
+        }
+
         self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
 
         if (is_null(self::$adminModuleDataProvider)) {
@@ -173,11 +181,9 @@ class ModuleManagerBuilder
                 self::$categoriesProvider
             );
 
-            self::$translator = Context::getContext()->getTranslator();
             self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
             self::$legacyLogger = new LegacyLogger();
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
-            self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
         }
     }
 

@@ -1,5 +1,5 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -89,11 +89,23 @@ function formatNumberCldr(value, callback, numberOfDecimal) {
  */
 function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 {
-	var formatter = cldrForCurrencyFormatterWrapper(null, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2,
-	});
-	return formatter(price);
+  // if you modified this function, don't forget to modify the PHP function displayPrice (in the Tools.php class)
+  var blank = '';
+  price = parseFloat(price.toFixed(10));
+  price = ps_round(price, priceDisplayPrecision);
+  if (currencyBlank > 0)
+  	blank = ' ';
+  if (currencyFormat == 1)
+  	return currencySign + blank + formatNumber(price, priceDisplayPrecision, ',', '.');
+  if (currencyFormat == 2)
+  	return (formatNumber(price, priceDisplayPrecision, ' ', ',') + blank + currencySign);
+  if (currencyFormat == 3)
+  	return (currencySign + blank + formatNumber(price, priceDisplayPrecision, '.', ','));
+  if (currencyFormat == 4)
+  	return (formatNumber(price, priceDisplayPrecision, ',', '.') + blank + currencySign);
+  if (currencyFormat == 5)
+  	return (currencySign + blank + formatNumber(price, priceDisplayPrecision, '\'', '.'));
+  return price;
 }
 
 /**

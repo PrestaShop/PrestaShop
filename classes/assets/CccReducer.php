@@ -1,29 +1,29 @@
 <?php
 
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2016 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -49,9 +49,10 @@ class CccReducerCore
     public function reduceCss($cssFileList)
     {
         $files = array();
-        foreach ($cssFileList['external'] as $css) {
-            if ('all' === $css['media']) {
-                $files[] = $css['path'];
+        foreach ($cssFileList['external'] as $key => &$css) {
+            if ('all' === $css['media'] && 'local' === $css['server']) {
+                $files[] = $this->getPathFromUri($css['path']);
+                unset($cssFileList['external'][$key]);
             }
         }
 
@@ -62,15 +63,13 @@ class CccReducerCore
             CssMinifier::minify($files, $destinationPath);
         }
 
-        $cssFileList['external'] = [
-            'theme-ccc' => [
-                "id" => "theme-ccc",
-                "type" => "external",
-                "path" => $destinationPath,
-                "uri" => $this->getFQDN().$this->getUriFromPath($destinationPath),
-                "media" => "all",
-                "priority" => StylesheetManager::DEFAULT_PRIORITY,
-            ]
+        $cssFileList['external']['theme-ccc'] = [
+            "id" => "theme-ccc",
+            "type" => "external",
+            "path" => $destinationPath,
+            "uri" => $this->getFQDN().$this->getUriFromPath($destinationPath),
+            "media" => "all",
+            "priority" => StylesheetManager::DEFAULT_PRIORITY,
         ];
 
         return $cssFileList;
@@ -82,8 +81,8 @@ class CccReducerCore
             $files = array();
             foreach ($list['external'] as $key => $js) {
                 // We only CCC the file without 'refer' or 'async'
-                if ('' === $js['attribute']) {
-                    $files[] = $js['path'];
+                if ('' === $js['attribute'] && 'local' === $js['server']) {
+                    $files[] = $this->getPathFromUri($js['path']);
                     unset($list['external'][$key]);
                 }
             }

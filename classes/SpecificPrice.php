@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -211,7 +211,7 @@ class SpecificPriceCore extends ObjectModel
      */
     protected static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
-        $name = Db::getInstance()->escape($field_name);
+        $name = Db::getInstance()->escape($field_name, false, true);
         $query_extra = 'AND `'.$name.'` = 0 ';
         if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
             return $query_extra;

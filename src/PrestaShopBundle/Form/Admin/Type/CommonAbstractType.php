@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 abstract class CommonAbstractType extends AbstractType
 {
     const PRESTASHOP_DECIMALS = 6;
-    
+
     /**
      * Get the configuration adapter
      *
@@ -57,7 +57,28 @@ abstract class CommonAbstractType extends AbstractType
     {
         $new_list = array();
         foreach ($list as $item) {
-            $new_list[$item[$mapping_name]] = $item[$mapping_value];
+            if (array_key_exists($item[$mapping_name], $new_list)) {
+                return $this->formatDataDuplicateChoicesList($list, $mapping_value, $mapping_name);
+            } else {
+                $new_list[$item[$mapping_name]] = $item[$mapping_value];
+            }
+        }
+        return $new_list;
+    }
+
+    /**
+     * Format legacy data list to mapping SF2 form field choice (possibility to have 2 name equals)
+     *
+     * @param array $list
+     * @param string $mapping_value
+     * @param string $mapping_name
+     * @return array
+     */
+    protected function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
+    {
+        $new_list = array();
+        foreach ($list as $item) {
+            $new_list[$item[$mapping_value].' - '.$item[$mapping_name]] = $item[$mapping_value];
         }
         return $new_list;
     }

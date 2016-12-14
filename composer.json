@@ -10,6 +10,7 @@
     "doctrine/cache": "~1.6|~1.5",
     "doctrine/common": "~2.5.3",
     "doctrine/orm": "~2.5.3",
+    "ext-curl": "*",
     "ext-intl": "*",
     "ext-zip": "*",
     "geoip2/geoip2": "~2.4.2",
@@ -93,7 +94,9 @@
     "prestashop/trackingfront": "dev-master",
     "prestashop/welcome": "dev-master",
     "prestashop/dashtrends": "dev-master",
-    "beberlei/DoctrineExtensions": "^1.0"
+    "beberlei/DoctrineExtensions": "^1.0",
+    "composer/ca-bundle": "^1.0",
+    "nikic/php-parser": "^2.1"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",
@@ -116,13 +119,10 @@
   "scripts": {
     "post-install-cmd": [
       "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
-      "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-    ],
+          "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+          "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+          "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+        ],
     "post-update-cmd": [
       "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
       "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
@@ -138,7 +138,10 @@
     "phpunit-sf": "php bin/phpunit -c admin-dev/"
   },
   "config": {
-    "bin-dir": "bin"
+    "bin-dir": "bin",
+    "platform": {
+      "php": "5.4.0"
+    }
   },
   "extra": {
     "symfony-app-dir": "app",

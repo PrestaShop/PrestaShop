@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\DependencyInjection;
 
+use Tools;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -35,6 +36,8 @@ class AddOnsConfiguration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('prestashop');
 
+        Tools::refreshCACertFile();
+
         $rootNode
             ->children()
                 ->arrayNode('addons')
@@ -44,8 +47,8 @@ class AddOnsConfiguration implements ConfigurationInterface
                                 ->integerNode('ttl')
                                     ->defaultValue(0)
                                 ->end()
-                                ->booleanNode('verify_ssl')
-                                    ->defaultTrue()
+                                ->scalarNode('verify_ssl')
+                                    ->defaultValue(_PS_CACHE_CA_CERT_FILE_)
                                 ->end()
                             ->end()
                         ->end()

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -395,7 +395,8 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-        if (isset($plaintextPassword) && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
+        $shouldCheckPassword = !is_null($plaintextPassword);
+        if ($shouldCheckPassword && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
             return false;
         }
 
@@ -425,7 +426,8 @@ class CustomerCore extends ObjectModel
                 $this->{$key} = $value;
             }
         }
-        if (!$crypto->isFirstHash($plaintextPassword, $passwordHash)) {
+        
+        if ($shouldCheckPassword && !$crypto->isFirstHash($plaintextPassword, $passwordHash)) {
             $this->passwd = $crypto->hash($plaintextPassword);
             $this->update();
         }

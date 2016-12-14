@@ -1,3 +1,27 @@
+{#**
+ * 2007-2016 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
@@ -392,7 +416,7 @@
                             </div>
                             <div id="form_step3_virtual_product_file_details" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'show' : 'hide' }}">
                               <a href="{{ form.step3.virtual_product.vars.value.file_download_link is defined ? form.step3.virtual_product.vars.value.file_download_link : '' }}" class="btn btn-default btn-sm download">{{ 'Download file'|trans({}, 'Admin.Actions') }}</a>
-                              <a href="{{ path('admin_product_virtual_remove_file_action') }}" class="btn btn-danger btn-sm delete">{{ 'Delete this file'|trans({}, 'Admin.Actions') }}</a>
+                              <a href="{{ path('admin_product_virtual_remove_file_action', { 'idProduct': 1 }) }}" class="btn btn-danger btn-sm delete">{{ 'Delete this file'|trans({}, 'Admin.Actions') }}</a>
                             </div>
                           </fieldset>
                         </div>
@@ -962,7 +986,7 @@
           data-redirect="{{ preview_link }}"
           data-url_deactive="{{ preview_link_deactivate }}"
           target="_blank"
-          class="btn btn-tertiary btn-submit hidden-xs preview"
+          class="btn btn-tertiary btn-submit preview"
           data-toggle="tooltip"
           id="product_form_preview_btn"
           title="{{ 'See how your product sheet will look online: CTRL+V'|trans({}, 'Admin.Catalog.Help') }}"

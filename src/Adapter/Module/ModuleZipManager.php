@@ -1,9 +1,9 @@
 <?php
-/*
+/**
  * 2007-2016 PrestaShop
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
@@ -11,17 +11,17 @@
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
- * 
+ *
  * DISCLAIMER
- * 
+ *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
- * 
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2016 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
@@ -32,6 +32,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 use Exception;
 use Tools;
+use ZipArchive;
 
 class ModuleZipManager
 {
@@ -84,11 +85,14 @@ class ModuleZipManager
         }
 
         $sandboxPath = $this->getSandboxPath($source);
-        if (!Tools::ZipExtract($source, $sandboxPath)) {
+        $zip = new ZipArchive();
+        if ($zip->open($source) === false || !$zip->extractTo($sandboxPath) || !$zip->close()) {
             throw new Exception(
                 $this->translator->trans(
-                    'Cannot extract module in %path% to get its name.',
-                    array('%path%' => $sandboxPath),
+                    'Cannot extract module in %path% to get its name. %error%',
+                    array(
+                        '%path%' => $sandboxPath,
+                        '%error%' => $zip->getStatusString()),
                     'Admin.Modules.Notification'));
         }
 
@@ -137,14 +141,16 @@ class ModuleZipManager
      */
     public function storeInModulesFolder($source)
     {
-        $name = $this->get($source, 'name');
+        $name = $this->getName($source);
         $sandboxPath = $this->get($source, 'sandboxPath');
         // Now we are sure to have a valid module, we copy it to the modules folder
         $modulePath = _PS_MODULE_DIR_.$name;
         $this->filesystem->mkdir($modulePath);
         $this->filesystem->mirror(
             $sandboxPath.$name,
-            $modulePath
+            $modulePath,
+            null,
+            array('override' => true)
         );
         $this->filesystem->remove($sandboxPath);
     }
@@ -154,7 +160,7 @@ class ModuleZipManager
         $sandboxPath = $this->get($source, 'sandboxPath');
         if ($sandboxPath === null) {
             $sandboxPath = _PS_CACHE_DIR_.'sandbox/'.uniqid().'/';
-            $this->filesystem->mkdir($sandboxPath, 0755);
+            $this->filesystem->mkdir($sandboxPath);
             $this->set($source, 'sandboxPath', $sandboxPath);
         }
         return $sandboxPath;
@@ -201,14 +207,10 @@ class ModuleZipManager
         }
 
         if (isset(self::$sources[$source])) {
-            foreach ($this->attributes as $attr) {
-                $this->{$attr} = self::$sources[$source][$attr];
-            }
-        } else {
-            foreach ($this->attributes as $attr) {
-                $this->{$attr} = null;
-                self::$sources[$source][$attr] = null;
-            }
+            return;
+        }
+        foreach ($this->attributes as $attr) {
+            self::$sources[$source][$attr] = null;
         }
     }
 }

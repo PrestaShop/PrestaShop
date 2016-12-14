@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2016 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 {extends file="helpers/view/view.tpl"}
 
@@ -128,7 +128,7 @@
 														<input type="text"
 															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
 															name="{$name|md5}"
-															value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}"' />
+															value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}" />
 													{else}
 														<textarea rows="{($key|strlen / $textarea_sized)|intval}"
 															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
@@ -152,12 +152,12 @@
 									<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay' d='Admin.Actions'}</button>
 								</div>
 							</div>
-              </form>
 						{/if}
 					{/foreach}
 				{/foreach}
 			{/foreach}
-		{/if}
+    </form>
+	{/if}
 
     <form action="{$url_submit_installed_module|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
       <div class="panel">

@@ -1,5 +1,5 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -403,7 +403,7 @@ var featuresCollection = (function() {
 
         if('' !== $(this).val()) {
           $.ajax({
-            url: $(this).attr('data-action').replace(/\/\d+/, '/' + $(this).val()),
+            url: $(this).attr('data-action').replace(/\/\d+(?=\?.*)/, '/' + $(this).val()),
             success: function(response) {
               $selector.prop('disabled', response.length === 0);
               $selector.empty();
@@ -790,7 +790,7 @@ var warehouseCombinations = (function() {
     'refresh': function() {
       var show = $('input#form_step3_advanced_stock_management:checked').size() > 0;
       if (show) {
-        var url = collectionHolder.attr('data-url').replace(/\/\d+/, '/' + id_product);
+        var url = collectionHolder.attr('data-url').replace(/\/\d+(?=\?.*)/, '/' + id_product);
         $.ajax({
           url: url,
           success: function(response) {
@@ -880,6 +880,22 @@ var form = (function() {
           $('#form-nav li a[href="#' + tabIndex.split('_')[0] + '"]').parent().addClass('has-error');
         });
 
+        if ($('div[class*="translation-label-"].has-danger').length > 0) {
+          var regexLabel = 'translation-label-';
+
+          var translationLabelClass = $.grep($('div[class*="translation-label-"].has-danger').first().attr('class').split(" "), function(v, i){
+            return v.indexOf(regexLabel) === 0;
+          }).join();
+
+          if (translationLabelClass) {
+            var selectValue = translationLabelClass.replace(regexLabel, '');
+
+            if ($('#form_switch_language option[value="' + selectValue + '"]').length > 0) {
+              $('#form_switch_language').val(selectValue).change();
+            }
+          }
+        }
+
         /** scroll to 1st error */
         if ($('.has-danger').first().offset()) {
           $('html, body').animate({
@@ -921,19 +937,19 @@ var form = (function() {
       });
 
       /** create keyboard event for save */
-      jwerty.key('ctrl+S', function(e) {
+      jwerty.key('ctrl+S/cmd+S', function(e) {
         e.preventDefault();
         send();
       });
 
       /** create keyboard event for save & duplicate */
-      jwerty.key('ctrl+D', function(e) {
+      jwerty.key('ctrl+D/cmd+D', function(e) {
         e.preventDefault();
         send($('.product-footer .duplicate').attr('data-redirect'));
       });
 
       /** create keyboard event for save & new */
-      jwerty.key('ctrl+P', function(e) {
+      jwerty.key('ctrl+P/cmd+P', function(e) {
         e.preventDefault();
         send($('.product-footer .new-product').attr('data-redirect'));
       });
@@ -945,14 +961,14 @@ var form = (function() {
       });
 
       /** create keyboard event for save & go preview */
-      jwerty.key('ctrl+V', function(e) {
+      jwerty.key('ctrl+V/cmd+V', function(e) {
           e.preventDefault();
           var productFooter = $('.product-footer .preview');
           send(productFooter.attr('data-redirect'), productFooter.attr('target'));
       });
 
       /** create keyboard event for save & active or desactive product*/
-      jwerty.key('ctrl+O', function(e) {
+      jwerty.key('ctrl+O/cmd+O', function(e) {
         e.preventDefault();
         var step1CheckBox = $('#form_step1_active');
         step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
@@ -1119,7 +1135,7 @@ var virtualProduct = (function() {
   var getOnDeleteVirtualProductFileHandler = function ($deleteButton) {
     return $.ajax({
       type: 'GET',
-      url: $deleteButton.attr('href').replace(/\/\d+/, '/' + id_product),
+      url: $deleteButton.attr('href').replace(/\/\d+(?=\?.*)/, '/' + id_product),
       success: function () {
         $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
         $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
@@ -1299,7 +1315,7 @@ var attachmentProduct = (function() {
 
         $.ajax({
           type: 'POST',
-          url: $('#form_step6_attachment_product').attr('data-action').replace(/\/\d+/, '/' + id_product),
+          url: $('#form_step6_attachment_product').attr('data-action').replace(/\/\d+(?=\?.*)/, '/' + id_product),
           data: data,
           contentType: false,
           processData: false,
@@ -1539,6 +1555,11 @@ var imagesProduct = (function() {
     },
     'checkDropzoneMode': function() {
       checkDropzoneMode();
+    },
+    'getOlderImageId': function() {
+      return Math.min.apply(Math,$('.dz-preview').map(function(){
+        return $(this).data('id');
+      }));
     }
   };
 })();
@@ -1620,9 +1641,14 @@ var formImagesProduct = (function() {
             url: dropZoneElem.find('.dz-preview[data-id="' + id + '"]').attr('url-delete'),
             complete: function() {
               formZoneElem.find('.close').click();
+              var wasCover = !!dropZoneElem.find('.dz-preview[data-id="' + id + '"] .iscover').length;
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
               $('.images .product-combination-image [value=' + id + ']').parent().remove();
               imagesProduct.checkDropzoneMode();
+              if (true === wasCover) {
+                // The controller will choose the oldest image as the new cover.
+                imagesProduct.updateDisplayCover(imagesProduct.getOlderImageId());
+              }
             }
           });
         }

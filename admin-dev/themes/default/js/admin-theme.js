@@ -1,5 +1,5 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -287,9 +287,14 @@ $(document).ready(function() {
 	//show footer when reach bottom
 	function animateFooter(){
 		if($(window).scrollTop() + $(window).height() === $(document).height()) {
+			$('div.onboarding-navbar').animate({
+				bottom: "+=50"
+			}, 500, function() {
+			});
 			$('#footer:hidden').removeClass('hide');
 		} else {
 			$('#footer').addClass('hide');
+			$('div.onboarding-navbar').css('bottom', '0px');
 		}
 	}
 

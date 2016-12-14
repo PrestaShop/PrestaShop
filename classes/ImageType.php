@@ -168,6 +168,21 @@ class ImageTypeCore extends ObjectModel
     /**
      * Get formatted name
      *
+     * @deprecated 1.7.0.0 Use ImageType::getFormattedName($name) instead
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function getFormatedName($name)
+    {
+        Tools::displayAsDeprecated('Please use ImageType::getFormattedName($name) instead');
+        return self::getFormattedName($name);
+    }
+
+    /**
+     * Get formatted name
+     *
      * @param string $name
      *
      * @return string
@@ -192,13 +207,14 @@ class ImageTypeCore extends ObjectModel
     /**
      * Get all image types
      *
-     * @return array|mixed|null
+     * @return array
      */
     public static function getAll()
     {
         $context = Context::getContext();
         if (isset($context->shop->theme)) {
-            return $context->shop->theme->get('image_types');
+            $imagesTypes = $context->shop->theme->get('image_types');
+            return is_array($imagesTypes) ? $imagesTypes : array();
         }
 
         return array();

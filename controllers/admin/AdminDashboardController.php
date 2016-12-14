@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -237,7 +237,8 @@ class AdminDashboardControllerCore extends AdminController
         // 	'Save' => $this->trans('Save', array(), 'Admin.Global')
         // );
 
-        if ($this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
+        $testStatsDateUpdate = $this->context->cookie->__get('stats_date_update');
+        if (!empty($testStatsDateUpdate) && $this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
             switch ($this->context->employee->preselect_date_range) {
                 case 'day':
                     $date_from = date('Y-m-d');

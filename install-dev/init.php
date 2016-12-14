@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -82,12 +82,13 @@ require_once _PS_INSTALL_PATH_.'classes/session.php';
 @set_time_limit(0);
 if (!@ini_get('date.timezone')) {
     @date_default_timezone_set('Europe/Paris');
+    ini_set('date.timezone', 'UTC');
 }
 
 // Try to improve memory limit if it's under 64M
 $current_memory_limit = psinstall_get_memory_limit();
-if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('64M')) {
-    ini_set('memory_limit', '64M');
+if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('128M')) {
+    ini_set('memory_limit', '128M');
 }
 
 function psinstall_get_octets($option)

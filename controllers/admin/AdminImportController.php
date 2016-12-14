@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1367,12 +1367,11 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!$valid_link) {
-            $this->informations[] = sprintf(
-                $this->trans('Rewrite link for %1$s (ID %2$s): re-written as %3$s.', array(), 'Admin.AdvParameters.Notification'),
-                $bak,
-                (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
-                $category->link_rewrite[$default_language_id]
-            );
+            $this->informations[] = $this->trans('Rewrite link for %1$s (ID %2$s): re-written as %3$s.', array(
+                '%1$s' => $bak,
+                '%2$s' => (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
+                '%3$s' => $category->link_rewrite[$default_language_id],
+            ), 'Admin.AdvParameters.Notification');
         }
         $res = false;
         if (($field_error = $category->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -1813,12 +1812,11 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!$valid_link) {
-            $this->informations[] = sprintf(
-                $this->trans('Rewrite link for %1$s (ID %2$s): re-written as %3$s.', array(), 'Admin.AdvParameters.Notification'),
-                $product->name[$id_lang],
-                (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
-                $link_rewrite
-            );
+            $this->informations[] = $this->trans('Rewrite link for %1$s (ID %2$s): re-written as %3$s.', array(
+                '%1$s' => $product->name[$id_lang],
+                '%2$s' => (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
+                '%3$s' => $link_rewrite,
+            ), 'Admin.AdvParameters.Notification');
         }
 
         if (!$valid_link || !(is_array($product->link_rewrite) && count($product->link_rewrite))) {

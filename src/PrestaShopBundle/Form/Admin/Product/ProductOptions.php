@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -204,7 +204,7 @@ class ProductOptions extends CommonAbstractType
         $builder->add('attachment_product', 'PrestaShopBundle\Form\Admin\Product\ProductAttachement', array(
             'required' => false,
             'label' => $this->translator->trans('Attachment', [], 'Admin.Catalog.Feature'),
-            'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action')]
+            'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action', array('idProduct' => 1))]
         ));
 
         //Add attachment selectors

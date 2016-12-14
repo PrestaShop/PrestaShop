@@ -1,19 +1,8 @@
 language: php
 
-services:
-  - mysql
-
 addons:
     apt:
-        sources:
-        - deb http://archive.ubuntu.com/ubuntu/ trusty multiverse
-        - deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse
-        - deb http://archive.ubuntu.com/ubuntu/ trusty universe
-        - deb http://archive.ubuntu.com/ubuntu/ trusty-updates universe
         packages:
-        - mysql-server-5.6
-        - mysql-client-5.6
-        - mysql-client-core-5.6
         - apache2
         - postfix
         - libapache2-mod-fastcgi

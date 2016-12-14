@@ -1,12 +1,12 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
+ * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
+ * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,8 +18,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -722,7 +722,7 @@ function init()
 			var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 			query = 'ajax=1&token='+token+'&action=editProductOnOrder&id_order='+id_order+'&';
 			if (element_list.length)
-				query += element_list.parent().parent().find('input:visible, select:visible, .edit_product_id_order_detail').serialize();
+				query += element_list.find('input:visible, select:visible, .edit_product_id_order_detail').serialize();
 			else
 				query += element.parent().parent().find('input:visible, select:visible, .edit_product_id_order_detail').serialize();
 

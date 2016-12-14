@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -134,7 +134,7 @@ class AdminTranslationsControllerCore extends AdminController
         // Create a title for each translation page
         $title = $this->trans('%1$s (Language: %2$s, Theme: %3$s)',
                 array(
-                    '%1$s' => $this->translations_informations[$this->type_selected]['name'],
+                    '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false: $this->translations_informations[$this->type_selected]['name']),
                     '%2$s' => $this->lang_selected->name,
                     '%3$s' => $this->theme_selected ? $this->theme_selected : $this->trans('None', array(), 'Admin.Global'),
                 ),
@@ -203,6 +203,22 @@ class AdminTranslationsControllerCore extends AdminController
             }
         }
 
+        $modules = array();
+        foreach ($this->getListModules() as $module) {
+            $modules[$module] = array(
+                'name' => $module,
+                'urlToTranslate' => !$this->isUsingNewTranslationsSystem($module) ? $this->context->link->getAdminLink(
+                    'AdminTranslations',
+                    true,
+                    array(),
+                    array(
+                        'type' => 'modules',
+                        'module' => $module,
+                    )
+                ) : '',
+            );
+        }
+
         $this->tpl_view_vars = array(
             'theme_default' => self::DEFAULT_THEME_NAME,
             'theme_lang_dir' =>_THEME_LANG_DIR_,
@@ -213,6 +229,7 @@ class AdminTranslationsControllerCore extends AdminController
             'packs_to_update' => $packsToUpdate,
             'url_submit' => self::$currentIndex.'&token='.$this->token,
             'themes' => $this->themes,
+            'modules' => $modules,
             'current_theme_name' => $this->context->shop->theme_name,
             'url_create_language' => 'index.php?controller=AdminLanguages&addlang&token='.$token,
         );
@@ -226,13 +243,25 @@ class AdminTranslationsControllerCore extends AdminController
         return $this->content;
     }
 
+    private function isUsingNewTranslationsSystem($moduleName)
+    {
+        $domains = array_keys($this->context->getTranslator()->getCatalogue()->all());
+        $moduleName = preg_replace('/^ps_(\w+)/', '$1', $moduleName);
+
+        if (count(preg_grep('/'.$moduleName.'/i', $domains))) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * This method merge each arrays of modules translation in the array of modules translations
      */
     protected function getModuleTranslations()
     {
         global $_MODULE;
-        $name_var = $this->translations_informations[$this->type_selected]['var'];
+        $name_var = (empty($this->translations_informations[$this->type_selected]['var']) ? false: $this->translations_informations[$this->type_selected]['var']);
 
         if (!isset($_MODULE) && !isset($GLOBALS[$name_var])) {
             $GLOBALS[$name_var] = array();
@@ -878,7 +907,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (Validate::isLangIsoCode($isoCode)) {
             if ($success = Language::downloadAndInstallLanguagePack($isoCode, $version = _PS_VERSION_, $params = null, $install = true)) {
                 Language::loadLanguages();
-                Tools::clearCache();
+                Tools::clearAllCache();
 
                 // TODO: Update AdminTranslationsController::addNewTabs to install tabs translated
 
@@ -1020,7 +1049,7 @@ class AdminTranslationsControllerCore extends AdminController
      */
     protected function findAndFillTranslations($files, $theme_name, $module_name, $dir = false)
     {
-        $name_var = $this->translations_informations[$this->type_selected]['var'];
+        $name_var = (empty($this->translations_informations[$this->type_selected]['var']) ? false: $this->translations_informations[$this->type_selected]['var']);
 
         // added for compatibility
         $GLOBALS[$name_var] = array_change_key_case($GLOBALS[$name_var]);
@@ -1171,7 +1200,6 @@ class AdminTranslationsControllerCore extends AdminController
                     _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
                     _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
                     _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR),
-                    _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs/' => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs/')
                 );
 
                 // Get all files for folders classes/ and override/classes/ recursively
@@ -1302,13 +1330,21 @@ class AdminTranslationsControllerCore extends AdminController
                 'sf_controller' => true,
                 'choice_theme' => true,
             ),
+            'modules' => array(
+                'name' => $this->trans('Installed modules translations', array(), 'Admin.International.Feature'),
+                'var' => '_MODULES',
+                'dir' => _PS_ROOT_DIR_.'/modules/',
+                'file' => '',
+                'sf_controller' => true,
+                'choice_theme' => false,
+            ),
             'mails' => array(
                 'name' => $this->trans('Email translations', array(), 'Admin.International.Feature'),
                 'var' => '_LANGMAIL',
                 'dir' => _PS_MAIL_DIR_.$this->lang_selected->iso_code.'/',
                 'file' => 'lang.php',
                 'sf_controller' => false,
-                'choice_theme' => true,
+                'choice_theme' => false,
             ),
             'others' => array(
                 'name' => $this->trans('Other translations', array(), 'Admin.International.Feature'),
@@ -1318,10 +1354,6 @@ class AdminTranslationsControllerCore extends AdminController
                 'sf_controller' => true,
                 'choice_theme' => false,
             ),
-            'modules' => array(
-                'dir' => _PS_MODULE_DIR_,
-                'file' => '',
-            )
         );
 
         if (defined('_PS_THEME_SELECTED_DIR_')) {
@@ -1507,7 +1539,7 @@ class AdminTranslationsControllerCore extends AdminController
                         }
 
                         // Clear modules cache
-                        Tools::clearCache();
+                        Tools::clearAllCache();
 
                         // Redirect
                         if (Tools::getIsset('submitTranslationsModulesAndStay')) {
@@ -1549,6 +1581,7 @@ class AdminTranslationsControllerCore extends AdminController
 
     protected function getMailPattern()
     {
+        Tools::displayAsDeprecated('Email pattern is no longer used, emails are always saved like they are.');
         // Let the indentation like it.
         return '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
 <html>
@@ -1621,9 +1654,6 @@ class AdminTranslationsControllerCore extends AdminController
                         // replace correct end of line
                         $content = str_replace("\r\n", PHP_EOL, $content);
 
-                        $string_mail = $this->getMailPattern();
-                        $content = str_replace(array('#content'), array($content), $string_mail);
-
                         // Magic Quotes shall... not.. PASS!
                         if (_PS_MAGIC_QUOTES_GPC_) {
                             $content = stripslashes($content);
@@ -1638,8 +1668,6 @@ class AdminTranslationsControllerCore extends AdminController
                         if (!file_exists($path) && !mkdir($path, 0777, true)) {
                             throw new PrestaShopException(sprintf($this->trans('Directory "%s" cannot be created', array(), 'Admin.International.Notification'), dirname($path)));
                         }
-
-                        $content = Tools::purifyHTML($content, array('{', '}'), true);
 
                         if ($type_content == 'tpl') {
                             preg_match('/{\s*[^$]+/s', $content, $matches);
@@ -2538,7 +2566,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @since 1.4.0.14
      * @param array       $content         With english and language needed contents
      * @param string      $lang            ISO code of the needed language
-     * @param string      $url for         The html page and displaying an outline
+     * @param string      $url             The html page and displaying an outline
      * @param string      $mail_name       Name of the file to translate (same for txt and html files)
      * @param string      $group_name      Group name allow to distinguish each block of mail.
      * @param string|bool $name_for_module Is not false define add a name for distinguish mails module
@@ -2567,18 +2595,12 @@ class AdminTranslationsControllerCore extends AdminController
 
     protected function cleanMailContent(&$content, $lang, &$title)
     {
-        // Because TinyMCE don't work correctly with <DOCTYPE>, <html> and <body> tags
         if (stripos($content[$lang], '<body')) {
             $array_lang = $lang != 'en' ? array('en', $lang) : array($lang);
             foreach ($array_lang as $language) {
                 $title[$language] = substr($content[$language], 0, stripos($content[$language], '<body'));
                 preg_match('#<title>([^<]+)</title>#Ui', $title[$language], $matches);
                 $title[$language] = empty($matches[1])?'':$matches[1];
-                // The 2 lines below allow to exlude <body> tag from the content.
-                // This allow to exclude body tag even if attributs are setted.
-                $content[$language] = substr($content[$language], stripos($content[$language], '<body') + 5);
-                $content[$language] = substr($content[$language], stripos($content[$language], '>') + 1);
-                $content[$language] = substr($content[$language], 0, stripos($content[$language], '</body>'));
             }
         }
         $content[$lang] = (isset($content[$lang]) ? Tools::htmlentitiesUTF8(stripslashes($content[$lang])) : '');
@@ -3194,7 +3216,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (defined('_PS_HOST_MODE_') && strpos($email, _PS_MAIL_DIR_) !== false) {
             $email_file = $email;
         } elseif (__PS_BASE_URI__ != '/') {
-            $email_file = str_replace(__PS_BASE_URI__, '', _PS_ROOT_DIR_.'/').$email;
+            $email_file = str_replace(__PS_BASE_URI__, _PS_ROOT_DIR_.'/', $email);
         } else {
             $email_file = _PS_ROOT_DIR_.$email;
         }

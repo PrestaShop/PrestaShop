@@ -1,29 +1,29 @@
 <?php
 
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2016 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class JavascriptManagerCore extends AbstractAssetManager
 {
@@ -32,15 +32,32 @@ class JavascriptManagerCore extends AbstractAssetManager
     protected $valid_position = ['head', 'bottom'];
     protected $valid_attribute = ['async', 'defer'];
 
-    public function register($id,
+    protected function getDefaultList()
+    {
+        $default = [];
+        foreach ($this->valid_position as $position) {
+            $default[$position] = [
+                'external' => array(),
+                'inline' => array(),
+            ];
+        }
+
+        return $default;
+    }
+
+    public function register(
+        $id,
         $relativePath,
         $position = self::DEFAULT_JS_POSITION,
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
-        $attribute = null
+        $attribute = null,
+        $server = 'local'
     ) {
-        if ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $position, $priority, $inline, $attribute);
+        if ('remote' === $server) {
+            $this->add($id, $relativePath, $position, $priority, $inline, $attribute, $server);
+        } else if ($fullPath = $this->getFullPath($relativePath)) {
+            $this->add($id, $fullPath, $position, $priority, $inline, $attribute, $server);
         }
     }
 
@@ -50,44 +67,35 @@ class JavascriptManagerCore extends AbstractAssetManager
             foreach ($this->list[$position] as $type => $null) {
                 foreach ($this->list[$position][$type] as $id => $item) {
                     if ($idToRemove === $id) {
-                        unset($this->list[$position][$type]);
+                        unset($this->list[$position][$type][$id]);
                     }
                 }
             }
         }
     }
 
-    protected function getDefaultList()
+    protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server)
     {
-        $default = [];
-        foreach ($this->valid_position as $position) {
-            $default[$position] = [
-                'external' => [],
-                'inline' => [],
-            ];
-        }
-
-        return $default;
-    }
-
-    protected function add($id, $fullPath, $position, $priority, $inline, $attribute)
-    {
-        if (filesize($fullPath) === 0) {
-            return;
-        }
-
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $position = $this->getSanitizedPosition($position);
         $attribute = $this->getSanitizedAttribute($attribute);
-        $type = ($inline) ? 'inline' : 'external';
+
+        if ('remote' === $server) {
+            $uri = $fullPath;
+            $type = 'external';
+        } else {
+            $uri = $this->getFQDN().$this->getUriFromPath($fullPath);
+            $type = ($inline) ? 'inline' : 'external';
+        }
 
         $this->list[$position][$type][$id] = array(
             'id' => $id,
             'type' => $type,
             'path' => $fullPath,
-            'uri' => $this->getFQDN().$this->getUriFromPath($fullPath),
+            'uri' => $uri,
             'priority' => $priority,
             'attribute' => $attribute,
+            'server' => $server,
         );
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -345,10 +345,13 @@ class TranslationsExtension extends \Twig_Extension
         }
 
         if ($hasMessagesSubtree) {
-            $output .= $this->render('button-toggle-messages-visibility.html.twig', array(
-                'label_show_messages' => $this->translator->trans('Show messages', array(), 'Admin.International.Feature'),
-                'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'Admin.International.Feature'),
-            ));
+            $output .= $this->container->get('templating')->render(
+                'PrestaShopBundle:Admin:Translations/include/button-toggle-messages-visibility.html.twig',
+                array(
+                    'label_show_messages' => $this->translator->trans('Show messages', array(), 'Admin.International.Feature'),
+                    'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'Admin.International.Feature'),
+                )
+            );
 
             $output .= $this->getNavigation($this->parseDomain($subtree));
         }
@@ -499,7 +502,10 @@ class TranslationsExtension extends \Twig_Extension
      */
     protected function getNavigation($id)
     {
-        return $this->render('pagination-bar.html.twig', array('page_id' => $id));
+        return $this->container->get('templating')->render(
+            'PrestaShopBundle:Admin:Translations/include/pagination-bar.html.twig',
+            array('page_id' => $id)
+        );
     }
 
     /**

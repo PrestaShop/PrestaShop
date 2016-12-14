@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -98,7 +98,6 @@ class AdminOrdersControllerCore extends AdminController
                 'type' => 'bool',
                 'tmpTableFilter' => true,
                 'orderby' => false,
-                'callback' => 'printNewCustomer'
             ),
             'customer' => array(
                 'title' => $this->trans('Customer', array(), 'Admin.Global'),
@@ -343,7 +342,7 @@ class AdminOrdersControllerCore extends AdminController
 
         $this->addJqueryUI('ui.datepicker');
         $this->addJS(_PS_JS_DIR_.'vendor/d3.v3.min.js');
-        $this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false');
+        $this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp');
 
         if ($this->access('edit') && $this->display == 'view') {
             $this->addJS(_PS_JS_DIR_.'admin/orders.js');
@@ -375,11 +374,6 @@ class AdminOrdersControllerCore extends AdminController
         ));
 
         return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
-    }
-
-    public function printNewCustomer($id_order, $tr)
-    {
-        return ($tr['new'] ? $this->trans('Yes', array(), 'Admin.Global') : $this->trans('No', array(), 'Admin.Global'));
     }
 
     public function processBulkUpdateOrderStatus()

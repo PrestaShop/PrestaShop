@@ -1,5 +1,5 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -68,7 +68,11 @@ $(document).ready(function() {
 	/*
 	 * Sortable case when ordered by position ASC
 	 */
-	$('tbody.sortable td.placeholder', form).disableSelection();
+
+	$("body").on("mousedown", "tbody.sortable [data-uniturl]", function () {
+		$(this).find('input:checkbox[name="bulk_action_selected_products[]"]').attr("checked", true);
+	});
+
 	$('tbody.sortable', form).sortable({
 		placeholder: 'placeholder',
 		update: function(event, ui) {
@@ -276,17 +280,7 @@ function bulkProductAction(element, action) {
 
         $('#catalog_deletion_modal').modal('hide');
 
-        // use a progressbar if more 1 item
-        if (items.size() > 1) {
-          return bulkModalAction(items, postUrl, redirectUrl, action);
-        } else {
-          var redirectionInput = $('<input>')
-            .attr('type', 'hidden')
-            .attr('name', 'redirect_url').val(redirectUrl);
-          form.append($(redirectionInput));
-          form.attr('action', postUrl);
-          form.submit();
-        }
+        return bulkModalAction(items, postUrl, redirectUrl, action);
       });
 
       return; // No break, but RETURN, to avoid code after switch block :)
@@ -295,10 +289,7 @@ function bulkProductAction(element, action) {
       postUrl = urlHandler.attr('bulkurl');
       redirectUrl = urlHandler.attr('redirecturl');
 
-      // use a progressbar if more 1 item
-      if (items.size() > 1) {
-        return bulkModalAction(items, postUrl, redirectUrl, action);
-      }
+      return bulkModalAction(items, postUrl, redirectUrl, action);
 
       break;
 
@@ -306,10 +297,7 @@ function bulkProductAction(element, action) {
       postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
       redirectUrl = urlHandler.attr('redirecturl');
 
-      // use a progressbar if more 1 item
-      if (items.size() > 1) {
-        return bulkModalAction(items, postUrl, redirectUrl, action);
-      }
+      return bulkModalAction(items, postUrl, redirectUrl, action);
 
       break;
 
@@ -317,10 +305,7 @@ function bulkProductAction(element, action) {
       postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
       redirectUrl = urlHandler.attr('redirecturl');
 
-      // use a progressbar if more 1 item
-      if (items.size() > 1) {
-        return bulkModalAction(items, postUrl, redirectUrl, action);
-      }
+      return bulkModalAction(items, postUrl, redirectUrl, action);
 
       break;
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,11 +38,16 @@ trait PrestaShopTranslatorTrait
             $domain = preg_replace('/\./', '', $domain);
         }
 
-        if (!$this->isSprintfString($id) || empty($parameters)) {
-            return parent::trans($id, $parameters, $domain, $locale);
+        $translated = parent::trans($id, $parameters, $domain, $locale);
+        if (isset($parameters['legacy'])) {
+            $translated = call_user_func($parameters['legacy'], $translated);
         }
 
-        return vsprintf(parent::trans($id, array(), $domain, $locale), $parameters);
+        if ($this->isSprintfString($id) && !empty($parameters)) {
+            $translated = vsprintf($translated, $parameters);
+        }
+
+        return $translated;
     }
 
     /**

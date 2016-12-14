@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -281,7 +281,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
 
         foreach ($langs as $lang) {
-            $language_code = explode('-', $lang['language_code']);
+            $cldrRepository = \Tools::getCldr(null, $lang['locale']);
+            $language_code = explode('-', $cldrRepository->getCulture());
             if (count($language_code) == 1) {
                 $cldrUpdate->fetchLocale($language_code['0']);
             } else {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,7 +54,7 @@ class LocalizationWarmer implements CacheWarmerInterface
             }
         }
 
-        $path_cache_file = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$this->version.$this->country.'.xml';
+        $path_cache_file = $cacheDir.$this->version.$this->country.'.xml';
 
         if (is_file($path_cache_file)) {
             $localization_file_content = file_get_contents($path_cache_file);
@@ -74,7 +74,7 @@ class LocalizationWarmer implements CacheWarmerInterface
             }
 
             try {
-                $fs->dumpFile($cacheDir, $localization_file_content);
+                $fs->dumpFile($path_cache_file, $localization_file_content);
             } catch (IOExceptionInterface $e) {
                 //@todo: log
             }

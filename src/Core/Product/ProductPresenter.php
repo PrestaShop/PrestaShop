@@ -1,4 +1,29 @@
 <?php
+/**
+ * 2007-2016 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
@@ -598,6 +623,9 @@ class ProductPresenter
                 $presentedProduct
             );
         }
+
+        $presentedProduct['embedded_attributes'] = $this->getProductEmbeddedAttributes($product);
+
         return $presentedProduct;
     }
 
@@ -613,5 +641,139 @@ class ProductPresenter
         }
 
         return $key;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getProductAttributeWhitelist()
+    {
+        return array(
+            'id_shop_default',
+            'id_manufacturer',
+            'id_supplier',
+            'reference',
+            'is_virtual',
+            'id_category_default',
+            'id_product_attribute',
+            'id_product',
+            'id_customization',
+            'price',
+            'pack_stock_type',
+            'meta_description',
+            'meta_keywords',
+            'meta_title',
+            'link_rewrite',
+            'name',
+            'description',
+            'description_short',
+            "on_sale",
+            "online_only",
+            "ecotax",
+            "minimal_quantity",
+            "price",
+            "unity",
+            "unit_price_ratio",
+            "additional_shipping_cost",
+            "customizable",
+            "text_fields",
+            "uploadable_files",
+            "redirect_type",
+            "id_product_redirected",
+            "available_for_order",
+            "available_date",
+            "show_condition",
+            "condition",
+            "show_price",
+            "indexed",
+            "visibility",
+            "cache_default_attribute",
+            "advanced_stock_management",
+            "date_add",
+            "date_upd",
+            "pack_stock_type",
+            "meta_description",
+            "meta_keywords",
+            "meta_title",
+            "link_rewrite",
+            "name",
+            "description",
+            "description_short",
+            "available_now",
+            "available_later",
+            "id",
+            "out_of_stock",
+            "new",
+            "quantity_wanted",
+            "extraContent",
+            "allow_oosp",
+            "category",
+            "category_name",
+            "link",
+            "attribute_price",
+            "price_tax_exc",
+            "price_without_reduction",
+            "reduction",
+            "specific_prices",
+            "quantity",
+            "quantity_all_versions",
+            "id_image",
+            "features",
+            "attachments",
+            "virtual",
+            "pack",
+            "packItems",
+            "nopackprice",
+            "customization_required",
+            "attributes",
+            "rate",
+            "tax_name",
+            "ecotax_rate",
+            "unit_price",
+            "customizations",
+            "is_customizable",
+            "show_quantities",
+            "quantity_label",
+            "quantity_discounts",
+            "customer_group_discount",
+            "weight_unit",
+            "images",
+            "cover",
+            "url",
+            "canonical_url",
+            "has_discount",
+            "discount_type",
+            "discount_percentage",
+            "discount_percentage_absolute",
+            "discount_amount",
+            "price_amount",
+            "unit_price_full",
+            "add_to_cart_url",
+            "main_variants",
+            "flags",
+            "labels",
+            "show_availability",
+            "availability_date",
+            "availability_message",
+            "availability",
+            "reference_to_display",
+        );
+    }
+
+    /**
+     * @param array $product
+     * @return string
+     */
+    protected function getProductEmbeddedAttributes(array $product)
+    {
+        $whitelist = $this->getProductAttributeWhitelist();
+        $embeddedProductAttributes = array();
+        foreach ($product as $attribute => $value) {
+            if (in_array($attribute, $whitelist)) {
+                $embeddedProductAttributes[$attribute] = $value;
+            }
+        }
+
+        return $embeddedProductAttributes;
     }
 }

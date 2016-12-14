@@ -497,9 +497,9 @@ abstract class PaymentModuleCore extends Module
                             'customization' => array()
                         );
 
-                        if (isset($product['unit_price']) && $product['unit_price']) {
-                            $product_var_tpl['unit_price'] = Tools::displayPrice($product['unit_price'], $this->context->currency, false);
-                            $product_var_tpl['unit_price_full'] = Tools::displayPrice($product['unit_price'], $this->context->currency, false)
+                        if (isset($product['price']) && $product['price']) {
+                            $product_var_tpl['unit_price'] = Tools::displayPrice($product['price'], $this->context->currency, false);
+                            $product_var_tpl['unit_price_full'] = Tools::displayPrice($product['price'], $this->context->currency, false)
                                 .' '.$product['unity'];
                         } else {
                             $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
@@ -1047,17 +1047,20 @@ abstract class PaymentModuleCore extends Module
             return '';
         }
 
-        $theme_template_path = _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
-        $default_mail_template_path = _PS_MAIL_DIR_.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
+        $pathToFindEmail = array(
+            _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name,
+            _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.'en'.DIRECTORY_SEPARATOR.$template_name,
+            _PS_MAIL_DIR_.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name,
+            _PS_MAIL_DIR_.'en'.DIRECTORY_SEPARATOR.$template_name,
+        );
 
-        if (Tools::file_exists_cache($theme_template_path)) {
-            $default_mail_template_path = $theme_template_path;
+        foreach ($pathToFindEmail as $path) {
+            if (Tools::file_exists_cache($path)) {
+                $this->context->smarty->assign('list', $var);
+                return $this->context->smarty->fetch($path);
+            }
         }
 
-        if (Tools::file_exists_cache($default_mail_template_path)) {
-            $this->context->smarty->assign('list', $var);
-            return $this->context->smarty->fetch($default_mail_template_path);
-        }
         return '';
     }
 }

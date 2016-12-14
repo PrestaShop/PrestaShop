@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -862,8 +862,11 @@ class LanguageCore extends ObjectModel
         }
 
         $files_copy = array('/en.jpg');
-        foreach (ImageType::getAll() as $alias => $config) {
-            $files_copy[] = '/en-default-'.ImageType::getFormattedName($alias).'.jpg';
+        $imagesType = ImageType::getAll();
+        if (!empty($imagesType)) {
+            foreach ($imagesType as $alias => $config) {
+                $files_copy[] = '/en-default-' . ImageType::getFormattedName($alias) . '.jpg';
+            }
         }
 
         foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to) {
@@ -894,7 +897,7 @@ class LanguageCore extends ObjectModel
 
         return isset(self::$_cache_language_installation[$iso_code]) ? self::$_cache_language_installation[$iso_code] : false;
     }
-    
+
     public static function isInstalledByLocale($locale)
     {
         if (self::$_cache_language_installation_by_locale === null) {

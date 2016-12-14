@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2016 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
@@ -53,11 +53,15 @@ class HookManager
     ) {
         global $kernel;
         if (!is_null($kernel)) {
+            // Ensure Request
+            if (!is_null($kernel->getContainer()->get('request_stack')->getCurrentRequest())) {
+                $hook_args = array_merge(array('request' => $kernel->getContainer()->get('request')), $hook_args);
+            }
+
             // If the Symfony kernel is instanciated, we use it for the event fonctionnality
             $hookDispatcher = $kernel->getContainer()->get('prestashop.hook.dispatcher');
             return $hookDispatcher->renderForParameters($hook_name, $hook_args)->getContent();
-        }
-        else {
+        } else {
             try {
                 return \HookCore::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
             } catch (\Exception $e) {

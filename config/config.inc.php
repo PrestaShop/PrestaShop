@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,6 +31,7 @@ if (is_file($currentDir.'/defines_custom.inc.php')) {
     include_once($currentDir.'/defines_custom.inc.php');
 }
 require_once($currentDir.'/defines.inc.php');
+require_once(_PS_CONFIG_DIR_.'autoload.php');
 
 $start_time = microtime(true);
 
@@ -48,20 +49,25 @@ if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_D
 
 /* No settings file? goto installer... */
 if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && !file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
-    if (file_exists($currentDir.'/../install')) {
-        header('Location: install/');
-    } elseif (file_exists($currentDir.'/../install-dev')) {
-        header('Location: install-dev/');
-    } else {
-        die('Error: "install" directory is missing');
-    }
-    exit;
+    Tools::redirectToInstall();
 }
 
 /* include settings file only if we are not in multi-tenancy mode */
-require_once(_PS_CONFIG_DIR_.'autoload.php');
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
+/* Improve PHP configuration on Windows */
+if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+    Windows::improveFilesytemPerformances();
+}
+
+if (defined('_PS_CREATION_DATE_')) {
+    $creationDate = _PS_CREATION_DATE_;
+    if (empty($creationDate)) {
+        Tools::redirectToInstall();
+    }
+} else {
+    Tools::redirectToInstall();
+}
 
 /* Custom config made by users */
 if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {

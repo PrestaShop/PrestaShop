@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -4170,7 +4170,7 @@ class ProductCore extends ObjectModel
         if (($customization_labels = Db::getInstance()->executeS('
 			SELECT `id_customization_field`, `id_lang`, `id_shop`, `name`
 			FROM `'._DB_PREFIX_.'customization_field_lang`
-			WHERE `id_customization_field` IN ('.implode(', ', $customization_field_ids).')'.($id_shop ? ' AND cfl.`id_shop` = '.(int)$id_shop : '').'
+			WHERE `id_customization_field` IN ('.implode(', ', $customization_field_ids).')'.($id_shop ? ' AND `id_shop` = '.(int)$id_shop : '').'
 			ORDER BY `id_customization_field`')) === false) {
             return false;
         }

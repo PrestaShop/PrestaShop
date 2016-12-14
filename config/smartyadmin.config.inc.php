@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,7 +60,17 @@ function smartyTranslate($params, &$smarty)
     $addSlashes = (isset($params['slashes']) || isset($params['js']));
     $isInPDF = isset($params['pdf']);
     $isInModule = isset($params['mod']) && !empty($params['mod']);
-    $sprintf = isset($params['sprintf']) ? $params['sprintf'] : array();
+    $sprintf = array();
+
+    if (isset($params['sprintf']) && null !== $params['sprintf'] && !is_array($params['sprintf'])) {
+        $sprintf = array($params['sprintf']);
+    } elseif ((isset($params['sprintf']) && null !== $params['sprintf'])) {
+        $sprintf = $params['sprintf'];
+    }
+
+    if (($htmlEntities || $addSlashes)) {
+        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
+    }
 
     if (isset($params['d']) && !empty($params['d'])) {
         if (isset($params['tags'])) {

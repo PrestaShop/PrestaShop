@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -117,12 +117,6 @@ class FrontControllerCore extends Controller
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
 
-    /** @var bool If false, does not build left page column content and hides it. */
-    public $display_column_left = true;
-
-    /** @var bool If false, does not build right page column content and hides it. */
-    public $display_column_right = true;
-
     /**
      * True if controller has already been initialized.
      * Prevents initializing controller more than once.
@@ -200,11 +194,11 @@ class FrontControllerCore extends Controller
         $this->cart_presenter = new CartPresenter();
         $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
         $this->stylesheetManager = new StylesheetManager(
-            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            array(_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__),
             new ConfigurationAdapter()
         );
         $this->javascriptManager = new JavascriptManager(
-            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            array(_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__),
             new ConfigurationAdapter()
         );
         $this->cccReducer = new CccReducer(
@@ -797,12 +791,16 @@ class FrontControllerCore extends Controller
      */
     protected function geolocationManagement($defaultCountry)
     {
-        if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1'))) {
+        if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1'))) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
                     $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_);
-                    $record = $reader->city(Tools::getRemoteAddr());
+                    try {
+                        $record = $reader->city(Tools::getRemoteAddr());
+                    } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+                        $record = null;
+                    }
 
                     if (is_object($record)) {
                         if (!in_array(strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
@@ -1005,11 +1003,12 @@ class FrontControllerCore extends Controller
             'media' => AbstractAssetManager::DEFAULT_MEDIA,
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
+            'server' => 'local',
         ];
 
         $params = array_merge($default_params, $params);
 
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline']);
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server']);
     }
 
     public function unregisterStylesheet($id)
@@ -1028,11 +1027,12 @@ class FrontControllerCore extends Controller
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
             'attributes' => null,
+            'server' => 'local',
         ];
 
         $params = array_merge($default_params, $params);
 
-        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes']);
+        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server']);
     }
 
     public function unregisterJavascript($id)

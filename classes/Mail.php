@@ -80,7 +80,10 @@ class MailCore extends ObjectModel
      * @param bool   $mode_smtp      SMTP mode (deprecated)
      * @param string $templatePath   Template path
      * @param bool   $die            Die after error
-     * @param string $bcc            Bcc recipient
+     * @param int    $idShop         Shop ID
+     * @param string $bcc            Bcc recipient address. You can use an array of array to send to multiple recipients
+     * @param string $replyTo        Reply-To recipient address
+     * @param string $replyToName    Reply-To recipient name
      *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
@@ -99,7 +102,8 @@ class MailCore extends ObjectModel
         $die = false,
         $idShop = null,
         $bcc = null,
-        $replyTo = null)
+        $replyTo = null,
+        $replyToName = null)
     {
         if (!$idShop) {
             $idShop = Context::getContext()->shop->id;
@@ -232,7 +236,17 @@ class MailCore extends ObjectModel
             $toName = (($toName == null || $toName == $to) ? '' : self::mimeEncode($toName));
             $message->addTo($to, $toName);
         }
-        if (isset($bcc)) {
+
+        if (isset($bcc) && is_array($bcc)) {
+            foreach ($bcc as $addr) {
+                $addr = trim($addr);
+                if (!Validate::isEmail($addr)) {
+                    Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
+                    return false;
+                }
+                $message->addBcc($addr);
+            }
+        } elseif (isset($bcc)) {
             $message->addBcc($bcc);
         }
 
@@ -258,37 +272,52 @@ class MailCore extends ObjectModel
             $swift = \Swift_Mailer::newInstance($connection);
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
-            if (!$iso) {
-                Tools::dieOrLog(Tools::displayError('Error - No ISO code for email'), $die);
-
-                return false;
+            $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
+            $isoArray = array();
+            if( $iso ) {
+                $isoArray[] = $iso;
             }
-            $isoTemplate = $iso.'/'.$template;
+            if( $isoDefault && $iso !== $isoDefault ) {
+                $isoArray[] = $isoDefault;
+            }
+            if( !in_array('en', $isoArray) ) {
+                $isoArray[] = 'en';
+            }
 
             $moduleName = false;
-            $overrideMail = false;
 
             // get templatePath
             if (preg_match('#'.$shop->physical_uri.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath)) && preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath), $res)) {
                 $moduleName = $res[1];
             }
+            foreach ($isoArray as $isoCode) {
+                $isoTemplate = $isoCode.'/'.$template;
+                $overrideMail = false;
 
-            if ($moduleName !== false && (file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.txt') ||
-                    file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.html'))) {
-                $templatePath = $themePath.'modules/'.$moduleName.'/mails/';
-            } elseif (file_exists($themePath.'mails/'.$isoTemplate.'.txt') || file_exists($themePath.'mails/'.$isoTemplate.'.html')) {
-                $templatePath = $themePath.'mails/';
-                $overrideMail  = true;
+                if ($moduleName !== false && (file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.txt') ||
+                        file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.html'))) {
+                    $templatePath = $themePath.'modules/'.$moduleName.'/mails/';
+                } elseif (file_exists($themePath.'mails/'.$isoTemplate.'.txt') || file_exists($themePath.'mails/'.$isoTemplate.'.html')) {
+                    $templatePath = $themePath.'mails/';
+                    $overrideMail  = true;
+                }
+
+                if (!file_exists($templatePath.$isoTemplate.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)) {
+                    PrestaShopLogger::addLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$isoTemplate.'.txt');
+                } elseif (!file_exists($templatePath.$isoTemplate.'.html') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML)) {
+                    PrestaShopLogger::addLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$isoTemplate.'.html');
+                } else {
+                    $templatePathExists = true;
+                    break;
+                }
             }
-            if (!file_exists($templatePath.$isoTemplate.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)) {
-                Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$isoTemplate.'.txt', $die);
+
+            if (empty($templatePathExists)) {
+                Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template, $die);
 
                 return false;
-            } elseif (!file_exists($templatePath.$isoTemplate.'.html') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML)) {
-                Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$isoTemplate.'.html', $die);
-
-                return false;
             }
+
             $templateHtml = '';
             $templateTxt = '';
             Hook::exec(
@@ -310,18 +339,11 @@ class MailCore extends ObjectModel
                     'template' => $template,
                     'template_html' => &$templateHtml,
                     'template_txt' => &$templateTxt,
-                  'id_lang' => (int) $idLang,
+                    'id_lang' => (int) $idLang,
                 ),
                 null,
                 true
             );
-            if ($overrideMail && file_exists($templatePath.$iso.'/lang.php')) {
-                include_once($templatePath.$iso.'/lang.php');
-            } elseif ($moduleName && file_exists($themePath.'mails/'.$iso.'/lang.php')) {
-                include_once($themePath.'mails/'.$iso.'/lang.php');
-            } elseif (file_exists(_PS_MAIL_DIR_.$iso.'/lang.php')) {
-                include_once(_PS_MAIL_DIR_.$iso.'/lang.php');
-            }
 
             /* Create mail and attach differents parts */
             $subject = '['.Configuration::get('PS_SHOP_NAME', null, null, $idShop).'] '.$subject;
@@ -337,7 +359,7 @@ class MailCore extends ObjectModel
             }
 
             if (isset($replyTo) && $replyTo) {
-                $message->setReplyTo($replyTo);
+                $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
 
             $templateVars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $templateVars);

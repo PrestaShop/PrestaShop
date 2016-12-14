@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,20 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShopBundle\Service\Cache\Refresh;
 use Symfony\Component\HttpFoundation\Request;
+
+use Composer\CaBundle\CaBundle;
 
 class ToolsCore
 {
+    const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
+
     protected static $file_exists_cache = array();
     protected static $_forceCompile;
     protected static $_caching;
@@ -596,7 +601,7 @@ class ToolsCore
     {
         static $cldr_cache;
         if ($context) {
-            $language_code = $context->language->language_code;
+            $language_code = $context->language->locale;
         }
 
         if (!empty($cldr_cache[$language_code])) {
@@ -741,6 +746,10 @@ class ToolsCore
 
         if ($currency_from === null) {
             $currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        }
+
+        if ($currency_to === null) {
+            $currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
@@ -1844,20 +1853,70 @@ class ToolsCore
         return file_exists($filename);
     }
 
-    public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5)
+    /**
+     * refresh a local cacert file
+     *
+     * @return void
+     */
+    public static function refreshCACertFile()
     {
-        if ($stream_context == null && preg_match('/^https?:\/\//', $url)) {
-            $stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout)));
+        if ((time() - @filemtime(_PS_CACHE_CA_CERT_FILE_) > 1296000)) {
+            $stream_context = @stream_context_create(
+              array(
+                'http' => array('timeout' => 3),
+                'ssl' => array(
+                    'cafile' => CaBundle::getBundledCaBundlePath()
+                )
+              )
+          );
+            $ca_cert_content = @file_get_contents(Tools::CACERT_LOCATION, false, $stream_context);
+
+            if (
+              preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) &&
+              substr(rtrim($ca_cert_content), -1) == '-'
+          ) {
+                file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
+            }
         }
-        if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url)) {
-            return @file_get_contents($url, $use_include_path, $stream_context);
-        } elseif (function_exists('curl_init')) {
+    }
+
+    public static function file_get_contents(
+        $url,
+        $use_include_path = false,
+        $stream_context = null,
+        $curl_timeout = 5,
+        $fallback = false
+    ) {
+        if ($stream_context == null && preg_match('/^https?:\/\//', $url)) {
+            $stream_context = @stream_context_create(
+                array(
+                    'http' => array('timeout' => $curl_timeout),
+                    'ssl' => array(
+                        'verify_peer' => true,
+                        'cafile' => CaBundle::getBundledCaBundlePath()
+                    )
+                )
+            );
+        }
+
+        $is_local_file = !preg_match('/^https?:\/\//', $url);
+        if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || $is_local_file) {
+            $content = @file_get_contents($url, $use_include_path, $stream_context);
+            if (!in_array($content, array('', false)) || $is_local_file || !$fallback) {
+                return $content;
+            }
+        }
+
+        if (function_exists('curl_init')) {
+            Tools::refreshCACertFile();
             $curl = curl_init();
+
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($curl, CURLOPT_CAINFO, _PS_CACHE_CA_CERT_FILE_);
             if ($stream_context != null) {
                 $opts = stream_context_get_options($stream_context);
                 if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post') {
@@ -1888,7 +1947,7 @@ class ToolsCore
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename(url), "w");
+        $localFile = fopen(basename($url), "w");
         if (!$localFile) {
             return false;
         }
@@ -2243,7 +2302,7 @@ class ToolsCore
         fwrite($write_fd, "AddType application/font-woff2 .woff2\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
     <FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
-        Header add Access-Control-Allow-Origin \"*\"
+        Header set Access-Control-Allow-Origin \"*\"
     </FilesMatch>
 </IfModule>\n\n");
 
@@ -2305,10 +2364,159 @@ FileETag none
         return true;
     }
 
+    public static function generateRobotsFile($executeHook = false)
+    {
+        $robots_file = _PS_ROOT_DIR_.'/robots.txt';
+
+        if (!$write_fd = @fopen($robots_file, 'w')) {
+            return false;
+        }
+
+        $robots_content = self::getRobotsContent();
+
+        if (true === $executeHook) {
+            Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
+                'rb_data' => &$robots_content
+            ));
+        }
+
+        // PS Comments
+        fwrite($write_fd, "# robots.txt automatically generated by PrestaShop e-commerce open-source solution\n");
+        fwrite($write_fd, "# http://www.prestashop.com - http://www.prestashop.com/forums\n");
+        fwrite($write_fd, "# This file is to prevent the crawling and indexing of certain parts\n");
+        fwrite($write_fd, "# of your site by web crawlers and spiders run by sites like Yahoo!\n");
+        fwrite($write_fd, "# and Google. By telling these \"robots\" where not to go on your site,\n");
+        fwrite($write_fd, "# you save bandwidth and server resources.\n");
+        fwrite($write_fd, "# For more information about the robots.txt standard, see:\n");
+        fwrite($write_fd, "# http://www.robotstxt.org/robotstxt.html\n");
+
+        // User-Agent
+        fwrite($write_fd, "User-agent: *\n");
+
+        // Allow Directives
+        if (count($robots_content['Allow'])) {
+            fwrite($write_fd, "# Allow Directives\n");
+            foreach ($robots_content['Allow'] as $allow) {
+                fwrite($write_fd, 'Allow: '.$allow."\n");
+            }
+        }
+
+        // Private pages
+        if (count($robots_content['GB'])) {
+            fwrite($write_fd, "# Private pages\n");
+            foreach ($robots_content['GB'] as $gb) {
+                fwrite($write_fd, 'Disallow: /*'.$gb."\n");
+            }
+        }
+
+        // Directories
+        if (count($robots_content['Directories'])) {
+            fwrite($write_fd, "# Directories\n");
+            foreach ($robots_content['Directories'] as $dir) {
+                fwrite($write_fd, 'Disallow: */'.$dir."\n");
+            }
+        }
+
+        // Files
+        if (count($robots_content['Files'])) {
+            $language_ids = Language::getIDs();
+            fwrite($write_fd, "# Files\n");
+            foreach ($robots_content['Files'] as $iso_code => $files) {
+                foreach ($files as $file) {
+                    if (!empty($language_ids) && count($language_ids) > 1) {
+                        fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
+                    } else {
+                        fwrite($write_fd, 'Disallow: /'.$file."\n");
+                    }
+                }
+            }
+        }
+
+        if (is_null(Context::getContext())) {
+            $sitemap_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'index_sitemap.xml';
+        } else {
+            $sitemap_file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.Context::getContext()->shop->id.'_index_sitemap.xml';
+        }
+
+        // Sitemap
+        if (file_exists($sitemap_file) && filesize($sitemap_file)) {
+            fwrite($write_fd, "# Sitemap\n");
+            $sitemap_filename = basename($sitemap_file);
+            fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME']
+                .__PS_BASE_URI__.$sitemap_filename."\n");
+        }
+
+        if (true === $executeHook) {
+            Hook::exec('actionAdminMetaAfterWriteRobotsFile', array(
+                'rb_data' => $robots_content,
+                'write_fd' => &$write_fd
+            ));
+        }
+
+        fclose($write_fd);
+
+        return true;
+    }
+
+    public static function getRobotsContent()
+    {
+        $tab = array();
+
+        // Special allow directives
+        $tab['Allow'] = array(
+            '*/modules/*.css',
+            '*/modules/*.js',
+            '*/modules/*.png',
+            '*/modules/*.jpg',
+        );
+
+        // Directories
+        $tab['Directories'] = array('cache/', 'classes/', 'config/', 'controllers/',
+            'css/', 'download/', 'js/', 'localization/', 'log/', 'mails/', 'modules/', 'override/',
+            'pdf/', 'src/', 'tools/', 'translations/', 'upload/', 'vendor/', 'web/', 'webservice/');
+
+        // Files
+        $disallow_controllers = array(
+            'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
+            'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order',
+            'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
+            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics','attachment', 'guest-tracking'
+        );
+
+        // Rewrite files
+        $tab['Files'] = array();
+        if (Configuration::get('PS_REWRITING_SETTINGS')) {
+            $sql = 'SELECT DISTINCT ml.url_rewrite, l.iso_code
+					FROM '._DB_PREFIX_.'meta m
+					INNER JOIN '._DB_PREFIX_.'meta_lang ml ON ml.id_meta = m.id_meta
+					INNER JOIN '._DB_PREFIX_.'lang l ON l.id_lang = ml.id_lang
+					WHERE l.active = 1 AND m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
+            if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
+                foreach ($results as $row) {
+                    $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
+                }
+            }
+        }
+
+        $tab['GB'] = array(
+            '?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
+            '&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
+        );
+
+        foreach ($disallow_controllers as $controller) {
+            $tab['GB'][] = 'controller='.$controller;
+        }
+
+        return $tab;
+    }
+
     public static function generateIndex()
     {
-        if (defined('_PS_CREATION_DATE_') && _PS_CREATION_DATE_ !== null && Configuration::get('PS_DISABLE_OVERRIDES')) {
-            PrestaShopAutoload::getInstance()->_include_override_path = false;
+        if (defined('_PS_CREATION_DATE_')) {
+            $creationDate = _PS_CREATION_DATE_;
+            if (!empty($creationDate) && Configuration::get('PS_DISABLE_OVERRIDES')) {
+                PrestaShopAutoload::getInstance()->_include_override_path = false;
+            }
         }
         PrestaShopAutoload::getInstance()->generateIndex();
     }
@@ -2748,6 +2956,29 @@ exit;
         Tools::clearCompile($smarty);
     }
 
+    /**
+     * Clear Symfony cache
+     */
+    public static function clearSf2Cache($env = null)
+    {
+        if (!$env) {
+            $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+        }
+
+        $sf2Refresh = new Refresh($env);
+        $sf2Refresh->addCacheClear();
+        return $sf2Refresh->execute();
+    }
+
+    /**
+     * Clear both Smarty and Symfony cache
+     */
+    public static function clearAllCache()
+    {
+        Tools::clearSmartyCache();
+        Tools::clearSf2Cache();
+    }
+
     public static function clearColorListCache($id_product = false)
     {
         // Change template dir if called from the BackOffice
@@ -2884,25 +3115,26 @@ exit;
      * @param $array
      * @param $cmp_function
      */
-    public static function uasort(&$array, $cmp_function) {
-        if(count($array) < 2) {
+    public static function uasort(&$array, $cmp_function)
+    {
+        if (count($array) < 2) {
             return;
         }
         $halfway = count($array) / 2;
-        $array1 = array_slice($array, 0, $halfway, TRUE);
-        $array2 = array_slice($array, $halfway, NULL, TRUE);
+        $array1 = array_slice($array, 0, $halfway, true);
+        $array2 = array_slice($array, $halfway, null, true);
 
         self::uasort($array1, $cmp_function);
         self::uasort($array2, $cmp_function);
-        if(call_user_func($cmp_function, end($array1), reset($array2)) < 1) {
+        if (call_user_func($cmp_function, end($array1), reset($array2)) < 1) {
             $array = $array1 + $array2;
             return;
         }
         $array = array();
         reset($array1);
         reset($array2);
-        while(current($array1) && current($array2)) {
-            if(call_user_func($cmp_function, current($array1), current($array2)) < 1) {
+        while (current($array1) && current($array2)) {
+            if (call_user_func($cmp_function, current($array1), current($array2)) < 1) {
                 $array[key($array1)] = current($array1);
                 next($array1);
             } else {
@@ -2910,11 +3142,11 @@ exit;
                 next($array2);
             }
         }
-        while(current($array1)) {
+        while (current($array1)) {
             $array[key($array1)] = current($array1);
             next($array1);
         }
-        while(current($array2)) {
+        while (current($array2)) {
             $array[key($array2)] = current($array2);
             next($array2);
         }
@@ -3573,6 +3805,18 @@ exit;
             }
             return Tools::getPath($url_base, $category->id_parent, $path, '', 'cms');
         }
+    }
+
+    public static function redirectToInstall()
+    {
+        if (file_exists(dirname(__FILE__).'/../install')) {
+            header('Location: install/');
+        } elseif (file_exists(dirname(__FILE__).'/../install-dev')) {
+            header('Location: install-dev/');
+        } else {
+            die('Error: "install" directory is missing');
+        }
+        exit;
     }
 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -224,12 +224,10 @@ class AdminThemesControllerCore extends AdminController
      */
     public function postProcess()
     {
+        global $kernel;
+
         if ('exporttheme' === Tools::getValue('action')) {
-            $exporter = new ThemeExporter(
-                new \PrestaShop\PrestaShop\Adapter\Configuration($this->context->shop),
-                new \Symfony\Component\Filesystem\Filesystem(),
-                new \Symfony\Component\Finder\Finder()
-            );
+            $exporter = $kernel->getContainer()->get('prestashop.core.addon.theme.exporter');
             $path = $exporter->export($this->context->shop->theme);
             $this->confirmations[] = $this->trans(
                 'Your theme has been correctly exported: %path%',
