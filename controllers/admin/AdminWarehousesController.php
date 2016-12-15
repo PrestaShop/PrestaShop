@@ -496,7 +496,14 @@ class AdminWarehousesControllerCore extends AdminController
      *
      * @throws PrestaShopException
      */
-    public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+    public function getList(
+        $id_lang,
+        $order_by = null,
+        $order_way = null,
+        $start = 0,
+        $limit = null,
+        $id_lang_shop = false
+    )
     {
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
@@ -581,17 +588,16 @@ class AdminWarehousesControllerCore extends AdminController
 
     protected function updateAddress()
     {
-        // updates/creates address if it does not exist
+        /** @var AddressCore $address */
+        $address = new Address();
+
         if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0) {
             $address = new Address((int)Tools::getValue('id_address'));
-        } // updates address
-        else {
-            $address = new Address();
-        } // creates address
-            // sets the address
+        }
+
         $address->alias = Tools::getValue('reference', null);
-        $address->lastname = 'warehouse'; // skip problem with numeric characters in warehouse name
-        $address->firstname = 'warehouse'; // skip problem with numeric characters in warehouse name
+        $address->lastname = 'warehouse';   // skip problem with numeric characters
+        $address->firstname = 'warehouse';  // in warehouse name
         $address->address1 = Tools::getValue('address', null);
         $address->address2 = Tools::getValue('address2', null);
         $address->postcode = Tools::getValue('postcode', null);
@@ -600,9 +606,13 @@ class AdminWarehousesControllerCore extends AdminController
         $address->id_state = Tools::getValue('id_state', null);
         $address->city = Tools::getValue('city', null);
 
-        if (!($country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT'))) || !Validate::isLoadedObject($country)) {
+        if (
+            !($country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT'))) ||
+            !Validate::isLoadedObject($country)
+        ) {
             $this->errors[] = Tools::displayError('Country is invalid');
         }
+
         $contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
         $id_state = isset($address) && is_object($address) ? (int)$address->id_state: 0;
         if ($contains_state && !$id_state) {
@@ -619,7 +629,10 @@ class AdminWarehousesControllerCore extends AdminController
             foreach ($validation as $item) {
                 $this->errors[] = $item;
             }
-            $this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
+
+            $this->errors[] = Tools::displayError(
+                'The address is not correct. Please make sure all of the required fields are completed.'
+            );
         } else {
             // valid
 
@@ -714,20 +727,18 @@ class AdminWarehousesControllerCore extends AdminController
      */
     public function processUpdate()
     {
-        // loads object
-        if (!($object = $this->loadObject(true))) {
-            return;
+        /** @var WarehouseCore $warehouse */
+        if (!($warehouse = $this->loadObject(true))) {
+            return false;
         }
-
-        /** @var Warehouse $object */
 
         $this->updateAddress();
         // handles carriers associations
         $ids_carriers_selected = Tools::getValue('ids_carriers_selected');
         if (Tools::isSubmit('ids_carriers_selected') && !empty($ids_carriers_selected)) {
-            $object->setCarriers($ids_carriers_selected);
+            $warehouse->setCarriers($ids_carriers_selected);
         } else {
-            $object->setCarriers(Tools::getValue('ids_carriers_available'));
+            $warehouse->setCarriers(Tools::getValue('ids_carriers_available'));
         }
 
         return parent::processUpdate();
