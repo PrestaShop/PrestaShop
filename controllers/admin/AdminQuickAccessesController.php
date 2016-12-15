@@ -47,8 +47,8 @@ class AdminQuickAccessesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
@@ -63,10 +63,10 @@ class AdminQuickAccessesControllerCore extends AdminController
                 'title' => $this->trans('Name', array(), 'Admin.Global')
             ),
             'link' => array(
-                'title' => $this->l('Link')
+                'title' => $this->trans('Link', array(), 'Admin.Navigation.Header')
             ),
             'new_window' => array(
-                'title' => $this->l('New window'),
+                'title' => $this->trans('New window', array(), 'Admin.Navigation.Header'),
                 'align' => 'center',
                 'type' => 'bool',
                 'active' => 'new_window',
@@ -76,7 +76,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Quick Access menu'),
+                'title' => $this->trans('Quick Access menu', array(), 'Admin.Navigation.Header'),
                 'icon' => 'icon-align-justify'
             ),
             'input' => array(
@@ -87,19 +87,19 @@ class AdminQuickAccessesControllerCore extends AdminController
                     'lang' => true,
                     'maxlength' => 32,
                     'required' => true,
-                    'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Forbidden characters:', array(), 'Admin.Notification.Info').' &lt;&gt;;=#{}'
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('URL'),
+                    'label' => $this->trans('URL', array(), 'Admin.Global'),
                     'name' => 'link',
                     'maxlength' => 128,
                     'required' => true,
-                    'hint' => $this->l('If it\'s a URL that comes from your Back Office, you MUST remove the security token.')
+                    'hint' => $this->trans('If it\'s a URL that comes from your back office, you MUST remove the security token.', array(), 'Admin.Navigation.Header')
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Open in new window'),
+                    'label' => $this->trans('Open in new window', array(), 'Admin.Navigation.Header'),
                     'name' => 'new_window',
                     'required' => false,
                     'values' => array(
@@ -132,7 +132,7 @@ class AdminQuickAccessesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_quick_access'] = array(
                 'href' => self::$currentIndex.'&addquick_access&token='.$this->token,
-                'desc' => $this->l('Add new quick access', null, null, false),
+                'desc' => $this->trans('Add new quick access', array(), 'Admin.Navigation.Header'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -190,7 +190,7 @@ class AdminQuickAccessesControllerCore extends AdminController
             }
             /* voluntary do affectation here */
             elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
-                PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+                PrestaShopLogger::addLog(sprintf($this->trans('%s addition', array(), 'Admin.AdvParameters.feature'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
                 $this->afterAdd($this->object);
             }
         }

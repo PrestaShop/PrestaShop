@@ -59,10 +59,10 @@ class AdminOutstandingControllerCore extends AdminController
 
         $this->fields_list = array(
             'number' => array(
-                'title' => $this->l('Invoice')
+                'title' => $this->trans('Invoice', array(), 'Admin.Global')
             ),
             'date_add' => array(
-                'title' => $this->l('Date'),
+                'title' => $this->trans('Date', array(), 'Admin.Global'),
                 'type' => 'date',
                 'align' => 'right',
                 'filter_key' => 'a!date_add'
@@ -77,7 +77,7 @@ class AdminOutstandingControllerCore extends AdminController
                 'align' => 'center'
             ),
             'risk' => array(
-                'title' => $this->l('Risk'),
+                'title' => $this->trans('Risk', array(), 'Admin.OrdersCustomers.Feature'),
                 'align' => 'center',
                 'orderby' => false,
                 'type' => 'select',
@@ -87,21 +87,21 @@ class AdminOutstandingControllerCore extends AdminController
                 'filter_type' => 'int'
             ),
             'outstanding_allow_amount' => array(
-                'title' => $this->l('Outstanding Allowance'),
+                'title' => $this->trans('Outstanding Allowance', array(), 'Admin.OrdersCustomers.Feature'),
                 'align' => 'center',
                 'prefix' => '<b>',
                 'suffix' => '</b>',
                 'type' => 'price'
             ),
             'outstanding' => array(
-                'title' => $this->l('Current Outstanding'),
+                'title' => $this->trans('Current Outstanding', array(), 'Admin.OrdersCustomers.Feature'),
                 'align' => 'center',
                 'callback' => 'printOutstandingCalculation',
                 'orderby' => false,
                 'search' => false
             ),
             'id_invoice' => array(
-                'title' => $this->l('Invoice'),
+                'title' => $this->trans('Invoice', array(), 'Admin.Global'),
                 'align' => 'center',
                 'callback' => 'printPDFIcons',
                 'orderby' => false,
