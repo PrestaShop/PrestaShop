@@ -65,7 +65,7 @@ class HookManager
             try {
                 return \HookCore::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
             } catch (\Exception $e) {
-                $logger = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('logger');
+                $logger = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger');
                 $logger->error(sprintf('Exception on hook %s for module %s. %s', $hook_name, $id_module, $e->getMessage()));
             }
         }
