@@ -79,7 +79,7 @@ class ThemeValidatorTest extends \PHPUnit_Framework_TestCase
 
         $config = (new Parser())->parse(file_get_contents($themeConfigFile));
         $config['directory'] = $themeDir;
-        $config['physical_uri'] = '/prestashop.unit.test';
+        $config['physical_uri'] = '/';
 
         $theme = new Theme($config);
 
