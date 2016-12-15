@@ -199,8 +199,6 @@ class ModuleManager implements AddonManagerInterface
                 'Admin.Modules.Notification'));
         }
 
-        $result = true;
-
         // Get new module
         // 1- From source
         if ($source != null) {
@@ -208,15 +206,13 @@ class ModuleManager implements AddonManagerInterface
         }
         // 2- From Addons
         else {
-            $result &= $this->moduleUpdater->setModuleOnDiskFromAddons($name);
+            // This step is not mandatory (in case of local module),
+            // we do not check the result
+            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
-        if ($result) {
-            // Load and execute upgrade files
-            $result &= $this->moduleUpdater->upgrade($name);
-        }
-
-        return (bool) $result;
+        // Load and execute upgrade files
+        return $this->moduleUpdater->upgrade($name);
     }
 
     /**
