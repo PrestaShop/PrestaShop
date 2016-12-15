@@ -239,7 +239,7 @@ class AdminStoresControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->trans('Status', array(), 'Admin.Global'),
+                    'label' => $this->trans('Active', array(), 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
