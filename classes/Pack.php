@@ -92,7 +92,7 @@ class PackCore extends Product
         $items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
         foreach ($items as $item) {
             /** @var Product $item */
-            $sum += $item->getPrice($price_display_method) * $item->pack_quantity;
+            $sum += $item->getPrice($price_display_method, ($item->id_pack_product_attribute ? $item->id_pack_product_attribute : null)) * $item->pack_quantity;
         }
 
         return $sum;
