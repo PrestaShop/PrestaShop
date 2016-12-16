@@ -82,7 +82,7 @@ global_settings:
         - ps_facetedsearch
       displaySearch:
         - ps_searchbar
-      displayProductButtons:
+      displayShareButtons:
         - ps_sharebuttons
       displayReassurance:
         - blockreassurance
