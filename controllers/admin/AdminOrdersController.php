@@ -851,7 +851,7 @@ class AdminOrdersControllerCore extends AdminController
                             $cart_rule->active = 1;
 
                             $cart_rule->reduction_amount = $amount;
-                            $cart_rule->reduction_tax = true;
+                            $cart_rule->reduction_tax = $order->getTaxCalculationMethod() != PS_TAX_EXC;
                             $cart_rule->minimum_amount_currency = $order->id_currency;
                             $cart_rule->reduction_currency = $order->id_currency;
 
