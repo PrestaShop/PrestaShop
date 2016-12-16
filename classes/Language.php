@@ -247,10 +247,12 @@ class LanguageCore extends ObjectModel
             'employee_password.html', 'employee_password.txt',
             'forward_msg.html', 'forward_msg.txt',
             'guest_to_customer.html', 'guest_to_customer.txt',
+            'import.html', 'import.txt',
             'in_transit.html', 'in_transit.txt',
             'log_alert.html', 'log_alert.txt',
             'newsletter.html', 'newsletter.txt',
             'order_canceled.html', 'order_canceled.txt',
+            'order_changed.html', 'order_changed.txt',
             'order_conf.html', 'order_conf.txt',
             'order_customer_comment.html', 'order_customer_comment.txt',
             'order_merchant_comment.html', 'order_merchant_comment.txt',
@@ -267,7 +269,6 @@ class LanguageCore extends ObjectModel
             'test.html', 'test.txt',
             'voucher.html', 'voucher.txt',
             'voucher_new.html', 'voucher_new.txt',
-            'order_changed.html', 'order_changed.txt',
         );
 
         $number = -1;
