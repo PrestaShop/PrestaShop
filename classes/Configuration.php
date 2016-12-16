@@ -145,8 +145,8 @@ class ConfigurationCore extends ObjectModel
                 FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` c
                 LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang` cl ON (c.`'.bqSQL(self::$definition['primary']).'` = cl.`'.bqSQL(self::$definition['primary']).'`)';
         $db = Db::getInstance();
-        $result = $db->executeS($sql, false);
-        while ($row = $db->nextRow($result)) {
+        $rows = (array) $db->executeS($sql);
+        foreach ($rows as $row) {
             $lang = ($row['id_lang']) ? $row['id_lang'] : 0;
             self::$types[$row['name']] = ($lang) ? 'lang' : 'normal';
             if (!isset(self::$_cache[self::$definition['table']][$lang])) {
