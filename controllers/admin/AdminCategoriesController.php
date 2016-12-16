@@ -569,7 +569,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'display_image' => true,
                     'image' => $thumb_url ? $thumb_url : false,
                     'size' => $thumb_size,
-                    'format' => isset($format['small']) ? $format['small'] : $format['category']
+                    'format' => isset($format['small']) ? $format['small'] : $format['category'],
+                    'hint' => $this->trans('Displays a small image in the parent category\'s page, if the theme allows it.', array(), 'Admin.Catalog.Help'),
                 ),
                 array(
                     'type' => 'file',
@@ -580,6 +581,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'max_files' => 3,
                     'files' => $menu_thumbnails,
                     'url' => Context::getContext()->link->getAdminLink('AdminCategories').'&ajax=1&id_category='.$this->id.'&action=uploadThumbnailImages',
+                    'hint' => $this->trans('The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.', array(), 'Admin.Catalog.Help'),
                 ),
                 array(
                     'type' => 'text',
