@@ -2512,7 +2512,7 @@ class ToolsCore
         fwrite($write_fd, "AddType application/x-font-woff .woff\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
 	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|svg)$\">
-		Header add Access-Control-Allow-Origin \"*\"
+		Header set Access-Control-Allow-Origin \"*\"
 	</FilesMatch>
 </IfModule>\n\n");
 
