@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -48,13 +48,13 @@
         <span class="icon-prev hidden-xs" aria-hidden="true">
           <i class="material-icons">&#xE5CB;</i>
         </span>
-        <span class="sr-only">Previous</span>
+        <span class="sr-only">{l s='Previous' d='Shop.Theme'}</span>
       </a>
       <a class="right carousel-control" href="#carousel" role="button" data-slide="next">
         <span class="icon-next" aria-hidden="true">
           <i class="material-icons">&#xE5CC;</i>
         </span>
-        <span class="sr-only">Next</span>
+        <span class="sr-only">{l s='Next' d='Shop.Theme'}</span>
       </a>
     </div>
   </div>
