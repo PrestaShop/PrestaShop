@@ -762,7 +762,10 @@ class LinkCore
         }
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
-        if ($watermarkLogged && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
+        if (!empty($type) && $watermarkLogged &&
+            ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) &&
+            isset(Context::getContext()->customer->id)
+        ) {
             $type .= '-'.$watermarkHash;
         }
 
