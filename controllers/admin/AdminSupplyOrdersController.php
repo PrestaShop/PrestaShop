@@ -1286,7 +1286,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                                                 $supply_order_detail_mvt->update();
 
                                             } else {
-                                                $this->errors[] = sprintf(Tools::displayError('An error occurred when adding stock for product: %s. No stock was added.'), $detail['name_displayed']);
+                                                $this->errors[] = $this->l('An error occurred. No stock was added.');
                                             }
                                         }
                                     }

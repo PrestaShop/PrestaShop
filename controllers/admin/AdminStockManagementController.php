@@ -1128,7 +1128,8 @@ class AdminStockManagementControllerCore extends AdminController
         }
 
         if ( ($this->display == 'removestock' || $this->display == 'transferstock') && !Tools::isSubmit('id_stock') ) {
-            $this->errors[] = Tools::displayError('The specified stock is not valid.');
+            $this->errors[] = Tools::displayError('An error occurred while loading the object.');
+            return false;
         }
 
         // Manage the add stock form
