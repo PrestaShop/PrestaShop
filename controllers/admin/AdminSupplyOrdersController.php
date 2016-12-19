@@ -1220,6 +1220,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                             if (!count($this->errors)) {
                                 $supply_order->id_supply_order_state = $state['id_supply_order_state'];
                                 if ($supply_order->save()) {
+                                    // create stock entry if not exist when order is in pending_receipt
                                     if ($new_state->pending_receipt) {
                                         $supply_order_details = $supply_order->getEntries();
                                         foreach ($supply_order_details as $supply_order_detail) {
@@ -1239,6 +1240,53 @@ class AdminSupplyOrdersControllerCore extends AdminController
                                                 // saves stock in warehouse
                                                 $stock->hydrate($stock_params);
                                                 $stock->add();
+                                            }
+                                        }
+                                    }
+
+                                    // add stock when is received completely
+                                    if ($new_state->receipt_state && $new_state->enclosed) {
+                                        $supply_order_details = $supply_order->getEntries();
+
+                                        $warehouse = new Warehouse($supply_order->id_warehouse);
+                                        $id_warehouse = $warehouse->id;
+
+                                        $stock_manager = StockManagerFactory::getManager();
+
+                                        foreach ($supply_order_details as $detail) {
+                                            $id_product = $detail['id_product'];
+                                            $id_product_attribute = $detail['id_product_attribute'];
+
+                                            if ($stock_manager->addProduct(
+                                                $detail['id_product'],
+                                                $detail['id_product_attribute'],
+                                                $warehouse,
+                                                (int)($detail['quantity_expected'] - $detail['quantity_received']),
+                                                Configuration::get('PS_STOCK_MVT_SUPPLY_ORDER'),
+                                                $detail['unit_price_te'],
+                                                true,
+                                                $supply_order->id
+                                            )) {
+                                                // Create warehouse_product_location entry if we add stock to a new warehouse
+                                                $id_wpl = (int)WarehouseProductLocation::getIdByProductAndWarehouse($id_product, $id_product_attribute, $id_warehouse);
+                                                if (!$id_wpl) {
+                                                    $wpl = new WarehouseProductLocation();
+                                                    $wpl->id_product = (int)$id_product;
+                                                    $wpl->id_product_attribute = (int)$id_product_attribute;
+                                                    $wpl->id_warehouse = (int)$id_warehouse;
+                                                    $wpl->save();
+                                                }
+
+                                                $supply_order_detail_mvt = new SupplyOrderDetail($detail['id_supply_order_detail']);
+                                                $supply_order_detail_mvt_params = array(
+                                                    'quantity_received' => (int)$detail['quantity_expected'],
+                                                );
+                                                // saves supply order detail
+                                                $supply_order_detail_mvt->hydrate($supply_order_detail_mvt_params);
+                                                $supply_order_detail_mvt->update();
+
+                                            } else {
+                                                $this->errors[] = $this->l('An error occurred. No stock was added.');
                                             }
                                         }
                                     }

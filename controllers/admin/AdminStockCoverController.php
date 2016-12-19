@@ -126,6 +126,7 @@ class AdminStockCoverControllerCore extends AdminController
         if (Tools::isSubmit('id_product')) {
             // if a product id is submit
 
+            $this->list_no_link = true;
             $this->lang = false;
             $this->list_id = 'details';
             $this->tpl_list_vars['show_filter'] = false;
@@ -143,7 +144,8 @@ class AdminStockCoverControllerCore extends AdminController
 
             $this->_select = 'a.id_product_attribute as id, a.id_product, stock_view.reference, stock_view.ean13,
 							stock_view.upc, stock_view.usable_quantity as stock';
-            $this->_join = ' INNER JOIN
+            $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
+            $this->_join .= ' INNER JOIN
 						  (
 						  	SELECT SUM(s.usable_quantity) as usable_quantity, s.id_product_attribute, s.reference, s.ean13, s.upc
 						   	FROM '._DB_PREFIX_.'stock s
@@ -177,6 +179,7 @@ class AdminStockCoverControllerCore extends AdminController
 						'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
 						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
         $this->_group = 'GROUP BY a.id_product';
+        $this->_where = 'AND a.advanced_stock_management = 1';
 
         self::$currentIndex .= '&coverage_period='.(int)$this->getCurrentCoveragePeriod().'&warn_days='.(int)$this->getCurrentWarning();
         if ($this->getCurrentCoverageWarehouse() != -1) {

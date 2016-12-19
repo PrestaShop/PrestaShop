@@ -137,7 +137,7 @@ class SupplyOrderStateCore extends ObjectModel
             }
             //check if the state correspond to a receipt state
             elseif ($is_receipt_state) {
-                $query->where('s.receipt_state = 1');
+                $query->where('s.receipt_state = 1 AND s.id_supply_order_state > '.(int)$id_state_referrer);
             }
         }
 
