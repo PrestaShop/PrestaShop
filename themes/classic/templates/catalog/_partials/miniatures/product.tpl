@@ -70,13 +70,15 @@
       </ul>
     {/block}
     <div class="highlighted-informations{if !$product.main_variants} no-variants{/if} hidden-sm-down">
-      <a
-        href="#"
-        class="quick-view"
-        data-link-action="quickview"
-      >
-        <i class="material-icons search">&#xE8B6;</i> {l s='Quick view' d='Shop.Theme.Actions'}
-      </a>
+      {block name='quick_view'}
+        <a
+          href="#"
+          class="quick-view"
+          data-link-action="quickview"
+        >
+          <i class="material-icons search">&#xE8B6;</i> {l s='Quick view' d='Shop.Theme.Actions'}
+        </a>
+       {/block}
 
       {block name='product_variants'}
         {if $product.main_variants}
