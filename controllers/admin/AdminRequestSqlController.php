@@ -49,8 +49,8 @@ class AdminRequestSqlControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_request_sql' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->l('SQL query Name')),
-            'sql' => array('title' => $this->l('SQL query'))
+            'name' => array('title' => $this->trans('SQL query Name', array(), 'Admin.AdvParameters.Feature')),
+            'sql' => array('title' => $this->trans('SQL query', array(), 'Admin.AdvParameters.Feature')),
         );
 
         $this->fields_options = array(
@@ -58,7 +58,7 @@ class AdminRequestSqlControllerCore extends AdminController
                 'title' =>    $this->trans('Settings', array(), 'Admin.Global'),
                 'fields' =>    array(
                     'PS_ENCODING_FILE_MANAGER_SQL' => array(
-                        'title' => $this->l('Select your default file encoding'),
+                        'title' => $this->trans('Select your default file encoding', array(), 'Admin.AdvParameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'value',
@@ -72,8 +72,8 @@ class AdminRequestSqlControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
@@ -95,7 +95,7 @@ class AdminRequestSqlControllerCore extends AdminController
         if ($this->display == 'view' && $id_request = Tools::getValue('id_request_sql')) {
             $this->toolbar_btn['edit'] = array(
                 'href' => self::$currentIndex.'&amp;updaterequest_sql&amp;token='.$this->token.'&amp;id_request_sql='.(int)$id_request,
-                'desc' => $this->l('Edit this SQL query')
+                'desc' => $this->trans('Edit this SQL query', array(), 'Admin.AdvParameters.Feature')
             );
         }
 
@@ -112,14 +112,14 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->display = null;
         $this->initToolbar();
 
-        $this->displayWarning($this->l('When saving the query, only the "SELECT" SQL statement is allowed.'));
+        $this->displayWarning($this->trans('When saving the query, only the "SELECT" SQL statement is allowed.', array(), 'Admin.AdvParameters.Notification'));
         $this->displayInformation('
-		<strong>'.$this->l('How do I create a new SQL query?').'</strong><br />
+		<strong>'.$this->trans('How do I create a new SQL query?', array(), 'Admin.AdvParameters.Help').'</strong><br />
 		<ul>
-			<li>'.$this->l('Click "Add New".').'</li>
-			<li>'.$this->l('Fill in the fields and click "Save".').'</li>
-			<li>'.$this->l('You can then view the query results by clicking on the Edit action in the dropdown menu: ').' <i class="icon-pencil"></i></li>
-			<li>'.$this->l('You can also export the query results as a CSV file by clicking on the Export button: ').' <i class="icon-cloud-upload"></i></li>
+			<li>'.$this->trans('Click "Add New".', array(), 'Admin.AdvParameters.Help').'</li>
+			<li>'.$this->trans('Fill in the fields and click "Save".', array(), 'Admin.AdvParameters.Help').'</li>
+			<li>'.$this->trans('You can then view the query results by clicking on the Edit action in the dropdown menu: ', array(), 'Admin.AdvParameters.Help').' <i class="icon-pencil"></i></li>
+			<li>'.$this->trans('You can also export the query results as a CSV file by clicking on the Export button: ', array(), 'Admin.AdvParameters.Help').' <i class="icon-cloud-upload"></i></li>
 		</ul>');
 
         $this->addRowAction('export');
@@ -134,20 +134,20 @@ class AdminRequestSqlControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('SQL query'),
+                'title' => $this->trans('SQL query', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'icon-cog'
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('SQL query name'),
+                    'label' => $this->trans('SQL query name', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'name',
                     'size' => 103,
                     'required' => true
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->l('SQL query'),
+                    'label' => $this->trans('SQL query', array(), 'Admin.AdvParameters.Feature'),
                     'name' => 'sql',
                     'cols' => 100,
                     'rows' => 10,
@@ -305,7 +305,7 @@ class AdminRequestSqlControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_request'] = array(
                 'href' => self::$currentIndex.'&addrequest_sql&token='.$this->token,
-                'desc' => $this->l('Add new SQL query', null, null, false),
+                'desc' => $this->trans('Add new SQL query', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }

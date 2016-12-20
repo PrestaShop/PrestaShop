@@ -47,19 +47,19 @@ class AdminWebserviceControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
 
         $this->fields_list = array(
             'key' => array(
-                'title' => $this->l('Key'),
+                'title' => $this->trans('Key', array(), 'Admin.AdvParamaters.Feature'),
                 'class' => 'fixed-width-md'
             ),
             'description' => array(
-                'title' => $this->l('Key description'),
+                'title' => $this->trans('Key description', array(), 'Admin.AdvParamaters.Feature'),
                 'align' => 'left',
                 'orderby' => false
             ),
@@ -77,11 +77,11 @@ class AdminWebserviceControllerCore extends AdminController
                 'general' => array(
                     'title' =>    $this->trans('Configuration', array(), 'Admin.Global'),
                     'fields' =>    array(
-                        'PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop\'s webservice'),
-                            'desc' => $this->l('Before activating the webservice, you must be sure to: ').
+                        'PS_WEBSERVICE' => array('title' => $this->trans('Enable PrestaShop\'s webservice', array(), 'Admin.AdvParamaters.Feature'),
+                            'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.AdvParamaters.Help').
                                                 '<ol>
-													<li>'.$this->l('Check that URL rewriting is available on this server.').'</li>
-													<li>'.$this->l('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.').'</li>
+													<li>'.$this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.AdvParamaters.Help').'</li>
+													<li>'.$this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.AdvParamaters.Help').'</li>
 												</ol>',
                             'cast' => 'intval',
                             'type' => 'bool'),
@@ -92,8 +92,8 @@ class AdminWebserviceControllerCore extends AdminController
 
         if (!defined('_PS_HOST_MODE_')) {
             $this->fields_options['general']['fields']['PS_WEBSERVICE_CGI_HOST'] = array(
-                'title' => $this->l('Enable CGI mode for PHP'),
-                'desc' => $this->l('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'),
+                'title' => $this->trans('Enable CGI mode for PHP', array(), 'Admin.AdvParamaters.Feature'),
+                'desc' => $this->trans('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.', array(), 'Admin.AdvParamaters.Help'),
                 'cast' => 'intval',
                 'type' => 'bool'
             );
@@ -105,7 +105,7 @@ class AdminWebserviceControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_webservice'] = array(
                 'href' => self::$currentIndex.'&addwebservice_account&token='.$this->token,
-                'desc' => $this->l('Add new webservice key', null, null, false),
+                'desc' => $this->trans('Add new webservice key', array(), 'Admin.AdvParamaters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -124,19 +124,19 @@ class AdminWebserviceControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Webservice Accounts'),
+                'title' => $this->trans('Webservice Accounts', array(), 'Admin.AdvParamaters.Feature'),
                 'icon' => 'icon-lock'
             ),
             'input' => array(
                 array(
                     'type' => 'textbutton',
-                    'label' => $this->l('Key'),
+                    'label' => $this->trans('Key', array(), 'Admin.AdvParamaters.Feature'),
                     'name' => 'key',
                     'id' => 'code',
                     'required' => true,
-                    'hint' => $this->l('Webservice account key.'),
+                    'hint' => $this->trans('Webservice account key.', array(), 'Admin.AdvParamaters.Feature'),
                     'button' => array(
-                        'label' => $this->l('Generate!'),
+                        'label' => $this->trans('Generate!', array(), 'Admin.AdvParamaters.Feature'),
                         'attributes' => array(
                             'onclick' => 'gencode(32)'
                         )
@@ -144,15 +144,15 @@ class AdminWebserviceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->l('Key description'),
+                    'label' => $this->trans('Key description', array(), 'Admin.AdvParamaters.Feature'),
                     'name' => 'description',
                     'rows' => 3,
                     'cols' => 110,
-                    'hint' => $this->l('Quick description of the key: who it is for, what permissions it has, etc.'),
+                    'hint' => $this->trans('Quick description of the key: who it is for, what permissions it has, etc.', array(), 'Admin.AdvParamaters.Help'),
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Status'),
+                    'label' => $this->trans('Status', array(), 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
@@ -171,7 +171,7 @@ class AdminWebserviceControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'resources',
-                    'label' => $this->l('Permissions'),
+                    'label' => $this->trans('Permissions', array(), 'Admin.AdvParamaters.Feature'),
                     'name' => 'resources',
                 )
             )
@@ -180,7 +180,7 @@ class AdminWebserviceControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             );
         }
@@ -269,24 +269,24 @@ class AdminWebserviceControllerCore extends AdminController
     public function checkForWarning()
     {
         if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) {
-            $this->warnings[] = $this->l('To avoid operating problems, please use an Apache server.');
+            $this->warnings[] = $this->trans('To avoid operating problems, please use an Apache server.', array(), 'Admin.AdvParamaters.Notification');
             if (function_exists('apache_get_modules')) {
                 $apache_modules = apache_get_modules();
                 if (!in_array('mod_auth_basic', $apache_modules)) {
-                    $this->warnings[] = $this->l('Please activate the \'mod_auth_basic\' Apache module to allow authentication of PrestaShop\'s webservice.');
+                    $this->warnings[] = $this->trans('Please activate the \'mod_auth_basic\' Apache module to allow authentication of PrestaShop\'s webservice.', array(), 'Admin.AdvParamaters.Notification');
                 }
                 if (!in_array('mod_rewrite', $apache_modules)) {
-                    $this->warnings[] = $this->l('Please activate the \'mod_rewrite\' Apache module to allow the PrestaShop webservice.');
+                    $this->warnings[] = $this->trans('Please activate the \'mod_rewrite\' Apache module to allow the PrestaShop webservice.', array(), 'Admin.AdvParamaters.Notification');
                 }
             } else {
-                $this->warnings[] = $this->l('We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they\'ve been activated in order to use the PrestaShop webservice.');
+                $this->warnings[] = $this->trans('We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they\'ve been activated in order to use the PrestaShop webservice.', array(), 'Admin.AdvParamaters.Notification');
             }
         }
         if (!extension_loaded('SimpleXML')) {
-            $this->warnings[] = $this->l('Please activate the \'SimpleXML\' PHP extension to allow testing of PrestaShop\'s webservice.');
+            $this->warnings[] = $this->trans('Please activate the \'SimpleXML\' PHP extension to allow testing of PrestaShop\'s webservice.', array(), 'Admin.AdvParamaters.Notification');
         }
         if (!configuration::get('PS_SSL_ENABLED')) {
-            $this->warnings[] = $this->l('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.');
+            $this->warnings[] = $this->trans('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.', array(), 'Admin.AdvParamaters.Notification');
         }
 
         foreach ($this->_list as $k => $item) {
