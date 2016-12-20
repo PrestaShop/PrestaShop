@@ -5171,6 +5171,9 @@ small.label, small.value {
 #pagenotfound .page-content #search_widget {
   width: 100%; }
 
+.page-not-found .search-widget form {
+  display: inline-block; }
+
 /*** Responsive part ***/
 @media (max-width: 767px) {
   .header-top .search-widget {
