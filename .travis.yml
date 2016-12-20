@@ -11,7 +11,7 @@ addons:
     sauce_connect: false
 
 cache:
-      directories:
+  directories:
     - $HOME/.composer/cache
 
 sudo: required
@@ -20,13 +20,13 @@ dist: trusty
 php:
   - 5.4
   - 5.6
-  - 7.0.13
+  - 7.0
 
 before_install:
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
-  
+
   # PrestaShop configuration
   - cp -Rf .composer/* ~/.composer/ & composer global install;
   - cp tests/parameters.yml.travis app/config/parameters.yml
@@ -42,8 +42,6 @@ script:
   - SYMFONY_DEPRECATIONS_HELPER=disabled php bin/phpunit -c tests/phpunit-admin.xml
   - composer phpunit-sf
   - composer phpunit-controllers
-  - cd $TRAVIS_BUILD_DIR # because /var/www/prestashop.unit.test (cwd) is about to be deleted
-  - bash ./travis-scripts/restore-backup
   - bash ./travis-scripts/run-selenium-tests
   - bash ./travis-scripts/test-startertheme
 
