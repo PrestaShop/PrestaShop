@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "selenium-standalone install",
+    "postinstall": "selenium-standalone install --silent",
     "test": "php prepare-shop.php && wdio wdio.conf.js",
     "selenium": "selenium-standalone start"
   },
