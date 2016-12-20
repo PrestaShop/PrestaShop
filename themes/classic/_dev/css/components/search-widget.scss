@@ -26,6 +26,14 @@
   }
 }
 
+.page-not-found {
+  .search-widget {
+    form {
+      display: inline-block;
+    }
+  }
+}
+
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {
   .header-top {
