@@ -26,7 +26,7 @@ before_install:
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
-  
+
   # PrestaShop configuration
   - cp -Rf .composer/* ~/.composer/ & composer global install;
   - cp tests/parameters.yml.travis app/config/parameters.yml
@@ -41,8 +41,9 @@ script:
   - php bin/phpunit -c tests/
   - SYMFONY_DEPRECATIONS_HELPER=disabled php bin/phpunit -c tests/phpunit-admin.xml
   - composer phpunit-sf
-  - bash travis-scripts/run-selenium-tests
-  - bash travis-scripts/test-startertheme
+  - composer phpunit-controllers
+  - bash ./travis-scripts/run-selenium-tests
+  - bash ./travis-scripts/test-startertheme
 
 after_script:
   - sudo cat /var/log/apache2/error.log

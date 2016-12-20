@@ -7,11 +7,17 @@
     convertErrorsToExceptions   = "true"
     convertNoticesToExceptions  = "true"
     convertWarningsToExceptions = "true"
-    processIsolation            = "false"
+    processIsolation            = "true"
     stopOnFailure               = "false"
     syntaxCheck                 = "true"
     bootstrap                   = "bootstrap.php"
     >
+
+    <groups>
+      <exclude>
+        <group>controller</group>
+      </exclude>
+    </groups>
 
     <testsuites>
         <testsuite name="PrestaShop Test Suite">

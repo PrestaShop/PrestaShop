@@ -213,8 +213,15 @@ class AdminPreferencesControllerCore extends AdminController
 
             // No HTTPS activation if you haven't already.
             if (!Tools::usingSecureMode() && !Configuration::get('PS_SSL_ENABLED')) {
+                $requestUri = '';
+                if (array_key_exists('REQUEST_URI', $_SERVER)) {
+                    $requestUri = $_SERVER['REQUEST_URI'];
+                }
+
                 $fields['PS_SSL_ENABLED']['type'] = 'disabled';
-                $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.Tools::getShopDomainSsl().Tools::safeOutput($_SERVER['REQUEST_URI']).'">'.
+                $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.
+                    Tools::getShopDomainSsl().
+                    Tools::safeOutput($requestUri).'">'.
                     $this->trans('Please click here to check if your shop supports HTTPS.', array(), 'Admin.ShopParameters.Feature').'</a>';
             }
 
