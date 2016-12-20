@@ -35,18 +35,23 @@ trait PrestaShopTranslatorTrait
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
         if (null !== $domain) {
-            $domain = preg_replace('/\./', '', $domain);
+            $domain = str_replace('.', '', $domain);
         }
-
-        $translated = parent::trans($id, $parameters, $domain, $locale);
+        
         if (isset($parameters['legacy'])) {
-            $translated = call_user_func($parameters['legacy'], $translated);
+            $legacy = $parameters['legacy'];
+            unset($parameters['legacy']);
+        }
+        
+        if (!empty($parameters) && $this->isSprintfString($id)) {
+            $translated = vsprintf(parent::trans($id, array(), $domain, $locale), $parameters);
+        } else {
+            $translated = parent::trans($id, $parameters, $domain, $locale);
         }
 
-        if ($this->isSprintfString($id) && !empty($parameters)) {
-            $translated = vsprintf($translated, $parameters);
+        if (isset($legacy)) {
+            $translated = call_user_func($legacy, $translated);
         }
-
         return $translated;
     }
 
@@ -56,7 +61,7 @@ trait PrestaShopTranslatorTrait
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
         if (null !== $domain) {
-            $domain = preg_replace('/\./', '', $domain);
+            $domain = str_replace('.', '', $domain);
         }
 
         if (!$this->isSprintfString($id)) {
