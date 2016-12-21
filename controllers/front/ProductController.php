@@ -101,22 +101,46 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
                     );
                 } else {
-                    if (!$this->product->id_product_redirected || $this->product->id_product_redirected == $this->product->id) {
+                    if (!$this->product->id_type_redirected ||
+                        (in_array($this->product->redirect_type, array('301-product', '302-product')) && $this->product->id_type_redirected == $this->product->id)
+                    ){
                         $this->product->redirect_type = '404';
                     }
 
                     switch ($this->product->redirect_type) {
-                        case '301':
+                        case '301-product':
                             header('HTTP/1.1 301 Moved Permanently');
-                            header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+                            header('Location: '.$this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
                         break;
-                        case '302':
+                        case '302-product':
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
-                            header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+                            header('Location: '.$this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
                         break;
+                        case '301-category':
+                            header('HTTP/1.1 301 Moved Permanently');
+                            header('Location: '.$this->context->link->getCategoryLink($this->product->id_type_redirected));
+                            exit;
+                            break;
+                        case '302-category':
+                            header('HTTP/1.1 302 Moved Temporarily');
+                            header('Cache-Control: no-cache');
+                            header('Location: '.$this->context->link->getCategoryLink($this->product->id_type_redirected));
+                            exit;
+                            break;
+                        case '301-cms':
+                            header('HTTP/1.1 301 Moved Permanently');
+                            header('Location: '.$this->context->link->getCMSLink($this->product->id_type_redirected));
+                            exit;
+                            break;
+                        case '302-cms':
+                            header('HTTP/1.1 302 Moved Temporarily');
+                            header('Cache-Control: no-cache');
+                            header('Location: '.$this->context->link->getCMSLink($this->product->id_type_redirected));
+                            exit;
+                            break;
                         case '404':
                         default:
                             header('HTTP/1.1 404 Not Found');
