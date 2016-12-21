@@ -91,22 +91,26 @@ class ProductSeo extends CommonAbstractType
         ->add('redirect_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(
                 $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => '404',
-                $this->translator->trans('Permanent redirection (301)', [], 'Admin.Catalog.Feature') => '301',
-                $this->translator->trans('Temporary redirection (302)', [], 'Admin.Catalog.Feature') => '302',
+                $this->translator->trans('Permanent redirection to a product (301)', [], 'Admin.Catalog.Feature') => '301-product',
+                $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => '302-product',
+                $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => '301-category',
+                $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => '302-category',
+                $this->translator->trans('Permanent redirection to a cms page (301)', [], 'Admin.Catalog.Feature') => '301-cms',
+                $this->translator->trans('Temporary redirection to a cms page (302)', [], 'Admin.Catalog.Feature') => '302-cms',
             ),
             'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Redirection when offline', [], 'Admin.Catalog.Feature'),
         ))
-        ->add('id_product_redirected', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
+        ->add('id_type_redirected', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
-            'placeholder' => $this->translator->trans('To which product the page should redirect?', [], 'Admin.Catalog.Help'),
+            'placeholder' => $this->translator->trans('To which page the page should redirect?', [], 'Admin.Catalog.Help'),
             'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
             'limit' => 1,
             'required' => false,
-            'label' => $this->translator->trans('Target product', [], 'Admin.Catalog.Feature')
+            'label' => $this->translator->trans('Target', [], 'Admin.Catalog.Feature')
         ));
     }
 
