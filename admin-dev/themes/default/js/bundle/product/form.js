@@ -1921,22 +1921,29 @@ var seo = (function() {
     if (redirectTypeElem.val() === '404') {
       $('#id-product-redirected').hide();
     } else {
+      updateRemoteUrl();
       $('#id-product-redirected').show();
     }
   }
-    /** Update friendly URL */
-    var updateFriendlyUrl = function(elem) {
-        /** Attr name equals "form[step1][name][1]".
-         * We need in this string the second integer */
-        var id_lang = elem.attr('name').match(/\d+/g)[1];
-        $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
-    };
 
+  function updateRemoteUrl() {
+    $('#id-product-redirected').find('.autocomplete-search').attr('data-remoteurl', redirectTypeElem.find('option:selected').data('remoteurl'));
+    $('#id-product-redirected').find('.autocomplete-search').trigger('buildTypeahead');
+  }
+
+  /** Update friendly URL */
+  var updateFriendlyUrl = function(elem) {
+      /** Attr name equals "form[step1][name][1]".
+       * We need in this string the second integer */
+      var id_lang = elem.attr('name').match(/\d+/g)[1];
+      $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
+  };
 
   return {
     'init': function() {
 
       hideShowRedirectToProduct();
+      updateRemoteUrl();
 
       /** On redirect type select change */
       redirectTypeElem.change(function() {
