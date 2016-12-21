@@ -694,7 +694,7 @@ class ProductPresenter
             "text_fields",
             "uploadable_files",
             "redirect_type",
-            "id_product_redirected",
+            "id_type_redirected",
             "available_for_order",
             "available_date",
             "show_condition",

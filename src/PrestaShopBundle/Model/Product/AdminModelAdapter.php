@@ -147,7 +147,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'text_fields',
             'active',
             'redirect_type',
-            'id_product_redirected',
+            'id_type_redirected',
             'visibility',
             'available_for_order',
             'show_price',
@@ -202,13 +202,13 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         // Product redirection
         $form_data['redirect_type'] = (string)$form_data['redirect_type'];
         if ($form_data['redirect_type'] != '404') {
-            if (isset($form_data['id_product_redirected']) && !empty($form_data['id_product_redirected']['data'])) {
-                $form_data['id_product_redirected'] = $form_data['id_product_redirected']['data'][0];
+            if (isset($form_data['id_type_redirected']) && !empty($form_data['id_type_redirected']['data'])) {
+                $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
             } else {
-                $form_data['id_product_redirected'] = 0;
+                $form_data['id_type_redirected'] = 0;
             }
         } else {
-            $form_data['id_product_redirected'] = 0;
+            $form_data['id_type_redirected'] = 0;
         }
 
         //map inputPackItems
@@ -472,8 +472,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'meta_title' => $this->product->meta_title,
                 'meta_description' => $this->product->meta_description,
                 'redirect_type' => $this->product->redirect_type,
-                'id_product_redirected' => [
-                    'data' => [$this->product->id_product_redirected]
+                'id_type_redirected' => [
+                    'data' => [$this->product->id_type_redirected]
                 ],
             ],
             'step6' => [

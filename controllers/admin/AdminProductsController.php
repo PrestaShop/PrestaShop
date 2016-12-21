@@ -3799,7 +3799,8 @@ class AdminProductsControllerCore extends AdminController
         ));
         $this->object = $product;
         //$this->display = 'edit';
-        $data->assign('product_name_redirected', Product::getProductName((int)$product->id_product_redirected, null, (int)$this->context->language->id));
+        // not used anymore ?
+        // $data->assign('product_name_redirected', Product::getProductName((int)$product->id_product_redirected, null, (int)$this->context->language->id));
         /*
         * Form for adding a virtual product like software, mp3, etc...
         */
