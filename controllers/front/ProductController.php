@@ -297,7 +297,7 @@ class ProductControllerCore extends FrontController
         $categories = $this->category->getParentsCategories();
         $setTemplate = false;
         foreach($categories as $category){
-            if($category['is_root_category'] != 1 && file_exists(_PS_THEME_DIR_.'product-'.$category['link_rewrite'].'.tpl')){
+            if(!$setTemplate && $category['is_root_category'] != 1 && file_exists(_PS_THEME_DIR_.'product-'.$category['link_rewrite'].'.tpl')){
                 $setTemplate = true;
                 $this->setTemplate(_PS_THEME_DIR_.'product-'.$category['link_rewrite'].'.tpl');
             }
