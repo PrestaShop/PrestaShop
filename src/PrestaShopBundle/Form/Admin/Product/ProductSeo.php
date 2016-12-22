@@ -116,7 +116,6 @@ class ProductSeo extends CommonAbstractType
             'label' => $this->translator->trans('Redirection when offline', [], 'Admin.Catalog.Feature'),
         ))
         ->add('id_type_redirected', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
-            'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => $this->translator->trans('To which page the page should redirect?', [], 'Admin.Catalog.Help'),

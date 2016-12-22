@@ -163,9 +163,9 @@ class CategoryDataProvider
             $limit = '';
         }
 
-        $allCategories = $this->getAllCategoriesName(
+        $searchCategories = \CategoryCore::getAllCategoriesName(
             $root_category = null,
-            $id_lang = false,
+            $id_lang = \ContextCore::getContext()->language->id,
             $active = true,
             $groups = null,
             $use_shop_restriction = true,
@@ -175,7 +175,7 @@ class CategoryDataProvider
         );
 
         $results = [];
-        foreach ($allCategories as $category) {
+        foreach ($searchCategories as $category) {
             $breadCrumb = $this->getBreadCrumb($category['id_category']);
             $results[] = [
                 'id' => $category['id_category'],

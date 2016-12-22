@@ -632,8 +632,16 @@ class CategoryCore extends ObjectModel
             $groups = (array) $groups;
         }
 
-        $cacheId = 'Category::getAllCategoriesName_'.md5((int) $idRootCategory.(int) $idLang.(int) $active.(int) $useShopRestriction
-            .(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
+        $cacheId = 'Category::getAllCategoriesName_'.md5(
+            (int) $idRootCategory.
+            (int) $idLang.
+            (int) $active.
+            (int) $useShopRestriction.
+            (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '').
+            (isset($sqlFilter) ? $sqlFilter : '').
+            (isset($orderBy) ? $orderBy : '').
+            (isset($limit) ? $limit : '')
+        );
 
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS('
@@ -698,8 +706,16 @@ class CategoryCore extends ObjectModel
             $groups = (array) $groups;
         }
 
-        $cacheId = 'Category::getNestedCategories_'.md5((int) $idRootCategory.(int) $idLang.(int) $active.(int) $useShopRestriction
-            .(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
+        $cacheId = 'Category::getAllCategoriesName_'.md5(
+                (int) $idRootCategory.
+                (int) $idLang.
+                (int) $active.
+                (int) $useShopRestriction.
+                (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '').
+                (isset($sqlFilter) ? $sqlFilter : '').
+                (isset($orderBy) ? $orderBy : '').
+                (isset($limit) ? $limit : '')
+            );
 
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS('
