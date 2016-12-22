@@ -36,6 +36,7 @@ class ProductSeo extends CommonAbstractType
 {
     private $translator;
     private $locales;
+    private $router;
 
     /**
      * Constructor
@@ -43,11 +44,12 @@ class ProductSeo extends CommonAbstractType
      * @param object $translator
      * @param object $legacyContext
      */
-    public function __construct($translator, $legacyContext)
+    public function __construct($translator, $legacyContext, $router)
     {
         $this->translator = $translator;
         $this->context = $legacyContext;
         $this->locales = $legacyContext->getLanguages();
+        $this->router = $router;
     }
 
     /**
@@ -57,6 +59,13 @@ class ProductSeo extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $remotesUrls = array(
+            '301-product' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            '302-product' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            '301-category' => $this->router->generate('admin_get_ajax_categories').'&query=%QUERY',
+            '302-category' => $this->router->generate('admin_get_ajax_categories').'&query=%QUERY',
+        );
+
         $builder->add('meta_title', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [
@@ -95,9 +104,13 @@ class ProductSeo extends CommonAbstractType
                 $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => '302-product',
                 $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => '301-category',
                 $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => '302-category',
-                $this->translator->trans('Permanent redirection to a cms page (301)', [], 'Admin.Catalog.Feature') => '301-cms',
-                $this->translator->trans('Temporary redirection to a cms page (302)', [], 'Admin.Catalog.Feature') => '302-cms',
             ),
+            'choice_attr' => function($val, $key, $index) use ($remotesUrls) {
+                if(array_key_exists($index, $remotesUrls)) {
+                    return ['data-remoteurl' => $remotesUrls[$index]];
+                }
+                return [];
+            },
             'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Redirection when offline', [], 'Admin.Catalog.Feature'),

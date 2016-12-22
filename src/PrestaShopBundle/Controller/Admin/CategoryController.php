@@ -84,4 +84,22 @@ class CategoryController extends FrameworkBundleAdminController
 
         return $response;
     }
+
+    /**
+     * Get Categories formatted like ajax_product_file.php
+     *
+     * @param $limit
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getAjaxCategoriesAction($limit, Request $request)
+    {
+        $response = new JsonResponse();
+
+        $response->setData(
+            $this->container->get('prestashop.adapter.data_provider.category')->getAjaxCategories($request->get('query'), $limit, true)
+        );
+
+        return $response;
+    }
 }

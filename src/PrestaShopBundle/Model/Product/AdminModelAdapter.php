@@ -206,9 +206,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
             } else {
                 $form_data['id_type_redirected'] = 0;
+                $form_data['redirect_type'] = '404';
             }
         } else {
             $form_data['id_type_redirected'] = 0;
+            $form_data['redirect_type'] = '404';
         }
 
         //map inputPackItems

@@ -101,6 +101,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+            - "@router"
         tags:
             - { name: form.type }
 
@@ -190,7 +191,7 @@ services:
         class: PrestaShopBundle\Form\Admin\Type\TextEmptyType
         tags:
             - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
-    
+
     form.type.extension.money:
         class: PrestaShopBundle\Form\Admin\Type\CustomMoneyType
         tags:

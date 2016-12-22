@@ -140,4 +140,51 @@ class CategoryDataProvider
 
         return substr($breadCrumb, strlen($delimiter));
     }
+
+    /**
+     * Get Categories formatted like ajax_product_file.php using CategoryCore::getNestedCategories
+     *
+     * @param $query
+     * @param $limit
+     * @param bool $nameAsBreadCrumb
+     * @return array
+     */
+    public function getAjaxCategories($query, $limit, $nameAsBreadCrumb = false)
+    {
+        if (empty($query)) {
+            $query = '';
+        } else {
+            $query = "AND cl.name LIKE '%".pSQL($query)."%'";
+        }
+
+        if (is_integer($limit)) {
+            $limit = 'LIMIT ' . $limit;
+        } else {
+            $limit = '';
+        }
+
+        $allCategories = $this->getAllCategoriesName(
+            $root_category = null,
+            $id_lang = false,
+            $active = true,
+            $groups = null,
+            $use_shop_restriction = true,
+            $sql_filter = $query,
+            $sql_sort = '',
+            $limit
+        );
+
+        $results = [];
+        foreach ($allCategories as $category) {
+            $breadCrumb = $this->getBreadCrumb($category['id_category']);
+            $results[] = [
+                'id' => $category['id_category'],
+                'name' => ($nameAsBreadCrumb ? $breadCrumb : $category['name']),
+                'breadcrumb' => $breadCrumb,
+                'image' => \ContextCore::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
+            ];
+        }
+
+        return $results;
+    }
 }
