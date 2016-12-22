@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
@@ -73,7 +74,17 @@ class ModuleManager implements AddonManagerInterface
 
     private $employee;
 
-    public function __construct(AdminModuleDataProvider $adminModulesProvider,
+    /**
+     * @param AdminModuleDataProvider $adminModulesProvider
+     * @param ModuleDataProvider $modulesProvider
+     * @param ModuleDataUpdater $modulesUpdater
+     * @param ModuleRepository $moduleRepository
+     * @param ModuleZipManager $moduleZipManager
+     * @param TranslatorInterface $translator
+     * @param Employee|null $employee
+     */
+    public function __construct(
+        AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
         ModuleRepository $moduleRepository,
@@ -88,6 +99,93 @@ class ModuleManager implements AddonManagerInterface
         $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
         $this->employee = $employee;
+    }
+
+    /**
+     * @param callable $modulesPresenter
+     * @return object
+     */
+    public function getModulesWithNotifications(callable $modulesPresenter)
+    {
+        $modules = $this->groupModulesByInstallationProgress();
+
+        $modulesProvider = $this->adminModuleProvider;
+        foreach ($modules as $moduleLabel => $modulesPart) {
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart, str_replace("to_", "", $moduleLabel));
+            $modules->{$moduleLabel} = $modulesPresenter($modulesPart);
+        }
+
+        return $modules;
+    }
+
+    public function countModulesWithNotifications()
+    {
+        $modules = (array) $this->groupModulesByInstallationProgress();
+
+        return array_reduce($modules, function ($carry, $item) {
+            return $carry + count($item);
+        }, 0);
+    }
+
+    /**
+     * @return object
+     */
+    protected function groupModulesByInstallationProgress()
+    {
+        $installedProducts = $this->moduleRepository->getInstalledModules();
+
+        $modules = (object) array(
+            'to_configure' => array(),
+            'to_update' => array(),
+        );
+
+        /**
+         * @var \PrestaShop\PrestaShop\Adapter\Module\Module $installedProduct
+         */
+        foreach ($installedProducts as $installedProduct) {
+            if ($this->shouldRecommendConfigurationForModule($installedProduct)) {
+                $modules->to_configure[] = (object)$installedProduct;
+            }
+
+            if ($installedProduct->canBeUpgraded()) {
+                $modules->to_update[] = (object)$installedProduct;
+            }
+        }
+
+        return $modules;
+    }
+
+    /**
+     * @param $installedProduct
+     * @return bool
+     */
+    protected function shouldRecommendConfigurationForModule($installedProduct)
+    {
+        $warnings = $this->getModuleInstallationWarnings($installedProduct);
+
+        return !empty($warnings);
+    }
+
+    /**
+     * @param $installedProduct
+     * @return array
+     */
+    protected function getModuleInstallationWarnings($installedProduct)
+    {
+        $warnings = array();
+        $moduleName = $installedProduct->attributes->get('name');
+
+        if ($this->moduleProvider->isModuleMainClassValid($moduleName)) {
+            $moduleMainClassFilepath = _PS_MODULE_DIR_ . $moduleName . '/' . $moduleName . '.php';
+            if (file_exists($moduleMainClassFilepath)) {
+                require_once $moduleMainClassFilepath;
+            }
+
+            $module = ServiceLocator::get($moduleName);
+            $warnings = $module->warning;
+        }
+
+        return $warnings;
     }
 
     /**
@@ -440,7 +538,7 @@ class ModuleManager implements AddonManagerInterface
                 array(),
                 'Admin.Modules.Notification');
         }
-        
+
         return $message;
     }
 }

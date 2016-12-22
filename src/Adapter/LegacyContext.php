@@ -139,7 +139,16 @@ class LegacyContext
      */
     public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar, $helpLink = '')
     {
-        $originCtrl = new \AdminLegacyLayoutControllerCore($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader, $headerTabContent, $enableSidebar, $helpLink);
+        $originCtrl = new \AdminLegacyLayoutControllerCore(
+            $controllerName,
+            $title,
+            $headerToolbarBtn,
+            $displayType,
+            $showContentHeader,
+            $headerTabContent,
+            $enableSidebar,
+            $helpLink
+        );
         $originCtrl->run();
 
         return $originCtrl->outPutHtml;
