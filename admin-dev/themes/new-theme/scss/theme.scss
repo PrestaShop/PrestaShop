@@ -2,6 +2,8 @@
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "../node_modules/PrestaKit/scss/custom/_variables.scss";
 @import "mixins/single_line_block";
+@import "mixins/notification_container";
+@import "mixins/notification_counter";
 
 // Settings
 @import "config/settings";

@@ -43,6 +43,14 @@
         box-sizing: border-box;
         font-size: 16px;
         text-decoration: none;
+
+        .notification-container {
+            @include notification_container();
+
+            .notification-counter {
+                @include notification_counter();
+            }
+        }
     }
 
     > .current {
