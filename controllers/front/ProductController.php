@@ -130,17 +130,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Location: '.$this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
                             break;
-                        case '301-cms':
-                            header('HTTP/1.1 301 Moved Permanently');
-                            header('Location: '.$this->context->link->getCMSLink($this->product->id_type_redirected));
-                            exit;
-                            break;
-                        case '302-cms':
-                            header('HTTP/1.1 302 Moved Temporarily');
-                            header('Cache-Control: no-cache');
-                            header('Location: '.$this->context->link->getCMSLink($this->product->id_type_redirected));
-                            exit;
-                            break;
                         case '404':
                         default:
                             header('HTTP/1.1 404 Not Found');
