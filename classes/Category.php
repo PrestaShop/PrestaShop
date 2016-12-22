@@ -145,8 +145,8 @@ class CategoryCore extends ObjectModel
     public function __construct($idCategory = null, $idLang = null, $idShop = null)
     {
         parent::__construct($idCategory, $idLang, $idShop);
-        $this->id_image = ($this->id && file_exists(_PS_CAT_IMG_DIR_.(int) $this->id.'.jpg')) ? (int) $this->id : false;
         $this->image_dir = _PS_CAT_IMG_DIR_;
+        $this->id_image = ($this->id && file_exists($this->image_dir.(int) $this->id.'.jpg')) ? (int) $this->id : false;
     }
 
     /**
@@ -823,7 +823,7 @@ class CategoryCore extends ObjectModel
 		ORDER BY `level_depth` ASC, category_shop.`position` ASC');
 
         foreach ($result as &$row) {
-            $row['id_image'] = Tools::file_exists_cache(_PS_CAT_IMG_DIR_.$row['id_category'].'.jpg') ? (int) $row['id_category'] : Language::getIsoById($idLang).'-default';
+            $row['id_image'] = Tools::file_exists_cache($this->image_dir.$row['id_category'].'.jpg') ? (int) $row['id_category'] : Language::getIsoById($idLang).'-default';
             $row['legend'] = 'no picture';
         }
 

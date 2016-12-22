@@ -158,6 +158,7 @@ services:
         class: PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType
         arguments:
             - "@prestashop.adapter.data_provider.product"
+            - "@prestashop.adapter.data_provider.category"
         tags:
             - { name: form.type }
 

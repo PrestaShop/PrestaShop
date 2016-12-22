@@ -33,6 +33,32 @@ use ObjectModel;
 class CategoryDataProvider
 {
     /**
+     * Get a category
+     *
+     * @param null $idCategory
+     * @param null $idLang
+     * @param null $idShop
+     *
+     * @throws \LogicException If the category id is not set
+     *
+     * @return \CategoryCore
+     */
+    public function getCategory($idCategory = null, $idLang = null, $idShop = null)
+    {
+        if (!$idCategory) {
+            throw new \LogicException('You need to provide a category id', 5002);
+        }
+
+        $category = new \CategoryCore($idCategory, $idLang, $idShop);
+
+        if ($category) {
+            $category->image = \ContextCore::getContext()->link->getCatImageLink($category->name, $category->id);
+        }
+
+        return $category;
+    }
+
+    /**
      * Get all nested categories
      *
      * @param int|null $root_category

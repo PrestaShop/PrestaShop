@@ -6236,4 +6236,26 @@ class ProductCore extends ObjectModel
 
         return $results;
     }
+
+    /**
+     * Get object of redirect_type
+     *
+     * @return bool|string
+     */
+    public function getRedirectType() {
+
+        switch($this->redirect_type) {
+            case '301-category':
+            case '302-category':
+                return 'category';
+                break;
+
+            case '301-product':
+            case '302-product':
+                return 'product';
+                break;
+        }
+
+        return false;
+    }
 }

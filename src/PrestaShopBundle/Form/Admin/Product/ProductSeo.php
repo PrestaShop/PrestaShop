@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the product SEO form
@@ -118,6 +119,7 @@ class ProductSeo extends CommonAbstractType
         ->add('id_type_redirected', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
             'mapping_value' => 'id',
             'mapping_name' => 'name',
+            'mapping_type' => $options['mapping_type'],
             'placeholder' => $this->translator->trans('To which page the page should redirect?', [], 'Admin.Catalog.Help'),
             'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
             'limit' => 1,
@@ -134,5 +136,15 @@ class ProductSeo extends CommonAbstractType
     public function getBlockPrefix()
     {
         return 'product_seo';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'mapping_type' => 'product',
+        ));
     }
 }

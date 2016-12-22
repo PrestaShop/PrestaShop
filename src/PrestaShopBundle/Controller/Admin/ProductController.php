@@ -421,7 +421,9 @@ class ProductController extends FrameworkBundleAdminController
             ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
             ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
             ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
-            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo')
+            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo', array(
+                'mapping_type' => $product->getRedirectType(),
+            ))
             ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
 
         // Prepare combination form (fake but just to validate the form)
