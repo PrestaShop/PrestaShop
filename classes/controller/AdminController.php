@@ -600,7 +600,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign(array(
             'breadcrumbs2' => $breadcrumbs2,
-            'quick_access_current_link_name' => $breadcrumbs2['tab']['name'].(isset($breadcrumbs2['action']) ? ' - '.$breadcrumbs2['action']['name'] : ''),
+            'quick_access_current_link_name' => Tools::safeOutput($breadcrumbs2['tab']['name'].(isset($breadcrumbs2['action']) ? ' - '.$breadcrumbs2['action']['name'] : '')),
             'quick_access_current_link_icon' => $breadcrumbs2['container']['icon']
         ));
 
