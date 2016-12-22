@@ -242,7 +242,7 @@ services:
        class: PrestaShopBundle\Twig\AdminExtension
        arguments:
             - "@request_stack"
-            - "@prestashop.module.manager"
+            - "@service_container"
        tags:
             - { name: twig.extension }
 

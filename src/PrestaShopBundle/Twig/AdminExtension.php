@@ -26,6 +26,7 @@
  */
 namespace PrestaShopBundle\Twig;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -47,12 +48,21 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
      */
     private $environment;
 
+
     /**
-     * @param RequestStack $requestStack
+     * @var \Symfony\Component\DependencyInjection\Container
      */
-    public function __construct(RequestStack $requestStack = null)
+    private $container;
+
+    /**
+     * AdminExtension constructor.
+     * @param RequestStack|null $requestStack
+     * @param ContainerInterface $container
+     */
+    public function __construct(RequestStack $requestStack = null, ContainerInterface $container)
     {
         $this->requestStack = $requestStack;
+        $this->container = $container;
     }
 
     /**
@@ -76,6 +86,8 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
             $controllerNameIndex = count($explodedControllerName) - 1;
             $controllerName = $explodedControllerName[$controllerNameIndex];
 
+            $moduleManager = $this->container->get('prestashop.module.manager');
+
             if (isset($tabConfiguration[$controllerName])) {
                 // Construct tabs and inject into twig tpl
                 $tabDataContent = array();
@@ -86,6 +98,10 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
                     $tabData['isCurrent'] = false;
                     if ($currentRouteName === $tabData['route']) {
                         $tabData['isCurrent'] = true;
+                    }
+
+                    if ($tabName === 'module_tab_notifications') {
+                        $tabData['notificationsCounter'] = $moduleManager->countModulesWithNotifications();
                     }
 
                     $tabDataContent[] = $this->environment->render(
