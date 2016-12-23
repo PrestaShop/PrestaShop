@@ -24,15 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
+
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
-
-class ModuleTabDeregistration
+class ModuleTabUnregister
 {
     /**
      * @var LangRepository

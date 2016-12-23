@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShopBundle\Event\ModuleManagementEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
@@ -72,7 +74,15 @@ class ModuleManager implements AddonManagerInterface
      */
     private $translator;
 
+    /**
+     * @var Employee Legacy employee class
+     */
     private $employee;
+    
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
 
     /**
      * @param AdminModuleDataProvider $adminModulesProvider
@@ -90,7 +100,8 @@ class ModuleManager implements AddonManagerInterface
         ModuleRepository $moduleRepository,
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
-        Employee $employee = null)
+        Employee $employee = null,
+        EventDispatcherInterface $dispatcher = null)
     {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->moduleProvider = $modulesProvider;
@@ -99,6 +110,7 @@ class ModuleManager implements AddonManagerInterface
         $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
         $this->employee = $employee;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -229,7 +241,12 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($name);
-        return $module->onInstall();
+        $result = $module->onInstall();
+        
+        if ($this->dispatcher) {
+            $this->dispatcher->dispatch(ModuleManagementEvent::INSTALL, new ModuleManagementEvent($module));
+        }
+        return $result;
     }
 
     /**
@@ -264,6 +281,10 @@ class ModuleManager implements AddonManagerInterface
 
         if ($result && (bool)$file_deletion) {
             $result &= $this->removeModuleFromDisk($name);
+        }
+        
+        if ($this->dispatcher) {
+            $this->dispatcher->dispatch(ModuleManagementEvent::UNINSTALL, new ModuleManagementEvent($module));
         }
 
         return $result;
@@ -310,7 +331,11 @@ class ModuleManager implements AddonManagerInterface
         }
 
         // Load and execute upgrade files
-        return $this->moduleUpdater->upgrade($name);
+        $result = $this->moduleUpdater->upgrade($name);
+        if ($this->dispatcher) {
+            $this->dispatcher->dispatch(ModuleManagementEvent::UPGRADE, new ModuleManagementEvent($this->moduleRepository->getModule($name)));
+        }
+        return $result;
     }
 
     /**
@@ -333,7 +358,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         try {
-            return $module->onDisable();
+            $result = $module->onDisable();
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -344,8 +369,12 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'),
                 0, $e);
         }
+        
+        if ($this->dispatcher) {
+            $this->dispatcher->dispatch(ModuleManagementEvent::DISABLE, new ModuleManagementEvent($module));
+        }
 
-        return true;
+        return $result;
     }
 
     /**
@@ -367,7 +396,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         try {
-            return $module->onEnable();
+            $result = $module->onEnable();
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -376,8 +405,12 @@ class ModuleManager implements AddonManagerInterface
                         '%error_details%' => $e->getMessage()),
                     'Admin.Modules.Notification'), 0, $e);
         }
+        
+        if ($this->dispatcher) {
+            $this->dispatcher->dispatch(ModuleManagementEvent::ENABLE, new ModuleManagementEvent($module));
+        }
 
-        return true;
+        return $result;
     }
 
     /**
@@ -469,10 +502,12 @@ class ModuleManager implements AddonManagerInterface
         try {
             if ((bool)$keep_data && method_exists($this, 'reset')) {
                 $status = $module->onReset();
+                if ($this->dispatcher) {
+                    $this->dispatcher->dispatch(ModuleManagementEvent::RESET, new ModuleManagementEvent($module));
+                }
             } else {
                 $status = ($module->onUninstall() && $module->onInstall());
             }
-            return $status;
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -483,6 +518,8 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'),
                 0, $e);
         }
+        
+        return $status;
     }
 
     /**

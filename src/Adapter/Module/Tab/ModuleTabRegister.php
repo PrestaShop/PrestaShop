@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
 use TabCore as Tab;
 
-class ModuleTabRegistration
+class ModuleTabRegister
 {
     /**
      * @var LangRepository

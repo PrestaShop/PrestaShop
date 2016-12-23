@@ -124,12 +124,6 @@ class ModuleRepositoryTest extends UnitTestCase
             array(
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
-                new ModuleDataUpdater($this->addonsDataProviderS, new AdminModuleDataProvider(
-                    'en',
-                    $this->sfRouter,
-                    $this->addonsDataProviderS,
-                    $this->categoriesProviderS
-                )),
                 new ModuleDataUpdater(
                     $this->addonsDataProviderS,
                     new AdminModuleDataProvider(
