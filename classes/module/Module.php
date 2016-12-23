@@ -2911,7 +2911,11 @@ abstract class ModuleCore
             $override_path = _PS_OVERRIDE_DIR_.$path;
         }
 
-        if (!is_file($override_path) || !is_writable($override_path)) {
+        if (!is_file($override_path)) {
+            return true;
+        }
+
+        if (!is_writable($override_path)) {
             return false;
         }
 
