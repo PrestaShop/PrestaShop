@@ -31,8 +31,6 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 
-use Tab;
-
 class ModuleDataUpdater
 {
     private $addonsDataProvider;

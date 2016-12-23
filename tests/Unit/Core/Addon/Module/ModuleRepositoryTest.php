@@ -137,10 +137,7 @@ class ModuleRepositoryTest extends UnitTestCase
                         $this->sfRouter,
                         $this->addonsDataProviderS,
                         $this->categoriesProviderS
-                    ),
-                    new LegacyContext(),
-                    new FakeLogger(),
-                    $this->translatorStub
+                    )
                 ),
                 new FakeLogger(),
                 $this->translatorStub,

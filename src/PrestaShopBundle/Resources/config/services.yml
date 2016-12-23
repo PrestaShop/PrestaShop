@@ -252,9 +252,6 @@ services:
         arguments:
             - "@prestashop.core.admin.data_provider.addons_interface"
             - "@prestashop.adapter.admin.data_provider.module"
-            - "@prestashop.adapter.legacy.context"
-            - "@prestashop.adapter.legacy.logger"
-            - "@translator"
 
 
     # Repositories
