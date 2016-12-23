@@ -25,7 +25,6 @@
   }
   .images-container {
     @include display(flex);
-    position: absolute;
     z-index: 1;
     min-height: rem(350px);
     .product-images > li.thumb-container > .thumb {
@@ -35,7 +34,7 @@
     }
   }
   .mask {
-    width: 33%;
+    width: 35%;
     height: rem(360px);
     overflow: hidden;
     margin-left: $small-space;
