@@ -230,6 +230,14 @@ class TabCore extends ObjectModel
 					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int) $idLang.')
 				WHERE t.`id_tab` = '.(int) $idTab.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '')
             );
+
+            $lang = new Language($idLang);
+            $tabLang = new TabLang(Context::getContext()->getTranslator(), $lang->locale);
+            $newName = $tabLang->getName($result['class_name']);
+            if ($newName !== $result['class_name']) {
+                $result['name'] = $newName;
+            }
+
             Cache::store($cacheId, $result);
 
             return $result;
@@ -280,8 +288,16 @@ class TabCore extends ObjectModel
 				ORDER BY t.`position` ASC'
             );
 
+            $lang = new Language($idLang);
+            $tabLang = new TabLang(Context::getContext()->getTranslator(), $lang->locale);
+
             if (is_array($result)) {
-                foreach ($result as $row) {
+                foreach ($result as &$row) {
+                    // Use translated data from TabLang class instead of *_lang table
+                    $newName = $tabLang->getName($row['class_name']);
+                    if ($newName !== $row['class_name']) {
+                        $row['name'] = $newName;
+                    }
                     if (!isset(self::$_cache_tabs[$idLang][$row['id_parent']])) {
                         self::$_cache_tabs[$idLang][$row['id_parent']] = array();
                     }
