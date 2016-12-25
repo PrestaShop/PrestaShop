@@ -49,12 +49,12 @@ class ProductListingPresenter extends ProductPresenter
         return $presentedProduct;
     }
 
-    protected function shouldEnableAddToCartButton(array $product)
+    protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
-        if (isset($product['attributes']) && count($product['attributes']) > 0) {
+        if (isset($product['attributes']) && count($product['attributes']) > 0 && !$settings->allow_add_variant_to_cart_from_listing) {
             return false;
         }
 
-        return parent::shouldEnableAddToCartButton($product);
+        return parent::shouldEnableAddToCartButton($product, $settings);
     }
 }

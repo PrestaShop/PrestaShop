@@ -204,7 +204,7 @@ class ProductPresenter
         return $presentedProduct;
     }
 
-    protected function shouldEnableAddToCartButton(array $product)
+    protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
             $shouldShowButton = false;
@@ -557,7 +557,7 @@ class ProductPresenter
             $language
         );
 
-        if ($this->shouldEnableAddToCartButton($product)) {
+        if ($this->shouldEnableAddToCartButton($product, $settings)) {
             $presentedProduct['add_to_cart_url'] = $this->getAddToCartURL($product);
         } else {
             $presentedProduct['add_to_cart_url'] = null;
