@@ -4600,6 +4600,11 @@ class ProductCore extends ObjectModel
             return false;
         }
 
+        // No need to query if there isn't any real cart!
+        if (!$id_cart) {
+            return false;
+        }
+
         if ($id_customization === 0) {
             // Backward compatibility: check if there are no products in cart with specific `id_customization` before returning false
             $product_customizations = (int)Db::getInstance()->getValue('
@@ -4611,10 +4616,6 @@ class ProductCore extends ObjectModel
             }
         }
 
-        // No need to query if there isn't any real cart!
-        if (!$id_cart) {
-            return false;
-        }
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
