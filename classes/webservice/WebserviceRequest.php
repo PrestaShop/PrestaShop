@@ -586,7 +586,7 @@ class WebserviceRequestCore
         if (isset($this->objOutput)) {
             $this->objOutput->setStatus($status);
         }
-        $this->errors[] = $display_errors ? array($code, $label) : 'Internal error. To see this error please display the PHP errors.';
+        $this->errors[] = array($code, $label);
     }
 
     /**
