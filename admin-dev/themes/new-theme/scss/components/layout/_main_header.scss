@@ -114,6 +114,7 @@
       }
     }
     .shop {
+      display: flex;
       a {
         padding-left: rem(60px);
         @include justify-content(space-between);
@@ -124,6 +125,7 @@
       a.link-shop {
         text-decoration: none;
         float: right;
+        margin-left: auto;
         padding-left: inherit;
         padding-right: 10px;
         padding-top: 3px;
