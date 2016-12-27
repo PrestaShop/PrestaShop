@@ -821,8 +821,14 @@ var form = (function() {
     updateMissingTranslatedNames();
 
     var data = $('input, textarea, select', elem).not(':input[type=button], :input[type=submit], :input[type=reset]').serialize();
+
     if (target == '_blank' && redirect) {
       var openBlank = window.open('about:blank', target, '');
+      openBlank.document.write(
+        '<p style="text-align: center;">' +
+        'Page loading...' +
+        '</p>'
+      );
     }
 
     $.ajax({
@@ -836,22 +842,27 @@ var form = (function() {
         $('#form-nav li.has-error').removeClass('has-error');
       },
       success: function(response) {
+        showSuccessMessage(translate_javascripts['Form update success']);
         if (redirect) {
           if (target) {
             if (target == '_blank') {
-                openBlank.location = redirect;
+              openBlank.location = redirect;
             } else {
-                window.open(redirect, target);
+              window.open(redirect, target);
             }
           } else {
             window.location = redirect;
           }
         }
-        showSuccessMessage(translate_javascripts['Form update success']);
       },
       error: function(response) {
-        var tabsWithErrors = [];
         showErrorMessage(translate_javascripts['Form update errors']);
+
+        if (target == '_blank' && redirect) {
+          openBlank.close();
+        }
+
+        var tabsWithErrors = [];
 
         $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
           tabsWithErrors.push(key);
@@ -968,8 +979,9 @@ var form = (function() {
         switchLanguage(event.target.value);
       });
 
-      /** on save with duplicate|new */
-      $('.btn-submit', elem).click(function() {
+      /** on save with duplicate|new|preview */
+      $('.btn-submit', elem).click(function(event) {
+        event.preventDefault();
         send($(this).attr('data-redirect'), $(this).attr('target'));
       });
 
