@@ -78,16 +78,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
 
     private function clearCache()
     {
-        try {
-            $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-            $sf2Refresh->addCacheClear();
-            $sf2Refresh->execute();
-        } catch (\Exception $exception) {
-            $finder = new \Symfony\Component\Finder\Finder;
-            $fs = new \Symfony\Component\Filesystem\Filesystem();
-            foreach ($finder->in(_PS_ROOT_DIR_.'/app/cache') as $file) {
-                $fs->remove($file->getFilename());
-            }
-        }
+        $fs = new \Symfony\Component\Filesystem\Filesystem();
+        $fs->remove(_PS_ROOT_DIR_ . '/app/cache/' . (_PS_MODE_DEV_ ? 'dev' : 'prod'));
     }
 }
