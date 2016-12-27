@@ -203,6 +203,20 @@ var combinations = (function() {
           locale: iso_user,
           format: 'YYYY-MM-DD'
         });
+
+        function countSelectedProducts() {
+          return $("#combination_form_"+ contentElem.attr('data') +" .img-highlight").length;
+        }
+
+        var number = $("#combination_form_"+ contentElem.attr('data') +" .number-of-images"),
+            allProductCombination = $("#combination_form_"+ contentElem.attr('data') +" .product-combination-image").length;
+
+        number.text(countSelectedProducts()+"/"+allProductCombination);
+
+        $(document).on('click','.tabs .product-combination-image', function () {
+          number.text(countSelectedProducts()+"/"+allProductCombination);
+        });
+
         $('#form-nav, #form_content').hide();
       });
 
