@@ -159,7 +159,7 @@ class TranslateCore
      * @param string $source
      * @return string
      */
-    public static function getModuleTranslation($module, $string, $source, $sprintf = null, $js = false)
+    public static function getModuleTranslation($module, $originalString, $source, $sprintf = null, $js = false)
     {
         global $_MODULES, $_MODULE, $_LANGADM;
 
@@ -171,24 +171,6 @@ class TranslateCore
         $name = $module instanceof Module ? $module->name : $module;
 
         $language = Context::getContext()->language;
-
-        if (!is_array($sprintf) && !is_null($sprintf)) {
-            $sprintf_for_trans = array($sprintf);
-        } elseif (is_null($sprintf)) {
-            $sprintf_for_trans = array();
-        } else {
-            $sprintf_for_trans = $sprintf;
-        }
-
-        /*
-         * Native modules working on both 1.6 & 1.7 are translated in messages.xlf
-         * So we need to check in the Symfony catalog for translations
-         */
-        $newTranslation = Context::getContext()->getTranslator()->trans($string, $sprintf_for_trans);
-
-        if ($string != $newTranslation) {
-            return $newTranslation;
-        }
 
         if (!isset($translationsMerged[$name]) && isset(Context::getContext()->language)) {
             $filesByPriority = array(
@@ -208,12 +190,14 @@ class TranslateCore
             }
             $translationsMerged[$name] = true;
         }
-        $string = preg_replace("/\\\*'/", "\'", $string);
+        $string = preg_replace("/\\\*'/", "\'", $originalString);
         $key = md5($string);
 
         $cacheKey = $name.'|'.$string.'|'.$source.'|'.(int)$js;
 
-        if (!isset($langCache[$cacheKey])) {
+        if (isset($langCache[$cacheKey])) {
+            $ret = $langCache[$cacheKey];
+        } else {
             if ($_MODULES == null) {
                 if (
                     $sprintf !== null &&
@@ -223,7 +207,7 @@ class TranslateCore
                     $string = Translate::checkAndReplaceArgs($string, $sprintf);
                 }
 
-                return str_replace('"', '&quot;', $string);
+                $ret = str_replace('"', '&quot;', $string);
             }
 
             $currentKey = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
@@ -266,12 +250,26 @@ class TranslateCore
 
             if ($sprintf === null) {
                 $langCache[$cacheKey] = $ret;
-            } else {
-                return $ret;
             }
         }
 
-        return $langCache[$cacheKey];
+        if (!is_array($sprintf) && !is_null($sprintf)) {
+            $sprintf_for_trans = array($sprintf);
+        } elseif (is_null($sprintf)) {
+            $sprintf_for_trans = array();
+        } else {
+            $sprintf_for_trans = $sprintf;
+        }
+
+        /*
+         * Native modules working on both 1.6 & 1.7 are translated in messages.xlf
+         * So we need to check in the Symfony catalog for translations
+         */
+        if ($ret === $originalString) {
+            $ret = Context::getContext()->getTranslator()->trans($originalString, $sprintf_for_trans);
+        }
+
+        return $ret;
     }
 
     /**
