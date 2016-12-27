@@ -110,7 +110,7 @@ $(function() {
 
 	//get content
 	function getHelp(pageController) {
-		var request = encodeURIComponent("getHelp=" + pageController + "&version=1.6&language=" + iso_user);
+		var request = encodeURIComponent("getHelp=" + pageController + "&version="+ _PS_VERSION_ +"&language=" + iso_user);
 		var d = new $.Deferred();
 		$.ajax( {
 			url: "//help.prestashop.com/api/?request=" + request,
@@ -151,7 +151,7 @@ $(function() {
 			success: function(data) {
 				for (var i = 0 ; i < data.page.results.length ; i++){
 					if (isCleanHtml(data.page.results[i].id + data.page.results[i].title))
-						$("#help-container #main-nav").append('<a href="//help.prestashop.com/' + data.page.results[i].id + '?version=1.6" data-target="' + data.page.results[i].id + '">' + data.page.results[i].title + '</a>');
+						$("#help-container #main-nav").append('<a href="//help.prestashop.com/' + data.page.results[i].id + '?version='+ _PS_VERSION_ +'" data-target="' + data.page.results[i].id + '">' + data.page.results[i].title + '</a>');
 				}
 				$("#help-container #main-nav a").on('click',function(e){
 					e.preventDefault();
@@ -237,10 +237,10 @@ $(function() {
 				}
 			});
 
-			// rewrite url ? -> "//help.prestashop.com/" + mapping[href][0] + '?version=1.6&language=' + mapping[href][2];
+			// rewrite url ? -> "//help.prestashop.com/" + mapping[href][0] + '?version='+ _PS_VERSION_ +'&language=' + mapping[href][2];
 
 			//home link
-			$('#help-container a.home').attr('href', '//help.prestashop.com/'+toc[language].id+'?version=1.6').on('click',function(e){
+			$('#help-container a.home').attr('href', '//help.prestashop.com/'+toc[language].id+'?version='+ _PS_VERSION_).on('click',function(e){
 				e.preventDefault();
 				pushContent(toc[language].id);
 			});
@@ -275,7 +275,7 @@ $(function() {
 					for (var i = 0 ; i < data.results.length ; i++) {
 						if (isCleanHtml(data.results[i].id + data.results[i].title + data.results[i].bodyTextHighlights)) {
 							$("#search-results").removeClass('hide')
-							.append( '<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/' + data.results[i].id + '?version=1.6" data-target="' + data.results[i].id + '">' + strongify(data.results[i].title) + '</a><p>' + strongify(data.results[i].bodyTextHighlights) + '</p></div>');
+							.append( '<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/' + data.results[i].id + '?version='+ _PS_VERSION_ +'" data-target="' + data.results[i].id + '">' + strongify(data.results[i].title) + '</a><p>' + strongify(data.results[i].bodyTextHighlights) + '</p></div>');
 						}
 					}
 					$("#search-results a").on('click',function(e) {
