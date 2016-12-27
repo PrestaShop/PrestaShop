@@ -226,6 +226,12 @@ class AdminThemesControllerCore extends AdminController
     {
         global $kernel;
 
+        // done here, because if it is true, $_FILES & $_POST are empty, so we don't have any message.
+        $post_max_size = Tools::getMaxUploadSize();
+        if ($post_max_size && isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && $_SERVER['CONTENT_LENGTH'] > $post_max_size) {
+            $this->errors[] = $this->trans('The uploaded file is too large.', array(), 'Admin.Design.Notification');
+        }
+
         if ('exporttheme' === Tools::getValue('action')) {
             $exporter = $kernel->getContainer()->get('prestashop.core.addon.theme.exporter');
             $path = $exporter->export($this->context->shop->theme);
