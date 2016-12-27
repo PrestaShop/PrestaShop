@@ -3852,3 +3852,10 @@ function cmpPriceDesc($a, $b)
     }
     return 0;
 }
+
+function ping($host,$port=80,$timeout=1)
+{
+    if ( ! @fsockopen($host, $port, $errno, $errstr, $timeout) )
+        return false;
+    return true;
+}
