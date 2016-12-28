@@ -79,7 +79,9 @@ module.exports = {
     return [require('postcss-flexibility')];
   },
   externals: {
-    prestashop: 'prestashop'
+    prestashop: 'prestashop',
+    $: '$',
+    jquery: 'jQuery'
   },
   devtool: 'source-map',
   plugins: plugins,
