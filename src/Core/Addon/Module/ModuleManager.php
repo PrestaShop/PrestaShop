@@ -243,9 +243,7 @@ class ModuleManager implements AddonManagerInterface
         $module = $this->moduleRepository->getModule($name);
         $result = $module->onInstall();
         
-        if ($this->dispatcher) {
-            $this->dispatcher->dispatch(ModuleManagementEvent::INSTALL, new ModuleManagementEvent($module));
-        }
+        $this->dispatch(ModuleManagementEvent::INSTALL, $module);
         return $result;
     }
 
@@ -283,9 +281,7 @@ class ModuleManager implements AddonManagerInterface
             $result &= $this->removeModuleFromDisk($name);
         }
         
-        if ($this->dispatcher) {
-            $this->dispatcher->dispatch(ModuleManagementEvent::UNINSTALL, new ModuleManagementEvent($module));
-        }
+        $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
 
         return $result;
     }
@@ -332,9 +328,8 @@ class ModuleManager implements AddonManagerInterface
 
         // Load and execute upgrade files
         $result = $this->moduleUpdater->upgrade($name);
-        if ($this->dispatcher) {
-            $this->dispatcher->dispatch(ModuleManagementEvent::UPGRADE, new ModuleManagementEvent($this->moduleRepository->getModule($name)));
-        }
+        $this->dispatch(ModuleManagementEvent::UPGRADE, $this->moduleRepository->getModule($name));
+
         return $result;
     }
 
@@ -370,9 +365,7 @@ class ModuleManager implements AddonManagerInterface
                 0, $e);
         }
         
-        if ($this->dispatcher) {
-            $this->dispatcher->dispatch(ModuleManagementEvent::DISABLE, new ModuleManagementEvent($module));
-        }
+        $this->dispatch(ModuleManagementEvent::DISABLE, $module);
 
         return $result;
     }
@@ -405,10 +398,7 @@ class ModuleManager implements AddonManagerInterface
                         '%error_details%' => $e->getMessage()),
                     'Admin.Modules.Notification'), 0, $e);
         }
-        
-        if ($this->dispatcher) {
-            $this->dispatcher->dispatch(ModuleManagementEvent::ENABLE, new ModuleManagementEvent($module));
-        }
+        $this->dispatch(ModuleManagementEvent::ENABLE, $module);
 
         return $result;
     }
@@ -502,9 +492,7 @@ class ModuleManager implements AddonManagerInterface
         try {
             if ((bool)$keep_data && method_exists($this, 'reset')) {
                 $status = $module->onReset();
-                if ($this->dispatcher) {
-                    $this->dispatcher->dispatch(ModuleManagementEvent::RESET, new ModuleManagementEvent($module));
-                }
+                $this->dispatch(ModuleManagementEvent::RESET, $module);
             } else {
                 $status = ($module->onUninstall() && $module->onInstall());
             }
@@ -577,5 +565,17 @@ class ModuleManager implements AddonManagerInterface
         }
 
         return $message;
+    }
+    
+    /**
+     * This function is a refacto of the event dispatching
+     * @param strig $event
+     * @param \PrestaShop\PrestaShop\Core\Addon\Module\Module $module
+     */
+    private function dispatch($event, $module)
+    {
+        if ($this->dispatcher) {
+            $this->dispatcher->dispatch($event, new ModuleManagementEvent($module));
+        }
     }
 }

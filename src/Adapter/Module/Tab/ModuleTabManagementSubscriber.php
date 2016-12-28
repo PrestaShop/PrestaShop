@@ -65,6 +65,6 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
     
     public function onModuleUninstall(ModuleManagementEvent $event)
     {
-        $this->moduleTabUnregister->uninstallTabs($event->getModule());
+        $this->moduleTabUnregister->unregisterTabs($event->getModule());
     }
 }

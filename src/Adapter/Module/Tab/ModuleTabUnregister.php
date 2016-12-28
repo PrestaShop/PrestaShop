@@ -69,14 +69,14 @@ class ModuleTabUnregister
      *
      * @return bool Returns true if the module tabs were successfully uninstalled, false if any of them failed to do so.
      */
-    public function uninstallTabs(Module $module)
+    public function unregisterTabs(Module $module)
     {
         // We use the Tab repository to have only 
         // installed tabs related to the module
         $tabs = $this->tabRepository->findByModule($module->get('name'));
 
         foreach ($tabs as $tab) {
-            $this->uninstallTab($tab);
+            $this->unregisterTab($tab);
         }
     }
     
@@ -86,7 +86,7 @@ class ModuleTabUnregister
      * @param Tab $tab The instance of entity tab.
      * 
      */
-    private function uninstallTab(Tab $tab)
+    private function unregisterTab(Tab $tab)
     {
         // We need to use the legacy class because of the right management
         $tab_legacy = new Tab($tab->id);
