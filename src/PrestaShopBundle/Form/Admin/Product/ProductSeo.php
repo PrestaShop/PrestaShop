@@ -115,16 +115,22 @@ class ProductSeo extends CommonAbstractType
             'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Redirection when offline', [], 'Admin.Catalog.Feature'),
+            'attr' => array(
+                'data-labelproduct' => $this->translator->trans('Target product', [], 'Admin.Catalog.Feature'),
+                'data-placeholderproduct' => $this->translator->trans('To which product the page should redirect?', [], 'Admin.Catalog.Help'),
+                'data-labelcategory' => $this->translator->trans('Target category', [], 'Admin.Catalog.Feature'),
+                'data-placeholdercategory' => $this->translator->trans('To which category the page should redirect?', [], 'Admin.Catalog.Help'),
+            ),
         ))
         ->add('id_type_redirected', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'mapping_type' => $options['mapping_type'],
-            'placeholder' => $this->translator->trans('To which page the page should redirect?', [], 'Admin.Catalog.Help'),
+            'placeholder' => $this->translator->trans('To which page this should redirect?', [], 'Admin.Catalog.Help'),
             'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
             'limit' => 1,
             'required' => false,
-            'label' => $this->translator->trans('Target', [], 'Admin.Catalog.Feature')
+            'label' => $this->translator->trans('Target', [], 'Admin.Catalog.Feature'),
         ));
     }
 
