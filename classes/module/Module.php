@@ -2112,11 +2112,11 @@ abstract class ModuleCore
     public function isEnabledForShopContext()
     {
         return (bool)Db::getInstance()->getValue(
-            'SELECT COUNT(*) n
+            'SELECT id_module
             FROM `'._DB_PREFIX_.'module_shop`
             WHERE id_module='.(int)$this->id.' AND id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')
             GROUP BY id_module
-            HAVING n='.(int)count(Shop::getContextListShopID())
+            HAVING COUNT(*)='.(int)count(Shop::getContextListShopID())
         );
     }
 
