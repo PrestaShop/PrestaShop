@@ -112,7 +112,7 @@ class SupplierCore extends ObjectModel
      *
      * @return array Suppliers
      */
-    public static function getSuppliers($getNbProducts = false, $idLang = 0, $active = true, $p = false, $n = false, $allGroups = false)
+    public static function getSuppliers($getNbProducts = false, $idLang = 0, $active = true, $p = false, $n = false, $allGroups = false, $withProduct = false)
     {
         if (!$idLang) {
             $idLang = Configuration::get('PS_LANG_DEFAULT');
@@ -128,6 +128,9 @@ class SupplierCore extends ObjectModel
         $query->join(Shop::addSqlAssociation('supplier', 's'));
         if ($active) {
             $query->where('s.`active` = 1');
+        }
+        if ($withProduct) {
+            $query->where('s.`id_supplier` IN (SELECT `id_supplier` FROM `'._DB_PREFIX_.'product_supplier`)');
         }
         $query->orderBy(' s.`name` ASC');
         $query->limit($n, ($p - 1) * $n);
