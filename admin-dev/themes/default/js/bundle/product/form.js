@@ -826,7 +826,7 @@ var form = (function() {
       var openBlank = window.open('about:blank', target, '');
       openBlank.document.write(
         '<p style="text-align: center;">' +
-        'Page loading...' +
+        '<img src="' + document.location.origin + baseAdminDir + '/themes/default/img/spinner.gif">' +
         '</p>'
       );
     }
