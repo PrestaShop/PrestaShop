@@ -114,7 +114,7 @@
 						<a class="slide-button btn"></a>
 					</span>
 					<p class="help-block">
-						{l s='Select "No" only if your server timed out and you need to resume the regeneration.'}
+						{l s='Select "No" only if your server timed out and you need to resume the regeneration.' html=1}
 					</p>
 				</div>
 			</div>
