@@ -71,6 +71,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['id_product_attribute'] = 0;
         $this->product['link_rewrite'] = 'hérisson';
         $this->product['price'] = null;
+        $this->product['price_without_reduction'] = null;
         $this->product['price_tax_exc'] = null;
         $this->product['specific_prices'] = null;
         $this->product['customizable'] = false;
