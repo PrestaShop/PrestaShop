@@ -170,6 +170,12 @@ class ProductPresenter
         $presentedProduct['regular_price_amount'] = $regular_price;
         $presentedProduct['regular_price'] = $this->priceFormatter->format($regular_price);
 
+        if ($product['reduction'] < $product['price_without_reduction'] ){
+            $presentedProduct['discount_to_display'] = $presentedProduct['discount_amount'];
+        } else {
+            $presentedProduct['discount_to_display'] = $presentedProduct['regular_price'];
+        }
+
         if (isset($product['unit_price']) && $product['unit_price']) {
             $presentedProduct['unit_price'] = $this->priceFormatter->format($product['unit_price']);
             $presentedProduct['unit_price_full'] = $this->priceFormatter->format($product['unit_price'])
