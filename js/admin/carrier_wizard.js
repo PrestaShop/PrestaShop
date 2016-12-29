@@ -193,7 +193,7 @@ function displaySummary()
 	$('#summary_meta_informations').html(tmp);
 
 	// Tax and calculation mode for the shipping cost
-	tmp = summary_translation_shipping_cost.replace('%2$s', '<strong>' + $('#id_tax_rules_group option:selected').text() + '</strong>');
+	tmp = summary_translation_shipping_cost.replace('%2$s', $('#id_tax_rules_group option:selected').text());
 
 		if ($('#billing_price').attr('checked'))
 			tmp = tmp.replace('%1$s', summary_translation_price);
