@@ -314,7 +314,9 @@
 								--
 							{else}
 								{if $params.type == 'bool'}
-									<select class="filter fixed-width-sm center" name="{$list_id}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}">
+									<select class="filter fixed-width-sm center"
+                          onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();"
+                          name="{$list_id}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}">
 										<option value="">-</option>
 										<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes' d='Admin.Global'}</option>
 										<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No' d='Admin.Global'}</option>
