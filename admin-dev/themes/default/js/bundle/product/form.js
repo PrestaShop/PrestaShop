@@ -1915,10 +1915,11 @@ var priceCalculation = (function() {
  */
 var seo = (function() {
   var redirectTypeElem = $('#form_step5_redirect_type');
+  var productRedirect = $('#id-product-redirected');
 
   /** Hide or show the input product selector */
   function hideShowRedirectToProduct() {
-    if (redirectTypeElem.val() === '404') {
+    if ('404' === redirectTypeElem.val()) {
       $('#id-product-redirected').hide();
     } else {
       updateRemoteUrl();
@@ -1927,8 +1928,19 @@ var seo = (function() {
   }
 
   function updateRemoteUrl() {
-    $('#id-product-redirected').find('.autocomplete-search').attr('data-remoteurl', redirectTypeElem.find('option:selected').data('remoteurl'));
-    $('#id-product-redirected').find('.autocomplete-search').trigger('buildTypeahead');
+    switch(redirectTypeElem.val()) {
+      case '301-category':
+      case '302-category':
+        productRedirect.find('label').html(redirectTypeElem.attr('data-labelcategory'));
+        productRedirect.find('input').attr('placeholder', redirectTypeElem.attr('data-placeholdercategory'));
+        break;
+      default:
+        productRedirect.find('label').html(redirectTypeElem.attr('data-labelproduct'));
+        productRedirect.find('input').attr('placeholder', redirectTypeElem.attr('data-placeholderproduct'));
+    }
+
+    productRedirect.find('.autocomplete-search').attr('data-remoteurl', redirectTypeElem.find('option:selected').data('remoteurl'));
+    productRedirect.find('.autocomplete-search').trigger('buildTypeahead');
   }
 
   /** Update friendly URL */
@@ -1947,6 +1959,7 @@ var seo = (function() {
 
       /** On redirect type select change */
       redirectTypeElem.change(function() {
+        productRedirect.find('#form_step5_id_type_redirected-data').html('');
         hideShowRedirectToProduct();
       });
 
