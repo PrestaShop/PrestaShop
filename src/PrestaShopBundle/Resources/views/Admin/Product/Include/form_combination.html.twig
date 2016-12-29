@@ -199,7 +199,10 @@
                 <div class="row">
                   <div class="col-md-12">
                       <fieldset class="form-group js-combination-images">
-                          <label><small class="form-control-label">{{ form.id_image_attr.vars.label }}</small></label>
+                          <label>
+                              <small class="form-control-label">{{ form.id_image_attr.vars.label }}</small>
+                              <small class="form-control-label number-of-images"></small>
+                          </label>
                           {{ form_errors(form.id_image_attr) }}
                           {{ form_widget(form.id_image_attr) }}
                       </fieldset>
