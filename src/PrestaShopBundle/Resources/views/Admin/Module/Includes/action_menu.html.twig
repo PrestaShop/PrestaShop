@@ -33,12 +33,20 @@
 
 <div class="pull-right btn-group">
   {% if url_active == 'buy' %}
-    <a class="btn pull-left btn-primary-reverse btn-primary-outline light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
+    <a class="btn pull-left btn-primary btn-primary-reverse btn-primary-outline light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
       {% if priceRaw != '0.00' %}{{ priceDisplay }}
       {% else %}{{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}{% endif %}
     </a>
   {% else %}
-    <a class="btn btn-primary-reverse btn-primary-outline light-button module_action_menu_{{ url_active }}" href="{{ urls[url_active] }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">{{ url_active|capitalize|replace({'_': " "}) }}</a>
+    <form class="btn-group" method="post" action="{{ urls[url_active] }}">
+        <button type="submit" class="btn btn-primary-reverse btn-primary-outline light-button module_action_menu_{{ url_active }}" 
+           data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">
+            {{ url_active|capitalize|replace({'_': " "}) }}
+        </button>
+        {% if urls|length > 1 %}
+        <input type="hidden" class="btn">
+        {% endif %}
+    </form>
     {% if urls|length > 1 %}
       <button type="button" class="btn btn-primary-outline  dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>
@@ -48,7 +56,11 @@
         {% for module_action, module_url in urls %}
           {% if module_action != url_active %}
             <li>
-              <a class="dropdown-item module_action_menu_{{ module_action }}" href="{{ module_url }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">{{module_action|capitalize|replace({'_': " "})}}</a>
+                <form method="post" action="{{ module_url }}">
+                    <button type="button" class="dropdown-item module_action_menu_{{ module_action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">
+                        {{module_action|capitalize|replace({'_': " "})}}
+                    </button>
+                </form>
             </li>
           {% endif %}
         {% endfor %}

@@ -1970,8 +1970,8 @@ var tags = (function() {
 var recommendedModules = (function() {
   return {
     'init': function() {
-      this.moduleActionMenuLinkSelectors = 'a.module_action_menu_install, a.module_action_menu_enable, ' +
-        'a.module_action_menu_uninstall, a.module_action_menu_disable, a.module_action_menu_reset, a.module_action_menu_update';
+      this.moduleActionMenuLinkSelectors = 'button.module_action_menu_install, button.module_action_menu_enable, ' +
+        'button.module_action_menu_uninstall, button.module_action_menu_disable, button.module_action_menu_reset, button.module_action_menu_update';
       $(this.moduleActionMenuLinkSelectors).on('module_card_action_event', this.saveProduct);
     },
     'saveProduct': function(event, action) {
