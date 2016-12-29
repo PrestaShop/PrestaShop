@@ -25,7 +25,7 @@
  */
 
 
-if (!extension_loaded('SimpleXML') || PHP_VERSION_ID < 50400) {
+if (!extension_loaded('SimpleXML') || PHP_VERSION_ID < 50400 || !is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache')) {
     require_once dirname(__FILE__).'/missing_extension.php';
     exit();
 }

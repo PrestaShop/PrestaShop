@@ -106,6 +106,12 @@
           <i>You can install PrestaShop 1.6 if you can't update your version of PHP.</i>
       </li>
     <?php endif; ?>
+        <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache')): ?>
+      <li>
+          PrestaShop installation needs to write critical files in the folder app/cache.
+          <i>Please review the permissions on your server.</i>
+      </li>
+    <?php endif; ?>
   </ol>
 
   <p>You can contact your web host provider to fix theses requirements.</p>
