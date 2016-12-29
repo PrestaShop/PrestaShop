@@ -754,17 +754,17 @@ class OrderCore extends ObjectModel
         if (count($products) < 1) {
             return false;
         }
+
         $virtual = true;
+
         foreach ($products as $product) {
-            $pd = ProductDownload::getIdFromIdProduct((int)$product['product_id']);
-            if ($pd && Validate::isUnsignedInt($pd) && $product['download_hash'] && $product['display_filename'] != '') {
-                if ($strict === false) {
-                    return true;
-                }
-            } else {
-                $virtual &= false;
+            if ($strict === false && (bool)$product['is_virtual']) {
+                return true;
             }
+
+            $virtual &= (bool)$product['is_virtual'];
         }
+
         return $virtual;
     }
 
