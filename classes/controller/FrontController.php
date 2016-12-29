@@ -1165,12 +1165,10 @@ class FrontControllerCore extends Controller
      */
     public function requireAssets(array $libraries)
     {
-        if (!empty($libraries)) {
-            foreach ($libraries as $library) {
-                if ($assets = PrestashopAssetsLibraries::getAssetsLibraries($library)) {
-                    foreach ($assets as $asset) {
-                        $this->$asset['type']($library, $asset['path'], $asset['params']);
-                    }
+        foreach ($libraries as $library) {
+            if ($assets = PrestashopAssetsLibraries::getAssetsLibraries($library)) {
+                foreach ($assets as $asset) {
+                    $this->$asset['type']($library, $asset['path'], $asset['params']);
                 }
             }
         }
