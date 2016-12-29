@@ -7513,7 +7513,6 @@ li.product-flag {
   display: -ms-flexbox;
   -js-display: flex;
   display: flex;
-  position: absolute;
   z-index: 1;
   min-height: 21.875rem; }
   .quickview .images-container .product-images > li.thumb-container > .thumb {
@@ -7522,7 +7521,7 @@ li.product-flag {
     background: white; }
 
 .quickview .mask {
-  width: 33%;
+  width: 35%;
   height: 22.5rem;
   overflow: hidden;
   margin-left: 0.625rem; }
