@@ -184,7 +184,7 @@ class ManufacturerCore extends ObjectModel
      *
      * @return array Manufacturers
      */
-    public static function getManufacturers($getNbProducts = false, $idLang = 0, $active = true, $p = false, $n = false, $allGroup = false, $group_by = false)
+    public static function getManufacturers($getNbProducts = false, $idLang = 0, $active = true, $p = false, $n = false, $allGroup = false, $group_by = false, $withProduct = false)
     {
         if (!$idLang) {
             $idLang = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -195,12 +195,14 @@ class ManufacturerCore extends ObjectModel
 
         $manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT m.*, ml.`description`, ml.`short_description`
-		FROM `'._DB_PREFIX_.'manufacturer` m
-		'.Shop::addSqlAssociation('manufacturer', 'm').'
-		INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.`id_manufacturer` = ml.`id_manufacturer` AND ml.`id_lang` = '.(int) $idLang.')
-		'.($active ? 'WHERE m.`active` = 1' : '')
-        .($group_by ? ' GROUP BY m.`id_manufacturer`' : '').'
-		ORDER BY m.`name` ASC
+		FROM `'._DB_PREFIX_.'manufacturer` m'
+        .Shop::addSqlAssociation('manufacturer', 'm').
+        'INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.`id_manufacturer` = ml.`id_manufacturer` AND ml.`id_lang` = '.(int) $idLang.')'.
+        'WHERE 1 '.
+        ($active ? 'AND m.`active` = 1 ' : '').
+        ($withProduct ? 'AND m.`id_manufacturer` IN (SELECT `id_manufacturer` FROM `'._DB_PREFIX_.'product`) ' : '').
+        ($group_by ? ' GROUP BY m.`id_manufacturer`' : '').
+        'ORDER BY m.`name` ASC
 		'.($p ? ' LIMIT '.(((int) $p - 1) * (int) $n).','.(int) $n : ''));
         if ($manufacturers === false) {
             return false;

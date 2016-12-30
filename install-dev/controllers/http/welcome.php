@@ -50,8 +50,10 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
             $this->redirect('welcome');
         }
 
-        $locale = $this->language->getLanguage($this->session->lang)->locale;
-        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_.'/app/Resources/translations/'.$locale.'/Install.'.$locale.'.xlf')) {
+        $cldrRepository = \Tools::getCldr(null, $this->language->getLanguage($this->session->lang)->locale);
+        $cldrLocale = $cldrRepository->getCulture();
+
+        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_.'/app/Resources/translations/'.$cldrLocale.'/Install.'.$cldrLocale.'.xlf')) {
             Language::downloadAndInstallLanguagePack($this->session->lang, _PS_VERSION_, null, false);
             $this->clearCache();
             $this->redirect('welcome');
@@ -76,14 +78,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
 
     private function clearCache()
     {
-        try {
-            Tools::clearSf2Cache();
-        } catch (\Exception $exception) {
-            $finder = new \Symfony\Component\Finder\Finder;
-            $fs = new \Symfony\Component\Filesystem\Filesystem();
-            foreach ($finder->in(_PS_ROOT_DIR_.'/app/cache') as $file) {
-                $fs->remove($file->getFilename());
-            }
-        }
+        $fs = new \Symfony\Component\Filesystem\Filesystem();
+        $fs->remove(_PS_ROOT_DIR_ . '/app/cache/' . (_PS_MODE_DEV_ ? 'dev' : 'prod'));
     }
 }

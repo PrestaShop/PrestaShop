@@ -170,6 +170,12 @@ class ProductPresenter
         $presentedProduct['regular_price_amount'] = $regular_price;
         $presentedProduct['regular_price'] = $this->priceFormatter->format($regular_price);
 
+        if ($product['reduction'] < $product['price_without_reduction']) {
+            $presentedProduct['discount_to_display'] = $presentedProduct['discount_amount'];
+        } else {
+            $presentedProduct['discount_to_display'] = $presentedProduct['regular_price'];
+        }
+
         if (isset($product['unit_price']) && $product['unit_price']) {
             $presentedProduct['unit_price'] = $this->priceFormatter->format($product['unit_price']);
             $presentedProduct['unit_price_full'] = $this->priceFormatter->format($product['unit_price'])
@@ -404,8 +410,17 @@ class ProductPresenter
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
                 } else {
-                    $presentedProduct['availability_message'] = $product['available_now'];
-                    $presentedProduct['availability'] = 'available';
+                    if (isset($product['quantity_wanted']) && $product['quantity_wanted'] > $product['quantity']) {
+                        $presentedProduct['availability_message'] = $this->translator->trans(
+                            'There are not enough products in stock',
+                            array(),
+                            'Shop.Notifications.Error'
+                        );
+                        $presentedProduct['availability'] = 'unavailable';
+                    } else {
+                        $presentedProduct['availability_message'] = $product['available_now'];
+                        $presentedProduct['availability'] = 'available';
+                    }
                 }
             } elseif ($product['allow_oosp']) {
                 if ($product['available_later']) {

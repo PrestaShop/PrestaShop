@@ -226,6 +226,12 @@ class AdminThemesControllerCore extends AdminController
     {
         global $kernel;
 
+        // done here, because if it is true, $_FILES & $_POST are empty, so we don't have any message.
+        $post_max_size = Tools::getMaxUploadSize();
+        if ($post_max_size && isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && $_SERVER['CONTENT_LENGTH'] > $post_max_size) {
+            $this->errors[] = $this->trans('The uploaded file is too large.', array(), 'Admin.Design.Notification');
+        }
+
         if ('exporttheme' === Tools::getValue('action')) {
             $exporter = $kernel->getContainer()->get('prestashop.core.addon.theme.exporter');
             $path = $exporter->export($this->context->shop->theme);
@@ -241,9 +247,10 @@ class AdminThemesControllerCore extends AdminController
                     $this->theme_manager->install($path);
                 } elseif ($filename = Tools::getValue('themearchive')) {
                     $path = _PS_ALL_THEMES_DIR_.$filename;
-                    if ($this->processUploadFile($path)) {
-                        $this->theme_manager->install($path);
-                        @unlink($path);
+                    $destination = $this->processUploadFile($path);
+                    if (!empty($destination)) {
+                        $this->theme_manager->install($destination);
+                        @unlink($destination);
                     }
                 } elseif ($source = Tools::getValue('themearchiveUrl')) {
                     $this->theme_manager->install($source);
@@ -316,24 +323,26 @@ class AdminThemesControllerCore extends AdminController
                 return false;
         }
 
-        if ('application/zip' !== $_FILES['themearchive']['type']) {
+        $tmp_name = $_FILES['themearchive']['tmp_name'];
+        if ('application/zip' !== mime_content_type($tmp_name)) {
             $this->errors[] = $this->trans('Invalid file format.', array(), 'Admin.Design.Notification');
             return false;
         }
 
         $name = $_FILES['themearchive']['name'];
         if (!Validate::isFileName($name)) {
-            $name = sha1_file($name).$ext;
+            $dest = _PS_ALL_THEMES_DIR_.sha1_file($tmp_name).'.zip';
         }
+
         if (!move_uploaded_file(
             $_FILES['themearchive']['tmp_name'],
-            _PS_ALL_THEMES_DIR_.$name
+            $dest
         )) {
             $this->errors[] = $this->trans('Failed to move uploaded file.', array(), 'Admin.Design.Notification');
             return false;
         }
 
-        return true;
+        return $dest;
     }
 
     /**

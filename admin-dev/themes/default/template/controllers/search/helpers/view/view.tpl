@@ -32,11 +32,11 @@ $(function() {
 {if $query}
 	<h2>
 	{if isset($nb_results) && $nb_results == 0}
-		<h2>{l s='There are no results matching your query "%s".' sprintf=[$query]}</h2>
+		<h2>{l s='There are no results matching your query "%s".' sprintf=[$query] html=1}</h2>
 	{elseif isset($nb_results) && $nb_results == 1}
-		{l s='1 result matches your query "%s".' sprintf=[$query]}
+		{l s='1 result matches your query "%s".' sprintf=[$query] html=1}
 	{elseif isset($nb_results)}
-		{l s='%d results match your query "%s".' sprintf=[$nb_results|intval, $query]}
+		{l s='%d results match your query "%s".' sprintf=[$nb_results|intval, $query] html=1}
 	{/if}
 	</h2>
 {/if}
