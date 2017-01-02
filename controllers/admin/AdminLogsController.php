@@ -88,13 +88,18 @@ class AdminLogsControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_LOGS_BY_EMAIL' => array(
                         'title' => $this->trans('Minimum severity level', array(), 'Admin.AdvParameters.Feature'),
-                        'hint' => $this->trans('Enter "5" if you do not want to receive any emails.').'<br />'.$this->trans('Emails will be sent to the shop owner.', array(), 'Admin.AdvParameters.Help'),
+                        'hint' => Tools::safeOutput(
+                            $this->trans('Enter "5" if you do not want to receive any emails.', array(), 'Admin.AdvParameters.Help').
+                            '<br>'.
+                            $this->trans('Emails will be sent to the shop owner.', array(), 'Admin.AdvParameters.Help'),
+                            true
+                        ),
                         'cast' => 'intval',
-                        'type' => 'text'
-                    )
+                        'type' => 'text',
+                    ),
                 ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
-            )
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
+            ),
         );
         $this->list_no_link = true;
         $this->_select .= 'CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname) employee';
