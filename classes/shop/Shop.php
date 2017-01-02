@@ -26,9 +26,7 @@
 
 use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * @since 1.5.0
