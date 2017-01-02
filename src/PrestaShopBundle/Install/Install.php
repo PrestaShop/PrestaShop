@@ -461,11 +461,14 @@ class Install extends AbstractInstall
             $languages_list = $this->language->getIsoList();
         }
 
+        $languages_list = array_unique($languages_list);
+
         $languages_available = $this->language->getIsoList();
         $languages = array();
 
         foreach ($languages_list as $iso) {
             if (!in_array($iso, $languages_available)) {
+                EntityLanguage::downloadAndInstallLanguagePack($iso);
                 continue;
             }
             if (!file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml')) {
@@ -495,6 +498,7 @@ class Install extends AbstractInstall
                     }
                 }
 
+                $errors = array();
                 EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
             }
 
@@ -679,7 +683,7 @@ class Install extends AbstractInstall
         $localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 
         $locale = new LocalizationPack();
-        $locale->loadLocalisationPack($localization_file_content, '', true);
+        $locale->loadLocalisationPack($localization_file_content, false, true);
 
         // Create default employee
         if (isset($data['admin_firstname']) && isset($data['admin_lastname']) && isset($data['admin_password']) && isset($data['admin_email'])) {

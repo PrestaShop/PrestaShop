@@ -54,8 +54,19 @@
          $('.tab-profile').hide()
          $('.'+id).show();
       });
+      function getChildren(table, perm, parent, rel) {
+         var kids = document.querySelectorAll(table+" [data-parent='"+parent+"'][data-type='"+perm+"']:not([data-rel='"+rel+"'])");
+         for(var i=0; i<kids.length;i++)
+         {
+            if(kids[i].checked) {
+               return true;
+            }
+         }
+         return false;
+      }
       $('.ajaxPower').change(function(){
          var tout = $(this).data('rel').split('||');
+         var rel = $(this).data('rel');
          var id_tab = tout[0];
          var id_profile = tout[1];
          var perm = tout[2];
@@ -67,6 +78,16 @@
          var classes = $parentRow.attr('class');
          var $permissionCheckbox = $(this);
          var targetPermissionType;
+         var parent = $(this).attr('data-parent');
+         if (parent != 0){
+            var $parentelem = $(table + ' .ajaxPower.' + perm + '.' + parent);
+            if(!$parentelem.is(':checked')){
+               $parentelem.prop("checked", true).change();
+            }else{
+               if(!$(this).is(':checked') && !getChildren(table, perm, parent, rel))
+                  $parentelem.prop("checked", false).change();
+            }
+         }
          switch (true) {
             case $permissionCheckbox.hasClass('view'): targetPermissionType = '.view'; break;
             case $permissionCheckbox.hasClass('add'): targetPermissionType = '.add'; break;

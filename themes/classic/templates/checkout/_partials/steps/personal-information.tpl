@@ -35,7 +35,11 @@
     <ul class="nav nav-inline m-y-2">
       <li class="nav-item">
         <a class="nav-link {if !$show_login_form}active{/if}" data-toggle="tab" href="#checkout-guest-form" role="tab">
-          {l s='Order as a guest' d='Shop.Theme.Checkout'}
+          {if $guest_allowed}
+            {l s='Order as a guest' d='Shop.Theme.Checkout'}
+          {else}
+            {l s='Create an account' d='Shop.Theme.CustomerAccount'}
+          {/if}
         </a>
       </li>
 
