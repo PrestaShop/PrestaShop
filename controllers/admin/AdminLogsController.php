@@ -36,7 +36,7 @@ class AdminLogsControllerCore extends AdminController
         $this->className = 'PrestaShopLogger';
         $this->lang = false;
         $this->noLink = true;
-        
+
         parent::__construct();
 
         $this->fields_list = array(
@@ -88,13 +88,13 @@ class AdminLogsControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_LOGS_BY_EMAIL' => array(
                         'title' => $this->l('Minimum severity level'),
-                        'hint' => $this->l('Enter "5" if you do not want to receive any emails.').'<br />'.$this->l('Emails will be sent to the shop owner.'),
+                        'hint' => Tools::safeOutput($this->l('Enter "5" if you do not want to receive any emails.').'<br />'.$this->l('Emails will be sent to the shop owner.'), true),
                         'cast' => 'intval',
-                        'type' => 'text'
-                    )
+                        'type' => 'text',
+                    ),
                 ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
-            )
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
+            ),
         );
         $this->list_no_link = true;
         $this->_select .= 'CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname) employee';
