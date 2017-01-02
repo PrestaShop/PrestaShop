@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 
@@ -119,8 +118,6 @@ class ShopCore extends ObjectModel
     const SHARE_ORDER = 'share_order';
     const SHARE_STOCK = 'share_stock';
 
-    private $configurator = null;
-
     /**
      * On shop instance, get its URL data
      *
@@ -131,8 +128,6 @@ class ShopCore extends ObjectModel
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
-
-        $this->configurator = new Configurator($this);
 
         if ($this->id) {
             $this->setUrl();
