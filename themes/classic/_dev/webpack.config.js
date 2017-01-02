@@ -28,7 +28,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var plugins = [];
 
-var production = false;
+var production = true;
 
 if (production) {
   plugins.push(

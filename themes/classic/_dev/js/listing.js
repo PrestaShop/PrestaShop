@@ -113,12 +113,24 @@ $(document).ready(() => {
     $('#footer').removeClass('hidden-sm-down');
   });
 
+  const parseSearchUrl = function (event) {
+    if (event.target.dataset.searchUrl !== undefined) {
+      return event.target.dataset.searchUrl;
+    }
+
+    if ($(event.target).parent()[0].dataset.searchUrl === undefined) {
+      throw new Error('Can not parse search URL');
+    }
+
+    return $(event.target).parent()[0].dataset.searchUrl;
+  };
+
   $('body').on('change', '#search_filters input[data-search-url]', function (event) {
-    prestashop.emit('updateFacets', event.target.dataset.searchUrl);
+    prestashop.emit('updateFacets', parseSearchUrl(event));
   });
 
   $('body').on('click', '.js-search-filters-clear-all', function (event) {
-    prestashop.emit('updateFacets', event.target.dataset.searchUrl);
+    prestashop.emit('updateFacets', parseSearchUrl(event));
   });
 
   $('body').on('click', '.js-search-link', function (event) {
