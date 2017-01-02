@@ -87,7 +87,6 @@ services:
     # Legacy context service, transitional
     prestashop.adapter.legacy.configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration
-        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().shop"]
 
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
