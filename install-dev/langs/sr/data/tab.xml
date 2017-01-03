@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="DEFAULT" name="More" />
+  <tab id="SELL" name="Sell"/>
+  <tab id="IMPROVE" name="Improve"/>
+  <tab id="CONFIGURE" name="Configure"/>
   <tab id="Addresses" name="Adrese"/>
   <tab id="Administration" name="Administracija"/>
   <tab id="Module_Page" name="Modules &amp; Services" />
