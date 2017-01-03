@@ -324,7 +324,33 @@ class AdminThemesControllerCore extends AdminController
         }
 
         $tmp_name = $_FILES['themearchive']['tmp_name'];
-        if ('application/zip' !== mime_content_type($tmp_name)) {
+        $mimeType = false;
+        $goodMimeType = false;
+
+        if (function_exists('finfo_open')) {
+            $finfo = @finfo_open(FILEINFO_MIME);
+            $mimeType = @finfo_file($finfo, $tmp_name);
+            @finfo_close($finfo);
+        } elseif (function_exists('mime_content_type')) {
+            $mimeType = @mime_content_type($tmp_name);
+        } elseif (function_exists('exec')) {
+            $mimeType = trim(@exec('file -b --mime-type '.escapeshellarg($tmp_name)));
+            if (!$mimeType) {
+                $mimeType = trim(@exec('file --mime '.escapeshellarg($tmp_name)));
+            }
+            if (!$mimeType) {
+                $mimeType = trim(@exec('file -bi '.escapeshellarg($tmp_name)));
+            }
+        }
+
+        if (!empty($mimeType)) {
+            preg_match('#application/zip#', $mimeType, $matches);
+            if (!empty($matches)) {
+                $goodMimeType = true;
+            }
+        }
+
+        if (false === $goodMimeType) {
             $this->errors[] = $this->trans('Invalid file format.', array(), 'Admin.Design.Notification');
             return false;
         }
