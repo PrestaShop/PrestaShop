@@ -17,8 +17,8 @@
     <tab id="Catalog_Price_Rules" name="Catalog Price Rules" />
     <tab id="Catalog" name="Catalog" />
     <tab id="Categories" name="Categories" />
-    <tab id="CMS_Categories" name="CMS Categories" />
-    <tab id="CMS_Pages" name="CMS Pages" />
+    <tab id="CMS_Categories" name="Page Categories" />
+    <tab id="CMS_Pages" name="Pages" />
     <tab id="Combinations_Generator" name="Combinations Generator" />
     <tab id="Configuration" name="Configuration" />
     <tab id="Contact" name="Contact" />
@@ -60,7 +60,7 @@
     <tab id="Look_feel" name="Design" />
     <tab id="Maintenance" name="Maintenance" />
     <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
-    <tab id="Manufacturers" name="Manufacturers" />
+    <tab id="Manufacturers" name="Brands" />
     <tab id="Marketing" name="Marketing" />
     <tab id="Menus" name="Menus" />
     <tab id="Merchandise_Returns" name="Merchandise Returns" />
@@ -119,7 +119,7 @@
     <tab id="Themes_Catalog" name="Theme Catalog" />
     <tab id="Themes" name="Theme &amp; Logo" />
     <tab id="Titles" name="Titles" />
-    <tab id="Traffic" name="Traffic" />
+    <tab id="Traffic" name="Traffic &amp; SEO" />
     <tab id="Translations" name="Translations" />
     <tab id="Warehouses" name="Warehouses" />
     <tab id="Webservice" name="Webservice" />
