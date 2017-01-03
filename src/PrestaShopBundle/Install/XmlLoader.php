@@ -397,7 +397,10 @@ class XmlLoader
 
             $path = $this->data_path.$entity.'.xml';
             if ($iso) {
-                $path = $this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml';
+                $path = $this->lang_path.$iso.'/data/'.$entity.'.xml';
+                if (!file_exists($path)) {
+                    $path = $this->lang_path.'en'.'/data/'.$entity.'.xml';
+                }
             }
 
             if (!file_exists($path)) {
