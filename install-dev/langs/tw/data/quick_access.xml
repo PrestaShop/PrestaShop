@@ -6,4 +6,5 @@
   <quick_access id="New_product" name="新產品"/>
   <quick_access id="New_voucher" name="新優惠券"/>
   <quick_access id="Orders" name="Orders"/>
+  <quick_access id="Installed_modules" name="Installed modules"/>
 </entity_quick_access>
