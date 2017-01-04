@@ -36,117 +36,132 @@ class SitemapControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->context->smarty->assign(array(
-            'sitemap' => $this->getTemplateVarSitemap(),
-        ));
+        $this->context->smarty->assign(
+            array(
+                'our_offers' => $this->trans('Our Offers', array(), 'Shop.Theme'),
+                'categories' => $this->trans('Categories', array(), 'Shop.Theme.Catalog'),
+                'your_account' => $this->trans('Your account', array(), 'Shop.Theme.CustomerAccount'),
+                'pages' => $this->trans('Pages', array(), 'Shop.Theme.Catalog'),
+                'links' => array(
+                    'offers' => $this->getOffersLinks(),
+                    'pages' => $this->getPagesLinks(),
+                    'user_account' => $this->getUserAccountLinks(),
+                    'categories' => $this->getCategoriesLinks(),
+                ),
+            )
+        );
 
         $this->setTemplate('cms/sitemap');
     }
 
-    public function getTemplateVarSitemap()
+    public function getCategoriesLinks()
     {
-        $pages = [];
-        $catalog_mode = Configuration::isCatalogMode();
+        return array(Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap'));
+    }
+
+    /**
+     * @return array
+     */
+    protected function getPagesLinks()
+    {
+        $links = array();
 
         $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
         foreach ($cms['cms'] as $p) {
-            $pages[] = [
-                'id' => 'cms-page-'.$p['id_cms'],
+            $links[] = array(
+                'id' => 'cms-page-' . $p['id_cms'],
                 'label' => $p['meta_title'],
                 'url' => $this->context->link->getCMSLink(new CMS($p['id_cms'])),
-            ];
+            );
         }
 
-        $pages[] = [
+        $links[] = array(
             'id' => 'stores-page',
             'label' => $this->trans('Our stores', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('stores'),
-        ];
+        );
 
-        $pages[] = [
+        $links[] = array(
             'id' => 'contact-page',
             'label' => $this->trans('Contact us', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('contact'),
-        ];
+        );
 
-        $pages[] = [
+        $links[] = array(
             'id' => 'sitemap-page',
             'label' => $this->trans('Sitemap', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('sitemap'),
-        ];
+        );
 
-        $pages[] = [
+        return $links;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUserAccountLinks()
+    {
+        $links = array();
+
+        $links[] = array(
             'id' => 'login-page',
             'label' => $this->trans('Log in', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('authentication'),
-        ];
+        );
 
-        $pages[] = [
+        $links[] = array(
             'id' => 'register-page',
             'label' => $this->trans('Create new account', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('authentication'),
-        ];
+        );
 
-        $catalog = [
-            'new-product' => [
+        return $links;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getOffersLinks()
+    {
+        $links = array(
+            array(
                 'id' => 'new-product-page',
                 'label' => $this->trans('New products', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('new-products'),
-            ],
-        ];
+            ),
+        );
 
-        if ($catalog_mode && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
-            $catalog['best-sales'] = [
+        if (Configuration::isCatalogMode() && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
+            $links[] = array(
                 'id' => 'best-sales-page',
                 'label' => $this->trans('Best sellers', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('best-sales'),
-            ];
-            $catalog['prices-drop'] = [
+            );
+            $links[] = array(
                 'id' => 'prices-drop-page',
                 'label' => $this->trans('Price drop', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('prices-drop'),
-            ];
+            );
         }
 
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
             $manufacturers = Manufacturer::getLiteManufacturersList($this->context->language->id, 'sitemap');
-            $catalog['manufacturer'] = [
+            $links[] = array(
                 'id' => 'manufacturer-page',
                 'label' => $this->trans('Brands', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('manufacturer'),
                 'children' => $manufacturers,
-            ];
+            );
 
             $suppliers = Supplier::getLiteSuppliersList($this->context->language->id, 'sitemap');
-            $catalog['supplier'] = [
+            $links[] = array(
                 'id' => 'supplier-page',
                 'label' => $this->trans('Suppliers', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('supplier'),
                 'children' => $suppliers,
-            ];
+            );
         }
 
-        $categories = Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap');
-        $catalog['category'] = [
-            'id' => 'category-page',
-            'label' => $this->trans('Categories', array(), 'Shop.Theme.Catalog'),
-            'url' => '#',
-            'children' => $categories['children'],
-        ];
-
-        $sitemap = [[
-                'id' => 'page-page',
-                'label' => $this->trans('Pages', array(), 'Shop.Theme'),
-                'url' => '#',
-                'children' => $pages,
-            ],[
-                'id' => 'catalog-page',
-                'label' => $this->trans('Catalog', array(), 'Shop.Theme'),
-                'url' => '#',
-                'children' => $catalog,
-            ],
-        ];
-
-        return $sitemap;
+        return $links;
     }
 }
