@@ -120,8 +120,24 @@ class ManufacturerControllerCore extends ProductListingFrontController
      */
     protected function assignManufacturer()
     {
+        $manufacturerVar = $this->objectPresenter->present($this->manufacturer);
+
+        $filteredManufacturer = Hook::exec(
+            'filteredManufacturerContent',
+            array('filtered_content' => $manufacturerVar['description']),
+            $id_module = null,
+            $array_return = false,
+            $check_exceptions = true,
+            $use_push = false,
+            $id_shop = null,
+            $chain = true
+        );
+        if (!empty($filteredManufacturer)) {
+            $manufacturerVar['description'] = $filteredManufacturer;
+        }
+
         $this->context->smarty->assign(array(
-            'manufacturer' => $this->objectPresenter->present($this->manufacturer),
+            'manufacturer' => $manufacturerVar,
         ));
     }
 
@@ -130,8 +146,28 @@ class ManufacturerControllerCore extends ProductListingFrontController
      */
     protected function assignAll()
     {
+        $manufacturersVar = $this->getTemplateVarManufacturers();
+
+        if (!empty($manufacturersVar)) {
+            foreach ($manufacturersVar as $k => $manufacturer) {
+                $filteredManufacturer = Hook::exec(
+                    'filteredManufacturerContent',
+                    array('filtered_content' => $manufacturer['text']),
+                    $id_module = null,
+                    $array_return = false,
+                    $check_exceptions = true,
+                    $use_push = false,
+                    $id_shop = null,
+                    $chain = true
+                );
+                if (!empty($filteredManufacturer)) {
+                    $manufacturersVar[$k]['text'] = $filteredManufacturer;
+                }
+            }
+        }
+
         $this->context->smarty->assign(array(
-            'brands' => $this->getTemplateVarManufacturers(),
+            'brands' => $manufacturersVar,
         ));
     }
 
