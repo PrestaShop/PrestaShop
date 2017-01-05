@@ -61,7 +61,7 @@ class ProductSeo extends CommonAbstractType
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [
                 'attr' => ['placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'Admin.Catalog.Help'),
-                    'counter' => 60],
+                    'counter' => 70],
                 'required' => false
             ],
             'locales' => $this->locales,
