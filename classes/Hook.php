@@ -585,16 +585,30 @@ class HookCore extends ObjectModel
      * @param bool $check_exceptions Check permission exceptions
      * @param bool $use_push Force change to be refreshed on Dashboard widgets
      * @param int $id_shop If specified, hook will be execute the shop with this ID
+     * @param bool $chain If specified, hook will chain the return of hook module
      *
      * @throws PrestaShopException
      *
      * @return string/array modules output
      */
-    public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true,
-                                $use_push = false, $id_shop = null)
+    public static function exec(
+        $hook_name,
+        $hook_args = array(),
+        $id_module = null,
+        $array_return = false,
+        $check_exceptions = true,
+        $use_push = false,
+        $id_shop = null,
+        $chain = false
+    )
     {
         if (defined('PS_INSTALLATION_IN_PROGRESS')) {
             return;
+        }
+
+        // $chain & $array_return are incompatible so if chained is set to true, we disable the array_return option
+        if (true === $chain) {
+            $array_return = false;
         }
 
         static $disable_non_native_modules = null;
@@ -666,7 +680,7 @@ class HookCore extends ObjectModel
             }
         }
 
-        foreach ($module_list as $array) {
+        foreach ($module_list as $key => $array) {
             // Check errors
             if ($id_module && $id_module != $array['id_module']) {
                 continue;
@@ -722,6 +736,10 @@ class HookCore extends ObjectModel
                     Tools::waitUntilFileIsModified($moduleInstance->push_filename, $moduleInstance->push_time_limit);
                 }
 
+                if (0 !== $key && true === $chain) {
+                    $hook_args['filtered_content'] = $output;
+                }
+
                 // Call hook method
                 if ($hook_callable) {
                     $display = Hook::coreCallHook($moduleInstance, 'hook'.$hook_name, $hook_args);
@@ -734,16 +752,29 @@ class HookCore extends ObjectModel
                 if ($array_return) {
                     $output[$moduleInstance->name] = $display;
                 } else {
-                    $output .= $display;
+                    if (true === $chain) {
+                        $output = $display;
+                    } else {
+                        $output .= $display;
+                    }
                 }
             } elseif (Hook::isDisplayHookName($hook_name)) {
                 if ($moduleInstance instanceof WidgetInterface) {
+
+                    if (0 !== $key && true === $chain) {
+                        $hook_args['filtered_content'] = $output;
+                    }
+
                     $display = Hook::coreRenderWidget($moduleInstance, $hook_name, $hook_args);
 
                     if ($array_return) {
                         $output[$moduleInstance->name] = $display;
                     } else {
-                        $output .= $display;
+                        if (true === $chain) {
+                            $output = $display;
+                        } else {
+                            $output .= $display;
+                        }
                     }
                 }
             }
