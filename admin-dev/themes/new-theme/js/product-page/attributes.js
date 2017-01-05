@@ -25,9 +25,9 @@
 import $ from 'jquery';
 // import Bloodhound from 'typeahead.js';
 
-export default function() {
-  $(document).ready(function() {
-    $('.js-attribute-checkbox').change( (event) => {
+export default function () {
+  $(document).ready(function () {
+    $('.js-attribute-checkbox').change((event) => {
       if ($(event.target).is(':checked')) {
         if ($(`.token[data-value="${$(event.target).data('value')}"] .close`).length === 0) {
           $('#form_step3_attributes').tokenfield(
@@ -52,4 +52,19 @@ export default function() {
         $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`).prop('checked', false);
       }
     });
+
+  $('input.form-control[counter], textarea.form-control[counter]').each(function () {
+    var attr = $(this).attr('counter');
+
+    if (typeof attr === undefined || attr === false) {
+      return;
+    }
+
+    $(this).parent().find('span.currentLength').text($(this).val().length);
+    $(this).parent().find('span.currentTotalMax').text(attr);
+    $(this).on('input', function () {
+      $(this).parent().find('span.currentLength').text($(this).val().length);
+      $(this).parent().find('span.currentTotalMax').text(attr);
+    });
+  });
 }
