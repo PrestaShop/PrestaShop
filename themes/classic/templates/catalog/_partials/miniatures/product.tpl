@@ -78,7 +78,7 @@
         >
           <i class="material-icons search">&#xE8B6;</i> {l s='Quick view' d='Shop.Theme.Actions'}
         </a>
-       {/block}
+      {/block}
 
       {block name='product_variants'}
         {if $product.main_variants}
