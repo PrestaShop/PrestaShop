@@ -5,11 +5,14 @@
 @import "partials/_mixins";
 @import "partials/_fonts";
 @import "partials/_commons";
+@import "components/alert";
 @import "components/drop-down";
 @import "components/search-widget";
 @import "components/mainmenu";
 @import "components/checkout";
 @import "components/customer";
+@import "components/forgotten-password";
+@import "components/renew-password";
 @import "components/imageslider";
 @import "components/featuredproducts";
 @import "components/custom-text";
