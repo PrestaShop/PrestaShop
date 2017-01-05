@@ -53,19 +53,18 @@ export default function () {
       }
     });
 
-  $('.form-control').each(function () {
-    var attr = null;
-    if (this.hasAttribute('counter') === true) {
-      attr = $(this).attr('counter');
-      if (typeof attr === typeof undefined || attr === false) {
-        return;
-      }
+  $('input.form-control[counter], textarea.form-control[counter]').each(function () {
+    var attr = $(this).attr('counter');
+
+    if (typeof attr === undefined || attr === false) {
+      return;
+    }
+
+    $(this).parent().find('span.currentLength').text($(this).val().length);
+    $(this).parent().find('span.currentTotalMax').text(attr);
+    $(this).on('input', function () {
       $(this).parent().find('span.currentLength').text($(this).val().length);
       $(this).parent().find('span.currentTotalMax').text(attr);
-      $(this).on('input', function () {
-        $(this).parent().find('span.currentLength').text($(this).val().length);
-        $(this).parent().find('span.currentTotalMax').text(attr);
-      });
-    }
+    });
   });
 }
