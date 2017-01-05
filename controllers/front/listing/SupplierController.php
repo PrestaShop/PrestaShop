@@ -121,8 +121,24 @@ class SupplierControllerCore extends ProductListingFrontController
      */
     protected function assignSupplier()
     {
+        $supplierVar = $this->objectPresenter->present($this->supplier);
+
+        $filteredSupplier = Hook::exec(
+            'filteredSupplierContent',
+            array('filtered_content' => $supplierVar['description']),
+            $id_module = null,
+            $array_return = false,
+            $check_exceptions = true,
+            $use_push = false,
+            $id_shop = null,
+            $chain = true
+        );
+        if (!empty($filteredSupplier)) {
+            $supplierVar['description'] = $filteredSupplier;
+        }
+
         $this->context->smarty->assign(array(
-            'supplier' => $this->objectPresenter->present($this->supplier),
+            'supplier' => $supplierVar,
         ));
     }
 
@@ -131,8 +147,28 @@ class SupplierControllerCore extends ProductListingFrontController
      */
     protected function assignAll()
     {
+        $suppliersVar = $this->getTemplateVarSuppliers();
+
+        if (!empty($suppliersVar)) {
+            foreach ($suppliersVar as $k => $supplier) {
+                $filteredSupplier = Hook::exec(
+                    'filteredSupplierContent',
+                    array('filtered_content' => $supplier['text']),
+                    $id_module = null,
+                    $array_return = false,
+                    $check_exceptions = true,
+                    $use_push = false,
+                    $id_shop = null,
+                    $chain = true
+                );
+                if (!empty($filteredSupplier)) {
+                    $suppliersVar[$k]['text'] = $filteredSupplier;
+                }
+            }
+        }
+
         $this->context->smarty->assign(array(
-            'brands' => $this->getTemplateVarSuppliers(),
+            'brands' => $suppliersVar,
         ));
     }
 
