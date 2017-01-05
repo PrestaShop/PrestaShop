@@ -1184,8 +1184,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             // Checking for fields validity
             // Hack for postcode required for country which does not have postcodes
             if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0')) {
-                if (isset($data['validate'])) {
-                    if (!call_user_func('Validate::'.$data['validate'],$value) && (!empty($value) || $data['required'])) {
+                if (isset($data['validate']) && (!call_user_func('Validate::'.$data['validate'], $value) && (!empty($value) || $data['required']))) {
                         $errors[$field] = $this->trans(
                             '%s is invalid.',
                             array(
@@ -1193,7 +1192,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                             ),
                             'Admin.Notifications.Error'
                         );
-                    }
                 } else {
                     if (isset($data['copy_post']) && !$data['copy_post']) {
                         continue;
