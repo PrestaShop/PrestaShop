@@ -94,7 +94,7 @@ class CmsControllerCore extends FrontController
 
             $cmsVar = $this->objectPresenter->present($this->cms);
 
-            $cmsVar['content'] = Hook::exec(
+            $filteredCmsContent = Hook::exec(
                 'filteredCmsContent',
                 array('filtered_content' => $cmsVar['content']),
                 $id_module = null,
@@ -104,6 +104,9 @@ class CmsControllerCore extends FrontController
                 $id_shop = null,
                 $chain = true
             );
+            if (!empty($filteredCmsContent)) {
+                $cmsVar['content'] = $filteredCmsContent;
+            }
 
             $this->context->smarty->assign(array(
                 'cms' => $cmsVar,
@@ -121,7 +124,7 @@ class CmsControllerCore extends FrontController
 
             $cmsCategoryVar = $this->getTemplateVarCategoryCms();
 
-            $cmsCategoryVar['cms_category']['description'] = Hook::exec(
+            $filteredCmsCategoryContent = Hook::exec(
                 'filteredCmsCategoryContent',
                 array('filtered_content' => $cmsCategoryVar['cms_category']['description']),
                 $id_module = null,
@@ -131,6 +134,9 @@ class CmsControllerCore extends FrontController
                 $id_shop = null,
                 $chain = true
             );
+            if (!empty($filteredCmsCategoryContent)) {
+                $cmsCategoryVar['cms_category']['description'] = $filteredCmsCategoryContent;
+            }
 
             $this->context->smarty->assign($cmsCategoryVar);
             $this->setTemplate('cms/category');
