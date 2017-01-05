@@ -581,5 +581,15 @@
       <title>Filter the content page category</title>
       <description>This hook is called just before fetching content page category.</description>
     </hook>
+    <hook id="filteredManufacturerContent">
+      <name>filteredManufacturerContent</name>
+      <title>Filter the content page manufacturer</title>
+      <description>This hook is called just before fetching content page manufacturer.</description>
+    </hook>
+    <hook id="filteredSupplierContent">
+      <name>filteredSupplierContent</name>
+      <title>Filter the content page supplier</title>
+      <description>This hook is called just before fetching content page supplier.</description>
+    </hook>
   </entities>
 </entity_hook>
