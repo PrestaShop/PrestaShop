@@ -39,14 +39,19 @@ trait PrestaShopTranslatorTrait
         }
 
         if (isset($parameters['legacy'])) {
-            $id = call_user_func($parameters['legacy'], $id);
+            $legacy = $parameters['legacy'];
             unset($parameters['legacy']);
         }
 
+        $translated = parent::trans($id, array(), $domain, $locale);
+        if (isset($legacy)) {
+            $translated = call_user_func($legacy, $translated);
+        }
+
         if (!empty($parameters) && $this->isSprintfString($id)) {
-            $translated = vsprintf(parent::trans($id, array(), $domain, $locale), $parameters);
-        } else {
-            $translated = parent::trans($id, $parameters, $domain, $locale);
+            $translated = vsprintf($translated, $parameters);
+        } elseif (!empty($parameters)) {
+            $translated = strtr($translated, $parameters);
         }
 
         return $translated;
