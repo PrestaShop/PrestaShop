@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
@@ -342,8 +343,16 @@ class ContextCore
      */
     public function getTranslator()
     {
-        if (null === $this->translator) {
-            $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_, false);
+        $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_.'/translations', false);
+        static $cacheExists = null;
+
+        if (null === $cacheExists) {
+            $fs = new Filesystem();
+            $cacheExists = $fs->exists(_PS_CACHE_DIR_.'/translations');
+        }
+
+        if (!$cacheExists) {
+            $adminContext = defined('_PS_ADMIN_DIR_');
             $this->translator->addLoader('xlf', new XliffFileLoader());
 
             $sqlTranslationLoader = new SqlTranslationLoader();
@@ -352,12 +361,12 @@ class ContextCore
             }
 
             $this->translator->addLoader('db', $sqlTranslationLoader);
+            $notName = $adminContext ? 'Shop*' : 'Admin*';
 
             $finder = Finder::create()
                 ->files()
-                ->filter(function (\SplFileInfo $file) {
-                    return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
-                })
+                ->name('*.*.xlf')
+                ->notName($notName)
                 ->in($this->getTranslationResourcesDirectories())
             ;
 
