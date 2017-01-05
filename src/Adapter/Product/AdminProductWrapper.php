@@ -456,13 +456,21 @@ class AdminProductWrapper
      */
     public function processProductCustomization($product, $data)
     {
+        $customization_ids = array();
+        if ($data) {
+            foreach ($data as $customization) {
+                $customization_ids[] = (int)$customization['id_customization_field'];
+            }
+        }
+
         //remove customization field langs
         foreach ($product->getCustomizationFieldIds() as $customizationFiled) {
             \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE `id_customization_field` = '.(int)$customizationFiled['id_customization_field']);
         }
 
-        //remove customization for the product
-        \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE `id_product` = '.(int)$product->id);
+        //remove unused customization for the product
+        \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE 
+            `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
 
         //create new customizations
         $countFieldText = 0;
@@ -478,10 +486,16 @@ class AdminProductWrapper
                 }
 
                 //create label
-                \Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
-                    VALUES ('.(int)$product->id.', '.(int)$customization['type'].', '.($customization['require'] ? 1 : 0).')');
-
-                $id_customization_field = (int)\Db::getInstance()->Insert_ID();
+                if (isset($customization['id_customization_field'])) {
+                    $id_customization_field = (int)$customization['id_customization_field'];
+                    \Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization_field`
+					SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int)$customization['type'] . '
+					WHERE `id_customization_field` = '.$id_customization_field);
+                } else {
+                		\Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
+                    	VALUES ('.(int)$product->id.', '.(int)$customization['type'].', '.($customization['require'] ? 1 : 0).')');
+               		$id_customization_field = (int)\Db::getInstance()->Insert_ID();
+                }
 
                 // Create multilingual label name
                 $langValues = '';

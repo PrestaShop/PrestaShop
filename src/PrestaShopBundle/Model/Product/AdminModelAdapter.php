@@ -589,6 +589,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         foreach ($customizationFields as $customizationField) {
             $baseObject = [
+                'id_customization_field' => $customizationField[$this->locales[0]['id_lang']]['id_customization_field'],
                 'label' => [],
                 'type' => $customizationField[$this->locales[0]['id_lang']]['type'],
                 'require' => $customizationField[$this->locales[0]['id_lang']]['required'] == 1 ? true : false,
