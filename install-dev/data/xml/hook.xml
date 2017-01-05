@@ -571,5 +571,15 @@
       <title>Filter the content page category</title>
       <description>This hook is called just before fetching content page category.</description>
     </hook>
+    <hook id="filteredProductContent">
+      <name>filteredProductContent</name>
+      <title>Filter the content page product</title>
+      <description>This hook is called just before fetching content page product.</description>
+    </hook>
+    <hook id="filteredCategoryContent">
+      <name>filteredCategoryContent</name>
+      <title>Filter the content page category</title>
+      <description>This hook is called just before fetching content page category.</description>
+    </hook>
   </entities>
 </entity_hook>
