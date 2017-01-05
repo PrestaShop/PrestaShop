@@ -23,9 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery'
+import MultiPagination from './multi-pagination';
 
 export default function () {
     let fixedOffset = $('.header-toolbar').height() + $('.main-header').height();
+    const MAX_PAGINATION = 20;
 
     let addPageLinksToNavigationBar = (nav) => {
         let pageTemplate = $(nav).find('.tpl');
@@ -41,6 +43,13 @@ export default function () {
 
         if (totalPages > 10) {
           $(nav).parent().addClass('relative-position');
+        }
+
+        if (totalPages === 1) {
+          return $('.pagination').addClass('hide');
+        }
+        else {
+          $('.pagination').removeClass('hide');
         }
 
         let i;
@@ -96,6 +105,9 @@ export default function () {
             let pageItem = pageLink.parent();
             let pageIndex = pageItem.data('page-index');
 
+            $(`[data-page-index=${pageIndex}]`).addClass('active');
+            $(`[data-page-index=${pageIndex}]`).siblings().removeClass('active');
+
             pageItem.parent().find('.active').removeClass('active');
             pageItem.addClass('active');
 
@@ -105,4 +117,13 @@ export default function () {
             return false;
         });
     });
+
+    if($('.translation-domains').find('.page').length > MAX_PAGINATION) {
+      $('.page-item.hide').removeClass('hide');
+      $('.pagination').each((index, pagination)=> {
+          let lastItem = $(pagination).find('.page-item:last-child');
+          $(pagination).find('.js-next-arrow').insertAfter(lastItem).removeClass('hide');
+          MultiPagination($(pagination));
+      });
+    }
 }

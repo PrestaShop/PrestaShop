@@ -34,22 +34,29 @@
   </div>
   <form>
     <label>{{ '(2 characters at least)'|trans({}, 'Admin.International.Feature') }}</label>
-    <div class="form-inline">
-      <input class="form-control search"
-             pattern=".{2,}"
-             placeholder="{{ 'Search a word or expression, e.g.: \"Order confirmation\"'|trans({}, 'Admin.International.Help') }}"
-             type="search"
-             id="jetsSearch"
-      />
-      <input class="btn btn-primary search-button" type="submit" value="{{ 'Search'|trans({}, 'Admin.Actions') }}" />
-      <input class="btn btn-tertiary-outline" type="reset" value="{{ 'Reset'|trans({}, 'Admin.Actions') }}" />
+    <div class="form-inline row">
+        <div class="col-md-10">
+            <input class="form-control search"
+                   pattern=".{2,}"
+                   placeholder="{{ 'Search a word or expression, e.g.: \"Order confirmation\"'|trans({}, 'Admin.International.Help') }}"
+                   type="search"
+                   id="jetsSearch"
+            />
+        </div>
+        <div class="col-md-2">
+            <input class="btn btn-primary search-button" type="submit" value="{{ 'Search'|trans({}, 'Admin.Actions') }}" />
+            <input class="btn btn-tertiary-outline" type="reset" value="{{ 'Reset'|trans({}, 'Admin.Actions') }}" />
+        </div>
     </div>
   </form>
   <div class="hide alert alert-warning">
     <i class="material-icons">info_outline</i>
     <span>{{ 'No results found'|trans({}, 'Admin.Notifications.Error') }}</span>
   </div>
-  {% include 'PrestaShopBundle:Admin/Translations/include:translations-forms.html.twig' %}
+  <div class="translations-results js-results">
+    <h2 class="hide">{{ 'Search Results'|trans({}, 'Admin.Translations') }}</h2>
+    {% include 'PrestaShopBundle:Admin/Translations/include:translations-forms.html.twig' %}
+  </div>
 </div>
 
 <form method="post" id="messages-fragments" action="{{ path('admin_international_translations_messages_fragments') }}">
@@ -61,7 +68,7 @@
 <div class="container-fluid">
   <div class="row">
     {% include 'PrestaShopBundle:Admin/Translations/include:translations-tree.html.twig' %}
-    <div class="translation-domains col-xs-6">
+    <div class="translation-domains col-xs-9">
       <h1 id="domain">
         <span class="name"></span>
         <span class="separator hide">-</span>

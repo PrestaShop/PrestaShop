@@ -46,6 +46,10 @@ export default function () {
         $(jetsSelector).removeClass('hide');
       }
 
+      if($(jetsSelector).length) {
+        $('.js-results').addClass('card').find('h2').removeClass('hide');
+      }
+
       return false;
     });
 
@@ -56,7 +60,7 @@ export default function () {
       $('#jetsContent form').addClass('hide');
 
       return false;
-    })
+    });
   });
 
   if ($('#jetsSearch').length > 0) {
@@ -66,7 +70,7 @@ export default function () {
       callSearchManually: true,
       manualContentHandling: function (tag) {
         // Search for translation keys and translation values
-        return $(tag).find('verbatim')[0].innerText + $(tag).find('textarea')[0].value;
+        return $(tag).find('.verbatim')[0].innerText + $(tag).find('textarea')[0].value;
       }
     });
   }

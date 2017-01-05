@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Doctrine\Common\Util\Inflector;
 
 class TranslationsExtension extends \Twig_Extension
 {
@@ -87,6 +88,7 @@ class TranslationsExtension extends \Twig_Extension
     {
         $output = '';
         $viewProperties = $this->getSharedEditFormViewProperties();
+        $viewProperties['is_search_results'] = true;
         $this->theme = $themeName;
 
         foreach ($translationsTree as $topLevelDomain => $tree) {
@@ -144,10 +146,6 @@ class TranslationsExtension extends \Twig_Extension
 
         foreach ($translationsTree as $topLevelDomain => $tree) {
             $output .= $this->concatenateSubtreeHeader($topLevelDomain, $tree);
-
-            if ($lastTranslationDomain !== $topLevelDomain) {
-                $output .= '<hr />';
-            }
         }
 
         return $output;
@@ -240,6 +238,13 @@ class TranslationsExtension extends \Twig_Extension
             $properties['translation']
         );
 
+        $isSearchResults = false;
+
+        if (array_key_exists('is_search_results', $properties)) {
+            $isSearchResults = $properties['is_search_results'];
+        }
+
+        $breadcrumbParts = explode('_', Inflector::tableize($domain));
         return $this->container->get('templating')->render(
             'PrestaShopBundle:Admin:Translations/include/form-edit-message.html.twig',
             array(
@@ -256,6 +261,8 @@ class TranslationsExtension extends \Twig_Extension
                 'translation_key' => $properties['translation_key'],
                 'hash' => $this->getTranslationHash($domain, $properties['translation_key']),
                 'theme' => $this->theme,
+                'breadcrumb_parts' => $breadcrumbParts,
+                'is_search_results' => $isSearchResults,
             )
         );
     }
@@ -541,27 +548,19 @@ class TranslationsExtension extends \Twig_Extension
      */
     protected function tagSubject($subject, $level, $id = null)
     {
-        $openingTag = '<h2 class="domain-part"><i class="material-icons delegate-toggle-messages">&#xE315;</i>'.
+        $openingTag = '<h2 class="domain-part">'.
             '<span class="delegate-toggle-messages{{ missing translations class }}">';
         $closingTag = '</span>{{ missing translations warning }}</h2>';
 
         if (2 === $level) {
             $openingTag = '<h2 class="domain-first-part"><i class="material-icons">&#xE315;</i><span>';
-            $closingTag = '</span></h2>'.
+            $closingTag = '</span>'.
                 '<div class="domain-actions">' .
-                    '<i class="material-icons visibility-on">&#xE8F4;</i>'.
-                    '<i class="material-icons visibility-off hide">&#xE8F5;</i>'.
-                    '<span class="btn-show-messages">' .
-                        $this->translator->trans('Show messages', array(), 'Admin.International.Feature') .
-                    '</span>'.
-                    '<span class="btn-hide-messages hide">' .
-                        $this->translator->trans('Hide messages', array(), 'Admin.International.Feature') .
-                    '</span>'.
                     '<span class="missing-translations pull-right hide">'.
                     '{{ missing translations warning }}'.
                     '</span>'.
-                '</div>'
-            ;
+                '</div>'.
+            '</h2>';
         }
 
         if ($id) {
