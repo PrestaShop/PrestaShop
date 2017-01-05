@@ -305,6 +305,35 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
 
             $product_for_template = $this->getTemplateVarProduct();
+
+            $filteredDescription = Hook::exec(
+                'filteredProductContent',
+                array('filtered_content' => $product_for_template['description']),
+                $id_module = null,
+                $array_return = false,
+                $check_exceptions = true,
+                $use_push = false,
+                $id_shop = null,
+                $chain = true
+            );
+            if (!empty($filteredDescription)) {
+                $product_for_template['description'] = $filteredDescription;
+            }
+
+            $filteredDescriptionShort = Hook::exec(
+                'filteredProductContent',
+                array('filtered_content' => $product_for_template['description_short']),
+                $id_module = null,
+                $array_return = false,
+                $check_exceptions = true,
+                $use_push = false,
+                $id_shop = null,
+                $chain = true
+            );
+            if (!empty($filteredDescriptionShort)) {
+                $product_for_template['description_short'] = $filteredDescriptionShort;
+            }
+
             $productManufacturer = new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id);
 
             $manufacturerImageUrl = $this->context->link->getManufacturerImageLink($productManufacturer->id);
