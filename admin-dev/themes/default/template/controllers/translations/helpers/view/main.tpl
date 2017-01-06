@@ -43,6 +43,8 @@
             'action',
             urlToTranslate + '&lang=' + id_lang
           );
+        } else {
+          formTranslation.attr('action', formTranslation.data('moduleaction'));
         }
       } else {
         if ('legacy' === typeOption.data('controller')) {
@@ -138,6 +140,7 @@
 	</script>
   <form method="post" action="{url entity=sf route=admin_international_translations_list }"
         data-sfaction="{url entity=sf route=admin_international_translations_list }"
+        data-moduleaction="{url entity=sf route=admin_international_translations_module }"
         data-legacyaction="{$link->getAdminLink('AdminTranslations', true)}"
         id="typeTranslationForm" class="form-horizontal">
     <div class="panel">
