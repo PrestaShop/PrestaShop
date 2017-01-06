@@ -463,21 +463,26 @@ class AdminProductWrapper
             }
         }
 
-        //remove customization field langs
+        $shopList = \ShopCore::getContextListShopID();
+
+        //remove customization field langs for current context shops
         foreach ($product->getCustomizationFieldIds() as $customizationFiled) {
-            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE `id_customization_field` = '.(int)$customizationFiled['id_customization_field']);
+            //if the customization_field is still in use, only delete the current context shops langs,
+            //else delete all the langs
+            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE 
+			`id_customization_field` = '.(int)$customizationFiled['id_customization_field'].
+            (in_array((int)$customizationFiled['id_customization_field'], $customization_ids) ? ' AND `id_shop` IN ('.implode(',', $shopList).')' : ''));
         }
 
         //remove unused customization for the product
         \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE 
-            `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
+        `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
 
         //create new customizations
         $countFieldText = 0;
         $countFieldFile = 0;
         $productCustomizableValue = 0;
         $hasRequiredField = false;
-        $shopList = \ShopCore::getContextListShopID();
 
         $new_customization_fields_ids = array();
 
