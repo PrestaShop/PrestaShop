@@ -125,7 +125,7 @@ class SupplierControllerCore extends ProductListingFrontController
 
         $filteredSupplier = Hook::exec(
             'filteredSupplierContent',
-            array('filtered_content' => $supplierVar['description']),
+            array('object' => $supplierVar),
             $id_module = null,
             $array_return = false,
             $check_exceptions = true,
@@ -133,8 +133,8 @@ class SupplierControllerCore extends ProductListingFrontController
             $id_shop = null,
             $chain = true
         );
-        if (!empty($filteredSupplier)) {
-            $supplierVar['description'] = $filteredSupplier;
+        if (!empty($filteredSupplier['object'])) {
+            $supplierVar = $filteredSupplier['object'];
         }
 
         $this->context->smarty->assign(array(
@@ -153,7 +153,7 @@ class SupplierControllerCore extends ProductListingFrontController
             foreach ($suppliersVar as $k => $supplier) {
                 $filteredSupplier = Hook::exec(
                     'filteredSupplierContent',
-                    array('filtered_content' => $supplier['text']),
+                    array('object' => $supplier),
                     $id_module = null,
                     $array_return = false,
                     $check_exceptions = true,
@@ -161,8 +161,8 @@ class SupplierControllerCore extends ProductListingFrontController
                     $id_shop = null,
                     $chain = true
                 );
-                if (!empty($filteredSupplier)) {
-                    $suppliersVar[$k]['text'] = $filteredSupplier;
+                if (!empty($filteredSupplier['object'])) {
+                    $suppliersVar[$k] = $filteredSupplier['object'];
                 }
             }
         }

@@ -80,9 +80,9 @@ class CategoryControllerCore extends ProductListingFrontController
 
         $categoryVar = $this->getTemplateVarCategory();
 
-        $filteredDescription = Hook::exec(
+        $filteredCategory= Hook::exec(
             'filteredCategoryContent',
-            array('filtered_content' => $categoryVar['description']),
+            array('object' => $categoryVar),
             $id_module = null,
             $array_return = false,
             $check_exceptions = true,
@@ -90,8 +90,8 @@ class CategoryControllerCore extends ProductListingFrontController
             $id_shop = null,
             $chain = true
         );
-        if (!empty($filteredDescription)) {
-            $categoryVar['description'] = $filteredDescription;
+        if (!empty($filteredCategory['object'])) {
+            $categoryVar = $filteredCategory['object'];
         }
 
         $this->context->smarty->assign(array(

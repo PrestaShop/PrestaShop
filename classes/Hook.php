@@ -737,7 +737,7 @@ class HookCore extends ObjectModel
                 }
 
                 if (0 !== $key && true === $chain) {
-                    $hook_args['filtered_content'] = $output;
+                    $hook_args = $output;
                 }
 
                 // Call hook method
@@ -762,7 +762,7 @@ class HookCore extends ObjectModel
                 if ($moduleInstance instanceof WidgetInterface) {
 
                     if (0 !== $key && true === $chain) {
-                        $hook_args['filtered_content'] = $output;
+                        $hook_args = $output;
                     }
 
                     $display = Hook::coreRenderWidget($moduleInstance, $hook_name, $hook_args);
@@ -783,6 +783,15 @@ class HookCore extends ObjectModel
         if ($different_shop) {
             $context->shop = $old_shop;
             $context->shop->setContext($old_context, $shop->id);
+        }
+
+        if (true === $chain) {
+            if (isset($output['cookie'])) {
+                unset($output['cookie']);
+            }
+            if (isset($output['cart'])) {
+                unset($output['cart']);
+            }
         }
 
         return $output;

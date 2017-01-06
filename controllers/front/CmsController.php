@@ -96,7 +96,7 @@ class CmsControllerCore extends FrontController
 
             $filteredCmsContent = Hook::exec(
                 'filteredCmsContent',
-                array('filtered_content' => $cmsVar['content']),
+                array('object' => $cmsVar),
                 $id_module = null,
                 $array_return = false,
                 $check_exceptions = true,
@@ -104,8 +104,8 @@ class CmsControllerCore extends FrontController
                 $id_shop = null,
                 $chain = true
             );
-            if (!empty($filteredCmsContent)) {
-                $cmsVar['content'] = $filteredCmsContent;
+            if (!empty($filteredCmsContent['object'])) {
+                $cmsVar = $filteredCmsContent['object'];
             }
 
             $this->context->smarty->assign(array(
@@ -126,7 +126,7 @@ class CmsControllerCore extends FrontController
 
             $filteredCmsCategoryContent = Hook::exec(
                 'filteredCmsCategoryContent',
-                array('filtered_content' => $cmsCategoryVar['cms_category']['description']),
+                array('object' => $cmsCategoryVar),
                 $id_module = null,
                 $array_return = false,
                 $check_exceptions = true,
@@ -134,8 +134,8 @@ class CmsControllerCore extends FrontController
                 $id_shop = null,
                 $chain = true
             );
-            if (!empty($filteredCmsCategoryContent)) {
-                $cmsCategoryVar['cms_category']['description'] = $filteredCmsCategoryContent;
+            if (!empty($filteredCmsCategoryContent['object'])) {
+                $cmsCategoryVar = $filteredCmsCategoryContent['object'];
             }
 
             $this->context->smarty->assign($cmsCategoryVar);
