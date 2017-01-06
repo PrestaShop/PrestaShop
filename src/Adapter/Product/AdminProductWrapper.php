@@ -479,8 +479,10 @@ class AdminProductWrapper
         $hasRequiredField = false;
         $shopList = \ShopCore::getContextListShopID();
 
+        $new_customization_fields_ids = array();
+
         if ($data) {
-            foreach ($data as $customization) {
+            foreach ($data as $key => $customization) {
                 if ($customization['require']) {
                     $hasRequiredField = true;
                 }
@@ -496,6 +498,8 @@ class AdminProductWrapper
                     	VALUES ('.(int)$product->id.', '.(int)$customization['type'].', '.($customization['require'] ? 1 : 0).')');
                		$id_customization_field = (int)\Db::getInstance()->Insert_ID();
                 }
+
+                $new_customization_fields_ids[$key] = $id_customization_field;
 
                 // Create multilingual label name
                 $langValues = '';
@@ -528,6 +532,8 @@ class AdminProductWrapper
         ), 'a.id_product = '.(int)$product->id);
 
         \ConfigurationCore::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', '1');
+
+        return $new_customization_fields_ids;
     }
 
     /**
