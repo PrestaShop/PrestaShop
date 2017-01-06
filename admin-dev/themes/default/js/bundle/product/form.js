@@ -1804,12 +1804,8 @@ var priceCalculation = (function() {
       $(document).on('keyup', '.combination-form .attribute_priceTI', function() {
         priceCalculation.impactTaxExclude($(this));
       });
-      /** combinations : update TTC price field on blur */
-      $(document).on('blur', '.combination-form .attribute_priceTE', function(e) {
-        $(this).val(priceCalculation.normalizePrice($(this).val()));
-      });
-      /** combinations : update wholesale price field on blur */
-      $(document).on('blur','.combination-form .attribute_wholesale_price', function(){
+      /** combinations : update wholesale price, unity and price TE field on blur */
+      $(document).on('blur','.combination-form .attribute_wholesale_price,.combination-form .attribute_unity,.combination-form .attribute_priceTE', function(){
         $(this).val(priceCalculation.normalizePrice($(this).val()));
       });
 
