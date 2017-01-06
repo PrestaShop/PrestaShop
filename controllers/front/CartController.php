@@ -70,7 +70,7 @@ class CartControllerCore extends FrontController
      */
     public function initContent()
     {
-        if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show' ) {
+        if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
             Tools::redirect('index.php');
         }
 
@@ -142,19 +142,23 @@ class CartControllerCore extends FrontController
 
     public function displayAjaxProductRefresh()
     {
-        $url = $this->context->link->getProductLink(
-            $this->id_product,
-            null,
-            null,
-            null,
-            $this->context->language->id,
-            null,
-            (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
-            false,
-            false,
-            true,
-            ['quantity_wanted' => (int)$this->qty]
-        );
+        if ($this->id_product) {
+            $url = $this->context->link->getProductLink(
+                $this->id_product,
+                null,
+                null,
+                null,
+                $this->context->language->id,
+                null,
+                (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
+                false,
+                false,
+                true,
+                ['quantity_wanted' => (int)$this->qty]
+            );
+        } else {
+            $url = false;
+        }
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode([
@@ -354,7 +358,8 @@ class CartControllerCore extends FrontController
      * @param $productInCart
      * @return bool
      */
-    function productInCartMatchesCriteria($productInCart) {
+    public function productInCartMatchesCriteria($productInCart)
+    {
         return (
             !isset($this->id_product_attribute) ||
             (
