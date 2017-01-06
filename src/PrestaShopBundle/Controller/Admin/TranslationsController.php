@@ -79,6 +79,22 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
+     * List translations keys and corresponding editable values for one module.
+     *
+     * @Template("@PrestaShop/Admin/Translations/list.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return array Template vars
+     */
+    public function moduleAction(Request $request)
+    {
+        if (!$request->isMethod('POST')) {
+            return $this->redirect('/admin-dev/index.php?controller=AdminTranslations');
+        }
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      */
