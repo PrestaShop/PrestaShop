@@ -250,7 +250,9 @@ $(window).resize(function(){
 
 $(window).bind('hashchange', function(){
 	checkUrl();
-	findCombination();
+	if (typeof productHasAttributes !== 'undefined' && productHasAttributes) {
+		findCombination();
+	}
 });
 
 //hover 'other views' images management
