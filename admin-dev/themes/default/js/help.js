@@ -300,6 +300,7 @@ $(function() {
 	//feedback
 	function initFeedback() {
 		var arr_feedback = {
+      version:_PS_VERSION_,
 			controller: help_class_name,
 			language: iso_user,
 			helpful: null,
