@@ -95,6 +95,7 @@ class ProductCombination extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_wholesale_price']
         ))
         ->add('attribute_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
