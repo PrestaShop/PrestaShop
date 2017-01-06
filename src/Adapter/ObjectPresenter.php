@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
+use Hook;
 
 class ObjectPresenter implements PresenterInterface
 {
@@ -54,6 +55,35 @@ class ObjectPresenter implements PresenterInterface
             }
         }
 
+        $this->filterHtmlContent($presentedObject, $object->getHtmlFields());
+
         return $presentedObject;
+    }
+
+    /**
+     * Execute filterHtml hook for html Content for objectPresenter
+     *
+     * @param $presentedObject
+     * @param $htmlFields
+     */
+    private function filterHtmlContent(&$presentedObject, $htmlFields)
+    {
+        foreach ($htmlFields as $field) {
+            if (array_key_exists($field, $presentedObject)) {
+                $filteredHtml = Hook::exec(
+                    'filteredHtmlContent',
+                    array('filtered_content' => $presentedObject[$field]),
+                    $id_module = null,
+                    $array_return = false,
+                    $check_exceptions = true,
+                    $use_push = false,
+                    $id_shop = null,
+                    $chain = true
+                );
+                if (!empty($filteredHtml)) {
+                    $presentedObject[$field] = $filteredHtml;
+                }
+            }
+        }
     }
 }

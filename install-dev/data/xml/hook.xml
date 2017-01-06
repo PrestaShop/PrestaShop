@@ -591,5 +591,10 @@
       <title>Filter the content page supplier</title>
       <description>This hook is called just before fetching content page supplier.</description>
     </hook>
+    <hook id="filteredHtmlContent">
+      <name>filteredHtmlContent</name>
+      <title>Filter HTML field before rending a page</title>
+      <description>This hook is called just before fetching a page on HTML field.</description>
+    </hook>
   </entities>
 </entity_hook>
