@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Doctrine\Common\Util\Inflector;
 use PrestashopBundle\Entity\Translation;
+use PrestaShopBundle\Translation\Provider\ModuleProvider;
+use PrestaShopBundle\Translation\View\TreeBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -92,6 +94,39 @@ class TranslationsController extends FrameworkBundleAdminController
         if (!$request->isMethod('POST')) {
             return $this->redirect('/admin-dev/index.php?controller=AdminTranslations');
         }
+
+        $lang = $request->get('lang');
+        $theme = $request->get('selected-theme');
+        $module = $request->get('selected-modules');
+
+        $moduleProvider = new ModuleProvider(
+            $this->container->get('prestashop.translation.database_loader'),
+            $this->container->getParameter('translations_dir')
+        );
+        $moduleProvider->setModuleName($module);
+
+        $treeBuilder = new TreeBuilder($this->langToLocale($lang), $theme);
+        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider);
+
+        return array(
+            'translationsTree' => $treeBuilder->makeTranslationsTree($catalogue),
+            'theme' => $this->getSelectedTheme($request),
+            'requestParams' => array(
+                'lang' => $lang,
+                'type' => $request->get('type'),
+                'theme' => $theme,
+            ),
+            'total_remaining_translations' => $this->get('translator')->trans(
+                '%nb_translations% missing',
+                array('%nb_translations%' => '%d'),
+                'Admin.International.Feature'
+            ),
+            'total_translations' => $this->get('translator')->trans(
+                '%d expressions',
+                array(),
+                'Admin.International.Feature'
+            )
+        );
     }
 
     /**
