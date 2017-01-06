@@ -86,7 +86,7 @@ class MailCore extends ObjectModel
      */
     public static function Send($id_lang, $template, $subject, $template_vars, $to,
         $to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,
-        $template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null, $reply_to = null)
+        $template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null, $reply_to = null,$attach_logo = false)
     {
         if (!$id_shop) {
             $id_shop = Context::getContext()->shop->id;
@@ -301,16 +301,19 @@ class MailCore extends ObjectModel
 
             $template_vars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $template_vars);
             $template_vars = array_map(array('Tools', 'stripslashes'), $template_vars);
-
-            if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop))) {
-                $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop);
-            } else {
-                if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop))) {
-                    $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
+            
+            if ($attach_logo) {
+                if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop))) {
+                    $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop);
                 } else {
-                    $template_vars['{shop_logo}'] = '';
+                    if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop))) {
+                        $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
+                    } else {
+                        $template_vars['{shop_logo}'] = '';
+                    }
                 }
             }
+            
             ShopUrl::cacheMainDomainForShop((int)$id_shop);
             /* don't attach the logo as */
             if (isset($logo)) {
