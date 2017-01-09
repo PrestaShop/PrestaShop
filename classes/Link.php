@@ -1152,11 +1152,15 @@ class LinkCore
 
         $patterns = array(
             '#'.Context::getContext()->link->getBaseLink().'#',
-            '#'.__PS_BASE_URI__.'#',
             '#'.basename(_PS_ADMIN_DIR_).'#',
             '/index.php/',
             '/_?token=[a-zA-Z0-9\_]+/'
         );
+
+        // If __PS_BASE_URI__ = '/', it destroys urls when is 'product/new' or 'modules/manage' (vhost for example)
+        if ('/' !== __PS_BASE_URI__) {
+            $patterns[] = '#'.__PS_BASE_URI__.'#';
+        }
 
         $url = preg_replace($patterns, '', $url);
         $url = trim($url, "?&/");
