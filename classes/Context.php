@@ -344,11 +344,10 @@ class ContextCore
     public function getTranslator()
     {
         $cacheDir = _PS_CACHE_DIR_.'/translations/'.$this->language->locale;
-        $fs = new Filesystem();
-
         $this->translator = new Translator($this->language->locale, null, $cacheDir, false);
 
-        if (!$fs->exists($cacheDir)) {
+        if (!is_dir($cacheDir)) {
+            $fs = new Filesystem();
             $fs->mkdir($cacheDir);
             $adminContext = defined('_PS_ADMIN_DIR_');
             $this->translator->addLoader('xlf', new XliffFileLoader());
