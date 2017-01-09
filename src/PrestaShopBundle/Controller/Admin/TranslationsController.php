@@ -174,6 +174,11 @@ class TranslationsController extends FrameworkBundleAdminController
 
         $lang = $this->findLanguageByLocale($requestParams['locale']);
 
+        $theme = $requestParams['theme'];
+        if (empty($requestParams['theme'])) {
+            $theme = null;
+        }
+
         /**
          * @var \PrestaShopBundle\Entity\Translation $translation
          */
@@ -182,13 +187,8 @@ class TranslationsController extends FrameworkBundleAdminController
                 'lang' => $lang,
                 'domain' => $requestParams['domain'],
                 'key' => $requestParams['translation_key'],
-                'theme' => $requestParams['theme']
+                'theme' => $theme
             ));
-
-        $theme = $requestParams['theme'];
-        if (empty($requestParams['theme'])) {
-            $theme = null;
-        }
 
         if (is_null($translation)) {
             $translation = new Translation();

@@ -147,7 +147,7 @@
       </h3>
       <p class="alert alert-info">
         {l s='Here you can modify translations for every line of text inside PrestaShop.'}<br />
-        {l s='First, select a type of translation (such as "Back office" or "Installed modules"), and then select the language you want to translate strings in.'}
+        {l s='First, select a type of translation (such as "Back office" or "Installed modules"), and then select the language you want to translate strings in.' html=true}
       </p>
       <div class="form-group">
         <input type="hidden" name="controller" value="AdminTranslations" />
@@ -220,7 +220,7 @@
 			<div id="submitAddLangContent" class="form-group">
 				<p class="alert alert-info">
 					{l s='You can add or update a language directly from the PrestaShop website here.'}<br/>
-					{l s='If you choose to update an existing language pack, all of your previous customizations in the theme named "Default-bootstrap" will be lost. This includes front office expressions and default email templates.'}
+					{l s='If you choose to update an existing language pack, all of your previous customizations in the theme named "Default-bootstrap" will be lost. This includes front office expressions and default email templates.' html=true}
 				</p>
 				{if $packs_to_update || $packs_to_install}
 					<label class="control-label col-lg-3" for="params_import_language">{l s='Please select the language you want to add or update'}</label>
@@ -261,7 +261,7 @@
 				{l s='Import a language pack manually'}
 			</h3>
 			<p class="alert alert-info">
-				{l s='If the language file format is ISO_code.gzip (e.g. "us.gzip"), and the language corresponding to this package does not exist, it will automatically be created.'}
+				{l s='If the language file format is ISO_code.gzip (e.g. "us.gzip"), and the language corresponding to this package does not exist, it will automatically be created.' html=true}
 				{l s='Warning: This will replace all of the existing data inside the destination language.'}
 			</p>
 			<div class="form-group">
