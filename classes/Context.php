@@ -361,7 +361,7 @@ class ContextCore
             }
 
             $this->translator->addLoader('db', $sqlTranslationLoader);
-            $notName = $adminContext ? 'Shop*' : 'Admin*';
+            $notName = $adminContext ? '^Shop*' : '^Admin*';
 
             $finder = Finder::create()
                 ->files()
