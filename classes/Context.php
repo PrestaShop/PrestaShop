@@ -343,12 +343,13 @@ class ContextCore
      */
     public function getTranslator()
     {
-        $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_.'/translations', false);
+        $cacheDir = _PS_CACHE_DIR_.'/translations/'.$this->language->locale;
+        $this->translator = new Translator($this->language->locale, null, $cacheDir, false);
         static $cacheExists = null;
 
         if (null === $cacheExists) {
             $fs = new Filesystem();
-            $cacheExists = $fs->exists(_PS_CACHE_DIR_.'/translations');
+            $cacheExists = $fs->exists($cacheDir);
         }
 
         if (!$cacheExists) {
