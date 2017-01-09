@@ -60,7 +60,7 @@ class ProductSeo extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $remotesUrls = array(
+        $remoteUrls = array(
             '301-product' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             '302-product' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             '301-category' => $this->router->generate('admin_get_ajax_categories').'&query=%QUERY',
@@ -106,9 +106,9 @@ class ProductSeo extends CommonAbstractType
                 $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => '301-category',
                 $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => '302-category',
             ),
-            'choice_attr' => function($val, $key, $index) use ($remotesUrls) {
-                if(array_key_exists($index, $remotesUrls)) {
-                    return ['data-remoteurl' => $remotesUrls[$index]];
+            'choice_attr' => function($val, $key, $index) use ($remoteUrls) {
+                if(array_key_exists($index, $remoteUrls)) {
+                    return ['data-remoteurl' => $remoteUrls[$index]];
                 }
                 return [];
             },
