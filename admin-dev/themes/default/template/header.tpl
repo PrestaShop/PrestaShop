@@ -144,19 +144,20 @@
 											{l s='Remove from QuickAccess'}
 										</a>
 									</li>
-								{/if}
-								<li {if isset($matchQuickLink)}class="hide"{/if}>
-									<a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
-										<i class="icon-plus-circle"></i>
-										{l s='Add current page to QuickAccess'}
-									</a>
-								</li>
+								{else}
                   <li>
-                    <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
-                      <i class="icon-cog"></i>
-                      {l s='Manage quick accesses'}
+                    <a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+                      <i class="icon-plus-circle"></i>
+                      {l s='Add current page to QuickAccess'}
                     </a>
                   </li>
+                {/if}
+                <li>
+                  <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+                    <i class="icon-cog"></i>
+                    {l s='Manage quick accesses'}
+                  </a>
+                </li>
 							</ul>
 						</li>
 					</ul>

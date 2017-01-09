@@ -6,4 +6,5 @@
   <quick_access id="New_product" name="Ny vare"/>
   <quick_access id="New_voucher" name="Ny rabatkupon"/>
   <quick_access id="Orders" name="Ordrer"/>
+  <quick_access id="Installed_modules" name="Installed modules"/>
 </entity_quick_access>
