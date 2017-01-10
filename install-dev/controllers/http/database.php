@@ -145,6 +145,9 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             }
 
             $this->database_server = $parameters['parameters']['database_host'];
+            if (!empty($parameters['parameters']['database_port'])) {
+                $this->database_server .= ':'.$parameters['parameters']['database_port'];
+            }
             $this->database_name = $parameters['parameters']['database_name'];
             $this->database_login = $parameters['parameters']['database_user'];
             $this->database_password = $parameters['parameters']['database_password'];

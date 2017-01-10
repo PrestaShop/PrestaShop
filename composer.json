@@ -23,7 +23,7 @@
     "pear/archive_tar": "~1.4.2",
     "swiftmailer/swiftmailer": "~5.4.3",
     "symfony/monolog-bundle": "2.8.2",
-    "sensio/distribution-bundle": "4.0.6",
+    "sensio/distribution-bundle": "~4.0.6",
     "sensio/framework-extra-bundle": "3.0.10",
     "prestashop/translationtools-bundle" : "dev-master",
     "tecnickcom/tcpdf": "6.2.12",
