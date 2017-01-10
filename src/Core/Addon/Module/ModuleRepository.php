@@ -25,6 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
+use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Psr\Log\LoggerInterface;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
@@ -91,14 +92,23 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @var array
      */
-    private $cache;
+    private $cache = array();
+
+    /**
+     * Optionnal Doctrine cache provider
+     * 
+     * @var \Doctrine\Common\Cache\CacheProvider 
+     */
+    private $cacheProvider;
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
         LoggerInterface $logger,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        $languageISO,
+        CacheProvider $cacheProvider = null
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->logger = $logger;
@@ -106,18 +116,28 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->moduleUpdater = $modulesUpdater;
         $this->translator = $translator;
         $this->finder = new Finder();
-        $this->cacheFilePath = _PS_CACHE_DIR_.'local_modules.json';
-        $this->cache = $this->readCacheFile();
+
+        // Cache related variables
+        $this->cacheFilePath = $languageISO.'_local_modules';
+        $this->cacheProvider = $cacheProvider;
+        
+        if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
+            $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
+        }
     }
 
     public function __destruct()
     {
-        $this->generateCacheFile($this->cache);
+        if ($this->cacheProvider) {
+            $this->cacheProvider->save($this->cacheFilePath, $this->cache);
+        }
     }
 
     public function clearCache()
     {
-        @unlink($this->cacheFilePath);
+        if ($this->cacheProvider) {
+            $this->cacheProvider->delete($this->cacheFilePath);
+        }
         $this->cache = array();
     }
 
@@ -503,42 +523,5 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         return $modules;
-    }
-    /*
-     * PROTECTED FUNCTIONS
-     */
-
-    /**
-     * In order to avoid class parsing, we generate a cache file which will keep mandatory data of modules.
-     *
-     * @param string $name The technical module name to find
-     *
-     * @return array Module data stored in file
-     */
-    private function generateCacheFile($data)
-    {
-        if (!$data) {
-            return;
-        }
-        $encoded_data = json_encode($data);
-        file_put_contents($this->cacheFilePath, $encoded_data);
-
-        return $data;
-    }
-
-    /**
-     * We load the file which contains cached data.
-     *
-     * @return array Module data loaded in file
-     */
-    private function readCacheFile()
-    {
-        // JSON file not found ? Generate it
-        if (!file_exists($this->cacheFilePath)) {
-            return array();
-        }
-        $data = json_decode(file_get_contents($this->cacheFilePath), true);
-
-        return ($data == null) ? array() : $data;
     }
 }

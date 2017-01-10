@@ -10,15 +10,15 @@ services:
         class: Symfony\Component\Finder\Finder
         shared: false
 
-    guzzle.cache.provider:
+    doctrine.cache.provider:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:
-            - "%kernel.cache_dir%/guzzle"
+            - "%kernel.cache_dir%/doctrine"
 
     guzzle.cache:
         class: Csa\Bundle\GuzzleBundle\GuzzleHttp\Cache\DoctrineAdapter
         arguments:
-            - "@guzzle.cache.provider"
+            - "@doctrine.cache.provider"
             - "%prestashop.addons.api_client.ttl%"
         shared: false
 
@@ -261,6 +261,8 @@ services:
             - "@prestashop.core.module.updater"
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
+            - "@doctrine.cache.provider"
 
     prestashop.core.addon.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository

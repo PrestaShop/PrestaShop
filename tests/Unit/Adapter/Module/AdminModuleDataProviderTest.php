@@ -97,15 +97,16 @@ class AdminModuleDataProviderTest extends UnitTestCase
             ),
         );
 
-        /* we need to fake cache wih fake catalog */
-        $this->clearModuleCache();
-        file_put_contents(_PS_CACHE_DIR_.'en_addons_modules.json', json_encode($fakeModules, true));
-
+        $this->cacheProviderS = Phake::partialMock('Doctrine\Common\Cache\CacheProvider');
+        Phake::when($this->cacheProviderS)->contains($this->languageISOCode.'_addons_modules')->thenReturn(true);
+        Phake::when($this->cacheProviderS)->fetch($this->languageISOCode.'_addons_modules')->thenReturn($fakeModules);
+        
         $this->adminModuleDataProvider = new AdminModuleDataProvider(
             $this->languageISOCode,
             $this->sfRouter,
             $this->addonsDataProviderS,
-            $this->categoriesProviderS
+            $this->categoriesProviderS,
+            $this->cacheProviderS
         );
     }
 
@@ -159,6 +160,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
                 'router' => $this->sfRouter,
                 'addonsDataProvider' => $this->addonsDataProviderS,
                 'categoriesProvider' => $this->categoriesProviderS,
+                'cacheProvider' => $this->cacheProviderS,
             )
         );
 
@@ -177,8 +179,6 @@ class AdminModuleDataProviderTest extends UnitTestCase
         if ($this->httpHostNotFound) {
             unset($_SERVER['HTTP_HOST']);
         }
-
-        $this->clearModuleCache();
     }
 
     private function fakeModule($id, $name, $displayName, $categoryName, $description)
@@ -191,12 +191,5 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $fakeModule->description = $description;
 
         return $fakeModule;
-    }
-
-    private function clearModuleCache()
-    {
-        if (file_exists(_PS_CACHE_DIR_.'en_catalog_modules.json')) {
-            unlink(_PS_CACHE_DIR_.'en_catalog_modules.json');
-        }
     }
 }
