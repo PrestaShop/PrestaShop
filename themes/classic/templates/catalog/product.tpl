@@ -128,7 +128,9 @@
                     {include file='catalog/_partials/product-add-to-cart.tpl'}
                   {/block}
 
-                  {hook h='displayProductButtons' product=$product}
+                  {block name='product_additional_info'}
+                    {include file='catalog/_partials/product-additional-info.tpl'}
+                  {/block}
 
                   {block name='product_refresh'}
                     <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}">
