@@ -325,7 +325,8 @@ class LocalizationPackCore
                 }
             }
 
-            if (($error = Currency::refreshCurrencies()) !== null) {
+            $error = Currency::refreshCurrencies();
+            if (!empty($error)) {
                 $this->_errors[] = $error;
             }
 
