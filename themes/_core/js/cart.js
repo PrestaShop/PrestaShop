@@ -41,8 +41,10 @@ $(document).ready(() => {
 
     var updatePrices = function (pricesInCart, $cartOverview, $newCart) {
       $.each(pricesInCart, function (index, priceInCart) {
-        var productUrl = $($(priceInCart).parents('.product-line-grid')[0]).find('a.label').attr('href');
-        var productAnchorSelector = '.label[href="' + productUrl + '"]';
+        var productLabel = $($(priceInCart).parents('.product-line-grid')[0]).find('a.label');
+        var productUrl = productLabel.attr('href');
+        var customizationId = productLabel.data('id_customization');
+        var productAnchorSelector = '.label[href="' + productUrl + '"][data-id_customization="' + customizationId + '"]';
         var newProductAnchor = $newCart.find(productAnchorSelector);
         var $cartItem = $($cartOverview.find(productAnchorSelector).parents('.cart-item')[0]);
 

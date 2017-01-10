@@ -33,7 +33,7 @@
   <!--  product left body: description -->
   <div class="product-line-grid-body col-md-4 col-xs-8">
     <div class="product-line-info">
-      <a class="label" href="{$product.url}">{$product.name}</a>
+      <a class="label" href="{$product.url}" data-id_customization="{$product.id_customization|intval}">{$product.name}</a>
     </div>
 
     <div class="product-line-info">
