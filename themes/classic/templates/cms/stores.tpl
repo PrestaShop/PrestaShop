@@ -35,7 +35,7 @@
       <article id="store-{$store.id}" class="store-item card">
         <div class="store-item-container clearfix">
           <div class="col-md-3 store-picture hidden-sm-down">
-            <img src="{$store.image}" alt="">
+            <img src="{$store.image.bySize.stores_default.url}" alt="{$store.image.legend}" title="{$store.image.legend}">
           </div>
           <div class="col-md-5 col-sm-7 col-xs-12 store-description">
             <h3 class="h3 card-title">{$store.name}</h3>
