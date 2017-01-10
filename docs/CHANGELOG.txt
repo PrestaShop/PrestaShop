@@ -24,6 +24,51 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.0.4 - (2017-01-10)
+####################################
+- Back Office:
+   - Bug fix:
+     - #7303: Add some test before use finfo
+     - #7292: Fix log page email hint
+     - #7295: Fix the customer thread timeline display
+     - #7118: Add parent menu permission if sub-menu is selected
+     - #7252: Fix product page ajax calls when url contains numbers
+     - #7193: Fix modules translation form
+     - #7271: Fix import theme for windows & special name
+     - #7267: Fix preview button action
+
+ - Front Office:
+   - Bug fix:
+     - #7286: Use the right wording when guest is disabled
+     - #7195: Fix wrong displayed discount when it's higher than price
+     - #7162: Add error message when ordering number of item greater than quantity
+     - #7186: Always return a current order state
+     - #7185: Fix quick view in safari browser
+     - #7276: Add option with product to getManufacturer, getSupplier
+     - #7278: Do not let Classic override jQuery
+     - #7266: Fix category images generation
+     - #7248: Fix multishop popup design
+     - #7297: Fix clean filter event handler
+
+ - Core:
+   - Bug fix:
+     - #7310: Protect translated strings from XSS
+     - #7114: Set curl as main solution and fopen as fallback
+     - #7279: Fix escaped translations
+     - #7275: Fix module translations priority
+     - #7263: Fix module uninstall when overridden file is missing
+     - #7194: Fix issue on translations without params
+
+ - Installer:
+   - Bug fix:
+     - #7307: Fix croatian install adding quick_access
+     - #7296: Adding missing tabs in IT + VN + SR, and other tab updates
+     - #7274: Fix installer in Canadian and catalog cache
+     - #7284: Fix localization install for language not in data/lang
+     - #7294: Use the right locale for French Canadian
+
+
+####################################
 #   v1.7.0.3 - (2016-12-16)
 ####################################
 - Back Office:
