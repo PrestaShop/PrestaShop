@@ -27,11 +27,20 @@
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+
 /**
  * This class will provide data from DB / ORM about Category
  */
 class CategoryDataProvider
 {
+    private $languageId;
+
+    public function __construct(LegacyContext $context)
+    {
+        $this->languageId = $context->getLanguage()->id;
+    }
+
     /**
      * Get all nested categories
      *
@@ -48,6 +57,10 @@ class CategoryDataProvider
      */
     public function getNestedCategories($root_category = null, $id_lang = false, $active = true, $groups = null, $use_shop_restriction = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
     {
+        if (!$id_lang) {
+            $id_lang = $this->languageId;
+        }
+
         return \CategoryCore::getNestedCategories($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
     }
 
@@ -66,6 +79,10 @@ class CategoryDataProvider
      */
     public function getAllCategoriesName($root_category = null, $id_lang = false, $active = true, $groups = null, $use_shop_restriction = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
     {
+        if (!$id_lang) {
+            $id_lang = $this->languageId;
+        }
+
         $categories = \CategoryCore::getAllCategoriesName($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
         array_shift($categories);
         return $categories;
