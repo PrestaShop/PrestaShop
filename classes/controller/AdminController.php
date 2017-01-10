@@ -470,6 +470,16 @@ class AdminControllerCore extends Controller
             32 => $this->l('Successfully signed in to PrestaShop Addons')
         );
 
+        $this->_error = array(
+            1 => $this->trans(
+                'The root category of the shop %shop% is not associated with the current one.',
+                array(
+                    '%shop%' => $this->context->shop->name,
+                ),
+                'Admin.Catalog.Feature'
+            ),
+        );
+
         if (!$this->identifier) {
             $this->identifier = 'id_'.$this->table;
         }
@@ -1759,6 +1769,10 @@ class AdminControllerCore extends Controller
 
         if ($conf = Tools::getValue('conf')) {
             $this->context->smarty->assign('conf', $this->json ? json_encode($this->_conf[(int)$conf]) : $this->_conf[(int)$conf]);
+        }
+
+        if ($error = Tools::getValue('error')) {
+            $this->context->smarty->assign('error', $this->json ? json_encode($this->_error[(int)$error]) : $this->_error[(int)$error]);
         }
 
         foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type) {

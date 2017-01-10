@@ -158,7 +158,12 @@ class AdminCategoriesControllerCore extends AdminController
         }
         // shop restriction : if category is not available for current shop, we redirect to the list from default category
         if (Validate::isLoadedObject($this->_category) && !$this->_category->isAssociatedToShop() && Shop::getContext() == Shop::CONTEXT_SHOP) {
-            $this->redirect_after = self::$currentIndex.'&id_category='.(int)$this->context->shop->getCategory().'&token='.$this->token;
+            if ($this->_category->id === $this->context->shop->getCategory()) {
+                $this->redirect_after = $this->context->link->getAdminLink('AdminDashboard').'&error=1';
+            } else {
+                $this->redirect_after = self::$currentIndex . '&id_category=' . (int)$this->context->shop->getCategory() . '&token=' . $this->token;
+            }
+
             $this->redirect();
         }
     }
