@@ -436,24 +436,24 @@ class AdminControllerCore extends Controller
         $token = $this->token;
 
         $this->_conf = array(
-            1 => $this->trans('Successful deletion', array(), 'Admin.Notifications.Success'),
+            1 => $this->trans('Successful deletion.', array(), 'Admin.Notifications.Success'),
             2 => $this->trans('The selection has been successfully deleted.',  array(), 'Admin.Notifications.Success'),
-            3 => $this->trans('Successful creation',  array(), 'Admin.Notifications.Success'),
-            4 => $this->trans('Successful update',  array(), 'Admin.Notifications.Success'),
+            3 => $this->trans('Successful creation.',  array(), 'Admin.Notifications.Success'),
+            4 => $this->trans('Successful update.',  array(), 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', array(), 'Admin.Notifications.Success'),
             6 => $this->trans('The settings have been successfully updated.', array(), 'Admin.Notifications.Success'),
             7 => $this->trans('The image was successfully deleted.', array(), 'Admin.Notifications.Success'),
             8 => $this->trans('The module was successfully downloaded.', array(), 'Admin.Modules.Notification'),
             9 => $this->trans('The thumbnails were successfully regenerated.', array(), 'Admin.Notifications.Success'),
-            10 => $this->trans('The message was successfully sent to the customer.', array(), 'Admin.OrdersCustomers.Success'),
-            11 => $this->trans('Comment successfully added', array(), 'Admin.Notifications.Success'),
+            10 => $this->trans('The message was successfully sent to the customer.', array(), 'Admin.OrdersCustomers.Notification'),
+            11 => $this->trans('Comment successfully added.', array(), 'Admin.Notifications.Success'),
             12 => $this->trans('Module(s) installed successfully.', array(), 'Admin.Modules.Notification'),
             13 => $this->trans('Module(s) uninstalled successfully.', array(), 'Admin.Modules.Notification'),
             14 => $this->trans('The translation was successfully copied.', array(), 'Admin.International.Notification'),
             15 => $this->trans('The translations have been successfully added.', array(), 'Admin.International.Notification'),
             16 => $this->trans('The module transplanted successfully to the hook.', array(), 'Admin.Modules.Notification'),
             17 => $this->trans('The module was successfully removed from the hook.', array(), 'Admin.Modules.Notification'),
-            18 => $this->trans('Successful upload', array(), 'Admin.Notifications.Success'),
+            18 => $this->trans('Successful upload.', array(), 'Admin.Notifications.Success'),
             19 => $this->trans('Duplication was completed successfully.', array(), 'Admin.Notifications.Success'),
             20 => $this->trans('The translation was added successfully, but the language has not been created.', array(), 'Admin.International.Notification'),
             21 => $this->trans('Module reset successfully.', array(), 'Admin.Modules.Notification'),
@@ -464,19 +464,19 @@ class AdminControllerCore extends Controller
             26 => $this->trans('Your cover image selection has been saved.', array(), 'Admin.Notifications.Success'),
             27 => $this->trans('The image\'s shop association has been modified.', array(), 'Admin.Notifications.Success'),
             28 => $this->trans('A zone has been assigned to the selection successfully.', array(), 'Admin.Notifications.Success'),
-            29 => $this->trans('Successful upgrade', array(), 'Admin.Notifications.Success'),
+            29 => $this->trans('Successful upgrade.', array(), 'Admin.Notifications.Success'),
             30 => $this->trans('A partial refund was successfully created.', array(), 'Admin.OrdersCustomers.Notification'),
             31 => $this->trans('The discount was successfully generated.', array(), 'Admin.Catalog.Notification'),
-            32 => $this->trans('Successfully signed in to PrestaShop Addons', array(), 'Admin.Modules.Notification'),
+            32 => $this->trans('Successfully signed in to PrestaShop Addons.', array(), 'Admin.Modules.Notification'),
         );
 
         $this->_error = array(
             1 => $this->trans(
-                'The root category of the shop %shop% is not associated with the current one.',
+                'The root category of the shop %shop% is not associated with the current shop. You can\'t access this page. Please change the root category of the shop.',
                 array(
                     '%shop%' => $this->context->shop->name,
                 ),
-                'Admin.Catalog.Feature'
+                'Admin.Catalog.Notification'
             ),
         );
 
