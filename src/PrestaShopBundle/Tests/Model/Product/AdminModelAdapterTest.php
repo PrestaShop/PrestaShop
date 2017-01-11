@@ -104,7 +104,7 @@ class AdminModelAdapterTest extends KernelTestCase
             ],
             "step6" => [
                 "redirect_type" => '',
-                "id_product_redirected" => [],
+                "id_type_redirected" => [],
                 "visibility" => '',
                 "tags" => [],
                 "display_options" => [],

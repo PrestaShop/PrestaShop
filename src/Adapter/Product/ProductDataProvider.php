@@ -25,8 +25,6 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use Symfony\Component\Process\Exception\LogicException;
-
 /**
  * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
  */
@@ -51,14 +49,14 @@ class ProductDataProvider
      * @param int|null $id_shop
      * @param object|null $context
      *
-     * @throws LogicException If the product id is not set
+     * @throws \LogicException If the product id is not set
      *
      * @return \ProductCore $product
      */
     public function getProduct($id_product, $full = false, $id_lang = null, $id_shop = null, $context = null)
     {
         if (!$id_product) {
-            throw new LogicException('You need to provide a product id', 5002);
+            throw new \LogicException('You need to provide a product id', 5002);
         }
 
         $product = new \ProductCore($id_product, $full, $id_lang, $id_shop, $context);

@@ -113,9 +113,9 @@
 
     <div class="col-md-5" id="id-product-redirected">
       <fieldset class="form-group">
-        <label class="form-control-label">{{ form.id_product_redirected.vars.label }}</label>
-        {{ form_errors(form.id_product_redirected) }}
-        {{ form_widget(form.id_product_redirected) }}
+        <label class="form-control-label">{{ form.id_type_redirected.vars.label }}</label>
+        {{ form_errors(form.id_type_redirected) }}
+        {{ form_widget(form.id_type_redirected) }}
       </fieldset>
 
     </div>
@@ -126,8 +126,8 @@
         <i class="material-icons">help</i>
         <p class="alert-text">
           {{ 'No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.'|trans({}, 'Admin.Catalog.Help') }}<br>
-          {{ 'Permanent redirection (301) = Permanently display another product instead.'|trans({}, 'Admin.Catalog.Help') }}<br>
-          {{ 'Temporary redirection (302) = Temporarily display another product instead.'|trans({}, 'Admin.Catalog.Help') }}
+          {{ 'Permanent redirection (301) = Permanently display another product or category instead.'|trans({}, 'Admin.Catalog.Help') }}<br>
+          {{ 'Temporary redirection (302) = Temporarily display another product or category instead.'|trans({}, 'Admin.Catalog.Help') }}
         </p>
       </div>
     </div>

@@ -1915,31 +1915,51 @@ var priceCalculation = (function() {
  */
 var seo = (function() {
   var redirectTypeElem = $('#form_step5_redirect_type');
+  var productRedirect = $('#id-product-redirected');
 
   /** Hide or show the input product selector */
   function hideShowRedirectToProduct() {
-    if (redirectTypeElem.val() === '404') {
+    if ('404' === redirectTypeElem.val()) {
       $('#id-product-redirected').hide();
     } else {
+      updateRemoteUrl();
       $('#id-product-redirected').show();
     }
   }
-    /** Update friendly URL */
-    var updateFriendlyUrl = function(elem) {
-        /** Attr name equals "form[step1][name][1]".
-         * We need in this string the second integer */
-        var id_lang = elem.attr('name').match(/\d+/g)[1];
-        $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
-    };
 
+  function updateRemoteUrl() {
+    switch(redirectTypeElem.val()) {
+      case '301-category':
+      case '302-category':
+        productRedirect.find('label').html(redirectTypeElem.attr('data-labelcategory'));
+        productRedirect.find('input').attr('placeholder', redirectTypeElem.attr('data-placeholdercategory'));
+        break;
+      default:
+        productRedirect.find('label').html(redirectTypeElem.attr('data-labelproduct'));
+        productRedirect.find('input').attr('placeholder', redirectTypeElem.attr('data-placeholderproduct'));
+    }
+
+    productRedirect.find('.autocomplete-search').attr('data-remoteurl', redirectTypeElem.find('option:selected').data('remoteurl'));
+    productRedirect.find('.autocomplete-search').trigger('buildTypeahead');
+  }
+
+  /** Update friendly URL */
+  var updateFriendlyUrl = function(elem) {
+      /** Attr name equals "form[step1][name][1]".
+       * We need in this string the second integer */
+      var id_lang = elem.attr('name').match(/\d+/g)[1];
+      $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
+  };
 
   return {
     'init': function() {
 
       hideShowRedirectToProduct();
+      updateRemoteUrl();
 
       /** On redirect type select change */
       redirectTypeElem.change(function() {
+        productRedirect.find('#form_step5_id_type_redirected-data').html('');
         hideShowRedirectToProduct();
       });
 

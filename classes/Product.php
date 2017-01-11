@@ -173,7 +173,7 @@ class ProductCore extends ObjectModel
     public $redirect_type = '';
 
     /** @var bool Product statuts */
-    public $id_product_redirected = 0;
+    public $id_type_redirected = 0;
 
     /** @var bool Product available for order */
     public $available_for_order = true;
@@ -313,7 +313,7 @@ class ProductCore extends ObjectModel
             'uploadable_files' =>            array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
             'active' =>                    array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'redirect_type' =>                array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
-            'id_product_redirected' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
+            'id_type_redirected' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
             'available_for_order' =>        array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'available_date' =>            array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
             'show_condition' =>            array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
@@ -887,15 +887,15 @@ class ProductCore extends ObjectModel
 
     public function toggleStatus()
     {
-        //test if the product is active and if redirect_type is empty string and set default value to id_product_redirected & redirect_type
+        //test if the product is active and if redirect_type is empty string and set default value to id_type_redirected & redirect_type
         //  /!\ after parent::toggleStatus() active will be false, that why we set 404 by default :p
         if ($this->active) {
             //case where active will be false after parent::toggleStatus()
-            $this->id_product_redirected = 0;
+            $this->id_type_redirected = 0;
             $this->redirect_type = '404';
         } else {
             //case where active will be true after parent::toggleStatus()
-            $this->id_product_redirected = 0;
+            $this->id_type_redirected = 0;
             $this->redirect_type = '';
         }
         return parent::toggleStatus();
@@ -6235,5 +6235,27 @@ class ProductCore extends ObjectModel
         }
 
         return $results;
+    }
+
+    /**
+     * Get object of redirect_type
+     *
+     * @return bool|string
+     */
+    public function getRedirectType() {
+
+        switch($this->redirect_type) {
+            case '301-category':
+            case '302-category':
+                return 'category';
+                break;
+
+            case '301-product':
+            case '302-product':
+                return 'product';
+                break;
+        }
+
+        return false;
     }
 }

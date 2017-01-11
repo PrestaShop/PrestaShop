@@ -27,6 +27,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Admin controller for the Category pages
@@ -83,5 +84,23 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $response;
+    }
+
+    /**
+     * Get Categories formatted like ajax_product_file.php
+     *
+     * @param $limit
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getAjaxCategoriesAction($limit, Request $request)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new NotFoundHttpException('Should be ajax request.');
+        }
+
+        return new JsonResponse(
+            $this->get('prestashop.adapter.data_provider.category')->getAjaxCategories($request->get('query'), $limit, true)
+        );
     }
 }
