@@ -11,3 +11,34 @@ phone' WHERE `id_country` = (SELECT `id_country` FROM `PREFIX_country` WHERE `is
 
 UPDATE `PREFIX_hook` SET `name` = 'displayProductAdditionalInfo' WHERE `name` = 'displayProductButtons';
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayProductAdditionalInfo', 'displayProductButtons');
+
+-- Need old value before updating
+ALTER TABLE `PREFIX_product` CHANGE `redirect_type` `redirect_type`
+  ENUM('','404',
+  '301', '302',
+  '301-product','302-product','301-category','302-category')
+  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+
+ALTER TABLE `PREFIX_product_shop` CHANGE `redirect_type` `redirect_type`
+  ENUM('','404',
+  '301', '302',
+  '301-product','302-product','301-category','302-category')
+  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+
+UPDATE `PREFIX_product` SET redirect_type = '301-product' WHERE redirect_type = '301';
+UPDATE `PREFIX_product` SET redirect_type = '302-product' WHERE redirect_type = '302';
+
+UPDATE `PREFIX_product_shop` SET redirect_type = '301-product' WHERE redirect_type = '301';
+UPDATE `PREFIX_product_shop` SET redirect_type = '302-product' WHERE redirect_type = '302';
+
+-- Can now remove old value
+ALTER TABLE `PREFIX_product` CHANGE `redirect_type` `redirect_type`
+  ENUM('','404','301-product','302-product','301-category','302-category')
+  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+
+ALTER TABLE `PREFIX_product_shop` CHANGE `redirect_type` `redirect_type`
+  ENUM('','404','301-product','302-product','301-category','302-category')
+  CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+
+ALTER TABLE `PREFIX_product` CHANGE `id_product_redirected` `id_type_redirected` INT(10) NOT NULL DEFAULT '0';
+ALTER TABLE `PREFIX_product_shop` CHANGE `id_product_redirected` `id_type_redirected` INT(10) NOT NULL DEFAULT '0';
