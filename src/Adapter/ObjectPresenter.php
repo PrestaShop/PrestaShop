@@ -69,7 +69,7 @@ class ObjectPresenter implements PresenterInterface
      */
     private function filterHtmlContent($type, &$presentedObject, $htmlFields)
     {
-        if (!empty($htmlFields)) {
+        if (!empty($htmlFields) && is_array($htmlFields)) {
             $filteredHtml = Hook::exec(
                 'filteredHtmlContent',
                 array(

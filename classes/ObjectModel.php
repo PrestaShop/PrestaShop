@@ -1999,23 +1999,25 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public function getHtmlFields()
     {
-        if (!empty($this->def) && is_array($this->def) && array_key_exists('table', $this->def)) {
+        $isDefinitionValid = !empty($this->def) && is_array($this->def) && array_key_exists('table', $this->def);
+        if (!$isDefinitionValid) {
+            return false;
+        }
 
-            if (isset(self::$htmlFields[$this->def['table']])) {
-                return self::$htmlFields[$this->def['table']];
-            }
-
-            self::$htmlFields[$this->def['table']] = array();
-
-            if (array_key_exists('fields', $this->def)) {
-                foreach ($this->def['fields'] as $name => $field) {
-                    if (is_array($field) && array_key_exists('type', $field) && self::TYPE_HTML === $field['type']) {
-                        self::$htmlFields[$this->def['table']][] = $name;
-                    }
-                }
-            }
-
+        if (isset(self::$htmlFields[$this->def['table']])) {
             return self::$htmlFields[$this->def['table']];
         }
+
+        self::$htmlFields[$this->def['table']] = array();
+
+        if (array_key_exists('fields', $this->def)) {
+            foreach ($this->def['fields'] as $name => $field) {
+                if (is_array($field) && array_key_exists('type', $field) && self::TYPE_HTML === $field['type']) {
+                    self::$htmlFields[$this->def['table']][] = $name;
+                }
+            }
+        }
+
+        return self::$htmlFields[$this->def['table']];
     }
 }
