@@ -207,7 +207,7 @@
 			$('#features_detachables_up').val(1);
 		});
 
-		$('input[name="_MEDIA_SERVER_1_"]').change(function(){
+    $('input[name="_MEDIA_SERVER_1_"], input[name="_MEDIA_SERVER_2_"], input[name="_MEDIA_SERVER_3_"]').change(function(){
 			$('#media_server_up').val(1);
 		});
 

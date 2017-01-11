@@ -435,6 +435,18 @@ class AdminPerformanceControllerCore extends AdminController
                     'name' => '_MEDIA_SERVER_1_',
                     'hint' => $this->trans('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
                 ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->trans('Media server #2', array(), 'Admin.AdvParameters.Feature'),
+                    'name' => '_MEDIA_SERVER_2_',
+                    'hint' => $this->trans('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->trans('Media server #3', array(), 'Admin.AdvParameters.Feature'),
+                    'name' => '_MEDIA_SERVER_3_',
+                    'hint' => $this->trans('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
+                ),
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions')
@@ -442,6 +454,8 @@ class AdminPerformanceControllerCore extends AdminController
         );
 
         $this->fields_value['_MEDIA_SERVER_1_'] = Configuration::get('PS_MEDIA_SERVER_1');
+        $this->fields_value['_MEDIA_SERVER_2_'] = Configuration::get('PS_MEDIA_SERVER_2');
+        $this->fields_value['_MEDIA_SERVER_3_'] = Configuration::get('PS_MEDIA_SERVER_3');
     }
 
     public function initFieldsetCaching()
@@ -735,21 +749,39 @@ class AdminPerformanceControllerCore extends AdminController
                 if (Tools::getValue('_MEDIA_SERVER_1_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_1_'))) {
                     $this->errors[] = $this->trans('Media server #1 is invalid', array(), 'Admin.AdvParameters.Notification');
                 }
+                if (Tools::getValue('_MEDIA_SERVER_2_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_2_'))) {
+                    $this->errors[] = $this->trans('Media server #2 is invalid', array(), 'Admin.AdvParameters.Notification');
+                }
+                if (Tools::getValue('_MEDIA_SERVER_3_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_3_'))) {
+                    $this->errors[] = $this->trans('Media server #3 is invalid', array(), 'Admin.AdvParameters.Notification');
+                }
                 if (!count($this->errors)) {
                     $base_urls = array();
                     $base_urls['_MEDIA_SERVER_1_'] = Tools::getValue('_MEDIA_SERVER_1_');
-                    if ($base_urls['_MEDIA_SERVER_1_']) {
+                    $base_urls['_MEDIA_SERVER_2_'] = Tools::getValue('_MEDIA_SERVER_2_');
+                    $base_urls['_MEDIA_SERVER_3_'] = Tools::getValue('_MEDIA_SERVER_3_');
+
+                    if ($base_urls['_MEDIA_SERVER_1_'] || $base_urls['_MEDIA_SERVER_2_'] || $base_urls['_MEDIA_SERVER_3_']) {
                         Configuration::updateValue('PS_MEDIA_SERVERS', 1);
                     } else {
                         Configuration::updateValue('PS_MEDIA_SERVERS', 0);
                     }
                     Configuration::updateValue('PS_MEDIA_SERVER_1', Tools::getValue('_MEDIA_SERVER_1_'));
+                    Configuration::updateValue('PS_MEDIA_SERVER_2', Tools::getValue('_MEDIA_SERVER_2_'));
+                    Configuration::updateValue('PS_MEDIA_SERVER_3', Tools::getValue('_MEDIA_SERVER_3_'));
+
                     Tools::clearSmartyCache();
                     Media::clearCache();
 
                     if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
-                        Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_']));
+                        Tools::generateHtaccess(null, null, null, '', null, array(
+                            $base_urls['_MEDIA_SERVER_1_'],
+                            $base_urls['_MEDIA_SERVER_2_'],
+                            $base_urls['_MEDIA_SERVER_3_']
+                        ));
                         unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
+                        unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
+                        unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
                         $redirectAdmin = true;
                     } else {
                         $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.AdvParameters.Notification');

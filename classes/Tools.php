@@ -1973,7 +1973,7 @@ class ToolsCore
                 )
             );
         }
-        
+
         if ($is_local_file) {
             $content = @file_get_contents($url, $use_include_path, $stream_context);
         } else {
@@ -2112,11 +2112,15 @@ class ToolsCore
 
     public static function getMediaServer($filename)
     {
-        if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_')) {
+        if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_')) {
             if (_MEDIA_SERVER_1_ == '') {
                 self::$_cache_nb_media_servers = 0;
-            } else {
+            } elseif (_MEDIA_SERVER_2_ == '') {
                 self::$_cache_nb_media_servers = 1;
+            } elseif (_MEDIA_SERVER_3_ == '') {
+                self::$_cache_nb_media_servers = 2;
+            } else {
+                self::$_cache_nb_media_servers = 3;
             }
         }
 
@@ -2226,8 +2230,15 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
-        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')) {
-            $medias = array(Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'));
+        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
+            && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
+            && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+        ) {
+            $medias = array(
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+            );
         }
 
         $media_domains = '';
