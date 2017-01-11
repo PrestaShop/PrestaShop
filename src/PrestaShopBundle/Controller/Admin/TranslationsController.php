@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Doctrine\Common\Util\Inflector;
 use PrestashopBundle\Entity\Translation;
+use PrestaShopBundle\Translation\Provider\ModuleProvider;
+use PrestaShopBundle\Translation\View\TreeBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -54,8 +56,12 @@ class TranslationsController extends FrameworkBundleAdminController
             return $this->redirect('/admin-dev/index.php?controller=AdminTranslations');
         }
 
+        $lang = $request->get('lang');
+        $theme = $request->get('selected-theme');
+
         $catalogue = $this->getTranslationsCatalogue($request);
-        $translationsTree = $this->makeTranslationsTree($catalogue);
+        $treeBuilder = new TreeBuilder($this->langToLocale($lang), $theme);
+        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
 
         return array(
             'translationsTree' => $translationsTree,
@@ -79,6 +85,55 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
+     * List translations keys and corresponding editable values for one module.
+     *
+     * @Template("@PrestaShop/Admin/Translations/list.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return array Template vars
+     */
+    public function moduleAction(Request $request)
+    {
+        if (!$request->isMethod('POST')) {
+            return $this->redirect('/admin-dev/index.php?controller=AdminTranslations');
+        }
+
+        $lang = $request->get('lang');
+        $theme = $request->get('selected-theme');
+        $module = $request->get('selected-modules');
+
+        $moduleProvider = new ModuleProvider(
+            $this->container->get('prestashop.translation.database_loader'),
+            $this->container->getParameter('translations_dir')
+        );
+        $moduleProvider->setModuleName($module);
+
+        $treeBuilder = new TreeBuilder($this->langToLocale($lang), $theme);
+        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider);
+
+        return array(
+            'translationsTree' => $treeBuilder->makeTranslationsTree($catalogue),
+            'theme' => $this->getSelectedTheme($request),
+            'requestParams' => array(
+                'lang' => $lang,
+                'type' => $request->get('type'),
+                'theme' => $theme,
+            ),
+            'total_remaining_translations' => $this->get('translator')->trans(
+                '%nb_translations% missing',
+                array('%nb_translations%' => '%d'),
+                'Admin.International.Feature'
+            ),
+            'total_translations' => $this->get('translator')->trans(
+                '%d expressions',
+                array(),
+                'Admin.International.Feature'
+            )
+        );
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      */
@@ -86,7 +141,8 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         $theme = $this->getSelectedTheme($request);
         $catalogue = $this->getTranslationsCatalogue($request);
-        $translationsTree = $this->makeTranslationsTree($catalogue);
+        $treeBuilder = new TreeBuilder($request->get('lang'), $theme);
+        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
 
         $translationsFormsView = $this->renderView(
             'PrestaShopBundle:Admin/Translations/include:translations-forms.html.twig',
@@ -286,66 +342,15 @@ class TranslationsController extends FrameworkBundleAdminController
      * @param $catalogue
      *
      * @return array
+     *
+     * @deprecated since 1.7.1.0
      */
     protected function makeTranslationsTree(array $catalogue)
     {
-        $translationsTree = array();
-        $flippedUnbreakableWords = array_flip($this->getUnbreakableWords());
+        trigger_error('makeTranslationsTree() is deprecated since version 1.7.1. Use PrestaShopBundle\Translation\View\TreeBuilder instead.', E_USER_DEPRECATED);
 
-        foreach ($catalogue as $domain => $messages) {
-            $unbreakableDomain = $this->makeDomainUnbreakable($domain);
-
-            $tableisedDomain = Inflector::tableize($unbreakableDomain);
-            list($basename) = explode('.', $tableisedDomain);
-            $parts = array_reverse(explode('_', $basename));
-
-            $totalParts = count($parts);
-            $subtree = &$translationsTree;
-
-            if ($totalParts - 2 < 0) {
-                $totalParts = 2;
-                $parts = array($parts[0], 'Admin');
-            }
-
-            $firstDomainPart = $parts[count($parts) - 1];
-
-            $condition = count($parts) > $totalParts - 2;
-            $depth = 0;
-
-            while ($condition) {
-                if ($depth === 1) {
-                    list($subdomain) = explode('.', str_replace(ucfirst($firstDomainPart), '', $domain));
-                    array_pop($parts);
-                } else {
-                    $subdomain = ucfirst(array_pop($parts));
-                    if (array_key_exists($subdomain, $flippedUnbreakableWords)) {
-                        $subdomain = $flippedUnbreakableWords[$subdomain];
-                    }
-                }
-
-                if (!array_key_exists($subdomain, $subtree)) {
-                    $subtree[$subdomain] = array();
-                }
-                $subtree = &$subtree[$subdomain];
-
-                $condition = count($parts) > $totalParts - 2;
-                $depth++;
-
-                if ($depth === 2) {
-                    $subtree['__fixed_length_id'] = '_' . sha1($domain);
-                    list($subtree['__domain']) = explode('.', $domain);
-
-                    $subtree['__metadata'] = $messages['__metadata'];
-                    $subtree['__metadata']['domain'] = $subtree['__domain'];
-                    unset($messages['__metadata']);
-                }
-            }
-
-            $subtree['__messages'] = array($domain => $messages);
-            unset($catalogue[$domain]);
-        }
-
-        return $translationsTree;
+        $treeBuilder = new TreeBuilder('en-US', null);
+        return $treeBuilder->makeTranslationsTree($catalogue);
     }
 
     /**
@@ -356,50 +361,28 @@ class TranslationsController extends FrameworkBundleAdminController
      * @param $domain
      *
      * @return string
+     *
+     * @deprecated since 1.7.1.0
      */
     protected function makeDomainUnbreakable($domain)
     {
-        $adjustedDomain = $domain;
-        $unbreakableWords = $this->getUnbreakableWords();
+        trigger_error('makeDomainUnbreakable() is deprecated since version 1.7.1. Use PrestaShopBundle\Translation\View\TreeBuilder instead.', E_USER_DEPRECATED);
 
-        foreach ($unbreakableWords as $search => $replacement) {
-            if (false !== strpos($domain, $search)) {
-                $adjustedDomain = str_replace($search, $replacement, $domain);
-
-                break;
-            }
-        }
-
-        return $adjustedDomain;
+        $treeBuilder = new TreeBuilder('en-US', null);
+        return $treeBuilder->makeDomainUnbreakable($domain);
     }
 
     /**
      * @return array
+     *
+     * @deprecated since 1.7.1.0
      */
     protected function getUnbreakableWords()
     {
-        return array(
-            'BankWire' => 'Bankwire',
-            'BlockBestSellers' => 'Blockbestsellers',
-            'BlockCart' => 'Blockcart',
-            'CheckPayment' => 'Checkpayment',
-            'ContactInfo' => 'Contactinfo',
-            'EmailSubscription' => 'Emailsubscription',
-            'FacetedSearch' => 'Facetedsearch',
-            'FeaturedProducts' => 'Featuredproducts',
-            'LegalCompliance' => 'Legalcompliance',
-            'ShareButtons' => 'Sharebuttons',
-            'ShoppingCart' => 'Shoppingcart',
-            'SocialFollow' => 'Socialfollow',
-            'WirePayment' => 'Wirepayment',
-            'BlockAdvertising' => 'Blockadvertising',
-            'CategoryTree' => 'Categorytree',
-            'CustomerSignIn' => 'Customersignin',
-            'CustomText' => 'Customtext',
-            'ImageSlider' => 'Imageslider',
-            'LinkList' => 'Linklist',
-            'ShopPDF' => 'ShopPdf',
-        );
+        trigger_error('getUnbreakableWords() is deprecated since version 1.7.1. Use PrestaShopBundle\Translation\View\TreeBuilder instead.', E_USER_DEPRECATED);
+
+        $treeBuilder = new TreeBuilder('en-US', null);
+        return $treeBuilder->getUnbreakableWords();
     }
 
     /**
