@@ -810,7 +810,7 @@ class LinkCore
             $uriPath = _THEME_SUP_DIR_.$idSupplier.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
         } elseif (!empty($type) && file_exists(_PS_SUPP_IMG_DIR_.$idSupplier.'.jpg')) { // !empty($type) because if is empty, is already tested
             $uriPath = _THEME_SUP_DIR_.$idSupplier.'.jpg';
-        } elseif (file_exists(_PS_SUPP_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+        } elseif (file_exists(_PS_SUPP_IMG_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
             $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
         } else {
             $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.'.jpg';
@@ -835,10 +835,35 @@ class LinkCore
             $uriPath = _THEME_MANU_DIR_.$idManufacturer.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
         } elseif (!empty($type) && file_exists(_PS_MANU_IMG_DIR_.$idManufacturer.'.jpg')) { // !empty($type) because if is empty, is already tested
             $uriPath = _THEME_MANU_DIR_.$idManufacturer.'.jpg';
-        } elseif (file_exists(_PS_MANU_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+        } elseif (file_exists(_PS_MANU_IMG_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
             $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
         } else {
             $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.'.jpg';
+        }
+
+        return $this->protocol_content.Tools::getMediaServer($uriPath).$uriPath;
+    }
+
+    /**
+     * Returns a link to a store image for display
+     *
+     * @param $idStore
+     * @param null $type    image type (small_default, medium_default, large_default, etc.)
+     *
+     * @return string
+     */
+    public function getStoreImageLink($name, $idStore, $type = null)
+    {
+        $idStore = (int)$idStore;
+
+        if (file_exists(_PS_STORE_IMG_DIR_.$idStore.(empty($type) ? '.jpg' : '-'.$type.'.jpg'))) {
+            $uriPath = _THEME_STORE_DIR_.$idStore.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
+        } elseif (!empty($type) && file_exists(_PS_STORE_IMG_DIR_.$idStore.'.jpg')) { // !empty($type) because if is empty, is already tested
+            $uriPath = _THEME_STORE_DIR_.$idStore.'.jpg';
+        } elseif (file_exists(_PS_STORE_IMG_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : $type.'.jpg'))) {
+            $uriPath = _THEME_STORE_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : $type.'.jpg');
+        } else {
+            $uriPath = _THEME_STORE_DIR_.Context::getContext()->language->iso_code.'.jpg';
         }
 
         return $this->protocol_content.Tools::getMediaServer($uriPath).$uriPath;

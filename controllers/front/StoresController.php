@@ -182,6 +182,8 @@ class StoresControllerCore extends FrontController
     {
         $stores = Store::getStores();
 
+        $imageRetriever = new \PrestaShop\PrestaShop\Adapter\Image\ImageRetriever($this->context->link);
+
         foreach ($stores as &$store) {
             unset($store['active']);
             // Prepare $store.address
@@ -223,7 +225,7 @@ class StoresControllerCore extends FrontController
                     'hours' => $temp[6],
                 ],
             ];
-            $store['image'] = _THEME_STORE_DIR_.(int)$store['id_store'].'-stores_default.jpg';
+            $store['image'] = $imageRetriever->getImage(new Store($store['id_store']), $store['id_store']);
         }
 
         return $stores;
