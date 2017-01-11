@@ -25,12 +25,15 @@
  */
 
 /**
- * This class require Xcache extension
+ * This class requires the Xcache extension
  *
  * @since 1.5.0
  */
 class CacheXcacheCore extends Cache
 {
+    /**
+     * CacheXcacheCore constructor
+     */
     public function __construct()
     {
         $this->keys = xcache_get(self::KEYS_NAME);
@@ -85,6 +88,7 @@ class CacheXcacheCore extends Cache
     public function flush()
     {
         $this->delete('*');
+
         return true;
     }
 }
