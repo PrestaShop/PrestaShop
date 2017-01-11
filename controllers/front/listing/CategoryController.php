@@ -78,8 +78,24 @@ class CategoryControllerCore extends ProductListingFrontController
             return;
         }
 
+        $categoryVar = $this->getTemplateVarCategory();
+
+        $filteredCategory= Hook::exec(
+            'filteredCategoryContent',
+            array('object' => $categoryVar),
+            $id_module = null,
+            $array_return = false,
+            $check_exceptions = true,
+            $use_push = false,
+            $id_shop = null,
+            $chain = true
+        );
+        if (!empty($filteredCategory['object'])) {
+            $categoryVar = $filteredCategory['object'];
+        }
+
         $this->context->smarty->assign(array(
-            'category' => $this->getTemplateVarCategory(),
+            'category' => $categoryVar,
             'subcategories' => $this->getTemplateVarSubCategories(),
         ));
 

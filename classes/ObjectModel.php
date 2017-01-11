@@ -157,6 +157,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of times. */
     protected static $db = false;
 
+    /** @var array|null List of HTML field (based on self::TYPE_HTML)  */
+    public static $htmlFields = null;
+
     /** @var bool Enables to define an ID before adding object. */
     public $force_id = false;
 
@@ -1989,5 +1992,32 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public static function disableCache()
     {
         ObjectModel::$cache_objects = false;
+    }
+
+    /**
+     * Return HtmlFields for object
+     */
+    public function getHtmlFields()
+    {
+        $isDefinitionValid = !empty($this->def) && is_array($this->def) && array_key_exists('table', $this->def);
+        if (!$isDefinitionValid) {
+            return false;
+        }
+
+        if (isset(self::$htmlFields[$this->def['table']])) {
+            return self::$htmlFields[$this->def['table']];
+        }
+
+        self::$htmlFields[$this->def['table']] = array();
+
+        if (array_key_exists('fields', $this->def)) {
+            foreach ($this->def['fields'] as $name => $field) {
+                if (is_array($field) && array_key_exists('type', $field) && self::TYPE_HTML === $field['type']) {
+                    self::$htmlFields[$this->def['table']][] = $name;
+                }
+            }
+        }
+
+        return self::$htmlFields[$this->def['table']];
     }
 }

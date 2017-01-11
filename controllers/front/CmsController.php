@@ -91,8 +91,25 @@ class CmsControllerCore extends FrontController
         parent::initContent();
 
         if ($this->assignCase == 1) {
+
+            $cmsVar = $this->objectPresenter->present($this->cms);
+
+            $filteredCmsContent = Hook::exec(
+                'filteredCmsContent',
+                array('object' => $cmsVar),
+                $id_module = null,
+                $array_return = false,
+                $check_exceptions = true,
+                $use_push = false,
+                $id_shop = null,
+                $chain = true
+            );
+            if (!empty($filteredCmsContent['object'])) {
+                $cmsVar = $filteredCmsContent['object'];
+            }
+
             $this->context->smarty->assign(array(
-                'cms' => $this->objectPresenter->present($this->cms),
+                'cms' => $cmsVar,
             ));
 
             if ($this->cms->indexation == 0) {
@@ -104,7 +121,24 @@ class CmsControllerCore extends FrontController
                 array('entity' => 'cms', 'id' => $this->cms->id)
             );
         } elseif ($this->assignCase == 2) {
-            $this->context->smarty->assign($this->getTemplateVarCategoryCms());
+
+            $cmsCategoryVar = $this->getTemplateVarCategoryCms();
+
+            $filteredCmsCategoryContent = Hook::exec(
+                'filteredCmsCategoryContent',
+                array('object' => $cmsCategoryVar),
+                $id_module = null,
+                $array_return = false,
+                $check_exceptions = true,
+                $use_push = false,
+                $id_shop = null,
+                $chain = true
+            );
+            if (!empty($filteredCmsCategoryContent['object'])) {
+                $cmsCategoryVar = $filteredCmsCategoryContent['object'];
+            }
+
+            $this->context->smarty->assign($cmsCategoryVar);
             $this->setTemplate('cms/category');
         }
     }
