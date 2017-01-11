@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use Symfony\Component\Translation\TranslatorInterface;
 use Search;
+use Hook;
 use Tools;
 
 class SearchProductSearchProvider implements ProductSearchProviderInterface
@@ -57,9 +58,11 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         $count    = 0;
 
         if (($string = $query->getSearchString())) {
+            $queryString = Tools::replaceAccentedChars(urldecode($string));
+
             $result = Search::find(
                 $context->getIdLang(),
-                Tools::replaceAccentedChars(urldecode($string)),
+                $queryString,
                 $query->getPage(),
                 $query->getResultsPerPage(),
                 $query->getSortOrder()->toLegacyOrderBy(),
@@ -70,10 +73,21 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
             );
             $products = $result['result'];
             $count    = $result['total'];
+
+            Hook::exec('actionSearch', array(
+                'searched_query' => $queryString,
+                'total' => $count,
+
+                // deprecated since 1.7.x
+                'expr' => $queryString,
+            ));
+
         } elseif (($tag = $query->getSearchTag())) {
+            $queryString = urldecode($tag);
+
             $products = Search::searchTag(
                 $context->getIdLang(),
-                urldecode($tag),
+                $queryString,
                 false,
                 $query->getPage(),
                 $query->getResultsPerPage(),
@@ -85,7 +99,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
 
             $count = Search::searchTag(
                 $context->getIdLang(),
-                urldecode($tag),
+                $queryString,
                 true,
                 $query->getPage(),
                 $query->getResultsPerPage(),
@@ -94,6 +108,14 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 false,
                 null
             );
+
+            Hook::exec('actionSearch', array(
+                'searched_query' => $queryString,
+                'total' => $count,
+
+                // deprecated since 1.7.x
+                'expr' => $queryString,
+            ));
         }
 
         $result = new ProductSearchResult();
