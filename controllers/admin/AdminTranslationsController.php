@@ -2503,25 +2503,22 @@ class AdminTranslationsControllerCore extends AdminController
                     // tab-content
                     $str_return .= '<div class="tab-content">';
 
-                    if (array_key_exists('html', $mail_files)) {
-                        $str_return .= '<div class="tab-pane active" id="'.$mail_name.'-html">';
-                        $base_uri = str_replace(_PS_ROOT_DIR_, __PS_BASE_URI__, $mails['directory']);
-                        $base_uri = str_replace('//', '/', $base_uri);
-                        $url_mail = $base_uri.$mail_name.'.html';
-                        $str_return .= $this->displayMailBlockHtml($mail_files['html'], $obj_lang->iso_code, $url_mail, $mail_name, $group_name, $name_for_module);
-                        $str_return .= '</div>';
-                    }
+                    $base_uri = str_replace(_PS_ROOT_DIR_, __PS_BASE_URI__, $mails['directory']);
+                    $base_uri = str_replace('//', '/', $base_uri);
+                    $url_mail = $base_uri.$mail_name.'.html';
 
-                    if (array_key_exists('txt', $mail_files)) {
-                        $str_return .= '<div class="tab-pane" id="'.$mail_name.'-text">';
-                        $str_return .= $this->displayMailBlockTxt($mail_files['txt'], $obj_lang->iso_code, $mail_name, $group_name, $name_for_module);
-                        $str_return .= '</div>';
-                    }
+                    $mail_files_html = empty($mail_files['html']) ? false : $mail_files['html'];
+                    $str_return .= '<div class="tab-pane active" id="'.$mail_name.'-html">';
+                    $str_return .= $this->displayMailBlockHtml($mail_files_html, $obj_lang->iso_code, $url_mail, $mail_name, $group_name, $name_for_module);
+                    $str_return .= '</div>';
+
+                    $mail_files_txt = empty($mail_files['txt']) ? false : $mail_files['txt'];
+                    $str_return .= '<div class="tab-pane" id="'.$mail_name.'-text">';
+                    $str_return .= $this->displayMailBlockTxt($mail_files_txt, $obj_lang->iso_code, $mail_name, $group_name, $name_for_module);
+                    $str_return .= '</div>';
 
                     $str_return .= '<div class="tab-pane" id="'.$mail_name.'-editor">';
-                    if (isset($mail_files['html'])) {
-                        $str_return .= $this->displayMailEditor($mail_files['html'], $obj_lang->iso_code, $url_mail, $mail_name, $group_name, $name_for_module);
-                    }
+                    $str_return .= $this->displayMailEditor($mail_files_html, $obj_lang->iso_code, $mail_name, $group_name, $name_for_module);
                     $str_return .= '</div>';
 
                     $str_return .= '</div>';
@@ -2551,11 +2548,17 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string
      */
-    protected function displayMailBlockTxt($content, $lang, $mail_name, $group_name, $name_for_module = false)
+    protected function displayMailBlockTxt($content = false, $lang, $mail_name, $group_name, $name_for_module = false)
     {
+        if (!empty($content)) {
+            $text_content = Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang])));
+        } else {
+            $text_content = '';
+        }
+
         return '<div class="block-mail" >
                     <div class="mail-form">
-                        <div><textarea class="rte noEditor" name="'.$group_name.'[txt]['.($name_for_module ? $name_for_module.'|' : '').$mail_name.']">'.Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang]))).'</textarea></div>
+                        <div><textarea class="rte noEditor" name="'.$group_name.'[txt]['.($name_for_module ? $name_for_module.'|' : '').$mail_name.']">'.$text_content.'</textarea></div>
                     </div>
                 </div>';
     }
@@ -2573,11 +2576,16 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string
      */
-    protected function displayMailBlockHtml($content, $lang, $url, $mail_name, $group_name, $name_for_module = false)
+    protected function displayMailBlockHtml($content = false, $lang, $url, $mail_name, $group_name, $name_for_module = false)
     {
         $title = array();
-        $this->cleanMailContent($content, $lang, $title);
+
+        if (!empty($content)) {
+            $this->cleanMailContent($content, $lang, $title);
+        }
+
         $name_for_module = $name_for_module ? $name_for_module.'|' : '';
+
         return '<div class="block-mail" >
                     <div class="mail-form">
                         <div class="thumbnail email-html-frame" data-email-src="'.$url.'"></div>
@@ -2585,12 +2593,19 @@ class AdminTranslationsControllerCore extends AdminController
                 </div>';
     }
 
-    protected function displayMailEditor($content, $lang, $url, $mail_name, $group_name, $name_for_module = false)
+    protected function displayMailEditor($content = false, $lang, $mail_name, $group_name, $name_for_module = false)
     {
         $title = array();
-        $this->cleanMailContent($content, $lang, $title);
+
+        if (!empty($content)) {
+            $this->cleanMailContent($content, $lang, $title);
+            $html_content = $content[$lang];
+        } else {
+            $html_content = '';
+        }
+
         $name_for_module = $name_for_module ? $name_for_module.'|' : '';
-        return '<textarea class="rte-mail rte-mail-'.$mail_name.' form-control" data-rte="'.$mail_name.'" name="'.$group_name.'[html]['.$name_for_module.$mail_name.']">'.$content[$lang].'</textarea>';
+        return '<textarea class="rte-mail rte-mail-'.$mail_name.' form-control" data-rte="'.$mail_name.'" name="'.$group_name.'[html]['.$name_for_module.$mail_name.']">'.$html_content.'</textarea>';
     }
 
     protected function cleanMailContent(&$content, $lang, &$title)
@@ -3221,7 +3236,11 @@ class AdminTranslationsControllerCore extends AdminController
             $email_file = _PS_ROOT_DIR_.$email;
         }
 
-        $email_html = file_get_contents($email_file);
+        if (file_exists($email_file)) {
+            $email_html = file_get_contents($email_file);
+        } else {
+            $email_html = '';
+        }
 
         return $email_html;
     }
