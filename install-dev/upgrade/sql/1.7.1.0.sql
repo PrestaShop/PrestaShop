@@ -42,3 +42,12 @@ ALTER TABLE `PREFIX_product_shop` CHANGE `redirect_type` `redirect_type`
 
 ALTER TABLE `PREFIX_product` CHANGE `id_product_redirected` `id_type_redirected` INT(10) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_product_shop` CHANGE `id_product_redirected` `id_type_redirected` INT(10) NOT NULL DEFAULT '0';
+
+INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
+  (NULL, 'filteredCmsContent', 'Filter the content page', 'This hook is called just before fetching content page.', '1'),
+  (NULL, 'filteredCmsCategoryContent', 'Filter the content page category', 'This hook is called just before fetching content page category.', '1'),
+  (NULL, 'filteredProductContent', 'Filter the content page product', 'This hook is called just before fetching content page product.', '1'),
+  (NULL, 'filteredCategoryContent', 'Filter the content page category', 'This hook is called just before fetching content page category.', '1'),
+  (NULL, 'filteredManufacturerContent', 'Filter the content page manufacturer', 'This hook is called just before fetching content page manufacturer.', '1'),
+  (NULL, 'filteredSupplierContent', 'Filter the content page supplier', 'This hook is called just before fetching content page supplier.', '1'),
+  (NULL, 'filteredHtmlContent', 'Filter HTML field before rending a page', 'This hook is called just before fetching a page on HTML field.', '1');
