@@ -78,7 +78,6 @@ class PasswordControllerCore extends FrontController
 
                 $mailParams = array(
                     '{email}' => $customer->email,
-
                     '{lastname}' => $customer->lastname,
                     '{firstname}' => $customer->firstname,
                     '{url}' => $this->context->link->getPageLink('password', true, null, 'token='.$customer->secure_key.'&id_customer='.(int) $customer->id.'&reset_token='.$customer->reset_password_token),
@@ -194,5 +193,57 @@ class PasswordControllerCore extends FrontController
         } else {
             $this->errors[] = $this->trans('We cannot regenerate your password with the data you\'ve submitted', array(), 'Shop.Notifications.Error');
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function display()
+    {
+        $this->context->smarty->assign(
+            array(
+                'layout' => $this->getLayout(),
+                'stylesheets' => $this->getStylesheets(),
+                'javascript' => $this->getJavascript(),
+                'js_custom_vars' => Media::getJsDef(),
+                'errors' => $this->getErrors(),
+                'successes' => $this->getSuccesses(),
+            )
+        );
+
+        $this->smartyOutputContent($this->template);
+
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getErrors()
+    {
+        $notifications = $this->prepareNotifications();
+
+        $errors = array();
+        if (array_key_exists('error', $notifications)) {
+            $errors = $notifications['error'];
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSuccesses()
+    {
+        $notifications = $this->prepareNotifications();
+
+        $successes = array();
+
+        if (array_key_exists('success', $notifications)) {
+            $successes = $notifications['success'];
+        }
+
+        return $successes;
     }
 }

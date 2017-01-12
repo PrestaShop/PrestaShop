@@ -23,6 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
+{if isset($notifications)}
 <aside id="notifications">
   <div class="container">
     {if $notifications.error}
@@ -66,3 +67,4 @@
     {/if}
   </div>
 </aside>
+{/if}
