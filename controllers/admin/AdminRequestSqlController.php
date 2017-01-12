@@ -118,8 +118,8 @@ class AdminRequestSqlControllerCore extends AdminController
 		<ul>
 			<li>'.$this->trans('Click "Add New".', array(), 'Admin.AdvParameters.Help').'</li>
 			<li>'.$this->trans('Fill in the fields and click "Save".', array(), 'Admin.AdvParameters.Help').'</li>
-			<li>'.$this->trans('You can then view the query results by clicking on the Edit action in the dropdown menu: ', array(), 'Admin.AdvParameters.Help').' <i class="icon-pencil"></i></li>
-			<li>'.$this->trans('You can also export the query results as a CSV file by clicking on the Export button: ', array(), 'Admin.AdvParameters.Help').' <i class="icon-cloud-upload"></i></li>
+			<li>'.$this->trans('You can then view the query results by clicking on the Edit action in the dropdown menu', array(), 'Admin.AdvParameters.Help').' <i class="icon-pencil"></i></li>
+			<li>'.$this->trans('You can also export the query results as a CSV file by clicking on the Export button', array(), 'Admin.AdvParameters.Help').' <i class="icon-cloud-upload"></i></li>
 		</ul>');
 
         $this->addRowAction('export');
