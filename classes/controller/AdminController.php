@@ -25,7 +25,6 @@
  */
 
 use PrestaShop\PrestaShop\Core\Cldr;
-use LegacyCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
@@ -4632,7 +4631,7 @@ class AdminControllerCore extends Controller
     protected function buildContainer()
     {
         $container = new ContainerBuilder();
-        $container->addCompilerPass(new LegacyCompilerPass());
+        $container->addCompilerPass(new \LegacyCompilerPass());
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
         $loader->load(_PS_CONFIG_DIR_.'services/admin/services_'. $env .'.yml');

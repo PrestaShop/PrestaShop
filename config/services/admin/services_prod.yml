@@ -17,12 +17,12 @@ services:
         class: PrestaShop\PrestaShop\Core\Module\HookConfigurator
         arguments: ["@hook_repository"]
 
-    theme_checker:
-        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker
+    theme_validator:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator
 
     theme_manager:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
-        arguments: ["@shop", "@configuration", "@theme_checker", "@employee", "@filesystem", "@finder", "@hook_configurator"]
+        arguments: ["@shop", "@configuration", "@theme_validator", "@employee", "@filesystem", "@finder", "@hook_configurator"]
 
     hashing:
         class: PrestaShop\PrestaShop\Core\Crypto\Hashing
