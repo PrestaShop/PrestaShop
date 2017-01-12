@@ -1834,50 +1834,65 @@
 	  var $body = (0, _jquery2['default'])('body');
 	
 	  $body.on('click', '[data-button-action="add-to-cart"]', function (event) {
-	    event.preventDefault();
+	    if ((0, _jquery2['default'])('#quantity_wanted').val() > (0, _jquery2['default'])('[data-stock]').data('stock')) {
+	      event.preventDefault();
+	      (0, _jquery2['default'])('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
+	    } else {
+	      var $form;
+	      var query;
+	      var actionURL;
 	
-	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
-	    var query = $form.serialize() + '&add=1&action=update';
-	    var actionURL = $form.attr('action');
+	      var _ret2 = (function () {
+	        event.preventDefault();
 	
-	    var isQuantityInputValid = function isQuantityInputValid($input) {
-	      var validInput = true;
+	        $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
+	        query = $form.serialize() + '&add=1&action=update';
+	        actionURL = $form.attr('action');
 	
-	      $input.each(function (index, input) {
-	        var $input = (0, _jquery2['default'])(input);
-	        var minimalValue = parseInt($input.attr('min'), 10);
-	        if (minimalValue && $input.val() < minimalValue) {
-	          onInvalidQuantity($input);
-	          validInput = false;
+	        var isQuantityInputValid = function isQuantityInputValid($input) {
+	          var validInput = true;
+	
+	          $input.each(function (index, input) {
+	            var $input = (0, _jquery2['default'])(input);
+	            var minimalValue = parseInt($input.attr('min'), 10);
+	            if (minimalValue && $input.val() < minimalValue) {
+	              onInvalidQuantity($input);
+	              validInput = false;
+	            }
+	          });
+	
+	          return validInput;
+	        };
+	
+	        var onInvalidQuantity = function onInvalidQuantity($input) {
+	          (0, _jquery2['default'])($input.parents('.product-add-to-cart')[0]).find('.product-minimal-quantity').addClass('error');
+	          $input.parent().find('label').addClass('error');
+	        };
+	
+	        var $quantityInput = $form.find('input[min]');
+	        if (!isQuantityInputValid($quantityInput)) {
+	          onInvalidQuantity($quantityInput);
+	
+	          return {
+	            v: undefined
+	          };
 	        }
-	      });
 	
-	      return validInput;
-	    };
+	        _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
+	          _prestashop2['default'].emit('updateCart', {
+	            reason: {
+	              idProduct: resp.id_product,
+	              idProductAttribute: resp.id_product_attribute,
+	              linkAction: 'add-to-cart'
+	            }
+	          });
+	        }).fail(function (resp) {
+	          _prestashop2['default'].emit('handleError', { eventType: 'addProductToCart', resp: resp });
+	        });
+	      })();
 	
-	    var onInvalidQuantity = function onInvalidQuantity($input) {
-	      (0, _jquery2['default'])($input.parents('.product-add-to-cart')[0]).find('.product-minimal-quantity').addClass('error');
-	      $input.parent().find('label').addClass('error');
-	    };
-	
-	    var $quantityInput = $form.find('input[min]');
-	    if (!isQuantityInputValid($quantityInput)) {
-	      onInvalidQuantity($quantityInput);
-	
-	      return;
+	      if (typeof _ret2 === 'object') return _ret2.v;
 	    }
-	
-	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      _prestashop2['default'].emit('updateCart', {
-	        reason: {
-	          idProduct: resp.id_product,
-	          idProductAttribute: resp.id_product_attribute,
-	          linkAction: 'add-to-cart'
-	        }
-	      });
-	    }).fail(function (resp) {
-	      _prestashop2['default'].emit('handleError', { eventType: 'addProductToCart', resp: resp });
-	    });
 	  });
 	
 	  $body.on('submit', '[data-link-action="add-voucher"]', function (event) {

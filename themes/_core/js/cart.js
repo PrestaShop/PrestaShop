@@ -150,51 +150,56 @@ $(document).ready(() => {
     'click',
     '[data-button-action="add-to-cart"]',
     (event) => {
+    if($('#quantity_wanted').val() > $('[data-stock]').data('stock')) {
       event.preventDefault();
+      $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
+    } else {
+        event.preventDefault();
 
-      var $form = $($(event.target).closest('form'));
-      var query = $form.serialize() + '&add=1&action=update';
-      var actionURL = $form.attr('action');
+        var $form = $($(event.target).closest('form'));
+        var query = $form.serialize() + '&add=1&action=update';
+        var actionURL = $form.attr('action');
 
-      let isQuantityInputValid = ($input) => {
-        var validInput = true;
+        let isQuantityInputValid = ($input) => {
+          var validInput = true;
 
-        $input.each((index, input) => {
-          let $input = $(input);
-          let minimalValue = parseInt($input.attr('min'), 10);
-          if (minimalValue && $input.val() < minimalValue) {
-              onInvalidQuantity($input);
-              validInput = false;
-          }
+          $input.each((index, input) => {
+            let $input = $(input);
+            let minimalValue = parseInt($input.attr('min'), 10);
+            if (minimalValue && $input.val() < minimalValue) {
+                onInvalidQuantity($input);
+                validInput = false;
+            }
+          });
+
+          return validInput;
+        };
+
+        let onInvalidQuantity = ($input) => {
+          $($input.parents('.product-add-to-cart')[0]).find('.product-minimal-quantity')
+              .addClass('error');
+          $input.parent().find('label').addClass('error');
+        };
+
+        let $quantityInput = $form.find('input[min]' );
+        if (!isQuantityInputValid($quantityInput)) {
+          onInvalidQuantity($quantityInput);
+
+          return;
+        }
+
+        $.post(actionURL, query, null, 'json').then((resp) => {
+          prestashop.emit('updateCart', {
+            reason: {
+              idProduct: resp.id_product,
+              idProductAttribute: resp.id_product_attribute,
+              linkAction: 'add-to-cart'
+            }
+          });
+        }).fail((resp) => {
+          prestashop.emit('handleError', {eventType: 'addProductToCart', resp: resp});
         });
-
-        return validInput;
-      };
-
-      let onInvalidQuantity = ($input) => {
-        $($input.parents('.product-add-to-cart')[0]).find('.product-minimal-quantity')
-            .addClass('error');
-        $input.parent().find('label').addClass('error');
-      };
-
-      let $quantityInput = $form.find('input[min]' );
-      if (!isQuantityInputValid($quantityInput)) {
-        onInvalidQuantity($quantityInput);
-
-        return;
       }
-
-      $.post(actionURL, query, null, 'json').then((resp) => {
-        prestashop.emit('updateCart', {
-          reason: {
-            idProduct: resp.id_product,
-            idProductAttribute: resp.id_product_attribute,
-            linkAction: 'add-to-cart'
-          }
-        });
-      }).fail((resp) => {
-        prestashop.emit('handleError', {eventType: 'addProductToCart', resp: resp});
-      });
     }
   );
 
