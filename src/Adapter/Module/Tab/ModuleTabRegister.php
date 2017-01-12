@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
 use TabCore as Tab;
@@ -57,12 +60,24 @@ class ModuleTabRegister
      */
     private $translator;
     
-    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator)
+    /**
+     * @var Finder
+     */
+    private $finder;
+    
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+    
+    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Finder $finder, Filesystem $filesystem)
     {
         $this->langRepository = $langRepository;
         $this->tabRepository = $tabRepository;
         $this->logger = $logger;
         $this->translator = $translator;
+        $this->finder = $finder;
+        $this->filesystem = $filesystem;
     }
     
     /**
@@ -76,28 +91,72 @@ class ModuleTabRegister
     {
         foreach ($module->getInstance()->getTabs() as $tab) {
             try {
-                $this->registerTab(new ParameterBag($module, $tab));
+                $this->registerTab($module, new ParameterBag($tab));
             } catch (Exception $e) {
                 $this->logger->error($e->getMessage());
             }
         }
     }
     
-    protected function checkIsValid(Module $module, ParameterBag $data)
+    /**
+     * Check mandatory data for tab registration, such as class name and class exists
+     * 
+     * @param string $moduleName
+     * @param ParameterBag $data
+     * @return boolean (= true) when no issue detected
+     * @throws Exception in case of invalid data
+     */
+    protected function checkIsValid($moduleName, ParameterBag $data)
     {
         $className = $data->get('class_name', null);
         if (null === $className) {
             throw new Exception('Missing class name of tab');
         }
         // Check controller exists
-        if (!file_exists(_PS_ROOT_DIR_.
-                DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).
-                DIRECTORY_SEPARATOR.$module->get('name').
-                DIRECTORY_SEPARATOR.'controllers'.
-                DIRECTORY_SEPARATOR.'admin'.
-                DIRECTORY_SEPARATOR.$className.'Controller.php')) {
+        if (!in_array($className.'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
             throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
         }
+        return true;
+    }
+    
+    /**
+     * Find all ModuleAdminController classes from module.
+     * This allow to check a class exists for a registered tab and to register automatically all the classes
+     * not explicitely declared by the module developer.
+     * 
+     * @param string $moduleName
+     * @return array of Symfony\Component\Finder\SplFileInfo, listing all the ModuleAdminControllers found
+     */
+    protected function getModuleAdminControllers($moduleName)
+    {
+        $modulePath = _PS_ROOT_DIR_.'/'.basename(_PS_MODULE_DIR_).
+                '/'.$moduleName.'/controllers/admin/';
+        
+        if (!$this->filesystem->exists($modulePath)) {
+            return array();
+        }
+        
+        $moduleFolder = $this->finder->files()
+                    ->in($modulePath)
+                    ->depth('== 0')
+                    ->name('*.php')
+                    ->exclude(['index.php'])
+                    ->contains('/extends\s+ModuleAdminController/i');
+        
+        return iterator_to_array($moduleFolder);
+    }
+    
+    /**
+     * Convert SPLFileInfo array to file names. Better & easier to check if a class to register exists.
+     * 
+     * @param string $moduleName
+     * @return array of strings
+     */
+    protected function getModuleAdminControllersFilename($moduleName)
+    {
+        return array_map(function(SplFileInfo $file) {
+            return $file->getFilename();
+        }, $this->getModuleAdminControllers($moduleName));
     }
     
     /**
@@ -110,7 +169,7 @@ class ModuleTabRegister
      */
     protected function registerTab(Module $module, ParameterBag $data)
     {
-        $this->checkIsValid($module, $data);
+        $this->checkIsValid($module->get('name'), $data);
         
         // Legacy Tab, to be replaced with Doctrine entity when right management
         // won't be directly linked to the tab creation

@@ -93,6 +93,8 @@ services:
             - "@prestashop.core.admin.lang.repository"
             - "@logger"
             - "@translator"
+            - "@finder"
+            - "@filesystem"
             
     prestashop.adapter.module.tab.unregister:
         class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabUnregister
