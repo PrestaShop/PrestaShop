@@ -37,8 +37,6 @@ define('MAX_COLUMNS', 6);
 /** correct Mac error on eof */
 @ini_set('auto_detect_line_endings', '1');
 
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-
 class AdminImportControllerCore extends AdminController
 {
     public static $column_mask;
@@ -2875,9 +2873,7 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
 
         if ($customer->passwd) {
-            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-            $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-            $customer->passwd = $crypto->hash($customer->passwd, _COOKIE_KEY_);
+            $customer->passwd = $this->get('hashing')->hash($customer->passwd, _COOKIE_KEY_);
         }
 
         $id_shop_list = explode($this->multiple_value_separator, $customer->id_shop);

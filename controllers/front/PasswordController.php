@@ -148,14 +148,7 @@ class PasswordControllerCore extends FrontController
                     if ($customer->getValidResetPasswordToken() !== Tools::getValue('reset_token')) {
                         $this->errors[] = $this->trans('The password change request expired. You should ask for a new one.', array(), 'Shop.Notifications.Error');
                     } else {
-                        try {
-                            $crypto = new Hashing();
-                        } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
-                            $this->errors[] = $this->trans('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.', array(), 'Shop.Notifications.Error');
-                            return false;
-                        }
-
-                        $customer->passwd = $crypto->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
+                        $customer->passwd = $this->get('hashing')->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
                         $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 
                         if ($customer->update()) {

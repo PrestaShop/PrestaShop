@@ -24,8 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Cldr;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
 
 class AdminControllerCore extends Controller
 {
@@ -3757,9 +3759,7 @@ class AdminControllerCore extends Controller
                 }
                 /* Automatically hash password in MD5 */
                 if ($key == 'passwd' && !empty($value)) {
-                    /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-                    $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-                    $value = $crypto->hash($value, _COOKIE_KEY_);
+                    $value = $this->get('hashing')->hash($value, _COOKIE_KEY_);
                 }
                 $object->{$key} = $value;
             }
@@ -4626,5 +4626,17 @@ class AdminControllerCore extends Controller
         }
 
         return $this->tabSlug;
+    }
+
+    protected function buildContainer()
+    {
+        $container = new ContainerBuilder();
+        $container->addCompilerPass(new \LegacyCompilerPass());
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
+        $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
+        $loader->load(_PS_CONFIG_DIR_.'services/admin/services_'. $env .'.yml');
+        $container->compile();
+
+        return $container;
     }
 }
