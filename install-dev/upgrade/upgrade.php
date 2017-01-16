@@ -324,6 +324,8 @@ $datas = array(
 
 if (version_compare(_PS_INSTALL_VERSION_, '1.6.0.11', '<')) {
     $datas[] = array('_MEDIA_SERVER_1_', defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : '');
+    $datas[] = array('_MEDIA_SERVER_2_', defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : '');
+    $datas[] = array('_MEDIA_SERVER_3_', defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : '');
 }
 
 if (defined('_RIJNDAEL_KEY_')) {

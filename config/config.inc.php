@@ -259,3 +259,9 @@ define('_PS_OS_COD_VALIDATION_', Configuration::get('PS_OS_COD_VALIDATION'));
 if (!defined('_MEDIA_SERVER_1_')) {
     define('_MEDIA_SERVER_1_', Configuration::get('PS_MEDIA_SERVER_1'));
 }
+if (!defined('_MEDIA_SERVER_2_')) {
+    define('_MEDIA_SERVER_2_', Configuration::get('PS_MEDIA_SERVER_2'));
+}
+if (!defined('_MEDIA_SERVER_3_')) {
+    define('_MEDIA_SERVER_3_', Configuration::get('PS_MEDIA_SERVER_3'));
+}
