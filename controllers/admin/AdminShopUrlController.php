@@ -540,7 +540,7 @@ class AdminShopUrlControllerCore extends AdminController
         }
 
         if (!array_key_exists('DeleteItem', self::$cache_lang)) {
-            self::$cache_lang['DeleteItem'] = $this->trans('Delete selected item?', array(), 'Admin.Notification.Warning');
+            self::$cache_lang['DeleteItem'] = $this->trans('Delete selected item?', array(), 'Admin.Notifications.Warning');
         }
 
         if (!array_key_exists('Name', self::$cache_lang)) {
