@@ -101,6 +101,16 @@
       <title>Product deletion</title>
       <description>This hook is called when a product is deleted</description>
     </hook>
+    <hook id="actionObjectProductInCartDeleteBefore">
+      <name>actionObjectProductInCartDeleteBefore</name>
+      <title>Cart product removal</title>
+      <description>This hook is called before a product is removed from a cart</description>
+    </hook>
+    <hook id="actionObjectProductInCartDeleteAfter">
+      <name>actionObjectProductInCartDeleteAfter</name>
+      <title>Cart product removal</title>
+      <description>This hook is called after a product is removed from a cart</description>
+    </hook>
     <hook id="displayFooterProduct">
       <name>displayFooterProduct</name>
       <title>Product footer</title>
