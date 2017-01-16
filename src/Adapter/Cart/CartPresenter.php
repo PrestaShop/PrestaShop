@@ -76,7 +76,7 @@ class CartPresenter implements PresenterInterface
 
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
             // return an array of attributes
-            $rawProduct['attributes'] = explode(',', $rawProduct['attributes']);
+            $rawProduct['attributes'] = explode(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), $rawProduct['attributes']);
             $attributesArray = array();
 
             foreach ($rawProduct['attributes'] as $attribute) {
@@ -389,7 +389,7 @@ class CartPresenter implements PresenterInterface
 
         $cartRulesIds = array_flip(array_map(
             function ($voucher) {
-               return $voucher['id_cart_rule'];
+                return $voucher['id_cart_rule'];
             },
             $vouchers['added']
         ));
