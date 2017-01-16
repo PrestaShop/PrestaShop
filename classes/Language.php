@@ -947,6 +947,8 @@ class LanguageCore extends ObjectModel
             self::installEmailsLanguagePack($lang_pack, $errors);
         }
 
+        Language::updateMultilangTable($iso);
+
         return count($errors) ? $errors : true;
     }
 
@@ -1131,5 +1133,85 @@ class LanguageCore extends ObjectModel
             }
             $gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
         }
+    }
+
+    /**
+     * Update all table_lang from xlf & DataLang
+     *
+     * @param $iso_code
+     *
+     * @return bool
+     */
+    public static function updateMultilangTable($iso_code)
+    {
+        $useLang = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = "'.pSQL($iso_code).'" ', true, false);
+
+        if (!empty($useLang)) {
+
+            $lang = new Language($useLang['id_lang']);
+
+            $tables = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
+            $langTables = array();
+
+            // Select table for existing class
+            foreach ($tables as $table) {
+                foreach ($table as $t) {
+                    $className = ucfirst(Tools::toCamelCase(str_replace(_DB_PREFIX_, '', $t)));
+                    if (class_exists($className)) {
+                        $langTables[$t] = $className;
+                    }
+                }
+            }
+
+            foreach ($langTables as $name => $className) {
+                $classObject = new $className(Context::getContext()->getTranslator(), $lang->locale);
+
+                $keys = $classObject->getKeys();
+                $fieldsToUpdate = $classObject->getFieldsToUpdate();
+
+                if (!empty($keys) && !empty($fieldsToUpdate)) {
+
+                    // get table data
+                    $tableData = Db::getInstance()->executeS('SELECT * FROM `' . $name . '`
+                        WHERE `id_lang` = "' . (int)$lang->id . '"', true, false);
+
+                    if (!empty($tableData)) {
+                        foreach ($tableData as $data) {
+
+                            $updateWhere = '';
+                            $updateField = '';
+
+                            // Construct update where
+                            foreach ($keys as $key) {
+                                if (!empty($updateWhere)) {
+                                    $updateWhere .= ' AND ';
+                                }
+                                $updateWhere .= $key . ' = "' . pSQL($data[$key]) . '"';
+                            }
+
+                            // Construct update field
+                            foreach ($fieldsToUpdate as $toUpdate) {
+                                $translatedField = $classObject->getFieldValue($toUpdate, $data[$toUpdate]);
+
+                                if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
+                                    if (!empty($updateField)) {
+                                        $updateField .= ' , ';
+                                    }
+                                    $updateField .= $toUpdate . ' = "' . pSQL($translatedField) . '"';
+                                }
+                            }
+
+                            // Update table
+                            if (!empty($updateWhere) && !empty($updateField)) {
+                                $sql = 'UPDATE `' . $name . '` SET ' . $updateField . ' WHERE ' . $updateWhere . ' AND `id_lang` = "' . (int)$lang->id . '" LIMIT 1;';
+                                Db::getInstance()->execute($sql);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }

@@ -909,8 +909,6 @@ class AdminTranslationsControllerCore extends AdminController
                 Language::loadLanguages();
                 Tools::clearAllCache();
 
-                // TODO: Update AdminTranslationsController::addNewTabs to install tabs translated
-
                 $languageCode = explode('-', Language::getLanguageCodeByIso($isoCode));
                 $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
                 $cldrUpdate->fetchLocale($languageCode[0].'-'.Tools::strtoupper($languageCode[1]));
