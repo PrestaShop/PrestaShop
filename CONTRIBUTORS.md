@@ -64,6 +64,7 @@ GitHub contributors:
 - CINS
 - cippest
 - Claire Meuriot
+- Claudio Venturini
 - cmouleyre
 - codvir
 - Comkwatt
@@ -75,6 +76,7 @@ GitHub contributors:
 - Damien Metzger
 - Damien PIQUET
 - DamienMetzger
+- damien_low
 - Damon Skelhorn
 - Dan Hlavenka
 - danidomen
@@ -89,6 +91,7 @@ GitHub contributors:
 - David-Julian BUCH
 - Davide
 - Davy Rolink
+- Debusschere Alexandre
 - Denver Prophit Jr.
 - Desbouche Christophe
 - DevNet
@@ -137,6 +140,7 @@ GitHub contributors:
 - Francois-Marie de Jouvencel
 - François Gaillard
 - Frederic BENOIST
+- Gabriel Arama
 - Gabriel Schwardy
 - Gaelle ITZKOVITZ
 - Gamesh
@@ -253,6 +257,7 @@ GitHub contributors:
 - Mehdi BOUZIDI
 - Michael Dekker
 - Michael Hjulskov
+- Michel ANTOINE
 - Michel Courtade
 - Mickael Desgranges
 - Mickael Andrieu
@@ -271,6 +276,7 @@ GitHub contributors:
 - nezenmoins
 - Nicolas Martin
 - Nicolas Sorosac
+- Nigel Helliwell
 - Niklas Ekman
 - Niko Wicaksono
 - Nils-Helge Garli Hegvik
@@ -280,6 +286,7 @@ GitHub contributors:
 - nturato
 - okom3pom
 - oleacorner
+- Olivier Monaco
 - Otto Nascarella
 - Pan P
 - Pan P.
@@ -323,12 +330,14 @@ GitHub contributors:
 - Raphael Droz
 - Raphael Malie
 - raulgundin
+- remoteshaman.com
 - Renaud Sanchez - ChouetteWeb.fr
 - rGaillard
 - Rhys
 - Richard LT
 - Rimas Kudelis
 - robert
+- roja45
 - Roland SchuÌˆtz
 - romainberger
 - Roy
@@ -376,8 +385,10 @@ GitHub contributors:
 - Sebastien Monterisi
 - Tanguy JACQUET
 - tchauviere
+- thecb1
 - therampagerado
 - Thibaud Chauviere
+- Thierry Marianne
 - thoma202
 - Thomas
 - Thomas Blanc

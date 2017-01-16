@@ -24,6 +24,34 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.1.11 - (2017-01-16)
+####################################
+
+	Fixed bugs:
+	CO: Fix detection of APCu on Performance page
+	CO: Cast id_cart to int to keep it in the SQL query
+	CO: Performance opt on scandir() usage
+	CO: Fix for MySQL error 1093 in generating the invoice number
+	CO: Fix misuse of getimagesize returned informations
+	CO: Fixed method Order::isVirtual
+	CO: PHP 7.1 Fatal error: operator not supported in DbQuery.php
+	CO: Fix multiple configuration entry for PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE
+
+	BO: Fixed category search in product association tab
+	BO: Fix date filter when entering BO
+	BO: Fixed product customization duplication
+	BO: Uploader helper multiple files undefined _max_files
+	BO: Orders amount currency fixed
+	BO: Remove synchronous javascript call in translations
+
+	FO: Reset country in address page after error
+	FO: Fix & optimize search::find queries
+	FO: Re-instate default id for product list
+	FO: Accessory product names are not the product name (Schema.org)
+	FO: Fix grid view payment methods on small devices
+
+
+####################################
 #   v1.6.1.10 - (2016-11-25)
 ####################################
 
@@ -39,7 +67,7 @@ Release Notes for PrestaShop 1.6
 	[*] BO : (81d6f5b) Bring back email pattern value in case someone uses it
 
 
-	
+
 
 
 ####################################
