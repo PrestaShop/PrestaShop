@@ -111,6 +111,7 @@ class OrderPresenter implements PresenterInterface
 
         $orderProducts = $order->getCartProducts();
         $cartProducts = $this->cartPresenter->present($cart);
+        $orderPaid = $order->getCurrentOrderState() && $order->getCurrentOrderState()->paid;
 
         foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
@@ -118,7 +119,7 @@ class OrderPresenter implements PresenterInterface
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
             $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price']);
 
-            if ($orderProduct['is_virtual']) {
+            if ($orderPaid && $orderProduct['is_virtual']) {
                 $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
                 $product_download = new ProductDownload($id_product_download);
                 if ($product_download->display_filename != '') {
