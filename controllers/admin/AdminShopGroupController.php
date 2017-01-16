@@ -246,7 +246,7 @@ class AdminShopGroupControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->trans('Status', array(), 'Admin.Globale'),
+                    'label' => $this->trans('Status', array(), 'Admin.Global'),
                     'name' => 'active',
                     'required' => true,
                     'class' => 't',

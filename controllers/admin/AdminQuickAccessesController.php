@@ -87,7 +87,7 @@ class AdminQuickAccessesControllerCore extends AdminController
                     'lang' => true,
                     'maxlength' => 32,
                     'required' => true,
-                    'hint' => $this->trans('Forbidden characters:', array(), 'Admin.Notification.Info').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Forbidden characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                 ),
                 array(
                     'type' => 'text',
@@ -190,7 +190,7 @@ class AdminQuickAccessesControllerCore extends AdminController
             }
             /* voluntary do affectation here */
             elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
-                PrestaShopLogger::addLog(sprintf($this->trans('%s addition', array(), 'Admin.AdvParameters.feature'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+                PrestaShopLogger::addLog(sprintf($this->trans('%s addition', array(), 'Admin.AdvParameters.Feature'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
                 $this->afterAdd($this->object);
             }
         }
