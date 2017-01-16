@@ -85,15 +85,15 @@
   <div class="modal-footer">
     <div class="input-group pull-right">
       <button type="button" class="btn btn-primary" tabindex="-1" id="import_continue_button" style="display: none;">
-        Ignore warnings and continue?
+        {l s="Ignore warnings and continue?" d="Admin.AdvParameters.Notification"}
       </button>
       &nbsp;
       <button type="button" class="btn btn-default" tabindex="-1" id="import_stop_button">
-        Abort import
+        {l s="Abort import" d="Admin.AdvParameters.Feature"}
       </button>
       &nbsp;
       <button type="button" class="btn btn-success" data-dismiss="modal" tabindex="-1" id="import_close_button" style="display: none;">
-        Close
+        {l s="Close" d="Admin.Actions"}
       </button>
     </div>
   </div>
