@@ -88,7 +88,7 @@ class AdminEmployeesControllerCore extends AdminController
             'firstname' => array('title' => $this->trans('First name', array(), 'Admin.Global')),
             'lastname' => array('title' => $this->trans('Last name', array(), 'Admin.Global')),
             'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global')),
-            'profile' => array('title' => $this->trans('Profile', array(), 'AdvParameters.Feature'), 'type' => 'select', 'list' => $this->profiles_array,
+            'profile' => array('title' => $this->trans('Profile', array(), 'Admin.AdvParameters.Feature'), 'type' => 'select', 'list' => $this->profiles_array,
                 'filter_key' => 'pl!name', 'class' => 'fixed-width-lg'),
             'active' => array('title' => $this->trans('Active', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status',
                 'type' => 'bool', 'class' => 'fixed-width-sm'),
@@ -96,19 +96,19 @@ class AdminEmployeesControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Employee options', array(), 'AdvParameters.Feature'),
+                'title' =>    $this->trans('Employee options', array(), 'Admin.AdvParameters.Feature'),
                 'fields' =>    array(
                     'PS_PASSWD_TIME_BACK' => array(
-                        'title' => $this->trans('Password regeneration', array(), 'AdvParameters.Feature'),
-                        'hint' => $this->trans('Security: Minimum time to wait between two password changes.', array(), 'AdvParameters.Feature'),
+                        'title' => $this->trans('Password regeneration', array(), 'Admin.AdvParameters.Feature'),
+                        'hint' => $this->trans('Security: Minimum time to wait between two password changes.', array(), 'Admin.AdvParameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => ' '.$this->trans('minutes', array(), 'AdvParameters.Feature'),
+                        'suffix' => ' '.$this->trans('minutes', array(), 'Admin.AdvParameters.Feature'),
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                     'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array(
-                        'title' => $this->trans('Memorize the language used in Admin panel forms', array(), 'AdvParameters.Feature'),
-                        'hint' => $this->trans('Allow employees to select a specific language for the Admin panel form.', array(), 'AdvParameters.Feature'),
+                        'title' => $this->trans('Memorize the language used in Admin panel forms', array(), 'Admin.AdvParameters.Feature'),
+                        'hint' => $this->trans('Allow employees to select a specific language for the Admin panel form.', array(), 'Admin.AdvParameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'value',
@@ -187,7 +187,7 @@ class AdminEmployeesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_employee'] = array(
                 'href' => self::$currentIndex.'&addemployee&token='.$this->token,
-                'desc' => $this->trans('Add new employee', array(), 'AdvParameters.Feature'),
+                'desc' => $this->trans('Add new employee', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -202,7 +202,7 @@ class AdminEmployeesControllerCore extends AdminController
                         '%lastname%' => $obj->lastname,
                         '%firstname%' => $obj->firstname,
                     ),
-                    'AdvParameters.Feature'
+                    'Admin.AdvParameters.Feature'
                 );
                 $this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ',
                     $this->toolbar_title);
@@ -237,7 +237,7 @@ class AdminEmployeesControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Employees', array(), 'AdvParameters.Feature'),
+                'title' => $this->trans('Employees', array(), 'Admin.AdvParameters.Feature'),
                 'icon' => 'icon-user'
             ),
             'input' => array(
@@ -299,7 +299,7 @@ class AdminEmployeesControllerCore extends AdminController
             $this->fields_form['input'][] = array(
                 'type' => 'password',
                 'label' => $this->trans('Password', array(), 'Admin.Global'),
-                'hint' => $this->trans('Password should be at least %num% characters long.', array('%num%' => Validate::ADMIN_PASSWORD_LENGTH), 'AdvParameters.Help'),
+                'hint' => $this->trans('Password should be at least %num% characters long.', array('%num%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.AdvParameters.Help'),
                 'name' => 'passwd'
                 );
         }
@@ -307,7 +307,7 @@ class AdminEmployeesControllerCore extends AdminController
         $this->fields_form['input'] = array_merge($this->fields_form['input'], array(
             array(
                 'type' => 'switch',
-                'label' => $this->trans('Subscribe to PrestaShop newsletter', array(), 'AdvParameters.Feature'),
+                'label' => $this->trans('Subscribe to PrestaShop newsletter', array(), 'Admin.AdvParameters.Feature'),
                 'name' => 'optin',
                 'required' => false,
                 'is_bool' => true,
@@ -323,13 +323,13 @@ class AdminEmployeesControllerCore extends AdminController
                         'label' => $this->trans('No', array(), 'Admin.Global')
                     )
                 ),
-                'hint' => $this->trans('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.', array(), 'AdvParameters.Help')
+                'hint' => $this->trans('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.', array(), 'Admin.AdvParameters.Help')
             ),
             array(
                 'type' => 'default_tab',
-                'label' => $this->trans('Default page', array(), 'AdvParameters.Feature'),
+                'label' => $this->trans('Default page', array(), 'Admin.AdvParameters.Feature'),
                 'name' => 'default_tab',
-                'hint' => $this->trans('This page will be displayed just after login.', array(), 'AdvParameters.Help'),
+                'hint' => $this->trans('This page will be displayed just after login.', array(), 'Admin.AdvParameters.Help'),
                 'options' => $this->tabs_list
             ),
             array(
@@ -364,7 +364,7 @@ class AdminEmployeesControllerCore extends AdminController
                         'label' => $this->trans('Disabled', array(), 'Admin.Global')
                     )
                 ),
-                'hint' => $this->trans('Allow or disallow this employee to log in to the Admin panel.', array(), 'AdvParameters.Help')
+                'hint' => $this->trans('Allow or disallow this employee to log in to the Admin panel.', array(), 'Admin.AdvParameters.Help')
             );
 
             // if employee is not SuperAdmin (id_profile = 1), don't make it possible to select the admin profile
@@ -378,7 +378,7 @@ class AdminEmployeesControllerCore extends AdminController
             }
             $this->fields_form['input'][] = array(
                 'type' => 'select',
-                'label' => $this->trans('Permission profile', array(), 'AdvParameters.Feature'),
+                'label' => $this->trans('Permission profile', array(), 'Admin.AdvParameters.Feature'),
                 'name' => 'id_profile',
                 'required' => true,
                 'options' => array(
@@ -387,7 +387,7 @@ class AdminEmployeesControllerCore extends AdminController
                     'name' => 'name',
                     'default' => array(
                         'value' => '',
-                        'label' => $this->trans('-- Choose --', array(), 'AdvParameters.Help'),
+                        'label' => $this->trans('-- Choose --', array(), 'Admin.AdvParameters.Help'),
                     )
                 )
             );
@@ -397,7 +397,7 @@ class AdminEmployeesControllerCore extends AdminController
                 $this->fields_form['input'][] = array(
                     'type' => 'shop',
                     'label' => $this->trans('Shop association', array(), 'Admin.Global'),
-                    'hint' => $this->trans('Select the shops the employee is allowed to access.', array(), 'AdvParameters.Help'),
+                    'hint' => $this->trans('Select the shops the employee is allowed to access.', array(), 'Admin.AdvParameters.Help'),
                     'name' => 'checkBoxShopAsso',
                 );
             }
