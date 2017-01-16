@@ -31,6 +31,14 @@
 		</div>
 	</div>
 {/if}
+{if isset($error)}
+  <div class="bootstrap">
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {$error}
+    </div>
+  </div>
+{/if}
 {if count($errors) && current($errors) != '' && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)}
 
 	<div class="bootstrap">
