@@ -2268,7 +2268,7 @@ class AdminProductsController extends AdminProductsControllerCore
         static $irow;
         $content = '';
 
-        if (!$category) {
+        if (!$id_category) {
             $id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
         }
 
@@ -3968,55 +3968,54 @@ class AdminProductsController extends AdminProductsControllerCore
             'upc' => array('title' => $this->l('UPC'), 'align' => 'left')
         );
 
+        $comb_array = array();
         if ($product->id) {
             /* Build attributes combinations */
             $combinations = $product->getAttributeCombinations($this->context->language->id);
             $groups = array();
-            $comb_array = array();
             if (is_array($combinations)) {
                 $combination_images = $product->getCombinationImages($this->context->language->id);
                 foreach ($combinations as $k => $combination) {
                     $price_to_convert = Tools::convertPrice($combination['price'], $currency);
                     $price = Tools::displayPrice($price_to_convert, $currency);
 
-                    $comb_array[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
-                    $comb_array[$combination['id_product_attribute']]['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
-                    $comb_array[$combination['id_product_attribute']]['wholesale_price'] = $combination['wholesale_price'];
-                    $comb_array[$combination['id_product_attribute']]['price'] = $price;
-                    $comb_array[$combination['id_product_attribute']]['weight'] = $combination['weight'].Configuration::get('PS_WEIGHT_UNIT');
-                    $comb_array[$combination['id_product_attribute']]['unit_impact'] = $combination['unit_price_impact'];
-                    $comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
-                    $comb_array[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
-                    $comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
-                    $comb_array[$combination['id_product_attribute']]['id_image'] = isset($combination_images[$combination['id_product_attribute']][0]['id_image']) ? $combination_images[$combination['id_product_attribute']][0]['id_image'] : 0;
-                    $comb_array[$combination['id_product_attribute']]['available_date'] = strftime($combination['available_date']);
-                    $comb_array[$combination['id_product_attribute']]['default_on'] = $combination['default_on'];
+                    $container['id_product_attribute'] = $combination['id_product_attribute'];
+                    $container['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
+                    $container['wholesale_price'] = $combination['wholesale_price'];
+                    $container['price'] = $price;
+                    $container['weight'] = $combination['weight'].Configuration::get('PS_WEIGHT_UNIT');
+                    $container['unit_impact'] = $combination['unit_price_impact'];
+                    $container['reference'] = $combination['reference'];
+                    $container['ean13'] = $combination['ean13'];
+                    $container['upc'] = $combination['upc'];
+                    $container['id_image'] = isset($combination_images[$combination['id_product_attribute']][0]['id_image']) ? $combination_images[$combination['id_product_attribute']][0]['id_image'] : 0;
+                    $container['available_date'] = strftime($combination['available_date']);
+                    $container['default_on'] = $combination['default_on'];
                     if ($combination['is_color_group']) {
                         $groups[$combination['id_attribute_group']] = $combination['group_name'];
                     }
+                    $comb_array[$combination['id_product_attribute']] = $container;
                 }
             }
 
-            if (isset($comb_array)) {
-                foreach ($comb_array as $id_product_attribute => $product_attribute) {
-                    $list = '';
+            foreach ($comb_array as $id_product_attribute => $product_attribute) {
+                $list = '';
 
-                    /* In order to keep the same attributes order */
-                    asort($product_attribute['attributes']);
+                /* In order to keep the same attributes order */
+                asort($product_attribute['attributes']);
 
-                    foreach ($product_attribute['attributes'] as $attribute) {
-                        $list .= $attribute[0].' - '.$attribute[1].', ';
-                    }
+                foreach ($product_attribute['attributes'] as $attribute) {
+                    $list .= $attribute[0].' - '.$attribute[1].', ';
+                }
 
-                    $list = rtrim($list, ', ');
-                    $comb_array[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
-                    $comb_array[$id_product_attribute]['available_date'] = $product_attribute['available_date'] != 0 ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
-                    $comb_array[$id_product_attribute]['attributes'] = $list;
-                    $comb_array[$id_product_attribute]['name'] = $list;
+                $list = rtrim($list, ', ');
+                $comb_array[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
+                $comb_array[$id_product_attribute]['available_date'] = $product_attribute['available_date'] != 0 ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
+                $comb_array[$id_product_attribute]['attributes'] = $list;
+                $comb_array[$id_product_attribute]['name'] = $list;
 
-                    if ($product_attribute['default_on']) {
-                        $comb_array[$id_product_attribute]['class'] = $default_class;
-                    }
+                if ($product_attribute['default_on']) {
+                    $comb_array[$id_product_attribute]['class'] = $default_class;
                 }
             }
         }
