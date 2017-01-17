@@ -26,7 +26,8 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\Process\Exception\LogicException;
-use \ContextCore as OldContext;
+use ContextCore as OldContext;
+use Language;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -41,13 +42,13 @@ class LegacyContext
      *
      * @throws LogicException If legacy context is not set properly
      *
-     * @return Context The Legacy context, for Adapter use only.
+     * @return \Context The Legacy context, for Adapter use only.
      */
     public function getContext()
     {
         static $legacyContext = null;
-        
-        if(null === $legacyContext) {
+
+        if (is_null($legacyContext)) {
             $legacyContext = OldContext::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
@@ -189,5 +190,19 @@ class LegacyContext
             $employeeCurrency = $this->getContext()->currency->sign;
         }
         return $employeeCurrency;
+    }
+
+    /**
+     * @return Language
+     */
+    public function getLanguage()
+    {
+        $context = $this->getContext();
+
+        if ($context->language instanceof Language) {
+            return $context->language;
+        }
+
+        return new Language;
     }
 }
