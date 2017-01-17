@@ -1243,7 +1243,7 @@ class FrontControllerCore extends Controller
     public function setTemplate($template, $params = array(), $locale = null)
     {
         parent::setTemplate(
-            $this->getTemplateFile($template, $params, $locale = null)
+            $this->getTemplateFile($template, $params, $locale)
         );
     }
 
