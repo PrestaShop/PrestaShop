@@ -139,6 +139,7 @@ services:
 
     prestashop.adapter.data_provider.category:
         class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
+        arguments: ["@=service('prestashop.adapter.legacy.context')"]
 
     prestashop.adapter.data_provider.country:
         class: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider

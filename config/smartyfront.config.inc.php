@@ -207,7 +207,8 @@ function smartyTranslate($params, &$smarty)
         }
     }
 
-    if (($translation = Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d'])) !== $params['s']) {
+    if (($translation = Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d'])) !== $params['s']
+        && $params['mod'] === false) {
         return $translation;
     }
 
