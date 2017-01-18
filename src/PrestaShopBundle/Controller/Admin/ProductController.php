@@ -79,7 +79,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $sortOrder To order product list
      * @return array Template vars
      */
-    public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
+    public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'desc')
     {
         $context = $this->get('prestashop.adapter.legacy.context')->getContext();
         $request->getSession()->set('_locale', $context->language->locale);
