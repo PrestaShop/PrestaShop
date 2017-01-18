@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
 
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
@@ -89,7 +90,7 @@ class ModuleTabUnregister
     private function unregisterTab(Tab $tab)
     {
         // We need to use the legacy class because of the right management
-        $tab_legacy = new Tab($tab->id);
+        $tab_legacy = new \Tab($tab->getId());
             
         if (!$tab_legacy->delete()) {
             $this->logger->warning(

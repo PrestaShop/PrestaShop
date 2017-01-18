@@ -36,7 +36,7 @@ class TabRepository extends EntityRepository
      */
     public function findByModule($moduleName)
     {
-        return $this->findByModule(['module' => $moduleName]);
+        return $this->findBy(['module' => $moduleName]);
     }
     
     /**
