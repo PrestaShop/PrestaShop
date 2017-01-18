@@ -24,7 +24,7 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
-import setUpAddress from './checkout-payment'
+import setUpAddress from './checkout-address'
 import setUpDelivery from './checkout-delivery'
 import setUpPayment from './checkout-payment'
 
