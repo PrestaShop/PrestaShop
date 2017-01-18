@@ -76,6 +76,7 @@ themes/default-bootstrap/modules/*/mails/*
 !/app/Resources/translations/default
 /app/test/cache/*
 !app/test/cache/.gitkeep
+/app/config/config.php
 /app/config/parameters.yml
 /app/config/parameters.php
 /app/logs/*
