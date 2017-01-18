@@ -1002,7 +1002,7 @@ class AdminImportControllerCore extends AdminController
         $res = array();
         if (is_array(self::$column_mask)) {
             foreach (self::$column_mask as $type => $nb) {
-                $res[$type] = isset($row[$nb]) ? $row[$nb] : null;
+                $res[$type] = isset($row[$nb]) ? trim($row[$nb]) : null;
             }
         }
 
@@ -2367,6 +2367,8 @@ class AdminImportControllerCore extends AdminController
 			', false);
             if (isset($datas['id_product']) && $datas['id_product']) {
                 $product = new Product((int)$datas['id_product'], false, $default_language);
+            } else {
+                return;
             }
         } else {
             return;
@@ -2587,11 +2589,11 @@ class AdminImportControllerCore extends AdminController
                                         0,
                                         (Configuration::get('PS_USE_ECOTAX') ? (float)$info['ecotax'] : 0),
                                         $id_image,
-                                        strval($info['reference']),
-                                        strval($info['ean13']),
+                                        (string)$info['reference'],
+                                        (string)$info['ean13'],
                                         (int)$info['default_on'],
                                         0,
-                                        strval($info['upc']),
+                                        (string)$info['upc'],
                                         (int)$info['minimal_quantity'],
                                         $info['available_date'],
                                         null,
@@ -2617,12 +2619,12 @@ class AdminImportControllerCore extends AdminController
                             (Configuration::get('PS_USE_ECOTAX') ? (float)$info['ecotax'] : 0),
                             (int)$info['quantity'],
                             $id_image,
-                            strval($info['reference']),
+                            (string)$info['reference'],
                             0,
-                            strval($info['ean13']),
+                            (string)$info['ean13'],
                             (int)$info['default_on'],
                             0,
-                            strval($info['upc']),
+                            (string)$info['upc'],
                             (int)$info['minimal_quantity'],
                             $id_shop_list,
                             $info['available_date']
