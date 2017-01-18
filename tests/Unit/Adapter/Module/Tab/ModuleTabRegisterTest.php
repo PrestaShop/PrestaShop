@@ -59,6 +59,11 @@ class ModuleTabRegisterTest extends UnitTestCase
         array('doge', array('WololoController.php', 'AdminMyController.php')),
     );
     
+    protected $expectedTabsToAdd = array(
+        'gamification' => array('AdminGamification'),
+        'doge' => array('Wololo', 'AdminMissing', 'AdminMy'),
+    );
+    
     /**
      * @var ModuleTabRegister
      */
@@ -116,6 +121,31 @@ class ModuleTabRegisterTest extends UnitTestCase
                     continue;
                 }
                 $this->fail('Expected Exception "'.$tab['exception'].'" has not been raised.');
+            }
+        }
+    }
+    
+    public function testTabsListToRegister()
+    {
+        foreach ($this->tabsToTest as $moduleName => $data) {
+            $tabs = $this->invokeMethod($this->tabRegister, 'addUndeclaredTabs', array($moduleName, $data));
+            
+            // We test there is no unexpected tab to register
+            // Be aware, it also include which can throw an exception later when being validated
+            foreach($tabs as $tab) {
+                $this->assertTrue(
+                        in_array($tab['class_name'], $this->expectedTabsToAdd[$moduleName]),
+                        'Module '.$moduleName.' should not register '.$tab['class_name']);
+            }
+            
+            // In the opposite, we check no tab is missing
+            foreach ($this->expectedTabsToAdd[$moduleName] as $moduleAdminController) {
+                foreach ($tabs as $tab) {
+                    if ($tab['class_name'] === $moduleAdminController) {
+                        continue 2;
+                    }
+                }
+                $this->fail('ModuleAdminController '.$moduleAdminController.' is expected but not found in the list to register!');
             }
         }
     }

@@ -81,7 +81,7 @@ class ModuleTabRegister
     }
     
     /**
-     * Install all module-defined tabs.
+     * Fetch module-defined tabs and find undeclared ModuleAdminControllers.
      *
      * This is done automatically as part of the module installation.
      * @param Module $module
