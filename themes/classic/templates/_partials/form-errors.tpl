@@ -24,10 +24,12 @@
  *}
 {if $errors|count}
   <div class="help-block">
-    <ul>
-      {foreach $errors as $error}
-        <li>{$error}</li>
-      {/foreach}
-    </ul>
+    {block name='form_errors'}
+      <ul>
+        {foreach $errors as $error}
+          <li>{$error}</li>
+        {/foreach}
+      </ul>
+    {/block}
   </div>
 {/if}

@@ -30,10 +30,18 @@
 
 {block name='page_content_container'}
   <section id="content" class="page-content page-cms page-cms-{$cms.id}">
-    {$cms.content nofilter}
 
-    {hook h='displayCMSDisputeInformation'}
+    {block name='cms_content'}
+      {$cms.content nofilter}
+    {/block}
 
-    {hook h='displayCMSPrintButton'}
+    {block name='hook_cms_dispute_information'}
+      {hook h='displayCMSDisputeInformation'}
+    {/block}
+
+    {block name='hook_cms_print_button'}
+      {hook h='displayCMSPrintButton'}
+    {/block}
+
   </section>
 {/block}

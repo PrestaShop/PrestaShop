@@ -24,7 +24,10 @@
  *}
 <section id="js-checkout-summary" class="card js-cart" data-refresh-url="{$urls.pages.cart}?ajax=1">
   <div class="card-block">
-    {hook h='displayCheckoutSummaryTop'}
+    {block name='hook_checkout_summary_top'}
+      {hook h='displayCheckoutSummaryTop'}
+    {/block}
+
     {block name='cart_summary_products'}
       <div class="cart-summary-products">
 

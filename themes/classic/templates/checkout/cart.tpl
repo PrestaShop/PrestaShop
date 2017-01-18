@@ -50,9 +50,9 @@
         {/block}
 
         <!-- shipping informations -->
-        <div>
+        {block name='hook_shopping_cart_footer'}
           {hook h='displayShoppingCartFooter'}
-        </div>
+        {/block}
       </div>
 
       <!-- Right Block: cart subtotal & cart total -->
@@ -61,7 +61,9 @@
         {block name='cart_summary'}
           <div class="card cart-summary">
 
-            {hook h='displayShoppingCart'}
+            {block name='hook_shopping_cart'}
+              {hook h='displayShoppingCart'}
+            {/block}
 
             {block name='cart_totals'}
               {include file='checkout/_partials/cart-detailed-totals.tpl' cart=$cart}
@@ -74,7 +76,7 @@
           </div>
         {/block}
 
-        {block name='display_reassurance'}
+        {block name='hook_reassurance'}
           {hook h='displayReassurance'}
         {/block}
 

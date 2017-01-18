@@ -22,8 +22,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<section class="checkout-step -unreachable" id="{$identifier}">
-  <h1 class="step-title h3">
-    <span class="step-number">{$position}</span> {$title}
-  </h1>
-</section>
+{block name='step'}
+  <section class="checkout-step -unreachable" id="{$identifier}">
+    <h1 class="step-title h3">
+      <span class="step-number">{$position}</span> {$title}
+    </h1>
+  </section>
+{/block}

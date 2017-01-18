@@ -25,6 +25,7 @@
 <div class="product-add-to-cart">
   {if !$configuration.is_catalog}
     <span class="control-label">{l s='Quantity' d='Shop.Theme.Catalog'}</span>
+
     {block name='product_quantity'}
       <div class="product-quantity">
         <div class="qty">
@@ -35,8 +36,9 @@
             value="{$product.quantity_wanted}"
             class="input-group"
             min="{$product.minimal_quantity}"
-          />
+          >
         </div>
+
         <div class="add">
           <button
             class="btn btn-primary add-to-cart"
@@ -49,6 +51,7 @@
             <i class="material-icons shopping-cart">&#xE547;</i>
             {l s='Add to cart' d='Shop.Theme.Actions'}
           </button>
+
           {block name='product_availability'}
             <span id="product-availability">
               {if $product.show_availability && $product.availability_message}
@@ -63,6 +66,7 @@
               {/if}
             </span>
           {/block}
+
         </div>
       </div>
       <div class="clearfix"></div>
