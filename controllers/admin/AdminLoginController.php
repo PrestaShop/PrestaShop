@@ -73,7 +73,7 @@ class AdminLoginControllerCore extends AdminController
             $clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'), explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
             // If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
             if ($clientIsMaintenanceOrLocal) {
-                $warningSslMessage = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', array(), 'Admin.Login.Notifications');
+                $warningSslMessage = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', array(), 'Admin.Login.Notification');
             } else {
                 $url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
                 $warningSslMessage = sprintf(
@@ -203,7 +203,7 @@ class AdminLoginControllerCore extends AdminController
             $is_employee_loaded = $this->context->employee->getByEmail($email, $passwd);
             $employee_associated_shop = $this->context->employee->getAssociatedShops();
             if (!$is_employee_loaded) {
-                $this->errors[] = $this->trans('The employee does not exist, or the password provided is incorrect.', array(), 'Admin.Login.Notifications');
+                $this->errors[] = $this->trans('The employee does not exist, or the password provided is incorrect.', array(), 'Admin.Login.Notification');
                 $this->context->employee->logout();
             } elseif (empty($employee_associated_shop) && !$this->context->employee->isSuperAdmin()) {
                 $this->errors[] = $this->trans('This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).', array(), 'Admin.Login.Notifications');
