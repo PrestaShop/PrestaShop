@@ -161,7 +161,10 @@ abstract class ModuleCore
     protected static $_defered_clearCache = array();
     protected static $_defered_func_call = array();
 
-    /** @var array Array of arrays representing tabs added by this module. @see installTabs() */
+    /**
+     * @var array Array of arrays representing tabs added by this module.
+     * @see PrestaShop\PrestaShop\Adapter\Module\Tab\RegisterTabs($module)
+     */
     protected $tabs = array();
 
     /** @var bool If true, allow push */

@@ -492,7 +492,6 @@ class ModuleManager implements AddonManagerInterface
         try {
             if ((bool)$keep_data && method_exists($this, 'reset')) {
                 $status = $module->onReset();
-                $this->dispatch(ModuleManagementEvent::RESET, $module);
             } else {
                 $status = ($module->onUninstall() && $module->onInstall());
             }
@@ -507,6 +506,7 @@ class ModuleManager implements AddonManagerInterface
                 0, $e);
         }
         
+        $this->dispatch(ModuleManagementEvent::RESET, $module);
         return $status;
     }
 

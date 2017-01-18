@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,6 +40,7 @@ use TabCore as Tab;
 
 class ModuleTabRegister
 {
+    private $defaultParent = 'DEFAULT';
     /**
      * @var LangRepository
      */
@@ -118,16 +119,16 @@ class ModuleTabRegister
             }
         }, $tabs);
         
-        foreach ($this->getModuleAdminControllersFilename($moduleName) as $adminControllerName) {
+        foreach ($this->getModuleAdminControllersFilename($moduleName) as $adminControllerFileName) {
+            $adminControllerName = str_replace('Controller.php', '', $adminControllerFileName);
             if (in_array($adminControllerName, $tabsNames)) {
                 continue;
             }
             
             $tabs[] = array(
-                'class_name' => str_replace('Controller.php', '', $adminControllerName),
+                'class_name' => $adminControllerName,
             );
         }
-        
         return $tabs;
     }
     
@@ -208,17 +209,17 @@ class ModuleTabRegister
         // won't be directly linked to the tab creation
         // @ToDo
         $tab = new Tab();
-        $tab->active = $data->getBoolean('active', false);
+        $tab->active = $data->getBoolean('visible', false);
         $tab->class_name = $data->get('class_name');
         $tab->module = $module->get('name');
-        $tab->name = $data->get('name', $tab->class_name);
+        $tab->name = $data->get('name', array($tab->class_name));
 
-        // Handle hidden or root position
+        // Handle parent menu
         $parentClassName = $data->get('ParentClassName', null);
-        if (true === $data->getBoolean('hidden', false)) {
-            $tab->id_parent = -1;
-        } elseif (!empty($parentClassName)) {
-            $tab->id_parent = $this->tabRepository->findOneByClassName($parentClassName);
+        if (!empty($parentClassName)) {
+            $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
+        } elseif (true === $tab->active) {
+            $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($this->defaultParent);
         } else {
             $tab->id_parent = 0;
         }
