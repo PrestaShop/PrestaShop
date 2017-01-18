@@ -89,13 +89,46 @@ class ModuleTabRegister
      */
     public function registerTabs(Module $module)
     {
-        foreach ($module->getInstance()->getTabs() as $tab) {
+        $tabs = $this->addUndeclaredTabs($module->get('name'), $module->getInstance()->getTabs());
+        
+        foreach ($tabs as $tab) {
             try {
                 $this->registerTab($module, new ParameterBag($tab));
             } catch (Exception $e) {
                 $this->logger->error($e->getMessage());
             }
         }
+
+    }
+    
+    /**
+     * Looks for ModuleAdminControllers not declared as Tab and 
+     * add them to the list to register
+     * 
+     * @param string $moduleName
+     * @param array $tabs
+     * @return array
+     */
+    protected function addUndeclaredTabs($moduleName, array $tabs)
+    {
+        // Function to get only class name from tabs already declared
+        $tabsNames = array_map(function($tab) {
+            if (array_key_exists('class_name', $tab)) {
+                return $tab['class_name'];
+            }
+        }, $tabs);
+        
+        foreach ($this->getModuleAdminControllersFilename($moduleName) as $adminControllerName) {
+            if (in_array($adminControllerName, $tabsNames)) {
+                continue;
+            }
+            
+            $tabs[] = array(
+                'class_name' => str_replace('Controller.php', '', $adminControllerName),
+            );
+        }
+        
+        return $tabs;
     }
     
     /**
