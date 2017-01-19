@@ -18,7 +18,12 @@ $color-active: #25B9D7;
 
 .search-translation {
   margin-bottom: rem(20px);
+  .breadcrumb small {
+    color: $gray-medium;
+  }
+  .form-control {
 
+  }
   .summary {
     position: absolute;
     font-size: 1rem;
@@ -28,11 +33,11 @@ $color-active: #25B9D7;
   }
 
   .search {
-    width: rem(500px);
+    width: 100%;
+    margin-left: rem(15px);
   }
 
   .search-button {
-    margin-left: rem(10px);
     margin-right: rem(10px);
   }
 
@@ -54,15 +59,10 @@ $color-active: #25B9D7;
 }
 
 .domains-tree {
-  background-color: #fff;
   float: left;
-  margin-right: rem(30px);
-  padding-right: rem(10px);
-  width: rem(275px);
 
   hr {
-    float: left;
-    width: rem(245px);
+    clear: both;
     height: rem(2px);
     border-top: solid 1px #bbcdd2;
     margin-top: 0;
@@ -71,7 +71,6 @@ $color-active: #25B9D7;
   .btn-expand,
   .btn-reduce {
     cursor: pointer;
-    width: rem(90px);
     height: rem(14px);
     object-fit: contain;
     font-size: $font-size-xs;
@@ -94,21 +93,21 @@ $color-active: #25B9D7;
   }
 
   .btn-expand {
-    float: left;
     margin-left: rem(-5px);
     margin-top: rem(15px);
   }
 
   .btn-reduce {
     float: right;
-    margin-top: rem(15px);
-    width: rem(100px);
+  }
+
+  .card {
+    padding: rem(15px) rem(15px) 0 rem(15px);
   }
 
   .domain-first-part,
   .domain-part {
-    float: left;
-    width: rem(238px);
+    width: 100%;
     height: rem(22px);
     object-fit: contain;
     font-size: $font-size-base;
@@ -148,9 +147,11 @@ $color-active: #25B9D7;
 
   .domain-first-part {
     margin-bottom: rem(5px);
-
+    .material-icons {
+      cursor: pointer;
+    }
     &.active {
-      span {
+      > span {
         color: $color-active;
       }
     }
@@ -159,6 +160,10 @@ $color-active: #25B9D7;
   .domain-part {
     color: #70848b;
     font-weight: 400;
+    margin-left: rem(20px);
+    .delegate-toggle-messages:not(.missing-translations):hover {
+      color: $color-active;
+    }
   }
 
   .translation-domain {
@@ -168,7 +173,6 @@ $color-active: #25B9D7;
   }
 
   .domain-actions {
-    float: left;
     margin-left: rem(10px);
     margin-bottom: rem(15px);
     width: 100%;
@@ -184,7 +188,6 @@ $color-active: #25B9D7;
     .btn-show-messages {
       cursor: pointer;
       float: left;
-      width: rem(83px);
       height: rem(14px);
       line-height: rem(25px);
       font-size: $font-size-xs;
@@ -235,6 +238,11 @@ $color-active: #25B9D7;
       position: relative;
     }
   }
+  .forms-container + .navbar-container {
+    position: relative;
+    bottom: 0;
+    right: 0;
+  }
 
   .form-control-warning {
     background-image: none;
@@ -266,11 +274,18 @@ $color-active: #25B9D7;
 
 }
 
+.translations-results {
+  margin-top: rem(50px);
+  padding-top: rem(15px);
+  padding-left: rem(15px);
+  margin-left: rem(15px);
+}
+
 #jetsContent {
   form {
     margin-bottom: rem(50px);
     margin-top: rem(20px);
-    width: rem(800px);
+    width: 100%;
 
     .form-group {
       margin-bottom: rem(10px);

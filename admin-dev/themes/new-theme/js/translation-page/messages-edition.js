@@ -68,7 +68,7 @@ export default function (search) {
       });
 
       return false;
-    })
+    });
   };
 
   $('#jetsContent form, .translation-domain form').each((formIndex, form) => {

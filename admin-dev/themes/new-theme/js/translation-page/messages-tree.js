@@ -45,7 +45,7 @@ export default function () {
   }
 
   function updateMissingTranslationsWarning(domainActions) {
-    let subdomain = domainActions.next();
+    let subdomain = domainActions.parent().next('.subdomains');
     let missingTranslations = subdomain.find('[data-missing-translations]');
     let totalMissingTranslations = 0;
 
@@ -67,7 +67,8 @@ export default function () {
   let allDomainsMissingTranslations = 0;
 
   $('.domain-first-part').each((index, domainToggler) => {
-    let domainActions = $(domainToggler).next();
+    let domainActions = $(domainToggler).find('.domain-actions');
+
     allDomainsMissingTranslations = allDomainsMissingTranslations + updateMissingTranslationsWarning(domainActions);
 
     $(domainToggler).click((event) => {

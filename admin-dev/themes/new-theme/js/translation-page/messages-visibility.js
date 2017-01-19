@@ -81,14 +81,20 @@ export default function(callback) {
   }
 
   function updateNavigationBar(translationDomain, editTranslationForms) {
-    let navigationContainer = $('.navbar-container');
+    let navigationContainer = $('.navbar-container:first');
     let navigation = translationDomain.find('nav');
+
     navigation.parent().attr('data-navigation-parent-of', editTranslationForms.attr('id'));
     navigation.attr('data-navigation-of', editTranslationForms.attr('id'));
 
     hideCurrentNavigationBar(navigationContainer);
+
     navigationContainer.append(navigation);
     $(navigationContainer.find('nav')).removeClass(hideClass);
+
+    $('.forms-container + .navbar-container').remove();
+    $('.forms-container').after(navigationContainer.clone());
+
   }
 
   function updateEditTranslationForms(formsContainer, editTranslationForms) {

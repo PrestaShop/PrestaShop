@@ -27,14 +27,19 @@
     <div class="hide alert alert-info">{{ notification_success }}</div>
     <div class="hide alert alert-danger">{{ notification_error }}</div>
   </div>
-  <p><verbatim>{{ translation_key }}</verbatim></p>
+  <p><label class="verbatim"><strong>{{ translation_key }}</strong></label></p>
   <div class="form-group row{% if not is_translated %} has-warning{% endif %}">
-    <div class="col-lg-12">
+    <div class="col-lg-11">
       <textarea class="form-control{% if not is_translated %} form-control-warning{% endif %}"
                 rows="3"
                 name="translation_value">
           {{- edited_translation_value -}}
       </textarea>
+      {% if is_search_results|default(false) %}
+        <nav class="breadcrumb">
+          <small>{{breadcrumb_parts[0]|default(false)}} > {{breadcrumb_parts[1]|default(false)}}</small>
+        </nav>
+      {% endif %}
     </div>
     <input type="hidden" name="domain" value="{{ domain }}"/>
     <input type="hidden" name="locale" value="{{ locale }}"/>
@@ -42,7 +47,7 @@
     <input type="hidden" name="theme" value="{{ theme }}"/>
     <input type="hidden" name="translation_key" value="{{ translation_key }}"/>
   </div>
-  <div class="col-md-offset-1 buttons">
+  <div class="col-md-11 buttons">
     <input class="btn btn-primary btn-sm pull-right" type="submit" value="{{ label_edit }}"/>
     <input class="btn btn-tertiary-outline btn-sm pull-right reset-translation-value" type="button" value="{{ label_reset }}"/>
   </div>

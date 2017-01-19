@@ -24,9 +24,22 @@
  *#}
 <div class="navigation-container">
   <nav class="hide">
-    <ul class="pagination">
-      <li class="page-item active" data-page-index="1"><a class="page-link" href="#_{{ page_id }}">1</a></li>
-      <li class="page-item tpl hide"><a class="page-link" href="#_{{ page_id }}"></a></li>
+    <ul class="pagination" data-display-number="2">
+      <li class="page-item hide">
+        <a class="hide js-next-arrow">
+          <a class="pull-left arrow js-arrow" href="#" aria-label="Previous" data-direction="prev">
+          <i class="material-icons">keyboard_arrow_left</i>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li class="page-item active" data-page-index="1"><a class="js-page-link page-link" href="#_{{ page_id }}">1</a></li>
+      <li class="page-item tpl hide"><a class="js-page-link page-link" href="#_{{ page_id }}"></a></li>
+      <li class="page-item hide js-next-arrow">
+        <a class="pull-left arrow js-arrow" href="#" aria-label="Next" data-direction="next">
+          <i class="material-icons">keyboard_arrow_right</i>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
     </ul>
   </nav>
 </div>
