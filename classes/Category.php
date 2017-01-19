@@ -706,7 +706,7 @@ class CategoryCore extends ObjectModel
             $groups = (array) $groups;
         }
 
-        $cacheId = 'Category::getAllCategoriesName_'.md5(
+        $cacheId = 'Category::getNestedCategories_'.md5(
                 (int) $idRootCategory.
                 (int) $idLang.
                 (int) $active.
