@@ -206,7 +206,7 @@ class AdminLoginControllerCore extends AdminController
                 $this->errors[] = $this->trans('The employee does not exist, or the password provided is incorrect.', array(), 'Admin.Login.Notification');
                 $this->context->employee->logout();
             } elseif (empty($employee_associated_shop) && !$this->context->employee->isSuperAdmin()) {
-                $this->errors[] = $this->trans('This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).', array(), 'Admin.Login.Notifications');
+                $this->errors[] = $this->trans('This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).', array(), 'Admin.Login.Notification');
                 $this->context->employee->logout();
             } else {
                 PrestaShopLogger::addLog(sprintf($this->trans('Back office connection from %s', array(), 'Admin.AdvParameters.Feature'), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
