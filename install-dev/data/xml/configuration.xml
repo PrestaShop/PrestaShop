@@ -212,9 +212,6 @@
   <configuration id="TRACKING_DIRECT_TRAFFIC" name="TRACKING_DIRECT_TRAFFIC">
     <value>0</value>
   </configuration>
-  <configuration id="PS_META_KEYWORDS" name="PS_META_KEYWORDS">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_VOLUME_UNIT" name="PS_VOLUME_UNIT">
     <value>cl</value>
   </configuration>
