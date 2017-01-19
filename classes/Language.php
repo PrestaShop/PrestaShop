@@ -1163,8 +1163,10 @@ class LanguageCore extends ObjectModel
                 }
             }
 
+            $translator = Context::getContext()->getTranslator();
+
             foreach ($langTables as $name => $className) {
-                $classObject = new $className(Context::getContext()->getTranslator(), $lang->locale);
+                $classObject = new $className($lang->locale);
 
                 $keys = $classObject->getKeys();
                 $fieldsToUpdate = $classObject->getFieldsToUpdate();
@@ -1191,7 +1193,8 @@ class LanguageCore extends ObjectModel
 
                             // Construct update field
                             foreach ($fieldsToUpdate as $toUpdate) {
-                                $translatedField = $classObject->getFieldValue($toUpdate, $data[$toUpdate]);
+                                $untranslated = $translator->getSourceString($data[$toUpdate], $classObject->getDomain());
+                                $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
 
                                 if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
                                     if (!empty($updateField)) {

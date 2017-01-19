@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 
 class DataLangCore
 {
-    /** @var TranslatorInterface  */
+    /** @var Translator  */
     protected $translator;
 
     /** @var string */
@@ -46,10 +46,29 @@ class DataLangCore
     /** @var string */
     protected $domain;
 
-    public function __construct(TranslatorInterface $translator, $locale)
+    public function __construct($locale)
     {
-        $this->translator = $translator;
         $this->locale = $locale;
+
+        $this->translator = new Translator(
+            $this->locale,
+            null,
+            _PS_CACHE_DIR_.'/translations/'.$this->locale,
+            false
+        );
+
+        $this->translator->addLoader('xlf', new \Symfony\Component\Translation\Loader\XliffFileLoader());
+
+        $finder = \Symfony\Component\Finder\Finder::create()
+            ->files()
+            ->name('*.'.$this->locale.'.xlf')
+            ->in((_PS_ROOT_DIR_ . '/app/Resources/translations'))
+        ;
+
+        foreach ($finder as $file) {
+            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+            $this->translator->addResource($format, $file, $locale, $domain);
+        }
 
         $this->init();
     }
@@ -83,5 +102,10 @@ class DataLangCore
     public function slugify($string)
     {
         return strtolower(str_replace(' ', '-', Tools::replaceAccentedChars($string)));
+    }
+
+    public function getDomain()
+    {
+        return $this->domain;
     }
 }
