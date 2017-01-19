@@ -101,11 +101,18 @@ function ps_update_tabs()
                                     } else {
                                         // if DB is != XML
                                         if ($tab_db_data[$tmp_class_name] != $tab) {
+
+                                            if (empty($tab_db_data[$tmp_class_name])) {
+                                                $where_name = '`name` IS NULL';
+                                            } else {
+                                                $where_name = '`name` = "' . pSQL($tab_db_data[$tmp_class_name]) . '"';
+                                            }
+
                                             $sql = 'UPDATE `' . _DB_PREFIX_ . 'tab_lang` 
                                                 SET  `name` = "' . pSQL($tab) . '" 
                                                 WHERE   `id_tab` = ' . (int)$tmp_class_id . ' AND 
                                                         `id_lang` = ' . (int)$lang['id_lang'] . ' AND 
-                                                        `name`  = "' . pSQL($tab_db_data[$tmp_class_name]) . '" ';
+                                                        ' . $where_name;
 
                                             Db::getInstance()->execute($sql);
                                         }
