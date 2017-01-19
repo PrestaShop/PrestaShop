@@ -73,7 +73,7 @@ class TabLangCore extends DataLangCore
                 md5('Database') => $this->translator->trans('Database', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('DB Backup') => $this->translator->trans('DB Backup', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('Delivery Slips') => $this->translator->trans('Delivery Slips', array(), 'Admin.Navigation.Menu', $this->locale),
-                md5('name="E-mail') => $this->translator->trans('name="E-mail', array(), 'Admin.Navigation.Menu', $this->locale),
+                md5('E-mail') => $this->translator->trans('E-mail', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('Employees') => $this->translator->trans('Employees', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('Team') => $this->translator->trans('Team', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('Features') => $this->translator->trans('Features', array(), 'Admin.Navigation.Menu', $this->locale),
