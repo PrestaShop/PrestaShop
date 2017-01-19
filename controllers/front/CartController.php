@@ -150,7 +150,7 @@ class CartControllerCore extends FrontController
                 null,
                 $this->context->language->id,
                 null,
-                (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
+                (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group'), true),
                 false,
                 false,
                 true,
