@@ -377,9 +377,7 @@ class LanguageCore extends ObjectModel
 
         foreach ($tables as $table) {
             foreach ($table as $t) {
-                if ($t != _DB_PREFIX_.'configuration_lang') {
-                    $langTables[] = $t;
-                }
+                $langTables[] = $t;
             }
         }
 
@@ -432,7 +430,11 @@ class LanguageCore extends ObjectModel
                     }
                 }
                 $sql = rtrim($sql, ', ');
-                $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $name)).'`)';
+                $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $name)).'` ';
+
+                // prevent insert with where initial data exists
+                $sql .= ' WHERE `'.bqSQL($identifier).'` IN (SELECT `'.bqSQL($identifier).'` FROM `'.bqSQL($name).'`) )';
+
                 $return &= Db::getInstance()->execute($sql);
             }
         }
