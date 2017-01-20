@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 
 class LanguageCore extends ObjectModel
 {
@@ -1172,7 +1173,11 @@ class LanguageCore extends ObjectModel
             foreach ($langTables as $name => $className) {
                 // update country lang from cldr
                 if (_DB_PREFIX_.'country_lang' == $name) {
-                    $cldrFile = _PS_TRANSLATIONS_DIR_.'cldr/datas/main/'.$lang->locale.'/languages.json';
+
+                    $cldrRepository = new cldrRepository($lang->locale);
+                    $cldrLocale = $cldrRepository->getCulture();
+                    $cldrFile = _PS_TRANSLATIONS_DIR_.'cldr/datas/main/'.$cldrLocale.'/territories.json';
+
                     if (file_exists($cldrFile)) {
                         $cldrContent = json_decode(file_get_contents($cldrFile), true);
 
@@ -1183,14 +1188,14 @@ class LanguageCore extends ObjectModel
                                 WHERE cl.`id_lang` = "' . (int)$lang->id . '" ', true, false);
 
                             if (!empty($translatableCountries)) {
-                                $cldrLanguages = $cldrContent['main'][$lang->locale]['localeDisplayNames']['languages'];
+                                $cldrLanguages = $cldrContent['main'][$cldrLocale]['localeDisplayNames']['territories'];
 
                                 foreach ($translatableCountries as $country) {
-                                    if (isset($cldrLanguages[strtolower($country['iso_code'])]) &&
-                                        !empty($cldrLanguages[strtolower($country['iso_code'])])
+                                    if (isset($cldrLanguages[$country['iso_code']]) &&
+                                        !empty($cldrLanguages[$country['iso_code']])
                                     ) {
                                         $sql = 'UPDATE `' . $name . '`
-                                            SET `name` = "' . pSQL(ucwords($cldrLanguages[strtolower($country['iso_code'])])) . '"
+                                            SET `name` = "' . pSQL(ucwords($cldrLanguages[$country['iso_code']])) . '"
                                             WHERE `id_country` = "' . (int)$country['id_country'] . '" AND `id_lang` = "' . (int)$lang->id . '" LIMIT 1;';
                                         Db::getInstance()->execute($sql);
                                     }
