@@ -80,10 +80,11 @@
           {/block}
           <div class="order-options">
             {if $recyclablePackAllowed}
-              <label>
+              <span class="custom-checkbox">
                 <input type="checkbox" name="recyclable" value="1" {if $recyclable} checked {/if}>
-                <span>{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</span>
-              </label>
+                <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                <label>{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</label>
+              </span>
             {/if}
             {if $gift.allowed}
               <span class="custom-checkbox">
