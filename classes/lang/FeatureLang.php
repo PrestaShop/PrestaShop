@@ -26,6 +26,7 @@
 
 class FeatureLangCore extends DataLangCore
 {
+    // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Shop.Demo.Catalog';
 
     protected $keys = array('id_feature');

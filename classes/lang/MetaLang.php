@@ -26,6 +26,7 @@
 
 class MetaLangCore extends DataLangCore
 {
+    // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Shop.Navigation';
 
     protected $keys = array('id_meta', 'id_shop');

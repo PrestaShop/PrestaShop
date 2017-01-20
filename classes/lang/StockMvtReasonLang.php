@@ -26,6 +26,7 @@
 
 class StockMvtReasonLangCore extends DataLangCore
 {
+    // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Catalog.Feature';
 
     protected $keys = array('id_stock_mvt_reason');

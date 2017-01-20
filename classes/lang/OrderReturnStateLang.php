@@ -26,6 +26,7 @@
 
 class OrderReturnStateLangCore extends DataLangCore
 {
+    // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.OrdersCustomers.Feature';
 
     protected $keys = array('id_order_return_state');

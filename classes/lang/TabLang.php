@@ -26,6 +26,7 @@
 
 class TabLangCore extends DataLangCore
 {
+    // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Navigation.Menu';
 
     protected $keys = array('id_tab');

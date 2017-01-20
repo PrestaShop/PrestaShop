@@ -26,6 +26,7 @@
 
 class GroupLangCore extends DataLangCore
 {
+    // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.ShopParameters.Feature';
 
     protected $keys = array('id_group');
