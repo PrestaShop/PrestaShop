@@ -606,5 +606,10 @@
       <title>Filter HTML field before rending a page</title>
       <description>This hook is called just before fetching a page on HTML field.</description>
     </hook>
+    <hook id="dashboardTop">
+      <name>dashboardTop</name>
+      <title>Dashboard Top</title>
+      <description>Displays the content in the dashboard's top area.</description>
+    </hook>
   </entities>
 </entity_hook>
