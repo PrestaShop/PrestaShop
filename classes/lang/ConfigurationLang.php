@@ -37,11 +37,17 @@ class ConfigurationLangCore extends DataLangCore
     {
         $this->fieldNames = array(
             'value' => array(
-                md5("Dear Customer,\n\nRegards,\nCustomer service") // PS_CUSTOMER_SERVICE_SIGNATURE
-                    => $this->translator->trans("Dear Customer,\n\nRegards,\nCustomer service", array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                md5("Dear Customer,
 
-                md5('We are currently updating our shop and will be back really soon.Thanks for your patience.') // PS_MAINTENANCE_TEXT
-                    => $this->translator->trans('We are currently updating our shop and will be back really soon.&lt;br&gt;Thanks for your patience.', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+Regards,
+Customer service") // PS_CUSTOMER_SERVICE_SIGNATURE
+                    => $this->translator->trans("Dear Customer,
+
+Regards,
+Customer service", array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+
+                md5("We are currently updating our shop and will be back really soon.<br>Thanks for your patience.") // PS_MAINTENANCE_TEXT
+                    => $this->translator->trans("We are currently updating our shop and will be back really soon.<br>Thanks for your patience.", array(), 'Admin.OrdersCustomers.Feature', $this->locale),
 
                 md5('#IN') => $this->translator->trans('#IN', array(), 'Admin.OrdersCustomers.Feature', $this->locale), // PS_INVOICE_PREFIX
                 md5('#DE') => $this->translator->trans('#DE', array(), 'Admin.OrdersCustomers.Feature', $this->locale), // PS_DELIVERY_PREFIX
