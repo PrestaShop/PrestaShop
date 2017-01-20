@@ -57,7 +57,10 @@ class ProductCustomField extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('label', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+        $builder->add('id_customization_field','Symfony\Component\Form\Extension\Core\Type\HiddenType', array(
+            'required' => false,
+        ))
+        ->add('label', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [ 'constraints' => array(
                 new Assert\NotBlank(),

@@ -843,6 +843,12 @@ var form = (function() {
       },
       success: function(response) {
         showSuccessMessage(translate_javascripts['Form update success']);
+        //update the customization ids
+        if (typeof response.customization_fields_ids != "undefined") {
+          $.each(response.customization_fields_ids, function (k, v) {
+              $("#form_step6_custom_fields_" + k + "_id_customization_field").val(v);
+          });
+        }
         if (redirect) {
           if (target) {
             if (target == '_blank') {

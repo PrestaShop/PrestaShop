@@ -509,12 +509,15 @@ class ProductController extends FrameworkBundleAdminController
                     // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
-                    $adminProductWrapper->processProductCustomization($product, $_POST['custom_fields']);
+                    $customization_fields_ids = $adminProductWrapper->processProductCustomization($product, $_POST['custom_fields']);
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
 
                     $adminProductController->processWarehouses();
 
-                    $response->setData(['product' => $product]);
+                    $response->setData([
+                        'product' => $product,
+                        'customization_fields_ids' => $customization_fields_ids
+                    ]);
                 }
 
                 if ($request->isXmlHttpRequest()) {
