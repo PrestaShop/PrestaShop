@@ -53,17 +53,17 @@ class AdminImagesControllerCore extends AdminController
             )
         );
 
-        $this->fields_list = array(
-            'id_image_type' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
-            'width' => array('title' => $this->trans('Width', array(), 'Admin.Global'),  'suffix' => ' px'),
-            'height' => array('title' => $this->trans('Height', array(), 'Admin.Global'),  'suffix' => ' px'),
-            'products' => array('title' => $this->trans('Products', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'categories' => array('title' => $this->trans('Categories', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'manufacturers' => array('title' => $this->trans('Brands', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'suppliers' => array('title' => $this->trans('Suppliers', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'stores' => array('title' => $this->trans('Stores', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
-        );
+        $this->fields_list = [
+            'id_image_type' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'],
+            'name' => ['title' => $this->trans('Name', [], 'Admin.Global')],
+            'width' => ['title' => $this->trans('Width', [], 'Admin.Global'),  'suffix' => ' px'],
+            'height' => ['title' => $this->trans('Height', [], 'Admin.Global'),  'suffix' => ' px'],
+            'products' => ['title' => $this->trans('Products', [], 'Admin.Global'), 'align' => 'center', 'orderby' => false],
+            'categories' => ['title' => $this->trans('Categories', [], 'Admin.Global'), 'align' => 'center', 'orderby' => false],
+            'manufacturers' => ['title' => $this->trans('Brands', [], 'Admin.Global'), 'align' => 'center', 'orderby' => false],
+            'suppliers' => ['title' => $this->trans('Suppliers', [], 'Admin.Global'), 'align' => 'center', 'orderby' => false],
+            'stores' => ['title' => $this->trans('Stores', [], 'Admin.Global'), 'align' => 'center', 'orderby' => false]
+        ];
 
         // No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
         $this->display_move = false;
@@ -376,11 +376,6 @@ class AdminImagesControllerCore extends AdminController
         } else {
             return parent::postProcess();
         }
-    }
-
-    public static function printEntityActiveIcon($value, $object)
-    {
-        return ($value ? '<span class="list-action-enable action-enabled"><i class="icon-check"></i></span>' : '<span class="list-action-enable action-disabled"><i class="icon-remove"></i></span>');
     }
 
     protected function _childValidation()
