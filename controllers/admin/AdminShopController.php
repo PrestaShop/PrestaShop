@@ -49,27 +49,27 @@ class AdminShopControllerCore extends AdminController
         $this->list_skip_actions['delete'] = array((int)Configuration::get('PS_SHOP_DEFAULT'));
         $this->fields_list = array(
             'id_shop' => array(
-                'title' => $this->trans('Shop ID', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Shop ID', array(), 'Admin.Shopparameters.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->trans('Shop name', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Shop name', array(), 'Admin.Shopparameters.Feature'),
                 'filter_key' => 'a!name',
                 'width' => 200,
             ),
             'shop_group_name' => array(
-                'title' => $this->trans('Shop group', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Shop group', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 150,
                 'filter_key' => 'gs!name'
             ),
             'category_name' => array(
-                'title' => $this->trans('Root category', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Root category', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 150,
                 'filter_key' => 'cl!name'
             ),
             'url' => array(
-                'title' => $this->trans('Main URL for this shop', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Main URL for this shop', array(), 'Admin.Shopparameters.Feature'),
                 'havingFilter' => 'url',
             ),
         );
@@ -99,13 +99,13 @@ class AdminShopControllerCore extends AdminController
             }
 
             $this->page_header_toolbar_btn['edit'] = array(
-                'desc' => $this->trans('Edit this shop group', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Edit this shop group', array(), 'Admin.Shopparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShopGroup').'&updateshop_group&id_shop_group='
                     .$this->id_shop_group,
             );
 
             $this->page_header_toolbar_btn['new'] = array(
-                'desc' => $this->trans('Add new shop', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new shop', array(), 'Admin.Shopparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop').'&add'.$this->table.'&id_shop_group='
                     .$this->id_shop_group,
             );
@@ -126,7 +126,7 @@ class AdminShopControllerCore extends AdminController
             }
 
             $this->toolbar_btn['new'] = array(
-                'desc' => $this->trans('Add new shop', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new shop', array(), 'Admin.Shopparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop').'&add'.$this->table.'&id_shop_group='
                     .$this->id_shop_group,
             );
@@ -157,7 +157,7 @@ class AdminShopControllerCore extends AdminController
             }
         }
 
-        $shops_tree = new HelperTreeShops('shops-tree', $this->trans('Multistore tree', array(), 'Admin.ShopParameters.Feature'));
+        $shops_tree = new HelperTreeShops('shops-tree', $this->trans('Multistore tree', array(), 'Admin.Shopparameters.Feature'));
         $shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
             ->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
                 new TreeToolbarLink(
@@ -365,7 +365,7 @@ class AdminShopControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Shop name', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Shop name', array(), 'Admin.Shopparameters.Feature'),
                     'desc' => array($this->trans('This field does not refer to the shop name visible in the front office.', array(), 'Admin.ShopParameters.Help'),
                             sprintf($this->trans('Follow %sthis link%s to edit the shop name used on the front office.', array(), 'Admin.ShopParameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
                     'name' => 'name',
@@ -404,7 +404,7 @@ class AdminShopControllerCore extends AdminController
 
             $this->fields_form['input'][] = array(
                 'type' => 'select',
-                'label' => $this->trans('Shop group', array(), 'Admin.ShopParameters.Feature'),
+                'label' => $this->trans('Shop group', array(), 'Admin.Shopparameters.Feature'),
                 'desc' => $group_desc,
                 'name' => 'id_shop_group',
                 'options' => array(
@@ -421,7 +421,7 @@ class AdminShopControllerCore extends AdminController
             );
             $this->fields_form['input'][] = array(
                 'type' => 'textShopGroup',
-                'label' => $this->trans('Shop group', array(), 'Admin.ShopParameters.Feature'),
+                'label' => $this->trans('Shop group', array(), 'Admin.Shopparameters.Feature'),
                 'desc' => $this->trans('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.', array(), 'Admin.ShopParameters.Help'),
                 'name' => 'id_shop_group',
                 'value' => $group->name

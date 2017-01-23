@@ -42,21 +42,21 @@ class AdminMaintenanceControllerCore extends AdminController
                 'title' =>    $this->trans('General', array(), 'Admin.Global'),
                 'fields' =>    array(
                     'PS_SHOP_ENABLE' => array(
-                        'title' => $this->trans('Enable Shop', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Enable Shop', array(), 'Admin.Shopparameters.Feature'),
                         'desc' => $this->trans('Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_MAINTENANCE_IP' => array(
-                        'title' => $this->trans('Maintenance IP', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Maintenance IP', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96)', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isGenericName',
                         'type' => 'maintenance_ip',
                         'default' => ''
                     ),
                     'PS_MAINTENANCE_TEXT' => array(
-                        'title' => $this->trans('Custom maintenance text', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Custom maintenance text', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('Custom text displayed on maintenance page while shop is deactivated.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isCleanHtml',
                         'type' => 'textareaLang',

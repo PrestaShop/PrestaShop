@@ -27,7 +27,7 @@
 class GenderLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Admin.ShopParameters.Feature';
+    protected $domain = 'Admin.Shopparameters.Feature';
 
     protected $keys = array('id_gender');
 
@@ -37,8 +37,8 @@ class GenderLangCore extends DataLangCore
     {
         $this->fieldNames = array(
             'name' => array(
-                md5('Mr.') => $this->translator->trans('Mr.', array(), 'Admin.ShopParameters.Feature', $this->locale),
-                md5('Mrs.') => $this->translator->trans('Mrs.', array(), 'Admin.ShopParameters.Feature', $this->locale),
+                md5('Mr.') => $this->translator->trans('Mr.', array(), 'Admin.Shopparameters.Feature', $this->locale),
+                md5('Mrs.') => $this->translator->trans('Mrs.', array(), 'Admin.Shopparameters.Feature', $this->locale),
             ),
         );
     }

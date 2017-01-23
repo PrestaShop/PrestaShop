@@ -67,7 +67,7 @@ class AdminGendersControllerCore extends AdminController
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->trans('Social title', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Social title', array(), 'Admin.Shopparameters.Feature'),
                 'filter_key' => 'b!name'
             ),
             'type' => array(
@@ -75,9 +75,9 @@ class AdminGendersControllerCore extends AdminController
                 'orderby' => false,
                 'type' => 'select',
                 'list' => array(
-                    0 => $this->trans('Male', array(), 'Admin.ShopParameters.Feature'),
-                    1 => $this->trans('Female', array(), 'Admin.ShopParameters.Feature'),
-                    2 => $this->trans('Neutral', array(), 'Admin.ShopParameters.Feature')
+                    0 => $this->trans('Male', array(), 'Admin.Shopparameters.Feature'),
+                    1 => $this->trans('Female', array(), 'Admin.Shopparameters.Feature'),
+                    2 => $this->trans('Neutral', array(), 'Admin.Shopparameters.Feature')
                 ),
                 'filter_key' => 'a!type',
                 'callback' => 'displayGenderType',
@@ -98,7 +98,7 @@ class AdminGendersControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_gender'] = array(
                 'href' => self::$currentIndex.'&addgender&token='.$this->token,
-                'desc' => $this->trans('Add new social title', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new social title', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -110,7 +110,7 @@ class AdminGendersControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Social titles', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Social titles', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-male'
             ),
             'input' => array(
@@ -133,17 +133,17 @@ class AdminGendersControllerCore extends AdminController
                         array(
                             'id' => 'type_male',
                             'value' => 0,
-                            'label' => $this->trans('Male', array(), 'Admin.ShopParameters.Feature')
+                            'label' => $this->trans('Male', array(), 'Admin.Shopparameters.Feature')
                         ),
                         array(
                             'id' => 'type_female',
                             'value' => 1,
-                            'label' => $this->trans('Female', array(), 'Admin.ShopParameters.Feature')
+                            'label' => $this->trans('Female', array(), 'Admin.Shopparameters.Feature')
                         ),
                         array(
                             'id' => 'type_neutral',
                             'value' => 2,
-                            'label' => $this->trans('Neutral', array(), 'Admin.ShopParameters.Feature')
+                            'label' => $this->trans('Neutral', array(), 'Admin.Shopparameters.Feature')
                         )
                     )
                 ),
@@ -156,14 +156,14 @@ class AdminGendersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Image width', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Image width', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'img_width',
                     'col' => 2,
                     'hint' => $this->trans('Image width in pixels. Enter "0" to use the original size.', array(), 'Admin.ShopParameters.Help')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Image height', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Image height', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'img_height',
                     'col' => 2,
                     'hint' => $this->trans('Image height in pixels. Enter "0" to use the original size.', array(), 'Admin.ShopParameters.Help')

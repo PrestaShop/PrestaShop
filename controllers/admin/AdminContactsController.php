@@ -60,7 +60,7 @@ class AdminContactsControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Contacts', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Contacts', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-envelope-alt'
             ),
             'input' => array(
@@ -83,7 +83,7 @@ class AdminContactsControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->trans('Save messages?', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Save messages?', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'customer_service',
                     'required' => false,
                     'class' => 't',
@@ -134,7 +134,7 @@ class AdminContactsControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_contact'] = array(
                 'href' => self::$currentIndex.'&addcontact&token='.$this->token,
-                'desc' => $this->trans('Add new contact', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new contact', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }

@@ -55,25 +55,25 @@ class AdminSearchEnginesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_search_engine' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'width' => 25),
-            'server' => array('title' => $this->trans('Server', array(), 'Admin.ShopParameters.Feature')),
-            'getvar' => array('title' => $this->trans('GET variable', array(), 'Admin.ShopParameters.Feature'), 'width' => 100)
+            'server' => array('title' => $this->trans('Server', array(), 'Admin.Shopparameters.Feature')),
+            'getvar' => array('title' => $this->trans('GET variable', array(), 'Admin.Shopparameters.Feature'), 'width' => 100)
         );
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Referrer', array(), 'Admin.ShopParameters.Feature')
+                'title' => $this->trans('Referrer', array(), 'Admin.Shopparameters.Feature')
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Server', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Server', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'server',
                     'size' => 20,
                     'required' => true
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('$_GET variable', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('$_GET variable', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'getvar',
                     'size' => 40,
                     'required' => true
@@ -90,7 +90,7 @@ class AdminSearchEnginesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_search_engine'] = array(
                 'href' => self::$currentIndex.'&addsearch_engine&token='.$this->token,
-                'desc' => $this->trans('Add new search engine', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new search engine', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }

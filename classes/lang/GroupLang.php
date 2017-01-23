@@ -27,7 +27,7 @@
 class GroupLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Admin.ShopParameters.Feature';
+    protected $domain = 'Admin.Shopparameters.Feature';
 
     protected $keys = array('id_group');
 
@@ -37,9 +37,9 @@ class GroupLangCore extends DataLangCore
     {
         $this->fieldNames = array(
             'name' => array(
-                md5('Visitor') => $this->translator->trans('Visitor', array(), 'Admin.ShopParameters.Feature', $this->locale),
-                md5('Guest') => $this->translator->trans('Guest', array(), 'Admin.ShopParameters.Feature', $this->locale),
-                md5('Customer') => $this->translator->trans('Customer', array(), 'Admin.ShopParameters.Feature', $this->locale),
+                md5('Visitor') => $this->translator->trans('Visitor', array(), 'Admin.Shopparameters.Feature', $this->locale),
+                md5('Guest') => $this->translator->trans('Guest', array(), 'Admin.Shopparameters.Feature', $this->locale),
+                md5('Customer') => $this->translator->trans('Customer', array(), 'Admin.Shopparameters.Feature', $this->locale),
             ),
         );
     }

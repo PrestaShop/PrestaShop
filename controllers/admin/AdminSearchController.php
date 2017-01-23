@@ -294,7 +294,7 @@ class AdminSearchControllerCore extends AdminController
             'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global'), 'align' => 'left', 'width' => 250),
             'company' => array('title' => $this->trans('Company', array(), 'Admin.Global'), 'align' => 'left', 'width' => 150),
             'birthday' => array('title' => $this->trans('Birth date', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'date', 'width' => 75),
-            'date_add' => array('title' => $this->trans('Registration date', array(), 'Admin.ShopParameters.Feature'), 'align' => 'center', 'type' => 'date', 'width' => 75),
+            'date_add' => array('title' => $this->trans('Registration date', array(), 'Admin.Shopparameters.Feature'), 'align' => 'center', 'type' => 'date', 'width' => 75),
             'orders' => array('title' => $this->trans('Orders', array(), 'Admin.Global'), 'align' => 'center', 'width' => 50),
             'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 25),
         ));

@@ -93,7 +93,7 @@ class AdminImportControllerCore extends AdminController
             $this->trans('Addresses', array(), 'Admin.Global'),
             $this->trans('Brands', array(), 'Admin.Global'),
             $this->trans('Suppliers', array(), 'Admin.Global'),
-            $this->trans('Alias', array(), 'Admin.ShopParameters.Feature'),
+            $this->trans('Alias', array(), 'Admin.Shopparameters.Feature'),
             $this->trans('Store contacts', array(), 'Admin.Advparameters.Feature'),
         );
 
@@ -195,7 +195,7 @@ class AdminImportControllerCore extends AdminController
                     'meta_title' => array('label' => $this->trans('Meta title', array(), 'Admin.Global')),
                     'meta_keywords' => array('label' => $this->trans('Meta keywords', array(), 'Admin.Global')),
                     'meta_description' => array('label' => $this->trans('Meta description', array(), 'Admin.Global')),
-                    'link_rewrite' => array('label' => $this->trans('Rewritten URL', array(), 'Admin.ShopParameters.Feature')),
+                    'link_rewrite' => array('label' => $this->trans('Rewritten URL', array(), 'Admin.Shopparameters.Feature')),
                     'image' => array('label' => $this->trans('Image URL', array(), 'Admin.Advparameters.Feature')),
                     'shop' => array(
                         'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
@@ -381,7 +381,7 @@ class AdminImportControllerCore extends AdminController
                 $this->available_fields = array(
                     'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                    'alias' => array('label' => $this->trans('Alias', array(), 'Admin.ShopParameters.Feature').'*'),
+                    'alias' => array('label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature').'*'),
                     'active' => array('label' => $this->trans('Active  (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'customer_email' => array('label' => $this->trans('Customer email', array(), 'Admin.Advparameters.Feature').'*'),
                     'id_customer' => array('label' => $this->trans('Customer ID', array(), 'Admin.Advparameters.Feature')),
@@ -440,7 +440,7 @@ class AdminImportControllerCore extends AdminController
                     'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
                 );
                 break;
-            case $this->entities[$this->trans('Alias', array(), 'Admin.ShopParameters.Feature')]:
+            case $this->entities[$this->trans('Alias', array(), 'Admin.Shopparameters.Feature')]:
                 //Overwrite required_fields
                 $this->required_fields = array(
                     'alias',
@@ -449,8 +449,8 @@ class AdminImportControllerCore extends AdminController
                 $this->available_fields = array(
                     'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                    'alias' => array('label' => $this->trans('Alias', array(), 'Admin.ShopParameters.Feature').'*'),
-                    'search' => array('label' => $this->trans('Search', array(), 'Admin.ShopParameters.Feature').'*'),
+                    'alias' => array('label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature').'*'),
+                    'search' => array('label' => $this->trans('Search', array(), 'Admin.Shopparameters.Feature').'*'),
                     'active' => array('label' => $this->trans('Active', array(), 'Admin.Global')),
                     );
                 self::$default_values = array(
@@ -4227,7 +4227,7 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
                 break;
-            case $this->entities[$this->trans('Alias', array(), 'Admin.ShopParameters.Feature')]:
+            case $this->entities[$this->trans('Alias', array(), 'Admin.Shopparameters.Feature')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'alias`');
                 break;
         }
@@ -4345,7 +4345,7 @@ class AdminImportControllerCore extends AdminController
                     $doneCount += $this->supplierImport($offset, $limit, $validateOnly);
                     $this->clearSmartyCache();
                     break;
-                case $this->entities[$import_type = $this->trans('Alias', array(), 'Admin.ShopParameters.Feature')]:
+                case $this->entities[$import_type = $this->trans('Alias', array(), 'Admin.Shopparameters.Feature')]:
                     $doneCount += $this->aliasImport($offset, $limit, $validateOnly);
                     break;
                 case $this->entities[$import_type = $this->trans('Store contacts', array(), 'Admin.Advparameters.Feature')]:

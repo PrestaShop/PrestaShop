@@ -74,7 +74,7 @@ class AdminTagsControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tag'] = array(
                 'href' => self::$currentIndex.'&addtag&token='.$this->token,
-                'desc' => $this->trans('Add new tag', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new tag', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -132,7 +132,7 @@ class AdminTagsControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Tag', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Tag', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-tag'
             ),
             'input' => array(

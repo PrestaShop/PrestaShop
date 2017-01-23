@@ -27,7 +27,7 @@
 class ContactLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Admin.ShopParameters.Feature';
+    protected $domain = 'Admin.Shopparameters.Feature';
 
     protected $keys = array('id_contact');
 
@@ -37,15 +37,15 @@ class ContactLangCore extends DataLangCore
     {
         $this->fieldNames = array(
             'name' => array(
-                md5('Webmaster') => $this->translator->trans('Webmaster', array(), 'Admin.ShopParameters.Feature', $this->locale),
-                md5('Customer service') => $this->translator->trans('Customer service', array(), 'Admin.ShopParameters.Feature', $this->locale),
+                md5('Webmaster') => $this->translator->trans('Webmaster', array(), 'Admin.Shopparameters.Feature', $this->locale),
+                md5('Customer service') => $this->translator->trans('Customer service', array(), 'Admin.Shopparameters.Feature', $this->locale),
             ),
             'description' => array(
                 md5('If a technical problem occurs on this website')
-                    => $this->translator->trans('If a technical problem occurs on this website', array(), 'Admin.ShopParameters.Feature', $this->locale),
+                    => $this->translator->trans('If a technical problem occurs on this website', array(), 'Admin.Shopparameters.Feature', $this->locale),
 
                 md5('For any question about a product, an order')
-                    => $this->translator->trans('For any question about a product, an order', array(), 'Admin.ShopParameters.Feature', $this->locale),
+                    => $this->translator->trans('For any question about a product, an order', array(), 'Admin.Shopparameters.Feature', $this->locale),
             ),
         );
     }

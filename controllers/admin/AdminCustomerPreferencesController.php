@@ -43,44 +43,44 @@ class AdminCustomerPreferencesControllerCore extends AdminController
                 'icon' =>    'icon-cogs',
                 'fields' =>    array(
                     'PS_CART_FOLLOWING' => array(
-                        'title' => $this->trans('Re-display cart at login', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Re-display cart at login', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('After a customer logs in, you can recall and display the content of his/her last shopping cart.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_CREATION_EMAIL' => array(
-                        'title' => $this->trans('Send an email after registration', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Send an email after registration', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('Send an email with summary of the account information (email, password) after registration.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_PASSWD_TIME_FRONT' => array(
-                        'title' => $this->trans('Password reset delay', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Password reset delay', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('Minimum time required between two requests for a password reset.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isUnsignedInt',
                         'cast' => 'intval',
                         'size' => 5,
                         'type' => 'text',
-                        'suffix' => $this->trans('minutes', array(), 'Admin.ShopParameters.Feature')
+                        'suffix' => $this->trans('minutes', array(), 'Admin.Shopparameters.Feature')
                     ),
                     'PS_B2B_ENABLE' => array(
-                        'title' => $this->trans('Enable B2B mode', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Enable B2B mode', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_BIRTHDATE' => array(
-                        'title' => $this->trans('Ask for birthdate', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Ask for birthdate', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('Display or not the birthdate field.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_OPTIN' => array(
-                        'title' => $this->trans('Enable partner offers', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Enable partner offers', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('Display or not the partner offers tick box, to receive offers from the store\'s partners.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
