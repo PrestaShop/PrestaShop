@@ -27,7 +27,7 @@
 class ProfileLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Admin.AdvParameters.Feature';
+    protected $domain = 'Admin.Advparameters.Feature';
 
     protected $keys = array('id_profile');
 
@@ -37,10 +37,10 @@ class ProfileLangCore extends DataLangCore
     {
         $this->fieldNames = array(
             'name' => array(
-                md5('SuperAdmin') => $this->translator->trans('SuperAdmin', array(), 'Admin.AdvParameters.Feature', $this->locale),
-                md5('Logistician') => $this->translator->trans('Logistician', array(), 'Admin.AdvParameters.Feature', $this->locale),
-                md5('Translator') => $this->translator->trans('Translator', array(), 'Admin.AdvParameters.Feature', $this->locale),
-                md5('Salesman') => $this->translator->trans('Salesman', array(), 'Admin.AdvParameters.Feature', $this->locale),
+                md5('SuperAdmin') => $this->translator->trans('SuperAdmin', array(), 'Admin.Advparameters.Feature', $this->locale),
+                md5('Logistician') => $this->translator->trans('Logistician', array(), 'Admin.Advparameters.Feature', $this->locale),
+                md5('Translator') => $this->translator->trans('Translator', array(), 'Admin.Advparameters.Feature', $this->locale),
+                md5('Salesman') => $this->translator->trans('Salesman', array(), 'Admin.Advparameters.Feature', $this->locale),
             ),
         );
     }

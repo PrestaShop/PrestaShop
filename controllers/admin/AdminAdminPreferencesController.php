@@ -49,7 +49,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                 'icon' =>    'icon-cogs',
                 'fields' =>    array(
                     'PRESTASTORE_LIVE' => array(
-                        'title' => $this->trans('Automatically check for module updates', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Automatically check for module updates', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('New modules and updates are displayed on the modules page.', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
@@ -57,7 +57,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                     'PS_COOKIE_CHECKIP' => array(
-                        'title' => $this->trans('Check the cookie\'s IP address', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Check the cookie\'s IP address', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('Check the IP address of the cookie in order to prevent your cookie from being stolen.', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
@@ -66,22 +66,22 @@ class AdminAdminPreferencesControllerCore extends AdminController
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                     'PS_COOKIE_LIFETIME_FO' => array(
-                        'title' => $this->trans('Lifetime of front office cookies', array(), 'Admin.AdvParameters.Feature'),
-                        'hint' => $this->trans('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Lifetime of front office cookies', array(), 'Admin.Advparameters.Feature'),
+                        'hint' => $this->trans('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.', array(), 'Admin.Advparameters.Feature'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => $this->trans('hours', array(), 'Admin.AdvParameters.Feature'),
+                        'suffix' => $this->trans('hours', array(), 'Admin.Advparameters.Feature'),
                         'default' => '480',
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                     'PS_COOKIE_LIFETIME_BO' => array(
-                        'title' => $this->trans('Lifetime of back office cookies', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Lifetime of back office cookies', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => $this->trans('hours', array(), 'Admin.AdvParameters.Feature'),
+                        'suffix' => $this->trans('hours', array(), 'Admin.Advparameters.Feature'),
                         'default' => '480',
                         'visibility' => Shop::CONTEXT_ALL
                     ),
@@ -89,60 +89,60 @@ class AdminAdminPreferencesControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'upload' => array(
-                'title' =>    $this->trans('Upload quota', array(), 'Admin.AdvParameters.Feature'),
+                'title' =>    $this->trans('Upload quota', array(), 'Admin.Advparameters.Feature'),
                 'icon' =>    'icon-cloud-upload',
                 'fields' => array(
                     'PS_ATTACHMENT_MAXIMUM_SIZE' => array(
-                        'title' => $this->trans('Maximum size for attached files', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Maximum size for attached files', array(), 'Admin.Advparameters.Feature'),
                         'hint' =>  sprintf($this->trans('Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).', array(), 'Admin.AdvParameters.Help'), $upload_mb),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => $this->trans('megabytes', array(), 'Admin.AdvParameters.Feature'),
+                        'suffix' => $this->trans('megabytes', array(), 'Admin.Advparameters.Feature'),
                         'default' => '2'
                     ),
                     'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
-                        'title' => $this->trans('Maximum size for a downloadable product', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Maximum size for a downloadable product', array(), 'Admin.Advparameters.Feature'),
                         'hint' => sprintf($this->trans('Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).', array(), 'Admin.AdvParameters.Help'), $upload_mb),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => $this->trans('megabytes', array(), 'Admin.AdvParameters.Feature'),
+                        'suffix' => $this->trans('megabytes', array(), 'Admin.Advparameters.Feature'),
                         'default' => '1'
                     ),
                     'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
-                        'title' => $this->trans('Maximum size for a product\'s image', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Maximum size for a product\'s image', array(), 'Admin.Advparameters.Feature'),
                         'hint' => sprintf($this->trans('Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).', array('%s' => $upload_mb), 'Admin.AdvParameters.Help')),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => $this->trans('megabytes', array(), 'Admin.AdvParameters.Feature'),
+                        'suffix' => $this->trans('megabytes', array(), 'Admin.Advparameters.Feature'),
                         'default' => '1'
                     ),
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'notifications' => array(
-                'title' =>    $this->trans('Notifications', array(), 'Admin.AdvParameters.Feature'),
+                'title' =>    $this->trans('Notifications', array(), 'Admin.Advparameters.Feature'),
                 'icon' =>    'icon-list-alt',
                 'description' => $this->trans('Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop\'s name. They display the number of new items since you last clicked on them.', array(), 'Admin.AdvParameters.Help'),
                 'fields' =>    array(
                     'PS_SHOW_NEW_ORDERS' => array(
-                        'title' => $this->trans('Show notifications for new orders', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Show notifications for new orders', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('This will display notifications when new orders are made in your shop.', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_SHOW_NEW_CUSTOMERS' => array(
-                        'title' => $this->trans('Show notifications for new customers', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Show notifications for new customers', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('This will display notifications every time a new customer registers in your shop.', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_SHOW_NEW_MESSAGES' => array(
-                        'title' => $this->trans('Show notifications for new messages', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Show notifications for new messages', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('This will display notifications when new messages are posted in your shop.', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',

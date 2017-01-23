@@ -64,7 +64,7 @@ class AdminProfilesControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Profile', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Profile', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-group'
             ),
             'input' => array(
@@ -108,7 +108,7 @@ class AdminProfilesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_profile'] = array(
                 'href' => self::$currentIndex.'&addprofile&token='.$this->token,
-                'desc' => $this->trans('Add new profile', array(), 'Admin.AdvParameters.Feature'),
+                'desc' => $this->trans('Add new profile', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }

@@ -88,7 +88,7 @@ class AdminEmployeesControllerCore extends AdminController
             'firstname' => array('title' => $this->trans('First name', array(), 'Admin.Global')),
             'lastname' => array('title' => $this->trans('Last name', array(), 'Admin.Global')),
             'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global')),
-            'profile' => array('title' => $this->trans('Profile', array(), 'Admin.AdvParameters.Feature'), 'type' => 'select', 'list' => $this->profiles_array,
+            'profile' => array('title' => $this->trans('Profile', array(), 'Admin.Advparameters.Feature'), 'type' => 'select', 'list' => $this->profiles_array,
                 'filter_key' => 'pl!name', 'class' => 'fixed-width-lg'),
             'active' => array('title' => $this->trans('Active', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status',
                 'type' => 'bool', 'class' => 'fixed-width-sm'),
@@ -96,19 +96,19 @@ class AdminEmployeesControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Employee options', array(), 'Admin.AdvParameters.Feature'),
+                'title' =>    $this->trans('Employee options', array(), 'Admin.Advparameters.Feature'),
                 'fields' =>    array(
                     'PS_PASSWD_TIME_BACK' => array(
-                        'title' => $this->trans('Password regeneration', array(), 'Admin.AdvParameters.Feature'),
-                        'hint' => $this->trans('Security: Minimum time to wait between two password changes.', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Password regeneration', array(), 'Admin.Advparameters.Feature'),
+                        'hint' => $this->trans('Security: Minimum time to wait between two password changes.', array(), 'Admin.Advparameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => ' '.$this->trans('minutes', array(), 'Admin.AdvParameters.Feature'),
+                        'suffix' => ' '.$this->trans('minutes', array(), 'Admin.Advparameters.Feature'),
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                     'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array(
-                        'title' => $this->trans('Memorize the language used in Admin panel forms', array(), 'Admin.AdvParameters.Feature'),
-                        'hint' => $this->trans('Allow employees to select a specific language for the Admin panel form.', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Memorize the language used in Admin panel forms', array(), 'Admin.Advparameters.Feature'),
+                        'hint' => $this->trans('Allow employees to select a specific language for the Admin panel form.', array(), 'Admin.Advparameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'value',
@@ -187,7 +187,7 @@ class AdminEmployeesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_employee'] = array(
                 'href' => self::$currentIndex.'&addemployee&token='.$this->token,
-                'desc' => $this->trans('Add new employee', array(), 'Admin.AdvParameters.Feature'),
+                'desc' => $this->trans('Add new employee', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -202,7 +202,7 @@ class AdminEmployeesControllerCore extends AdminController
                         '%lastname%' => $obj->lastname,
                         '%firstname%' => $obj->firstname,
                     ),
-                    'Admin.AdvParameters.Feature'
+                    'Admin.Advparameters.Feature'
                 );
                 $this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ',
                     $this->toolbar_title);
@@ -237,7 +237,7 @@ class AdminEmployeesControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Employees', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Employees', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-user'
             ),
             'input' => array(
@@ -307,7 +307,7 @@ class AdminEmployeesControllerCore extends AdminController
         $this->fields_form['input'] = array_merge($this->fields_form['input'], array(
             array(
                 'type' => 'switch',
-                'label' => $this->trans('Subscribe to PrestaShop newsletter', array(), 'Admin.AdvParameters.Feature'),
+                'label' => $this->trans('Subscribe to PrestaShop newsletter', array(), 'Admin.Advparameters.Feature'),
                 'name' => 'optin',
                 'required' => false,
                 'is_bool' => true,
@@ -327,7 +327,7 @@ class AdminEmployeesControllerCore extends AdminController
             ),
             array(
                 'type' => 'default_tab',
-                'label' => $this->trans('Default page', array(), 'Admin.AdvParameters.Feature'),
+                'label' => $this->trans('Default page', array(), 'Admin.Advparameters.Feature'),
                 'name' => 'default_tab',
                 'hint' => $this->trans('This page will be displayed just after login.', array(), 'Admin.AdvParameters.Help'),
                 'options' => $this->tabs_list
@@ -378,7 +378,7 @@ class AdminEmployeesControllerCore extends AdminController
             }
             $this->fields_form['input'][] = array(
                 'type' => 'select',
-                'label' => $this->trans('Permission profile', array(), 'Admin.AdvParameters.Feature'),
+                'label' => $this->trans('Permission profile', array(), 'Admin.Advparameters.Feature'),
                 'name' => 'id_profile',
                 'required' => true,
                 'options' => array(

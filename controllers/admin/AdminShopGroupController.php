@@ -55,7 +55,7 @@ class AdminShopGroupControllerCore extends AdminController
                 'class' => 'fixed-width-xs',
             ),
             'name' => array(
-                'title' => $this->trans('Shop group', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Shop group', array(), 'Admin.Advparameters.Feature'),
                 'width' => 'auto',
                 'filter_key' => 'a!name',
             ),
@@ -63,10 +63,10 @@ class AdminShopGroupControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Multistore options', array(), 'Admin.AdvParameters.Feature'),
+                'title' =>    $this->trans('Multistore options', array(), 'Admin.Advparameters.Feature'),
                 'fields' =>    array(
                     'PS_SHOP_DEFAULT' => array(
-                        'title' => $this->trans('Default shop', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Default shop', array(), 'Admin.Advparameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'id_shop',
@@ -108,7 +108,7 @@ class AdminShopGroupControllerCore extends AdminController
             }
         }
 
-        $shops_tree = new HelperTreeShops('shops-tree', $this->trans('Multistore tree', array(), 'Admin.AdvParameters.Feature'));
+        $shops_tree = new HelperTreeShops('shops-tree', $this->trans('Multistore tree', array(), 'Admin.Advparameters.Feature'));
         $shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
             ->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
                 new TreeToolbarLink(
@@ -146,11 +146,11 @@ class AdminShopGroupControllerCore extends AdminController
 
         if ($this->display != 'add' && $this->display != 'edit') {
             $this->page_header_toolbar_btn['new'] = array(
-                'desc' => $this->trans('Add a new shop group', array(), 'Admin.AdvParameters.Feature'),
+                'desc' => $this->trans('Add a new shop group', array(), 'Admin.Advparameters.Feature'),
                 'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token
             );
             $this->page_header_toolbar_btn['new_2'] = array(
-                'desc' => $this->trans('Add a new shop', array(), 'Admin.AdvParameters.Feature'),
+                'desc' => $this->trans('Add a new shop', array(), 'Admin.Advparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop').'&addshop',
                 'imgclass' => 'new_2',
                 'icon' => 'process-icon-new'
@@ -164,7 +164,7 @@ class AdminShopGroupControllerCore extends AdminController
 
         if ($this->display != 'add' && $this->display != 'edit') {
             $this->toolbar_btn['new'] = array(
-                'desc' => $this->trans('Add a new shop group', array(), 'Admin.AdvParameters.Feature'),
+                'desc' => $this->trans('Add a new shop group', array(), 'Admin.Advparameters.Feature'),
                 'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
             );
         }
@@ -174,20 +174,20 @@ class AdminShopGroupControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Shop group', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Shop group', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-shopping-cart'
             ),
             'description' => $this->trans('Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.', array(), 'Admin.AdvParameters.Help'),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Shop group name', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Shop group name', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'name',
                     'required' => true
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->trans('Share customers', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Share customers', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'share_customer',
                     'required' => true,
                     'class' => 't',
@@ -207,7 +207,7 @@ class AdminShopGroupControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->trans('Share available quantities to sell', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Share available quantities to sell', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'share_stock',
                     'required' => true,
                     'class' => 't',
@@ -222,11 +222,11 @@ class AdminShopGroupControllerCore extends AdminController
                             'value' => 0
                         )
                     ),
-                    'desc' => $this->trans('Share available quantities between shops of this group. When changing this option, all available products quantities will be reset to 0.', array(), 'Admin.AdvParameters.Feature'),
+                    'desc' => $this->trans('Share available quantities between shops of this group. When changing this option, all available products quantities will be reset to 0.', array(), 'Admin.Advparameters.Feature'),
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->trans('Share orders', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Share orders', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'share_order',
                     'required' => true,
                     'class' => 't',

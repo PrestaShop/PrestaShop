@@ -94,7 +94,7 @@ class AdminImportControllerCore extends AdminController
             $this->trans('Brands', array(), 'Admin.Global'),
             $this->trans('Suppliers', array(), 'Admin.Global'),
             $this->trans('Alias', array(), 'Admin.ShopParameters.Feature'),
-            $this->trans('Store contacts', array(), 'Admin.AdvParameters.Feature'),
+            $this->trans('Store contacts', array(), 'Admin.Advparameters.Feature'),
         );
 
         // @since 1.5.0
@@ -102,8 +102,8 @@ class AdminImportControllerCore extends AdminController
             $this->entities = array_merge(
                 $this->entities,
                 array(
-                    $this->trans('Supply Orders', array(), 'Admin.AdvParameters.Feature'),
-                    $this->trans('Supply Order Details', array(), 'Admin.AdvParameters.Feature'),
+                    $this->trans('Supply Orders', array(), 'Admin.Advparameters.Feature'),
+                    $this->trans('Supply Order Details', array(), 'Admin.Advparameters.Feature'),
                 )
             );
         }
@@ -118,46 +118,46 @@ class AdminImportControllerCore extends AdminController
                 );
 
                 $this->available_fields = array(
-                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
-                    'id_product' => array('label' => $this->trans('Product ID', array(), 'Admin.AdvParameters.Feature')),
-                    'product_reference' => array('label' => $this->trans('Product Reference', array(), 'Admin.AdvParameters.Feature')),
+                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
+                    'id_product' => array('label' => $this->trans('Product ID', array(), 'Admin.Advparameters.Feature')),
+                    'product_reference' => array('label' => $this->trans('Product Reference', array(), 'Admin.Advparameters.Feature')),
                     'group' => array(
-                        'label' => $this->trans('Attribute (Name:Type:Position)', array(), 'Admin.AdvParameters.Feature').'*'
+                        'label' => $this->trans('Attribute (Name:Type:Position)', array(), 'Admin.Advparameters.Feature').'*'
                     ),
                     'attribute' => array(
-                        'label' => $this->trans('Value (Value:Position)', array(), 'Admin.AdvParameters.Feature').'*'
+                        'label' => $this->trans('Value (Value:Position)', array(), 'Admin.Advparameters.Feature').'*'
                     ),
-                    'supplier_reference' => array('label' => $this->trans('Supplier reference', array(), 'Admin.AdvParameters.Feature')),
+                    'supplier_reference' => array('label' => $this->trans('Supplier reference', array(), 'Admin.Advparameters.Feature')),
                     'reference' => array('label' => $this->trans('Reference', array(), 'Admin.Global')),
-                    'ean13' => array('label' => $this->trans('EAN13', array(), 'Admin.AdvParameters.Feature')),
-                    'upc' => array('label' => $this->trans('UPC', array(), 'Admin.AdvParameters.Feature')),
+                    'ean13' => array('label' => $this->trans('EAN13', array(), 'Admin.Advparameters.Feature')),
+                    'upc' => array('label' => $this->trans('UPC', array(), 'Admin.Advparameters.Feature')),
                     'wholesale_price' => array('label' => $this->trans('Cost price', array(), 'Admin.Catalog.Feature')),
                     'price' => array('label' => $this->trans('Impact on price', array(), 'Admin.Catalog.Feature')),
                     'ecotax' => array('label' => $this->trans('Ecotax', array(), 'Admin.Catalog.Feature')),
                     'quantity' => array('label' => $this->trans('Quantity', array(), 'Admin.Global')),
-                    'minimal_quantity' => array('label' => $this->trans('Minimal quantity', array(), 'Admin.AdvParameters.Feature')),
+                    'minimal_quantity' => array('label' => $this->trans('Minimal quantity', array(), 'Admin.Advparameters.Feature')),
                     'weight' => array('label' => $this->trans('Impact on weight', array(), 'Admin.Catalog.Feature')),
-                    'default_on' => array('label' => $this->trans('Default (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Feature')),
-                    'available_date' => array('label' => $this->trans('Combination availability date', array(), 'Admin.AdvParameters.Feature')),
+                    'default_on' => array('label' => $this->trans('Default (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
+                    'available_date' => array('label' => $this->trans('Combination availability date', array(), 'Admin.Advparameters.Feature')),
                     'image_position' => array(
-                        'label' => $this->trans('Choose among product images by position (1,2,3...)', array(),'Admin.AdvParameters.Feature' )
+                        'label' => $this->trans('Choose among product images by position (1,2,3...)', array(), 'Admin.Advparameters.Feature')
                     ),
-                    'image_url' => array('label' => $this->trans('Image URLs (x,y,z...)', array(), 'Admin.AdvParameters.Feature')),
-                    'image_alt' => array('label' => $this->trans('Image alt texts (x,y,z...)', array(), 'Admin.AdvParameters.Feature')),
+                    'image_url' => array('label' => $this->trans('Image URLs (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
+                    'image_alt' => array('label' => $this->trans('Image alt texts (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
                     'shop' => array(
-                        'label' => $this->trans('ID / Name of shop', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
                     ),
                     'advanced_stock_management' => array(
-                        'label' => $this->trans('Advanced Stock Management', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('Advanced Stock Management', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Help')
                     ),
                     'depends_on_stock' => array(
-                        'label' => $this->trans('Depends on stock', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('Depends on stock', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', array(), 'Admin.AdvParameters.Help')
                     ),
                     'warehouse' => array(
-                        'label' => $this->trans('Warehouse', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('Warehouse', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('ID of the warehouse to set as storage.', array(), 'Admin.AdvParameters.Help')
                     ),
                 );
@@ -182,23 +182,23 @@ class AdminImportControllerCore extends AdminController
 
             case $this->entities[$this->trans('Categories', array(), 'Admin.Global')]:
                 $this->available_fields = array(
-                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
+                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                    'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.AdvParameters.Feature')),
+                    'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
                     'parent' => array('label' => $this->trans('Parent category', array(), 'Admin.Catalog.Feature')),
                     'is_root_category' => array(
-                        'label' => $this->trans('Root category (0/1)', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('Root category (0/1)', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('A category root is where a category tree can begin. This is used with multistore.', array(), 'Admin.AdvParameters.Help')
                         ),
                     'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
                     'meta_title' => array('label' => $this->trans('Meta title', array(), 'Admin.Global')),
                     'meta_keywords' => array('label' => $this->trans('Meta keywords', array(), 'Admin.Global')),
                     'meta_description' => array('label' => $this->trans('Meta description', array(), 'Admin.Global')),
-                    'link_rewrite' => array('label' => $this->trans('Rewritten URL', array(),'Admin.ShopParameters.Feature')),
-                    'image' => array('label' => $this->trans('Image URL', array(), 'Admin.AdvParameters.Feature')),
+                    'link_rewrite' => array('label' => $this->trans('Rewritten URL', array(), 'Admin.ShopParameters.Feature')),
+                    'image' => array('label' => $this->trans('Image URL', array(), 'Admin.Advparameters.Feature')),
                     'shop' => array(
-                        'label' => $this->trans('ID / Name of shop', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
                     ),
                 );
@@ -217,90 +217,90 @@ class AdminImportControllerCore extends AdminController
                 );
 
                 $this->available_fields = array(
-                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
+                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                    'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.AdvParameters.Feature')),
+                    'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
-                    'category' => array('label' => $this->trans('Categories (x,y,z...)', array(), 'Admin.AdvParameters.Feature')),
-                    'price_tex' => array('label' => $this->trans('Price tax excluded', array(), 'Admin.AdvParameters.Feature')),
-                    'price_tin' => array('label' => $this->trans('Price tax included', array(), 'Admin.AdvParameters.Feature')),
-                    'id_tax_rules_group' => array('label' => $this->trans('Tax rule ID', array(), 'Admin.AdvParameters.Feature')),
+                    'category' => array('label' => $this->trans('Categories (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
+                    'price_tex' => array('label' => $this->trans('Price tax excluded', array(), 'Admin.Advparameters.Feature')),
+                    'price_tin' => array('label' => $this->trans('Price tax included', array(), 'Admin.Advparameters.Feature')),
+                    'id_tax_rules_group' => array('label' => $this->trans('Tax rule ID', array(), 'Admin.Advparameters.Feature')),
                     'wholesale_price' => array('label' => $this->trans('Cost price', array(), 'Admin.Catalog.Feature')),
-                    'on_sale' => array('label' => $this->trans('On sale (0/1)', array(), 'Admin.AdvParameters.Feature')),
-                    'reduction_price' => array('label' => $this->trans('Discount amount', array(), 'Admin.AdvParameters.Feature')),
-                    'reduction_percent' => array('label' => $this->trans('Discount percent', array(), 'Admin.AdvParameters.Feature')),
-                    'reduction_from' => array('label' => $this->trans('Discount from (yyyy-mm-dd)', array(), 'Admin.AdvParameters.Feature')),
-                    'reduction_to' => array('label' => $this->trans('Discount to (yyyy-mm-dd)', array(), 'Admin.AdvParameters.Feature')),
-                    'reference' => array('label' => $this->trans('Reference #', array(), 'Admin.AdvParameters.Feature')),
-                    'supplier_reference' => array('label' => $this->trans('Supplier reference #', array(), 'Admin.AdvParameters.Feature')),
+                    'on_sale' => array('label' => $this->trans('On sale (0/1)', array(), 'Admin.Advparameters.Feature')),
+                    'reduction_price' => array('label' => $this->trans('Discount amount', array(), 'Admin.Advparameters.Feature')),
+                    'reduction_percent' => array('label' => $this->trans('Discount percent', array(), 'Admin.Advparameters.Feature')),
+                    'reduction_from' => array('label' => $this->trans('Discount from (yyyy-mm-dd)', array(), 'Admin.Advparameters.Feature')),
+                    'reduction_to' => array('label' => $this->trans('Discount to (yyyy-mm-dd)', array(), 'Admin.Advparameters.Feature')),
+                    'reference' => array('label' => $this->trans('Reference #', array(), 'Admin.Advparameters.Feature')),
+                    'supplier_reference' => array('label' => $this->trans('Supplier reference #', array(), 'Admin.Advparameters.Feature')),
                     'supplier' => array('label' => $this->trans('Supplier', array(), 'Admin.Global')),
                     'manufacturer' => array('label' => $this->trans('Brand', array(), 'Admin.Global')),
-                    'ean13' => array('label' => $this->trans('EAN13', array(), 'Admin.AdvParameters.Feature')),
-                    'upc' => array('label' => $this->trans('UPC', array(), 'Admin.AdvParameters.Feature')),
+                    'ean13' => array('label' => $this->trans('EAN13', array(), 'Admin.Advparameters.Feature')),
+                    'upc' => array('label' => $this->trans('UPC', array(), 'Admin.Advparameters.Feature')),
                     'ecotax' => array('label' => $this->trans('Ecotax', array(), 'Admin.Catalog.Feature')),
                     'width' => array('label' => $this->trans('Width', array(), 'Admin.Global')),
                     'height' => array('label' => $this->trans('Height', array(), 'Admin.Global')),
                     'depth' => array('label' => $this->trans('Depth', array(), 'Admin.Global')),
                     'weight' => array('label' => $this->trans('Weight', array(), 'Admin.Global')),
                     'quantity' => array('label' => $this->trans('Quantity', array(), 'Admin.Global')),
-                    'minimal_quantity' => array('label' => $this->trans('Minimal quantity', array(), 'Admin.AdvParameters.Feature')),
+                    'minimal_quantity' => array('label' => $this->trans('Minimal quantity', array(), 'Admin.Advparameters.Feature')),
                     'visibility' => array('label' => $this->trans('Visibility', array(), 'Admin.Catalog.Feature')),
-                    'additional_shipping_cost' => array('label' => $this->trans('Additional shipping cost', array(), 'Admin.AdvParameters.Feature')),
-                    'unity' => array('label' => $this->trans('Unit for the price per unit', array(), 'Admin.AdvParameters.Feature')),
-                    'unit_price' => array('label' => $this->trans('Price per unit', array(), 'Admin.AdvParameters.Feature')),
+                    'additional_shipping_cost' => array('label' => $this->trans('Additional shipping cost', array(), 'Admin.Advparameters.Feature')),
+                    'unity' => array('label' => $this->trans('Unit for the price per unit', array(), 'Admin.Advparameters.Feature')),
+                    'unit_price' => array('label' => $this->trans('Price per unit', array(), 'Admin.Advparameters.Feature')),
                     'description_short' => array('label' => $this->trans('Summary', array(), 'Admin.Catalog.Feature')),
                     'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
-                    'tags' => array('label' => $this->trans('Tags (x,y,z...)', array(), 'Admin.AdvParameters.Feature')),
+                    'tags' => array('label' => $this->trans('Tags (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
                     'meta_title' => array('label' => $this->trans('Meta title', array(), 'Admin.Global')),
                     'meta_keywords' => array('label' => $this->trans('Meta keywords', array(), 'Admin.Global')),
                     'meta_description' => array('label' => $this->trans('Meta description', array(), 'Admin.Global')),
-                    'link_rewrite' => array('label' => $this->trans('Rewritten URL', array(), 'Admin.AdvParameters.Feature')),
+                    'link_rewrite' => array('label' => $this->trans('Rewritten URL', array(), 'Admin.Advparameters.Feature')),
                     'available_now' => array('label' => $this->trans('Label when in stock', array(), 'Admin.Catalog.Feature')),
-                    'available_later' => array('label' => $this->trans('Label when backorder allowed', array(), 'Admin.AdvParameters.Feature')),
-                    'available_for_order' => array('label' => $this->trans('Available for order (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Feature')),
-                    'available_date' => array('label' => $this->trans('Product availability date', array(), 'Admin.AdvParameters.Feature')),
-                    'date_add' => array('label' => $this->trans('Product creation date', array(), 'Admin.AdvParameters.Feature')),
-                    'show_price' => array('label' => $this->trans('Show price (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Feature')),
-                    'image' => array('label' => $this->trans('Image URLs (x,y,z...)', array(), 'Admin.AdvParameters.Feature')),
-                    'image_alt' => array('label' => $this->trans('Image alt texts (x,y,z...)', array(), 'Admin.AdvParameters.Feature')),
+                    'available_later' => array('label' => $this->trans('Label when backorder allowed', array(), 'Admin.Advparameters.Feature')),
+                    'available_for_order' => array('label' => $this->trans('Available for order (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
+                    'available_date' => array('label' => $this->trans('Product availability date', array(), 'Admin.Advparameters.Feature')),
+                    'date_add' => array('label' => $this->trans('Product creation date', array(), 'Admin.Advparameters.Feature')),
+                    'show_price' => array('label' => $this->trans('Show price (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
+                    'image' => array('label' => $this->trans('Image URLs (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
+                    'image_alt' => array('label' => $this->trans('Image alt texts (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
                     'delete_existing_images' => array(
-                        'label' => $this->trans('Delete existing images (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Feature')
+                        'label' => $this->trans('Delete existing images (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')
                     ),
-                    'features' => array('label' => $this->trans('Feature (Name:Value:Position:Customized)', array(), 'Admin.AdvParameters.Feature')),
-                    'online_only' => array('label' => $this->trans('Available online only (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Feature')),
+                    'features' => array('label' => $this->trans('Feature (Name:Value:Position:Customized)', array(), 'Admin.Advparameters.Feature')),
+                    'online_only' => array('label' => $this->trans('Available online only (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
                     'condition' => array('label' => $this->trans('Condition', array(), 'Admin.Catalog.Feature')),
-                    'customizable' => array('label' => $this->trans('Customizable (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Feature')),
-                    'uploadable_files' => array('label' => $this->trans('Uploadable files (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Feature')),
-                    'text_fields' => array('label' => $this->trans('Text fields (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Feature')),
-                    'out_of_stock' => array('label' => $this->trans('Action when out of stock', array(), 'Admin.AdvParameters.Feature')),
-                    'is_virtual' => array('label' => $this->trans('Virtual product (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Feature')),
-                    'file_url' => array('label' => $this->trans('File URL', array(), 'Admin.AdvParameters.Feature')),
+                    'customizable' => array('label' => $this->trans('Customizable (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
+                    'uploadable_files' => array('label' => $this->trans('Uploadable files (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
+                    'text_fields' => array('label' => $this->trans('Text fields (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
+                    'out_of_stock' => array('label' => $this->trans('Action when out of stock', array(), 'Admin.Advparameters.Feature')),
+                    'is_virtual' => array('label' => $this->trans('Virtual product (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
+                    'file_url' => array('label' => $this->trans('File URL', array(), 'Admin.Advparameters.Feature')),
                     'nb_downloadable' => array(
                         'label' => $this->trans('Number of allowed downloads', array(), 'Admin.Catalog.Feature'),
                         'help' => $this->trans('Number of days this file can be accessed by customers. Set to zero for unlimited access.', array(), 'Admin.Catalog.Help'),
                     ),
-                    'date_expiration' => array('label' => $this->trans('Expiration date (yyyy-mm-dd)', array(), 'Admin.AdvParameters.Feature')),
+                    'date_expiration' => array('label' => $this->trans('Expiration date (yyyy-mm-dd)', array(), 'Admin.Advparameters.Feature')),
                     'nb_days_accessible' => array(
-                        'label' => $this->trans('Number of days', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('Number of days', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Number of days this file can be accessed by customers. Set to zero for unlimited access.', array(), 'Admin.Catalog.Help'),
                     ),
                     'shop' => array(
-                        'label' => $this->trans('ID / Name of shop', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
                     ),
                     'advanced_stock_management' => array(
-                        'label' => $this->trans('Advanced Stock Management', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('Advanced Stock Management', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes).', array(), 'Admin.AdvParameters.Help')
                     ),
                     'depends_on_stock' => array(
-                        'label' => $this->trans('Depends on stock', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('Depends on stock', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', array(), 'Admin.AdvParameters.Help')
                     ),
                     'warehouse' => array(
-                        'label' => $this->trans('Warehouse', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('Warehouse', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('ID of the warehouse to set as storage.', array(), 'Admin.AdvParameters.Help')
                     ),
-                    'accessories' => array('label' => $this->trans('Accessories (x,y,z...)', array(), 'Admin.AdvParameters.Feature')),
+                    'accessories' => array('label' => $this->trans('Accessories (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
                 );
 
                 self::$default_values = array(
@@ -339,22 +339,22 @@ class AdminImportControllerCore extends AdminController
                 $this->required_fields = array('email', 'passwd', 'lastname', 'firstname');
 
                 $this->available_fields = array(
-                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
+                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                    'active' => array('label' => $this->trans('Active  (0/1)', array(), 'Admin.AdvParameters.Feature')),
-                    'id_gender' => array('label' => $this->trans('Titles ID (Mr = 1, Ms = 2, else 0)', array(), 'Admin.AdvParameters.Feature')),
+                    'active' => array('label' => $this->trans('Active  (0/1)', array(), 'Admin.Advparameters.Feature')),
+                    'id_gender' => array('label' => $this->trans('Titles ID (Mr = 1, Ms = 2, else 0)', array(), 'Admin.Advparameters.Feature')),
                     'email' => array('label' => $this->trans('Email', array(), 'Admin.Global').'*'),
                     'passwd' => array('label' => $this->trans('Password', array(), 'Admin.Global').'*'),
-                    'birthday' => array('label' => $this->trans('Birth date (yyyy-mm-dd)', array(), 'Admin.AdvParameters.Feature')),
+                    'birthday' => array('label' => $this->trans('Birth date (yyyy-mm-dd)', array(), 'Admin.Advparameters.Feature')),
                     'lastname' => array('label' => $this->trans('Last name', array(), 'Admin.Global').'*'),
                     'firstname' => array('label' => $this->trans('First name', array(), 'Admin.Global').'*'),
-                    'newsletter' => array('label' => $this->trans('Newsletter (0/1)', array(), 'Admin.AdvParameters.Feature')),
-                    'optin' => array('label' => $this->trans('Partner offers (0/1)', array(), 'Admin.AdvParameters.Feature')),
-                    'date_add' => array('label' => $this->trans('Registration date (yyyy-mm-dd)', array(), 'Admin.AdvParameters.Feature')),
-                    'group' => array('label' => $this->trans('Groups (x,y,z...)', array(), 'Admin.AdvParameters.Feature')),
-                    'id_default_group' => array('label' => $this->trans('Default group ID', array(), 'Admin.AdvParameters.Feature')),
+                    'newsletter' => array('label' => $this->trans('Newsletter (0/1)', array(), 'Admin.Advparameters.Feature')),
+                    'optin' => array('label' => $this->trans('Partner offers (0/1)', array(), 'Admin.Advparameters.Feature')),
+                    'date_add' => array('label' => $this->trans('Registration date (yyyy-mm-dd)', array(), 'Admin.Advparameters.Feature')),
+                    'group' => array('label' => $this->trans('Groups (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
+                    'id_default_group' => array('label' => $this->trans('Default group ID', array(), 'Admin.Advparameters.Feature')),
                     'id_shop' => array(
-                        'label' => $this->trans('ID / Name of shop', array(),'Admin.AdvParameters.Feature' ),
+                        'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
                     ),
                 );
@@ -379,12 +379,12 @@ class AdminImportControllerCore extends AdminController
                 );
 
                 $this->available_fields = array(
-                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
+                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'alias' => array('label' => $this->trans('Alias', array(), 'Admin.ShopParameters.Feature').'*'),
-                    'active' => array('label' => $this->trans('Active  (0/1)', array(), 'Admin.AdvParameters.Feature')),
-                    'customer_email' => array('label' => $this->trans('Customer email', array(), 'Admin.AdvParameters.Feature').'*'),
-                    'id_customer' => array('label' => $this->trans('Customer ID', array(), 'Admin.AdvParameters.Feature')),
+                    'active' => array('label' => $this->trans('Active  (0/1)', array(), 'Admin.Advparameters.Feature')),
+                    'customer_email' => array('label' => $this->trans('Customer email', array(), 'Admin.Advparameters.Feature').'*'),
+                    'id_customer' => array('label' => $this->trans('Customer ID', array(), 'Admin.Advparameters.Feature')),
                     'manufacturer' => array('label' => $this->trans('Brand', array(), 'Admin.Global')),
                     'supplier' => array('label' => $this->trans('Supplier', array(), 'Admin.Global')),
                     'company' => array('label' => $this->trans('Company', array(), 'Admin.Global')),
@@ -420,18 +420,18 @@ class AdminImportControllerCore extends AdminController
                 );
 
                 $this->available_fields = array(
-                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
+                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                    'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.AdvParameters.Feature')),
+                    'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
                     'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
                     'short_description' => array('label' => $this->trans('Short description', array(), 'Admin.Catalog.Feature')),
                     'meta_title' => array('label' => $this->trans('Meta title', array(), 'Admin.Global')),
                     'meta_keywords' => array('label' => $this->trans('Meta keywords', array(), 'Admin.Global')),
                     'meta_description' => array('label' => $this->trans('Meta description', array(), 'Admin.Global')),
-                    'image' => array('label' => $this->trans('Image URL', array(), 'Admin.AdvParameters.Feature')),
+                    'image' => array('label' => $this->trans('Image URL', array(), 'Admin.Advparameters.Feature')),
                     'shop' => array(
-                        'label' => $this->trans('ID / Name of group shop', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('ID / Name of group shop', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
                     ),
                 );
@@ -447,7 +447,7 @@ class AdminImportControllerCore extends AdminController
                     'search',
                 );
                 $this->available_fields = array(
-                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
+                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'alias' => array('label' => $this->trans('Alias', array(), 'Admin.ShopParameters.Feature').'*'),
                     'search' => array('label' => $this->trans('Search', array(), 'Admin.ShopParameters.Feature').'*'),
@@ -457,7 +457,7 @@ class AdminImportControllerCore extends AdminController
                     'active' => '1',
                 );
                 break;
-            case $this->entities[$this->trans('Store contacts', array(), 'Admin.AdvParameters.Feature')]:
+            case $this->entities[$this->trans('Store contacts', array(), 'Admin.Advparameters.Feature')]:
                 unset(self::$validators['name']);
                 self::$validators = array(
                     'hours' => array('AdminImportController', 'split')
@@ -470,26 +470,26 @@ class AdminImportControllerCore extends AdminController
                     'longitude',
                 );
                 $this->available_fields = array(
-                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
+                    'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                    'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.AdvParameters.Feature')),
+                    'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
                     'address1' => array('label' => $this->trans('Address', array(), 'Admin.Global').'*'),
-                    'address2' => array('label' => $this->trans('Address (2)', array(), 'Admin.AdvParameters.Feature')),
+                    'address2' => array('label' => $this->trans('Address (2)', array(), 'Admin.Advparameters.Feature')),
                     'postcode' => array('label' => $this->trans('Zip/postal code', array(), 'Admin.Global')),
                     'state' => array('label' => $this->trans('State', array(), 'Admin.Global')),
                     'city' => array('label' => $this->trans('City', array(), 'Admin.Global').'*'),
                     'country' => array('label' => $this->trans('Country', array(), 'Admin.Global').'*'),
-                    'latitude' => array('label' => $this->trans('Latitude', array(), 'Admin.AdvParameters.Feature').'*'),
-                    'longitude' => array('label' => $this->trans('Longitude', array(), 'Admin.AdvParameters.Feature').'*'),
+                    'latitude' => array('label' => $this->trans('Latitude', array(), 'Admin.Advparameters.Feature').'*'),
+                    'longitude' => array('label' => $this->trans('Longitude', array(), 'Admin.Advparameters.Feature').'*'),
                     'phone' => array('label' => $this->trans('Phone', array(), 'Admin.Global')),
                     'fax' => array('label' => $this->trans('Fax', array(), 'Admin.Global')),
                     'email' => array('label' => $this->trans('Email address', array(), 'Admin.Global')),
-                    'note' => array('label' => $this->trans('Note', array(), 'Admin.AdvParameters.Feature')),
-                    'hours' => array('label' => $this->trans('Hours (x,y,z...)', array(), 'Admin.AdvParameters.Feature')),
-                    'image' => array('label' => $this->trans('Image URL', array(), 'Admin.AdvParameters.Feature')),
+                    'note' => array('label' => $this->trans('Note', array(), 'Admin.Advparameters.Feature')),
+                    'hours' => array('label' => $this->trans('Hours (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
+                    'image' => array('label' => $this->trans('Image URL', array(), 'Admin.Advparameters.Feature')),
                     'shop' => array(
-                        'label' => $this->trans('ID / Name of shop', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
                         'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
                     ),
                 );
@@ -502,7 +502,7 @@ class AdminImportControllerCore extends AdminController
         // @since 1.5.0
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             switch ((int)Tools::getValue('entity')) {
-                case $this->entities[$this->trans('Supply Orders', array(), 'Admin.AdvParameters.Feature')]:
+                case $this->entities[$this->trans('Supply Orders', array(), 'Admin.Advparameters.Feature')]:
                     // required fields
                     $this->required_fields = array(
                         'id_supplier',
@@ -512,16 +512,16 @@ class AdminImportControllerCore extends AdminController
                     );
                     // available fields
                     $this->available_fields = array(
-                        'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
+                        'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                         'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                        'id_supplier' => array('label' => $this->trans('Supplier ID *', array(), 'Admin.AdvParameters.Feature')),
-                        'id_lang' => array('label' => $this->trans('Lang ID', array(), 'Admin.AdvParameters.Feature')),
-                        'id_warehouse' => array('label' => $this->trans('Warehouse ID *', array(), 'Admin.AdvParameters.Feature')),
-                        'id_currency' => array('label' => $this->trans('Currency ID *', array(), 'Admin.AdvParameters.Feature')),
-                        'reference' => array('label' => $this->trans('Supply Order Reference *', array(), 'Admin.AdvParameters.Feature')),
-                        'date_delivery_expected' => array('label' => $this->trans('Delivery Date (Y-M-D)*', array(), 'Admin.AdvParameters.Feature')),
-                        'discount_rate' => array('label' => $this->trans('Discount rate', array(), 'Admin.AdvParameters.Feature')),
-                        'is_template' => array('label' => $this->trans('Template', array(), 'Admin.AdvParameters.Feature')),
+                        'id_supplier' => array('label' => $this->trans('Supplier ID *', array(), 'Admin.Advparameters.Feature')),
+                        'id_lang' => array('label' => $this->trans('Lang ID', array(), 'Admin.Advparameters.Feature')),
+                        'id_warehouse' => array('label' => $this->trans('Warehouse ID *', array(), 'Admin.Advparameters.Feature')),
+                        'id_currency' => array('label' => $this->trans('Currency ID *', array(), 'Admin.Advparameters.Feature')),
+                        'reference' => array('label' => $this->trans('Supply Order Reference *', array(), 'Admin.Advparameters.Feature')),
+                        'date_delivery_expected' => array('label' => $this->trans('Delivery Date (Y-M-D)*', array(), 'Admin.Advparameters.Feature')),
+                        'discount_rate' => array('label' => $this->trans('Discount rate', array(), 'Admin.Advparameters.Feature')),
+                        'is_template' => array('label' => $this->trans('Template', array(), 'Admin.Advparameters.Feature')),
                     );
                     // default values
                     self::$default_values = array(
@@ -531,7 +531,7 @@ class AdminImportControllerCore extends AdminController
                         'is_template' => '0',
                     );
                     break;
-                case $this->entities[$this->trans('Supply Order Details', array(), 'Admin.AdvParameters.Feature')]:
+                case $this->entities[$this->trans('Supply Order Details', array(), 'Admin.Advparameters.Feature')]:
                     // required fields
                     $this->required_fields = array(
                         'supply_order_reference',
@@ -541,14 +541,14 @@ class AdminImportControllerCore extends AdminController
                     );
                     // available fields
                     $this->available_fields = array(
-                        'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.AdvParameters.Feature')),
-                        'supply_order_reference' => array('label' => $this->trans('Supply Order Reference *', array(), 'Admin.AdvParameters.Feature')),
-                        'id_product' => array('label' => $this->trans('Product ID *', array(), 'Admin.AdvParameters.Feature')),
-                        'id_product_attribute' => array('label' => $this->trans('Product Attribute ID', array(), 'Admin.AdvParameters.Feature')),
-                        'unit_price_te' => array('label' => $this->trans('Unit Price (tax excl.)*', array(), 'Admin.AdvParameters.Feature')),
-                        'quantity_expected' => array('label' => $this->trans('Quantity Expected *', array(), 'Admin.AdvParameters.Feature')),
-                        'discount_rate' => array('label' => $this->trans('Discount Rate', array(), 'Admin.AdvParameters.Feature')),
-                        'tax_rate' => array('label' => $this->trans('Tax Rate', array(), 'Admin.AdvParameters.Feature')),
+                        'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
+                        'supply_order_reference' => array('label' => $this->trans('Supply Order Reference *', array(), 'Admin.Advparameters.Feature')),
+                        'id_product' => array('label' => $this->trans('Product ID *', array(), 'Admin.Advparameters.Feature')),
+                        'id_product_attribute' => array('label' => $this->trans('Product Attribute ID', array(), 'Admin.Advparameters.Feature')),
+                        'unit_price_te' => array('label' => $this->trans('Unit Price (tax excl.)*', array(), 'Admin.Advparameters.Feature')),
+                        'quantity_expected' => array('label' => $this->trans('Quantity Expected *', array(), 'Admin.Advparameters.Feature')),
+                        'discount_rate' => array('label' => $this->trans('Discount Rate', array(), 'Admin.Advparameters.Feature')),
+                        'tax_rate' => array('label' => $this->trans('Tax Rate', array(), 'Admin.Advparameters.Feature')),
                     );
                     // default values
                     self::$default_values = array(
@@ -791,7 +791,7 @@ class AdminImportControllerCore extends AdminController
                 // Default save button - action dynamically handled in javascript
                 $this->toolbar_btn['save-import'] = array(
                     'href' => '#',
-                    'desc' => $this->trans('Import .CSV data', array(), 'Admin.AdvParameters.Feature')
+                    'desc' => $this->trans('Import .CSV data', array(), 'Admin.Advparameters.Feature')
                 );
                 break;
         }
@@ -4348,7 +4348,7 @@ class AdminImportControllerCore extends AdminController
                 case $this->entities[$import_type = $this->trans('Alias', array(), 'Admin.ShopParameters.Feature')]:
                     $doneCount += $this->aliasImport($offset, $limit, $validateOnly);
                     break;
-                case $this->entities[$import_type = $this->trans('Store contacts', array(), 'Admin.AdvParameters.Feature')]:
+                case $this->entities[$import_type = $this->trans('Store contacts', array(), 'Admin.Advparameters.Feature')]:
                     $doneCount += $this->storeContactImport($offset, $limit, $validateOnly);
                     $this->clearSmartyCache();
                     break;
@@ -4357,12 +4357,12 @@ class AdminImportControllerCore extends AdminController
             // @since 1.5.0
             if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                 switch ((int)Tools::getValue('entity')) {
-                    case $this->entities[$import_type = $this->trans('Supply Orders', array(), 'Admin.AdvParameters.Feature')]:
+                    case $this->entities[$import_type = $this->trans('Supply Orders', array(), 'Admin.Advparameters.Feature')]:
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                             $doneCount += $this->supplyOrdersImport($offset, $limit, $validateOnly);
                         }
                         break;
-                    case $this->entities[$import_type = $this->trans('Supply Order Details', array(), 'Admin.AdvParameters.Feature')]:
+                    case $this->entities[$import_type = $this->trans('Supply Order Details', array(), 'Admin.Advparameters.Feature')]:
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                             $doneCount += $this->supplyOrdersDetailsImport($offset, $limit, $crossStepsVariables, $validateOnly);
                         }

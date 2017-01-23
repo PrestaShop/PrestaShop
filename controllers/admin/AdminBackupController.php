@@ -43,9 +43,9 @@ class AdminBackupControllerCore extends AdminController
 
         $this->fields_list = array(
             'date' => array('title' => $this->trans('Date', array(), 'Admin.Global'), 'type' => 'datetime', 'class' => 'fixed-width-lg', 'orderby' => false, 'search' => false),
-            'age' => array('title' => $this->trans('Age', array(), 'Admin.AdvParameters.Feature'), 'orderby' => false, 'search' => false),
+            'age' => array('title' => $this->trans('Age', array(), 'Admin.Advparameters.Feature'), 'orderby' => false, 'search' => false),
             'filename' => array('title' => $this->trans('Filename', array(), 'Admin.Global'), 'orderby' => false, 'search' => false),
-            'filesize' => array('title' => $this->trans('File size', array(), 'Admin.AdvParameters.Feature'), 'class' => 'fixed-width-sm', 'orderby' => false, 'search' => false)
+            'filesize' => array('title' => $this->trans('File size', array(), 'Admin.Advparameters.Feature'), 'class' => 'fixed-width-sm', 'orderby' => false, 'search' => false)
         );
 
         $this->bulk_actions = array('delete' => array(
@@ -55,10 +55,10 @@ class AdminBackupControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Backup options', array(), 'Admin.AdvParameters.Feature'),
+                'title' =>    $this->trans('Backup options', array(), 'Admin.Advparameters.Feature'),
                 'fields' =>    array(
                     'PS_BACKUP_ALL' => array(
-                        'title' => $this->trans('Ignore statistics tables', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Ignore statistics tables', array(), 'Admin.Advparameters.Feature'),
                         'desc' => $this->trans('Drop existing tables during import.', array(), 'Admin.AdvParameters.Help').'
 							<br />'._DB_PREFIX_.'connections, '._DB_PREFIX_.'connections_page, '._DB_PREFIX_
                             .'connections_source, '._DB_PREFIX_.'guest, '._DB_PREFIX_.'statssearch',
@@ -66,7 +66,7 @@ class AdminBackupControllerCore extends AdminController
                         'type' => 'bool'
                     ),
                     'PS_BACKUP_DROP_TABLE' => array(
-                        'title' => $this->trans('Drop existing tables during import', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Drop existing tables during import', array(), 'Admin.Advparameters.Feature'),
                         'hint' => array(
                             $this->trans('If enabled, the backup script will drop your tables prior to restoring data.', array(), 'Admin.AdvParameters.Help'),
                             $this->trans('(ie. "DROP TABLE IF EXISTS")', array(), 'Admin.AdvParameters.Help'),

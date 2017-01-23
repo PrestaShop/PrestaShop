@@ -89,7 +89,7 @@
       </button>
       &nbsp;
       <button type="button" class="btn btn-default" tabindex="-1" id="import_stop_button">
-        {l s="Abort import" d="Admin.AdvParameters.Feature"}
+        {l s="Abort import" d="Admin.Advparameters.Feature"}
       </button>
       &nbsp;
       <button type="button" class="btn btn-success" data-dismiss="modal" tabindex="-1" id="import_close_button" style="display: none;">

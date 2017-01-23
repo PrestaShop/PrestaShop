@@ -529,31 +529,31 @@ class AdminShopControllerCore extends AdminController
         $import_data = array(
             'carrier' => $this->trans('Carriers', array(), 'Admin.Shipping.Feature'),
             'cms' => $this->trans('Pages', array(), 'Admin.Design.Feature'),
-            'contact' => $this->trans('Contact information', array(), 'Admin.AdvParameters.Feature'),
+            'contact' => $this->trans('Contact information', array(), 'Admin.Advparameters.Feature'),
             'country' => $this->trans('Countries', array(), 'Admin.Global'),
             'currency' => $this->trans('Currencies', array(), 'Admin.Global'),
-            'discount' => $this->trans('Discount prices', array(), 'Admin.AdvParameters.Feature'),
-            'employee' => $this->trans('Employees', array(), 'Admin.AdvParameters.Feature'),
+            'discount' => $this->trans('Discount prices', array(), 'Admin.Advparameters.Feature'),
+            'employee' => $this->trans('Employees', array(), 'Admin.Advparameters.Feature'),
             'image' => $this->trans('Images', array(), 'Admin.Global'),
             'lang' => $this->trans('Languages', array(), 'Admin.Global'),
             'manufacturer' => $this->trans('Brands', array(), 'Admin.Global'),
             'module' => $this->trans('Modules', array(), 'Admin.Global'),
-            'hook_module' => $this->trans('Module hooks', array(), 'Admin.AdvParameters.Feature'),
-            'meta_lang' => $this->trans('Meta information', array(), 'Admin.AdvParameters.Feature'),
+            'hook_module' => $this->trans('Module hooks', array(), 'Admin.Advparameters.Feature'),
+            'meta_lang' => $this->trans('Meta information', array(), 'Admin.Advparameters.Feature'),
             'product' => $this->trans('Products', array(), 'Admin.Global'),
-            'product_attribute' => $this->trans('Product combinations', array(), 'Admin.AdvParameters.Feature'),
-            'stock_available' => $this->trans('Available quantities for sale', array(), 'Admin.AdvParameters.Feature'),
+            'product_attribute' => $this->trans('Product combinations', array(), 'Admin.Advparameters.Feature'),
+            'stock_available' => $this->trans('Available quantities for sale', array(), 'Admin.Advparameters.Feature'),
             'store' => $this->trans('Stores', array(), 'Admin.Global'),
-            'warehouse' => $this->trans('Warehouses', array(), 'Admin.AdvParameters.Feature'),
-            'webservice_account' => $this->trans('Webservice accounts', array(), 'Admin.AdvParameters.Feature'),
-            'attribute_group' => $this->trans('Attribute groups', array(), 'Admin.AdvParameters.Feature'),
+            'warehouse' => $this->trans('Warehouses', array(), 'Admin.Advparameters.Feature'),
+            'webservice_account' => $this->trans('Webservice accounts', array(), 'Admin.Advparameters.Feature'),
+            'attribute_group' => $this->trans('Attribute groups', array(), 'Admin.Advparameters.Feature'),
             'feature' => $this->trans('Features', array(), 'Admin.Global'),
-            'group' => $this->trans('Customer groups', array(), 'Admin.AdvParameters.Feature'),
-            'tax_rules_group' => $this->trans('Tax rules groups', array(), 'Admin.AdvParameters.Feature'),
+            'group' => $this->trans('Customer groups', array(), 'Admin.Advparameters.Feature'),
+            'tax_rules_group' => $this->trans('Tax rules groups', array(), 'Admin.Advparameters.Feature'),
             'supplier' => $this->trans('Suppliers', array(), 'Admin.Global'),
-            'referrer' => $this->trans('Referrers/affiliates', array(), 'Admin.AdvParameters.Feature'),
+            'referrer' => $this->trans('Referrers/affiliates', array(), 'Admin.Advparameters.Feature'),
             'zone' => $this->trans('Zones', array(), 'Admin.International.Feature'),
-            'cart_rule' => $this->trans('Cart rules', array(), 'Admin.AdvParameters.Feature'),
+            'cart_rule' => $this->trans('Cart rules', array(), 'Admin.Advparameters.Feature'),
         );
 
         // Hook for duplication of shop data
@@ -570,14 +570,14 @@ class AdminShopControllerCore extends AdminController
             $this->fields_import_form = array(
                 'radio' => array(
                     'type' => 'radio',
-                    'label' => $this->trans('Import data', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Import data', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'useImportData',
                     'value' => 1
                 ),
                 'select' => array(
                     'type' => 'select',
                     'name' => 'importFromShop',
-                    'label' => $this->trans('Choose the source shop', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Choose the source shop', array(), 'Admin.Advparameters.Feature'),
                     'options' => array(
                         'query' => Shop::getShops(false),
                         'name' => 'name'
@@ -585,7 +585,7 @@ class AdminShopControllerCore extends AdminController
                 ),
                 'allcheckbox' => array(
                     'type' => 'checkbox',
-                    'label' => $this->trans('Choose data to import', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Choose data to import', array(), 'Admin.Advparameters.Feature'),
                     'values' => $import_data
                 ),
                 'desc' => $this->trans('Use this option to associate data (products, modules, etc.) the same way for each selected shop.', array(), 'Admin.AdvParameters.Help')
@@ -835,7 +835,7 @@ class AdminShopControllerCore extends AdminController
 
         $tree = array(array(
             'data' => array(
-                'title' => '<b>'.$this->trans('Shop groups list', array(), 'Admin.AdvParameters.Feature').'</b>',
+                'title' => '<b>'.$this->trans('Shop groups list', array(), 'Admin.Advparameters.Feature').'</b>',
                 'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-root.png',
                 'attr' => array(
                     'href' => $this->context->link->getAdminLink('AdminShopGroup'),

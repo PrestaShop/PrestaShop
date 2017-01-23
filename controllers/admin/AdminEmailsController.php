@@ -59,8 +59,8 @@ class AdminEmailsControllerCore extends AdminController
 
             $this->fields_list = array(
                 'id_mail' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-                'recipient' => array('title' => $this->trans('Recipient', array(), 'Admin.AdvParameters.Feature')),
-                'template' => array('title' => $this->trans('Template', array(), 'Admin.AdvParameters.Feature')),
+                'recipient' => array('title' => $this->trans('Recipient', array(), 'Admin.Advparameters.Feature')),
+                'template' => array('title' => $this->trans('Template', array(), 'Admin.Advparameters.Feature')),
                 'language' => array(
                     'title' => $this->trans('Language', array(), 'Admin.Global'),
                     'type' => 'select',
@@ -70,9 +70,9 @@ class AdminEmailsControllerCore extends AdminController
                     'filter_type' => 'int',
                     'order_key' => 'language'
                 ),
-                'subject' => array('title' => $this->trans('Subject', array(), 'Admin.AdvParameters.Feature')),
+                'subject' => array('title' => $this->trans('Subject', array(), 'Admin.Advparameters.Feature')),
                 'date_add' => array(
-                    'title' => $this->trans('Sent', array(), 'Admin.AdvParameters.Feature'),
+                    'title' => $this->trans('Sent', array(), 'Admin.Advparameters.Feature'),
                     'type' => 'datetime',
                 )
             );
@@ -93,7 +93,7 @@ class AdminEmailsControllerCore extends AdminController
                 'icon' => 'icon-envelope',
                 'fields' =>    array(
                     'PS_MAIL_EMAIL_MESSAGE' => array(
-                        'title' => $this->trans('Send emails to', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Send emails to', array(), 'Admin.Advparameters.Feature'),
                         'desc' => $this->trans('Where customers send messages from the order page.', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isUnsignedId',
                         'type' => 'select',
@@ -107,8 +107,8 @@ class AdminEmailsControllerCore extends AdminController
                         'type' => 'radio',
                         'required' => true,
                         'choices' => array(
-                            3 => $this->trans('Never send emails (may be useful for testing purposes)', array(), 'Admin.AdvParameters.Feature'),
-                            2 => $this->trans('Set my own SMTP parameters (for advanced users ONLY)', array(), 'Admin.AdvParameters.Feature')
+                            3 => $this->trans('Never send emails (may be useful for testing purposes)', array(), 'Admin.Advparameters.Feature'),
+                            2 => $this->trans('Set my own SMTP parameters (for advanced users ONLY)', array(), 'Admin.Advparameters.Feature')
                         )
                     ),
                     'PS_MAIL_TYPE' => array(
@@ -117,13 +117,13 @@ class AdminEmailsControllerCore extends AdminController
                         'type' => 'radio',
                         'required' => true,
                         'choices' => array(
-                            Mail::TYPE_HTML => $this->trans('Send email in HTML format', array(), 'Admin.AdvParameters.Feature'),
-                            Mail::TYPE_TEXT => $this->trans('Send email in text format', array(), 'Admin.AdvParameters.Feature'),
-                            Mail::TYPE_BOTH => $this->trans('Both', array(), 'Admin.AdvParameters.Feature')
+                            Mail::TYPE_HTML => $this->trans('Send email in HTML format', array(), 'Admin.Advparameters.Feature'),
+                            Mail::TYPE_TEXT => $this->trans('Send email in text format', array(), 'Admin.Advparameters.Feature'),
+                            Mail::TYPE_BOTH => $this->trans('Both', array(), 'Admin.Advparameters.Feature')
                         )
                     ),
                     'PS_LOG_EMAILS' => array(
-                        'title' => $this->trans('Log Emails', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Log Emails', array(), 'Admin.Advparameters.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
@@ -135,26 +135,26 @@ class AdminEmailsControllerCore extends AdminController
                 'title' => $this->trans('Email', array(), 'Admin.Global'),
                 'fields' =>    array(
                     'PS_MAIL_DOMAIN' => array(
-                        'title' => $this->trans('Mail domain name', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Mail domain name', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('Fully qualified domain name (keep this field empty if you don\'t know).', array(), 'Admin.AdvParameters.Help'),
                         'empty' => true, 'validation' =>
                         'isUrl',
                         'type' => 'text',
                     ),
                     'PS_MAIL_SERVER' => array(
-                        'title' => $this->trans('SMTP server', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('SMTP server', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('IP address or server name (e.g. smtp.mydomain.com).', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isGenericName',
                         'type' => 'text',
                     ),
                     'PS_MAIL_USER' => array(
-                        'title' => $this->trans('SMTP username', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('SMTP username', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('Leave blank if not applicable.', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isGenericName',
                         'type' => 'text',
                     ),
                     'PS_MAIL_PASSWD' => array(
-                        'title' => $this->trans('SMTP password', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('SMTP password', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('Leave blank if not applicable.', array(), 'Admin.AdvParameters.Help'),
                         'validation' => 'isAnything',
                         'type' => 'password',
@@ -170,21 +170,21 @@ class AdminEmailsControllerCore extends AdminController
                         'list' => array(
                             array(
                                 'mode' => 'off',
-                                'name' => $this->trans('None', array(), 'Admin.AdvParameters.Feature')
+                                'name' => $this->trans('None', array(), 'Admin.Advparameters.Feature')
                             ),
                             array(
                                 'mode' => 'tls',
-                                'name' => $this->trans('TLS', array(), 'Admin.AdvParameters.Feature')
+                                'name' => $this->trans('TLS', array(), 'Admin.Advparameters.Feature')
                             ),
                             array(
                                 'mode' => 'ssl',
-                                'name' => $this->trans('SSL', array(), 'Admin.AdvParameters.Feature')
+                                'name' => $this->trans('SSL', array(), 'Admin.Advparameters.Feature')
                             )
                         ),
                     ),
                     'PS_MAIL_SMTP_PORT' => array(
-                        'title' => $this->trans('Port', array(), 'Admin.AdvParameters.Feature'),
-                        'hint' => $this->trans('Port number to use.', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Port', array(), 'Admin.Advparameters.Feature'),
+                        'hint' => $this->trans('Port number to use.', array(), 'Admin.Advparameters.Feature'),
                         'validation' => 'isInt',
                         'type' => 'text',
                         'cast' => 'intval',
@@ -194,11 +194,11 @@ class AdminEmailsControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'test' => array(
-                'title' =>    $this->trans('Test your email configuration', array(), 'Admin.AdvParameters.Feature'),
+                'title' =>    $this->trans('Test your email configuration', array(), 'Admin.Advparameters.Feature'),
                 'hide_multishop_checkbox' => true,
                 'fields' =>    array(
                     'PS_SHOP_EMAIL' => array(
-                        'title' => $this->trans('Send a test email to', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Send a test email to', array(), 'Admin.Advparameters.Feature'),
                         'type' => 'text',
                         'id' => 'testEmail',
                         'no_multishop_checkbox' => true
@@ -208,7 +208,7 @@ class AdminEmailsControllerCore extends AdminController
 					<div class="alert" id="mailResultCheck" style="display:none;"></div>
 				</div></div>',
                 'buttons' => array(
-                    array('title' => $this->trans('Send a test email', array(), 'Admin.AdvParameters.Feature'),
+                    array('title' => $this->trans('Send a test email', array(), 'Admin.Advparameters.Feature'),
                         'icon' => 'process-icon-envelope',
                         'name' => 'btEmailTest',
                         'js' => 'verifyMail()',
@@ -220,7 +220,7 @@ class AdminEmailsControllerCore extends AdminController
 
         if (!defined('_PS_HOST_MODE_')) {
             $this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices'][1] =
-                $this->trans('Use PHP\'s mail() function (recommended; works in most cases)', array(), 'Admin.AdvParameters.Feature');
+                $this->trans('Use PHP\'s mail() function (recommended; works in most cases)', array(), 'Admin.Advparameters.Feature');
         }
 
         ksort($this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices']);
@@ -232,12 +232,12 @@ class AdminEmailsControllerCore extends AdminController
 
         $this->addJs(_PS_JS_DIR_.'/admin/email.js');
 
-        Media::addJsDefL('textMsg', $this->trans('This is a test message. Your server is now configured to send email.', array(), 'Admin.AdvParameters.Feature'));
-        Media::addJsDefL('textSubject', $this->trans('Test message -- Prestashop', array(), 'Admin.AdvParameters.Feature'));
-        Media::addJsDefL('textSendOk', $this->trans('A test email has been sent to the email address you provided.', array(), 'Admin.AdvParameters.Feature'));
-        Media::addJsDefL('textSendError', $this->trans('Error: Please check your configuration', array(), 'Admin.AdvParameters.Feature'));
+        Media::addJsDefL('textMsg', $this->trans('This is a test message. Your server is now configured to send email.', array(), 'Admin.Advparameters.Feature'));
+        Media::addJsDefL('textSubject', $this->trans('Test message -- Prestashop', array(), 'Admin.Advparameters.Feature'));
+        Media::addJsDefL('textSendOk', $this->trans('A test email has been sent to the email address you provided.', array(), 'Admin.Advparameters.Feature'));
+        Media::addJsDefL('textSendError', $this->trans('Error: Please check your configuration', array(), 'Admin.Advparameters.Feature'));
         Media::addJsDefL('token_mail', $this->token);
-        Media::addJsDefL('errorMail', $this->trans('This email address is not valid', array(), 'Admin.AdvParameters.Feature'));
+        Media::addJsDefL('errorMail', $this->trans('This email address is not valid', array(), 'Admin.Advparameters.Feature'));
     }
 
     public function processDelete()
@@ -256,7 +256,7 @@ class AdminEmailsControllerCore extends AdminController
         parent::initToolbar();
         $this->toolbar_btn['delete'] = array(
             'short' => 'Erase',
-            'desc' => $this->trans('Erase all', array(), 'Admin.AdvParameters.Feature'),
+            'desc' => $this->trans('Erase all', array(), 'Admin.Advparameters.Feature'),
             'js' => 'if (confirm(\''.$this->trans('Are you sure?', array(), 'Admin.Notifications.Warning').'\')) document.location = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminEmails')).'&amp;token='.$this->token.'&amp;deletemail=1\';'
         );
         unset($this->toolbar_btn['new']);
@@ -284,7 +284,7 @@ class AdminEmailsControllerCore extends AdminController
 
         $this->toolbar_btn['back'] = array(
             'href' => $back,
-            'desc' => $this->trans('Back to the dashboard', array(), 'Admin.AdvParameters.Feature')
+            'desc' => $this->trans('Back to the dashboard', array(), 'Admin.Advparameters.Feature')
         );
 
         // $this->content .= $this->renderOptions();
