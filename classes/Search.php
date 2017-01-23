@@ -760,7 +760,7 @@ class SearchCore
         if (is_array($queryArray3) && !empty($queryArray3)) {
             Db::getInstance()->execute(
                 'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
-				VALUES '.implode(',', $queryArray3).'
+				VALUES '.implode(',', array_map('intval', $queryArray3)).'
 				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)', false
         );
         }
