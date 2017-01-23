@@ -108,17 +108,31 @@ class OrderDetailControllerCore extends FrontController
                     }
 
                     if (Validate::isLoadedObject($customer)) {
-                        Mail::Send($this->context->language->id, 'order_customer_comment', Mail::l('Message from a customer'),
-                        array(
-                            '{lastname}' => $customer->lastname,
-                            '{firstname}' => $customer->firstname,
-                            '{email}' => $customer->email,
-                            '{id_order}' => (int)$order->id,
-                            '{order_name}' => $order->getUniqReference(),
-                            '{message}' => Tools::nl2br($msgText),
-                            '{product_name}' => $product_name
-                        ),
-                        $to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname);
+                        Mail::Send(
+                            $this->context->language->id,
+                            'order_customer_comment',
+                            Mail::l('Message from a customer'),
+                            array(
+                                '{lastname}' => $customer->lastname,
+                                '{firstname}' => $customer->firstname,
+                                '{email}' => $customer->email,
+                                '{id_order}' => (int)$order->id,
+                                '{order_name}' => $order->getUniqReference(),
+                                '{message}' => Tools::nl2br($msgText),
+                                '{product_name}' => $product_name
+                            ),
+                            $to,
+                            $toName,
+                            strval(Configuration::get('PS_SHOP_EMAIL')),
+                            $customer->firstname.' '.$customer->lastname,
+                            null,
+                            null,
+                            _PS_MAIL_DIR_,
+                            false,
+                            null,
+                            null,
+                            $customer->email
+                        );
                     }
 
                     if (Tools::getValue('ajax') != 'true') {
