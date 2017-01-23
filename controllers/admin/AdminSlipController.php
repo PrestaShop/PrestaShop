@@ -77,7 +77,7 @@ class AdminSlipControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_CREDIT_SLIP_PREFIX' => array(
                         'title' => $this->trans('Credit slip prefix', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Prefix used for credit slips.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Prefix used for credit slips.', array(), 'Admin.Orderscustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang'
                     )
@@ -114,7 +114,7 @@ class AdminSlipControllerCore extends AdminController
                     'name' => 'date_from',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'date',
@@ -122,7 +122,7 @@ class AdminSlipControllerCore extends AdminController
                     'name' => 'date_to',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help')
                 )
             ),
             'submit' => array(

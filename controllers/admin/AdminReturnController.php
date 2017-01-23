@@ -56,17 +56,17 @@ class AdminReturnControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_ORDER_RETURN' => array(
                         'title' => $this->trans('Enable returns', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Would you like to allow merchandise returns in your shop?', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Would you like to allow merchandise returns in your shop?', array(), 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval', 'type' => 'bool'),
                     'PS_ORDER_RETURN_NB_DAYS' => array(
                         'title' => $this->trans('Time limit of validity', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('How many days after the delivery date does the customer have to return a product?', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('How many days after the delivery date does the customer have to return a product?', array(), 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'text',
                         'size' => '2'),
                     'PS_RETURN_PREFIX' => array(
                         'title' => $this->trans('Returns prefix', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Prefix used for return name (e.g. RE00001).', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Prefix used for return name (e.g. RE00001).', array(), 'Admin.Orderscustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang'
                     ),
@@ -126,7 +126,7 @@ class AdminReturnControllerCore extends AdminController
                         'id' => 'id_order_return_state',
                         'name' => 'name'
                     ),
-                    'desc' => $this->trans('Merchandise return (RMA) status.', array(), 'Admin.OrdersCustomers.Help')
+                    'desc' => $this->trans('Merchandise return (RMA) status.', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'list_products',
@@ -134,7 +134,7 @@ class AdminReturnControllerCore extends AdminController
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                    'desc' => $this->trans('List of products in return package.', array(), 'Admin.OrdersCustomers.Help')
+                    'desc' => $this->trans('List of products in return package.', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'pdf_order_return',
@@ -142,7 +142,7 @@ class AdminReturnControllerCore extends AdminController
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                    'desc' => $this->trans('The link is only available after validation and before the parcel gets delivered.', array(), 'Admin.OrdersCustomers.Help')
+                    'desc' => $this->trans('The link is only available after validation and before the parcel gets delivered.', array(), 'Admin.Orderscustomers.Help')
                 ),
             ),
             'submit' => array(

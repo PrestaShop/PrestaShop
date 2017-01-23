@@ -39,26 +39,26 @@ class AdminInvoicesControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_INVOICE' => array(
                         'title' => $this->trans('Enable invoices', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('If enabled, your customers will receive an invoice for the purchase.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('If enabled, your customers will receive an invoice for the purchase.', array(), 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_INVOICE_TAXES_BREAKDOWN' => array(
                         'title' => $this->trans('Enable tax breakdown', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('If required, show the total amount per rate of the corresponding tax.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('If required, show the total amount per rate of the corresponding tax.', array(), 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_PDF_IMG_INVOICE' => array(
                         'title' => $this->trans('Enable product image', array(), 'Admin.Orderscustomers.Feature'),
-                        'hint' => $this->trans('Adds an image in front of the product name on the invoice', array(), 'Admin.OrdersCustomers.Help'),
+                        'hint' => $this->trans('Adds an image in front of the product name on the invoice', array(), 'Admin.Orderscustomers.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_INVOICE_PREFIX' => array(
                         'title' => $this->trans('Invoice prefix', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Freely definable prefix for invoice number (e.g. #IN00001).', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Freely definable prefix for invoice number (e.g. #IN00001).', array(), 'Admin.Orderscustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang'
                     ),
@@ -91,7 +91,7 @@ class AdminInvoicesControllerCore extends AdminController
                             array(
                                 '%number%' => Order::getLastInvoiceNumber() + 1
                             ),
-                            'Admin.OrdersCustomers.Help'
+                            'Admin.Orderscustomers.Help'
                         ),
                         'size' => 6,
                         'type' => 'text',
@@ -99,26 +99,26 @@ class AdminInvoicesControllerCore extends AdminController
                     ),
                     'PS_INVOICE_LEGAL_FREE_TEXT' => array(
                         'title' => $this->trans('Legal free text', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).', array(), 'Admin.Orderscustomers.Help'),
                         'size' => 50,
                         'type' => 'textareaLang',
                     ),
                     'PS_INVOICE_FREE_TEXT' => array(
                         'title' => $this->trans('Footer text', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('This text will appear at the bottom of the invoice, below your company details.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('This text will appear at the bottom of the invoice, below your company details.', array(), 'Admin.Orderscustomers.Help'),
                         'size' => 50,
                         'type' => 'textLang',
                     ),
                     'PS_INVOICE_MODEL' => array(
                         'title' => $this->trans('Invoice model', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Choose an invoice model.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Choose an invoice model.', array(), 'Admin.Orderscustomers.Help'),
                         'type' => 'select',
                         'identifier' => 'value',
                         'list' => $this->getInvoicesModels()
                     ),
                     'PS_PDF_USE_CACHE' => array(
                         'title' => $this->trans('Use the disk as cache for PDF invoices', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Saves memory but slows down the PDF generation.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Saves memory but slows down the PDF generation.', array(), 'Admin.Orderscustomers.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
@@ -143,7 +143,7 @@ class AdminInvoicesControllerCore extends AdminController
                     'name' => 'date_from',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'date',
@@ -151,7 +151,7 @@ class AdminInvoicesControllerCore extends AdminController
                     'name' => 'date_to',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help')
                 )
             ),
             'submit' => array(
@@ -190,7 +190,7 @@ class AdminInvoicesControllerCore extends AdminController
                         'id' => 'id_order_state',
                         'name' => 'name'
                     ),
-                    'hint' => $this->trans('You can also export orders which have not been charged yet.', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('You can also export orders which have not been charged yet.', array(), 'Admin.Orderscustomers.Help')
                 )
             ),
             'submit' => array(

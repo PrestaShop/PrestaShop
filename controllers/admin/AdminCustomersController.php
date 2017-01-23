@@ -396,8 +396,8 @@ class AdminCustomersControllerCore extends AdminController
                     'name' => 'passwd',
                     'required' => ($obj->id ? false : true),
                     'col' => '4',
-                    'hint' => ($obj->id ? $this->trans('Leave this field blank if there\'s no change.', array(), 'Admin.OrdersCustomers.Help') :
-                        sprintf($this->trans('Password should be at least %s characters long.', array(), 'Admin.OrdersCustomers.Help'), Validate::PASSWORD_LENGTH))
+                    'hint' => ($obj->id ? $this->trans('Leave this field blank if there\'s no change.', array(), 'Admin.Orderscustomers.Help') :
+                        sprintf($this->trans('Password should be at least %s characters long.', array(), 'Admin.Orderscustomers.Help'), Validate::PASSWORD_LENGTH))
                 ),
                 array(
                     'type' => 'birthday',
@@ -428,7 +428,7 @@ class AdminCustomersControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Enable or disable customer login.', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Enable or disable customer login.', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'switch',
@@ -450,7 +450,7 @@ class AdminCustomersControllerCore extends AdminController
                         )
                     ),
                     'disabled' =>  (bool)!Configuration::get('PS_CUSTOMER_OPTIN'),
-                    'hint' => $this->trans('This customer will receive your ads via email.', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('This customer will receive your ads via email.', array(), 'Admin.Orderscustomers.Help')
                 ),
             )
         );
@@ -476,7 +476,7 @@ class AdminCustomersControllerCore extends AdminController
                     'values' => $groups,
                     'required' => true,
                     'col' => '6',
-                    'hint' => $this->trans('Select all the groups that you would like to apply to this customer.', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Select all the groups that you would like to apply to this customer.', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'select',
@@ -489,8 +489,8 @@ class AdminCustomersControllerCore extends AdminController
                     ),
                     'col' => '4',
                     'hint' => array(
-                        $this->trans('This group will be the user\'s default group.', array(), 'Admin.OrdersCustomers.Help'),
-                        $this->trans('Only the discount for the selected group will be applied to this customer.', array(), 'Admin.OrdersCustomers.Help')
+                        $this->trans('This group will be the user\'s default group.', array(), 'Admin.Orderscustomers.Help'),
+                        $this->trans('Only the discount for the selected group will be applied to this customer.', array(), 'Admin.Orderscustomers.Help')
                     )
                 )
             )
@@ -539,14 +539,14 @@ class AdminCustomersControllerCore extends AdminController
                 'type' => 'text',
                 'label' => $this->trans('Allowed outstanding amount', array(), 'Admin.Orderscustomers.Feature'),
                 'name' => 'outstanding_allow_amount',
-                'hint' => $this->trans('Valid characters:', array(), 'Admin.OrdersCustomers.Help').' 0-9',
+                'hint' => $this->trans('Valid characters:', array(), 'Admin.Orderscustomers.Help').' 0-9',
                 'suffix' => $this->context->currency->sign
             );
             $this->fields_form['input'][] = array(
                 'type' => 'text',
                 'label' => $this->trans('Maximum number of payment days', array(), 'Admin.Orderscustomers.Feature'),
                 'name' => 'max_payment_days',
-                'hint' => $this->trans('Valid characters:', array(), 'Admin.OrdersCustomers.Help').' 0-9'
+                'hint' => $this->trans('Valid characters:', array(), 'Admin.Orderscustomers.Help').' 0-9'
             );
             $this->fields_form['input'][] = array(
                 'type' => 'select',

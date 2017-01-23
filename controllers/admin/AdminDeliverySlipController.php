@@ -39,18 +39,18 @@ class AdminDeliverySlipControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_DELIVERY_PREFIX' => array(
                         'title' => $this->trans('Delivery prefix', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Prefix used for delivery slips.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('Prefix used for delivery slips.', array(), 'Admin.Orderscustomers.Help'),
                         'type' => 'textLang'
                     ),
                     'PS_DELIVERY_NUMBER' => array(
                         'title' => $this->trans('Delivery number', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('The next delivery slip will begin with this number and then increase with each additional slip.', array(), 'Admin.OrdersCustomers.Help'),
+                        'desc' => $this->trans('The next delivery slip will begin with this number and then increase with each additional slip.', array(), 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'text'
                     ),
                     'PS_PDF_IMG_DELIVERY' => array(
                         'title' => $this->trans('Enable product image', array(), 'Admin.Orderscustomers.Feature'),
-                        'hint' => $this->trans('Adds an image before product name on Delivery-slip', array(), 'Admin.OrdersCustomers.Help'),
+                        'hint' => $this->trans('Adds an image before product name on Delivery-slip', array(), 'Admin.Orderscustomers.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
@@ -75,7 +75,7 @@ class AdminDeliverySlipControllerCore extends AdminController
                     'name' => 'date_from',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'date',
@@ -83,7 +83,7 @@ class AdminDeliverySlipControllerCore extends AdminController
                     'name' => 'date_to',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help')
                 )
             ),
             'submit' => array(
