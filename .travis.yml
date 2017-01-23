@@ -8,7 +8,7 @@ addons:
         - libapache2-mod-fastcgi
         - libappindicator1
         - fonts-liberation
-    sauce_connect: true
+    sauce_connect: false
 
 cache:
   directories:
