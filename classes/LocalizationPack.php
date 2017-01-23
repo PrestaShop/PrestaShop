@@ -52,13 +52,20 @@ class LocalizationPackCore
                 $country = new Country($id_country);
             }
             if (!$id_country || !Validate::isLoadedObject($country)) {
-                $this->_errors[] = Tools::displayError(sprintf('Cannot load country : %1d', $id_country));
+                $this->_errors[] = Context::getContext()->getTranslator()->trans('Cannot load country : %d',
+                    array($id_country),
+                    'Admin.International.Notification'
+                );
                 return false;
             }
             if (!$country->active) {
                 $country->active = 1;
                 if (!$country->update()) {
-                    $this->_errors[] = Tools::displayError(sprintf('Cannot enable the associated country: %1s', $country->name));
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans(
+                        'Cannot enable the associated country: %s',
+                        array($country->name),
+                        'Admin.International.Notification'
+                    );
                 }
             }
         }
@@ -143,7 +150,7 @@ class LocalizationPackCore
                         $zone->active = true;
 
                         if (!$zone->add()) {
-                            $this->_errors[] = Tools::displayError('Invalid Zone name.');
+                            $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid Zone name.', array(), 'Admin.International.Notification');
                             return false;
                         }
 
@@ -153,7 +160,7 @@ class LocalizationPackCore
                     $state->id_zone = $id_zone;
 
                     if (!$state->validateFields()) {
-                        $this->_errors[] = Tools::displayError('Invalid state properties.');
+                        $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid state properties.', array(), 'Admin.International.Notification');
                         return false;
                     }
 
@@ -161,18 +168,18 @@ class LocalizationPackCore
                     if (!$country->contains_states) {
                         $country->contains_states = 1;
                         if (!$country->update()) {
-                            $this->_errors[] = Tools::displayError('Cannot update the associated country: ').$country->name;
+                            $this->_errors[] = Context::getContext()->getTranslator()->trans('Cannot update the associated country: %s', array($country->name), 'Admin.International.Notification');
                         }
                     }
 
                     if (!$state->add()) {
-                        $this->_errors[] = Tools::displayError('An error occurred while adding the state.');
+                        $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while adding the state.', array(), 'Admin.International.Notification');
                         return false;
                     }
                 } else {
                     $state = new State($id_state);
                     if (!Validate::isLoadedObject($state)) {
-                        $this->_errors[] = Tools::displayError('An error occurred while fetching the state.');
+                        $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while fetching the state.', array(), 'Admin.International.Notification');
                         return false;
                     }
                 }
@@ -204,12 +211,12 @@ class LocalizationPackCore
                 $tax->active = 1;
 
                 if (($error = $tax->validateFields(false, true)) !== true || ($error = $tax->validateFieldsLang(false, true)) !== true) {
-                    $this->_errors[] = Tools::displayError('Invalid tax properties.').' '.$error;
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid tax properties.', array(), 'Admin.International.Notification').' '.$error;
                     return false;
                 }
 
                 if (!$tax->add()) {
-                    $this->_errors[] = Tools::displayError('An error occurred while importing the tax: ').(string)$attributes['name'];
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while importing the tax: %s', array((string)$attributes['name']), 'Admin.International.Notification');
                     return false;
                 }
 
@@ -232,7 +239,7 @@ class LocalizationPackCore
                 $trg->active = 1;
 
                 if (!$trg->save()) {
-                    $this->_errors[] = Tools::displayError('This tax rule cannot be saved.');
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('This tax rule cannot be saved.', array(), 'Admin.International.Notification');
                     return false;
                 }
 
@@ -312,12 +319,12 @@ class LocalizationPackCore
                 $currency->decimals = (int)$attributes['decimals'];
                 $currency->active = true;
                 if (!$currency->validateFields()) {
-                    $this->_errors[] = Tools::displayError('Invalid currency properties.');
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid currency properties.', array(), 'Admin.International.Notification');
                     return false;
                 }
                 if (!Currency::exists($currency->iso_code)) {
                     if (!$currency->add()) {
-                        $this->_errors[] = Tools::displayError('An error occurred while importing the currency: ').strval($attributes['name']);
+                        $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while importing the currency: %s', array(strval($attributes['name'])), 'Admin.International.Notification');
                         return false;
                     }
 
@@ -384,11 +391,11 @@ class LocalizationPackCore
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
                 if (!isset($varNames[strval($attributes['type'])])) {
-                    $this->_errors[] = Tools::displayError('Localization pack corrupted: wrong unit type.');
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Localization pack corrupted: wrong unit type.', array(), 'Admin.International.Notification');
                     return false;
                 }
                 if (!Configuration::updateValue($varNames[strval($attributes['type'])], strval($attributes['value']))) {
-                    $this->_errors[] = Tools::displayError('An error occurred while setting the units.');
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while setting the units.', array(), 'Admin.International.Notification');
                     return false;
                 }
             }
@@ -420,18 +427,18 @@ class LocalizationPackCore
                     if ($install) {
                         if (!$moduleManager->isInstalled($name)) {
                             if (!$module->install()) {
-                                $this->_errors[] = Tools::displayError('An error occurred while installing the module:').$name;
+                                $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while installing the module: %s', array($name), 'Admin.International.Notification');
                             }
                         }
                     } elseif ($moduleManager->isInstalled($name)) {
                         if (!$module->uninstall()) {
-                            $this->_errors[] = Tools::displayError('An error occurred while uninstalling the module:').$name;
+                            $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while uninstalling the module: %s', array($name), 'Admin.International.Notification');
                         }
                     }
 
                     unset($module);
                 } else {
-                    $this->_errors[] = Tools::displayError('An error has occurred, this module does not exist:').$name;
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error has occurred, this module does not exist: %s', array($name), 'Admin.International.Error');
                 }
             }
         }
@@ -457,7 +464,11 @@ class LocalizationPackCore
 
                 if (isset($name) && isset($attributes['value']) && Configuration::get($name) !== false) {
                     if (!Configuration::updateValue($name, (string)$attributes['value'])) {
-                        $this->_errors[] = Tools::displayError('An error occurred during the configuration setup: '.$name);
+                        $this->_errors[] = Context::getContext()->getTranslator()->trans(
+                            'An error occurred during the configuration setup: %1$s',
+                            array($name),
+                            'Admin.International.Notification'
+                        );
                     }
                 }
             }
@@ -490,11 +501,11 @@ class LocalizationPackCore
                     $group = new Group((int)$id_group);
                     $group->price_display_method = (int)$attributes['price_display_method'];
                     if (!$group->save()) {
-                        $this->_errors[] = Tools::displayError('An error occurred during the default group update');
+                        $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred during the default group update', array(), 'Admin.International.Notification');
                     }
                 }
             } else {
-                $this->_errors[] = Tools::displayError('An error has occurred during the default group update');
+                $this->_errors[] = Context::getContext()->getTranslator()->trans('An error has occurred during the default group update', array(), 'Admin.International.Notification');
             }
         }
 
