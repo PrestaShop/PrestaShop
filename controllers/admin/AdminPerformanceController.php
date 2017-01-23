@@ -131,7 +131,7 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'smarty_caching_type_filesystem',
                             'value' => 'filesystem',
-                            'label' => $this->trans('File System', array(), 'Admin.Advparameters.Feature').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->trans('(the directory %s must be writable)', array(), 'Admin.AdvParameters.Notification'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
+                            'label' => $this->trans('File System', array(), 'Admin.Advparameters.Feature').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->trans('(the directory %s must be writable)', array(), 'Admin.Advparameters.Notification'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
                         ),
                         array(
                             'id' => 'smarty_caching_type_mysql',
@@ -468,7 +468,7 @@ class AdminPerformanceControllerCore extends AdminController
                 '[a]' => '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">',
                 '[/a]' => '</a>',
             ),
-            'Admin.AdvParameters.Notification'
+            'Admin.Advparameters.Notification'
         );
 
         $warning_memcached = ' '.$this->trans('(you must install the [a]Memcached PECL extension[/a])',
@@ -476,7 +476,7 @@ class AdminPerformanceControllerCore extends AdminController
                 '[a]' => '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcached.installation.php" target="_blank">',
                 '[/a]' => '</a>',
             ),
-            'Admin.AdvParameters.Notification'
+            'Admin.Advparameters.Notification'
         );
 
         $warning_apc = ' '.$this->trans('(you must install the [a]APC PECL extension[/a])',
@@ -484,14 +484,14 @@ class AdminPerformanceControllerCore extends AdminController
                 '[a]' => '<a href="http://php.net/manual/'.substr($php_lang, 0, 2).'/apc.installation.php" target="_blank">',
                 '[/a]' => '</a>',
             ),
-            'Admin.AdvParameters.Notification'
+            'Admin.Advparameters.Notification'
         );
 
         $warning_xcache = ' '.$this->trans('(you must install the [a]Xcache extension[/a])', array(
             '[a]' => '<a href="http://xcache.lighttpd.net" target="_blank">',
             '[/a]' => '</a>',
             ),
-            'Admin.AdvParameters.Notification'
+            'Admin.Advparameters.Notification'
         );
 
         $this->fields_form[6]['form'] = array(
@@ -618,13 +618,13 @@ class AdminPerformanceControllerCore extends AdminController
         if (Tools::isSubmit('submitAddServer')) {
             if ($this->access('add')) {
                 if (!Tools::getValue('memcachedIp')) {
-                    $this->errors[] = $this->trans('The Memcached IP is missing.', array(), 'Admin.AdvParameters.Notification');
+                    $this->errors[] = $this->trans('The Memcached IP is missing.', array(), 'Admin.Advparameters.Notification');
                 }
                 if (!Tools::getValue('memcachedPort')) {
-                    $this->errors[] = $this->trans('The Memcached port is missing.', array(), 'Admin.AdvParameters.Notification');
+                    $this->errors[] = $this->trans('The Memcached port is missing.', array(), 'Admin.Advparameters.Notification');
                 }
                 if (!Tools::getValue('memcachedWeight')) {
-                    $this->errors[] = $this->trans('The Memcached weight is missing.', array(), 'Admin.AdvParameters.Notification');
+                    $this->errors[] = $this->trans('The Memcached weight is missing.', array(), 'Admin.Advparameters.Notification');
                 }
                 if (!count($this->errors)) {
                     if (CacheMemcache::addServer(pSQL(Tools::getValue('memcachedIp')),
@@ -632,7 +632,7 @@ class AdminPerformanceControllerCore extends AdminController
                         (int)Tools::getValue('memcachedWeight'))) {
                         Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
                     } else {
-                        $this->errors[] = $this->trans('The Memcached server cannot be added.', array(), 'Admin.AdvParameters.Notification');
+                        $this->errors[] = $this->trans('The Memcached server cannot be added.', array(), 'Admin.Advparameters.Notification');
                     }
                 }
             } else {
@@ -645,7 +645,7 @@ class AdminPerformanceControllerCore extends AdminController
                 if (CacheMemcache::deleteServer((int)Tools::getValue('deleteMemcachedServer'))) {
                     Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
                 } else {
-                    $this->errors[] = $this->trans('There was an error when attempting to delete the Memcached server.', array(), 'Admin.AdvParameters.Notification');
+                    $this->errors[] = $this->trans('There was an error when attempting to delete the Memcached server.', array(), 'Admin.Advparameters.Notification');
                 }
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
@@ -705,7 +705,7 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             '%directorypath%' => realpath($theme_cache_directory)
                         ),
-                        'Admin.AdvParameters.Notification'
+                        'Admin.Advparameters.Notification'
                     );
                 }
 
@@ -747,13 +747,13 @@ class AdminPerformanceControllerCore extends AdminController
         if ((bool)Tools::getValue('media_server_up') && !defined('_PS_HOST_MODE_')) {
             if ($this->access('edit')) {
                 if (Tools::getValue('_MEDIA_SERVER_1_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_1_'))) {
-                    $this->errors[] = $this->trans('Media server #1 is invalid', array(), 'Admin.AdvParameters.Notification');
+                    $this->errors[] = $this->trans('Media server #1 is invalid', array(), 'Admin.Advparameters.Notification');
                 }
                 if (Tools::getValue('_MEDIA_SERVER_2_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_2_'))) {
-                    $this->errors[] = $this->trans('Media server #2 is invalid', array(), 'Admin.AdvParameters.Notification');
+                    $this->errors[] = $this->trans('Media server #2 is invalid', array(), 'Admin.Advparameters.Notification');
                 }
                 if (Tools::getValue('_MEDIA_SERVER_3_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_3_'))) {
-                    $this->errors[] = $this->trans('Media server #3 is invalid', array(), 'Admin.AdvParameters.Notification');
+                    $this->errors[] = $this->trans('Media server #3 is invalid', array(), 'Admin.Advparameters.Notification');
                 }
                 if (!count($this->errors)) {
                     $base_urls = array();
@@ -817,23 +817,23 @@ class AdminPerformanceControllerCore extends AdminController
                     $config['parameters']['ps_caching'] = $caching_system;
                 } else {
                     $cache_active = false;
-                    $this->errors[] = $this->trans('The caching system is missing.', array(), 'Admin.AdvParameters.Notification');
+                    $this->errors[] = $this->trans('The caching system is missing.', array(), 'Admin.Advparameters.Notification');
                 }
                 if ($cache_active) {
                     if ($caching_system == 'CacheMemcache' && !extension_loaded('memcache')) {
-                        $this->errors[] = $this->trans('To use Memcached, you must install the Memcache PECL extension on your server.', array(), 'Admin.AdvParameters.Notification').'
+                        $this->errors[] = $this->trans('To use Memcached, you must install the Memcache PECL extension on your server.', array(), 'Admin.Advparameters.Notification').'
 							<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
                     } elseif ($caching_system == 'CacheMemcached' && !extension_loaded('memcached')) {
-                        $this->errors[] = $this->trans('To use Memcached, you must install the Memcached PECL extension on your server.', array(), 'Admin.AdvParameters.Notification').'
+                        $this->errors[] = $this->trans('To use Memcached, you must install the Memcached PECL extension on your server.', array(), 'Admin.Advparameters.Notification').'
 							<a href="http://www.php.net/manual/en/memcached.installation.php">http://www.php.net/manual/en/memcached.installation.php</a>';
                     } elseif ($caching_system == 'CacheApc'  && !extension_loaded('apc') && !extension_loaded('apcu')) {
-                        $this->errors[] = $this->trans('To use APC cache, you must install the APC PECL extension on your server.', array(), 'Admin.AdvParameters.Notification').'
+                        $this->errors[] = $this->trans('To use APC cache, you must install the APC PECL extension on your server.', array(), 'Admin.Advparameters.Notification').'
 							<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
                     } elseif ($caching_system == 'CacheXcache' && !extension_loaded('xcache')) {
-                        $this->errors[] = $this->trans('To use Xcache, you must install the Xcache extension on your server.', array(), 'Admin.AdvParameters.Notification').'
+                        $this->errors[] = $this->trans('To use Xcache, you must install the Xcache extension on your server.', array(), 'Admin.Advparameters.Notification').'
 							<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
                     } elseif ($caching_system == 'CacheXcache' && !ini_get('xcache.var_size')) {
-                        $this->errors[] = $this->trans('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).', array(), 'Admin.AdvParameters.Notification').'
+                        $this->errors[] = $this->trans('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).', array(), 'Admin.Advparameters.Notification').'
 							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';
                     }
 
@@ -853,7 +853,7 @@ class AdminPerformanceControllerCore extends AdminController
                         }
                         $redirectAdmin = true;
                     } else {
-                        $this->errors[] = $this->trans('The settings file cannot be overwritten.', array(), 'Admin.AdvParameters.Notification');
+                        $this->errors[] = $this->trans('The settings file cannot be overwritten.', array(), 'Admin.Advparameters.Notification');
                     }
                 }
             } else {
@@ -886,9 +886,6 @@ class AdminPerformanceControllerCore extends AdminController
 
             if (!empty($debug_mode_status)) {
                 switch ($debug_mode_status) {
-                    case self::DEBUG_MODE_ERROR_COULD_NOT_BACKUP:
-                        $this->errors[] = $this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.old.php'), 'Admin.Advparameters.Notification');
-                        break;
                     case self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
                         $this->errors[] = $this->trans('Error: could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
                         break;

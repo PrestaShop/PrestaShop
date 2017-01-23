@@ -240,7 +240,7 @@ class AdminShopControllerCore extends AdminController
         if (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) {
             $shop_group = new ShopGroup((int)Tools::getValue('id_shop_group'));
             if ($shop_group->shopNameExists(Tools::getValue('name'), (int)Tools::getValue('id_shop'))) {
-                $this->errors[] = $this->trans('You cannot have two shops with the same name in the same group.', array(), 'Admin.AdvParameters.Notification');
+                $this->errors[] = $this->trans('You cannot have two shops with the same name in the same group.', array(), 'Admin.Advparameters.Notification');
             }
         }
 
@@ -265,7 +265,7 @@ class AdminShopControllerCore extends AdminController
     public function processDelete()
     {
         if (!Validate::isLoadedObject($object = $this->loadObject())) {
-            $this->errors[] = $this->trans('Unable to load this shop.', array(), 'Admin.AdvParameters.Notification');
+            $this->errors[] = $this->trans('Unable to load this shop.', array(), 'Admin.Advparameters.Notification');
         } elseif (!Shop::hasDependency($object->id)) {
             $result = Category::deleteCategoriesFromShop($object->id) && parent::processDelete();
             Tools::generateHtaccess();
@@ -636,7 +636,7 @@ class AdminShopControllerCore extends AdminController
     public function processAdd()
     {
         if (!Tools::getValue('categoryBox') || !in_array(Tools::getValue('id_category'), Tools::getValue('categoryBox'))) {
-            $this->errors[] = $this->trans('You need to select at least the root category.', array(), 'Admin.AdvParameters.Notification');
+            $this->errors[] = $this->trans('You need to select at least the root category.', array(), 'Admin.Advparameters.Notification');
         }
 
         if (Tools::isSubmit('id_category_default')) {

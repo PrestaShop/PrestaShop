@@ -112,7 +112,7 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->display = null;
         $this->initToolbar();
 
-        $this->displayWarning($this->trans('When saving the query, only the "SELECT" SQL statement is allowed.', array(), 'Admin.AdvParameters.Notification'));
+        $this->displayWarning($this->trans('When saving the query, only the "SELECT" SQL statement is allowed.', array(), 'Admin.Advparameters.Notification'));
         $this->displayInformation('
 		<strong>'.$this->trans('How do I create a new SQL query?', array(), 'Admin.Advparameters.Help').'</strong><br />
 		<ul>
@@ -356,7 +356,7 @@ class AdminRequestSqlControllerCore extends AdminController
                         readfile($export_dir.$file);
                         die();
                     } else {
-                        $this->errors[] = $this->trans('The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.', array(), 'Admin.AdvParameters.Notification');
+                        $this->errors[] = $this->trans('The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.', array(), 'Admin.Advparameters.Notification');
                     }
                 }
             }
@@ -379,7 +379,7 @@ class AdminRequestSqlControllerCore extends AdminController
                             array(
                                 '%tablename%' => $e[$key]['table'],
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = $this->trans(
@@ -388,7 +388,7 @@ class AdminRequestSqlControllerCore extends AdminController
                                     '%attribute%' => $e[$key]['attribut'][0],
                                     '%table%' => $e[$key]['attribut'][1],
                                 ),
-                                'Admin.AdvParameters.Notification'
+                                'Admin.Advparameters.Notification'
                             );
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedForm'), 'Admin.Advparameters.Notification');
@@ -402,7 +402,7 @@ class AdminRequestSqlControllerCore extends AdminController
                             array(
                                 '%tablename%' => $e[$key]['table'],
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = $this->trans(
@@ -411,10 +411,10 @@ class AdminRequestSqlControllerCore extends AdminController
                                 '%attribute%' => $e[$key]['attribut'][0],
                                 '%table%' => $e[$key]['attribut'][1],
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } elseif (isset($e[$key]['*'])) {
-                        $this->errors[] = $this->trans('The "*" operator cannot be used in a nested query.', array(), 'Admin.AdvParameters.Notification');
+                        $this->errors[] = $this->trans('The "*" operator cannot be used in a nested query.', array(), 'Admin.Advparameters.Notification');
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedSelect'), 'Admin.Advparameters.Notification');
                     }
@@ -427,7 +427,7 @@ class AdminRequestSqlControllerCore extends AdminController
                             array(
                                 '%operator%' => $e[$key]['operator'],
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = $this->trans(
@@ -436,7 +436,7 @@ class AdminRequestSqlControllerCore extends AdminController
                                 '%attribute%' => $e[$key]['attribut'][0],
                                 '%table%' => $e[$key]['attribut'][1],
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedWhere'), 'Admin.Advparameters.Notification');
@@ -450,7 +450,7 @@ class AdminRequestSqlControllerCore extends AdminController
                             array(
                                 '%operator%' => $e[$key]['operator']
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = $this->trans(
@@ -459,7 +459,7 @@ class AdminRequestSqlControllerCore extends AdminController
                                 '%attribute%' => $e[$key]['attribut'][0],
                                 '%table%' => $e[$key]['attribut'][1],
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedHaving'), 'Admin.Advparameters.Notification');
@@ -474,7 +474,7 @@ class AdminRequestSqlControllerCore extends AdminController
                                 '%attribute%' => $e[$key]['attribut'][0],
                                 '%table%' => $e[$key]['attribut'][1],
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedOrder'), 'Admin.Advparameters.Notification');
@@ -489,7 +489,7 @@ class AdminRequestSqlControllerCore extends AdminController
                                 '%attribute%' => $e[$key]['attribut'][0],
                                 '%table%' => $e[$key]['attribut'][1],
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedGroupBy'), 'Admin.Advparameters.Notification');
@@ -497,7 +497,7 @@ class AdminRequestSqlControllerCore extends AdminController
                 break;
 
                 case 'checkedLimit':
-                    $this->errors[] = $this->trans('The LIMIT clause must contain numeric arguments.', array(), 'Admin.AdvParameters.Notification');
+                    $this->errors[] = $this->trans('The LIMIT clause must contain numeric arguments.', array(), 'Admin.Advparameters.Notification');
                 break;
 
                 case 'returnNameTable':
@@ -508,10 +508,10 @@ class AdminRequestSqlControllerCore extends AdminController
                                 '%reference%' => $e[$key]['reference'][0],
                                 '%table%' => $e[$key]['attribut'][1],
                             ),
-                            'Admin.AdvParameters.Notification'
+                            'Admin.Advparameters.Notification'
                         );
                     } else {
-                        $this->errors[] = $this->trans('When multiple tables are used, each attribute must refer back to a table.', array(), 'Admin.AdvParameters.Notification');
+                        $this->errors[] = $this->trans('When multiple tables are used, each attribute must refer back to a table.', array(), 'Admin.Advparameters.Notification');
                     }
                 break;
 
@@ -520,7 +520,7 @@ class AdminRequestSqlControllerCore extends AdminController
                 break;
 
                 case 'testedUnauthorized':
-                    $this->errors[] = sprintf($this->trans('Is an unauthorized keyword.', array(), 'Admin.AdvParameters.Notification'), $e[$key]);
+                    $this->errors[] = sprintf($this->trans('Is an unauthorized keyword.', array(), 'Admin.Advparameters.Notification'), $e[$key]);
                 break;
             }
         }

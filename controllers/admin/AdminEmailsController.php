@@ -163,7 +163,7 @@ class AdminEmailsControllerCore extends AdminController
                     'PS_MAIL_SMTP_ENCRYPTION' => array(
                         'title' => $this->trans('Encryption'),
                         'hint' => $this->trans('Use an encrypt protocol', array(), 'Admin.Advparameters.Help'),
-                        'desc' => extension_loaded('openssl') ? '' : '/!\\ '.$this->trans('SSL does not seem to be available on your server.', array(), 'Admin.AdvParameters.Notification'),
+                        'desc' => extension_loaded('openssl') ? '' : '/!\\ '.$this->trans('SSL does not seem to be available on your server.', array(), 'Admin.Advparameters.Notification'),
                         'type' => 'select',
                         'cast' => 'strval',
                         'identifier' => 'mode',

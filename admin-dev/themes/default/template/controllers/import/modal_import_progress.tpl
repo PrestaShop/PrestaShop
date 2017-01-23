@@ -85,7 +85,7 @@
   <div class="modal-footer">
     <div class="input-group pull-right">
       <button type="button" class="btn btn-primary" tabindex="-1" id="import_continue_button" style="display: none;">
-        {l s="Ignore warnings and continue?" d="Admin.AdvParameters.Notification"}
+        {l s="Ignore warnings and continue?" d="Admin.Advparameters.Notification"}
       </button>
       &nbsp;
       <button type="button" class="btn btn-default" tabindex="-1" id="import_stop_button">

@@ -155,7 +155,7 @@ class AdminBackupControllerCore extends AdminController
         }
 
         $obj = new $this->className();
-        $obj->error = $this->trans('The backup file does not exist', array(), 'Admin.AdvParameters.Notification');
+        $obj->error = $this->trans('The backup file does not exist', array(), 'Admin.Advparameters.Notification');
 
         return $obj;
     }
@@ -171,14 +171,14 @@ class AdminBackupControllerCore extends AdminController
 
         // Test if the backup dir is writable
         if (!is_writable(PrestaShopBackup::getBackupPath())) {
-            $this->warnings[] = $this->trans('The "Backups" directory located in the admin directory must be writable (CHMOD 755 / 777).', array(), 'Admin.AdvParameters.Notification');
+            $this->warnings[] = $this->trans('The "Backups" directory located in the admin directory must be writable (CHMOD 755 / 777).', array(), 'Admin.Advparameters.Notification');
         } elseif ($this->display == 'add') {
             if (($object = $this->loadObject())) {
                 if (!$object->add()) {
                     $this->errors[] = $object->error;
                 } else {
                     $this->context->smarty->assign(array(
-                            'conf' => $this->trans('It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.', array(), 'Admin.AdvParameters.Notification'),
+                            'conf' => $this->trans('It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.', array(), 'Admin.Advparameters.Notification'),
                             'backup_url' => $object->getBackupURL(),
                             'backup_weight' => number_format((filesize($object->id) * 0.000001), 2, '.', '')
                         ));
@@ -246,7 +246,7 @@ class AdminBackupControllerCore extends AdminController
         $dh = @opendir(PrestaShopBackup::getBackupPath());
 
         if ($dh === false) {
-            $this->errors[] = $this->trans('Unable to open your backup directory', array(), 'Admin.AdvParameters.Notification');
+            $this->errors[] = $this->trans('Unable to open your backup directory', array(), 'Admin.Advparameters.Notification');
             return;
         }
         while (($file = readdir($dh)) !== false) {
