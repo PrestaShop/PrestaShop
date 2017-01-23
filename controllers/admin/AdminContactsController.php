@@ -71,7 +71,7 @@ class AdminContactsControllerCore extends AdminController
                     'required' => true,
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Contact name (e.g. Customer Support).', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('Contact name (e.g. Customer Support).', array(), 'Admin.Shopparameters.Help'),
                 ),
                 array(
                     'type' => 'text',
@@ -79,7 +79,7 @@ class AdminContactsControllerCore extends AdminController
                     'name' => 'email',
                     'required' => false,
                     'col' => 4,
-                    'hint' => $this->trans('Emails will be sent to this address.', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('Emails will be sent to this address.', array(), 'Admin.Shopparameters.Help'),
                 ),
                 array(
                     'type' => 'switch',
@@ -88,7 +88,7 @@ class AdminContactsControllerCore extends AdminController
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'hint' => $this->trans('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.', array(), 'Admin.Shopparameters.Help'),
                     'values' => array(
                         array(
                             'id' => 'customer_service_on',
@@ -109,7 +109,7 @@ class AdminContactsControllerCore extends AdminController
                     'required' => false,
                     'lang' => true,
                     'col' => 6,
-                    'hint' => $this->trans('Further information regarding this contact.', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('Further information regarding this contact.', array(), 'Admin.Shopparameters.Help'),
                 ),
             ),
             'submit' => array(

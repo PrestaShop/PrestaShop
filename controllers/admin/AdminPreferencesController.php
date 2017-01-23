@@ -96,8 +96,8 @@ class AdminPreferencesControllerCore extends AdminController
             $fields = array(
                 'PS_SSL_ENABLED' => array(
                     'title' => $this->trans('Enable SSL', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.', array(), 'Admin.ShopParameters.Help'),
-                    'hint' => $this->trans('If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.', array(), 'Admin.Shopparameters.Help'),
+                    'hint' => $this->trans('If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
@@ -107,7 +107,7 @@ class AdminPreferencesControllerCore extends AdminController
 
             $fields['PS_SSL_ENABLED_EVERYWHERE'] = array(
                 'title' => $this->trans('Enable SSL on all pages', array(), 'Admin.Shopparameters.Feature'),
-                'desc' => $this->trans('When enabled, all the pages of your shop will be SSL-secured.', array(), 'Admin.ShopParameters.Help'),
+                'desc' => $this->trans('When enabled, all the pages of your shop will be SSL-secured.', array(), 'Admin.Shopparameters.Help'),
                 'validation' => 'isBool',
                 'cast' => 'intval',
                 'type' => 'bool',
@@ -118,7 +118,7 @@ class AdminPreferencesControllerCore extends AdminController
             $fields = array_merge($fields, array(
                 'PS_TOKEN_ENABLE' => array(
                     'title' => $this->trans('Increase front office security', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('Enable or disable token in the Front Office to improve PrestaShop\'s security.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('Enable or disable token in the Front Office to improve PrestaShop\'s security.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
@@ -127,7 +127,7 @@ class AdminPreferencesControllerCore extends AdminController
                 ),
                 'PS_ALLOW_HTML_IFRAME' => array(
                     'title' => $this->trans('Allow iframes on HTML fields', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('Allow iframes on text fields like product description. We recommend that you leave this option disabled.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('Allow iframes on text fields like product description. We recommend that you leave this option disabled.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
@@ -135,7 +135,7 @@ class AdminPreferencesControllerCore extends AdminController
                 ),
                 'PS_USE_HTMLPURIFIER' => array(
                     'title' => $this->trans('Use HTMLPurifier Library', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('Clean the HTML content on text fields. We recommend that you leave this option enabled.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('Clean the HTML content on text fields. We recommend that you leave this option enabled.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
@@ -143,7 +143,7 @@ class AdminPreferencesControllerCore extends AdminController
                 ),
                 'PS_PRICE_ROUND_MODE' => array(
                     'title' => $this->trans('Round mode', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isInt',
                     'cast' => 'intval',
                     'type' => 'select',
@@ -152,7 +152,7 @@ class AdminPreferencesControllerCore extends AdminController
                 ),
                 'PS_ROUND_TYPE' => array(
                     'title' => $this->trans('Round type', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).', array(), 'Admin.Shopparameters.Help'),
                     'cast' => 'intval',
                     'type' => 'select',
                     'list' => array(
@@ -173,7 +173,7 @@ class AdminPreferencesControllerCore extends AdminController
                 ),
                 'PS_PRICE_DISPLAY_PRECISION' => array(
                     'title' => $this->trans('Number of decimals', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('Choose how many decimals you want to display', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('Choose how many decimals you want to display', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isUnsignedInt',
                     'cast' => 'intval',
                     'type' => 'text',
@@ -181,21 +181,21 @@ class AdminPreferencesControllerCore extends AdminController
                 ),
                 'PS_DISPLAY_SUPPLIERS' => array(
                     'title' => $this->trans('Display brands and suppliers', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('Enable brands and suppliers pages on your front office even when their respective modules are disabled.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('Enable brands and suppliers pages on your front office even when their respective modules are disabled.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool'
                 ),
                 'PS_DISPLAY_BEST_SELLERS' => array(
                     'title' => $this->trans('Display best sellers', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('Enable best sellers page on your front office even when its respective module is disabled.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('Enable best sellers page on your front office even when its respective module is disabled.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool'
                 ),
                 'PS_MULTISHOP_FEATURE_ACTIVE' => array(
                     'title' => $this->trans('Enable Multistore', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => $this->trans('The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',

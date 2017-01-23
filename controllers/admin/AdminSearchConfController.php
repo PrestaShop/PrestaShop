@@ -103,7 +103,7 @@ class AdminSearchConfControllerCore extends AdminController
                         'validation' => 'isBool',
                         'type' => 'bool',
                         'cast' => 'intval',
-                        'desc' => $this->trans('Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.', array(), 'Admin.ShopParameters.Help')
+                        'desc' => $this->trans('Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.', array(), 'Admin.Shopparameters.Help')
                     )
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
@@ -117,11 +117,11 @@ class AdminSearchConfControllerCore extends AdminController
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
-                        'desc' => $this->trans('By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).', array(), 'Admin.ShopParameters.Help').'<br/>'.
-                                  $this->trans('With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.', array(), 'Admin.ShopParameters.Help'),
+                        'desc' => $this->trans('By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).', array(), 'Admin.Shopparameters.Help').'<br/>'.
+                                  $this->trans('With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.', array(), 'Admin.Shopparameters.Help'),
                         'hint' => array(
-                            $this->trans('Enable search within a whole word, rather than from its beginning only.', array(), 'Admin.ShopParameters.Help'),
-                            $this->trans('It checks if the searched term is contained in the indexed word. This may be resource-consuming.', array(), 'Admin.ShopParameters.Help')
+                            $this->trans('Enable search within a whole word, rather than from its beginning only.', array(), 'Admin.Shopparameters.Help'),
+                            $this->trans('It checks if the searched term is contained in the indexed word. This may be resource-consuming.', array(), 'Admin.Shopparameters.Help')
                         )
                     ),
                     'PS_SEARCH_END' => array(
@@ -129,16 +129,16 @@ class AdminSearchConfControllerCore extends AdminController
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
-                        'desc' => $this->trans('By default, if you search "book", you will have "book", "bookcase" and "bookend".', array(), 'Admin.ShopParameters.Help').'<br/>'.
-                                  $this->trans('With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.', array(), 'Admin.ShopParameters.Help'),
+                        'desc' => $this->trans('By default, if you search "book", you will have "book", "bookcase" and "bookend".', array(), 'Admin.Shopparameters.Help').'<br/>'.
+                                  $this->trans('With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.', array(), 'Admin.Shopparameters.Help'),
                         'hint' => array(
-                            $this->trans('Enable more precise search with the end of the word.', array(), 'Admin.ShopParameters.Help'),
-                            $this->trans('It checks if the searched term is the exact end of the indexed word.', array(), 'Admin.ShopParameters.Help')
+                            $this->trans('Enable more precise search with the end of the word.', array(), 'Admin.Shopparameters.Help'),
+                            $this->trans('It checks if the searched term is the exact end of the indexed word.', array(), 'Admin.Shopparameters.Help')
                         )
                     ),
                     'PS_SEARCH_MINWORDLEN' => array(
                         'title' => $this->trans('Minimum word length (in characters)', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Only words this size or larger will be indexed.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Only words this size or larger will be indexed.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval'
@@ -146,7 +146,7 @@ class AdminSearchConfControllerCore extends AdminController
                     'PS_SEARCH_BLACKLIST' => array(
                         'title' => $this->trans('Blacklisted words', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isGenericName',
-                        'hint' => $this->trans('Please enter the index words separated by a "|".', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Please enter the index words separated by a "|".', array(), 'Admin.Shopparameters.Help'),
                         'type' => 'textareaLang'
                     )
                 ),
@@ -284,8 +284,8 @@ class AdminSearchConfControllerCore extends AdminController
                     'name' => 'alias',
                     'required' => true,
                     'hint' => array(
-                        $this->trans('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\').', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('Forbidden characters: &lt;&gt;;=#{}', array(), 'Admin.ShopParameters.Help')
+                        $this->trans('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\').', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('Forbidden characters: &lt;&gt;;=#{}', array(), 'Admin.Shopparameters.Help')
                     )
                 ),
                 array(
@@ -293,7 +293,7 @@ class AdminSearchConfControllerCore extends AdminController
                     'label' => $this->trans('Result', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'search',
                     'required' => true,
-                    'hint' => $this->trans('Search this word instead.', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Search this word instead.', array(), 'Admin.Shopparameters.Help')
                 )
             ),
             'submit' => array(

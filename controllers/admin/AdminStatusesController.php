@@ -278,21 +278,21 @@ class AdminStatusesControllerCore extends AdminController
                     'lang' => true,
                     'required' => true,
                     'hint' => array(
-                        $this->trans('Order status (e.g. \'Pending\').', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('Invalid characters: numbers and', array(), 'Admin.ShopParameters.Help').' !<>,;?=+()@#"{}_$%:'
+                        $this->trans('Order status (e.g. \'Pending\').', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('Invalid characters: numbers and', array(), 'Admin.Shopparameters.Help').' !<>,;?=+()@#"{}_$%:'
                     )
                 ),
                 array(
                     'type' => 'file',
                     'label' => $this->trans('Icon', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'icon',
-                    'hint' => $this->trans('Upload an icon from your computer (File type: .gif, suggested size: 16x16).', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Upload an icon from your computer (File type: .gif, suggested size: 16x16).', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'color',
                     'label' => $this->trans('Color', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'color',
-                    'hint' => $this->trans('Status will be highlighted in this color. HTML colors only.', array(), 'Admin.ShopParameters.Help').' "lightblue", "#CC6600")'
+                    'hint' => $this->trans('Status will be highlighted in this color. HTML colors only.', array(), 'Admin.Shopparameters.Help').' "lightblue", "#CC6600")'
                 ),
                 array(
                     'type' => 'checkbox',
@@ -405,8 +405,8 @@ class AdminStatusesControllerCore extends AdminController
                         'folder' => 'folder'
                     ),
                     'hint' => array(
-                        $this->trans('Only letters, numbers and underscores ("_") are allowed.', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('Email template for both .html and .txt.', array(), 'Admin.ShopParameters.Help')
+                        $this->trans('Only letters, numbers and underscores ("_") are allowed.', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('Email template for both .html and .txt.', array(), 'Admin.Shopparameters.Help')
                     )
                 )
             ),
@@ -480,15 +480,15 @@ class AdminStatusesControllerCore extends AdminController
                     'lang' => true,
                     'required' => true,
                     'hint' => array(
-                        $this->trans('Order\'s return status name.', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('Invalid characters: numbers and', array(), 'Admin.ShopParameters.Help').' !<>,;?=+()@#"�{}_$%:'
+                        $this->trans('Order\'s return status name.', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('Invalid characters: numbers and', array(), 'Admin.Shopparameters.Help').' !<>,;?=+()@#"�{}_$%:'
                     )
                 ),
                 array(
                     'type' => 'color',
                     'label' => $this->trans('Color', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'color',
-                    'hint' => $this->trans('Status will be highlighted in this color. HTML colors only.', array(), 'Admin.ShopParameters.Help').' "lightblue", "#CC6600")'
+                    'hint' => $this->trans('Status will be highlighted in this color. HTML colors only.', array(), 'Admin.Shopparameters.Help').' "lightblue", "#CC6600")'
                 )
             ),
             'submit' => array(

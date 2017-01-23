@@ -47,7 +47,7 @@ class AdminPPreferencesControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_CATALOG_MODE' => array(
                         'title' => $this->trans('Catalog mode', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('When active, all shopping features will be disabled.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('When active, all shopping features will be disabled.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'required' => false,
@@ -61,15 +61,15 @@ class AdminPPreferencesControllerCore extends AdminController
                     ),
                     'PS_PRODUCT_SHORT_DESC_LIMIT' => array(
                         'title' => $this->trans('Max size of product summary', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Set the maximum size of the summary of your product description (in characters).', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Set the maximum size of the summary of your product description (in characters).', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => $this->trans('characters', array(), 'Admin.ShopParameters.Help'),
+                        'suffix' => $this->trans('characters', array(), 'Admin.Shopparameters.Help'),
                     ),
                     'PS_QTY_DISCOUNT_ON_COMBINATION' => array(
                         'title' => $this->trans('Quantity discounts based on', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('How to calculate quantity discounts.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('How to calculate quantity discounts.', array(), 'Admin.Shopparameters.Help'),
                         'cast' => 'intval',
                         'show' => true,
                         'required' => false,
@@ -82,7 +82,7 @@ class AdminPPreferencesControllerCore extends AdminController
                     ),
                     'PS_FORCE_FRIENDLY_PRODUCT' => array(
                         'title' => $this->trans('Force update of friendly URL', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('When active, friendly URL will be updated on every save.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('When active, friendly URL will be updated on every save.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'required' => false,
@@ -90,7 +90,7 @@ class AdminPPreferencesControllerCore extends AdminController
                     ),
                     'PS_PRODUCT_ACTIVATION_DEFAULT' => array(
                         'title' => $this->trans('Default activation status', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('When active, new products will be activated by default during creation.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('When active, new products will be activated by default during creation.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'required' => false,
@@ -104,14 +104,14 @@ class AdminPPreferencesControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_PRODUCTS_PER_PAGE' => array(
                         'title' => $this->trans('Products per page', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Number of products displayed per page. Default is 10.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Number of products displayed per page. Default is 10.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isUnsignedInt',
                         'cast' => 'intval',
                         'type' => 'text'
                     ),
                     'PS_PRODUCTS_ORDER_BY' => array(
                         'title' => $this->trans('Default order by', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('The order in which products are displayed in the product list.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('The order in which products are displayed in the product list.', array(), 'Admin.Shopparameters.Help'),
                         'type' => 'select',
                         'list' => array(
                             array('id' => '0', 'name' => $this->trans('Product name', array(), 'Admin.Shopparameters.Feature')),
@@ -127,7 +127,7 @@ class AdminPPreferencesControllerCore extends AdminController
                     ),
                     'PS_PRODUCTS_ORDER_WAY' => array(
                         'title' => $this->trans('Default order method', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Default order method for product list.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Default order method for product list.', array(), 'Admin.Shopparameters.Help'),
                         'type' => 'select',
                         'list' => array(
                             array(
@@ -156,7 +156,7 @@ class AdminPPreferencesControllerCore extends AdminController
                     ),
                     'PS_LAST_QTIES' => array(
                         'title' => $this->trans('Display remaining quantities when the quantity is lower than', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Set to "0" to disable this feature.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Set to "0" to disable this feature.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isUnsignedId',
                         'required' => true,
                         'cast' => 'intval',
@@ -171,7 +171,7 @@ class AdminPPreferencesControllerCore extends AdminController
                     ),
                     'PS_ATTRIBUTE_CATEGORY_DISPLAY' => array(
                         'title' => $this->trans('Display the "add to cart" button when a product has attributes', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
@@ -187,7 +187,7 @@ class AdminPPreferencesControllerCore extends AdminController
                     ),
                     'PS_DISPLAY_DISCOUNT_PRICE' => array(
                         'title' => $this->trans('Display discounted price', array(), 'Admin.Shopparameters.Feature'),
-                        'desc' => $this->trans('In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").', array(), 'Admin.ShopParameters.Help'),
+                        'desc' => $this->trans('In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'required' => false,
@@ -201,7 +201,7 @@ class AdminPPreferencesControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_ORDER_OUT_OF_STOCK' => array(
                         'title' => $this->trans('Allow ordering of out-of-stock products', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'required' => false,
@@ -249,7 +249,7 @@ class AdminPPreferencesControllerCore extends AdminController
                     ),*/
                     'PS_PACK_STOCK_TYPE' => array(
                         'title' =>  $this->trans('Default pack stock management', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('When selling packs of products, how do you want your stock to be calculated?', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('When selling packs of products, how do you want your stock to be calculated?', array(), 'Admin.Shopparameters.Help'),
                         'type' => 'select',
                         'list' =>array(
                             array(

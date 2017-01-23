@@ -53,56 +53,56 @@ class AdminOrderPreferencesControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_FINAL_SUMMARY_ENABLED' => array(
                         'title' => $this->trans('Enable final summary', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_GUEST_CHECKOUT_ENABLED' => array(
                         'title' => $this->trans('Enable guest checkout', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Allow guest visitors to place an order without registering.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Allow guest visitors to place an order without registering.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_DISALLOW_HISTORY_REORDERING' => array(
                         'title' => $this->trans('Disable Reordering Option', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_PURCHASE_MINIMUM' => array(
                         'title' => $this->trans('Minimum purchase total required in order to validate the order', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Set to 0 to disable this feature.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Set to 0 to disable this feature.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isFloat',
                         'cast' => 'floatval',
                         'type' => 'price'
                     ),
                     'PS_ORDER_RECALCULATE_SHIPPING' => array(
                         'title' => $this->trans('Recalculate shipping cost after order edition', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Automatically updates the shipping costs when you edit an order.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Automatically updates the shipping costs when you edit an order.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                      ),
                     'PS_ALLOW_MULTISHIPPING' => array(
                         'title' => $this->trans('Allow multishipping', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_SHIP_WHEN_AVAILABLE' => array(
                         'title' => $this->trans('Delayed shipping', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Allows you to delay shipping at your customers\' request.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Allows you to delay shipping at your customers\' request.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CONDITIONS' => array(
                         'title' => $this->trans('Terms of service', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Require customers to accept or decline terms of service before processing an order.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Require customers to accept or decline terms of service before processing an order.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
@@ -113,7 +113,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
                     ),
                     'PS_CONDITIONS_CMS_ID' => array(
                         'title' => $this->trans('Page for the Terms and conditions', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Choose the page which contains your store\'s terms and conditions of use.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Choose the page which contains your store\'s terms and conditions of use.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isInt',
                         'type' => 'select',
                         'list' => $cms_tab,
@@ -129,21 +129,21 @@ class AdminOrderPreferencesControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_GIFT_WRAPPING' => array(
                         'title' => $this->trans('Offer gift wrapping', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Suggest gift-wrapping to customers.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Suggest gift-wrapping to customers.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_GIFT_WRAPPING_PRICE' => array(
                         'title' => $this->trans('Gift-wrapping price', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Set a price for gift wrapping.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Set a price for gift wrapping.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isPrice',
                         'cast' => 'floatval',
                         'type' => 'price'
                     ),
                     'PS_GIFT_WRAPPING_TAX_RULES_GROUP' => array(
                         'title' => $this->trans('Gift-wrapping tax', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Set a tax for gift wrapping.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Set a tax for gift wrapping.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'select',
@@ -152,7 +152,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
                     ),
                     'PS_RECYCLABLE_PACK' => array(
                         'title' => $this->trans('Offer recycled packaging', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Suggest recycled packaging to customer.', array(), 'Admin.ShopParameters.Help'),
+                        'hint' => $this->trans('Suggest recycled packaging to customer.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'

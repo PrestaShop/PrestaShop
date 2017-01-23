@@ -255,7 +255,7 @@ class AdminStoresControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Whether or not to display this store.', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Whether or not to display this store.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'file',
@@ -264,7 +264,7 @@ class AdminStoresControllerCore extends AdminController
                     'display_image' => true,
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
-                    'hint' => $this->trans('Storefront picture.', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Storefront picture.', array(), 'Admin.Shopparameters.Help')
                 )
             ),
             'hours' => array(
@@ -418,14 +418,14 @@ class AdminStoresControllerCore extends AdminController
                 'no_escape' => true,
             ),
             'PS_SHOP_EMAIL' => array('title' => $this->trans('Shop email', array(), 'Admin.Shopparameters.Feature'),
-                'hint' => $this->trans('Displayed in emails sent to customers.', array(), 'Admin.ShopParameters.Help'),
+                'hint' => $this->trans('Displayed in emails sent to customers.', array(), 'Admin.Shopparameters.Help'),
                 'validation' => 'isEmail',
                 'required' => true,
                 'type' => 'text'
             ),
             'PS_SHOP_DETAILS' => array(
                 'title' => $this->trans('Registration number', array(), 'Admin.Shopparameters.Feature'),
-                'hint' => $this->trans('Shop registration information (e.g. SIRET or RCS).', array(), 'Admin.ShopParameters.Help'),
+                'hint' => $this->trans('Shop registration information (e.g. SIRET or RCS).', array(), 'Admin.Shopparameters.Help'),
                 'validation' => 'isGenericName',
                 'type' => 'textarea',
                 'cols' => 30,

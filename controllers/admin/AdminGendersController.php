@@ -120,7 +120,7 @@ class AdminGendersControllerCore extends AdminController
                     'name' => 'name',
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.ShopParameters.Help').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Shopparameters.Help').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
                     'required' => true
                 ),
                 array(
@@ -159,14 +159,14 @@ class AdminGendersControllerCore extends AdminController
                     'label' => $this->trans('Image width', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'img_width',
                     'col' => 2,
-                    'hint' => $this->trans('Image width in pixels. Enter "0" to use the original size.', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Image width in pixels. Enter "0" to use the original size.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Image height', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'img_height',
                     'col' => 2,
-                    'hint' => $this->trans('Image height in pixels. Enter "0" to use the original size.', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Image height in pixels. Enter "0" to use the original size.', array(), 'Admin.Shopparameters.Help')
                 )
             ),
             'submit' => array(

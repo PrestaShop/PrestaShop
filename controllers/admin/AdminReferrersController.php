@@ -226,7 +226,7 @@ class AdminReferrersControllerCore extends AdminController
                     'type' => 'password',
                     'label' => $this->trans('Password', array(), 'Admin.Global'),
                     'name' => 'passwd',
-                    'desc' => $this->trans('Leave blank if no change.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('Leave blank if no change.', array(), 'Admin.Shopparameters.Help'),
                     'autocomplete' => false
                 )
             ),
@@ -263,13 +263,13 @@ class AdminReferrersControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Click fee', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'click_fee',
-                    'desc' => $this->trans('Fee given for each visit.', array(), 'Admin.ShopParameters.Help')
+                    'desc' => $this->trans('Fee given for each visit.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Base fee', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'base_fee',
-                    'desc' => $this->trans('Fee given for each order placed.', array(), 'Admin.ShopParameters.Help')
+                    'desc' => $this->trans('Fee given for each order placed.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'text',
@@ -333,7 +333,7 @@ class AdminReferrersControllerCore extends AdminController
                     '[1]' => '<a style="cursor: pointer; font-weight: bold;" onclick="$(\'#tracking_expert\').slideToggle();">',
                     '[/1]' => '</a>',
                 ),
-                'Admin.ShopParameters.Help'
+                'Admin.Shopparameters.Help'
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),

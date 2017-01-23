@@ -76,15 +76,15 @@ class AdminMetaControllerCore extends AdminController
         $general_fields = array(
             'PS_REWRITING_SETTINGS' => array(
                 'title' => $this->trans('Friendly URL', array(), 'Admin.Global'),
-                'hint' => ($mod_rewrite ? $this->trans('Enable this option only if your server allows URL rewriting (recommended).', array(), 'Admin.ShopParameters.Help') : ''),
+                'hint' => ($mod_rewrite ? $this->trans('Enable this option only if your server allows URL rewriting (recommended).', array(), 'Admin.Shopparameters.Help') : ''),
                 'validation' => 'isBool',
                 'cast' => 'intval',
                 'type' => 'bool',
-                'desc' => (!$mod_rewrite ? $this->trans('URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.', array(), 'Admin.ShopParameters.Help') : '')
+                'desc' => (!$mod_rewrite ? $this->trans('URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.', array(), 'Admin.Shopparameters.Help') : '')
             ),
             'PS_ALLOW_ACCENTED_CHARS_URL' => array(
                 'title' => $this->trans('Accented URL', array(), 'Admin.Shopparameters.Feature'),
-                'hint' => $this->trans('Enable this option if you want to allow accented characters in your friendly URLs.').' '.$this->trans('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.', array(), 'Admin.ShopParameters.Help'),
+                'hint' => $this->trans('Enable this option if you want to allow accented characters in your friendly URLs.').' '.$this->trans('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.', array(), 'Admin.Shopparameters.Help'),
                 'validation' => 'isBool',
                 'cast' => 'intval',
                 'type' => 'bool'
@@ -108,7 +108,7 @@ class AdminMetaControllerCore extends AdminController
             if ($this->checkConfiguration($this->ht_file)) {
                 $general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
                     'title' => $this->trans('Disable Apache\'s MultiViews option', array(), 'Admin.Shopparameters.Feature'),
-                    'hint' => $this->trans('Enable this option only if you have problems with URL rewriting.', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('Enable this option only if you have problems with URL rewriting.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
@@ -116,7 +116,7 @@ class AdminMetaControllerCore extends AdminController
 
                 $general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
                     'title' => $this->trans('Disable Apache\'s mod_security module', array(), 'Admin.Shopparameters.Feature'),
-                    'hint' => $this->trans('Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
@@ -201,7 +201,7 @@ class AdminMetaControllerCore extends AdminController
         } else {
             $this->fields_options['manage_domain_name'] = array(
                 'title' => $this->trans('Manage domain name', array(), 'Admin.Shopparameters.Feature'),
-                'description' => $this->trans('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.', array(), 'Admin.ShopParameters.Help'),
+                'description' => $this->trans('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.', array(), 'Admin.Shopparameters.Help'),
                 'buttons' => array(
                     array(
                         'title' => $this->trans('Add a domain name', array(), 'Admin.Shopparameters.Feature'),
@@ -330,7 +330,7 @@ class AdminMetaControllerCore extends AdminController
                             'query' => 'query',
                         ),
                     ),
-                    'hint' => $this->trans('Name of the related page.', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('Name of the related page.', array(), 'Admin.Shopparameters.Help'),
                     'required' => true,
                 ),
                 array(
@@ -339,8 +339,8 @@ class AdminMetaControllerCore extends AdminController
                     'name' => 'title',
                     'lang' => true,
                     'hint' => array(
-                        $this->trans('Title of this page.', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.ShopParameters.Help').' &lt;&gt;;=#{}'
+                        $this->trans('Title of this page.', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('Invalid characters:', array(), 'Admin.Shopparameters.Help').' &lt;&gt;;=#{}'
                     )
                 ),
                 array(
@@ -349,7 +349,7 @@ class AdminMetaControllerCore extends AdminController
                     'name' => 'description',
                     'lang' => true,
                     'hint' => array(
-                        $this->trans('A short description of your shop.', array(), 'Admin.ShopParameters.Help'),
+                        $this->trans('A short description of your shop.', array(), 'Admin.Shopparameters.Help'),
                         $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                     )
                 ),
@@ -359,8 +359,8 @@ class AdminMetaControllerCore extends AdminController
                     'name' => 'keywords',
                     'lang' => true,
                     'hint' =>  array(
-                        $this->trans('List of keywords for search engines.', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.ShopParameters.Help'),
+                        $this->trans('List of keywords for search engines.', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.Shopparameters.Help'),
                         $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                     )
                 ),
@@ -372,8 +372,8 @@ class AdminMetaControllerCore extends AdminController
                     'required' => true,
                     'disabled' => (bool)$is_index,
                     'hint' => array(
-                        $this->trans('For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('Only letters and hyphens are allowed.', array(), 'Admin.ShopParameters.Help'),
+                        $this->trans('For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('Only letters and hyphens are allowed.', array(), 'Admin.Shopparameters.Help'),
                     )
                 ),
             ),

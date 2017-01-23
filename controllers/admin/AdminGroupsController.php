@@ -108,7 +108,7 @@ class AdminGroupsControllerCore extends AdminController
                     'fields' =>    array(
                         'PS_UNIDENTIFIED_GROUP' => array(
                             'title' => $this->trans('Visitors group', array(), 'Admin.Shopparameters.Feature'),
-                            'desc' => $this->trans('The group defined for your un-identified visitors.', array(), 'Admin.ShopParameters.Help'),
+                            'desc' => $this->trans('The group defined for your un-identified visitors.', array(), 'Admin.Shopparameters.Help'),
                             'cast' => 'intval',
                             'type' => 'select',
                             'list' => $groups,
@@ -116,7 +116,7 @@ class AdminGroupsControllerCore extends AdminController
                         ),
                         'PS_GUEST_GROUP' => array(
                             'title' => $this->trans('Guests group', array(), 'Admin.Shopparameters.Feature'),
-                            'desc' => $this->trans('The group defined for your identified guest customers (used in guest checkout).', array(), 'Admin.ShopParameters.Help'),
+                            'desc' => $this->trans('The group defined for your identified guest customers (used in guest checkout).', array(), 'Admin.Shopparameters.Help'),
                             'cast' => 'intval',
                             'type' => 'select',
                             'list' => $groups,
@@ -124,7 +124,7 @@ class AdminGroupsControllerCore extends AdminController
                         ),
                         'PS_CUSTOMER_GROUP' => array(
                             'title' => $this->trans('Customers group', array(), 'Admin.Shopparameters.Feature'),
-                            'desc' => $this->trans('The group defined for your identified registered customers.', array(), 'Admin.ShopParameters.Help'),
+                            'desc' => $this->trans('The group defined for your identified registered customers.', array(), 'Admin.Shopparameters.Help'),
                             'cast' => 'intval',
                             'type' => 'select',
                             'list' => $groups,
@@ -285,14 +285,14 @@ class AdminGroupsControllerCore extends AdminController
                     'name' => 'reduction',
                     'suffix' => '%',
                     'col' => 1,
-                    'hint' => $this->trans('Automatically apply this value as a discount on all products for members of this customer group.', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Automatically apply this value as a discount on all products for members of this customer group.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'select',
                     'label' => $this->trans('Price display method', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'price_display_method',
                     'col' => 2,
-                    'hint' => $this->trans('How prices are displayed in the order summary for this customer group.', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('How prices are displayed in the order summary for this customer group.', array(), 'Admin.Shopparameters.Help'),
                     'options' => array(
                         'query' => array(
                             array(
@@ -327,7 +327,7 @@ class AdminGroupsControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Customers in this group can view prices.', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Customers in this group can view prices.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'group_discount_category',
@@ -569,19 +569,19 @@ class AdminGroupsControllerCore extends AdminController
         $default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
         $unidentified_group_information = sprintf(
-            $this->trans('%s - All persons without a customer account or customers that are not logged in.', array(), 'Admin.ShopParameters.Help'),
+            $this->trans('%s - All persons without a customer account or customers that are not logged in.', array(), 'Admin.Shopparameters.Help'),
             '<b>'.$unidentified->name[$this->context->language->id].'</b>'
         );
         $guest_group_information = sprintf(
-            $this->trans('%s - All persons who placed an order through Guest Checkout.', array(), 'Admin.ShopParameters.Help'),
+            $this->trans('%s - All persons who placed an order through Guest Checkout.', array(), 'Admin.Shopparameters.Help'),
             '<b>'.$guest->name[$this->context->language->id].'</b>'
         );
         $default_group_information = sprintf(
-            $this->trans('%s - All persons who created an account on this site.', array(), 'Admin.ShopParameters.Help'),
+            $this->trans('%s - All persons who created an account on this site.', array(), 'Admin.Shopparameters.Help'),
             '<b>'.$default->name[$this->context->language->id].'</b>'
         );
 
-        $this->displayInformation($this->trans('PrestaShop has three default customer groups:', array(), 'Admin.ShopParameters.Help'));
+        $this->displayInformation($this->trans('PrestaShop has three default customer groups:', array(), 'Admin.Shopparameters.Help'));
         $this->displayInformation($unidentified_group_information);
         $this->displayInformation($guest_group_information);
         $this->displayInformation($default_group_information);

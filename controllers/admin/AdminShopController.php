@@ -366,8 +366,8 @@ class AdminShopControllerCore extends AdminController
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Shop name', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => array($this->trans('This field does not refer to the shop name visible in the front office.', array(), 'Admin.ShopParameters.Help'),
-                            sprintf($this->trans('Follow %sthis link%s to edit the shop name used on the front office.', array(), 'Admin.ShopParameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
+                    'desc' => array($this->trans('This field does not refer to the shop name visible in the front office.', array(), 'Admin.Shopparameters.Help'),
+                            sprintf($this->trans('Follow %sthis link%s to edit the shop name used on the front office.', array(), 'Admin.Shopparameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
                     'name' => 'name',
                     'required' => true,
                 )
@@ -422,7 +422,7 @@ class AdminShopControllerCore extends AdminController
             $this->fields_form['input'][] = array(
                 'type' => 'textShopGroup',
                 'label' => $this->trans('Shop group', array(), 'Admin.Shopparameters.Feature'),
-                'desc' => $this->trans('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.', array(), 'Admin.ShopParameters.Help'),
+                'desc' => $this->trans('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.', array(), 'Admin.Shopparameters.Help'),
                 'name' => 'id_shop_group',
                 'value' => $group->name
             );
@@ -432,7 +432,7 @@ class AdminShopControllerCore extends AdminController
         $this->fields_form['input'][] = array(
             'type' => 'select',
             'label' => $this->trans('Category root', array(), 'Admin.Catalog.Feature'),
-            'desc' => sprintf($this->trans('This is the root category of the store that you\'ve created. To define a new root category for your store, %splease click here%s.', array(), 'Admin.ShopParameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">', '</a>'),
+            'desc' => sprintf($this->trans('This is the root category of the store that you\'ve created. To define a new root category for your store, %splease click here%s.', array(), 'Admin.Shopparameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">', '</a>'),
             'name' => 'id_category',
             'options' => array(
                 'query' => $categories,
@@ -484,7 +484,7 @@ class AdminShopControllerCore extends AdminController
                 'use_search' => true,
                 'use_checkbox' => true
             ),
-            'desc' => $this->trans('By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.', array(), 'Admin.ShopParameters.Help')
+            'desc' => $this->trans('By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.', array(), 'Admin.Shopparameters.Help')
         );
         /*$this->fields_form['input'][] = array(
             'type' => 'switch',
@@ -502,7 +502,7 @@ class AdminShopControllerCore extends AdminController
                     'value' => 0
                 )
             ),
-            'desc' => $this->trans('Enable or disable your store?', array(), 'Admin.ShopParameters.Help')
+            'desc' => $this->trans('Enable or disable your store?', array(), 'Admin.Shopparameters.Help')
         );*/
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
