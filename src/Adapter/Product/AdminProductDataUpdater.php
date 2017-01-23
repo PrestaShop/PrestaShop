@@ -277,7 +277,7 @@ class AdminProductDataUpdater implements ProductInterface
             SET cp.`position` = ELT(cp.`position`, '.$fields.'),
                 p.`date_upd` = "'.date('Y-m-d H:i:s').'",
                 product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
-            WHERE cp.`id_category` = '.$categoryId.' AND cp.`id_product` IN ('.implode(',', array_keys($productList)).')';
+            WHERE cp.`id_category` = '.(int)$categoryId.' AND cp.`id_product` IN ('.implode(',', array_map('intval', array_keys($productList))).')';
 
         \Db::getInstance()->query($updatePositions);
 
