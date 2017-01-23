@@ -426,7 +426,7 @@ class CustomerCore extends ObjectModel
                 $this->{$key} = $value;
             }
         }
-        
+
         if ($shouldCheckPassword && !$crypto->isFirstHash($plaintextPassword, $passwordHash)) {
             $this->passwd = $crypto->hash($plaintextPassword);
             $this->update();
@@ -494,7 +494,7 @@ class CustomerCore extends ObjectModel
     {
         if (!Validate::isEmail($email)) {
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-                die(Tools::displayError('Invalid email'));
+                die(Context::getContext()->getTranslator()->trans('Invalid email', array(), 'Admin.Orderscustomers.Notification'));
             }
 
             return false;
