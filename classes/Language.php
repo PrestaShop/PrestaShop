@@ -652,7 +652,7 @@ class LanguageCore extends ObjectModel
     public static function getIdByIso($iso_code, $no_cache = false)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
+            die(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification').' '.Tools::safeOutput($iso_code));
         }
 
         $key = 'Language::getIdByIso_'.$iso_code;
@@ -705,7 +705,7 @@ class LanguageCore extends ObjectModel
     public static function getLanguageCodeByIso($iso_code)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
+            die(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification').' '.Tools::safeOutput($iso_code));
         }
 
         return Db::getInstance()->getValue('SELECT `language_code` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
@@ -714,7 +714,7 @@ class LanguageCore extends ObjectModel
     public static function getLanguageByIETFCode($code)
     {
         if (!Validate::isLanguageCode($code)) {
-            die(sprintf(Tools::displayError('Fatal error: IETF code %s is not correct'), Tools::safeOutput($code)));
+            die(Context::getContext()->getTranslator()->trans('Fatal error: IETF code %s is not correct', array(Tools::safeOutput($code)), 'Admin.International.Notification'));
         }
 
         // $code is in the form of 'xx-YY' where xx is the language code
@@ -956,7 +956,7 @@ class LanguageCore extends ObjectModel
 
         $lang_pack = self::getLangDetails($iso);
         if (!$lang_pack) {
-            $errors[] = Tools::displayError('Sorry this language is not available');
+            $errors[] = Context::getContext()->getTranslator()->trans('Sorry this language is not available', array(), 'Admin.International.Notification');
         }
 
         self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
@@ -985,7 +985,7 @@ class LanguageCore extends ObjectModel
 
         if (!is_writable(dirname($file))) {
             // @todo Throw exception
-            $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
+            $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', array(), 'Admin.International.Notification').' ('.$file.')';
         } else {
             @file_put_contents($file, $content);
         }
@@ -995,7 +995,7 @@ class LanguageCore extends ObjectModel
     {
         if (!file_exists(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip')) {
             // @todo Throw exception
-            $errors[] = Tools::displayError('Language pack unavailable.');
+            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', array(), 'Admin.International.Notification');
         } else {
             $zipArchive = new ZipArchive();
             $zipArchive->open(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip');
@@ -1011,7 +1011,7 @@ class LanguageCore extends ObjectModel
 
         if (!file_exists($folder.'.zip')) {
             // @todo Throw exception
-            $errors[] = Tools::displayError('Language pack unavailable.');
+            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', array(), 'Admin.International.Notification');
         } else {
             $zipArchive = new ZipArchive();
             $zipArchive->open($folder.'.zip');
@@ -1056,7 +1056,7 @@ class LanguageCore extends ObjectModel
         Tools::clearCache();
 
         if (!Language::checkAndAddLanguage((string) $iso, false, false, $params)) {
-            $errors[] = sprintf(Tools::displayError('An error occurred while creating the language: %s'), (string) $iso);
+            $errors[] = Context::getContext()->getTranslator()->trans('An error occurred while creating the language: %s', array((string)$iso), 'Admin.International.Notification');
         } else {
             // Reset cache
             Language::loadLanguages();
