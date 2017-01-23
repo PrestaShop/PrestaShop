@@ -200,7 +200,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->setType('checkbox')
                 ->setLabel(
                     $this->translator->trans(
-                        'Receive offers from our partners', [], 'Shop.Theme.CustomerAccount'
+                        'Receive offers from our partners', [], 'Shop.Theme.Customeraccount'
                     )
                 )
                 ->setRequired($this->partner_optin_is_required)

@@ -25,11 +25,11 @@
 {extends file='customer/page.tpl'}
 
 {block name='page_title'}
-  {l s='Order history' d='Shop.Theme.CustomerAccount'}
+  {l s='Order history' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='page_content'}
-  <h6>{l s='Here are the orders you\'ve placed since your account was created.' d='Shop.Theme.CustomerAccount'}</h6>
+  <h6>{l s='Here are the orders you\'ve placed since your account was created.' d='Shop.Theme.Customeraccount'}</h6>
 
   {if $orders}
     <table class="table table-striped table-bordered table-labeled hidden-sm-down">
@@ -68,7 +68,7 @@
             </td>
             <td class="text-xs-center order-actions">
               <a href="{$order.details.details_url}" data-link-action="view-order-details">
-                {l s='Details' d='Shop.Theme.CustomerAccount'}
+                {l s='Details' d='Shop.Theme.Customeraccount'}
               </a>
               {if $order.details.reorder_url}
                 <a href="{$order.details.reorder_url}">{l s='Reorder' d='Shop.Theme.Actions'}</a>
@@ -98,7 +98,7 @@
             </div>
             <div class="col-xs-2 text-xs-right">
                 <div>
-                  <a href="{$order.details.details_url}" data-link-action="view-order-details" title="{l s='Details' d='Shop.Theme.CustomerAccount'}">
+                  <a href="{$order.details.details_url}" data-link-action="view-order-details" title="{l s='Details' d='Shop.Theme.Customeraccount'}">
                     <i class="material-icons">&#xE8B6;</i>
                   </a>
                 </div>

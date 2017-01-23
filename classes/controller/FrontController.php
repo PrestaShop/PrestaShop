@@ -1661,7 +1661,7 @@ class FrontControllerCore extends Controller
     protected function addMyAccountToBreadcrumb()
     {
         return array(
-            'title' => $this->getTranslator()->trans('Your account', array(), 'Shop.Theme.CustomerAccount'),
+            'title' => $this->getTranslator()->trans('Your account', array(), 'Shop.Theme.Customeraccount'),
             'url' => $this->context->link->getPageLink('my-account', true),
         );
     }

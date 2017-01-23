@@ -25,7 +25,7 @@
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {l s='Reset your password' d='Shop.Theme.CustomerAccount'}
+  {l s='Reset your password' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='page_content'}
@@ -36,7 +36,7 @@
         <div class="email">
           {l
             s='Email address: %email%'
-            d='Shop.Theme.CustomerAccount'
+            d='Shop.Theme.Customeraccount'
             sprintf=['%email%' => $customer_email|stripslashes]}
         </div>
 

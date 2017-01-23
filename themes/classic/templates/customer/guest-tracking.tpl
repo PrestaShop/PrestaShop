@@ -25,7 +25,7 @@
 {extends file='customer/order-detail.tpl'}
 
 {block name='page_title'}
-  {l s='Guest Tracking' d='Shop.Theme.CustomerAccount'}
+  {l s='Guest Tracking' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='order_detail'}
@@ -39,11 +39,11 @@
   {block name='guest_to_customer'}
     <form action="{$urls.pages.guest_tracking}" method="post">
       <header>
-        <h1 class="h3">{l s='Transform your guest account into a customer account and enjoy:' d='Shop.Theme.CustomerAccount'}</h1>
+        <h1 class="h3">{l s='Transform your guest account into a customer account and enjoy:' d='Shop.Theme.Customeraccount'}</h1>
         <ul>
-          <li> -{l s='Personalized and secure access' d='Shop.Theme.CustomerAccount'}</li>
-          <li> -{l s='Fast and easy checkout' d='Shop.Theme.CustomerAccount'}</li>
-          <li> -{l s='Easier merchandise return' d='Shop.Theme.CustomerAccount'}</li>
+          <li> -{l s='Personalized and secure access' d='Shop.Theme.Customeraccount'}</li>
+          <li> -{l s='Fast and easy checkout' d='Shop.Theme.Customeraccount'}</li>
+          <li> -{l s='Easier merchandise return' d='Shop.Theme.Customeraccount'}</li>
         </ul>
       </header>
 

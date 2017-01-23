@@ -40,7 +40,7 @@ class SitemapControllerCore extends FrontController
             array(
                 'our_offers' => $this->trans('Our Offers', array(), 'Shop.Theme'),
                 'categories' => $this->trans('Categories', array(), 'Shop.Theme.Catalog'),
-                'your_account' => $this->trans('Your account', array(), 'Shop.Theme.CustomerAccount'),
+                'your_account' => $this->trans('Your account', array(), 'Shop.Theme.Customeraccount'),
                 'pages' => $this->trans('Pages', array(), 'Shop.Theme.Catalog'),
                 'links' => array(
                     'offers' => $this->getOffersLinks(),
