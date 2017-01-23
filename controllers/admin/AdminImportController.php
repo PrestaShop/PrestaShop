@@ -399,8 +399,8 @@ class AdminImportControllerCore extends AdminController
                     'other' => array('label' => $this->trans('Other', array(), 'Admin.Global')),
                     'phone' => array('label' => $this->trans('Phone', array(), 'Admin.Global')),
                     'phone_mobile' => array('label' => $this->trans('Mobile Phone', array(), 'Admin.Global')),
-                    'vat_number' => array('label' => $this->trans('VAT number', array(), 'Admin.OrdersCustomers.Feature')),
-                    'dni' => array('label' => $this->trans('Identification number', array(), 'Admin.OrdersCustomers.Feature')),
+                    'vat_number' => array('label' => $this->trans('VAT number', array(), 'Admin.Orderscustomers.Feature')),
+                    'dni' => array('label' => $this->trans('Identification number', array(), 'Admin.Orderscustomers.Feature')),
                 );
 
                 self::$default_values = array(

@@ -27,7 +27,7 @@
 class OrderStateLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Admin.OrdersCustomers.Feature';
+    protected $domain = 'Admin.Orderscustomers.Feature';
 
     protected $keys = array('id_order_state');
 
@@ -38,46 +38,46 @@ class OrderStateLangCore extends DataLangCore
         $this->fieldNames = array(
             'name' => array(
                 md5('Awaiting check payment')
-                    => $this->translator->trans('Awaiting check payment', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Awaiting check payment', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Payment accepted')
-                    => $this->translator->trans('Payment accepted', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Payment accepted', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Processing in progress')
-                    => $this->translator->trans('Processing in progress', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Processing in progress', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Shipped')
-                    => $this->translator->trans('Shipped', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Shipped', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Delivered')
-                    => $this->translator->trans('Delivered', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Delivered', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Canceled')
-                    => $this->translator->trans('Canceled', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Canceled', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Refunded')
-                    => $this->translator->trans('Refunded', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Refunded', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Payment error')
-                    => $this->translator->trans('Payment error', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Payment error', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('On backorder (paid)')
-                    => $this->translator->trans('On backorder (paid)', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('On backorder (paid)', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('On backorder (not paid)')
-                    => $this->translator->trans('On backorder (not paid)', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('On backorder (not paid)', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Awaiting bank wire payment')
-                    => $this->translator->trans('Awaiting bank wire payment', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Awaiting bank wire payment', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Awaiting PayPal payment')
-                    => $this->translator->trans('Awaiting PayPal payment', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Awaiting PayPal payment', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Remote payment accepted')
-                    => $this->translator->trans('Remote payment accepted', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Remote payment accepted', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('Awaiting Cash On Delivery validation')
-                    => $this->translator->trans('Awaiting Cash On Delivery validation', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('Awaiting Cash On Delivery validation', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
             ),
         );

@@ -27,7 +27,7 @@
 class OrderMessageLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Admin.OrdersCustomers.Feature';
+    protected $domain = 'Admin.Orderscustomers.Feature';
 
     protected $keys = array('id_order_message');
 
@@ -37,11 +37,11 @@ class OrderMessageLangCore extends DataLangCore
     {
         $this->fieldNames = array(
             'name' => array(
-                md5('Delay') => $this->translator->trans('Delay', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                md5('Delay') => $this->translator->trans('Delay', array(), 'Admin.Orderscustomers.Feature', $this->locale),
             ),
             'message' => array(
                 md5("Hi,\n\nUnfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.\nPlease accept our apologies and rest assured that we are working hard to rectify this.\n\nBest regards,")
-                    => $this->translator->trans("Hi,\n\nUnfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.\nPlease accept our apologies and rest assured that we are working hard to rectify this.\n\nBest regards,", array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans("Hi,\n\nUnfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.\nPlease accept our apologies and rest assured that we are working hard to rectify this.\n\nBest regards,", array(), 'Admin.Orderscustomers.Feature', $this->locale),
             ),
         );
     }

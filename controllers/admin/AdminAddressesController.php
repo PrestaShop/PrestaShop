@@ -101,7 +101,7 @@ class AdminAddressesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_address'] = array(
                 'href' => self::$currentIndex.'&addaddress&token='.$this->token,
-                'desc' => $this->trans('Add new address', array(), 'Admin.OrdersCustomers.Feature'),
+                'desc' => $this->trans('Add new address', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -113,7 +113,7 @@ class AdminAddressesControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Addresses', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Addresses', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-envelope-alt'
             ),
             'input' => array(
@@ -125,15 +125,15 @@ class AdminAddressesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Identification number', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Identification number', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'dni',
                     'required' => false,
                     'col' => '4',
-                    'hint' => $this->trans('The national ID card number of this person, or a unique tax identification number.', array(), 'Admin.OrdersCustomers.Feature')
+                    'hint' => $this->trans('The national ID card number of this person, or a unique tax identification number.', array(), 'Admin.Orderscustomers.Feature')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Address alias', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Address alias', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'alias',
                     'required' => true,
                     'col' => '4',
@@ -208,7 +208,7 @@ class AdminAddressesControllerCore extends AdminController
                 );
                 $temp_fields[] = array(
                     'type' => 'text',
-                    'label' => $this->trans('VAT number', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('VAT number', array(), 'Admin.Orderscustomers.Feature'),
                     'col' => '2',
                     'name' => 'vat_number',
                     'required' => in_array('vat_number', $required_fields)

@@ -27,7 +27,7 @@
 class OrderReturnStateLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Admin.OrdersCustomers.Feature';
+    protected $domain = 'Admin.Orderscustomers.Feature';
 
     protected $keys = array('id_order_return_state');
 
@@ -37,11 +37,11 @@ class OrderReturnStateLangCore extends DataLangCore
     {
         $this->fieldNames = array(
             'name' => array(
-                md5('Waiting for confirmation') => $this->translator->trans('Waiting for confirmation', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
-                md5('Waiting for package') => $this->translator->trans('Waiting for package', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
-                md5('Package received') => $this->translator->trans('Package received', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
-                md5('Return denied') => $this->translator->trans('Return denied', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
-                md5('Return completed') => $this->translator->trans('Return completed', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                md5('Waiting for confirmation') => $this->translator->trans('Waiting for confirmation', array(), 'Admin.Orderscustomers.Feature', $this->locale),
+                md5('Waiting for package') => $this->translator->trans('Waiting for package', array(), 'Admin.Orderscustomers.Feature', $this->locale),
+                md5('Package received') => $this->translator->trans('Package received', array(), 'Admin.Orderscustomers.Feature', $this->locale),
+                md5('Return denied') => $this->translator->trans('Return denied', array(), 'Admin.Orderscustomers.Feature', $this->locale),
+                md5('Return completed') => $this->translator->trans('Return completed', array(), 'Admin.Orderscustomers.Feature', $this->locale),
             ),
         );
     }

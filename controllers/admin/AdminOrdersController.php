@@ -31,7 +31,7 @@ class BoOrder extends PaymentModule
 
     public function __construct()
     {
-        $this->displayName = $this->trans('Back office order', array(), 'Admin.OrdersCustomers.Feature');
+        $this->displayName = $this->trans('Back office order', array(), 'Admin.Orderscustomers.Feature');
     }
 }
 
@@ -93,7 +93,7 @@ class AdminOrdersControllerCore extends AdminController
                 'title' => $this->trans('Reference', array(), 'Admin.Global')
             ),
             'new' => array(
-                'title' => $this->trans('New client', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('New client', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'text-center',
                 'type' => 'bool',
                 'tmpTableFilter' => true,
@@ -190,7 +190,7 @@ class AdminOrdersControllerCore extends AdminController
         }
 
         $this->bulk_actions = array(
-            'updateOrderStatus' => array('text' => $this->trans('Change Order Status', array(), 'Admin.OrdersCustomers.Feature'), 'icon' => 'icon-refresh')
+            'updateOrderStatus' => array('text' => $this->trans('Change Order Status', array(), 'Admin.Orderscustomers.Feature'), 'icon' => 'icon-refresh')
         );
     }
 
@@ -207,7 +207,7 @@ class AdminOrdersControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_order'] = array(
                 'href' => self::$currentIndex.'&addorder&token='.$this->token,
-                'desc' => $this->trans('Add new order', array(), 'Admin.OrdersCustomers.Feature'),
+                'desc' => $this->trans('Add new order', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -266,7 +266,7 @@ class AdminOrdersControllerCore extends AdminController
             'toolbar_btn' => $this->toolbar_btn,
             'toolbar_scroll' => $this->toolbar_scroll,
             'PS_CATALOG_MODE' => Configuration::get('PS_CATALOG_MODE'),
-            'title' => array($this->trans('Orders', array(), 'Admin.OrdersCustomers.Feature'), $this->trans('Create order', array(), 'Admin.OrdersCustomers.Feature'))
+            'title' => array($this->trans('Orders', array(), 'Admin.Orderscustomers.Feature'), $this->trans('Create order', array(), 'Admin.Orderscustomers.Feature'))
 
         ));
         $this->content .= $this->createTemplate('form.tpl')->fetch();
@@ -290,23 +290,23 @@ class AdminOrdersControllerCore extends AdminController
                     '%firstname%' => $customer->firstname,
                     '%lastname%' => $customer->lastname,
                 ),
-                'Admin.OrdersCustomers.Feature'
+                'Admin.Orderscustomers.Feature'
             );
             $this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 
             if ($order->hasBeenShipped()) {
-                $type = $this->trans('Return products', array(), 'Admin.OrdersCustomers.Feature');
+                $type = $this->trans('Return products', array(), 'Admin.Orderscustomers.Feature');
             } elseif ($order->hasBeenPaid()) {
-                $type = $this->trans('Standard refund', array(), 'Admin.OrdersCustomers.Feature');
+                $type = $this->trans('Standard refund', array(), 'Admin.Orderscustomers.Feature');
             } else {
-                $type = $this->trans('Cancel products', array(), 'Admin.OrdersCustomers.Feature');
+                $type = $this->trans('Cancel products', array(), 'Admin.Orderscustomers.Feature');
             }
 
             if (!$order->hasBeenShipped() && !$this->lite_display) {
                 $this->toolbar_btn['new'] = array(
                     'short' => 'Create',
                     'href' => '#',
-                    'desc' => $this->trans('Add a product', array(), 'Admin.OrdersCustomers.Feature'),
+                    'desc' => $this->trans('Add a product', array(), 'Admin.Orderscustomers.Feature'),
                     'class' => 'add_product'
                 );
             }
@@ -324,7 +324,7 @@ class AdminOrdersControllerCore extends AdminController
                 $this->toolbar_btn['partial_refund'] = array(
                     'short' => 'Create',
                     'href' => '',
-                    'desc' => $this->trans('Partial refund', array(), 'Admin.OrdersCustomers.Feature'),
+                    'desc' => $this->trans('Partial refund', array(), 'Admin.Orderscustomers.Feature'),
                     'class' => 'process-icon-partialRefund'
                 );
             }
@@ -830,7 +830,7 @@ class AdminOrdersControllerCore extends AdminController
                         // Generate voucher
                         if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors) && $amount > 0) {
                             $cart_rule = new CartRule();
-                            $cart_rule->description = $this->trans('Credit slip for order #%d', array('#%d' => $order->id), 'Admin.OrdersCustomers.Feature');
+                            $cart_rule->description = $this->trans('Credit slip for order #%d', array('#%d' => $order->id), 'Admin.Orderscustomers.Feature');
                             $language_ids = Language::getIDs(false);
                             foreach ($language_ids as $id_lang) {
                                 // Define a temporary name
@@ -1101,7 +1101,7 @@ class AdminOrdersControllerCore extends AdminController
                         if (Tools::isSubmit('generateDiscount') && !count($this->errors)) {
                             $cartrule = new CartRule();
                             $language_ids = Language::getIDs((bool)$order);
-                            $cartrule->description = $this->trans('Credit card slip for order #%d', array('#%d' => $order->id), 'Admin.OrdersCustomers.Feature');
+                            $cartrule->description = $this->trans('Credit card slip for order #%d', array('#%d' => $order->id), 'Admin.Orderscustomers.Feature');
                             foreach ($language_ids as $id_lang) {
                                 // Define a temporary name
                                 $cartrule->name[$id_lang] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
@@ -1270,7 +1270,7 @@ class AdminOrdersControllerCore extends AdminController
                     $employee = new Employee((int)Context::getContext()->cookie->id_employee);
                     $payment_module->validateOrder(
                         (int)$cart->id, (int)$id_order_state,
-                        $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->trans('Manual order -- Employee:', array(), 'Admin.OrdersCustomers.Feature').' '.
+                        $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->trans('Manual order -- Employee:', array(), 'Admin.Orderscustomers.Feature').' '.
                         substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key
                     );
                     if ($payment_module->currentOrder) {
@@ -1687,7 +1687,7 @@ class AdminOrdersControllerCore extends AdminController
         $helper->title = $this->trans('Average Order Value', array(), 'Admin.Global');
         $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
         if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false) {
-            $helper->value = $this->trans('%amount% tax excl.', array('%amount%' => ConfigurationKPI::get('AVG_ORDER_VALUE')), 'Admin.OrdersCustomers.Feature');
+            $helper->value = $this->trans('%amount% tax excl.', array('%amount%' => ConfigurationKPI::get('AVG_ORDER_VALUE')), 'Admin.Orderscustomers.Feature');
         }
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
         $helper->refresh = (bool)(ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time);
@@ -1697,8 +1697,8 @@ class AdminOrdersControllerCore extends AdminController
         $helper->id = 'box-net-profit-visit';
         $helper->icon = 'icon-user';
         $helper->color = 'color4';
-        $helper->title = $this->trans('Net Profit per Visit', array(), 'Admin.OrdersCustomers.Feature');
-        $helper->subtitle = $this->trans('30 days', array(), 'Admin.OrdersCustomers.Feature');
+        $helper->title = $this->trans('Net Profit per Visit', array(), 'Admin.Orderscustomers.Feature');
+        $helper->subtitle = $this->trans('30 days', array(), 'Admin.Orderscustomers.Feature');
         if (ConfigurationKPI::get('NETPROFIT_VISIT') !== false) {
             $helper->value = ConfigurationKPI::get('NETPROFIT_VISIT');
         }
@@ -1757,11 +1757,11 @@ class AdminOrdersControllerCore extends AdminController
                 '%firstname%' => $customer->firstname,
                 '%lastname%' => $customer->lastname,
             ),
-            'Admin.OrdersCustomers.Feature'
+            'Admin.Orderscustomers.Feature'
         );
         if (Shop::isFeatureActive()) {
             $shop = new Shop((int)$order->id_shop);
-            $this->toolbar_title .= ' - '.sprintf($this->trans('Shop: %s', array(), 'Admin.OrdersCustomers.Feature'), $shop->name);
+            $this->toolbar_title .= ' - '.sprintf($this->trans('Shop: %s', array(), 'Admin.Orderscustomers.Feature'), $shop->name);
         }
 
         // gets warehouses to ship products, if and only if advanced stock management is activated

@@ -48,12 +48,12 @@ class AdminSlipControllerCore extends AdminController
                 'class' => 'fixed-width-xs'
             ),
             'id_order' => array(
-                'title' => $this->trans('Order ID', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Order ID', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'left',
                 'class' => 'fixed-width-md'
             ),
             'date_add' => array(
-                'title' => $this->trans('Date issued', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Date issued', array(), 'Admin.Orderscustomers.Feature'),
                 'type' => 'date',
                 'align' => 'right',
                 'filter_key' => 'a!date_add',
@@ -69,14 +69,14 @@ class AdminSlipControllerCore extends AdminController
         );
 
         $this->_select = 'a.id_order_slip AS id_pdf';
-        $this->optionTitle = $this->trans('Slip', array(), 'Admin.OrdersCustomers.Feature');
+        $this->optionTitle = $this->trans('Slip', array(), 'Admin.Orderscustomers.Feature');
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Credit slip options', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' =>    $this->trans('Credit slip options', array(), 'Admin.Orderscustomers.Feature'),
                 'fields' =>    array(
                     'PS_CREDIT_SLIP_PREFIX' => array(
-                        'title' => $this->trans('Credit slip prefix', array(), 'Admin.OrdersCustomers.Feature'),
+                        'title' => $this->trans('Credit slip prefix', array(), 'Admin.Orderscustomers.Feature'),
                         'desc' => $this->trans('Prefix used for credit slips.', array(), 'Admin.OrdersCustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang'
@@ -93,7 +93,7 @@ class AdminSlipControllerCore extends AdminController
     {
         $this->page_header_toolbar_btn['generate_pdf'] = array(
             'href' => self::$currentIndex.'&token='.$this->token,
-            'desc' => $this->trans('Generate PDF', array(), 'Admin.OrdersCustomers.Feature'),
+            'desc' => $this->trans('Generate PDF', array(), 'Admin.Orderscustomers.Feature'),
             'icon' => 'process-icon-save-date'
         );
 
@@ -104,7 +104,7 @@ class AdminSlipControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Print a PDF', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Print a PDF', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-print'
             ),
             'input' => array(
@@ -126,7 +126,7 @@ class AdminSlipControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->trans('Generate PDF', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Generate PDF', array(), 'Admin.Orderscustomers.Feature'),
                 'id' => 'submitPrint',
                 'icon' => 'process-icon-download-alt'
             )
@@ -179,7 +179,7 @@ class AdminSlipControllerCore extends AdminController
 
         $this->toolbar_btn['save-date'] = array(
             'href' => '#',
-            'desc' => $this->trans('Generate PDF', array(), 'Admin.OrdersCustomers.Feature')
+            'desc' => $this->trans('Generate PDF', array(), 'Admin.Orderscustomers.Feature')
         );
     }
 

@@ -27,7 +27,7 @@
 class RiskLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Admin.OrdersCustomers.Feature';
+    protected $domain = 'Admin.Orderscustomers.Feature';
 
     protected $keys = array('id_risk');
 
@@ -37,10 +37,10 @@ class RiskLangCore extends DataLangCore
     {
         $this->fieldNames = array(
             'name' => array(
-                md5('None') => $this->translator->trans('None', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
-                md5('Low') => $this->translator->trans('Low', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
-                md5('Medium') => $this->translator->trans('Medium', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
-                md5('High') => $this->translator->trans('High', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                md5('None') => $this->translator->trans('None', array(), 'Admin.Orderscustomers.Feature', $this->locale),
+                md5('Low') => $this->translator->trans('Low', array(), 'Admin.Orderscustomers.Feature', $this->locale),
+                md5('Medium') => $this->translator->trans('Medium', array(), 'Admin.Orderscustomers.Feature', $this->locale),
+                md5('High') => $this->translator->trans('High', array(), 'Admin.Orderscustomers.Feature', $this->locale),
             ),
         );
     }

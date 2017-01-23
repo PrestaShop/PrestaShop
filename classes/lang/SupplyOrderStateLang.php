@@ -27,7 +27,7 @@
 class SupplyOrderStateLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
-    protected $domain = 'Admin.OrdersCustomers.Feature';
+    protected $domain = 'Admin.Orderscustomers.Feature';
 
     protected $keys = array('id_supply_order_state');
 
@@ -38,22 +38,22 @@ class SupplyOrderStateLangCore extends DataLangCore
         $this->fieldNames = array(
             'name' => array(
                 md5('1 - Creation in progress')
-                    => $this->translator->trans('1 - Creation in progress', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('1 - Creation in progress', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('2 - Order validated')
-                    => $this->translator->trans('2 - Order validated', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('2 - Order validated', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('3 - Pending receipt')
-                    => $this->translator->trans('3 - Pending receipt', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('3 - Pending receipt', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('4 - Order received in part')
-                    => $this->translator->trans('4 - Order received in part', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('4 - Order received in part', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('5 - Order received completely')
-                    => $this->translator->trans('5 - Order received completely', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('5 - Order received completely', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
                 md5('6 - Order canceled')
-                    => $this->translator->trans('6 - Order canceled', array(), 'Admin.OrdersCustomers.Feature', $this->locale),
+                    => $this->translator->trans('6 - Order canceled', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
             ),
         );

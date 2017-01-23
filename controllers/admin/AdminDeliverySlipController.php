@@ -35,21 +35,21 @@ class AdminDeliverySlipControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Delivery slip options', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' =>    $this->trans('Delivery slip options', array(), 'Admin.Orderscustomers.Feature'),
                 'fields' =>    array(
                     'PS_DELIVERY_PREFIX' => array(
-                        'title' => $this->trans('Delivery prefix', array(), 'Admin.OrdersCustomers.Feature'),
+                        'title' => $this->trans('Delivery prefix', array(), 'Admin.Orderscustomers.Feature'),
                         'desc' => $this->trans('Prefix used for delivery slips.', array(), 'Admin.OrdersCustomers.Help'),
                         'type' => 'textLang'
                     ),
                     'PS_DELIVERY_NUMBER' => array(
-                        'title' => $this->trans('Delivery number', array(), 'Admin.OrdersCustomers.Feature'),
+                        'title' => $this->trans('Delivery number', array(), 'Admin.Orderscustomers.Feature'),
                         'desc' => $this->trans('The next delivery slip will begin with this number and then increase with each additional slip.', array(), 'Admin.OrdersCustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'text'
                     ),
                     'PS_PDF_IMG_DELIVERY' => array(
-                        'title' => $this->trans('Enable product image', array(), 'Admin.OrdersCustomers.Feature'),
+                        'title' => $this->trans('Enable product image', array(), 'Admin.Orderscustomers.Feature'),
                         'hint' => $this->trans('Adds an image before product name on Delivery-slip', array(), 'Admin.OrdersCustomers.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
@@ -65,7 +65,7 @@ class AdminDeliverySlipControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Print PDF', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Print PDF', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-print'
             ),
             'input' => array(
@@ -87,7 +87,7 @@ class AdminDeliverySlipControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->trans('Generate PDF', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Generate PDF', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-download-alt'
             )
         );
