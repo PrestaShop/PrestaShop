@@ -843,17 +843,24 @@ var form = (function() {
       },
       success: function(response) {
         showSuccessMessage(translate_javascripts['Form update success']);
-        if (redirect) {
-          if (target) {
-            if (target == '_blank') {
-              openBlank.location = redirect;
-            } else {
-              window.open(redirect, target);
-            }
-          } else {
-            window.location = redirect;
-          }
+        
+        if (!redirect) {
+          return;
         }
+
+        if (false === target) {
+          window.location = redirect;
+
+          return;
+        }
+
+        if ('_blank' !== target) {
+          window.open(redirect, target);
+
+          return;
+        }
+
+        openBlank.location = redirect;
       },
       error: function(response) {
         showErrorMessage(translate_javascripts['Form update errors']);
