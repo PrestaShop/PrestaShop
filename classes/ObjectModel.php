@@ -1030,9 +1030,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields))) {
                 if (Tools::isEmpty($value)) {
                     if ($human_errors) {
-                        return sprintf(Tools::displayError('The %s field is required.'), $this->displayFieldName($field, get_class($this)));
+                        return $this->trans('The %s field is required.', array($this->displayFieldName($field, get_class($this))), 'Admin.Notifications.Error');
                     } else {
-                        return 'Property '.get_class($this).'->'.$field.' is empty';
+                        return $this->trans('Property %s is empty.', array(get_class($this).'->'.$field), 'Admin.Notifications.Error');
                     }
                 }
             }
@@ -1046,7 +1046,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Check field values
         if (!in_array('values', $skip) && !empty($data['values']) && is_array($data['values']) && !in_array($value, $data['values'])) {
-            return 'Property '.get_class($this).'->'.$field.' has bad value (allowed values are: '.implode(', ', $data['values']).')';
+            return $this->trans('Property %1$s has a bad value (allowed values are: %2$s).', array(get_class($this).'->'.$field, implode(', ', $data['values'])), 'Admin.Notifications.Error');
         }
 
         // Check field size
@@ -1061,12 +1061,20 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 if ($human_errors) {
                     if (isset($data['lang']) && $data['lang']) {
                         $language = new Language((int)$id_lang);
-                        return sprintf(Tools::displayError('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).'), $this->displayFieldName($field, get_class($this)), $language->name, $size['max']);
+                        return $this->trans('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).', array($this->displayFieldName($field, get_class($this)), $language->name, $size['max']), 'Admin.Notifications.Error');
                     } else {
-                        return sprintf(Tools::displayError('The %1$s field is too long (%2$d chars max).'), $this->displayFieldName($field, get_class($this)), $size['max']);
+                        return $this->trans('The %1$s field is too long (%2$d chars max).', array($this->displayFieldName($field, get_class($this)), $size['max']), 'Admin.Notifications.Error');
                     }
                 } else {
-                    return 'Property '.get_class($this).'->'.$field.' length ('.$length.') must be between '.$size['min'].' and '.$size['max'];
+                    return $this->trans('Property %1$s length (%2$d) must be between %3$d and %4$d',
+                        array(
+                            get_class($this).'->'.$field,
+                            $length,
+                            $size['min'],
+                            $size['max'],
+                        ),
+                        'Admin.Notifications.Error'
+                    );
                 }
             }
         }
@@ -1074,7 +1082,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         // Check field validator
         if (!in_array('validate', $skip) && !empty($data['validate'])) {
             if (!method_exists('Validate', $data['validate'])) {
-                throw new PrestaShopException('Validation function not found. '.$data['validate']);
+                throw new PrestaShopException(
+                    $this->trans(
+                        'Validation function not found: %s.',
+                        array($data['validate']),
+                        'Admin.Notifications.Error'
+                    )
+                );
             }
 
             if (!empty($value)) {
@@ -1090,9 +1104,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 }
                 if (!$res) {
                     if ($human_errors) {
-                        return sprintf(Tools::displayError('The %s field is invalid.'), $this->displayFieldName($field, get_class($this)));
+                        return $this->trans('The %s field is invalid.', array($this->displayFieldName($field, get_class($this))), 'Admin.Notifications.Error');
                     } else {
-                        return 'Property '.get_class($this).'->'.$field.' is not valid';
+                        return $this->trans('Property %s is not valid', array(get_class($this).'->'.$field), 'Admin.Notifications.Error');
                     }
                 }
             }
@@ -1149,16 +1163,16 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             // Checking for required fields
             if (isset($data['required']) && $data['required'] && empty($value) && $value !== '0') {
                 if (!$this->id || $field != 'passwd') {
-                    $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is required.');
+                    $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.$this->trans('is required.', array(), 'Admin.Notifications.Error');
                 }
             }
 
             // Checking for maximum fields sizes
             if (isset($data['size']) && !empty($value) && Tools::strlen($value) > $data['size']) {
-                $errors[$field] = sprintf(
-                    Tools::displayError('%1$s is too long. Maximum length: %2$d'),
-                    self::displayFieldName($field, get_class($this), $htmlentities),
-                    $data['size']
+                $errors[$field] = $this->trans(
+                    '%1$s is too long. Maximum length: %2$d',
+                    array(self::displayFieldName($field, get_class($this), $htmlentities), $data['size']),
+                    'Admin.Notifications.Error'
                 );
             }
 
@@ -1168,7 +1182,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 if (isset($data['validate'])) {
                     if (!call_user_func('Validate::'.$data['validate'],$value) && (!empty($value) || $data['required'])) {
                         $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).
-                            '</b> '.Tools::displayError('is invalid.');
+                            '</b> '.$this->trans('is invalid.', array(), 'Admin.Notifications.Error');
                     }
                 } else {
                     if (isset($data['copy_post']) && !$data['copy_post']) {
@@ -1361,7 +1375,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $value = Tools::getValue($field);
 
             if (empty($value)) {
-                $errors[$field] = sprintf(Tools::displayError('The field %s is required.'), self::displayFieldName($field, get_class($this), $htmlentities));
+                $errors[$field] = $this->trans('The field %s is required.', array(self::displayFieldName($field, get_class($this), $htmlentities)), 'Admin.Notifications.Error');
             }
         }
 
