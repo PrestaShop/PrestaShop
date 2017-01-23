@@ -145,17 +145,17 @@ class AdminSlipControllerCore extends AdminController
     {
         if (Tools::getValue('submitAddorder_slip')) {
             if (!Validate::isDate(Tools::getValue('date_from'))) {
-                $this->errors[] = $this->trans('Invalid "From" date', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('Invalid "From" date', array(), 'Admin.Orderscustomers.Notification');
             }
             if (!Validate::isDate(Tools::getValue('date_to'))) {
-                $this->errors[] = $this->trans('Invalid "To" date', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('Invalid "To" date', array(), 'Admin.Orderscustomers.Notification');
             }
             if (!count($this->errors)) {
                 $order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
                 if (count($order_slips)) {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateOrderSlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
                 }
-                $this->errors[] = $this->trans('No order slips were found for this period.', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('No order slips were found for this period.', array(), 'Admin.Orderscustomers.Notification');
             }
         } else {
             return parent::postProcess();

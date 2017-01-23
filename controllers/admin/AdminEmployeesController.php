@@ -430,7 +430,7 @@ class AdminEmployeesControllerCore extends AdminController
         $email = $this->getFieldValue($obj, 'email');
         if (Validate::isEmail($email) && Employee::employeeExists($email) && (!Tools::getValue('id_employee')
             || ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email)) {
-            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.OrdersCustomers.Notification').' '.$email;
+            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.Orderscustomers.Notification').' '.$email;
         }
     }
 

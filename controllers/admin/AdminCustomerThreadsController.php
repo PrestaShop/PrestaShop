@@ -479,7 +479,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         self::$currentIndex.'&id_customer_thread='.(int)$id_customer_thread.'&viewcustomer_thread&token='.Tools::getValue('token')
                     );
                 } else {
-                    $this->errors[] = $this->trans('An error occurred. Your message was not sent. Please contact your system administrator.', array(), 'Admin.OrdersCustomers.Notification');
+                    $this->errors[] = $this->trans('An error occurred. Your message was not sent. Please contact your system administrator.', array(), 'Admin.Orderscustomers.Notification');
                 }
             }
         }
@@ -1076,7 +1076,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         if (!isset($overview->from)
                             || (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
-                            $message_errors[] = $this->trans('Cannot create message in a new thread.', array(), 'Admin.OrdersCustomers.Notification');
+                            $message_errors[] = $this->trans('Cannot create message in a new thread.', array(), 'Admin.Orderscustomers.Notification');
                             continue;
                         }
 
@@ -1141,7 +1141,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
                         if (!$message || strlen($message)==0) {
-                            $message_errors[] = $this->trans('The message body is empty, cannot import it.', array(), 'Admin.OrdersCustomers.Notification');
+                            $message_errors[] = $this->trans('The message body is empty, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
                             $fetch_succeed = false;
                             continue;
                         }
@@ -1154,7 +1154,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                                 $cm->message = $message;
                                 $cm->add();
                             } catch (PrestaShopException $pse) {
-                                $message_errors[] = $this->trans('The message content is not valid, cannot import it.', array(), 'Admin.OrdersCustomers.Notification');
+                                $message_errors[] = $this->trans('The message content is not valid, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
                                 $fetch_succeed = false;
                                 continue;
                             }

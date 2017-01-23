@@ -221,16 +221,16 @@ class AdminReturnControllerCore extends AdminController
                             if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int)(Tools::getValue('id_customization', 0)))) {
                                 Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
                             } else {
-                                $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', array(), 'Admin.OrdersCustomers.Notification');
+                                $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', array(), 'Admin.Orderscustomers.Notification');
                             }
                         } else {
-                            $this->errors[] = $this->trans('You need at least one product.', array(), 'Admin.OrdersCustomers.Notification');
+                            $this->errors[] = $this->trans('You need at least one product.', array(), 'Admin.Orderscustomers.Notification');
                         }
                     } else {
-                        $this->errors[] = $this->trans('The order return is invalid.', array(), 'Admin.OrdersCustomers.Notification');
+                        $this->errors[] = $this->trans('The order return is invalid.', array(), 'Admin.Orderscustomers.Notification');
                     }
                 } else {
-                    $this->errors[] = $this->trans('The order return content is invalid.', array(), 'Admin.OrdersCustomers.Notification');
+                    $this->errors[] = $this->trans('The order return content is invalid.', array(), 'Admin.Orderscustomers.Notification');
                 }
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
@@ -278,7 +278,7 @@ class AdminReturnControllerCore extends AdminController
                         }
                     }
                 } else {
-                    $this->errors[] = $this->trans('No order return ID has been specified.', array(), 'Admin.OrdersCustomers.Notification');
+                    $this->errors[] = $this->trans('No order return ID has been specified.', array(), 'Admin.Orderscustomers.Notification');
                 }
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');

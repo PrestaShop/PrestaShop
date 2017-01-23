@@ -203,7 +203,7 @@ class AdminCustomersControllerCore extends AdminController
         }
 
         if (!$this->can_add_customer && !$this->display) {
-            $this->informations[] = $this->trans('You have to select a shop if you want to create a customer.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->informations[] = $this->trans('You have to select a shop if you want to create a customer.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         parent::initContent();
@@ -723,7 +723,7 @@ class AdminCustomersControllerCore extends AdminController
         $orders_ko = array();
         foreach ($orders as $order) {
             if (!isset($order['order_state'])) {
-                $order['order_state'] = $this->trans('There is no status defined for this order.', array(), 'Admin.OrdersCustomers.Notification');
+                $order['order_state'] = $this->trans('There is no status defined for this order.', array(), 'Admin.Orderscustomers.Notification');
             }
 
             if ($order['valid']) {
@@ -791,7 +791,7 @@ class AdminCustomersControllerCore extends AdminController
         }
         $total_connections = count($connections);
         for ($i = 0; $i < $total_connections; $i++) {
-            $connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->trans('Direct link', array(), 'Admin.OrdersCustomers.Notification');
+            $connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->trans('Direct link', array(), 'Admin.Orderscustomers.Notification');
         }
 
         $referrers = Referrer::getReferrers($customer->id);
@@ -864,7 +864,7 @@ class AdminCustomersControllerCore extends AdminController
         } elseif ($this->delete_mode == 'deleted') {
             $this->deleted = true;
         } else {
-            $this->errors[] = $this->trans('Unknown delete mode:', array(), 'Admin.OrdersCustomers.Notification').' '.$this->deleted;
+            $this->errors[] = $this->trans('Unknown delete mode:', array(), 'Admin.Orderscustomers.Notification').' '.$this->deleted;
             return;
         }
     }
@@ -887,12 +887,12 @@ class AdminCustomersControllerCore extends AdminController
             $customer->getByEmail($customer_email);
         }
         if ($customer->id) {
-            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.OrdersCustomers.Notification').' '.$customer_email;
+            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.Orderscustomers.Notification').' '.$customer_email;
             $this->display = 'edit';
             return $customer;
         } elseif (trim(Tools::getValue('passwd')) == '') {
             $this->validateRules();
-            $this->errors[] = $this->trans('Password cannot be empty.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('Password cannot be empty.', array(), 'Admin.Orderscustomers.Notification');
             $this->display = 'edit';
         } elseif ($customer = parent::processAdd()) {
             $this->context->smarty->assign('new_customer', $customer);
@@ -913,14 +913,14 @@ class AdminCustomersControllerCore extends AdminController
                     $customer->getByEmail($customer_email);
                 }
                 if (($customer->id) && ($customer->id != (int)$this->object->id)) {
-                    $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.OrdersCustomers.Notification').' '.$customer_email;
+                    $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.Orderscustomers.Notification').' '.$customer_email;
                 }
             }
 
             return parent::processUpdate();
         } else {
-            $this->errors[] = $this->trans('An error occurred while loading the object.', array(), 'Admin.OrdersCustomers.Notification').'
-				<b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while loading the object.', array(), 'Admin.Orderscustomers.Notification').'
+				<b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Orderscustomers.Notification');
         }
     }
 
@@ -928,7 +928,7 @@ class AdminCustomersControllerCore extends AdminController
     {
         // Check that default group is selected
         if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox'))) {
-            $this->errors[] = $this->trans('A default customer group must be selected in group box.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('A default customer group must be selected in group box.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         // Check the requires fields which are settings in the BO
@@ -956,10 +956,10 @@ class AdminCustomersControllerCore extends AdminController
     {
         $customer = new Customer((int)Tools::getValue('id_customer'));
         if (!Validate::isLoadedObject($customer)) {
-            $this->errors[] = $this->trans('This customer does not exist.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('This customer does not exist.', array(), 'Admin.Orderscustomers.Notification');
         }
         if (Customer::customerExists($customer->email)) {
-            $this->errors[] = $this->trans('This customer already exists as a non-guest.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('This customer already exists as a non-guest.', array(), 'Admin.Orderscustomers.Notification');
         } elseif ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id))) {
             if ($id_order = (int)Tools::getValue('id_order')) {
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders').'&id_order='.$id_order.'&vieworder&conf=3');
@@ -967,7 +967,7 @@ class AdminCustomersControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&viewcustomer&conf=3&token='.$this->token);
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
     }
 
@@ -978,11 +978,11 @@ class AdminCustomersControllerCore extends AdminController
     {
         $customer = new Customer($this->id_object);
         if (!Validate::isLoadedObject($customer)) {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
         $customer->newsletter = $customer->newsletter ? 0 : 1;
         if (!$customer->update()) {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
     }
@@ -994,11 +994,11 @@ class AdminCustomersControllerCore extends AdminController
     {
         $customer = new Customer($this->id_object);
         if (!Validate::isLoadedObject($customer)) {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
         $customer->optin = $customer->optin ? 0 : 1;
         if (!$customer->update()) {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
     }

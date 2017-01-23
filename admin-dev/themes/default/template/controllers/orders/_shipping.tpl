@@ -98,7 +98,7 @@
 						<div class="container-fluid">
 							{if !$recalculate_shipping_cost}
 							<div class="alert alert-info">
-							{l s='Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings' d='Admin.OrdersCustomers.Notification'}
+							{l s='Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings' d='Admin.Orderscustomers.Notification'}
 							</div>
 							{/if}
 							<div class="form-group">

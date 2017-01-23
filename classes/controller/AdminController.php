@@ -447,7 +447,7 @@ class AdminControllerCore extends Controller
             7 => $this->trans('The image was successfully deleted.', array(), 'Admin.Notifications.Success'),
             8 => $this->trans('The module was successfully downloaded.', array(), 'Admin.Modules.Notification'),
             9 => $this->trans('The thumbnails were successfully regenerated.', array(), 'Admin.Notifications.Success'),
-            10 => $this->trans('The message was successfully sent to the customer.', array(), 'Admin.OrdersCustomers.Notification'),
+            10 => $this->trans('The message was successfully sent to the customer.', array(), 'Admin.Orderscustomers.Notification'),
             11 => $this->trans('Comment successfully added.', array(), 'Admin.Notifications.Success'),
             12 => $this->trans('Module(s) installed successfully.', array(), 'Admin.Modules.Notification'),
             13 => $this->trans('Module(s) uninstalled successfully.', array(), 'Admin.Modules.Notification'),
@@ -467,7 +467,7 @@ class AdminControllerCore extends Controller
             27 => $this->trans('The image\'s shop association has been modified.', array(), 'Admin.Notifications.Success'),
             28 => $this->trans('A zone has been assigned to the selection successfully.', array(), 'Admin.Notifications.Success'),
             29 => $this->trans('Successful upgrade.', array(), 'Admin.Notifications.Success'),
-            30 => $this->trans('A partial refund was successfully created.', array(), 'Admin.OrdersCustomers.Notification'),
+            30 => $this->trans('A partial refund was successfully created.', array(), 'Admin.Orderscustomers.Notification'),
             31 => $this->trans('The discount was successfully generated.', array(), 'Admin.Catalog.Notification'),
             32 => $this->trans('Successfully signed in to PrestaShop Addons.', array(), 'Admin.Modules.Notification'),
         );
@@ -2084,7 +2084,8 @@ class AdminControllerCore extends Controller
         ));
     }
 
-    public function initToolbarFlags() {
+    public function initToolbarFlags()
+    {
         $this->getLanguages();
 
         $this->initToolbar();
@@ -3101,8 +3102,7 @@ class AdminControllerCore extends Controller
         $start = 0,
         $limit = null,
         $id_lang_shop = false
-    )
-    {
+    ) {
         Hook::exec('action'.$this->controller_name.'ListingFieldsModifier', array(
             'select' => &$this->_select,
             'join' => &$this->_join,

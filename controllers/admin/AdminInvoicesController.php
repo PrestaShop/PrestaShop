@@ -255,11 +255,11 @@ class AdminInvoicesControllerCore extends AdminController
     {
         if (Tools::isSubmit('submitAddinvoice_date')) {
             if (!Validate::isDate(Tools::getValue('date_from'))) {
-                $this->errors[] = $this->trans('Invalid "From" date', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('Invalid "From" date', array(), 'Admin.Orderscustomers.Notification');
             }
 
             if (!Validate::isDate(Tools::getValue('date_to'))) {
-                $this->errors[] = $this->trans('Invalid "To" date', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('Invalid "To" date', array(), 'Admin.Orderscustomers.Notification');
             }
 
             if (!count($this->errors)) {
@@ -267,11 +267,11 @@ class AdminInvoicesControllerCore extends AdminController
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicesPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
                 }
 
-                $this->errors[] = $this->trans('No invoice has been found for this period.', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('No invoice has been found for this period.', array(), 'Admin.Orderscustomers.Notification');
             }
         } elseif (Tools::isSubmit('submitAddinvoice_status')) {
             if (!is_array($status_array = Tools::getValue('id_order_state')) || !count($status_array)) {
-                $this->errors[] = $this->trans('You must select at least one order status.', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('You must select at least one order status.', array(), 'Admin.Orderscustomers.Notification');
             } else {
                 foreach ($status_array as $id_order_state) {
                     if (count(OrderInvoice::getByStatus((int)$id_order_state))) {
@@ -279,7 +279,7 @@ class AdminInvoicesControllerCore extends AdminController
                     }
                 }
 
-                $this->errors[] = $this->trans('No invoice has been found for this status.', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('No invoice has been found for this status.', array(), 'Admin.Orderscustomers.Notification');
             }
         } else {
             parent::postProcess();
@@ -289,7 +289,7 @@ class AdminInvoicesControllerCore extends AdminController
     public function beforeUpdateOptions()
     {
         if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 && (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber()) {
-            $this->errors[] = $this->trans('Invalid invoice number.', array(), 'Admin.OrdersCustomers.Notification').Order::getLastInvoiceNumber().')';
+            $this->errors[] = $this->trans('Invalid invoice number.', array(), 'Admin.Orderscustomers.Notification').Order::getLastInvoiceNumber().')';
         }
     }
 

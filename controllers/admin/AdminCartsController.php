@@ -560,14 +560,14 @@ class AdminCartsControllerCore extends AdminController
         if ($this->access('edit')) {
             $errors = array();
             if (!$id_order = Tools::getValue('id_order')) {
-                $errors[] = $this->trans('Invalid order', array(), 'Admin.OrdersCustomers.Notification');
+                $errors[] = $this->trans('Invalid order', array(), 'Admin.Orderscustomers.Notification');
             }
             $cart = Cart::getCartByOrderId($id_order);
             $new_cart = $cart->duplicate();
             if (!$new_cart || !Validate::isLoadedObject($new_cart['cart'])) {
-                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.OrdersCustomers.Notification');
+                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.Orderscustomers.Notification');
             } elseif (!$new_cart['success']) {
-                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.OrdersCustomers.Notification');
+                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.Orderscustomers.Notification');
             } else {
                 $this->context->cart = $new_cart['cart'];
                 echo json_encode($this->ajaxReturnVars());
