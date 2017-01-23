@@ -248,7 +248,7 @@ class AdminReferrersControllerCore extends AdminController
                     array(
                         '%modulename%' => Module::getModuleName('trackingfront'),
                     ),
-                    'Admin.ShopParameters.Notification'
+                    'Admin.Shopparameters.Notification'
                 ),
             );
         }
@@ -275,7 +275,7 @@ class AdminReferrersControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Percent fee', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'percent_fee',
-                    'desc' => $this->trans('Percent of the sales.', array(), 'Admin.ShopParameters.Notification')
+                    'desc' => $this->trans('Percent of the sales.', array(), 'Admin.Shopparameters.Notification')
                 )
             ),
             'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))

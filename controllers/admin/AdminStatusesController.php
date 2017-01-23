@@ -599,7 +599,7 @@ class AdminStatusesControllerCore extends AdminController
         } elseif (Tools::isSubmit('delete'.$this->table)) {
             $order_state = new OrderState(Tools::getValue('id_order_state'), $this->context->language->id);
             if (!$order_state->isRemovable()) {
-                $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', array(), 'Admin.ShopParameters.Notification');
+                $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', array(), 'Admin.Shopparameters.Notification');
             } else {
                 return parent::postProcess();
             }
@@ -607,7 +607,7 @@ class AdminStatusesControllerCore extends AdminController
             foreach (Tools::getValue($this->table.'Box') as $selection) {
                 $order_state = new OrderState((int)$selection, $this->context->language->id);
                 if (!$order_state->isRemovable()) {
-                    $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', array(), 'Admin.ShopParameters.Notification');
+                    $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', array(), 'Admin.Shopparameters.Notification');
                     break;
                 }
             }

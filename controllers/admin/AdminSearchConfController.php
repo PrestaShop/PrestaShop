@@ -312,14 +312,14 @@ class AdminSearchConfControllerCore extends AdminController
         $string = strval(Tools::getValue('alias'));
         $aliases = explode(',', $string);
         if (empty($search) || empty($string)) {
-            $this->errors[] = $this->trans('Aliases and results are both required.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('Aliases and results are both required.', array(), 'Admin.Shopparameters.Notification');
         }
         if (!Validate::isValidSearch($search)) {
-            $this->errors[] = $search.' '.$this->trans('Is not a valid result', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $search.' '.$this->trans('Is not a valid result', array(), 'Admin.Shopparameters.Notification');
         }
         foreach ($aliases as $alias) {
             if (!Validate::isValidSearch($alias)) {
-                $this->errors[] = $alias.' '.$this->trans('Is not a valid alias', array(), 'Admin.ShopParameters.Notification');
+                $this->errors[] = $alias.' '.$this->trans('Is not a valid alias', array(), 'Admin.Shopparameters.Notification');
             }
         }
 
@@ -331,7 +331,7 @@ class AdminSearchConfControllerCore extends AdminController
         }
 
         if (empty($this->errors)) {
-            $this->confirmations[] = $this->trans('Creation successful', array(), 'Admin.ShopParameters.Notification');
+            $this->confirmations[] = $this->trans('Creation successful', array(), 'Admin.Shopparameters.Notification');
         }
     }
 }

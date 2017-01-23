@@ -451,7 +451,7 @@ class AdminGroupsControllerCore extends AdminController
     public function processSave()
     {
         if (!$this->validateDiscount(Tools::getValue('reduction'))) {
-            $this->errors[] = $this->trans('The discount value is incorrect (must be a percentage).', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('The discount value is incorrect (must be a percentage).', array(), 'Admin.Shopparameters.Notification');
         } else {
             $this->updateCategoryReduction();
             $object = parent::processSave();
@@ -476,10 +476,10 @@ class AdminGroupsControllerCore extends AdminController
 
         $result = array();
         if (!Validate::isUnsignedId($id_category)) {
-            $result['errors'][] = $this->trans('Wrong category ID.', array(), 'Admin.ShopParameters.Notification');
+            $result['errors'][] = $this->trans('Wrong category ID.', array(), 'Admin.Shopparameters.Notification');
             $result['hasError'] = true;
         } elseif (!$this->validateDiscount($category_reduction)) {
-            $result['errors'][] = $this->trans('The discount value is incorrect (must be a percentage).', array(), 'Admin.ShopParameters.Notification');
+            $result['errors'][] = $this->trans('The discount value is incorrect (must be a percentage).', array(), 'Admin.Shopparameters.Notification');
             $result['hasError'] = true;
         } else {
             $result['id_category'] = (int)$id_category;
@@ -529,7 +529,7 @@ class AdminGroupsControllerCore extends AdminController
             }
             foreach ($category_reduction as $cat => $reduction) {
                 if (!Validate::isUnsignedId($cat) || !$this->validateDiscount($reduction)) {
-                    $this->errors[] = $this->trans('The discount value is incorrect.', array(), 'Admin.ShopParameters.Notification');
+                    $this->errors[] = $this->trans('The discount value is incorrect.', array(), 'Admin.Shopparameters.Notification');
                 } else {
                     $category = new Category((int)$cat);
                     $category->addGroupsIfNoExist((int)Tools::getValue('id_group'));
@@ -538,7 +538,7 @@ class AdminGroupsControllerCore extends AdminController
                     $group_reduction->reduction = (float)($reduction / 100);
                     $group_reduction->id_category = (int)$cat;
                     if (!$group_reduction->save()) {
-                        $this->errors[] = $this->trans('You cannot save group reductions.', array(), 'Admin.ShopParameters.Notification');
+                        $this->errors[] = $this->trans('You cannot save group reductions.', array(), 'Admin.Shopparameters.Notification');
                     }
                 }
             }
@@ -552,11 +552,11 @@ class AdminGroupsControllerCore extends AdminController
     {
         $group = new Group($this->id_object);
         if (!Validate::isLoadedObject($group)) {
-            $this->errors[] = $this->trans('An error occurred while updating this group.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating this group.', array(), 'Admin.Shopparameters.Notification');
         }
         $update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'group` SET show_prices = '.($group->show_prices ? 0 : 1).' WHERE `id_group` = '.(int)$group->id);
         if (!$update) {
-            $this->errors[] = $this->trans('An error occurred while updating this group.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating this group.', array(), 'Admin.Shopparameters.Notification');
         }
         Tools::clearSmartyCache();
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);

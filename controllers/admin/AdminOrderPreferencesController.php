@@ -179,7 +179,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
         $sql = 'SELECT `id_cms` FROM `'._DB_PREFIX_.'cms`
 				WHERE id_cms = '.(int)Tools::getValue('PS_CONDITIONS_CMS_ID');
         if (Tools::getValue('PS_CONDITIONS') && (Tools::getValue('PS_CONDITIONS_CMS_ID') == 0 || !Db::getInstance()->getValue($sql))) {
-            $this->errors[] = $this->trans('Assign a valid page if you want it to be read.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('Assign a valid page if you want it to be read.', array(), 'Admin.Shopparameters.Notification');
         }
     }
 }

@@ -122,21 +122,21 @@ class AdminMetaControllerCore extends AdminController
                     'type' => 'bool',
                 );
             } else {
-                $url_description = $this->trans('Before you can use this tool, you need to:', array(), 'Admin.ShopParameters.Notification');
-                $url_description .= $this->trans('1) Create a blank .htaccess file in your root directory.', array(), 'Admin.ShopParameters.Notification');
-                $url_description .= $this->trans('2) Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.ShopParameters.Notification');
+                $url_description = $this->trans('Before you can use this tool, you need to:', array(), 'Admin.Shopparameters.Notification');
+                $url_description .= $this->trans('1) Create a blank .htaccess file in your root directory.', array(), 'Admin.Shopparameters.Notification');
+                $url_description .= $this->trans('2) Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
             }
         }
 
         // Options to generate robot.txt
-        $robots_description = $this->trans('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).', array(), 'Admin.ShopParameters.Notification');
+        $robots_description = $this->trans('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).', array(), 'Admin.Shopparameters.Notification');
         if ($this->checkConfiguration($this->rb_file)) {
-            $robots_description .= $this->trans('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)', array(), 'Admin.ShopParameters.Notification');
+            $robots_description .= $this->trans('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)', array(), 'Admin.Shopparameters.Notification');
             $robots_submit = array('name' => 'submitRobots', 'title' => $this->trans('Generate robots.txt file', array(), 'Admin.Shopparameters.Feature'));
         } else {
-            $robots_description .= $this->trans('Before you can use this tool, you need to:', array(), 'Admin.ShopParameters.Notification');
-            $robots_description .= $this->trans('1) Create a blank robots.txt file in your root directory.', array(), 'Admin.ShopParameters.Notification');
-            $robots_description .= $this->trans('2) Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.ShopParameters.Notification');
+            $robots_description .= $this->trans('Before you can use this tool, you need to:', array(), 'Admin.Shopparameters.Notification');
+            $robots_description .= $this->trans('1) Create a blank robots.txt file in your root directory.', array(), 'Admin.Shopparameters.Notification');
+            $robots_description .= $this->trans('2) Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
         }
 
         $robots_options = array(
@@ -158,7 +158,7 @@ class AdminMetaControllerCore extends AdminController
             if (!Shop::isFeatureActive()) {
                 $this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
                 if ($this->url) {
-                    $shop_url_options['description'] = $this->trans('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.', array(), 'Admin.ShopParameters.Notification');
+                    $shop_url_options['description'] = $this->trans('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.', array(), 'Admin.Shopparameters.Notification');
                     $shop_url_options['fields'] = array(
                         'domain' => array(
                             'title' =>    $this->trans('Shop domain', array(), 'Admin.Shopparameters.Feature'),
@@ -182,7 +182,7 @@ class AdminMetaControllerCore extends AdminController
                     $shop_url_options['submit'] = array('title' => $this->trans('Save', array(), 'Admin.Actions'));
                 }
             } else {
-                $shop_url_options['description'] = $this->trans('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.', array(), 'Admin.ShopParameters.Notification');
+                $shop_url_options['description'] = $this->trans('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.', array(), 'Admin.Shopparameters.Notification');
             }
         }
 
@@ -219,7 +219,7 @@ class AdminMetaControllerCore extends AdminController
                 $this->addAllRouteFields();
             }
             $this->fields_options['routes']['title'] = $this->trans('Schema of URLs', array(), 'Admin.Shopparameters.Feature');
-            $this->fields_options['routes']['description'] = $this->trans('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.', array(), 'Admin.ShopParameters.Notification').'<br />'.$this->trans('There are several available keywords for each route listed below; note that keywords with * are required!', array(), 'Admin.ShopParameters.Notification').'<br />'.$this->trans('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.', array(), 'Admin.ShopParameters.Notification');
+            $this->fields_options['routes']['description'] = $this->trans('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.', array(), 'Admin.Shopparameters.Notification').'<br />'.$this->trans('There are several available keywords for each route listed below; note that keywords with * are required!', array(), 'Admin.Shopparameters.Notification').'<br />'.$this->trans('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.', array(), 'Admin.Shopparameters.Notification');
             $this->fields_options['routes']['submit'] = array('title' => $this->trans('Save', array(), 'Admin.Actions'));
         }
 
@@ -449,7 +449,7 @@ class AdminMetaControllerCore extends AdminController
     public function renderList()
     {
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-            $this->displayInformation($this->trans('You can only display the page list in a shop context.', array(), 'Admin.ShopParameters.Notification'));
+            $this->displayInformation($this->trans('You can only display the page list in a shop context.', array(), 'Admin.Shopparameters.Notification'));
         } else {
             return parent::renderList();
         }
@@ -509,9 +509,9 @@ class AdminMetaControllerCore extends AdminController
         } else {
             Configuration::updateValue('PS_REWRITING_SETTINGS', 0);
             // Message copied/pasted from the information tip
-            $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.ShopParameters.Notification');
-            $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.ShopParameters.Notification');
-            $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.ShopParameters.Notification');
+            $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.Shopparameters.Notification');
+            $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Shopparameters.Notification');
+            $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
             $this->errors[] = $message;
         }
     }

@@ -311,14 +311,14 @@ class AdminShopControllerCore extends AdminController
         $categories = Tools::getValue('categoryBox');
 
         if (!is_array($categories)) {
-            $this->errors[] = $this->trans('Please create some sub-categories for this root category.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('Please create some sub-categories for this root category.', array(), 'Admin.Shopparameters.Notification');
             return false;
         }
 
         array_unshift($categories, Configuration::get('PS_ROOT_CATEGORY'));
 
         if (!Category::updateFromShop($categories, $new_shop->id)) {
-            $this->errors[] = $this->trans('You need to select at least the root category.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('You need to select at least the root category.', array(), 'Admin.Shopparameters.Notification');
         }
         if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data)) {
             $new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
@@ -397,9 +397,9 @@ class AdminShopControllerCore extends AdminController
             }
 
             if ($this->display == 'add') {
-                $group_desc = $this->trans('Warning: You won\'t be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.', array(), 'Admin.ShopParameters.Notification');
+                $group_desc = $this->trans('Warning: You won\'t be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.', array(), 'Admin.Shopparameters.Notification');
             } else {
-                $group_desc = $this->trans('You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.', array(), 'Admin.ShopParameters.Notification');
+                $group_desc = $this->trans('You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.', array(), 'Admin.Shopparameters.Notification');
             }
 
             $this->fields_form['input'][] = array(
