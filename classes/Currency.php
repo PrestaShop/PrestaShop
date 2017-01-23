@@ -523,14 +523,14 @@ class CurrencyCore extends ObjectModel
     {
         // Parse
         if (!$feed = Tools::simplexml_load_file(_PS_CURRENCY_FEED_URL_)) {
-            return Tools::displayError('Cannot parse feed.');
+            return Context::getContext()->getTranslator()->trans('Cannot parse feed.', array(), 'Admin.Notifications.Error');
         }
 
         // Default feed currency (EUR)
         $isoCodeSource = strval($feed->source['iso_code']);
 
         if (!$defaultCurrency = Currency::getDefaultCurrency()) {
-            return Tools::displayError('No default currency');
+            return Context::getContext()->getTranslator()->trans('No default currency', array(), 'Admin.Notifications.Error');
         }
 
         $currencies = Currency::getCurrencies(true, false, true);
