@@ -134,6 +134,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var String file type of image files. */
     protected $image_format = 'jpg';
 
+    /** @var PrestaShopBundle\Translation\Translator */
+    protected $translator;
+
     /**
      * @var array Contains object definition
      * @since 1.5.0.1
@@ -199,11 +202,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param int|null $id      If specified, loads and existing object from DB (optional).
      * @param int|null $id_lang Required if object is multilingual (optional).
      * @param int|null $id_shop ID shop for objects with multishop tables.
+     * @param PrestaShopBundle\Translation\Translator
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    public function __construct($id = null, $id_lang = null, $id_shop = null, $translator = null)
     {
         $class_name = get_class($this);
         if (!isset(ObjectModel::$loaded_classes[$class_name])) {
@@ -218,6 +222,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             foreach (ObjectModel::$loaded_classes[$class_name] as $key => $value) {
                 $this->{$key} = $value;
             }
+        }
+
+        if (!is_null($translator)) {
+            $this->translator = $translator;
         }
 
         if ($id_lang !== null) {
@@ -237,6 +245,19 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $entity_mapper = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get("\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper");
             $entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
+    }
+
+    protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
+    {
+        if (is_null($this->translator)) {
+            $this->translator = Context::getContext()->getTranslator();
+            if (is_null($this->translator)) {
+                return $id;
+            }
+        }
+
+        $parameters['legacy'] = 'htmlspecialchars';
+        return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
     /**
