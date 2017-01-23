@@ -204,7 +204,7 @@ abstract class ControllerCore
             if ($this->viewAccess()) {
                 $this->initContent();
             } else {
-                $this->errors[] = Tools::displayError('Access denied.');
+                $this->errors[] = $this->trans('Access denied.', array(), 'Admin.Notifications.Error');
             }
 
             if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className))) {
