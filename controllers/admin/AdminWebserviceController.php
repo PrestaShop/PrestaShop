@@ -78,10 +78,10 @@ class AdminWebserviceControllerCore extends AdminController
                     'title' =>    $this->trans('Configuration', array(), 'Admin.Global'),
                     'fields' =>    array(
                         'PS_WEBSERVICE' => array('title' => $this->trans('Enable PrestaShop\'s webservice', array(), 'Admin.Advparameters.Feature'),
-                            'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.AdvParameters.Help').
+                            'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.Advparameters.Help').
                                                 '<ol>
-													<li>'.$this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.AdvParameters.Help').'</li>
-													<li>'.$this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.AdvParameters.Help').'</li>
+													<li>'.$this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.Advparameters.Help').'</li>
+													<li>'.$this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.Advparameters.Help').'</li>
 												</ol>',
                             'cast' => 'intval',
                             'type' => 'bool'),
@@ -93,7 +93,7 @@ class AdminWebserviceControllerCore extends AdminController
         if (!defined('_PS_HOST_MODE_')) {
             $this->fields_options['general']['fields']['PS_WEBSERVICE_CGI_HOST'] = array(
                 'title' => $this->trans('Enable CGI mode for PHP', array(), 'Admin.Advparameters.Feature'),
-                'desc' => $this->trans('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.', array(), 'Admin.AdvParameters.Help'),
+                'desc' => $this->trans('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.', array(), 'Admin.Advparameters.Help'),
                 'cast' => 'intval',
                 'type' => 'bool'
             );
@@ -148,7 +148,7 @@ class AdminWebserviceControllerCore extends AdminController
                     'name' => 'description',
                     'rows' => 3,
                     'cols' => 110,
-                    'hint' => $this->trans('Quick description of the key: who it is for, what permissions it has, etc.', array(), 'Admin.AdvParameters.Help'),
+                    'hint' => $this->trans('Quick description of the key: who it is for, what permissions it has, etc.', array(), 'Admin.Advparameters.Help'),
                 ),
                 array(
                     'type' => 'switch',

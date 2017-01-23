@@ -94,7 +94,7 @@ class AdminEmailsControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_MAIL_EMAIL_MESSAGE' => array(
                         'title' => $this->trans('Send emails to', array(), 'Admin.Advparameters.Feature'),
-                        'desc' => $this->trans('Where customers send messages from the order page.', array(), 'Admin.AdvParameters.Help'),
+                        'desc' => $this->trans('Where customers send messages from the order page.', array(), 'Admin.Advparameters.Help'),
                         'validation' => 'isUnsignedId',
                         'type' => 'select',
                         'cast' => 'intval',
@@ -136,33 +136,33 @@ class AdminEmailsControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_MAIL_DOMAIN' => array(
                         'title' => $this->trans('Mail domain name', array(), 'Admin.Advparameters.Feature'),
-                        'hint' => $this->trans('Fully qualified domain name (keep this field empty if you don\'t know).', array(), 'Admin.AdvParameters.Help'),
+                        'hint' => $this->trans('Fully qualified domain name (keep this field empty if you don\'t know).', array(), 'Admin.Advparameters.Help'),
                         'empty' => true, 'validation' =>
                         'isUrl',
                         'type' => 'text',
                     ),
                     'PS_MAIL_SERVER' => array(
                         'title' => $this->trans('SMTP server', array(), 'Admin.Advparameters.Feature'),
-                        'hint' => $this->trans('IP address or server name (e.g. smtp.mydomain.com).', array(), 'Admin.AdvParameters.Help'),
+                        'hint' => $this->trans('IP address or server name (e.g. smtp.mydomain.com).', array(), 'Admin.Advparameters.Help'),
                         'validation' => 'isGenericName',
                         'type' => 'text',
                     ),
                     'PS_MAIL_USER' => array(
                         'title' => $this->trans('SMTP username', array(), 'Admin.Advparameters.Feature'),
-                        'hint' => $this->trans('Leave blank if not applicable.', array(), 'Admin.AdvParameters.Help'),
+                        'hint' => $this->trans('Leave blank if not applicable.', array(), 'Admin.Advparameters.Help'),
                         'validation' => 'isGenericName',
                         'type' => 'text',
                     ),
                     'PS_MAIL_PASSWD' => array(
                         'title' => $this->trans('SMTP password', array(), 'Admin.Advparameters.Feature'),
-                        'hint' => $this->trans('Leave blank if not applicable.', array(), 'Admin.AdvParameters.Help'),
+                        'hint' => $this->trans('Leave blank if not applicable.', array(), 'Admin.Advparameters.Help'),
                         'validation' => 'isAnything',
                         'type' => 'password',
                         'autocomplete' => false
                     ),
                     'PS_MAIL_SMTP_ENCRYPTION' => array(
                         'title' => $this->trans('Encryption'),
-                        'hint' => $this->trans('Use an encrypt protocol', array(), 'Admin.AdvParameters.Help'),
+                        'hint' => $this->trans('Use an encrypt protocol', array(), 'Admin.Advparameters.Help'),
                         'desc' => extension_loaded('openssl') ? '' : '/!\\ '.$this->trans('SSL does not seem to be available on your server.', array(), 'Admin.AdvParameters.Notification'),
                         'type' => 'select',
                         'cast' => 'strval',

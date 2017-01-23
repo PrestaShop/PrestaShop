@@ -146,19 +146,19 @@ class AdminImportControllerCore extends AdminController
                     'image_alt' => array('label' => $this->trans('Image alt texts (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
                     'shop' => array(
                         'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.Advparameters.Help'),
                     ),
                     'advanced_stock_management' => array(
                         'label' => $this->trans('Advanced Stock Management', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes)', array(), 'Admin.AdvParameters.Help')
+                        'help' => $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Help')
                     ),
                     'depends_on_stock' => array(
                         'label' => $this->trans('Depends on stock', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', array(), 'Admin.AdvParameters.Help')
+                        'help' => $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', array(), 'Admin.Advparameters.Help')
                     ),
                     'warehouse' => array(
                         'label' => $this->trans('Warehouse', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('ID of the warehouse to set as storage.', array(), 'Admin.AdvParameters.Help')
+                        'help' => $this->trans('ID of the warehouse to set as storage.', array(), 'Admin.Advparameters.Help')
                     ),
                 );
 
@@ -189,7 +189,7 @@ class AdminImportControllerCore extends AdminController
                     'parent' => array('label' => $this->trans('Parent category', array(), 'Admin.Catalog.Feature')),
                     'is_root_category' => array(
                         'label' => $this->trans('Root category (0/1)', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('A category root is where a category tree can begin. This is used with multistore.', array(), 'Admin.AdvParameters.Help')
+                        'help' => $this->trans('A category root is where a category tree can begin. This is used with multistore.', array(), 'Admin.Advparameters.Help')
                         ),
                     'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
                     'meta_title' => array('label' => $this->trans('Meta title', array(), 'Admin.Global')),
@@ -199,7 +199,7 @@ class AdminImportControllerCore extends AdminController
                     'image' => array('label' => $this->trans('Image URL', array(), 'Admin.Advparameters.Feature')),
                     'shop' => array(
                         'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.Advparameters.Help'),
                     ),
                 );
 
@@ -286,19 +286,19 @@ class AdminImportControllerCore extends AdminController
                     ),
                     'shop' => array(
                         'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.Advparameters.Help'),
                     ),
                     'advanced_stock_management' => array(
                         'label' => $this->trans('Advanced Stock Management', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes).', array(), 'Admin.AdvParameters.Help')
+                        'help' => $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes).', array(), 'Admin.Advparameters.Help')
                     ),
                     'depends_on_stock' => array(
                         'label' => $this->trans('Depends on stock', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', array(), 'Admin.AdvParameters.Help')
+                        'help' => $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', array(), 'Admin.Advparameters.Help')
                     ),
                     'warehouse' => array(
                         'label' => $this->trans('Warehouse', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('ID of the warehouse to set as storage.', array(), 'Admin.AdvParameters.Help')
+                        'help' => $this->trans('ID of the warehouse to set as storage.', array(), 'Admin.Advparameters.Help')
                     ),
                     'accessories' => array('label' => $this->trans('Accessories (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
                 );
@@ -355,7 +355,7 @@ class AdminImportControllerCore extends AdminController
                     'id_default_group' => array('label' => $this->trans('Default group ID', array(), 'Admin.Advparameters.Feature')),
                     'id_shop' => array(
                         'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.Advparameters.Help'),
                     ),
                 );
 
@@ -432,7 +432,7 @@ class AdminImportControllerCore extends AdminController
                     'image' => array('label' => $this->trans('Image URL', array(), 'Admin.Advparameters.Feature')),
                     'shop' => array(
                         'label' => $this->trans('ID / Name of group shop', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.Advparameters.Help'),
                     ),
                 );
 
@@ -490,7 +490,7 @@ class AdminImportControllerCore extends AdminController
                     'image' => array('label' => $this->trans('Image URL', array(), 'Admin.Advparameters.Feature')),
                     'shop' => array(
                         'label' => $this->trans('ID / Name of shop', array(), 'Admin.Advparameters.Feature'),
-                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.AdvParameters.Help'),
+                        'help' => $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', array(), 'Admin.Advparameters.Help'),
                     ),
                 );
                 self::$default_values = array(
@@ -969,7 +969,7 @@ class AdminImportControllerCore extends AdminController
                 continue;
             }
             if ($k === 'price_tin') { // Special case for Product : either one or the other. Not both.
-                $fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].'<br/>&nbsp;&nbsp;<i>'.$this->trans('or', array(), 'Admin.AdvParameters.Help').'</i>&nbsp;&nbsp; '.$field['label'].'</div>';
+                $fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].'<br/>&nbsp;&nbsp;<i>'.$this->trans('or', array(), 'Admin.Advparameters.Help').'</i>&nbsp;&nbsp; '.$field['label'].'</div>';
             } else {
                 if (isset($field['help'])) {
                     $html = '&nbsp;<a href="#" class="help-tooltip" data-toggle="tooltip" title="'.$field['help'].'"><i class="icon-info-sign"></i></a>';

@@ -265,7 +265,7 @@ class AdminEmployeesControllerCore extends AdminController
                             '%url%' => '<a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>',
                             '%email%' => $obj->email,
                         ),
-                        'Admin.AdvParameters.Help'
+                        'Admin.Advparameters.Help'
                         )).'
                     </div>',
                 ),
@@ -299,7 +299,7 @@ class AdminEmployeesControllerCore extends AdminController
             $this->fields_form['input'][] = array(
                 'type' => 'password',
                 'label' => $this->trans('Password', array(), 'Admin.Global'),
-                'hint' => $this->trans('Password should be at least %num% characters long.', array('%num%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.AdvParameters.Help'),
+                'hint' => $this->trans('Password should be at least %num% characters long.', array('%num%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.Advparameters.Help'),
                 'name' => 'passwd'
                 );
         }
@@ -323,13 +323,13 @@ class AdminEmployeesControllerCore extends AdminController
                         'label' => $this->trans('No', array(), 'Admin.Global')
                     )
                 ),
-                'hint' => $this->trans('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.', array(), 'Admin.AdvParameters.Help')
+                'hint' => $this->trans('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.', array(), 'Admin.Advparameters.Help')
             ),
             array(
                 'type' => 'default_tab',
                 'label' => $this->trans('Default page', array(), 'Admin.Advparameters.Feature'),
                 'name' => 'default_tab',
-                'hint' => $this->trans('This page will be displayed just after login.', array(), 'Admin.AdvParameters.Help'),
+                'hint' => $this->trans('This page will be displayed just after login.', array(), 'Admin.Advparameters.Help'),
                 'options' => $this->tabs_list
             ),
             array(
@@ -364,7 +364,7 @@ class AdminEmployeesControllerCore extends AdminController
                         'label' => $this->trans('Disabled', array(), 'Admin.Global')
                     )
                 ),
-                'hint' => $this->trans('Allow or disallow this employee to log in to the Admin panel.', array(), 'Admin.AdvParameters.Help')
+                'hint' => $this->trans('Allow or disallow this employee to log in to the Admin panel.', array(), 'Admin.Advparameters.Help')
             );
 
             // if employee is not SuperAdmin (id_profile = 1), don't make it possible to select the admin profile
@@ -387,7 +387,7 @@ class AdminEmployeesControllerCore extends AdminController
                     'name' => 'name',
                     'default' => array(
                         'value' => '',
-                        'label' => $this->trans('-- Choose --', array(), 'Admin.AdvParameters.Help'),
+                        'label' => $this->trans('-- Choose --', array(), 'Admin.Advparameters.Help'),
                     )
                 )
             );
@@ -397,7 +397,7 @@ class AdminEmployeesControllerCore extends AdminController
                 $this->fields_form['input'][] = array(
                     'type' => 'shop',
                     'label' => $this->trans('Shop association', array(), 'Admin.Global'),
-                    'hint' => $this->trans('Select the shops the employee is allowed to access.', array(), 'Admin.AdvParameters.Help'),
+                    'hint' => $this->trans('Select the shops the employee is allowed to access.', array(), 'Admin.Advparameters.Help'),
                     'name' => 'checkBoxShopAsso',
                 );
             }

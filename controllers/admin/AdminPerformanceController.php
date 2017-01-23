@@ -69,19 +69,19 @@ class AdminPerformanceControllerCore extends AdminController
                             'id' => 'smarty_force_compile_'._PS_SMARTY_NO_COMPILE_,
                             'value' => _PS_SMARTY_NO_COMPILE_,
                             'label' => $this->trans('Never recompile template files', array(), 'Admin.Advparameters.Feature'),
-                            'hint' => $this->trans('This option should be used in a production environment.', array(), 'Admin.AdvParameters.Help')
+                            'hint' => $this->trans('This option should be used in a production environment.', array(), 'Admin.Advparameters.Help')
                         ),
                         array(
                             'id' => 'smarty_force_compile_'._PS_SMARTY_CHECK_COMPILE_,
                             'value' => _PS_SMARTY_CHECK_COMPILE_,
                             'label' => $this->trans('Recompile templates if the files have been updated', array(), 'Admin.Advparameters.Feature'),
-                            'hint' => $this->trans('Templates are recompiled when they are updated. If you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.', array(), 'Admin.AdvParameters.Help')
+                            'hint' => $this->trans('Templates are recompiled when they are updated. If you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.', array(), 'Admin.Advparameters.Help')
                         ),
                         array(
                             'id' => 'smarty_force_compile_'._PS_SMARTY_FORCE_COMPILE_,
                             'value' => _PS_SMARTY_FORCE_COMPILE_,
                             'label' => $this->trans('Force compilation', array(), 'Admin.Advparameters.Feature'),
-                            'hint' => $this->trans('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. Note: This should never be used in a production environment.', array(), 'Admin.AdvParameters.Help')
+                            'hint' => $this->trans('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. Note: This should never be used in a production environment.', array(), 'Admin.Advparameters.Help')
                         )
                     )
                 ),
@@ -121,7 +121,7 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Should be enabled if you want to avoid to store the smarty cache on NFS.', array(), 'Admin.AdvParameters.Help')
+                    'hint' => $this->trans('Should be enabled if you want to avoid to store the smarty cache on NFS.', array(), 'Admin.Advparameters.Help')
                 ),
                 array(
                     'type' => 'radio',
@@ -238,7 +238,7 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Enable or disable debug mode.', array(), 'Admin.AdvParameters.Help')
+                    'hint' => $this->trans('Enable or disable debug mode.', array(), 'Admin.Advparameters.Help')
                 ),
             ),
             'submit' => array(
@@ -258,7 +258,7 @@ class AdminPerformanceControllerCore extends AdminController
                 'title' => $this->trans('Optional features', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-puzzle-piece'
             ),
-            'description' => $this->trans('Some features can be disabled in order to improve performance.', array(), 'Admin.AdvParameters.Help'),
+            'description' => $this->trans('Some features can be disabled in order to improve performance.', array(), 'Admin.Advparameters.Help'),
             'input' => array(
                 array(
                     'type' => 'hidden',
@@ -282,8 +282,8 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Choose "No" to disable Product Combinations.', array(), 'Admin.AdvParameters.Help'),
-                    'desc' => Combination::isCurrentlyUsed() ? $this->trans('You cannot set this parameter to No when combinations are already used by some of your products', array(), 'Admin.AdvParameters.Help') : null
+                    'hint' => $this->trans('Choose "No" to disable Product Combinations.', array(), 'Admin.Advparameters.Help'),
+                    'desc' => Combination::isCurrentlyUsed() ? $this->trans('You cannot set this parameter to No when combinations are already used by some of your products', array(), 'Admin.Advparameters.Help') : null
                 ),
                 array(
                     'type' => 'switch',
@@ -302,7 +302,7 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Choose "No" to disable Product Features.', array(), 'Admin.AdvParameters.Help')
+                    'hint' => $this->trans('Choose "No" to disable Product Features.', array(), 'Admin.Advparameters.Help')
                 ),
                 array(
                     'type' => 'switch',
@@ -322,7 +322,7 @@ class AdminPerformanceControllerCore extends AdminController
                             'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Choose "No" to disable Customer Groups.', array(), 'Admin.AdvParameters.Help')
+                    'hint' => $this->trans('Choose "No" to disable Customer Groups.', array(), 'Admin.Advparameters.Help')
                 )
             ),
             'submit' => array(
@@ -342,7 +342,7 @@ class AdminPerformanceControllerCore extends AdminController
                 'title' => $this->trans('CCC (Combine, Compress and Cache)', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-fullscreen'
             ),
-            'description' => $this->trans('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.', array(), 'Admin.AdvParameters.Help'),
+            'description' => $this->trans('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.', array(), 'Admin.Advparameters.Help'),
             'input' => array(
                 array(
                     'type' => 'hidden',
@@ -394,7 +394,7 @@ class AdminPerformanceControllerCore extends AdminController
                 'type' => 'switch',
                 'label' => $this->trans('Apache optimization', array(), 'Admin.Advparameters.Feature'),
                 'name' => 'PS_HTACCESS_CACHE_CONTROL',
-                'hint' => $this->trans('This will add directives to your .htaccess file, which should improve caching and compression.', array(), 'Admin.AdvParameters.Help'),
+                'hint' => $this->trans('This will add directives to your .htaccess file, which should improve caching and compression.', array(), 'Admin.Advparameters.Help'),
                 'values' => array(
                     array(
                         'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
@@ -433,19 +433,19 @@ class AdminPerformanceControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Media server #1', array(), 'Admin.Advparameters.Feature'),
                     'name' => '_MEDIA_SERVER_1_',
-                    'hint' => $this->trans('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
+                    'hint' => $this->trans('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.', array(), 'Admin.Advparameters.Help')
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Media server #2', array(), 'Admin.Advparameters.Feature'),
                     'name' => '_MEDIA_SERVER_2_',
-                    'hint' => $this->trans('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
+                    'hint' => $this->trans('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.', array(), 'Admin.Advparameters.Help')
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Media server #3', array(), 'Admin.Advparameters.Feature'),
                     'name' => '_MEDIA_SERVER_3_',
-                    'hint' => $this->trans('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.', array(), 'Admin.AdvParameters.Help')
+                    'hint' => $this->trans('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.', array(), 'Admin.Advparameters.Help')
                 ),
             ),
             'submit' => array(

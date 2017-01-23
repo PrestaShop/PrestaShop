@@ -89,9 +89,9 @@ class AdminLogsControllerCore extends AdminController
                     'PS_LOGS_BY_EMAIL' => array(
                         'title' => $this->trans('Minimum severity level', array(), 'Admin.Advparameters.Feature'),
                         'hint' => Tools::safeOutput(
-                            $this->trans('Enter "5" if you do not want to receive any emails.', array(), 'Admin.AdvParameters.Help').
+                            $this->trans('Enter "5" if you do not want to receive any emails.', array(), 'Admin.Advparameters.Help').
                             '<br>'.
-                            $this->trans('Emails will be sent to the shop owner.', array(), 'Admin.AdvParameters.Help'),
+                            $this->trans('Emails will be sent to the shop owner.', array(), 'Admin.Advparameters.Help'),
                             true
                         ),
                         'cast' => 'intval',

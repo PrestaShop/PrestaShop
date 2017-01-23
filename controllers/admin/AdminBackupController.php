@@ -59,7 +59,7 @@ class AdminBackupControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_BACKUP_ALL' => array(
                         'title' => $this->trans('Ignore statistics tables', array(), 'Admin.Advparameters.Feature'),
-                        'desc' => $this->trans('Drop existing tables during import.', array(), 'Admin.AdvParameters.Help').'
+                        'desc' => $this->trans('Drop existing tables during import.', array(), 'Admin.Advparameters.Help').'
 							<br />'._DB_PREFIX_.'connections, '._DB_PREFIX_.'connections_page, '._DB_PREFIX_
                             .'connections_source, '._DB_PREFIX_.'guest, '._DB_PREFIX_.'statssearch',
                         'cast' => 'intval',
@@ -68,8 +68,8 @@ class AdminBackupControllerCore extends AdminController
                     'PS_BACKUP_DROP_TABLE' => array(
                         'title' => $this->trans('Drop existing tables during import', array(), 'Admin.Advparameters.Feature'),
                         'hint' => array(
-                            $this->trans('If enabled, the backup script will drop your tables prior to restoring data.', array(), 'Admin.AdvParameters.Help'),
-                            $this->trans('(ie. "DROP TABLE IF EXISTS")', array(), 'Admin.AdvParameters.Help'),
+                            $this->trans('If enabled, the backup script will drop your tables prior to restoring data.', array(), 'Admin.Advparameters.Help'),
+                            $this->trans('(ie. "DROP TABLE IF EXISTS")', array(), 'Admin.Advparameters.Help'),
                         ),
                         'cast' => 'intval',
                         'type' => 'bool'
