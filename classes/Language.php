@@ -1150,112 +1150,112 @@ class LanguageCore extends ObjectModel
         $useLang = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = "'.pSQL($iso_code).'" ', true, false);
 
         if (!empty($useLang)) {
-
             $lang = new Language($useLang['id_lang']);
 
             $tables = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
-            $langTables = array();
-
-            // Select table for existing class
             foreach ($tables as $table) {
                 foreach ($table as $t) {
                     $className = ucfirst(Tools::toCamelCase(str_replace(_DB_PREFIX_, '', $t)));
-                    if (class_exists($className) ||
-                        in_array($t, array(
-                            _DB_PREFIX_.'country_lang',
-                        ))
-                    ) {
-                        $langTables[$t] = $className;
+
+                    if (_DB_PREFIX_.'country_lang' == $t) {
+                        self::updateMultilangFromCldr($lang);
+                    } else {
+                        self::updateMultilangFromClass($t, $className, $lang);
                     }
                 }
             }
 
-            $translator = Context::getContext()->getTranslator();
+            Hook::exec('actionUpdateLangAfter', array('lang' => $lang));
+        }
 
-            foreach ($langTables as $name => $className) {
-                // update country lang from cldr
-                if (_DB_PREFIX_.'country_lang' == $name) {
+        return true;
+    }
 
-                    $cldrRepository = new cldrRepository($lang->locale);
-                    $cldrLocale = $cldrRepository->getCulture();
-                    $cldrFile = _PS_TRANSLATIONS_DIR_.'cldr/datas/main/'.$cldrLocale.'/territories.json';
+    public static function updateMultilangFromCldr($lang)
+    {
+        $cldrRepository = new cldrRepository($lang->locale);
+        $cldrLocale = $cldrRepository->getCulture();
+        $cldrFile = _PS_TRANSLATIONS_DIR_.'cldr/datas/main/'.$cldrLocale.'/territories.json';
 
-                    if (file_exists($cldrFile)) {
-                        $cldrContent = json_decode(file_get_contents($cldrFile), true);
+        if (file_exists($cldrFile)) {
+            $cldrContent = json_decode(file_get_contents($cldrFile), true);
 
-                        if (!empty($cldrContent)) {
+            if (!empty($cldrContent)) {
 
-                            $translatableCountries = Db::getInstance()->executeS('SELECT c.`iso_code`, cl.* FROM `' . _DB_PREFIX_ . 'country` c
-                                INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country`
-                                WHERE cl.`id_lang` = "' . (int)$lang->id . '" ', true, false);
+                $translatableCountries = Db::getInstance()->executeS('SELECT c.`iso_code`, cl.* FROM `' . _DB_PREFIX_ . 'country` c
+                    INNER JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country`
+                    WHERE cl.`id_lang` = "' . (int)$lang->id . '" ', true, false);
 
-                            if (!empty($translatableCountries)) {
-                                $cldrLanguages = $cldrContent['main'][$cldrLocale]['localeDisplayNames']['territories'];
+                if (!empty($translatableCountries)) {
+                    $cldrLanguages = $cldrContent['main'][$cldrLocale]['localeDisplayNames']['territories'];
 
-                                foreach ($translatableCountries as $country) {
-                                    if (isset($cldrLanguages[$country['iso_code']]) &&
-                                        !empty($cldrLanguages[$country['iso_code']])
-                                    ) {
-                                        $sql = 'UPDATE `' . $name . '`
-                                            SET `name` = "' . pSQL(ucwords($cldrLanguages[$country['iso_code']])) . '"
-                                            WHERE `id_country` = "' . (int)$country['id_country'] . '" AND `id_lang` = "' . (int)$lang->id . '" LIMIT 1;';
-                                        Db::getInstance()->execute($sql);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    $classObject = new $className($lang->locale);
-
-                    $keys = $classObject->getKeys();
-                    $fieldsToUpdate = $classObject->getFieldsToUpdate();
-
-                    if (!empty($keys) && !empty($fieldsToUpdate)) {
-
-                        // get table data
-                        $tableData = Db::getInstance()->executeS('SELECT * FROM `' . $name . '`
-                            WHERE `id_lang` = "' . (int)$lang->id . '"', true, false);
-
-                        if (!empty($tableData)) {
-                            foreach ($tableData as $data) {
-
-                                $updateWhere = '';
-                                $updateField = '';
-
-                                // Construct update where
-                                foreach ($keys as $key) {
-                                    if (!empty($updateWhere)) {
-                                        $updateWhere .= ' AND ';
-                                    }
-                                    $updateWhere .= $key . ' = "' . pSQL($data[$key]) . '"';
-                                }
-
-                                // Construct update field
-                                foreach ($fieldsToUpdate as $toUpdate) {
-                                    $untranslated = $translator->getSourceString($data[$toUpdate], $classObject->getDomain());
-                                    $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
-
-                                    if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
-                                        if (!empty($updateField)) {
-                                            $updateField .= ' , ';
-                                        }
-                                        $updateField .= $toUpdate . ' = "' . pSQL($translatedField) . '"';
-                                    }
-                                }
-
-                                // Update table
-                                if (!empty($updateWhere) && !empty($updateField)) {
-                                    $sql = 'UPDATE `' . $name . '` SET ' . $updateField . ' WHERE ' . $updateWhere . ' AND `id_lang` = "' . (int)$lang->id . '" LIMIT 1;';
-                                    Db::getInstance()->execute($sql);
-                                }
-                            }
+                    foreach ($translatableCountries as $country) {
+                        if (isset($cldrLanguages[$country['iso_code']]) &&
+                            !empty($cldrLanguages[$country['iso_code']])
+                        ) {
+                            $sql = 'UPDATE `' . _DB_PREFIX_ . 'country_lang`
+                                SET `name` = "' . pSQL(ucwords($cldrLanguages[$country['iso_code']])) . '"
+                                WHERE `id_country` = "' . (int)$country['id_country'] . '" AND `id_lang` = "' . (int)$lang->id . '" LIMIT 1;';
+                            Db::getInstance()->execute($sql);
                         }
                     }
                 }
             }
         }
+    }
 
-        return true;
+    public static function updateMultilangFromClass($table, $className, $lang)
+    {
+        if (!class_exists($className)) {
+            return;
+        }
+
+        $translator = Context::getContext()->getTranslator();
+
+        $classObject = new $className($lang->locale);
+
+        $keys = $classObject->getKeys();
+        $fieldsToUpdate = $classObject->getFieldsToUpdate();
+
+        if (!empty($keys) && !empty($fieldsToUpdate)) {
+
+            // get table data
+            $tableData = Db::getInstance()->executeS('SELECT * FROM `' . bqSQL($table) . '`
+                WHERE `id_lang` = "' . (int)$lang->id . '"', true, false);
+
+            if (!empty($tableData)) {
+                foreach ($tableData as $data) {
+                    $updateWhere = '';
+                    $updateField = '';
+
+                    // Construct update where
+                    foreach ($keys as $key) {
+                        if (!empty($updateWhere)) {
+                            $updateWhere .= ' AND ';
+                        }
+                        $updateWhere .= '`'.bqSQL($key).'` = "' . pSQL($data[$key]) . '"';
+                    }
+
+                    // Construct update field
+                    foreach ($fieldsToUpdate as $toUpdate) {
+                        $untranslated = $translator->getSourceString($data[$toUpdate], $classObject->getDomain());
+                        $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
+
+                        if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
+                            if (!empty($updateField)) {
+                                $updateField .= ' , ';
+                            }
+                            $updateField .= '`'.bqSQL($toUpdate).'` = "' . pSQL($translatedField) . '"';
+                        }
+                    }
+
+                    // Update table
+                    if (!empty($updateWhere) && !empty($updateField)) {
+                        $sql = 'UPDATE `' . bqSQL($table) . '` SET ' . $updateField . ' WHERE ' . $updateWhere . ' AND `id_lang` = "' . (int)$lang->id . '" LIMIT 1;';
+                        Db::getInstance()->execute($sql);
+                    }
+                }
+            }
+        }
     }
 }

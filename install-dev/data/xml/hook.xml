@@ -611,5 +611,10 @@
       <title>Dashboard Top</title>
       <description>Displays the content in the dashboard's top area.</description>
     </hook>
+    <hook id="actionUpdateLangAfter">
+      <name>actionUpdateLangAfter</name>
+      <title>Update "lang" tables</title>
+      <description>Update "lang" tables after adding or updating a language.</description>
+    </hook>
   </entities>
 </entity_hook>
