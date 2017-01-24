@@ -475,8 +475,10 @@ class AdminProductWrapper
         }
 
         //remove unused customization for the product
-        \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE 
-        `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
+        if (!empty($customization_ids)) {
+            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE 
+            `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
+        }
 
         //create new customizations
         $countFieldText = 0;
