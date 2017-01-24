@@ -73,7 +73,7 @@
     <url_rewrite>adressen</url_rewrite>
   </meta>
   <meta id="authentication" id_shop="1">
-    <title>Authentifizierung</title>
+    <title>Anmeldung</title>
     <description/>
     <keywords/>
     <url_rewrite>authentifizierung</url_rewrite>
@@ -91,10 +91,10 @@
     <url_rewrite>discount</url_rewrite>
   </meta>
   <meta id="history" id_shop="1">
-    <title>Bestellungsverlauf</title>
+    <title>Bestellverlauf</title>
     <description/>
     <keywords/>
-    <url_rewrite>bestellungsverlauf</url_rewrite>
+    <url_rewrite>bestellverlauf</url_rewrite>
   </meta>
   <meta id="identity" id_shop="1">
     <title>Kennung</title>
@@ -109,10 +109,10 @@
     <url_rewrite>mein-Konto</url_rewrite>
   </meta>
   <meta id="order-follow" id_shop="1">
-    <title>Bestellungsverfolgung</title>
+    <title>Auftragsverfolgung</title>
     <description/>
     <keywords/>
-    <url_rewrite>bestellungsverfolgung</url_rewrite>
+    <url_rewrite>auftragsverfolgung</url_rewrite>
   </meta>
   <meta id="order-slip" id_shop="1">
     <title>Bestellschein</title>
