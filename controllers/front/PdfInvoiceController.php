@@ -41,7 +41,7 @@ class PdfInvoiceControllerCore extends FrontController
         }
 
         if (!(int) Configuration::get('PS_INVOICE')) {
-            die(Tools::displayError('Invoices are disabled in this shop.'));
+            die($this->trans('Invoices are disabled in this shop.', array(), 'Shop.Notifications.Error'));
         }
 
         $id_order = (int) Tools::getValue('id_order');
@@ -50,15 +50,15 @@ class PdfInvoiceControllerCore extends FrontController
         }
 
         if (!isset($order) || !Validate::isLoadedObject($order)) {
-            die(Tools::displayError('The invoice was not found.'));
+            die($this->trans('The invoice was not found.', array(), 'Shop.Notifications.Error'));
         }
 
         if ((isset($this->context->customer->id) && $order->id_customer != $this->context->customer->id) || (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key'))) {
-            die(Tools::displayError('The invoice was not found.'));
+            die($this->trans('The invoice was not found.', array(), 'Shop.Notifications.Error'));
         }
 
         if (!OrderState::invoiceAvailable($order->getCurrentState()) && !$order->invoice_number) {
-            die(Tools::displayError('No invoice is available.'));
+            die($this->trans('No invoice is available.', array(), 'Shop.Notifications.Error'));
         }
 
         $this->order = $order;
