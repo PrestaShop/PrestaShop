@@ -330,7 +330,7 @@ class AdminStoresControllerCore extends AdminController
             $country = new Country((int)$id_country);
 
             if ($id_country && $country && !(int)$country->contains_states && $id_state) {
-                $this->errors[] = Tools::displayError('You\'ve selected a state for a country that does not contain states.');
+                $this->errors[] = $this->trans('You\'ve selected a state for a country that does not contain states.', array(), 'Admin.Advparameters.Notification');
             }
 
             /* If the selected country contains states, then a state have to be selected */
