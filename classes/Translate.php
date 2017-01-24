@@ -285,7 +285,11 @@ class TranslateCore
         $iso = Context::getContext()->language->iso_code;
 
         if (!Validate::isLangIsoCode($iso)) {
-            Tools::displayError(sprintf('Invalid iso lang (%s)', Tools::safeOutput($iso)));
+            Context::getContext()->getTranslator()->trans(
+                'Invalid iso lang (%s)',
+                array(Tools::safeOutput($iso)),
+                'Admin.International.Notification'
+            );
         }
 
         if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
