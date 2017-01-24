@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,7 +33,7 @@ class ProductExtraContent implements HookContentClassInterface
     /**
      * Title of the content. This can be used in the template
      * e.g as a tab name or an anchor.
-     * 
+     *
      * @var string
      */
     private $title;
@@ -49,7 +49,7 @@ class ProductExtraContent implements HookContentClassInterface
     /**
      * For some reason, you may need to have a class on the div generated,
      * or to be able to set an anchor.
-     * 
+     *
      * @var array
      */
     private $attr = array(

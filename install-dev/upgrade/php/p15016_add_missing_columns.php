@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,7 @@ function p15016_add_missing_columns()
         foreach ($list_fields as $k => $field) {
             $list_fields[$k] = $field['Field'];
         }
-            
+
         if (in_array('id_contactinfos', $list_fields)) {
             if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` CHANGE `id_contactinfos` `id_reinsurance` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT')) {
                 $errors[] = Db::getInstance()->getMsgError();
@@ -50,9 +50,9 @@ function p15016_add_missing_columns()
                 $errors[] = Db::getInstance()->getMsgError();
             }
         }
-        
+
         $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'reinsurance_lang`');
-        
+
         if (!is_array($list_fields) || $list_fields == false) {
             $return = Db::getInstance()->execute('
 				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'reinsurance_lang` (
@@ -66,7 +66,7 @@ function p15016_add_missing_columns()
             }
         }
     }
-    
+
     $id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name="blocktopmenu"');
     if ($id_module) {
         $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'linksmenutop`');
@@ -79,7 +79,7 @@ function p15016_add_missing_columns()
                 $errors[] = Db::getInstance()->getMsgError();
             }
         }
-                
+
         $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'linksmenutop_lang`');
         foreach ($list_fields as $k => $field) {
             $list_fields[$k] = $field['Field'];

@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,7 @@ $(document).ready(function()
 	{
 		$('#btNext').addClass('disabled').attr('disabled', true);
 	}
-	
+
 	// Activate / desactivate next button when licence checkbox is clicked
 	$('#set_license').click(function()
 	{
@@ -39,7 +39,7 @@ $(document).ready(function()
 		else
 			$('#btNext').addClass('disabled').attr('disabled', true);
 	});
-	
+
 	if ($('#set_license').prop('checked'))
 		$('#btNext').removeClass('disabled').attr('disabled', false);
 	else

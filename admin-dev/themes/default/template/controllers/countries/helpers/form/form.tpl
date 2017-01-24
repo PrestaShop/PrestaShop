@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -35,7 +35,7 @@
 					{l s='Required fields for the address (click for more details):'}
 					{$input.display_valid_fields}
 				</div>
-			</div>			
+			</div>
 			<div class="row">
 				<div class="col-lg-12">
 					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore your last registered address format.'}" data-html="true"><a id="useLastDefaultLayout" href="javascript:void(0)" onclick="resetLayout('{$input.encoding_address_layout}', 'lastDefault');" class="btn btn-default">
@@ -94,10 +94,10 @@
 		$('#need_zip_code_on, #need_zip_code_off').change(function() {
 			disableZipFormat();
 		});
-		
+
 		$('#iso_code').change(function() {
 			disableTAASC();
-		});				
+		});
 		disableTAASC();
 	});
 

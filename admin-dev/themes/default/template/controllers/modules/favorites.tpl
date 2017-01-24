@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
+* @copyright 2007-2017 PrestaShop SA
 * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,7 +32,7 @@
 			<div class="btn-group pull-right">
 				<a class="btn btn-default {if !isset($smarty.get.select)} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}">
 					<i class="icon-list"></i>
-					{l s='Normal view'} 
+					{l s='Normal view'}
 				</a>
 				<a class="btn btn-default {if $smarty.get.select == 'favorites'} active{/if}" href="javascript:void(0);">
 					<i class="icon-star"></i>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,7 @@
 function ps_1700_right_management()
 {
     $actions = array('CREATE', 'READ', 'UPDATE', 'DELETE');
-    
+
     /**
      * Add roles
      */
@@ -41,12 +41,12 @@ function ps_1700_right_management()
             ');
         }
     }
-    
+
     /**
      * Add access
      */
     $accessObject = new Access;
-    
+
     // Tabs
     $oldAccess = Db::getInstance()->executeS('SELECT a.* FROM `'._DB_PREFIX_.'access_old` a JOIN `'._DB_PREFIX_.'tab` USING (id_tab)');
     if (empty($oldAccess)) {
@@ -64,7 +64,7 @@ function ps_1700_right_management()
             }
         }
     }
-    
+
     // Modules
     $oldAccess = Db::getInstance()->executeS('SELECT m.* FROM `'._DB_PREFIX_.'module_access_old` m JOIN  `'._DB_PREFIX_.'module` USING (id_module)');
     if (empty($oldAccess)) {

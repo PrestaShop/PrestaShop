@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -160,7 +160,7 @@ class ProfileCore extends ObjectModel
                         'delete' => '0',
                     )
                 );
-                
+
                 $result = Db::getInstance()->executeS('
 				SELECT `slug`,
                                     `slug` LIKE "%CREATE" as "add",
@@ -173,7 +173,7 @@ class ProfileCore extends ObjectModel
 
                 foreach ($result as $row) {
                     $idTab = self::findIdTabByAuthSlug($row['slug']);
-                    
+
                     self::$_cache_accesses[$idProfile][$type][$idTab][array_search('1', $row)] = '1';
                 }
             }
@@ -181,9 +181,9 @@ class ProfileCore extends ObjectModel
 
         return self::$_cache_accesses[$idProfile][$type];
     }
-    
+
     /**
-     * 
+     *
      * @param int    $idProfile Profile ID
      * @param string $type Type
      * @param array  $cacheData Cached data
@@ -200,9 +200,9 @@ class ProfileCore extends ObjectModel
             );
         }
     }
-    
+
     /**
-     * 
+     *
      * @param string $authSlug
      * @return int
      */
@@ -219,7 +219,7 @@ class ProfileCore extends ObjectModel
             FROM `'._DB_PREFIX_.'tab` t
             WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
         ');
-        
+
         return $result['id_tab'];
     }
 }

@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -33,7 +33,7 @@
 				<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 				<div class="form-group">
 					<label for="id_warehouse" class="control-label col-lg-3">{l s='Filter movements by warehouse:'}</label>
-					<div class="col-lg-9">					
+					<div class="col-lg-9">
 						<select id="id_warehouse" name="id_warehouse" onchange="$('#stock-movement-filter').submit();">
 							{foreach $list_warehouses as $warehouse}
 								<option {if $warehouse.id_warehouse == $current_warehouse}selected="selected"{/if} value="{$warehouse.id_warehouse}">{$warehouse.name}</option>
