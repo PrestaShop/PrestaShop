@@ -76,10 +76,11 @@ class AdminLoginControllerCore extends AdminController
                 $warningSslMessage = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', array(), 'Admin.Login.Notification');
             } else {
                 $url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
-                $warningSslMessage = sprintf(
-                    Translate::ppTags(
-                        Tools::displayError('SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]', false),
-                        array('<a href="%s">')
+                $warningSslMessage = Translate::ppTags(
+                        $this->trans(
+                            'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]',
+                            array('<a href="%s">'),
+                            'Admin.Login.Notification'
                     ),
                     $url
                 );
