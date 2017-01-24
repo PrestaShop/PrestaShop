@@ -60,15 +60,15 @@ class ValidateCore
     public static function isModuleUrl($url, &$errors)
     {
         if (!$url || $url == 'http://') {
-            $errors[] = Tools::displayError('Please specify module URL');
+            $errors[] = Context::getContext()->getTranslator()->trans('Please specify module URL', array(), 'Admin.Modules.Notification');
         } elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz') {
-            $errors[] = Tools::displayError('Unknown archive type');
+            $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
         } else {
             if ((strpos($url, 'http')) === false) {
                 $url = 'http://'.$url;
             }
             if (!is_array(@get_headers($url))) {
-                $errors[] = Tools::displayError('Invalid URL');
+                $errors[] = Context::getContext()->getTranslator()->trans('Invalid URL', array(), 'Admin.Notifications.Error');
             }
         }
         if (!count($errors)) {
