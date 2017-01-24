@@ -276,7 +276,7 @@ class UploaderCore
             } else {
                 $file['size'] = $fileSize;
                 unlink($filePath);
-                $file['error'] = Tools::displayError('Server file size is different from local file size');
+                $file['error'] = Context::getContext()->getTranslator()->trans('Server file size is different from local file size', array(), 'Admin.Notifications.Error');
             }
         }
 
@@ -293,25 +293,25 @@ class UploaderCore
         $error = 0;
         switch ($error_code) {
             case 1:
-                $error = sprintf(Tools::displayError('The uploaded file exceeds %s'), ini_get('upload_max_filesize'));
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('upload_max_filesize')), 'Admin.Notifications.Error');
                 break;
             case 2:
-                $error = sprintf(Tools::displayError('The uploaded file exceeds %s'), ini_get('post_max_size'));
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('post_max_size')), 'Admin.Notifications.Error');
                 break;
             case 3:
-                $error = Tools::displayError('The uploaded file was only partially uploaded');
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file was only partially uploaded', array(), 'Admin.Notifications.Error');
                 break;
             case 4:
-                $error = Tools::displayError('No file was uploaded');
+                $error = Context::getContext()->getTranslator()->trans('No file was uploaded', array(), 'Admin.Notifications.Error');
                 break;
             case 6:
-                $error = Tools::displayError('Missing temporary folder');
+                $error = Context::getContext()->getTranslator()->trans('Missing temporary folder', array(), 'Admin.Notifications.Error');
                 break;
             case 7:
-                $error = Tools::displayError('Failed to write file to disk');
+                $error = Context::getContext()->getTranslator()->trans('Failed to write file to disk', array(), 'Admin.Notifications.Error');
                 break;
             case 8:
-                $error = Tools::displayError('A PHP extension stopped the file upload');
+                $error = Context::getContext()->getTranslator()->trans('A PHP extension stopped the file upload', array(), 'Admin.Notifications.Error');
                 break;
             default:
                 break;
@@ -331,12 +331,12 @@ class UploaderCore
         $postMaxSize = $this->getPostMaxSizeBytes();
 
         if ($postMaxSize && ($this->_getServerVars('CONTENT_LENGTH') > $postMaxSize)) {
-            $file['error'] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini');
+            $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', array(), 'Admin.Notifications.Error');
             return false;
         }
 
         if (preg_match('/\%00/', $file['name'])) {
-            $file['error'] = Tools::displayError('Invalid file name');
+            $file['error'] = Context::getContext()->getTranslator()->trans('Invalid file name', array(), 'Admin.Notifications.Error');
 
             return false;
         }
@@ -345,13 +345,13 @@ class UploaderCore
 
         //TODO check mime type.
         if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
-            $file['error'] = Tools::displayError('Filetype not allowed');
+            $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', array(), 'Admin.Notifications.Error');
 
             return false;
         }
 
         if ($this->checkFileSize() && $file['size'] > $this->getMaxSize()) {
-            $file['error'] = sprintf(Tools::displayError('File (size : %1s) is too big (max : %2s)'), $file['size'], $this->getMaxSize());
+            $file['error'] = Context::getContext()->getTranslator()->trans('File (size: %1s) is too big (max: %2s)', array($file['size'], $this->getMaxSize()), 'Admin.Notifications.Error');
 
             return false;
         }
