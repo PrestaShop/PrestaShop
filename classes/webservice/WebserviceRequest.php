@@ -1545,18 +1545,22 @@ class WebserviceRequestCore
      */
     protected function getSQLRetrieveFilter($sqlId, $filterValue, $tableAlias = 'main.')
     {
+        if (!empty($tableAlias)) {
+            $tableAlias = '`'.bqSQL(str_replace('.', '', $tableAlias)).'`.';
+        }
+
         $ret = '';
         preg_match('/^(.*)\[(.*)\](.*)$/', $filterValue, $matches);
         if (count($matches) > 1) {
             if ($matches[1] == '%' || $matches[3] == '%') {
-                $ret .= ' AND '.bqSQL($tableAlias).'`'.bqSQL($sqlId).'` LIKE "'.pSQL($matches[1].$matches[2].$matches[3])."\"\n";
+                $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` LIKE "'.pSQL($matches[1].$matches[2].$matches[3])."\"\n";
             } elseif ($matches[1] == '' && $matches[3] == '') {
                 if (strpos($matches[2], '|') > 0) {
                     $values = explode('|', $matches[2]);
                     $ret .= ' AND (';
                     $temp = '';
                     foreach ($values as $value) {
-                        $temp .= bqSQL($tableAlias).'`'.bqSQL($sqlId).'` = "'.bqSQL($value).'" OR ';
+                        $temp .= $tableAlias.'`'.bqSQL($sqlId).'` = "'.bqSQL($value).'" OR ';
                     }
                     $ret .= rtrim($temp, 'OR ').')'."\n";
                 } elseif (preg_match('/^([\d\.:\-\s]+),([\d\.:\-\s]+)$/', $matches[2], $matches3)) {

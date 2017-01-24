@@ -285,8 +285,8 @@ class AdminProductDataUpdater implements ProductInterface
         \Db::getInstance()->query('SET @i := 0');
         $selectPositions = 'UPDATE`'._DB_PREFIX_.'category_product` cp
             SET cp.`position` = (SELECT @i := @i + 1)
-            WHERE cp.`id_category` = '.$categoryId.'
-            ORDER BY cp.`id_product` NOT IN ('.implode(',', array_keys($productList)).'), cp.`position` ASC';
+            WHERE cp.`id_category` = '.(int)$categoryId.'
+            ORDER BY cp.`id_product` NOT IN ('.implode(',', array_map('intval', array_keys($productList))).'), cp.`position` ASC';
         \Db::getInstance()->query($selectPositions);
 
         return true;

@@ -172,7 +172,7 @@ abstract class AbstractAdminQueryBuilder
             $goodOrder = array();
             foreach ($order as $k => $o) {
                 if (Validate::isOrderBy($o)) {
-                    $goodOrder[] = $o;
+                    $goodOrder[] = '`'.bqSQL($o).'`';
                 }
             }
 
