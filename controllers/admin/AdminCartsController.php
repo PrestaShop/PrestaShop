@@ -480,7 +480,7 @@ class AdminCartsControllerCore extends AdminController
                     $errors[] = $this->trans('You already have the maximum quantity available for this product.', array(), 'Admin.Catalog.Notification');
                 } elseif ($qty_upd < 0) {
                     $minimal_qty = $id_product_attribute ? Attribute::getAttributeMinimalQty((int)$id_product_attribute) : $product->minimal_quantity;
-                    $errors[] = sprintf(Tools::displayError('You must add a minimum quantity of %d', false), $minimal_qty);
+                    $errors[] = sprintf($this->trans('You must add a minimum quantity of %d', array(), 'Admin.Catalog.Notification'), $minimal_qty);
                 }
             }
 
@@ -625,7 +625,7 @@ class AdminCartsControllerCore extends AdminController
             }
             if (!count($errors)) {
                 if (!$this->context->cart->addCartRule((int)$cart_rule->id)) {
-                    $errors[] = Tools::displayError('Can\'t add the voucher.');
+                    $errors[] = $this->trans('Can\'t add the voucher.', array(), 'Admin.Catalog.Notification');
                 }
             }
             echo json_encode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
