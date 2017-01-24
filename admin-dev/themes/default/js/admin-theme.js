@@ -223,22 +223,23 @@ $(document).ready(function() {
 		// clean trigger
 		navigation.off().attr('id','nav-mobile');
 		$('span.menu-collapse').off();
-		navigation.on('click.collapse','span.menu-collapse',function(){
+		navigation.on('click.collapse','span.menu-collapse', expand);
+		$('#nav-mobile').on('click',expand);
+		function expand(event) {
+			event.stopPropagation();
 			if ($(this).hasClass('expanded')){
-				$(this).html('<i class="icon-align-justify"></i>');
 				navigation.find('ul.menu').hide();
 				navigation.removeClass('expanded');
-				$(this).removeClass('expanded');
+				$('span.menu-collapse').removeClass('expanded');
 				//remove submenu when closing nav
 				$('#nav-mobile-submenu').remove();
 			}
 			else {
-				$(this).html('<i class="icon-remove"></i>');
 				navigation.find('ul.menu').removeClass('menu-close').show();
 				navigation.addClass('expanded');
-				$(this).addClass('expanded');
+				$('span.menu-collapse').addClass('expanded');
 			}
-		});
+		};
 		//get click for item which has submenu
 		navigation.on('click.submenu','.maintab.has_submenu a.title', function(e){
 			e.preventDefault();

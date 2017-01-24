@@ -320,7 +320,7 @@
 					<ul class="header-list navbar-right">
 						<li>
               {if isset($debug_mode) && $debug_mode == true}
-                <span class="shop-state" id="debug-mode">
+                <span class="shop-state hidden-xs" id="debug-mode">
                   <i class="material-icons">bug_report</i>
                   <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
                     title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>']}</p>">{l s='Debug mode'}</span>
@@ -353,7 +353,7 @@
 				{/if}
 
 				{* Ajax running *}
-				<span id="ajax_running">
+				<span id="ajax_running" class="hidden-xs">
 					<i class="icon-refresh icon-spin icon-fw"></i>
 				</span>
 

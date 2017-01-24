@@ -349,18 +349,19 @@ $min-height: 950px
 	&.expanded
 		width: 100%
 		height: 100%
-		top: 35px
+		top: 60px
+		background: rgba(0,0,0,.7)
 		.menu-collapse
-			top: -35px
+			top: -60px
 			position: absolute
 			z-index: 1200
 			@include left(0)
 	ul.menu
 		position: absolute
 		display: none
-		width: 100%
+		width: 90%
 		height: 100%
-		background-color: rgba(black,0.8)
+		background-color: #363A41
 		padding: 0
 		border-top: 1px black solid
 		list-style: none
@@ -383,16 +384,17 @@ $min-height: 950px
 		> li
 			background: $main-color
 			position: relative
+			padding: 10px 0
+			&#tab-SELL, &#tab-IMPROVE, &#tab-CONFIGURE
+				display: none
 			> a
 				display: block
 				height: $menu-item-size
-				line-height: $menu-item-size
 				position: relative
-				border-bottom: 1px solid darken($main-color,10%)
-				font-size: 12px
+				border-bottom: 1px solid #6c868e
+				font-size: 16px
 				color: mix($main-color, contrast-color($main-color, white, #333), 30%)
 				background-color: $main-color
-				text-transform: uppercase
 				text-decoration: none
 				@include padding(0, 0, 0, 10px)
 				@include transition-property(background-color)
@@ -430,12 +432,11 @@ $min-height: 950px
 	ul.menu.menu-close
 		@include animate(fadeOutLeft, 0.2s)
 	.menu-collapse
-		color: white
-		background-color: black
+		color: $gray-light
 		width: 35px
 		height: 35px
 		text-align: center
-		line-height: 1.3em
+		line-height: 2.3em
 
 .menu-collapse
 	cursor: pointer
