@@ -16,25 +16,24 @@ $color-active: #25B9D7;
   }
 }
 
-.search-translation {
-  margin-bottom: rem(20px);
-  .breadcrumb small {
+.breadcrumb {
+  small {
     color: $gray-medium;
   }
-  .form-control {
-
-  }
+}
+.total-remaining-translations {
+  color: $color-error;
+}
+.search-translation {
+  margin-bottom: rem(20px);
   .summary {
-    position: absolute;
-    font-size: 1rem;
+    font-size: rem(14px);
     color: #363A41;
-    left: rem(400px);
-    top: rem(-5px);
   }
 
   .search {
     width: 100%;
-    margin-left: rem(15px);
+    margin-top: 1px;
   }
 
   .search-button {
@@ -149,11 +148,6 @@ $color-active: #25B9D7;
     margin-bottom: rem(5px);
     .material-icons {
       cursor: pointer;
-    }
-    &.active {
-      > span {
-        color: $color-active;
-      }
     }
   }
 
@@ -275,6 +269,7 @@ $color-active: #25B9D7;
 }
 
 .translations-results {
+  display: none;
   margin-top: rem(50px);
   padding-top: rem(15px);
   padding-left: rem(15px);

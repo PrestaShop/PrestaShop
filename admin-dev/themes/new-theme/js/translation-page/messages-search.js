@@ -47,7 +47,7 @@ export default function () {
       }
 
       if($(jetsSelector).length) {
-        $('.js-results').addClass('card').find('h2').removeClass('hide');
+        $('.js-results').show().addClass('card').find('h2').removeClass('hide');
       }
 
       return false;
