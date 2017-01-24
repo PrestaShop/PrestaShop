@@ -5491,7 +5491,7 @@ class ProductCore extends ObjectModel
     public function setWsPositionInCategory($position)
     {
         if ($position < 0) {
-            WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a negative position, the minimum for a position is 0.'), 134);
+            WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot set a negative position, the minimum for a position is 0.', array(), 'Admin.Catalog.Notification'), 134);
         }
         $result = Db::getInstance()->executeS('
 			SELECT `id_product`
@@ -5500,7 +5500,7 @@ class ProductCore extends ObjectModel
 			ORDER BY `position`
 		');
         if (($position > 0) && ($position + 1 > count($result))) {
-            WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).'), 135);
+            WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).', array(), 'Admin.Catalog.Notification'), 135);
         }
 
         foreach ($result as &$value) {
