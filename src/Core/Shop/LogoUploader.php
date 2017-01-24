@@ -28,6 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Shop;
 
 use Configuration;
+use Context;
 use ImageManager;
 use PrestaShopException;
 use Shop;
@@ -166,7 +167,16 @@ class LogoUploader
             if ($error = ImageManager::validateIconUpload($files[$name])) {
                 throw new PrestaShopException($error);
             } elseif (!copy($_FILES[$name]['tmp_name'], $destination)) {
-                throw new PrestaShopException(sprintf(Tools::displayError('An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".'), $files[$name]['tmp_name'], $destination));
+                throw new PrestaShopException(
+                    Context::getContext()->getTranslator()->trans(
+                        'An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".',
+                        array(
+                            $files[$name]['tmp_name'],
+                            $destination
+                        ),
+                        'Admin.Design.Notification'
+                    )
+                );
             }
         }
 
