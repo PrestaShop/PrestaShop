@@ -100,7 +100,7 @@ class StockAvailableCore extends ObjectModel
     public function updateWs()
     {
         if ($this->depends_on_stock) {
-            return WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot update the available stock when it depends on stock.'), 133);
+            return WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot update the available stock when it depends on stock.', array(), 'Admin.Catalog.Notification'), 133);
         }
         return $this->update();
     }
