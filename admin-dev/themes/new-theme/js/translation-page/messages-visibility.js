@@ -57,9 +57,11 @@ export default function(callback) {
     let domainPart = editTranslationForms.parents('.translation-domain').prev();
     let missingTranslationWarning = domainPart.find('.missing-translations-short-message');
     let warningPlaceholder = $('#domain .missing-translations');
+    let totalPlaceholder = $('#domain .total-expressions');
     let separator = $('#domain .separator');
     if (missingTranslationWarning.length > 0) {
       warningPlaceholder.text(missingTranslationWarning.text());
+      totalPlaceholder.text($('.total-translations').text());
       separator.removeClass('hide');
     } else {
       warningPlaceholder.text('');

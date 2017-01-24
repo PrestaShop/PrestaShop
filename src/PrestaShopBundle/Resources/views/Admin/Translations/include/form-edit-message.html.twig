@@ -29,17 +29,20 @@
   </div>
   <p><label class="verbatim"><strong>{{ translation_key }}</strong></label></p>
   <div class="form-group row{% if not is_translated %} has-warning{% endif %}">
-    <div class="col-lg-11">
+    <div class="col-lg-12">
       <textarea class="form-control{% if not is_translated %} form-control-warning{% endif %}"
                 rows="3"
                 name="translation_value">
           {{- edited_translation_value -}}
       </textarea>
-      {% if is_search_results|default(false) %}
-        <nav class="breadcrumb">
-          <small>{{breadcrumb_parts[0]|default(false)}} > {{breadcrumb_parts[1]|default(false)}}</small>
-        </nav>
-      {% endif %}
+        <span class="breadcrumb">
+          <small>{{breadcrumb_parts[0]|default(false)}}
+            {% if breadcrumb_parts[1]|default(false) %}
+              >
+              {{breadcrumb_parts[1]|default(false)}}
+            {% endif %}
+        </small>
+      </span>
     </div>
     <input type="hidden" name="domain" value="{{ domain }}"/>
     <input type="hidden" name="locale" value="{{ locale }}"/>
@@ -47,7 +50,7 @@
     <input type="hidden" name="theme" value="{{ theme }}"/>
     <input type="hidden" name="translation_key" value="{{ translation_key }}"/>
   </div>
-  <div class="col-md-11 buttons">
+  <div class="col-md-12 buttons">
     <input class="btn btn-primary btn-sm pull-right" type="submit" value="{{ label_edit }}"/>
     <input class="btn btn-tertiary-outline btn-sm pull-right reset-translation-value" type="button" value="{{ label_reset }}"/>
   </div>
