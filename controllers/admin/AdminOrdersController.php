@@ -540,7 +540,7 @@ class AdminOrdersControllerCore extends AdminController
 
                                 Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
                             } else {
-                                $this->errors[] = Tools::displayError('An error occurred while sending an email to the customer.', array(), 'Admin.Notifications.Error');
+                                $this->errors[] = $this->trans('An error occurred while sending an email to the customer.', array(), 'Admin.Notifications.Error');
                             }
                         }
                     } else {
@@ -704,7 +704,7 @@ class AdminOrdersControllerCore extends AdminController
                                 Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
                             }
                         }
-                        $this->errors[] = $this->trans('An error occurred while sending an email to the customer.', array(), 'Admin.OrdersCustomers.Notification');
+                        $this->errors[] = $this->trans('An error occurred while sending an email to the customer.', array(), 'Admin.Orderscustomers.Notification');
                     }
                 }
             } else {
