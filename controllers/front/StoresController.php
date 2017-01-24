@@ -38,7 +38,7 @@ class StoresControllerCore extends FrontController
 
         // StarterTheme: Remove check when google maps v3 is done
         if (!extension_loaded('Dom')) {
-            $this->errors[] = Tools::displayError('PHP "Dom" extension has not been loaded.');
+            $this->errors[] = $this->trans('PHP "Dom" extension has not been loaded.', array(), 'Shop.Notifications.Error');
             $this->context->smarty->assign('errors', $this->errors);
         }
     }
