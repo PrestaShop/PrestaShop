@@ -864,7 +864,7 @@ class ProductController extends FrameworkBundleAdminController
         // export CSV
         $csvTools->exportData(
             $dataCallback,
-            ['id_product' => 'ID',
+            ['id_product' => 'Product ID',
                 'image_link' => 'Image',
                 'name' => 'Name',
                 'reference' => 'Reference',
