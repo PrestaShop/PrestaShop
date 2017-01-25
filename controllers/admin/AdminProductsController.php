@@ -1681,7 +1681,7 @@ class AdminProductsControllerCore extends AdminController
                 $imagesTypes = ImageType::getImagesTypes('products');
                 foreach ($imagesTypes as $k => $image_type) {
                     if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($image_type['name']).'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format)) {
-                        $this->errors[] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error').' '.stripslashes($image_type['name']);
+                        $this->errors[] = $this->trans('An error occurred while copying this image: %s', array(stripslashes($image_type['name'])), 'Admin.Notifications.Error');
                     }
                 }
             }
