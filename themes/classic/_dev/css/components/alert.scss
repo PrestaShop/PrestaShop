@@ -1,3 +1,7 @@
+.ps-alert-error {
+  margin-bottom: 0;
+}
+
 .ps-alert-error,
 .ps-alert-success {
   .item {
@@ -5,6 +9,7 @@
     border: 2px $brand-danger solid;
     display: flex;
     background-color: $brand-danger;
+    margin-bottom: 1rem;
 
     i {
       border: 15px $brand-danger solid;
@@ -12,15 +17,15 @@
 
       svg {
         background-color: $brand-danger;
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
       }
     }
 
     p {
       background-color: $body-bg;
       margin: 0;
-      padding: 14px 20px 14px 20px;
+      padding: 18px 20px 18px 20px;
       width: 100%;
     }
   }
