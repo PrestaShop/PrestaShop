@@ -565,16 +565,16 @@ class CartRuleCore extends ObjectModel
         }
 
         if (!$this->active) {
-            return (!$display_error) ? false : $this->trans('This voucher is disabled', array(), 'Admin.Orderscustomers.Notification');
+            return (!$display_error) ? false : $this->trans('This voucher is disabled', array(), 'Shop.Notifications.Error');
         }
         if (!$this->quantity) {
-            return (!$display_error) ? false : $this->trans('This voucher has already been used', array(), 'Admin.Orderscustomers.Notification');
+            return (!$display_error) ? false : $this->trans('This voucher has already been used', array(), 'Shop.Notifications.Error');
         }
         if (strtotime($this->date_from) > time()) {
-            return (!$display_error) ? false : $this->trans('This voucher is not valid yet', array(), 'Admin.Orderscustomers.Notification');
+            return (!$display_error) ? false : $this->trans('This voucher is not valid yet', array(), 'Shop.Notifications.Error');
         }
         if (strtotime($this->date_to) < time()) {
-            return (!$display_error) ? false : $this->trans('This voucher has expired', array(), 'Admin.Orderscustomers.Notification');
+            return (!$display_error) ? false : $this->trans('This voucher has expired', array(), 'Shop.Notifications.Error');
         }
 
         if ($context->cart->id_customer) {
@@ -587,7 +587,7 @@ class CartRuleCore extends ObjectModel
 			AND '.(int)Configuration::get('PS_OS_ERROR').' != o.current_state
 			');
             if ($quantityUsed + 1 > $this->quantity_per_user) {
-                return (!$display_error) ? false : $this->trans('You cannot use this voucher anymore (usage limit reached)', array(), 'Admin.Orderscustomers.Notification');
+                return (!$display_error) ? false : $this->trans('You cannot use this voucher anymore (usage limit reached)', array(), 'Shop.Notifications.Error');
             }
         }
 
@@ -599,14 +599,14 @@ class CartRuleCore extends ObjectModel
 			WHERE crg.id_cart_rule = '.(int)$this->id.'
 			AND crg.id_group '.($context->cart->id_customer ? 'IN (SELECT cg.id_group FROM '._DB_PREFIX_.'customer_group cg WHERE cg.id_customer = '.(int)$context->cart->id_customer.')' : '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP')));
             if (!$id_cart_rule) {
-                return (!$display_error) ? false : $this->trans('You cannot use this voucher', array(), 'Admin.Orderscustomers.Notification');
+                return (!$display_error) ? false : $this->trans('You cannot use this voucher', array(), 'Shop.Notifications.Error');
             }
         }
 
         // Check if the customer delivery address is usable with the cart rule
         if ($this->country_restriction) {
             if (!$context->cart->id_address_delivery) {
-                return (!$display_error) ? false : $this->trans('You must choose a delivery address before applying this voucher to your order', array(), 'Admin.Orderscustomers.Notification');
+                return (!$display_error) ? false : $this->trans('You must choose a delivery address before applying this voucher to your order', array(), 'Shop.Notifications.Error');
             }
             $id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crc.id_cart_rule
@@ -614,14 +614,14 @@ class CartRuleCore extends ObjectModel
 			WHERE crc.id_cart_rule = '.(int)$this->id.'
 			AND crc.id_country = (SELECT a.id_country FROM '._DB_PREFIX_.'address a WHERE a.id_address = '.(int)$context->cart->id_address_delivery.' LIMIT 1)');
             if (!$id_cart_rule) {
-                return (!$display_error) ? false : $this->trans('You cannot use this voucher in your country of delivery', array(), 'Admin.Orderscustomers.Notification');
+                return (!$display_error) ? false : $this->trans('You cannot use this voucher in your country of delivery', array(), 'Shop.Notifications.Error');
             }
         }
 
         // Check if the carrier chosen by the customer is usable with the cart rule
         if ($this->carrier_restriction && $check_carrier) {
             if (!$context->cart->id_carrier) {
-                return (!$display_error) ? false : $this->trans('You must choose a carrier before applying this voucher to your order', array(), 'Admin.Orderscustomers.Notification');
+                return (!$display_error) ? false : $this->trans('You must choose a carrier before applying this voucher to your order', array(), 'Shop.Notifications.Error');
             }
             $id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crc.id_cart_rule
@@ -630,7 +630,7 @@ class CartRuleCore extends ObjectModel
 			WHERE crc.id_cart_rule = '.(int)$this->id.'
 			AND c.id_carrier = '.(int)$context->cart->id_carrier);
             if (!$id_cart_rule) {
-                return (!$display_error) ? false : $this->trans('You cannot use this voucher with this carrier', array(), 'Admin.Orderscustomers.Notification');
+                return (!$display_error) ? false : $this->trans('You cannot use this voucher with this carrier', array(), 'Shop.Notifications.Error');
             }
         }
 
@@ -644,7 +644,7 @@ class CartRuleCore extends ObjectModel
                 }
             }
             if (!$is_ok) {
-                return (!$display_error) ? false : $this->trans('You cannot use this voucher on products on sale', array(), 'Admin.Orderscustomers.Notification');
+                return (!$display_error) ? false : $this->trans('You cannot use this voucher on products on sale', array(), 'Shop.Notifications.Error');
             }
         }
 
@@ -656,7 +656,7 @@ class CartRuleCore extends ObjectModel
 			WHERE crs.id_cart_rule = '.(int)$this->id.'
 			AND crs.id_shop = '.(int)$context->shop->id);
             if (!$id_cart_rule) {
-                return (!$display_error) ? false : $this->trans('You cannot use this voucher', array(), 'Admin.Orderscustomers.Notification');
+                return (!$display_error) ? false : $this->trans('You cannot use this voucher', array(), 'Shop.Notifications.Error');
             }
         }
 
@@ -673,9 +673,9 @@ class CartRuleCore extends ObjectModel
         // Check if the cart rule is only usable by a specific customer, and if the current customer is the right one
         if ($this->id_customer && $context->cart->id_customer != $this->id_customer) {
             if (!Context::getContext()->customer->isLogged()) {
-                return (!$display_error) ? false : ($this->trans('You cannot use this voucher', array(), 'Admin.Orderscustomers.Notification').' - '.$this->trans('Please log in first', array(), 'Admin.Orderscustomers.Notification'));
+                return (!$display_error) ? false : ($this->trans('You cannot use this voucher', array(), 'Shop.Notifications.Error').' - '.$this->trans('Please log in first', array(), 'Shop.Notifications.Error'));
             }
-            return (!$display_error) ? false : $this->trans('You cannot use this voucher', array(), 'Admin.Orderscustomers.Notification');
+            return (!$display_error) ? false : $this->trans('You cannot use this voucher', array(), 'Shop.Notifications.Error');
         }
 
         if ($this->minimum_amount && $check_carrier) {
@@ -721,7 +721,7 @@ class CartRuleCore extends ObjectModel
         if (count($otherCartRules)) {
             foreach ($otherCartRules as $otherCartRule) {
                 if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart) {
-                    return (!$display_error) ? false : $this->trans('This voucher is already in your cart', array(), 'Admin.Orderscustomers.Notification');
+                    return (!$display_error) ? false : $this->trans('This voucher is already in your cart', array(), 'Shop.Notifications.Error');
                 }
                 if ($otherCartRule['gift_product']) {
                     --$nb_products;
@@ -737,7 +737,7 @@ class CartRuleCore extends ObjectModel
                         $cart_rule = new CartRule((int)$otherCartRule['id_cart_rule'], $context->cart->id_lang);
                         // The cart rules are not combinable and the cart rule currently in the cart has priority over the one tested
                         if ($cart_rule->priority <= $this->priority) {
-                            return (!$display_error) ? false : $this->trans('This voucher is not combinable with an other voucher already in your cart:', array(), 'Admin.Orderscustomers.Notification').' '.$cart_rule->name;
+                            return (!$display_error) ? false : $this->trans('This voucher is not combinable with an other voucher already in your cart:', array(), 'Shop.Notifications.Error').' '.$cart_rule->name;
                         }
                         // But if the cart rule that is tested has priority over the one in the cart, we remove the one in the cart and keep this new one
                         else {
@@ -749,7 +749,7 @@ class CartRuleCore extends ObjectModel
         }
 
         if (!$nb_products) {
-            return (!$display_error) ? false : $this->trans('Cart is empty', array(), 'Admin.Orderscustomers.Notification');
+            return (!$display_error) ? false : $this->trans('Cart is empty', array(), 'Shop.Notifications.Error');
         }
 
         if (!$display_error) {
@@ -772,7 +772,7 @@ class CartRuleCore extends ObjectModel
                     }
                 }
                 if (!count($eligible_products_list)) {
-                    return (!$display_error) ? false : $this->trans('You cannot use this voucher in an empty cart', array(), 'Admin.Orderscustomers.Notification');
+                    return (!$display_error) ? false : $this->trans('You cannot use this voucher in an empty cart', array(), 'Shop.Notifications.Error');
                 }
 
                 $product_rules = $this->getProductRules($id_product_rule_group);
@@ -799,7 +799,7 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Admin.Orderscustomers.Notification');
+                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                             }
                             $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
                             break;
@@ -821,7 +821,7 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Admin.Orderscustomers.Notification');
+                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                             }
                             $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
                             break;
@@ -847,7 +847,7 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Admin.Orderscustomers.Notification');
+                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                             }
                             // Attribute id is not important for this filter in the global list, so the ids are replaced by 0
                             foreach ($matching_products_list as &$matching_product) {
@@ -871,7 +871,7 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Admin.Orderscustomers.Notification');
+                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                             }
                             $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
                             break;
@@ -891,14 +891,14 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Admin.Orderscustomers.Notification');
+                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                             }
                             $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
                             break;
                     }
 
                     if (!count($eligible_products_list)) {
-                        return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Admin.Orderscustomers.Notification');
+                        return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                     }
                 }
                 $selected_products = array_merge($selected_products, $eligible_products_list);
