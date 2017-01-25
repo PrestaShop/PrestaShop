@@ -69,9 +69,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array(
-            'header' => HTMLTemplateOrderSlip::l('Credit slip'),
-        ));
+        $this->smarty->assign(array('header' => Context::getContext()->getTranslator()->trans('Credit slip', array(), 'Shop.Pdf')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
@@ -192,7 +190,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getFilename()
     {
-        return 'order-slip-'.sprintf('%06d', $this->order_slip->id).'.pdf';
+        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_slip->id).'.pdf';
     }
 
     /**

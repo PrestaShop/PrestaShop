@@ -95,7 +95,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return sprintf('%06d', $this->order_return->id).'.pdf';
+        return Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_return->id).'.pdf';
     }
 
     /**
@@ -116,9 +116,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array(
-            'header' => HTMLTemplateOrderReturn::l('Order return'),
-        ));
+        $this->smarty->assign(array('header' => Context::getContext()->getTranslator()->trans('Order return', array(), 'Shop.Pdf')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
