@@ -100,7 +100,7 @@ class MetaCore extends ObjectModel
                 } elseif (preg_match('/^[a-z0-9_.-]*\.php$/i', $file)) {
                     $selectedPages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
                 } elseif (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file)) {
-                    $selectedPages[strtolower(Context::getContext()->getTranslator()->trans('%2$s (in %1$s)', array(dirname($file), str_replace('Controller.php', '', basename($file))), 'Admin.Notifications.Error'))] = strtolower(str_replace('Controller.php', '', basename($file)));
+                    $selectedPages[strtolower(Context::getContext()->getTranslator()->trans('File %2$s (in directory %1$s)', array(dirname($file), str_replace('Controller.php', '', basename($file))), 'Admin.Notifications.Error'))] = strtolower(str_replace('Controller.php', '', basename($file)));
                 }
             }
         }

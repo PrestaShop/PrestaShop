@@ -287,8 +287,13 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($fields_required as $field) {
             if (($value = $this->{$field}) == false && (string)$value != '0') {
                 if (!$this->id || $field != 'passwd') {
-                    $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities)
-                                .'</b> '.$this->trans('is required.', array(), 'Shop.Notifications.Error');
+                    $errors[] = $this->trans(
+                        '%s is required.',
+                        array(
+                            '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b>'
+                        ),
+                        'Shop.Notifications.Error'
+                    );
                 }
             }
         }

@@ -66,7 +66,7 @@ class HelperImageUploaderCore extends HelperUploader
         }
 
         if ($file['size'] > $this->getMaxSize()) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('File (size: %1s) is too big (max: %2s)', array($file['size'], $this->getMaxSize()), 'Admin.Notifications.Error');
+            $file['error'] = Context::getContext()->getTranslator()->trans('File is too big. Current size is %1s, maximum size is %2s.', array($file['size'], $this->getMaxSize()), 'Admin.Notifications.Error');
             return false;
         }
 

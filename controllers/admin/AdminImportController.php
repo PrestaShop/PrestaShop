@@ -3002,15 +3002,25 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!$res) {
-            $this->errors[] = $this->trans(
-                '%1$s (ID: %2$s) cannot be %3$s',
-                array(
-                    $info['email'],
-                    (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
-                    ($validateOnly?'validated':'saved')
-                ),
-                'Admin.Advparameters.Notification'
-            );
+            if ($validateOnly) {
+                $this->errors[] = $this->trans(
+                    'Email address %1$s (ID: %2$s) cannot be validated.',
+                    array(
+                        $info['email'],
+                        (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
+                    ),
+                    'Admin.Advparameters.Notification'
+                );
+            } else {
+                $this->errors[] = $this->trans(
+                    'Email address %1$s (ID: %2$s) cannot be saved.',
+                    array(
+                        $info['email'],
+                        (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
+                    ),
+                    'Admin.Advparameters.Notification'
+                );
+            }
             $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
                 Db::getInstance()->getMsgError();
         }
@@ -3141,16 +3151,27 @@ class AdminImportControllerCore extends AdminController
                 $customer_list = Customer::getCustomersByEmail($address->customer_email);
 
                 if (count($customer_list) == 0) {
-                    $this->errors[] = $this->trans(
-                        '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be %4$s',
-                        array(
-                            Db::getInstance()->getMsgError(),
-                            $address->customer_email,
-                            (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
-                            ($validateOnly?'validated':'saved')
-                        ),
-                        'Admin.Advparameters.Notification'
-                    );
+                    if ($validateOnly) {
+                        $this->errors[] = $this->trans(
+                            '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated',
+                            array(
+                                $address->customer_email,
+                                Db::getInstance()->getMsgError(),
+                                (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
+                    } else {
+                        $this->errors[] = $this->trans(
+                            '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved',
+                            array(
+                                $address->customer_email,
+                                Db::getInstance()->getMsgError(),
+                                (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
+                    }
                 }
             } else {
                 $this->errors[] = sprintf($this->trans('"%s" is not a valid email address.', array(), 'Admin.AdvParameters.Notification'), $address->customer_email);
@@ -3164,26 +3185,46 @@ class AdminImportControllerCore extends AdminController
                 $customer_list = Customer::getCustomersByEmail($customer->email);
 
                 if (count($customer_list) == 0) {
+                    if ($validateOnly) {
+                        $this->errors[] = $this->trans(
+                            '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated',
+                            array(
+                                $customer->email,
+                                Db::getInstance()->getMsgError(),
+                                (int)$address->id_customer,
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
+                    } else {
+                        $this->errors[] = $this->trans(
+                            '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved',
+                            array(
+                                $customer->email,
+                                Db::getInstance()->getMsgError(),
+                                (int)$address->id_customer,
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
+                    }
+                }
+            } else {
+                if ($validateOnly) {
                     $this->errors[] = $this->trans(
-                        '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be %4$s',
+                        'The customer ID #%d does not exist in the database, and therefore cannot be validated.',
                         array(
-                            Db::getInstance()->getMsgError(),
-                            $customer->email,
-                            (int)$address->id_customer,
-                            ($validateOnly?'validated':'saved')
+                            $address->id_customer,
+                        ),
+                        'Admin.Advparameters.Notification'
+                    );
+                } else {
+                    $this->errors[] = $this->trans(
+                        'The customer ID #%d does not exist in the database, and therefore cannot be saved.',
+                        array(
+                            $address->id_customer,
                         ),
                         'Admin.Advparameters.Notification'
                     );
                 }
-            } else {
-                $this->errors[] = $this->trans(
-                    'The customer ID #%d does not exist in the database, and therefore cannot be %2$s',
-                    array(
-                        $address->id_customer,
-                        ($validateOnly?'validated':'saved')
-                    ),
-                    'Admin.Advparameters.Notification'
-                );
             }
         } else {
             $customer_list = array();

@@ -669,7 +669,7 @@ class AdminImagesControllerCore extends AdminController
             }
             if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false))) === true) {
                 if (!count($this->errors)) {
-                    $this->errors[] = $this->trans('Cannot write images for this type: %s. Please check the %s folder\'s writing permissions.', array($proc['type'], $proc['dir']), 'Admin.Design.Notification');
+                    $this->errors[] = $this->trans('Cannot write images for this type: %1$s. Please check the %2$s folder\'s writing permissions.', array($proc['type'], $proc['dir']), 'Admin.Design.Notification');
                 }
             } elseif ($return == 'timeout') {
                 $this->errors[] = $this->trans('Only part of the images have been regenerated. The server timed out before finishing.', array(), 'Admin.Design.Notification');
@@ -681,7 +681,7 @@ class AdminImagesControllerCore extends AdminController
                 }
                 if (!count($this->errors)) {
                     if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages)) {
-                        $this->errors[] = $this->trans('Cannot write "No picture" image to (%s) images folder. Please check the folder\'s writing permissions.', array($proc['type']), 'Admin.Design.Notification');
+                        $this->errors[] = $this->trans('Cannot write "No picture" image to %s images folder. Please check the folder\'s writing permissions.', array($proc['type']), 'Admin.Design.Notification');
                     }
                 }
             }

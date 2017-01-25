@@ -737,7 +737,7 @@ class CartRuleCore extends ObjectModel
                         $cart_rule = new CartRule((int)$otherCartRule['id_cart_rule'], $context->cart->id_lang);
                         // The cart rules are not combinable and the cart rule currently in the cart has priority over the one tested
                         if ($cart_rule->priority <= $this->priority) {
-                            return (!$display_error) ? false : $this->trans('This voucher is not combinable with an other voucher already in your cart:', array(), 'Shop.Notifications.Error').' '.$cart_rule->name;
+                            return (!$display_error) ? false : $this->trans('This voucher is not combinable with an other voucher already in your cart: %s', array($cart_rule->name), 'Shop.Notifications.Error');
                         }
                         // But if the cart rule that is tested has priority over the one in the cart, we remove the one in the cart and keep this new one
                         else {

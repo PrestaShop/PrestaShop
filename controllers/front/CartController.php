@@ -194,7 +194,7 @@ class CartControllerCore extends FrontController
                                 $this->context->cart->addCartRule($cartRule->id);
                             }
                         } else {
-                            $this->errors[] = $this->trans('This voucher does not exists.', array(), 'Shop.Notifications.Error');
+                            $this->errors[] = $this->trans('This voucher does not exist.', array(), 'Shop.Notifications.Error');
                         }
                     }
                 } elseif (($id_cart_rule = (int)Tools::getValue('deleteDiscount')) && Validate::isUnsignedId($id_cart_rule)) {

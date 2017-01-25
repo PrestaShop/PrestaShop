@@ -732,10 +732,13 @@ class AdminPerformanceControllerCore extends AdminController
                     if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
                         Tools::generateHtaccess();
                     } else {
-                        $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.Advparameters.Notification');
-                        $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Advparameters.Notification');
-                        $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Advparameters.Notification');
-                        $this->errors[] = $message;
+                        $this->errors[] = $this->trans(
+                            'Before being able to use this tool, you need to:
+                            <br />- Create a blank .htaccess in your root directory.
+                            <br />- Give it write permissions (CHMOD 666 on Unix system).',
+                            array(),
+                            'Admin.Advparameters.Notification'
+                        );
                         Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
                     }
                 }
@@ -784,10 +787,13 @@ class AdminPerformanceControllerCore extends AdminController
                         unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
                         $redirectAdmin = true;
                     } else {
-                        $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.Advparameters.Notification');
-                        $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Advparameters.Notification');
-                        $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Advparameters.Notification');
-                        $this->errors[] = $message;
+                        $this->errors[] = $this->trans(
+                            'Before being able to use this tool, you need to:
+                            <br />- Create a blank .htaccess in your root directory.
+                            <br />- Give it write permissions (CHMOD 666 on Unix system).',
+                            array(),
+                            'Admin.Advparameters.Notification'
+                        );
                         Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
                     }
                 }

@@ -251,7 +251,7 @@ class PrestaShopBackupCore
             if (count($schema) != 1 || !isset($schema[0]['Table']) || !isset($schema[0]['Create Table'])) {
                 fclose($fp);
                 $this->delete();
-                echo Context::getContext()->getTranslator()->trans('An error occurred while backing up. Unable to obtain the schema of', array(), 'Admin.Advparameters.Notification').' "'.$table;
+                echo Context::getContext()->getTranslator()->trans('An error occurred while backing up. Unable to obtain the schema of %s', array($table), 'Admin.Advparameters.Notification');
 
                 return false;
             }
