@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -33,7 +33,7 @@
 		</h3>
 		<p>
 			<a class="btn btn-default" href="{$backup_url}">
-				<i class="icon-download"></i> 
+				<i class="icon-download"></i>
 				{l s='Download the backup file (%s MB)' sprintf=[$backup_weight]}
 			</a>
 		</p>
@@ -57,7 +57,7 @@
 			</ol>
 			<form action="{$currentIndex|escape:'html':'UTF-8'}&amp;add{$table}&amp;token={$token|escape:'html':'UTF-8'}" method="post" class="form-horizontal">
 				<button type="submit" class="btn btn-default">
-					<i class="icon-save"></i> 
+					<i class="icon-save"></i>
 					{l s='I have read the disclaimer. Please create a new backup.'}
 				</button>
 			</form>

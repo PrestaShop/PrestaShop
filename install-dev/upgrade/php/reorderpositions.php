@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,7 +50,7 @@ function reorderpositions()
             }
         }
     }
-    
+
     $cat_parent = Db::getInstance()->executeS('SELECT DISTINCT c.id_parent FROM `'._DB_PREFIX_.'category` c WHERE id_category != 1');
     foreach ($cat_parent as $parent) {
         $result = Db::getInstance()->executeS('
@@ -66,14 +66,14 @@ function reorderpositions()
 			WHERE `id_parent` = '.(int)($categ['id_parent']).'
 			AND `id_category` = '.(int)($categ['id_category']));
         }
-        
+
         $result = Db::getInstance()->executeS('
 							SELECT DISTINCT c.*, cl.*
 							FROM `'._DB_PREFIX_.'category` c
 							LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
 							WHERE c.id_parent = '.(int)($parent['id_parent']).'
 							ORDER BY name ASC');
-        
+
         // Remove number from category name
         foreach ($result as $i => $categ) {
             Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` c
@@ -82,7 +82,7 @@ function reorderpositions()
 			WHERE c.id_category = '.(int)($categ['id_category']).' AND id_lang = \''.(int)($categ['id_lang']).'\'');
         }
     }
-    
+
     /* Clean CMS positions */
     $cms_cat = Db::getInstance()->executeS('SELECT id_cms_category FROM `'._DB_PREFIX_.'cms_category` WHERE active=1');
     if ($cms_cat) {

@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -33,7 +33,7 @@
 		{if isset($next_thread) && $next_thread}
 			<a class="btn btn-default pull-right" href="{$next_thread.href|escape:'html':'UTF-8'}">
 				{$next_thread.name} <i class="icon-forward"></i>
-			</a> 
+			</a>
 		{/if}
 	</div>
 	<div class="well">
@@ -115,7 +115,7 @@
 			<i class="icon-magic icon-2x"></i><br>
 			{l s="Choose a template"}
 		</button>
-		-->		
+		-->
 		<button class="btn btn-default pull-right" name="submitReply"><i class="process-icon-mail-reply"></i> {l s="Send"}</button>
 		<input type="hidden" name="id_customer_thread" value="{$thread->id|intval}" />
 		<input type="hidden" name="msg_email" value="{$thread->email}" />
@@ -159,7 +159,7 @@
 			});
 			timer = setInterval("markAsRead()", 3000);
 		});
-	
+
 	function markAsRead()
 	{
 		$.ajax({

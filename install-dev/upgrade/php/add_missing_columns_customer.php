@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,7 +47,7 @@ function add_missing_columns_customer()
         'max_payment_days' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
 			ADD `max_payment_days` int(10) unsigned NOT NULL default "60"'
     );
-    
+
     foreach ($missing_fields as $field => $query) {
         if (!in_array($field, $current_fields)) {
             $res &= $db->execute($query);

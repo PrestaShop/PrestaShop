@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -69,7 +69,7 @@
 			</tr>
 		{/if}
 	{/if}
-	
+
 	{if ($order->total_paid_tax_incl - $order->total_paid_tax_excl) > 0}
 		<tr>
 			<td class="grey" width="70%">
@@ -80,7 +80,7 @@
 			</td>
 		</tr>
 	{/if}
-	
+
 	<tr class="bold">
 		<td class="grey" width="70%">
 			{if $tax_excluded_display}{l s='Total (Tax Excl.)' pdf='true'}{else}{l s='Total (Tax Incl.)' d='Shop.PDF' pdf='true'}{/if}
