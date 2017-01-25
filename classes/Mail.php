@@ -292,14 +292,12 @@ class MailCore extends ObjectModel
             }
             foreach ($isoArray as $isoCode) {
                 $isoTemplate = $isoCode.'/'.$template;
-                $overrideMail = false;
 
                 if ($moduleName !== false && (file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.txt') ||
                         file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.html'))) {
                     $templatePath = $themePath.'modules/'.$moduleName.'/mails/';
                 } elseif (file_exists($themePath.'mails/'.$isoTemplate.'.txt') || file_exists($themePath.'mails/'.$isoTemplate.'.html')) {
                     $templatePath = $themePath.'mails/';
-                    $overrideMail  = true;
                 }
 
                 if (!file_exists($templatePath.$isoTemplate.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)) {
