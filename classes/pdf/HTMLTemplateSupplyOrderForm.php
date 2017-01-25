@@ -51,7 +51,8 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
         // header informations
         $this->date = Tools::displayDate($supply_order->date_add);
-        $this->title = HTMLTemplateSupplyOrderForm::l('Supply order form');
+
+        $this->title = Context::getContext()->getTranslator()->trans('Supply order form', array(), 'Shop.Pdf');
 
         $this->shop = new Shop((int)$this->order->id_shop);
     }
@@ -122,7 +123,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return self::l('SupplyOrderForm').sprintf('_%s', $this->supply_order->reference).'.pdf';
+        return 'supply-order-form-'.sprintf('%06d', $this->supply_order->reference).'.pdf';
     }
 
     /**
@@ -192,8 +193,8 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     {
         $this->address = $this->address_warehouse;
         $free_text = array();
-        $free_text[] = HTMLTemplateSupplyOrderForm::l('TE: Tax excluded');
-        $free_text[] = HTMLTemplateSupplyOrderForm::l('TI: Tax included');
+        $free_text[] = Context::getContext()->getTranslator()->trans('TE: Tax excluded', array(), 'Shop.Pdf');
+        $free_text[] = Context::getContext()->getTranslator()->trans('TI: Tax included', array(), 'Shop.Pdf');
 
         $this->smarty->assign(array(
             'shop_address' => $this->getShopAddress(),
