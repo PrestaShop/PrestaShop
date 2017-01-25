@@ -71,6 +71,12 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
+        /* For Generating TCPDF Parameters
+        */
+        $pdf = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'));
+		$barcode_params = $pdf->serializeTCPDFtagParameters(array($this->order->getUniqReference(), 'C128', '', '', 0, 0, 0.2, array('position'=>'S', 'border'=>false, 'padding'=>0, 'fgcolor'=>array(0,0,0), 'bgcolor'=>array(255,255,255), 'text'=>true, 'font'=>'Helvetica', 'fontsize'=>8, 'stretchtext'=>0), 'N'));
+		$this->smarty->assign(array('barcode_params' => $barcode_params));
+        
         $this->smarty->assign(array('header' => HTMLTemplateInvoice::l('Invoice')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
