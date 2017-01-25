@@ -841,9 +841,11 @@ var form = (function() {
         $('*.has-danger').removeClass('has-danger');
         $('#form-nav li.has-error').removeClass('has-error');
       },
-      success: function(response) {
+      success: function() {
         showSuccessMessage(translate_javascripts['Form update success']);
-        
+
+        $('.js-spinner').hide();
+
         if (!redirect) {
           return;
         }
@@ -990,6 +992,12 @@ var form = (function() {
       $('.btn-submit', elem).click(function(event) {
         event.preventDefault();
         send($(this).attr('data-redirect'), $(this).attr('target'));
+      });
+
+      $('.js-btn-save').on('click', function () {
+        event.preventDefault();
+        $('.js-spinner').show();
+        send($(this).attr('href'));
       });
 
       /** on active field change, send form */
