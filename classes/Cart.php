@@ -3767,7 +3767,7 @@ class CartCore extends ObjectModel
 
         $hook = Hook::exec('actionCartSummary', $summary, null, true);
         if (is_array($hook)) {
-            $summary = array_merge($summary, array_shift($hook));
+            $summary = array_merge($summary, (array)array_shift($hook));
         }
 
         return $summary;
