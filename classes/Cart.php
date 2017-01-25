@@ -952,6 +952,7 @@ class CartCore extends ObjectModel
         }
 
         $pa_implode = array();
+        $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
 
         foreach ($ipa_list as $id_product_attribute) {
             if ((int)$id_product_attribute && !array_key_exists($id_product_attribute.'-'.$id_lang, self::$_attributesLists)) {
@@ -982,19 +983,19 @@ class CartCore extends ObjectModel
         );
 
         foreach ($result as $row) {
-            self::$_attributesLists[$row['id_product_attribute'].'-'.$id_lang]['attributes'] .= $row['public_group_name'].' : '.$row['attribute_name'].', ';
-            self::$_attributesLists[$row['id_product_attribute'].'-'.$id_lang]['attributes_small'] .= $row['attribute_name'].', ';
+            self::$_attributesLists[$row['id_product_attribute'].'-'.$id_lang]['attributes'] .= $row['public_group_name'].' : '.$row['attribute_name'].$separator.' ';
+            self::$_attributesLists[$row['id_product_attribute'].'-'.$id_lang]['attributes_small'] .= $row['attribute_name'].$separator.' ';
         }
 
         foreach ($pa_implode as $id_product_attribute) {
             self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes'] = rtrim(
                 self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes'],
-                ', '
+                $separator.' '
             );
 
             self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes_small'] = rtrim(
                 self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes_small'],
-                ', '
+                $separator.' '
             );
         }
     }
@@ -1517,7 +1518,6 @@ class CartCore extends ObjectModel
         $id_customization = null,
         $id_address_delivery = 0
     ) {
-
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
         }
@@ -1746,8 +1746,7 @@ class CartCore extends ObjectModel
         $products = null,
         $id_carrier = null,
         $use_cache = true
-    )
-    {
+    ) {
         // Dependencies
         $price_calculator = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
 

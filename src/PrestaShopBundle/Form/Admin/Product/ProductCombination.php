@@ -95,6 +95,7 @@ class ProductCombination extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_wholesale_price']
         ))
         ->add('attribute_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
@@ -126,6 +127,7 @@ class ProductCombination extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Impact on price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_unity'],
         ))
         ->add('attribute_minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,

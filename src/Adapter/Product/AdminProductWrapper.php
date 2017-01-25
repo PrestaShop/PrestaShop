@@ -513,7 +513,7 @@ class AdminProductWrapper
                 foreach (\LanguageCore::getLanguages() as $language) {
                     $name = $customization['label'][$language['id_lang']];
                     foreach ($shopList as $id_shop) {
-                        $langValues .= '('.(int)$id_customization_field.', '.(int)$language['id_lang'].', '.$id_shop .',\''.$name.'\'), ';
+                        $langValues .= '('.(int)$id_customization_field.', '.(int)$language['id_lang'].', '.(int)$id_shop .',\''.pSQL($name).'\'), ';
                     }
                 }
                 \Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '.rtrim($langValues, ', '));

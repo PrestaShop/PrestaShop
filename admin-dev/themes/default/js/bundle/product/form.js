@@ -1836,6 +1836,10 @@ var priceCalculation = (function() {
       $(document).on('keyup', '.combination-form .attribute_priceTI', function() {
         priceCalculation.impactTaxExclude($(this));
       });
+      /** combinations : update wholesale price, unity and price TE field on blur */
+      $(document).on('blur','.combination-form .attribute_wholesale_price,.combination-form .attribute_unity,.combination-form .attribute_priceTE', function(){
+        $(this).val(priceCalculation.normalizePrice($(this).val()));
+      });
 
       priceCalculation.taxInclude();
 

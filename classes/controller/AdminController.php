@@ -3158,8 +3158,8 @@ class AdminControllerCore extends Controller
                     $this->_where .= ' AND EXISTS (
                         SELECT 1
                         FROM `'._DB_PREFIX_.$this->table.'_shop` sa
-                        WHERE a.'.$this->identifier.' = sa.'.$this->identifier.
-                        ' AND sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
+                        WHERE a.`'.bqSQL($this->identifier).'` = sa.`'.bqSQL($this->identifier).'`
+                         AND sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
                     )';
                 }
             }
@@ -3268,8 +3268,8 @@ class AdminControllerCore extends Controller
     {
         $shopJoinClause = '';
         if ($this->shopLinkType) {
-            $shopJoinClause = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
-                            ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
+            $shopJoinClause = ' LEFT JOIN `'._DB_PREFIX_.bqSQL($this->shopLinkType).'` shop
+                            ON a.`id_'.bqSQL($this->shopLinkType).'` = shop.`id_'.bqSQL($this->shopLinkType).'`';
         }
 
         return "\n".$this->getLanguageJoinClause($id_lang, $id_lang_shop).
@@ -3286,8 +3286,8 @@ class AdminControllerCore extends Controller
     {
         $languageJoinClause = '';
         if ($this->lang) {
-            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . $this->table . '_lang` b ON (b.`' .
-                $this->identifier . '` = a.`' . $this->identifier . '` AND b.`id_lang` = ' . (int)$idLang;
+            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->table). '_lang` b 
+                ON (b.`' . bqSQL($this->identifier) . '` = a.`' . bqSQL($this->identifier) . '` AND b.`id_lang` = ' . (int)$idLang;
 
             if ($idLangShop) {
                 if (!Shop::isFeatureActive()) {

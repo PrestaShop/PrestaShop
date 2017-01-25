@@ -345,7 +345,7 @@ abstract class ModuleGraphCore extends Module
     public static function getDateBetween($employee = null)
     {
         if ($employee = ModuleGraph::getEmployee($employee)) {
-            return ' \''.$employee->stats_date_from.' 00:00:00\' AND \''.$employee->stats_date_to.' 23:59:59\' ';
+            return ' \''.pSQL($employee->stats_date_from).' 00:00:00\' AND \''.pSQL($employee->stats_date_to).' 23:59:59\' ';
         }
         return ' \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m-t').' 23:59:59\' ';
     }

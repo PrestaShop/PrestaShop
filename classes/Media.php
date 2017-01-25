@@ -670,11 +670,14 @@ class MediaCore
      */
     public static function clearCache()
     {
-        foreach (array(_PS_THEME_DIR_.'cache') as $dir) {
-            if (file_exists($dir)) {
-                foreach (array_diff(scandir($dir), array('..', '.', 'index.php')) as $file) {
-                    Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file);
-                }
+        $files = array_merge(
+            glob(_PS_THEME_DIR_.'assets/cache/*'),
+            glob(_PS_THEME_DIR_.'cache/*')
+        );
+
+        foreach ($files as $file) {
+            if ('index.php' !== basename($file)) {
+                Tools::deleteFile($file);
             }
         }
 
