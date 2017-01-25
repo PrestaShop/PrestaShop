@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 
@@ -163,6 +164,11 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array(), $avoidPersistence = false, $formatCldr = true)
     {
+        $offset = (int)$offset;
+        $limit = (int)$limit;
+        $orderBy = Validate::isOrderBy($orderBy) ? $orderBy : 'id_product';
+        $sortOrder = Validate::isOrderWay($sortOrder) ? $sortOrder : 'desc';
+
         $filterParams = $this->combinePersistentCatalogProductFilter(array_merge(
             $post,
             ['last_offset' => $offset, 'last_limit' => $limit, 'last_orderBy' => $orderBy, 'last_sortOrder' => $sortOrder]
