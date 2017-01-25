@@ -96,8 +96,7 @@ class AdminPreferencesControllerCore extends AdminController
             $fields = array(
                 'PS_SSL_ENABLED' => array(
                     'title' => $this->trans('Enable SSL', array(), 'Admin.ShopParameters.Feature'),
-                    'desc' => $this->trans('If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.', array(), 'Admin.ShopParameters.Help'),
-                    'hint' => $this->trans('If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('When enabled, all the pages of your shop will be SSL-secured.', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
@@ -110,9 +109,8 @@ class AdminPreferencesControllerCore extends AdminController
                 'desc' => $this->trans('When enabled, all the pages of your shop will be SSL-secured.', array(), 'Admin.ShopParameters.Help'),
                 'validation' => 'isBool',
                 'cast' => 'intval',
-                'type' => 'bool',
+                'type' => 'hidden',
                 'default' => '0',
-                'disabled' => (Tools::getValue('PS_SSL_ENABLED', Configuration::get('PS_SSL_ENABLED'))) ? false : true
             );
 
             $fields = array_merge($fields, array(
@@ -248,5 +246,17 @@ class AdminPreferencesControllerCore extends AdminController
         $tab = Tab::getInstanceFromClassName('AdminShopGroup');
         $tab->active = (bool)Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
         $tab->update();
+    }
+
+    /**
+     * Some additional processing, before processing the whole form
+     */
+    public function postProcess()
+    {
+        if (Tools::isSubmit('PS_SSL_ENABLED')) {
+            $_POST['PS_SSL_ENABLED_EVERYWHERE'] = (Tools::getValue('PS_SSL_ENABLED')) ? 1 : 0;
+        }
+
+        parent::postProcess();
     }
 }

@@ -86,6 +86,9 @@
   <configuration id="PS_SSL_ENABLED" name="PS_SSL_ENABLED">
     <value>0</value>
   </configuration>
+  <configuration id="PS_SSL_ENABLED_EVERYWHERE" name="PS_SSL_ENABLED_EVERYWHERE">
+    <value>0</value>
+  </configuration>
   <configuration id="PS_WEIGHT_UNIT" name="PS_WEIGHT_UNIT">
     <value>kg</value>
   </configuration>

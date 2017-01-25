@@ -204,3 +204,4 @@ DELETE FROM `PREFIX_configuration` WHERE `name` IN (
 ALTER TABLE `PREFIX_tab` ADD `icon` varchar(32) DEFAULT '';
 
 /* PHP:migrate_tabs_17(); */;
+/* PHP:force_ssl(); */;
