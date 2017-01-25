@@ -370,9 +370,11 @@ class TranslateCore
 
     /**
      * Helper function to make calls to postProcessTranslation more readable.
+     * @deprecated 1.7.1.0
      */
     public static function ppTags($string, $tags)
     {
+        Tools::displayAsDeprecated();
         return Translate::postProcessTranslation($string, array('tags' => $tags));
     }
 }
