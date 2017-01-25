@@ -3222,8 +3222,9 @@ class ProductCore extends ObjectModel
     public function getPublicPrice($tax = true, $id_product_attribute = null, $decimals = 6,
             $divisor = null, $only_reduc = false, $usereduc = true, $quantity = 1)
     {
+        $specific_price_output = null;
         return Product::getPriceStatic((int)$this->id, $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity,
-            false, null, null, null, null, true, true, null, false);
+            false, null, null, null, $specific_price_output, true, true, null, false);
     }
 
     public function getIdProductAttributeMostExpensive()
