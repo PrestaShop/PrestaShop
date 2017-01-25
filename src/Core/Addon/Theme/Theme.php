@@ -78,9 +78,11 @@ class Theme implements AddonInterface
         $modulesToHook = $this->get('global_settings.hooks.modules_to_hook', array());
 
         foreach ($modulesToHook as $hookName => $modules) {
-            foreach (array_values($modules) as $module) {
-                if (!in_array($module, $modulesToEnable)) {
-                    $modulesToEnable[] = $module;
+            if (is_array($modules)) {
+                foreach (array_values($modules) as $module) {
+                    if (!in_array($module, $modulesToEnable)) {
+                        $modulesToEnable[] = $module;
+                    }
                 }
             }
         }
