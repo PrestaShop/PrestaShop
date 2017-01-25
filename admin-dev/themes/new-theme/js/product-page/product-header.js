@@ -55,13 +55,6 @@ export default function() {
     }
   });
 
-  $('.js-btn-save').on('click', () =>{
-    $('.js-spinner').show();
-    $( document ).ajaxComplete(()=> {
-      $('.js-spinner').hide();
-    });
-  });
-
   var init = () => {
     if($('.js-nav-tabs').width() < $('.js-tabs').width()) {
       $('.js-nav-tabs').width($('.js-tabs').width());
