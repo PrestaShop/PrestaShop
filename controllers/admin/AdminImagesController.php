@@ -365,7 +365,7 @@ class AdminImagesControllerCore extends AdminController
                 } elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
                     || !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
                     || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY'))) {
-                    $this->errors[] = Tools::displayError('Unknown error.');
+                    $this->errors[] = $this->trans('Unknown error.', array(), 'Admin.Notifications.Error');
                 } else {
                     $this->confirmations[] = $this->_conf[6];
                 }
@@ -669,7 +669,7 @@ class AdminImagesControllerCore extends AdminController
             }
             if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false))) === true) {
                 if (!count($this->errors)) {
-                    $this->errors[] = sprintf(Tools::displayError('Cannot write images for this type: %s. Please check the %s folder\'s writing permissions.'), $proc['type'], $proc['dir']);
+                    $this->errors[] = $this->trans('Cannot write images for this type: %s. Please check the %s folder\'s writing permissions.', array($proc['type'], $proc['dir']), 'Admin.Design.Notification');
                 }
             } elseif ($return == 'timeout') {
                 $this->errors[] = $this->trans('Only part of the images have been regenerated. The server timed out before finishing.', array(), 'Admin.Design.Notification');
@@ -681,7 +681,7 @@ class AdminImagesControllerCore extends AdminController
                 }
                 if (!count($this->errors)) {
                     if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages)) {
-                        $this->errors[] = sprintf(Tools::displayError('Cannot write "No picture" image to (%s) images folder. Please check the folder\'s writing permissions.'), $proc['type']);
+                        $this->errors[] = $this->trans('Cannot write "No picture" image to (%s) images folder. Please check the folder\'s writing permissions.', array($proc['type']), 'Admin.Design.Notification');
                     }
                 }
             }

@@ -68,11 +68,11 @@ class MetaCore extends ObjectModel
     {
         $selectedPages = array();
         if (!$files = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'front'.DIRECTORY_SEPARATOR, 'php', '', true)) {
-            die(Tools::displayError('Cannot scan root directory'));
+            die(Context::getContext()->getTranslator()->trans('Cannot scan root directory', array(), 'Admin.Notifications.Error'));
         }
 
         if (!$overrideFiles = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR, 'php', '', true)) {
-            die(Tools::displayError('Cannot scan "override" directory'));
+            die(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', array(), 'Admin.Notifications.Error'));
         }
 
         $files = array_values(array_unique(array_merge($files, $overrideFiles)));
@@ -100,7 +100,7 @@ class MetaCore extends ObjectModel
                 } elseif (preg_match('/^[a-z0-9_.-]*\.php$/i', $file)) {
                     $selectedPages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
                 } elseif (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file)) {
-                    $selectedPages[strtolower(sprintf(Tools::displayError('%2$s (in %1$s)'), dirname($file), str_replace('Controller.php', '', basename($file))))] = strtolower(str_replace('Controller.php', '', basename($file)));
+                    $selectedPages[strtolower(Context::getContext()->getTranslator()->trans('%2$s (in %1$s)', array(dirname($file), str_replace('Controller.php', '', basename($file))), 'Admin.Notifications.Error'))] = strtolower(str_replace('Controller.php', '', basename($file)));
                 }
             }
         }

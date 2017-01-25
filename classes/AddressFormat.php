@@ -129,7 +129,7 @@ class AddressFormatCore extends ObjectModel
         $isValid = false;
 
         if (!class_exists($className)) {
-            $this->_errorFormatList[] = Tools::displayError('This class name does not exist.').
+            $this->_errorFormatList[] = $this->trans('This class name does not exist.', array(), 'Admin.Notifications.Error').
             ': '.$className;
         } else {
             $obj = new $className();
@@ -146,7 +146,7 @@ class AddressFormatCore extends ObjectModel
             }
 
             if (!$isValid) {
-                $this->_errorFormatList[] = Tools::displayError('This property does not exist in the class or is forbidden.').
+                $this->_errorFormatList[] = $this->trans('This property does not exist in the class or is forbidden.', array(), 'Admin.Notifications.Error').
                 ': '.$className.': '.$fieldName;
             }
 
@@ -173,23 +173,23 @@ class AddressFormatCore extends ObjectModel
         if ($associationName = explode(':', $patternName)) {
             $totalNameUsed = count($associationName);
             if ($totalNameUsed > 2) {
-                $this->_errorFormatList[] = Tools::displayError('This association has too many elements.');
+                $this->_errorFormatList[] = $this->trans('This association has too many elements.', array(), 'Admin.Notifications.Error');
             } elseif ($totalNameUsed == 1) {
                 $associationName[0] = strtolower($associationName[0]);
                 if (in_array($associationName[0], self::$forbiddenPropertyList) ||
                     !$this->_checkValidateClassField('Address', $associationName[0], false)) {
-                    $this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.
+                    $this->_errorFormatList[] = $this->trans('This name is not allowed.', array(), 'Admin.Notifications.Error').': '.
                     $associationName[0];
                 }
             } elseif ($totalNameUsed == 2) {
                 if (empty($associationName[0]) || empty($associationName[1])) {
-                    $this->_errorFormatList[] = Tools::displayError('Syntax error with this pattern.').': '.$patternName;
+                    $this->_errorFormatList[] = $this->trans('Syntax error with this pattern.', array(), 'Admin.Notifications.Error').': '.$patternName;
                 } else {
                     $associationName[0] = ucfirst($associationName[0]);
                     $associationName[1] = strtolower($associationName[1]);
 
                     if (in_array($associationName[0], self::$forbiddenClassList)) {
-                        $this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.
+                        $this->_errorFormatList[] = $this->trans('This name is not allowed.', array(), 'Admin.Notifications.Error').': '.
                         $associationName[0];
                     } else {
                         // Check if the id field name exist in the Address class
@@ -225,7 +225,7 @@ class AddressFormatCore extends ObjectModel
                                 $this->_checkLiableAssociation($patternName, $fieldsValidate);
                                 $usedKeyList[] = $patternName;
                             } else {
-                                $this->_errorFormatList[] = Tools::displayError('This key has already been used.').
+                                $this->_errorFormatList[] = $this->trans('This key has already been used.', array(), 'Admin.Notifications.Error').
                                     ': '.$patternName;
                             }
                         }

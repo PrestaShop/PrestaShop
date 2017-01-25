@@ -552,7 +552,7 @@ class AdminStatusesControllerCore extends AdminController
 
             // Update object
             if (!$order_return_state->save()) {
-                $this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current order\'s return status.');
+                $this->errors[] = $this->trans('An error has occurred: Can\'t save the current order\'s return status.', array(), 'Admin.Orderscustomers.Notification');
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
             }
@@ -572,7 +572,7 @@ class AdminStatusesControllerCore extends AdminController
             $order_return_state = new OrderReturnState((int)$id_order_return_state);
 
             if (!$order_return_state->delete()) {
-                $this->errors[] = Tools::displayError('An error has occurred: Can\'t delete the current order\'s return status.');
+                $this->errors[] = $this->trans('An error has occurred: Can\'t delete the current order\'s return status.', array(), 'Admin.Orderscustomers.Notification');
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$this->token);
             }

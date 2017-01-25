@@ -271,7 +271,7 @@ class AdminShopControllerCore extends AdminController
             Tools::generateHtaccess();
             return $result;
         } else {
-            $this->errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency).');
+            $this->errors[] = $this->trans('You cannot delete this shop (customer and/or order dependency).', array(), 'Admin.Shopparameters.Notification');
         }
 
         return false;

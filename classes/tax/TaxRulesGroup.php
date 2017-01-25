@@ -148,7 +148,7 @@ class TaxRulesGroupCore extends ObjectModel
     */
     public static function getTaxRulesGroupsForOptions()
     {
-        $tax_rules[] = array('id_tax_rules_group' => 0, 'name' => Tools::displayError('No tax'));
+        $tax_rules[] = array('id_tax_rules_group' => 0, 'name' => Context::getContext()->getTranslator()->trans('No tax', array(), 'Admin.International.Notification'));
         return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroups());
     }
 

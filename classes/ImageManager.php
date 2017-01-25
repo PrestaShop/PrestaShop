@@ -430,13 +430,13 @@ class ImageManagerCore
     public static function validateUpload($file, $maxFileSize = 0, $types = null)
     {
         if ((int) $maxFileSize > 0 && $file['size'] > (int) $maxFileSize) {
-            return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $maxFileSize / 1024);
+            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1024, $maxFileSize / 1024), 'Admin.Notifications.Error');
         }
         if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
-            return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', array(), 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', array($file['error']), 'Admin.Notifications.Error');
         }
 
         return false;
@@ -453,17 +453,13 @@ class ImageManagerCore
     public static function validateIconUpload($file, $maxFileSize = 0)
     {
         if ((int) $maxFileSize > 0 && $file['size'] > $maxFileSize) {
-            return sprintf(
-                Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'),
-                $file['size'] / 1000,
-                $maxFileSize / 1000
-            );
+            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1000, $maxFileSize / 1000), 'Admin.Notifications.Error');
         }
         if (substr($file['name'], -4) != '.ico') {
-            return Tools::displayError('Image format not recognized, allowed formats are: .ico');
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .ico', array(), 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return Tools::displayError('Error while uploading image; please change your server\'s settings.');
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings.', array(), 'Admin.Notifications.Error');
         }
 
         return false;

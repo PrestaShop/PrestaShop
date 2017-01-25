@@ -316,7 +316,12 @@ class FrontControllerCore extends Controller
 
         /* Theme is missing */
         if (!is_dir(_PS_THEME_DIR_)) {
-            throw new PrestaShopException((sprintf(Tools::displayError('Current theme unavailable "%s". Please check your theme directory name and permissions.'), basename(rtrim(_PS_THEME_DIR_, '/\\')))));
+            throw new PrestaShopException(
+                $this->trans(
+                    'Current theme unavailable "%s". Please check your theme directory name and permissions.',
+                    array(basename(rtrim(_PS_THEME_DIR_, '/\\'))),
+                    'Admin.Design.Notification'
+                ));
         }
 
         if (Configuration::get('PS_GEOLOCATION_ENABLED')) {

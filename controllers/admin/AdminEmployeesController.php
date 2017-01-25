@@ -76,7 +76,7 @@ class AdminEmployeesControllerCore extends AdminController
 
         $profiles = Profile::getProfiles($this->context->language->id);
         if (!$profiles) {
-            $this->errors[] = Tools::displayError('No profile.');
+            $this->errors[] = $this->trans('No profile.', array(), 'Admin.Notifications.Error');
         } else {
             foreach ($profiles as $profile) {
                 $this->profiles_array[$profile['name']] = $profile['name'];

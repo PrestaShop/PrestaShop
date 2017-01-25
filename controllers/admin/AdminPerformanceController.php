@@ -732,10 +732,10 @@ class AdminPerformanceControllerCore extends AdminController
                     if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
                         Tools::generateHtaccess();
                     } else {
-                        $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.AdvParameters.Notification');
-                        $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.AdvParameters.Notification');
-                        $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.AdvParameters.Notification');
-                        $this->errors[] = Tools::displayError($message, false);
+                        $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.Advparameters.Notification');
+                        $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Advparameters.Notification');
+                        $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Advparameters.Notification');
+                        $this->errors[] = $message;
                         Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
                     }
                 }
@@ -784,10 +784,10 @@ class AdminPerformanceControllerCore extends AdminController
                         unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
                         $redirectAdmin = true;
                     } else {
-                        $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.AdvParameters.Notification');
-                        $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.AdvParameters.Notification');
-                        $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.AdvParameters.Notification');
-                        $this->errors[] = Tools::displayError($message, false);
+                        $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.Advparameters.Notification');
+                        $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Advparameters.Notification');
+                        $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Advparameters.Notification');
+                        $this->errors[] = $message;
                         Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
                     }
                 }
@@ -887,19 +887,19 @@ class AdminPerformanceControllerCore extends AdminController
             if (!empty($debug_mode_status)) {
                 switch ($debug_mode_status) {
                     case self::DEBUG_MODE_ERROR_COULD_NOT_BACKUP:
-                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.old.php'));
+                        $this->errors[] = $this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.old.php'), 'Admin.Advparameters.Notification');
                         break;
                     case self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
-                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        $this->errors[] = $this->trans('Error: could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
                         break;
                     case self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS:
-                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        $this->errors[] = $this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
                         break;
                     case self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
-                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines_custom.inc.php'));
+                        $this->errors[] = $this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines_custom.inc.php'), 'Admin.Advparameters.Notification');
                         break;
                     case self::DEBUG_MODE_ERROR_NO_READ_ACCESS:
-                        $this->errors[] = Tools::displayError(sprintf($this->trans('Error: could not read file. Make sure that the correct permissions are set on the file %s', array(), 'Admin.AdvParameters.Notification'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        $this->errors[] = $this->trans('Error: could not read file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
                         break;
                     default:
                         break;

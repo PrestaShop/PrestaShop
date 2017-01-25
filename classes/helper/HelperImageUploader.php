@@ -51,12 +51,12 @@ class HelperImageUploaderCore extends HelperUploader
         $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
 
         if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size)) {
-            $file['error'] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini');
+            $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', array(), 'Admin.Notifications.Error');
             return false;
         }
 
         if ($upload_max_filesize && ($this->_getServerVars('CONTENT_LENGTH') > $upload_max_filesize)) {
-            $file['error'] = Tools::displayError('The uploaded file exceeds the upload_max_filesize directive in php.ini');
+            $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini', array(), 'Admin.Notifications.Error');
             return false;
         }
 
@@ -66,7 +66,7 @@ class HelperImageUploaderCore extends HelperUploader
         }
 
         if ($file['size'] > $this->getMaxSize()) {
-            $file['error'] = sprintf(Tools::displayError('File (size : %1s) is too big (max : %2s)'), $file['size'], $this->getMaxSize());
+            $file['error'] = Context::getContext()->getTranslator()->trans('File (size: %1s) is too big (max: %2s)', array($file['size'], $this->getMaxSize()), 'Admin.Notifications.Error');
             return false;
         }
 

@@ -137,10 +137,10 @@ class OrderHistoryCore extends ObjectModel
                     $links .= '<li>';
                     $links .= '<a href="'.$product['link'].'">'.Tools::htmlentitiesUTF8($product['name']).'</a>';
                     if (isset($product['deadline'])) {
-                        $links .= '&nbsp;'.Tools::htmlentitiesUTF8(Tools::displayError('expires on', false)).'&nbsp;'.$product['deadline'];
+                        $links .= '&nbsp;'.$this->trans('expires on ', array($product['deadline']), 'Admin.Orderscustomers.Notification');
                     }
                     if (isset($product['downloadable'])) {
-                        $links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)', false), (int)$product['downloadable']));
+                        $links .= '&nbsp;'.$this->trans('downloadable %d time(s)', array((int)$product['downloadable']), 'Admin.Orderscustomers.Notification');
                     }
                     $links .= '</li>';
                 }
@@ -319,7 +319,7 @@ class OrderHistoryCore extends ObjectModel
 
         // changes invoice number of order ?
         if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order)) {
-            die(Tools::displayError('Invalid new order status'));
+            die($this->trans('Invalid new order status', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         // the order is valid if and only if the invoice is available and the order is not cancelled

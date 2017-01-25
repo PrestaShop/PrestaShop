@@ -276,13 +276,13 @@ abstract class ModuleGraphCore extends Module
     {
         $context = Context::getContext();
         if (!($render = Configuration::get('PS_STATS_RENDER'))) {
-            return Tools::displayError('No graph engine selected');
+            return Context::getContext()->getTranslator()->trans('No graph engine selected', array(), 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
         if (!file_exists(_PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php')) {
-            return Tools::displayError('Graph engine selected is unavailable.');
+            return Context::getContext()->getTranslator()->trans('Graph engine selected is unavailable.', array(), 'Admin.Modules.Notification');
         }
 
         $id_employee = (int)$context->employee->id;

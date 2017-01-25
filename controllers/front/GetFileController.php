@@ -315,15 +315,15 @@ class GetFileControllerCore extends FrontController
     protected function displayCustomError($msg)
     {
         $translations = array(
-        'Invalid key.' => Tools::displayError('Invalid key.'),
-        'This product does not exist in our store.' => Tools::displayError('This product does not exist in our store.'),
-        'This product has been deleted.' => Tools::displayError('This product has been deleted.'),
-        'This file no longer exists.'    => Tools::displayError('This file no longer exists.'),
-        'This product has been refunded.' => Tools::displayError('This product has been refunded.'),
-        'The product deadline is in the past.' => Tools::displayError('The product deadline is in the past.'),
-        'Expiration date exceeded' => Tools::displayError('The product expiration date has passed, preventing you from download this product.'),
-        'Expiration date has passed, you cannot download this product' => Tools::displayError('Expiration date has passed, you cannot download this product.'),
-        'You have reached the maximum number of allowed downloads.' => Tools::displayError('You have reached the maximum number of downloads allowed.'));
+        'Invalid key.' => $this->trans('Invalid key.', array(), 'Shop.Notifications.Error'),
+        'This product does not exist in our store.' => $this->trans('This product does not exist in our store.', array(), 'Shop.Notifications.Error'),
+        'This product has been deleted.' => $this->trans('This product has been deleted.', array(), 'Shop.Notifications.Error'),
+        'This file no longer exists.'    => $this->trans('This file no longer exists.', array(), 'Shop.Notifications.Error'),
+        'This product has been refunded.' => $this->trans('This product has been refunded.', array(), 'Shop.Notifications.Error'),
+        'The product deadline is in the past.' => $this->trans('The product deadline is in the past.', array(), 'Shop.Notifications.Error'),
+        'Expiration date exceeded' => $this->trans('The product expiration date has passed, preventing you from download this product.', array(), 'Shop.Notifications.Error'),
+        'Expiration date has passed, you cannot download this product' => $this->trans('Expiration date has passed, you cannot download this product.', array(), 'Shop.Notifications.Error'),
+        'You have reached the maximum number of allowed downloads.' => $this->trans('You have reached the maximum number of downloads allowed.', array(), 'Shop.Notifications.Error'));
         ?>
 		<script type="text/javascript">
 		//<![CDATA[

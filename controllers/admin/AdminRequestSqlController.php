@@ -391,7 +391,7 @@ class AdminRequestSqlControllerCore extends AdminController
                                 'Admin.AdvParameters.Notification'
                             );
                     } else {
-                        $this->errors[] = Tools::displayError('Undefined "checkedFrom" error');
+                        $this->errors[] = $this->trans('Undefined "%s" error', array('checkedForm'), 'Admin.Advparameters.Notification');
                     }
                 break;
 
@@ -416,7 +416,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } elseif (isset($e[$key]['*'])) {
                         $this->errors[] = $this->trans('The "*" operator cannot be used in a nested query.', array(), 'Admin.AdvParameters.Notification');
                     } else {
-                        $this->errors[] = Tools::displayError('Undefined "checkedSelect" error');
+                        $this->errors[] = $this->trans('Undefined "%s" error', array('checkedSelect'), 'Admin.Advparameters.Notification');
                     }
                 break;
 
@@ -439,7 +439,7 @@ class AdminRequestSqlControllerCore extends AdminController
                             'Admin.AdvParameters.Notification'
                         );
                     } else {
-                        $this->errors[] = Tools::displayError('Undefined "checkedWhere" error');
+                        $this->errors[] = $this->trans('Undefined "%s" error', array('checkedWhere'), 'Admin.Advparameters.Notification');
                     }
                 break;
 
@@ -462,7 +462,7 @@ class AdminRequestSqlControllerCore extends AdminController
                             'Admin.AdvParameters.Notification'
                         );
                     } else {
-                        $this->errors[] = Tools::displayError('Undefined "checkedHaving" error');
+                        $this->errors[] = $this->trans('Undefined "%s" error', array('checkedHaving'), 'Admin.Advparameters.Notification');
                     }
                 break;
 
@@ -477,7 +477,7 @@ class AdminRequestSqlControllerCore extends AdminController
                             'Admin.AdvParameters.Notification'
                         );
                     } else {
-                        $this->errors[] = Tools::displayError('Undefined "checkedOrder" error');
+                        $this->errors[] = $this->trans('Undefined "%s" error', array('checkedOrder'), 'Admin.Advparameters.Notification');
                     }
                 break;
 
@@ -492,7 +492,7 @@ class AdminRequestSqlControllerCore extends AdminController
                             'Admin.AdvParameters.Notification'
                         );
                     } else {
-                        $this->errors[] = Tools::displayError('Undefined "checkedGroupBy" error');
+                        $this->errors[] = $this->trans('Undefined "%s" error', array('checkedGroupBy'), 'Admin.Advparameters.Notification');
                     }
                 break;
 

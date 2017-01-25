@@ -104,10 +104,10 @@ class AdminDeliverySlipControllerCore extends AdminController
     {
         if (Tools::isSubmit('submitAdddelivery')) {
             if (!Validate::isDate(Tools::getValue('date_from'))) {
-                $this->errors[] = Tools::displayError('Invalid \'from\' date');
+                $this->errors[] = $this->trans('Invalid \'from\' date', array(), 'Admin.Catalog.Notification');
             }
             if (!Validate::isDate(Tools::getValue('date_to'))) {
-                $this->errors[] = Tools::displayError('Invalid \'to\' date');
+                $this->errors[] = $this->trans('Invalid \'to\' date', array(), 'Admin.Catalog.Notification');
             }
             if (!count($this->errors)) {
                 if (count(OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to')))) {

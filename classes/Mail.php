@@ -179,14 +179,14 @@ class MailCore extends ObjectModel
 
         // It would be difficult to send an e-mail if the e-mail is not valid, so this time we can die if there is a problem
         if (!is_array($to) && !Validate::isEmail($to)) {
-            Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
+            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: parameter "to" is corrupted', array(), 'Admin.Advparameters.Notification'), $die);
 
             return false;
         }
 
         // if bcc is not null, make sure it's a vaild e-mail
         if (!is_null($bcc) && !is_array($bcc) && !Validate::isEmail($bcc)) {
-            Tools::dieOrLog(Tools::displayError('Error: parameter "bcc" is corrupted'), $die);
+            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: parameter "bcc" is corrupted', array(), 'Admin.Advparameters.Notification'), $die);
             $bcc = null;
         }
 
@@ -200,13 +200,13 @@ class MailCore extends ObjectModel
         }
 
         if (!Validate::isTplName($template)) {
-            Tools::dieOrLog(Tools::displayError('Error: invalid e-mail template'), $die);
+            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail template', array(), 'Admin.Advparameters.Notification'), $die);
 
             return false;
         }
 
         if (!Validate::isMailSubject($subject)) {
-            Tools::dieOrLog(Tools::displayError('Error: invalid e-mail subject'), $die);
+            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail subject', array(), 'Admin.Advparameters.Notification'), $die);
 
             return false;
         }
@@ -217,7 +217,7 @@ class MailCore extends ObjectModel
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
                 if (!Validate::isEmail($addr)) {
-                    Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
+                    Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail address', array(), 'Admin.Advparameters.Notification'), $die);
 
                     return false;
                 }
@@ -241,7 +241,7 @@ class MailCore extends ObjectModel
             foreach ($bcc as $addr) {
                 $addr = trim($addr);
                 if (!Validate::isEmail($addr)) {
-                    Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
+                    Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail address', array(), 'Admin.Advparameters.Notification'), $die);
                     return false;
                 }
                 $message->addBcc($addr);
@@ -254,7 +254,7 @@ class MailCore extends ObjectModel
             /* Connect with the appropriate configuration */
             if ($configuration['PS_MAIL_METHOD'] == 2) {
                 if (empty($configuration['PS_MAIL_SERVER']) || empty($configuration['PS_MAIL_SMTP_PORT'])) {
-                    Tools::dieOrLog(Tools::displayError('Error: invalid SMTP server or SMTP port'), $die);
+                    Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid SMTP server or SMTP port', array(), 'Admin.Advparameters.Notification'), $die);
 
                     return false;
                 }
@@ -303,9 +303,9 @@ class MailCore extends ObjectModel
                 }
 
                 if (!file_exists($templatePath.$isoTemplate.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)) {
-                    PrestaShopLogger::addLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$isoTemplate.'.txt');
+                    PrestaShopLogger::addLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($templatePath.$isoTemplate.'.txt'), 'Admin.Advparameters.Notification'));
                 } elseif (!file_exists($templatePath.$isoTemplate.'.html') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML)) {
-                    PrestaShopLogger::addLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$isoTemplate.'.html');
+                    PrestaShopLogger::addLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($templatePath.$isoTemplate.'.html'), 'Admin.Advparameters.Notification'));
                 } else {
                     $templatePathExists = true;
                     break;
@@ -313,7 +313,7 @@ class MailCore extends ObjectModel
             }
 
             if (empty($templatePathExists)) {
-                Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template, $die);
+                Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($template), 'Admin.Advparameters.Notification'), $die);
 
                 return false;
             }

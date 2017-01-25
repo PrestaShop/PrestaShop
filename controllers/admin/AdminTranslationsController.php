@@ -957,10 +957,13 @@ class AdminTranslationsControllerCore extends AdminController
                 file_put_contents($file_name, '');
             }
             if (!is_writable($file_name)) {
-                throw new PrestaShopException(sprintf(
-                    Tools::displayError('Cannot write to the theme\'s language file (%s). Please check writing permissions.'),
-                    $file_name
-                ));
+                throw new PrestaShopException(
+                    $this->trans(
+                        'Cannot write to the theme\'s language file (%s). Please check writing permissions.',
+                        array($file_name),
+                        'Admin.International.Notification'
+                    )
+                );
             }
 
             // this string is initialized one time for a file

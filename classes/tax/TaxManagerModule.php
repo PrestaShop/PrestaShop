@@ -38,13 +38,13 @@ abstract class TaxManagerModuleCore extends Module
         $class_file = _PS_MODULE_DIR_.'/'.$this->name.'/'.$this->tax_manager_class.'.php';
 
         if (!isset($this->tax_manager_class) || !file_exists($class_file)) {
-            die(sprintf(Tools::displayError('Incorrect Tax Manager class [%s]'), $this->tax_manager_class));
+            die($this->trans('Incorrect Tax Manager class [%s]', array($this->tax_manager_class), 'Admin.International.Notification'));
         }
 
         require_once($class_file);
 
         if (!class_exists($this->tax_manager_class)) {
-            die(sprintf(Tools::displayError('Tax Manager class not found [%s]'), $this->tax_manager_class));
+            die($this->trans('Tax Manager class not found [%s]', array($this->tax_manager_class), 'Admin.International.Notification'));
         }
 
         $class = $this->tax_manager_class;

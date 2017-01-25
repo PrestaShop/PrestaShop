@@ -371,7 +371,7 @@ class CustomizationCore extends ObjectModel
     {
         $cart = new Cart($this->id_cart);
         if (!Validate::isLoadedObject($cart)) {
-            WebserviceRequest::getInstance()->setError(500, Tools::displayError('Could not load cart id='.$this->id_cart), 137);
+            WebserviceRequest::getInstance()->setError(500, $this->trans('Could not load cart id=%s', array($this->id_cart), 'Admin.Notifications.Error'), 137);
 
             return false;
         }

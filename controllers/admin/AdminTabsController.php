@@ -290,7 +290,7 @@ class AdminTabsControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
             }
         } elseif (Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue('id_tab') === Tools::getValue('id_parent')) {
-            $this->errors[] = Tools::displayError('You can\'t put this menu inside itself. ');
+            $this->errors[] = $this->trans('You can\'t put this menu inside itself. ', array(), 'Admin.Advparameters.Notification');
         } elseif (Tools::isSubmit('submitAdd'.$this->table) && $id_parent = (int)Tools::getValue('id_parent')) {
             $this->redirect_after = self::$currentIndex.'&id_'.$this->table.'='.$id_parent.'&details'.$this->table.'&conf=4&token='.$this->token;
         } elseif (isset($_GET['details'.$this->table]) && is_array($this->bulk_actions)) {
