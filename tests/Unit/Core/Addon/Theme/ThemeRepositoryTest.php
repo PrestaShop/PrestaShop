@@ -68,7 +68,7 @@ class ThemeRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstanceByNameNotFound()
     {
-        $this->setExpectedException('PrestaShopException', '[ThemeRepository] Theme configuration file not found for theme `not_found`.');
+        $this->setExpectedException('PrestaShopException');
         $this->repository->getInstanceByName('not_found');
     }
 
