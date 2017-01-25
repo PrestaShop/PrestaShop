@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 abstract class CommonAbstractType extends AbstractType
 {
     const PRESTASHOP_DECIMALS = 6;
-    
+
     /**
      * Get the configuration adapter
      *
@@ -57,7 +57,28 @@ abstract class CommonAbstractType extends AbstractType
     {
         $new_list = array();
         foreach ($list as $item) {
-            $new_list[$item[$mapping_name]] = $item[$mapping_value];
+            if (array_key_exists($item[$mapping_name], $new_list)) {
+                return $this->formatDataDuplicateChoicesList($list, $mapping_value, $mapping_name);
+            } else {
+                $new_list[$item[$mapping_name]] = $item[$mapping_value];
+            }
+        }
+        return $new_list;
+    }
+
+    /**
+     * Format legacy data list to mapping SF2 form field choice (possibility to have 2 name equals)
+     *
+     * @param array $list
+     * @param string $mapping_value
+     * @param string $mapping_name
+     * @return array
+     */
+    protected function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
+    {
+        $new_list = array();
+        foreach ($list as $item) {
+            $new_list[$item[$mapping_value].' - '.$item[$mapping_name]] = $item[$mapping_value];
         }
         return $new_list;
     }
