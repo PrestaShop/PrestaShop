@@ -1,7 +1,5 @@
 {include file='_partials/form-errors.tpl' errors=$errors['']}
 
-{* TODO StarterTheme: HOOKS!!! *}
-
 <form id="login-form" action="{$action}" method="post">
 
   <section>
