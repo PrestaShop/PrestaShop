@@ -408,6 +408,15 @@ class TranslationsExtension extends \Twig_Extension
             unset($subtree['__domain']);
         }
 
+        $totalTranslationsAttribute = '';
+        if (array_key_exists('__messages', $subtree)) {
+            $totalTranslations = count(array_values($subtree['__messages'])[0]);
+            $totalTranslationsAttribute = ' data-total-translations="' . $this->translator->trans('%nb_translations% expressions',
+                    array('%nb_translations%' => $totalTranslations),
+                    'Admin.International.Feature'
+                ) . '"';
+        }
+
         $missingTranslationsAttribute = '';
         if (array_key_exists('__metadata', $subtree)) {
             $missingTranslations = $subtree['__metadata']['missing_translations'];
@@ -421,6 +430,7 @@ class TranslationsExtension extends \Twig_Extension
                 'id' => $id,
                 'domain' => $domainAttribute,
                 'parent' => $parentAttribute,
+                'total_translations' => $totalTranslationsAttribute,
                 'missing_translations' => $missingTranslationsAttribute,
                 'title' => $output,
             )
