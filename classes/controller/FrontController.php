@@ -694,13 +694,15 @@ class FrontControllerCore extends Controller
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
+                $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
                 $this->context->smarty->assign(array(
                     'shop' => $this->getTemplateVarShop(),
                     'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
                     'maintenance_text' => Configuration::get('PS_MAINTENANCE_TEXT', (int) $this->context->language->id),
+                    'stylesheets' => $this->getStylesheets(),
                 ));
-
                 $this->smartyOutputContent('errors/maintenance.tpl');
+
                 exit;
             }
         }
@@ -712,10 +714,14 @@ class FrontControllerCore extends Controller
     protected function displayRestrictedCountryPage()
     {
         header('HTTP/1.1 403 Forbidden');
+
+        $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
         $this->context->smarty->assign(array(
             'shop' => $this->getTemplateVarShop(),
+            'stylesheets' => $this->getStylesheets(),
         ));
         $this->smartyOutputContent('errors/restricted-country.tpl');
+
         exit;
     }
 
