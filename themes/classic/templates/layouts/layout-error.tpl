@@ -12,15 +12,19 @@
     {/block}
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    {block name='stylesheets'}
+      {include file="_partials/stylesheets.tpl" stylesheets=$stylesheets}
+    {/block}
+
   </head>
 
   <body>
 
-    {block name='content'}
-      <p>Hello world! This is HTML5 Boilerplate.</p>
-    {/block}
-
-    <!-- Load JS files here -->
+    <div id="layout-error">
+      {block name='content'}
+        <p>Hello world! This is HTML5 Boilerplate.</p>
+      {/block}
+    </div>
 
   </body>
 
