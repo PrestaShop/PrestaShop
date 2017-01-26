@@ -339,16 +339,16 @@ class TranslationsExtension extends \Twig_Extension
             $id = $this->parseDomain($subtree);
         }
 
-        $output = $this->tagSubject($subject, $level, $id);
-        if ($level === 3) {
-            $output = $this->replaceWarningPlaceholder($output, $subtree);
-        }
-        if ($level === 2) {
+        $output = $this->tagSubject($subject, $hasMessagesSubtree, $id);
+
+        if (!$hasMessagesSubtree) {
             $output = str_replace(
                 '{{ missing translations warning }}',
                 $this->translator->trans('%d missing', array(), 'Admin.International.Feature'),
                 $output
             );
+        } else {
+            $output = $this->replaceWarningPlaceholder($output, $subtree);
         }
 
         if ($hasMessagesSubtree) {
@@ -551,33 +551,33 @@ class TranslationsExtension extends \Twig_Extension
 
     /**
      * @param $subject
-     * @param $level
+     * @param $isLastChild
      * @param null $id
      *
      * @return string
      */
-    protected function tagSubject($subject, $level, $id = null)
+    protected function tagSubject($subject, $isLastChild, $id = null)
     {
-        $openingTag = '<h2 class="domain-part">'.
-            '<span class="delegate-toggle-messages{{ missing translations class }}">';
-        $closingTag = '</span>{{ missing translations warning }}</h2>';
-
-        if (2 === $level) {
+        if ($isLastChild) {
+            $openingTag = '<h2 class="domain-part">' .
+                '<span class="delegate-toggle-messages{{ missing translations class }}">';
+            $closingTag = '</span>{{ missing translations warning }}</h2>';
+        } else {
             $openingTag = '<h2 class="domain-first-part"><i class="material-icons">&#xE315;</i><span>';
             $closingTag = '</span>'.
                 '<div class="domain-actions">' .
-                    '<span class="missing-translations pull-right hide">'.
-                    '{{ missing translations warning }}'.
-                    '</span>'.
+                '<span class="missing-translations pull-right hide">'.
+                '{{ missing translations warning }}'.
+                '</span>'.
                 '</div>'.
-            '</h2>';
+                '</h2>';
         }
 
         if ($id) {
             $openingTag = '<span id="_'.$id.'">';
             $closingTag = '</span>';
 
-            if (2 === $level) {
+            if (!$isLastChild) {
                 $openingTag = '<h2>'.$openingTag;
                 $closingTag = $closingTag.'</h2>';
             }

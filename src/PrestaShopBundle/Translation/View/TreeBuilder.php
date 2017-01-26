@@ -102,50 +102,29 @@ class TreeBuilder
             list($basename) = explode('.', $tableisedDomain);
             $parts = array_reverse(explode('_', $basename));
 
-            $totalParts = count($parts);
             $subtree = &$translationsTree;
 
-            if ($totalParts - 2 < 0) {
-                $totalParts = 2;
-                $parts = array($parts[0], 'Admin');
-            }
-
-            $firstDomainPart = $parts[count($parts) - 1];
-
-            $condition = count($parts) > $totalParts - 2;
-            $depth = 0;
-
-            while ($condition) {
-                if ($depth === 1) {
-                    list($subdomain) = explode('.', str_replace(ucfirst($firstDomainPart), '', $domain));
-                    array_pop($parts);
-                } else {
-                    $subdomain = ucfirst(array_pop($parts));
-                    if (array_key_exists($subdomain, $flippedUnbreakableWords)) {
-                        $subdomain = $flippedUnbreakableWords[$subdomain];
-                    }
+            while (count($parts) > 0) {
+                $subdomain = ucfirst(array_pop($parts));
+                if (array_key_exists($subdomain, $flippedUnbreakableWords)) {
+                    $subdomain = $flippedUnbreakableWords[$subdomain];
                 }
 
                 if (!array_key_exists($subdomain, $subtree)) {
                     $subtree[$subdomain] = array();
                 }
+
                 $subtree = &$subtree[$subdomain];
-
-                $condition = count($parts) > $totalParts - 2;
-                $depth++;
-
-                if ($depth === 2) {
-                    $subtree['__fixed_length_id'] = '_' . sha1($domain);
-                    list($subtree['__domain']) = explode('.', $domain);
-
-                    $subtree['__metadata'] = $messages['__metadata'];
-                    $subtree['__metadata']['domain'] = $subtree['__domain'];
-                    unset($messages['__metadata']);
-                }
             }
 
             $subtree['__messages'] = array($domain => $messages);
-            unset($catalogue[$domain]);
+            if (isset($messages['__metadata'])) {
+                $subtree['__fixed_length_id'] = '_' . sha1($domain);
+                list($subtree['__domain']) = explode('.', $domain);
+                $subtree['__metadata'] = $messages['__metadata'];
+                $subtree['__metadata']['domain'] = $subtree['__domain'];
+                unset($messages['__metadata']);
+            }
         }
 
         return $translationsTree;
