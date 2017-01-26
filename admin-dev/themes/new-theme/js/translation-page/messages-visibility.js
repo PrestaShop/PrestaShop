@@ -67,6 +67,7 @@ export default function(callback) {
       warningPlaceholder.text('');
       separator.addClass('hide');
     }
+    separator.first().removeClass('hide');
 
     let domain = $('#domain .name');
     let title = editTranslationForms.attr('data-domain');
