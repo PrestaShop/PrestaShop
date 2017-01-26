@@ -256,7 +256,7 @@
 			</div>
 		</div>
 	</form>
-	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal hide">
 		<div class="panel">
 			<h3>
 				<i class="icon-download"></i>
