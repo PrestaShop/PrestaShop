@@ -68,16 +68,16 @@ class CmsControllerCore extends FrontController
         if (Validate::isLoadedObject($this->cms)) {
             $adtoken = Tools::getAdminToken('AdminCmsContent'.(int) Tab::getIdFromClassName('AdminCmsContent').(int) Tools::getValue('id_employee'));
             if (!$this->cms->isAssociatedToShop() || !$this->cms->active && Tools::getValue('adtoken') != $adtoken) {
-                header('HTTP/1.1 404 Not Found');
-                header('Status: 404 Not Found');
+              $this->redirect_after = '404';
+              $this->redirect();
             } else {
                 $this->assignCase = 1;
             }
         } elseif (Validate::isLoadedObject($this->cms_category) && $this->cms_category->active) {
             $this->assignCase = 2;
         } else {
-            header('HTTP/1.1 404 Not Found');
-            header('Status: 404 Not Found');
+          $this->redirect_after = '404';
+          $this->redirect();
         }
     }
 
