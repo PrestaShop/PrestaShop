@@ -222,8 +222,7 @@
 			</h3>
 			<div id="submitAddLangContent" class="form-group">
 				<p class="alert alert-info">
-					{l s='You can add or update a language directly from the PrestaShop website here.'}<br/>
-					{l s='If you choose to update an existing language pack, all of your previous customizations in the theme named "Classic" will be lost. This includes front office expressions and default email templates.' html=true}
+					{l s='You can add or update a language directly from the PrestaShop website here.'}
 				</p>
 				{if $packs_to_update || $packs_to_install}
 					<label class="control-label col-lg-3" for="params_import_language">{l s='Please select the language you want to add or update'}</label>
