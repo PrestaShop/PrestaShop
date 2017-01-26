@@ -416,7 +416,7 @@
                             </div>
                             <div id="form_step3_virtual_product_file_details" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'show' : 'hide' }}">
                               <a href="{{ form.step3.virtual_product.vars.value.file_download_link is defined ? form.step3.virtual_product.vars.value.file_download_link : '' }}" class="btn btn-default btn-sm download">{{ 'Download file'|trans({}, 'Admin.Actions') }}</a>
-                              <a href="{{ path('admin_product_virtual_remove_file_action') }}" class="btn btn-danger btn-sm delete">{{ 'Delete this file'|trans({}, 'Admin.Actions') }}</a>
+                              <a href="{{ path('admin_product_virtual_remove_file_action', {'idProduct': id_product}) }}" class="btn btn-danger btn-sm delete">{{ 'Delete this file'|trans({}, 'Admin.Actions') }}</a>
                             </div>
                           </fieldset>
                         </div>
