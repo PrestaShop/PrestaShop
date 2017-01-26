@@ -30,4 +30,6 @@ function ps_1700_reset_theme()
 {
     $theme = (new ThemeManagerBuilder(Context::getContext(), Db::getInstance()))->build();
     $theme->reset('classic');
+
+    return true;
 }

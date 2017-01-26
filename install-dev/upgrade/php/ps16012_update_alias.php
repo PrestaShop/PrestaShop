@@ -48,4 +48,6 @@ function ps16012_update_alias()
             }
         }
     }
+
+    return true;
 }

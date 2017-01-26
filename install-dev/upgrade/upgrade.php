@@ -30,31 +30,6 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 
-/**
- * 2007-2017 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
 $filePrefix = 'PREFIX_';
 $engineType = 'ENGINE_TYPE';
 define('PS_IN_UPGRADE', 1);
@@ -161,10 +136,38 @@ require_once(dirname(__FILE__).'/../init.php');
 Upgrade::migrateSettingsFile();
 require_once(_PS_CONFIG_DIR_.'bootstrap.php');
 
-$cacheDir = _PS_ROOT_DIR_.'/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/log/';
-@mkdir($cacheDir, 0777, true);
-$logger = new FileLogger();
-$logger->setFilename($cacheDir.@date('Ymd').'_upgrade.log');
+$logDir = _PS_ROOT_DIR_.'/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/log/';
+@mkdir($logDir, 0777, true);
+
+Cache::clean('*');
+
+Context::getContext()->shop = new Shop(1);
+Shop::setContext(Shop::CONTEXT_SHOP, 1);
+
+if (!isset(Context::getContext()->language) || !Validate::isLoadedObject(Context::getContext()->language)) {
+    if ($id_lang = (int)getConfValue('PS_LANG_DEFAULT')) {
+        Context::getContext()->language = new Language($id_lang);
+    }
+}
+if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country)) {
+    if ($id_country = (int)getConfValue('PS_COUNTRY_DEFAULT')) {
+        Context::getContext()->country = new Country((int)$id_country);
+    }
+}
+
+Context::getContext()->cart = new Cart();
+Context::getContext()->employee = new Employee(1);
+if (!defined('_PS_SMARTY_FAST_LOAD_')) {
+    define('_PS_SMARTY_FAST_LOAD_', true);
+}
+require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+
+Context::getContext()->smarty = $smarty;
+
+$upgrade = new Upgrade($logDir);
+if (isset($_GET['autoupgrade']) && $_GET['autoupgrade'] == 1) {
+    $upgrade->setInAutoUpgrade(true);
+}
 
 if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set('Europe/Paris');
@@ -185,17 +188,6 @@ if (!defined('_PS_INSTALLER_SQL_UPGRADE_DIR_')) {
     define('_PS_INSTALLER_SQL_UPGRADE_DIR_', _PS_INSTALL_PATH_.'upgrade/sql/');
 }
 
-
-//old version detection
-global $oldversion, $logger;
-$oldversion = false;
-
-//sql file execution
-global $requests, $warningExist;
-$requests = '';
-$fail_result = '';
-$warningExist = false;
-
 if (!defined('_THEMES_DIR_')) {
     define('_THEMES_DIR_', __PS_BASE_URI__.'themes/');
 }
@@ -215,79 +207,6 @@ if (empty($oldversion)) {
 }
 
 $versionCompare =  version_compare(_PS_INSTALL_VERSION_, $oldversion);
-
-if ($versionCompare == '-1') {
-    $logger->logError('This installer is too old.');
-    $requests .= '<action result="fail" error="27" />'."\n";
-} elseif ($versionCompare == 0) {
-    $logger->logError(sprintf('You already have the %s version.', _PS_INSTALL_VERSION_));
-    $fail_result .= '<action result="fail" error="28" />'."\n";
-} elseif ($versionCompare === false) {
-    $logger->logError('There is no older version. Did you delete or rename the app/config/parameters.php file?');
-    $fail_result .= '<action result="fail" error="29" />'."\n";
-}
-
-if ((defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_)) {
-    $logger->logError('The cache is activated. Please deactivate it first before lauching this script.');
-    $fail_result .= '<action result="fail" error="35" />'."\n";
-}
-
-
-//check DB access
-// include_once(_PS_INSTALL_PATH_.'/classes/ToolsInstall.php');
-// $resultDB = ToolsInstall::checkDB(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
-/*
-if ($resultDB !== true)
-{
-    $logger->logError('Invalid database configuration.');
-    die("<action result='fail' error='".$resultDB."'/>\n");
-}
-*/
-
-//
-//custom sql file creation
-$upgradeFiles = array();
-if (empty($fail_result)) {
-    if ($handle = opendir(_PS_INSTALLER_SQL_UPGRADE_DIR_)) {
-        while (false !== ($file = readdir($handle))) {
-            if ($file != '.' and $file != '..') {
-                $upgradeFiles[] = str_replace(".sql", "", $file);
-            }
-        }
-        closedir($handle);
-    }
-    if (empty($upgradeFiles)) {
-        $logger->logError('Can\'t find the sql upgrade files. Please verify that the /install/sql/upgrade folder is not empty)');
-        $fail_result .=  '<action result="fail" error="31" />'."\n";
-    }
-    natcasesort($upgradeFiles);
-}
-
-// fix : complete version number if there is not all 4 numbers
-// for example replace 1.4.3 by 1.4.3.0
-// consequences : file 1.4.3.0.sql will be skipped if oldversion = 1.4.3
-// @since 1.4.4.0
-$arrayVersion = preg_split('#\.#', $oldversion);
-$versionNumbers = sizeof($arrayVersion);
-
-if ($versionNumbers != 4) {
-    $arrayVersion = array_pad($arrayVersion, 4, '0');
-}
-
-$oldversion = implode('.', $arrayVersion);
-// end of fix
-$neededUpgradeFiles = array();
-foreach ($upgradeFiles as $version) {
-    if (version_compare($version, $oldversion) == 1 and version_compare(_PS_INSTALL_VERSION_, $version) != -1) {
-        $neededUpgradeFiles[] = $version;
-    }
-}
-
-if (empty($fail_result) && empty($neededUpgradeFiles)) {
-    $logger->logError('No upgrade is possible.');
-    $fail_result .= '<action result="fail" error="32" />'."\n";
-}
-
 
 // refresh conf file
 require_once(_PS_INSTALL_PATH_.'upgrade/classes/AddConfToFile.php');
@@ -322,12 +241,6 @@ $datas = array(
     array('_PS_VERSION_', _PS_INSTALL_VERSION_)
 );
 
-if (version_compare(_PS_INSTALL_VERSION_, '1.6.0.11', '<')) {
-    $datas[] = array('_MEDIA_SERVER_1_', defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : '');
-    $datas[] = array('_MEDIA_SERVER_2_', defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : '');
-    $datas[] = array('_MEDIA_SERVER_3_', defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : '');
-}
-
 if (defined('_RIJNDAEL_KEY_')) {
     $datas[] = array('_RIJNDAEL_KEY_', _RIJNDAEL_KEY_);
 }
@@ -341,44 +254,74 @@ if (!defined('_MYSQL_ENGINE_')) {
     define('_MYSQL_ENGINE_', 'MyISAM');
 }
 
-global $smarty;
-// Clean all cache values
-Cache::clean('*');
+if ($versionCompare == '-1') {
+    $upgrade->logError('Current version: %current%. Version to install: %future%.', 27, array('%current%' => $oldversion, '%future%' => _PS_INSTALL_VERSION_));
+} elseif ($versionCompare == 0) {
+    $upgrade->logError('You already have the %future% version.', 28, array('%future%' => _PS_INSTALL_VERSION_));
+} elseif ($versionCompare === false) {
+    $upgrade->logError('There is no older version. Did you delete or rename the app/config/parameters.php file?', 29);
+}
 
-Context::getContext()->shop = new Shop(1);
-Shop::setContext(Shop::CONTEXT_SHOP, 1);
+//
+//custom sql file creation
+$upgradeFiles = array();
+if (!$upgrade->hasFailure()) {
+    if (!file_exists(_PS_INSTALLER_SQL_UPGRADE_DIR_)) {
+        $upgrade->logError('Unable to find upgrade directory in the installation path.', 31);
+    }
 
-if (!isset(Context::getContext()->language) || !Validate::isLoadedObject(Context::getContext()->language)) {
-    if ($id_lang = (int)getConfValue('PS_LANG_DEFAULT')) {
-        Context::getContext()->language = new Language($id_lang);
+    if ($handle = opendir(_PS_INSTALLER_SQL_UPGRADE_DIR_)) {
+        while (false !== ($file = readdir($handle))) {
+            if ($file != '.' and $file != '..') {
+                $upgradeFiles[] = str_replace(".sql", "", $file);
+            }
+        }
+        closedir($handle);
+    }
+    if (empty($upgradeFiles)) {
+        $upgrade->logError('Cannot find the SQL upgrade files. Please verify that the %folder% folder is not empty)', 31, array('%folder%' => _PS_INSTALLER_SQL_UPGRADE_DIR_));
+    }
+    natcasesort($upgradeFiles);
+}
+
+// fix : complete version number if there is not all 4 numbers
+// for example replace 1.4.3 by 1.4.3.0
+// consequences : file 1.4.3.0.sql will be skipped if oldversion = 1.4.3
+// @since 1.4.4.0
+$arrayVersion = preg_split('#\.#', $oldversion);
+$versionNumbers = sizeof($arrayVersion);
+
+if ($versionNumbers != 4) {
+    $arrayVersion = array_pad($arrayVersion, 4, '0');
+}
+
+$oldversion = implode('.', $arrayVersion);
+// end of fix
+$neededUpgradeFiles = array();
+foreach ($upgradeFiles as $version) {
+    if (version_compare($version, $oldversion) == 1 and version_compare(_PS_INSTALL_VERSION_, $version) != -1) {
+        $neededUpgradeFiles[] = $version;
     }
 }
-if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country)) {
-    if ($id_country = (int)getConfValue('PS_COUNTRY_DEFAULT')) {
-        Context::getContext()->country = new Country((int)$id_country);
-    }
+
+if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
+    $upgrade->logError('%install_version% is not a valid version number.', 40,
+        array('%install_version%' => _PS_INSTALL_VERSION_));
 }
 
-Context::getContext()->cart = new Cart();
-Context::getContext()->employee = new Employee(1);
-if (!defined('_PS_SMARTY_FAST_LOAD_')) {
-    define('_PS_SMARTY_FAST_LOAD_', true);
+if (!$upgrade->hasFailure() && empty($neededUpgradeFiles)) {
+    $upgrade->logError('No upgrade is possible.', 32);
 }
-require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
-
-Context::getContext()->smarty = $smarty;
 
 $sqlContentVersion = array();
-if (empty($fail_result)) {
+if (!$upgrade->hasFailure()) {
     foreach ($neededUpgradeFiles as $version) {
         $file = _PS_INSTALLER_SQL_UPGRADE_DIR_.$version.'.sql';
         if (!file_exists($file)) {
-            $logger->logError('Error while loading sql upgrade file.');
-            $fail_result .= '<action result="fail" error="33" sqlfile="'.$version.'" />'."\n";
+            $upgrade->logError('Error while loading SQL upgrade file "%file%.sql".', 33, array('%file%' => $version));
         }
         if (!$sqlContent = file_get_contents($file)) {
-            $logger->logError(sprintf('Error while loading sql upgrade file %s.', $version));
-            $fail_result .= '<action result="fail" error="33" />'."\n";
+            $upgrade->logError('Error while loading SQL upgrade file "%file%.sql".', 33, array('%file%' => $version));
         }
         $sqlContent .= "\n";
         $sqlContent = str_replace(array($filePrefix, $engineType), array(_DB_PREFIX_, $mysqlEngine), $sqlContent);
@@ -388,19 +331,25 @@ if (empty($fail_result)) {
     }
 }
 
-$install = new PrestaShopBundle\Install\Install();
-$install->generateSf2ProductionEnv();
+$sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+$sf2Refresh->addDoctrineSchemaUpdate();
+$output = $sf2Refresh->execute();
 
-if (empty($fail_result)) {
+if (0 !== $output['doctrine:schema:update']['exitCode']) {
+    $msgErrors = explode("\n", $output['doctrine:schema:update']['output']);
+    $upgrade->logError('Error upgrading doctrine schema : '.$msgErrors, 43);
+}
+
+if (!$upgrade->hasFailure()) {
     Language::loadLanguages();
 
-    if (isset($_GET['customModule']) and $_GET['customModule'] == 'desactivate') {
+    if (isset($_GET['deactivateCustomModule']) and $_GET['deactivateCustomModule'] == '1') {
         require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');
         deactivate_custom_modules();
     }
 
     // Disable the old incompatible modules
-    $disableModules = function() use ($incompatibleModules)
+    $disableModules = function() use ($incompatibleModules, $upgrade)
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
@@ -415,7 +364,7 @@ if (empty($fail_result)) {
          */
         foreach ($list as $moduleName => $module) {
             if (in_array($moduleName, $incompatibleModules)) {
-                echo "Uninstalling module $moduleName, not supported in this prestashop version.\n";
+                $upgrade->logInfo("Uninstalling module $moduleName, not supported in this prestashop version.");
                 $module->onUninstall();
             } else {
                 $moduleInfo = $moduleManagerRepository->getModule($moduleName, true);
@@ -424,7 +373,7 @@ if (empty($fail_result)) {
                 if ($attributes->get('compatibility')) {
                     $maxVersion = $attributes->get('compatibility')->to;
                     if (version_compare($maxVersion, _PS_INSTALL_VERSION_) == -1 && Module::isEnabled($moduleName)) {
-                        echo "Disabling module $moduleName. Max supported version : ".$maxVersion."\n";
+                        $upgrade->logInfo("Disabling module $moduleName. Max supported version : ".$maxVersion);
                         Module::disableAllByName($moduleName);
                     }
                 }
@@ -433,6 +382,7 @@ if (empty($fail_result)) {
         ////
     };
     $disableModules();
+    $db = Db::getInstance();
 
     foreach ($sqlContentVersion as $version => $sqlContent) {
         foreach ($sqlContent as $query) {
@@ -458,54 +408,52 @@ if (empty($fail_result)) {
                         }
                     }
 
+                    $phpRes = null;
                     /* Call a simple function */
                     if (strpos($phpString, '::') === false) {
                         $func_name = str_replace($pattern[0], '', $php[0]);
-                        require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.Tools::strtolower($func_name).'.php');
-                        $phpRes = call_user_func_array($func_name, $parameters);
+                        if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php'))
+                        {
+                            $upgrade->logWarning('[ERROR] '.$version.' PHP - missing file '.$query, 41, array(), true);
+                        } else {
+                            require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_ . Tools::strtolower($func_name) . '.php');
+                            $phpRes = call_user_func_array($func_name, $parameters);
+                        }
                     } else {
-                        /* Or an object method */
-                        $func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
-                        $phpRes = call_user_func_array($func_name, $parameters);
+                        /* Or an object method, not supported */
+                        $upgrade->logWarning('[ERROR] '.$version.' PHP - Object Method call is forbidden ('.$php[0].'::'.str_replace($pattern[0], '', $php[1]).')', 42, array(), true);
                     }
-                    if ((is_array($phpRes) and !empty($phpRes['error'])) or $phpRes === false) {
-                        $warningExist = true;
-                        $logger->logError('PHP error: '.$query."\r\n".(empty($phpRes['msg'])?'':' - '.$phpRes['msg']));
-                        $logger->logError(empty($phpRes['error'])?'':$phpRes['error']);
-                        $requests .= '
-			<request result="fail" sqlfile="'.$version.'">
-				<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-				<phpMsgError><![CDATA['.(empty($phpRes['msg'])?'':$phpRes['msg']).']]></phpMsgError>
-				<phpNumberError><![CDATA['.(empty($phpRes['error'])?'':$phpRes['error']).']]></phpNumberError>
-			</request>'."\n";
+                    if ((is_array($phpRes) and !empty($phpRes['error'])) || $phpRes === false) {
+                        $upgrade->logWarning('[ERROR] PHP '.$version.' '.$query."\n".'
+								'.(empty($phpRes['error']) ? '' : $phpRes['error']."\n").'
+								'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']), $version, array(), true);
                     } else {
-                        $requests .=
-        '	<request result="ok" sqlfile="'.$version.'">
-				<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-			</request>'."\n";
+                        $upgrade->logInfo('[OK] PHP '.$version.' : '.$query, $version, array(), true);
                     }
-                } elseif (!Db::getInstance()->execute($query)) {
-                    $logger->logError('SQL query: '."\r\n".$query);
-                    $logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
-                    $warningExist = true;
-                    $requests .= '
-	<request result="fail" sqlfile="'.$version.'" >
-		<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-		<sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
-			<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
-		</request>'."\n";
                 } else {
-                    $requests .='
-	<request result="ok" sqlfile="'.$version.'">
-			<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-		</request>'."\n";
+                    if (!$db->execute($query)) {
+                        $error = $db->getMsgError();
+                        $error_number = $db->getNumberError();
+
+                        $duplicates = array('1050', '1054', '1060', '1061', '1062', '1091');
+                        if (!in_array($error_number, $duplicates))
+                        {
+                            $upgrade->logWarning('SQL '.$version.'
+								'.$error_number.' in '.$query.': '.$error, $version, array(), true);
+                        } else {
+                            $upgrade->logInfo('SQL '.$version.'
+								'.$error_number.' in '.$query.': '.$error, $version, array(), true);
+                        }
+                    } else {
+                        $upgrade->logInfo('[OK] SQL '.$version.' : '.$query, $version, array(), true);
+                    }
                 }
             }
         }
     }
     Configuration::loadConfiguration();
 
-    $enableNativeModules = function() {
+    $enableNativeModules = function() use ($upgrade) {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
         $moduleManagerRepository->clearCache();
@@ -514,11 +462,11 @@ if (empty($fail_result)) {
         foreach ($catalog as $moduleName => $module) {
             if ($module->categoryName == 'Natif') {
                 if (!$moduleManagerBuilder->build()->isInstalled($moduleName)) {
-                    echo "Installing native module ".$moduleName."\n";
+                    $upgrade->logInfo("Installing native module ".$moduleName);
                     $module = $moduleManagerRepository->getModule($moduleName);
                     $module->onInstall();
                 } else {
-                    echo "Native module ".$moduleName." already installed\n";
+                    $upgrade->logInfo("Native module ".$moduleName." already installed");
                 }
             }
         }
@@ -526,75 +474,222 @@ if (empty($fail_result)) {
 
     $enableNativeModules();
 
-
     // Settings updated, compile and cache directories must be emptied
     $tools_dir = rtrim(_PS_INSTALL_PATH_, '\\/').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'tools'.DIRECTORY_SEPARATOR;
     $arrayToClean = array(
         $tools_dir.'smarty'.DIRECTORY_SEPARATOR.'cache',
         $tools_dir.'smarty'.DIRECTORY_SEPARATOR.'compile',
         $tools_dir.'smarty_v2'.DIRECTORY_SEPARATOR.'cache',
-        $tools_dir.'smarty_v2'.DIRECTORY_SEPARATOR.'compile'
+        $tools_dir.'smarty_v2'.DIRECTORY_SEPARATOR.'compile',
+        $tools_dir.'app/cache/',
+        $tools_dir.'cache/smarty/cache/',
+        $tools_dir.'cache/smarty/compile/'
     );
+
     foreach ($arrayToClean as $dir) {
         if (file_exists($dir)) {
             foreach (scandir($dir) as $file) {
                 if ($file[0] != '.' and $file != 'index.php' and $file != '.htaccess') {
-                    unlink($dir.DIRECTORY_SEPARATOR.$file);
+                    if (is_file($dir.$file)) {
+                        unlink($dir . $file);
+                    } elseif (is_dir($dir.$file.DIRECTORY_SEPARATOR)) {
+                        Tools14::deleteDirectory($dir . $file . DIRECTORY_SEPARATOR, true);
+                    }
+                    $upgrade->logInfo('[CLEANING CACHE] File %file% removed', null, array('%file%' => $file));
+                }
+            }
+        } else {
+            $upgrade->logWarning('[SKIP] directory "%directory%" does not exist and cannot be emptied.', null, array('%directory%' => str_replace($tools_dir, '', $dir)));
+        }
+    }
+
+    $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `name` = \'PS_LEGACY_IMAGES\' WHERE name LIKE \'0\' AND `value` = 1');
+    $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 0 WHERE `name` LIKE \'PS_LEGACY_IMAGES\'');
+    if ($db->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1') > 0)
+        $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 1 WHERE `name` LIKE \'PS_VIRTUAL_PROD_FEATURE_ACTIVE\'');
+
+    if (defined('_THEME_NAME_') && isset($_GET['updateDefaultTheme']) && $_GET['updateDefaultTheme']
+        && 'classic' === _THEME_NAME_)
+    {
+        $separator = addslashes(DIRECTORY_SEPARATOR);
+        $file = _PS_ROOT_DIR_.$separator.'themes'.$separator._THEME_NAME_.$separator.'cache'.$separator;
+        if (file_exists($file)) {
+            foreach (scandir($file) as $cache) {
+                if ($cache[0] != '.' && $cache != 'index.php' && $cache != '.htaccess' && file_exists($file.$cache) && !is_dir($file.$cache)) {
+                    if (file_exists($file.$cache)) {
+                        unlink($file.$cache);
+                    }
                 }
             }
         }
     }
+
+    // Upgrade languages
+    if (!defined('_PS_TOOL_DIR_')) {
+        define('_PS_TOOL_DIR_', _PS_ROOT_DIR_.'/tools/');
+    }
+    if (!defined('_PS_TRANSLATIONS_DIR_')) {
+        define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_.'/translations/');
+    }
+    if (!defined('_PS_MODULES_DIR_')) {
+        define('_PS_MODULES_DIR_', _PS_ROOT_DIR_.'/modules/');
+    }
+    if (!defined('_PS_MAILS_DIR_')) {
+        define('_PS_MAILS_DIR_', _PS_ROOT_DIR_.'/mails/');
+    }
+
+    $langs = $db->executeS('SELECT * FROM `'._DB_PREFIX_.'lang` WHERE `active` = 1');
+
+    if (is_array($langs)) {
+        foreach ($langs as $lang) {
+            $isoCode = $lang['iso_code'];
+
+            if (Validate::isLangIsoCode($isoCode)) {
+                $errorsLanguage = array();
+
+                Language::downloadLanguagePack($isoCode, _PS_VERSION_, $errorsLanguage);
+
+                $lang_pack = Language::getLangDetails($isoCode);
+                Language::installSfLanguagePack($lang_pack['locale'], $errorsLanguage);
+
+                if (isset($_GET['keepMails']) && !$_GET['keepMails']) {
+                    Language::installEmailsLanguagePack($lang_pack, $errorsLanguage);
+                }
+
+                if (empty($errorsLanguage)) {
+                    Language::loadLanguages();
+
+                    // TODO: Update AdminTranslationsController::addNewTabs to install tabs translated
+
+                    $cldrUpdate = new \PrestaShop\PrestaShop\Core\Cldr\Update(_PS_TRANSLATIONS_DIR_);
+                    $cldrUpdate->fetchLocale(Language::getLocaleByIso($isoCode));
+                } else {
+                    $upgrade->logError('Error updating translations', 44);
+                }
+            }
+        }
+    }
+
+    if (file_exists(_PS_ROOT_DIR_.'/classes/Tools.php')) {
+        require_once(_PS_ROOT_DIR_.'/classes/Tools.php');
+    }
+    if (!class_exists('Tools2', false) and class_exists('ToolsCore')) {
+        eval('class Tools2 extends ToolsCore{}');
+    }
+
+    if (class_exists('Tools2') && method_exists('Tools2', 'generateHtaccess')) {
+        $url_rewrite = (bool)$db->getvalue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
+
+        if (!defined('_MEDIA_SERVER_1_')) {
+            define('_MEDIA_SERVER_1_', '');
+        }
+
+        if (!defined('_PS_USE_SQL_SLAVE_')) {
+            define('_PS_USE_SQL_SLAVE_', false);
+        }
+
+        Tools2::generateHtaccess(null, $url_rewrite);
+    }
+
+    if (isset($_GET['adminDir']) && $_GET['adminDir']) {
+        $adminDir = base64_decode($_GET['adminDir']);
+        $path = $adminDir . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR
+                . 'template' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'modules'
+                . DIRECTORY_SEPARATOR . 'header.tpl';
+        if (file_exists($path)) {
+            unlink($path);
+        }
+    }
+
+    if (file_exists(_PS_ROOT_DIR_.'/app/cache/dev/class_index.php')) {
+        unlink(_PS_ROOT_DIR_.'/app/cache/dev/class_index.php');
+    }
+    if (file_exists(_PS_ROOT_DIR_.'/app/cache/prod/class_index.php')) {
+        unlink(_PS_ROOT_DIR_.'/app/cache/prod/class_index.php');
+    }
+
+    // Clear XML files
+    if (file_exists(_PS_ROOT_DIR_.'/config/xml/blog-fr.xml')) {
+        unlink(_PS_ROOT_DIR_.'/config/xml/blog-fr.xml');
+    }
+    if (file_exists(_PS_ROOT_DIR_.'/config/xml/default_country_modules_list.xml')) {
+        unlink(_PS_ROOT_DIR_.'/config/xml/default_country_modules_list.xml');
+    }
+    if (file_exists(_PS_ROOT_DIR_.'/config/xml/modules_list.xml')) {
+        unlink(_PS_ROOT_DIR_.'/config/xml/modules_list.xml');
+    }
+    if (file_exists(_PS_ROOT_DIR_.'/config/xml/modules_native_addons.xml')) {
+        unlink(_PS_ROOT_DIR_.'/config/xml/modules_native_addons.xml');
+    }
+    if (file_exists(_PS_ROOT_DIR_.'/config/xml/must_have_modules_list.xml')) {
+        unlink(_PS_ROOT_DIR_.'/config/xml/must_have_modules_list.xml');
+    }
+    if (file_exists(_PS_ROOT_DIR_.'/config/xml/tab_modules_list.xml')) {
+        unlink(_PS_ROOT_DIR_.'/config/xml/tab_modules_list.xml');
+    }
+    if (file_exists(_PS_ROOT_DIR_.'/config/xml/trusted_modules_list.xml')) {
+        unlink(_PS_ROOT_DIR_.'/config/xml/trusted_modules_list.xml');
+    }
+    if (file_exists(_PS_ROOT_DIR_.'/config/xml/untrusted_modules_list.xml')) {
+        unlink(_PS_ROOT_DIR_.'/config/xml/untrusted_modules_list.xml');
+    }
+
+    if (isset($_GET['deactivateCustomModule']) && $_GET['deactivateCustomModule'] == 1) {
+        $exist = $db->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_DISABLE_OVERRIDES\'');
+        if ($exist) {
+            $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = 1 WHERE `name` LIKE \'PS_DISABLE_OVERRIDES\'');
+        } else {
+            $db->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value, date_add, date_upd) VALUES ("PS_DISABLE_OVERRIDES", 1, NOW(), NOW())');
+        }
+
+        if (class_exists('PrestaShopAutoload') && method_exists('PrestaShopAutoload', 'generateIndex')) {
+            PrestaShopAutoload::getInstance()->_include_override_path = false;
+            PrestaShopAutoload::getInstance()->generateIndex();
+        }
+    }
+
+    if (isset($_GET['idEmployee'])) {
+        $themeManager = getThemeManager($_GET['idEmployee']);
+        $themeName = ((isset($_GET['changeToDefaultTheme']) && $_GET['changeToDefaultTheme'] == 1) ? 'classic' : _THEME_NAME_);
+
+        $isThemeEnabled = $themeManager->enable($themeName);
+        if (!$isThemeEnabled) {
+            $themeErrors = $themeManager->getErrors($themeName);
+            $upgrade->logError($themeErrors, 45);
+        } else {
+            Tools::clearCache();
+        }
+    }
+
 }
 $result = '<?xml version="1.0" encoding="UTF-8"?>';
-if (empty($fail_result)) {
+if (empty($upgrade->hasFailure())) {
     Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 0);
     Configuration::updateValue('PS_NEED_REBUILD_INDEX', 1);
     Configuration::updateValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
-    $result .= $warningExist ? '<action result="fail" error="34">'."\n" : '<action result="ok" error="">'."\n";
-    $result .= $requests;
-    $result .= '</action>'."\n";
+    $result .= '<action result="ok" id="">'."\n";
+    foreach($upgrade->getInfoList() as $info) {
+        $result .= $info."\n";
+    }
+
+    foreach($upgrade->getWarningList() as $warning) {
+        $result .= $warning."\n";
+    }
 } else {
-    $result = $fail_result;
+    foreach($upgrade->getFailureList() as $failure) {
+        $result .= $failure."\n";
+    }
 }
 
-if (!isset($return_type)) {
-    $return_type = 'xml';
-}
-
-// format available
-// 1) output on screen
-// - xml (default)
-// - json
-// 2) return value in php
-// - include : variable $result available after inclusion
-// 3) file_get_contents()
-// - eval : $res = eval(file_get_contents());
-if (empty($return_type) || $return_type == 'xml') {
+if ($upgrade->getInAutoUpgrade()) {
+    header('Content-Type: application/json');
+    echo json_encode(array('nextQuickInfo' => $upgrade->getNextQuickInfo(), 'nextErrors' => $upgrade->getNextErrors(),
+                            'next' => $upgrade->getNext(), 'next_desc' => $upgrade->getNextDesc()));
+} else {
     header('Content-Type: text/xml');
     echo $result;
-} else {
-    // result in xml to array
-    $result = @simplexml_load_string($result);
-    if (!class_exists('ToolsInstall', false)) {
-        if (file_exists(_PS_INSTALL_PATH_.'/upgrade/classes/ToolsInstall.php')) {
-            include_once(_PS_INSTALL_PATH_.'/upgrade/classes/ToolsInstall.php');
-        }
-    }
-
-    if ($result && class_exists('ToolsInstall', false)) {
-        $result = ToolsInstall::simpleXMLToArray($result);
-        switch ($return_type) {
-            case 'json':
-                header('Content-Type: application/json');
-                echo json_encode($result);
-                break;
-            case 'eval':
-                return $result;
-            case 'include':
-                break;
-        }
-    }
 }
+
 function getConfValue($name)
 {
     $full = version_compare('1.5.0.10', _PS_VERSION_) < 0;
@@ -615,4 +710,12 @@ function getConfValue($name)
         }
     }
     return Db::getInstance()->getValue($sql);
+}
+
+function getThemeManager($id_employee)
+{
+    $context = Context::getContext();
+    $context->employee = new Employee((int) $id_employee);
+
+    return (new \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder($context, Db::getInstance()))->build();
 }

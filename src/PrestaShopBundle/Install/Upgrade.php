@@ -50,12 +50,173 @@ namespace PrestaShopBundle\Install {
     use Symfony\Component\Yaml\Yaml;
     use Symfony\Component\Filesystem\Filesystem;
     use Symfony\Component\Filesystem\Exception\IOException;
+    use Context;
     use RandomLib;
     use Composer\Script\Event;
     use PhpEncryption;
 
     class Upgrade
     {
+        /** @var \FileLogger */
+        private $logger;
+        private $infoList = array();
+        private $warningList = array();
+        private $failureList = array();
+        private $nextQuickInfo = array();
+        private $nextErrors = array();
+        private $next;
+        private $nextDesc;
+        private $inAutoUpgrade = false;
+        private $translator;
+        // used for translations
+        public static $l_cache;
+
+
+        public function __construct($cacheDir)
+        {
+            $this->logger = new \FileLogger();
+            $this->logger->setFilename($cacheDir.@date('Ymd').'_upgrade.log');
+            $this->translator = Context::getContext()->getTranslator();
+            $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.');
+        }
+
+        public function getTranslator() {
+            return $this->translator;
+        }
+
+        public function logInfo($quickInfo, $id = null,
+                                $transVariables = array(), $dbInfo = false) {
+            $info = $this->getTranslator()->trans($quickInfo, $transVariables,
+                'Install.Upgrade.Error');
+            if ($this->inAutoUpgrade) {
+                if ($dbInfo) {
+                    $this->nextQuickInfo[] = '<div class="upgradeDbOk">' . $info . '</div>';
+                } else {
+                    $this->nextQuickInfo[] = $info;
+                }
+                $this->infoList[] = $info;
+            } else {
+                if (!empty($quickInfo)) {
+                    $this->logger->logInfo($info);
+                }
+                if ($id !== null) {
+                    if (!is_numeric($id)) {
+                        $customInfo = '<action result="info" id="' . $id . '"><![CDATA[' . htmlentities($info) . "]]></action>\n";
+                    } else {
+                        $customInfo = '<action result="info" id="' . $id . '" />' . "\n";
+                    }
+                    $this->infoList[] = $customInfo;
+                }
+            }
+        }
+
+        public function logWarning($quickInfo, $id,
+                                    $transVariables = array(), $dbInfo = false) {
+            $info = $this->getTranslator()->trans($quickInfo, $transVariables,
+                'Install.Upgrade.Error');
+            if ($this->inAutoUpgrade) {
+                if ($dbInfo) {
+                    $this->nextQuickInfo[] = '<div class="upgradeDbError">' . $info . '</div>';
+                } else {
+                    $this->nextQuickInfo[] = $info;
+                }
+                $this->nextErrors[] = $info;
+                $this->warningList[] = $info;
+                if (empty($this->failureList)) {
+                    $this->nextDesc = $this->getTranslator()->trans('Warning detected during upgrade.');
+                }
+            } else {
+                if (!empty($quickInfo)) {
+                    $this->logger->logWarning($info);
+                }
+                if ($id !== null) {
+                    if (!is_numeric($id)) {
+                        $customWarning = '<action result="warning" id="' . $id . '"><![CDATA[' . htmlentities($info) . "]]></action>\n";
+                    } else {
+                        $customWarning = '<action result="warning" id="' . $id . '" />' . "\n";
+                    }
+                    $this->warningList[] = $customWarning;
+                }
+            }
+        }
+
+        public function logError($quickInfo, $id,
+                                 $transVariables = array(), $dbInfo = false) {
+            $info = $this->getTranslator()->trans($quickInfo, $transVariables,
+                'Install.Upgrade.Error');
+            if ($this->inAutoUpgrade) {
+                if ($dbInfo) {
+                    $this->nextQuickInfo[] = '<div class="upgradeDbError">' . $info . '</div>';
+                } else {
+                    $this->nextQuickInfo[] = $info;
+                }
+                $this->nextErrors[] = $info;
+                $this->failureList[] = $info;
+                $this->nextDesc = $this->getTranslator()->trans('Error detected during upgrade.');
+                $this->next = 'error';
+            } else {
+                if (!empty($quickInfo)) {
+                    $this->logger->logError($info);
+                }
+                if ($id !== null) {
+                    if (!is_numeric($id)) {
+                        $customError = '<action result="error" id="' . $id . '"><![CDATA[' . htmlentities($info) . "]]></action>\n";
+                    } else {
+                        $customError = '<action result="error" id="' . $id . '" />' . "\n";
+                    }
+                    $this->failureList[] = $customError;
+                }
+            }
+        }
+
+        public function getInAutoUpgrade() {
+            return $this->inAutoUpgrade;
+        }
+
+        public function setInAutoUpgrade($value) {
+            $this->inAutoUpgrade = $value;
+        }
+
+        public function getNext() {
+            return $this->next;
+        }
+
+        public function getNextDesc() {
+            return $this->nextDesc;
+        }
+
+        public function getInfoList() {
+            return $this->infoList;
+        }
+
+        public function getWarningList() {
+            return $this->warningList;
+        }
+
+        public function getFailureList() {
+            return $this->failureList;
+        }
+
+        public function getNextQuickInfo() {
+            return $this->nextQuickInfo;
+        }
+
+        public function getNextErrors() {
+            return $this->nextErrors;
+        }
+
+        public function hasInfo() {
+            return !empty($this->infoList);
+        }
+
+        public function hasWarning() {
+            return !empty($this->warningList);
+        }
+
+        public function hasFailure() {
+            return !empty($this->failureList);
+        }
+
         const SETTINGS_FILE = 'config/settings.inc.php';
 
         public static function migrateSettingsFile(Event $event = null)
