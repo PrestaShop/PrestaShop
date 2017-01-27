@@ -48,16 +48,12 @@ trait TranslationFinderTrait
         if (null !== $pattern) {
             $finder->name($pattern);
         }
-        $translationFiles = $finder->files()->in($paths);
+        $translationFiles = $finder->files()->notName('index.php')->in($paths);
         if (count($translationFiles) === 0) {
             throw new \Exception('There is no translation file available.');
         }
 
         foreach ($translationFiles as $file) {
-            if ('index.php' === $file->getFileName()) {
-                continue;
-            }
-
             if (strpos($file->getBasename('.xlf'), $locale) !== false) {
                 $domain = $file->getBasename('.xlf');
             } else {
