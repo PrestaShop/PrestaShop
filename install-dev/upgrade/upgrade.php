@@ -26,9 +26,6 @@
 
 
 use PrestaShopBundle\Install\Upgrade;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 
 $filePrefix = 'PREFIX_';
 $engineType = 'ENGINE_TYPE';
