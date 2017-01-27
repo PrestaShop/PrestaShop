@@ -76,11 +76,12 @@ class ThemeExporter
     /**
      * @param $themeName
      * @param $locale
+     * @param $rootDir
      * @return string
      */
-    public function createZipArchive($themeName, $locale)
+    public function createZipArchive($themeName, $locale, $rootDir = false)
     {
-        $archiveParentDirectory = $this->exportCatalogues($themeName, $locale);
+        $archiveParentDirectory = $this->exportCatalogues($themeName, $locale, $rootDir);
         $zipFilename = $this->makeZipFilename($themeName, $locale);
         $this->zipManager->createArchive($zipFilename, $archiveParentDirectory);
 
@@ -90,14 +91,15 @@ class ThemeExporter
     /**
      * @param $themeName
      * @param $locale
+     * @param $rootDir
      * @return string
      */
-    public function exportCatalogues($themeName, $locale)
+    public function exportCatalogues($themeName, $locale, $rootDir = false)
     {
         $this->themeProvider->setLocale($locale);
         $this->themeProvider->setThemeName($themeName);
 
-        $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale);
+        $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir);
         try {
             $themeCatalogue = $this->themeProvider->getThemeCatalogue();
         } catch (\Exception $exception) {
@@ -125,7 +127,8 @@ class ThemeExporter
 
         $this->dumper->dump($mergedTranslations, array(
             'path' => $archiveParentDirectory,
-            'default_locale' => $locale
+            'default_locale' => $locale,
+            'root_dir' => $rootDir,
         ));
 
         $this->renameCatalogues($locale, $archiveParentDirectory);
@@ -152,9 +155,10 @@ class ThemeExporter
     /**
      * @param $themeName
      * @param $locale
+     * @param $rootDir
      * @return \Symfony\Component\Translation\MessageCatalogue
      */
-    protected function getCatalogueExtractedFromTemplates($themeName, $locale)
+    protected function getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir = false)
     {
         $tmpFolderPath = $this->getTemporaryExtractionFolder($themeName);
         $folderPath = $this->getFlattenizationFolder($themeName);
@@ -168,7 +172,7 @@ class ThemeExporter
         $theme = $this->themeRepository->getInstanceByName($themeName);
         $this->themeExtractor
             ->setOutputPath($tmpFolderPath)
-            ->extract($theme, $locale);
+            ->extract($theme, $locale, $rootDir);
 
         Flattenizer::flatten($tmpFolderPath . '/' . $locale, $folderPath . '/' . $locale, $locale);
 
