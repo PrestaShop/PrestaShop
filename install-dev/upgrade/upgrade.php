@@ -35,10 +35,10 @@ $engineType = 'ENGINE_TYPE';
 define('PS_IN_UPGRADE', 1);
 
 $classes14 = ['Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper','ImportModule',
-	'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine',
-	'MySQL', 'Order', 'OrderDetail', 'OrderDiscount', 'OrderHistory', 'OrderMessage', 'OrderReturn',
-	'OrderReturnState', 'OrderSlip', 'OrderState', 'PDF', 'RangePrice', 'RangeWeight', 'StockMvt',
-	'StockMvtReason', 'SubDomain', 'Shop', 'Tax', 'TaxRule', 'TaxRulesGroup', 'WebserviceKey', 'WebserviceRequest', ''];
+    'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine',
+    'MySQL', 'Order', 'OrderDetail', 'OrderDiscount', 'OrderHistory', 'OrderMessage', 'OrderReturn',
+    'OrderReturnState', 'OrderSlip', 'OrderState', 'PDF', 'RangePrice', 'RangeWeight', 'StockMvt',
+    'StockMvtReason', 'SubDomain', 'Shop', 'Tax', 'TaxRule', 'TaxRulesGroup', 'WebserviceKey', 'WebserviceRequest', ''];
 
 
 $incompatibleModules = [
@@ -356,8 +356,7 @@ if (!$upgrade->hasFailure()) {
     }
 
     // Disable the old incompatible modules
-    $disableModules = function() use ($incompatibleModules, $upgrade)
-    {
+    $disableModules = function () use ($incompatibleModules, $upgrade) {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
         $moduleManagerRepository->clearCache();
@@ -419,8 +418,7 @@ if (!$upgrade->hasFailure()) {
                     /* Call a simple function */
                     if (strpos($phpString, '::') === false) {
                         $func_name = str_replace($pattern[0], '', $php[0]);
-                        if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php'))
-                        {
+                        if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php')) {
                             $upgrade->logWarning('[ERROR] '.$version.' PHP - missing file '.$query, 41, array(), true);
                         } else {
                             require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_ . Tools::strtolower($func_name) . '.php');
@@ -443,8 +441,7 @@ if (!$upgrade->hasFailure()) {
                         $error_number = $db->getNumberError();
 
                         $duplicates = array('1050', '1054', '1060', '1061', '1062', '1091');
-                        if (!in_array($error_number, $duplicates))
-                        {
+                        if (!in_array($error_number, $duplicates)) {
                             $upgrade->logWarning('SQL '.$version.'
 								'.$error_number.' in '.$query.': '.$error, $version, array(), true);
                         } else {
@@ -460,7 +457,7 @@ if (!$upgrade->hasFailure()) {
     }
     Configuration::loadConfiguration();
 
-    $enableNativeModules = function() use ($upgrade) {
+    $enableNativeModules = function () use ($upgrade) {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
         $moduleManagerRepository->clearCache();
@@ -512,12 +509,12 @@ if (!$upgrade->hasFailure()) {
 
     $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `name` = \'PS_LEGACY_IMAGES\' WHERE name LIKE \'0\' AND `value` = 1');
     $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 0 WHERE `name` LIKE \'PS_LEGACY_IMAGES\'');
-    if ($db->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1') > 0)
+    if ($db->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1') > 0) {
         $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 1 WHERE `name` LIKE \'PS_VIRTUAL_PROD_FEATURE_ACTIVE\'');
+    }
 
     if (defined('_THEME_NAME_') && isset($_GET['updateDefaultTheme']) && $_GET['updateDefaultTheme']
-        && 'classic' === _THEME_NAME_)
-    {
+        && 'classic' === _THEME_NAME_) {
         $separator = addslashes(DIRECTORY_SEPARATOR);
         $file = _PS_ROOT_DIR_.$separator.'themes'.$separator._THEME_NAME_.$separator.'cache'.$separator;
         if (file_exists($file)) {
@@ -531,36 +528,36 @@ if (!$upgrade->hasFailure()) {
         }
     }
 
-	if (version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
-		$dir = _PS_ROOT_DIR_ . '/controllers/';
-		if (file_exists($dir)) {
-			foreach (scandir($dir) as $file) {
-				if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
-					if (file_exists($dir . basename(str_replace('.php', '', $file) . '.php'))) {
-						unlink($dir . basename($file));
-					}
-				}
-			}
-		}
+    if (version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
+        $dir = _PS_ROOT_DIR_ . '/controllers/';
+        if (file_exists($dir)) {
+            foreach (scandir($dir) as $file) {
+                if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
+                    if (file_exists($dir . basename(str_replace('.php', '', $file) . '.php'))) {
+                        unlink($dir . basename($file));
+                    }
+                }
+            }
+        }
 
-		$dir = _PS_ROOT_DIR_ . '/classes/';
-		foreach ($classes14 as $class) {
-			if (file_exists($dir . basename($class) . '.php')) {
-				unlink($dir . basename($class) . '.php');
-			}
-		}
+        $dir = _PS_ROOT_DIR_ . '/classes/';
+        foreach ($classes14 as $class) {
+            if (file_exists($dir . basename($class) . '.php')) {
+                unlink($dir . basename($class) . '.php');
+            }
+        }
 
-		$dir = _PS_ADMIN_DIR_ . '/tabs/';
-		if (file_exists($dir)) {
-			foreach (scandir($dir) as $file) {
-				if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
-					if (file_exists($dir . basename(str_replace('.php', '', $file) . '.php'))) {
-						unlink($dir . basename($file));
-					}
-				}
-			}
-		}
-	}
+        $dir = _PS_ADMIN_DIR_ . '/tabs/';
+        if (file_exists($dir)) {
+            foreach (scandir($dir) as $file) {
+                if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
+                    if (file_exists($dir . basename(str_replace('.php', '', $file) . '.php'))) {
+                        unlink($dir . basename($file));
+                    }
+                }
+            }
+        }
+    }
 
     // Upgrade languages
     if (!defined('_PS_TOOL_DIR_')) {
@@ -698,7 +695,6 @@ if (!$upgrade->hasFailure()) {
             Tools::clearCache();
         }
     }
-
 }
 $result = '<?xml version="1.0" encoding="UTF-8"?>';
 if (empty($upgrade->hasFailure())) {
@@ -706,15 +702,15 @@ if (empty($upgrade->hasFailure())) {
     Configuration::updateValue('PS_NEED_REBUILD_INDEX', 1);
     Configuration::updateValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
     $result .= '<action result="ok" id="">'."\n";
-    foreach($upgrade->getInfoList() as $info) {
+    foreach ($upgrade->getInfoList() as $info) {
         $result .= $info."\n";
     }
 
-    foreach($upgrade->getWarningList() as $warning) {
+    foreach ($upgrade->getWarningList() as $warning) {
         $result .= $warning."\n";
     }
 } else {
-    foreach($upgrade->getFailureList() as $failure) {
+    foreach ($upgrade->getFailureList() as $failure) {
         $result .= $failure."\n";
     }
 }
