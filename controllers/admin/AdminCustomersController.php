@@ -728,7 +728,7 @@ class AdminCustomersControllerCore extends AdminController
 
             if ($order['valid']) {
                 $orders_ok[] = $order;
-                $total_ok += $order['total_paid_real_not_formated'];
+                $total_ok += $order['total_paid_real_not_formated']/$order['conversion_rate'];
             } else {
                 $orders_ko[] = $order;
             }

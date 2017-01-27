@@ -691,7 +691,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 foreach ($orders as $key => $order) {
                     if ($order['valid']) {
                         $orders_ok[] = $order;
-                        $total_ok += $order['total_paid_real'];
+                        $total_ok += $order['total_paid_real']/$order['conversion_rate'];
                     }
                     $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
                     $orders[$key]['total_paid_real'] = Tools::displayPrice($order['total_paid_real'], new Currency((int)$order['id_currency']));
