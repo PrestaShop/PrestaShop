@@ -54,12 +54,12 @@ class AdminShopUrlControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_shop_url' => array(
-                'title' => $this->trans('Shop URL ID', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Shop URL ID', array(), 'Admin.Advparameters.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'shop_name' => array(
-                'title' => $this->trans('Shop name', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Shop name', array(), 'Admin.Advparameters.Feature'),
                 'filter_key' => 's!name'
             ),
             'url' => array(
@@ -68,7 +68,7 @@ class AdminShopUrlControllerCore extends AdminController
                 'havingFilter' => true
             ),
             'main' => array(
-                'title' => $this->trans('Is it the main URL?', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Is it the main URL?', array(), 'Admin.Advparameters.Feature'),
                 'align' => 'center',
                 'activeVisu' => 'main',
                 'active' => 'main',
@@ -119,19 +119,19 @@ class AdminShopUrlControllerCore extends AdminController
         $this->multiple_fieldsets = true;
         if (!$update_htaccess) {
             $desc_virtual_uri = array(
-                '<span class="warning_mod_rewrite">'.$this->trans('If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.', array(), 'Admin.AdvParameters.Help').'</span>'
+                '<span class="warning_mod_rewrite">'.$this->trans('If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.', array(), 'Admin.Advparameters.Help').'</span>'
             );
         } else {
             $desc_virtual_uri = array(
-                $this->trans('You can use this option if you want to create a store with a URL that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).', array(), 'Admin.AdvParameters.Help'),
-                '<strong>'.$this->trans('URL rewriting must be activated on your server to use this feature.', array(), 'Admin.AdvParameters.Help').'</strong>'
+                $this->trans('You can use this option if you want to create a store with a URL that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).', array(), 'Admin.Advparameters.Help'),
+                '<strong>'.$this->trans('URL rewriting must be activated on your server to use this feature.', array(), 'Admin.Advparameters.Help').'</strong>'
             );
         }
         $this->fields_form = array(
             array(
                 'form' => array(
                     'legend' => array(
-                        'title' => $this->trans('URL options', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('URL options', array(), 'Admin.Advparameters.Feature'),
                         'icon' => 'icon-cogs'
                     ),
                     'input' => array(
@@ -154,7 +154,7 @@ class AdminShopUrlControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'switch',
-                            'label' => $this->trans('Is it the main URL for this shop?', array(), 'Admin.AdvParameters.Feature'),
+                            'label' => $this->trans('Is it the main URL for this shop?', array(), 'Admin.Advparameters.Feature'),
                             'name' => 'main',
                             'is_bool' => true,
                             'class' => 't',
@@ -169,13 +169,13 @@ class AdminShopUrlControllerCore extends AdminController
                                 )
                             ),
                             'desc' => array(
-                                $this->trans('If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).', array(), 'Admin.AdvParameters.Help'),
+                                $this->trans('If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).', array(), 'Admin.Advparameters.Help'),
                                 array(
-                                    'text' => $this->trans('Since the selected shop has no main URL, you have to set this URL as the Main URL.', array(), 'Admin.AdvParameters.Help'),
+                                    'text' => $this->trans('Since the selected shop has no main URL, you have to set this URL as the Main URL.', array(), 'Admin.Advparameters.Help'),
                                     'id' => 'mainUrlInfo'
                                 ),
                                 array(
-                                    'text' => $this->trans('The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.', array(), 'Admin.AdvParameters.Help'),
+                                    'text' => $this->trans('The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.', array(), 'Admin.Advparameters.Help'),
                                     'id' => 'mainUrlInfoExplain'
                                 )
                             )
@@ -207,19 +207,19 @@ class AdminShopUrlControllerCore extends AdminController
             array(
                 'form' => array(
                     'legend' => array(
-                        'title' => $this->trans('Shop URL', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Shop URL', array(), 'Admin.Advparameters.Feature'),
                         'icon' => 'icon-shopping-cart'
                     ),
                     'input' => array(
                         array(
                             'type' => 'text',
-                            'label' => $this->trans('Domain', array(), 'Admin.AdvParameters.Feature'),
+                            'label' => $this->trans('Domain', array(), 'Admin.Advparameters.Feature'),
                             'name' => 'domain',
                             'size' => 50,
                         ),
                         array(
                             'type' => 'text',
-                            'label' => $this->trans('SSL Domain', array(), 'Admin.AdvParameters.Feature'),
+                            'label' => $this->trans('SSL Domain', array(), 'Admin.Advparameters.Feature'),
                             'name' => 'domain_ssl',
                             'size' => 50,
                         ),
@@ -236,9 +236,9 @@ class AdminShopUrlControllerCore extends AdminController
                 array(
                     array(
                         'type' => 'text',
-                        'label' => $this->trans('Physical URL', array(), 'Admin.AdvParameters.Feature'),
+                        'label' => $this->trans('Physical URL', array(), 'Admin.Advparameters.Feature'),
                         'name' => 'physical_uri',
-                        'desc' => $this->trans('This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.', array(), 'Admin.AdvParameters.Help'),
+                        'desc' => $this->trans('This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.', array(), 'Admin.Advparameters.Help'),
                         'size' => 50,
                     )
                 )
@@ -249,15 +249,15 @@ class AdminShopUrlControllerCore extends AdminController
             array(
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Virtual URL', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Virtual URL', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'virtual_uri',
                     'desc' => $desc_virtual_uri,
                     'size' => 50,
-                    'hint' => (!$update_htaccess) ? $this->trans('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn\'t work, please check with your hosting provider on how to activate URL rewriting.', array(), 'Admin.AdvParameters.Help') : null,
+                    'hint' => (!$update_htaccess) ? $this->trans('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn\'t work, please check with your hosting provider on how to activate URL rewriting.', array(), 'Admin.Advparameters.Help') : null,
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Final URL', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Final URL', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'final_url',
                     'size' => 76,
                     'readonly' => true
@@ -306,12 +306,12 @@ class AdminShopUrlControllerCore extends AdminController
             }
 
             $this->page_header_toolbar_btn['edit'] = array(
-                'desc' => $this->trans('Edit this shop', array(), 'Admin.AdvParameters.Feature'),
+                'desc' => $this->trans('Edit this shop', array(), 'Admin.Advparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop').'&updateshop&shop_id='.(int)$this->id_shop,
             );
 
             $this->page_header_toolbar_btn['new'] = array(
-                'desc' => $this->trans('Add a new URL', array(), 'Admin.AdvParameters.Feature'),
+                'desc' => $this->trans('Add a new URL', array(), 'Admin.Advparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&shop_id='.(int)$this->id_shop,
             );
         }
@@ -331,7 +331,7 @@ class AdminShopUrlControllerCore extends AdminController
             }
 
             $this->toolbar_btn['new'] = array(
-                'desc' => $this->trans('Add a new URL', array(), 'Admin.AdvParameters.Feature'),
+                'desc' => $this->trans('Add a new URL', array(), 'Admin.Advparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&shop_id='.(int)$this->id_shop,
             );
         }
@@ -361,7 +361,7 @@ class AdminShopUrlControllerCore extends AdminController
             }
         }
 
-        $shops_tree = new HelperTreeShops('shops-tree', $this->trans('Multistore tree', array(), 'Admin.AdvParameters.Feature'));
+        $shops_tree = new HelperTreeShops('shops-tree', $this->trans('Multistore tree', array(), 'Admin.Advparameters.Feature'));
         $shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
             ->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
                 new TreeToolbarLink(

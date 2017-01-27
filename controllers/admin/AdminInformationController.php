@@ -108,27 +108,27 @@ class AdminInformationControllerCore extends AdminController
     public function getTestResult()
     {
         $tests_errors = array(
-            'phpversion' => $this->trans('Update your PHP version.', array(), 'Admin.AdvParameters.Notification'),
-            'upload' => $this->trans('Configure your server to allow file uploads.', array(), 'Admin.AdvParameters.Notification'),
-            'system' => $this->trans('Configure your server to allow the creation of directories and files with write permissions.', array(), 'Admin.AdvParameters.Notification'),
-            'gd' => $this->trans('Enable the GD library on your server.', array(), 'Admin.AdvParameters.Notification'),
-            'mysql_support' => $this->trans('Enable the MySQL support on your server.', array(), 'Admin.AdvParameters.Notification'),
-            'config_dir' => $this->trans('Set write permissions for the "config" folder.', array(), 'Admin.AdvParameters.Notification'),
-            'cache_dir' => $this->trans('Set write permissions for the "cache" folder.', array(), 'Admin.AdvParameters.Notification'),
-            'sitemap' => $this->trans('Set write permissions for the "sitemap.xml" file.', array(), 'Admin.AdvParameters.Notification'),
-            'img_dir' => $this->trans('Set write permissions for the "img" folder and subfolders.', array(), 'Admin.AdvParameters.Notification'),
-            'log_dir' => $this->trans('Set write permissions for the "log" folder and subfolders.', array(), 'Admin.AdvParameters.Notification'),
-            'mails_dir' => $this->trans('Set write permissions for the "mails" folder and subfolders.', array(), 'Admin.AdvParameters.Notification'),
-            'module_dir' => $this->trans('Set write permissions for the "modules" folder and subfolders.', array(), 'Admin.AdvParameters.Notification'),
-            'theme_lang_dir' => $this->trans('Set the write permissions for the "themes%s/lang/" folder and subfolders, recursively.', array('%s' => _THEME_NAME_), 'Admin.AdvParameters.Notification'),
-            'translations_dir' => $this->trans('Set write permissions for the "translations" folder and subfolders.', array(), 'Admin.AdvParameters.Notification'),
-            'customizable_products_dir' => $this->trans('Set write permissions for the "upload" folder and subfolders.', array(), 'Admin.AdvParameters.Notification'),
-            'virtual_products_dir' => $this->trans('Set write permissions for the "download" folder and subfolders.', array(), 'Admin.AdvParameters.Notification'),
-            'fopen' => $this->trans('Allow the PHP fopen() function on your server.', array(), 'Admin.AdvParameters.Notification'),
-            'gz' => $this->trans('Enable GZIP compression on your server.', array(), 'Admin.AdvParameters.Notification'),
-            'files' => $this->trans('Some PrestaShop files are missing from your server.', array(), 'Admin.AdvParameters.Notification'),
-            'new_phpversion' => $this->trans('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!', array('%s' => phpversion()), 'Admin.AdvParameters.Notification'),
-            'apache_mod_rewrite' => $this->trans('Enable the Apache mod_rewrite module', array(), 'Admin.AdvParameters.Notification')
+            'phpversion' => $this->trans('Update your PHP version.', array(), 'Admin.Advparameters.Notification'),
+            'upload' => $this->trans('Configure your server to allow file uploads.', array(), 'Admin.Advparameters.Notification'),
+            'system' => $this->trans('Configure your server to allow the creation of directories and files with write permissions.', array(), 'Admin.Advparameters.Notification'),
+            'gd' => $this->trans('Enable the GD library on your server.', array(), 'Admin.Advparameters.Notification'),
+            'mysql_support' => $this->trans('Enable the MySQL support on your server.', array(), 'Admin.Advparameters.Notification'),
+            'config_dir' => $this->trans('Set write permissions for the "config" folder.', array(), 'Admin.Advparameters.Notification'),
+            'cache_dir' => $this->trans('Set write permissions for the "cache" folder.', array(), 'Admin.Advparameters.Notification'),
+            'sitemap' => $this->trans('Set write permissions for the "sitemap.xml" file.', array(), 'Admin.Advparameters.Notification'),
+            'img_dir' => $this->trans('Set write permissions for the "img" folder and subfolders.', array(), 'Admin.Advparameters.Notification'),
+            'log_dir' => $this->trans('Set write permissions for the "log" folder and subfolders.', array(), 'Admin.Advparameters.Notification'),
+            'mails_dir' => $this->trans('Set write permissions for the "mails" folder and subfolders.', array(), 'Admin.Advparameters.Notification'),
+            'module_dir' => $this->trans('Set write permissions for the "modules" folder and subfolders.', array(), 'Admin.Advparameters.Notification'),
+            'theme_lang_dir' => $this->trans('Set the write permissions for the "themes%s/lang/" folder and subfolders, recursively.', array('%s' => _THEME_NAME_), 'Admin.Advparameters.Notification'),
+            'translations_dir' => $this->trans('Set write permissions for the "translations" folder and subfolders.', array(), 'Admin.Advparameters.Notification'),
+            'customizable_products_dir' => $this->trans('Set write permissions for the "upload" folder and subfolders.', array(), 'Admin.Advparameters.Notification'),
+            'virtual_products_dir' => $this->trans('Set write permissions for the "download" folder and subfolders.', array(), 'Admin.Advparameters.Notification'),
+            'fopen' => $this->trans('Allow the PHP fopen() function on your server.', array(), 'Admin.Advparameters.Notification'),
+            'gz' => $this->trans('Enable GZIP compression on your server.', array(), 'Admin.Advparameters.Notification'),
+            'files' => $this->trans('Some PrestaShop files are missing from your server.', array(), 'Admin.Advparameters.Notification'),
+            'new_phpversion' => $this->trans('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!', array('%s' => phpversion()), 'Admin.Advparameters.Notification'),
+            'apache_mod_rewrite' => $this->trans('Enable the Apache mod_rewrite module', array(), 'Admin.Advparameters.Notification')
         );
 
         // Functions list to test with 'test_system'

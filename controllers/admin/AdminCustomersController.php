@@ -53,7 +53,7 @@ class AdminCustomersControllerCore extends AdminController
         $this->required_fields = array(
             array(
                 'name' => 'optin',
-                'label' => $this->trans('Partner offers', array(), 'Admin.OrdersCustomers.Feature')
+                'label' => $this->trans('Partner offers', array(), 'Admin.Orderscustomers.Feature')
             ),
         );
 
@@ -135,17 +135,17 @@ class AdminCustomersControllerCore extends AdminController
                 'callback' => 'printNewsIcon',
             ),
             'optin' => array(
-                'title' => $this->trans('Partner offers', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Partner offers', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'text-center',
                 'callback' => 'printOptinIcon',
             ),
             'date_add' => array(
-                'title' => $this->trans('Registration', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Registration', array(), 'Admin.Orderscustomers.Feature'),
                 'type' => 'date',
                 'align' => 'text-right'
             ),
             'connect' => array(
-                'title' => $this->trans('Last visit', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Last visit', array(), 'Admin.Orderscustomers.Feature'),
                 'type' => 'datetime',
                 'search' => false,
                 'havingFilter' => true
@@ -176,10 +176,10 @@ class AdminCustomersControllerCore extends AdminController
         }
 
         self::$meaning_status = array(
-            'open' => $this->trans('Open', array(), 'Admin.OrdersCustomers.Feature'),
-            'closed' => $this->trans('Closed', array(), 'Admin.OrdersCustomers.Feature'),
-            'pending1' => $this->trans('Pending 1', array(), 'Admin.OrdersCustomers.Feature'),
-            'pending2' => $this->trans('Pending 2', array(), 'Admin.OrdersCustomers.Feature')
+            'open' => $this->trans('Open', array(), 'Admin.Orderscustomers.Feature'),
+            'closed' => $this->trans('Closed', array(), 'Admin.Orderscustomers.Feature'),
+            'pending1' => $this->trans('Pending 1', array(), 'Admin.Orderscustomers.Feature'),
+            'pending2' => $this->trans('Pending 2', array(), 'Admin.Orderscustomers.Feature')
         );
     }
 
@@ -203,7 +203,7 @@ class AdminCustomersControllerCore extends AdminController
         }
 
         if (!$this->can_add_customer && !$this->display) {
-            $this->informations[] = $this->trans('You have to select a shop if you want to create a customer.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->informations[] = $this->trans('You have to select a shop if you want to create a customer.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         parent::initContent();
@@ -243,13 +243,13 @@ class AdminCustomersControllerCore extends AdminController
             case '':
             case 'list':
                 array_pop($this->toolbar_title);
-                $this->toolbar_title[] = $this->trans('Manage your Customers', array(), 'Admin.OrdersCustomers.Feature');
+                $this->toolbar_title[] = $this->trans('Manage your Customers', array(), 'Admin.Orderscustomers.Feature');
                 break;
             case 'view':
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
                     array_pop($this->toolbar_title);
-                    $this->toolbar_title[] = sprintf($this->trans('Information about customer %s', array(), 'Admin.OrdersCustomers.Feature'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+                    $this->toolbar_title[] = sprintf($this->trans('Information about customer %s', array(), 'Admin.Orderscustomers.Feature'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
                 }
                 break;
             case 'add':
@@ -257,9 +257,9 @@ class AdminCustomersControllerCore extends AdminController
                 array_pop($this->toolbar_title);
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
-                    $this->toolbar_title[] = sprintf($this->trans('Editing customer %s', array(), 'Admin.OrdersCustomers.Feature'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+                    $this->toolbar_title[] = sprintf($this->trans('Editing customer %s', array(), 'Admin.Orderscustomers.Feature'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
                 } else {
-                    $this->toolbar_title[] = $this->trans('Creating a new Customer', array(), 'Admin.OrdersCustomers.Feature');
+                    $this->toolbar_title[] = $this->trans('Creating a new Customer', array(), 'Admin.Orderscustomers.Feature');
                 }
                 break;
         }
@@ -275,7 +275,7 @@ class AdminCustomersControllerCore extends AdminController
         if (empty($this->display) && $this->can_add_customer) {
             $this->page_header_toolbar_btn['new_customer'] = array(
                 'href' => self::$currentIndex.'&addcustomer&token='.$this->token,
-                'desc' => $this->trans('Add new customer', array(), 'Admin.OrdersCustomers.Feature'),
+                'desc' => $this->trans('Add new customer', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -396,12 +396,12 @@ class AdminCustomersControllerCore extends AdminController
                     'name' => 'passwd',
                     'required' => ($obj->id ? false : true),
                     'col' => '4',
-                    'hint' => ($obj->id ? $this->trans('Leave this field blank if there\'s no change.', array(), 'Admin.OrdersCustomers.Help') :
-                        sprintf($this->trans('Password should be at least %s characters long.', array(), 'Admin.OrdersCustomers.Help'), Validate::PASSWORD_LENGTH))
+                    'hint' => ($obj->id ? $this->trans('Leave this field blank if there\'s no change.', array(), 'Admin.Orderscustomers.Help') :
+                        sprintf($this->trans('Password should be at least %s characters long.', array(), 'Admin.Orderscustomers.Help'), Validate::PASSWORD_LENGTH))
                 ),
                 array(
                     'type' => 'birthday',
-                    'label' => $this->trans('Birthday', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Birthday', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'birthday',
                     'options' => array(
                         'days' => $days,
@@ -428,11 +428,11 @@ class AdminCustomersControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Enable or disable customer login.', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Enable or disable customer login.', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->trans('Partner offers', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Partner offers', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'optin',
                     'required' => false,
                     'class' => 't',
@@ -450,7 +450,7 @@ class AdminCustomersControllerCore extends AdminController
                         )
                     ),
                     'disabled' =>  (bool)!Configuration::get('PS_CUSTOMER_OPTIN'),
-                    'hint' => $this->trans('This customer will receive your ads via email.', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('This customer will receive your ads via email.', array(), 'Admin.Orderscustomers.Help')
                 ),
             )
         );
@@ -471,16 +471,16 @@ class AdminCustomersControllerCore extends AdminController
             array(
                 array(
                     'type' => 'group',
-                    'label' => $this->trans('Group access', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Group access', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'groupBox',
                     'values' => $groups,
                     'required' => true,
                     'col' => '6',
-                    'hint' => $this->trans('Select all the groups that you would like to apply to this customer.', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Select all the groups that you would like to apply to this customer.', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->trans('Default customer group', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Default customer group', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'id_default_group',
                     'options' => array(
                         'query' => $groups,
@@ -489,8 +489,8 @@ class AdminCustomersControllerCore extends AdminController
                     ),
                     'col' => '4',
                     'hint' => array(
-                        $this->trans('This group will be the user\'s default group.', array(), 'Admin.OrdersCustomers.Help'),
-                        $this->trans('Only the discount for the selected group will be applied to this customer.', array(), 'Admin.OrdersCustomers.Help')
+                        $this->trans('This group will be the user\'s default group.', array(), 'Admin.Orderscustomers.Help'),
+                        $this->trans('Only the discount for the selected group will be applied to this customer.', array(), 'Admin.Orderscustomers.Help')
                     )
                 )
             )
@@ -522,35 +522,35 @@ class AdminCustomersControllerCore extends AdminController
             );
             $this->fields_form['input'][] = array(
                 'type' => 'text',
-                'label' => $this->trans('SIRET', array(), 'Admin.OrdersCustomers.Feature'),
+                'label' => $this->trans('SIRET', array(), 'Admin.Orderscustomers.Feature'),
                 'name' => 'siret'
             );
             $this->fields_form['input'][] = array(
                 'type' => 'text',
-                'label' => $this->trans('APE', array(), 'Admin.OrdersCustomers.Feature'),
+                'label' => $this->trans('APE', array(), 'Admin.Orderscustomers.Feature'),
                 'name' => 'ape'
             );
             $this->fields_form['input'][] = array(
                 'type' => 'text',
-                'label' => $this->trans('Website', array(), 'Admin.OrdersCustomers.Feature'),
+                'label' => $this->trans('Website', array(), 'Admin.Orderscustomers.Feature'),
                 'name' => 'website'
             );
             $this->fields_form['input'][] = array(
                 'type' => 'text',
-                'label' => $this->trans('Allowed outstanding amount', array(), 'Admin.OrdersCustomers.Feature'),
+                'label' => $this->trans('Allowed outstanding amount', array(), 'Admin.Orderscustomers.Feature'),
                 'name' => 'outstanding_allow_amount',
-                'hint' => $this->trans('Valid characters:', array(), 'Admin.OrdersCustomers.Help').' 0-9',
+                'hint' => $this->trans('Valid characters:', array(), 'Admin.Orderscustomers.Help').' 0-9',
                 'suffix' => $this->context->currency->sign
             );
             $this->fields_form['input'][] = array(
                 'type' => 'text',
-                'label' => $this->trans('Maximum number of payment days', array(), 'Admin.OrdersCustomers.Feature'),
+                'label' => $this->trans('Maximum number of payment days', array(), 'Admin.Orderscustomers.Feature'),
                 'name' => 'max_payment_days',
-                'hint' => $this->trans('Valid characters:', array(), 'Admin.OrdersCustomers.Help').' 0-9'
+                'hint' => $this->trans('Valid characters:', array(), 'Admin.Orderscustomers.Help').' 0-9'
             );
             $this->fields_form['input'][] = array(
                 'type' => 'select',
-                'label' => $this->trans('Risk rating', array(), 'Admin.OrdersCustomers.Feature'),
+                'label' => $this->trans('Risk rating', array(), 'Admin.Orderscustomers.Feature'),
                 'name' => 'id_risk',
                 'required' => false,
                 'class' => 't',
@@ -630,7 +630,7 @@ class AdminCustomersControllerCore extends AdminController
         $helper->id = 'box-age';
         $helper->icon = 'icon-calendar';
         $helper->color = 'color2';
-        $helper->title = $this->trans('Average Age', array(), 'Admin.OrdersCustomers.Feature');
+        $helper->title = $this->trans('Average Age', array(), 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->trans('All Time', array(), 'Admin.Global');
         if (ConfigurationKPI::get('AVG_CUSTOMER_AGE', $this->context->language->id) !== false) {
             $helper->value = ConfigurationKPI::get('AVG_CUSTOMER_AGE', $this->context->language->id);
@@ -643,7 +643,7 @@ class AdminCustomersControllerCore extends AdminController
         $helper->id = 'box-orders';
         $helper->icon = 'icon-retweet';
         $helper->color = 'color3';
-        $helper->title = $this->trans('Orders per Customer', array(), 'Admin.OrdersCustomers.Feature');
+        $helper->title = $this->trans('Orders per Customer', array(), 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->trans('All Time', array(), 'Admin.Global');
         if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER') !== false) {
             $helper->value = ConfigurationKPI::get('ORDERS_PER_CUSTOMER');
@@ -656,7 +656,7 @@ class AdminCustomersControllerCore extends AdminController
         $helper->id = 'box-newsletter';
         $helper->icon = 'icon-envelope';
         $helper->color = 'color4';
-        $helper->title = $this->trans('Newsletter Registrations', array(), 'Admin.OrdersCustomers.Feature');
+        $helper->title = $this->trans('Newsletter Registrations', array(), 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->trans('All Time', array(), 'Admin.Global');
         if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS') !== false) {
             $helper->value = ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS');
@@ -723,7 +723,7 @@ class AdminCustomersControllerCore extends AdminController
         $orders_ko = array();
         foreach ($orders as $order) {
             if (!isset($order['order_state'])) {
-                $order['order_state'] = $this->trans('There is no status defined for this order.', array(), 'Admin.OrdersCustomers.Notification');
+                $order['order_state'] = $this->trans('There is no status defined for this order.', array(), 'Admin.Orderscustomers.Notification');
             }
 
             if ($order['valid']) {
@@ -791,7 +791,7 @@ class AdminCustomersControllerCore extends AdminController
         }
         $total_connections = count($connections);
         for ($i = 0; $i < $total_connections; $i++) {
-            $connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->trans('Direct link', array(), 'Admin.OrdersCustomers.Notification');
+            $connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->trans('Direct link', array(), 'Admin.Orderscustomers.Notification');
         }
 
         $referrers = Referrer::getReferrers($customer->id);
@@ -864,7 +864,7 @@ class AdminCustomersControllerCore extends AdminController
         } elseif ($this->delete_mode == 'deleted') {
             $this->deleted = true;
         } else {
-            $this->errors[] = $this->trans('Unknown delete mode:', array(), 'Admin.OrdersCustomers.Notification').' '.$this->deleted;
+            $this->errors[] = $this->trans('Unknown delete mode:', array(), 'Admin.Orderscustomers.Notification').' '.$this->deleted;
             return;
         }
     }
@@ -887,12 +887,12 @@ class AdminCustomersControllerCore extends AdminController
             $customer->getByEmail($customer_email);
         }
         if ($customer->id) {
-            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.OrdersCustomers.Notification').' '.$customer_email;
+            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.Orderscustomers.Notification').' '.$customer_email;
             $this->display = 'edit';
             return $customer;
         } elseif (trim(Tools::getValue('passwd')) == '') {
             $this->validateRules();
-            $this->errors[] = $this->trans('Password cannot be empty.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('Password cannot be empty.', array(), 'Admin.Orderscustomers.Notification');
             $this->display = 'edit';
         } elseif ($customer = parent::processAdd()) {
             $this->context->smarty->assign('new_customer', $customer);
@@ -913,14 +913,14 @@ class AdminCustomersControllerCore extends AdminController
                     $customer->getByEmail($customer_email);
                 }
                 if (($customer->id) && ($customer->id != (int)$this->object->id)) {
-                    $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.OrdersCustomers.Notification').' '.$customer_email;
+                    $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.Orderscustomers.Notification').' '.$customer_email;
                 }
             }
 
             return parent::processUpdate();
         } else {
-            $this->errors[] = $this->trans('An error occurred while loading the object.', array(), 'Admin.OrdersCustomers.Notification').'
-				<b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while loading the object.', array(), 'Admin.Orderscustomers.Notification').'
+				<b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Orderscustomers.Notification');
         }
     }
 
@@ -928,7 +928,7 @@ class AdminCustomersControllerCore extends AdminController
     {
         // Check that default group is selected
         if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox'))) {
-            $this->errors[] = $this->trans('A default customer group must be selected in group box.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('A default customer group must be selected in group box.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         // Check the requires fields which are settings in the BO
@@ -956,10 +956,10 @@ class AdminCustomersControllerCore extends AdminController
     {
         $customer = new Customer((int)Tools::getValue('id_customer'));
         if (!Validate::isLoadedObject($customer)) {
-            $this->errors[] = $this->trans('This customer does not exist.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('This customer does not exist.', array(), 'Admin.Orderscustomers.Notification');
         }
         if (Customer::customerExists($customer->email)) {
-            $this->errors[] = $this->trans('This customer already exists as a non-guest.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('This customer already exists as a non-guest.', array(), 'Admin.Orderscustomers.Notification');
         } elseif ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id))) {
             if ($id_order = (int)Tools::getValue('id_order')) {
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders').'&id_order='.$id_order.'&vieworder&conf=3');
@@ -967,7 +967,7 @@ class AdminCustomersControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&viewcustomer&conf=3&token='.$this->token);
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
     }
 
@@ -978,11 +978,11 @@ class AdminCustomersControllerCore extends AdminController
     {
         $customer = new Customer($this->id_object);
         if (!Validate::isLoadedObject($customer)) {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
         $customer->newsletter = $customer->newsletter ? 0 : 1;
         if (!$customer->update()) {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
     }
@@ -994,11 +994,11 @@ class AdminCustomersControllerCore extends AdminController
     {
         $customer = new Customer($this->id_object);
         if (!Validate::isLoadedObject($customer)) {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
         $customer->optin = $customer->optin ? 0 : 1;
         if (!$customer->update()) {
-            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating customer information.', array(), 'Admin.Orderscustomers.Notification');
         }
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
     }

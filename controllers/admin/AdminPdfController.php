@@ -60,7 +60,7 @@ class AdminPdfControllerCore extends AdminController
         } elseif (Tools::isSubmit('id_order_invoice')) {
             $this->generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
         } else {
-            die($this->trans('The order ID -- or the invoice order ID -- is missing.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('The order ID -- or the invoice order ID -- is missing.', array(), 'Admin.Orderscustomers.Notification'));
         }
     }
 
@@ -70,7 +70,7 @@ class AdminPdfControllerCore extends AdminController
         $order = new Order((int)$order_slip->id_order);
 
         if (!Validate::isLoadedObject($order)) {
-            die($this->trans('The order cannot be found within your database.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('The order cannot be found within your database.', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         $order->products = OrderSlip::getOrdersSlipProducts($order_slip->id, $order);
@@ -87,7 +87,7 @@ class AdminPdfControllerCore extends AdminController
             $order = Order::getByDelivery((int)Tools::getValue('id_delivery'));
             $this->generateDeliverySlipPDFByIdOrder((int)$order->id);
         } else {
-            die($this->trans('The order ID -- or the invoice order ID -- is missing.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('The order ID -- or the invoice order ID -- is missing.', array(), 'Admin.Orderscustomers.Notification'));
         }
     }
 
@@ -96,7 +96,7 @@ class AdminPdfControllerCore extends AdminController
         $order_invoice_collection = OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
 
         if (!count($order_invoice_collection)) {
-            die($this->trans('No invoice was found.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('No invoice was found.', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         $this->generatePDF($order_invoice_collection, PDF::TEMPLATE_INVOICE);
@@ -112,7 +112,7 @@ class AdminPdfControllerCore extends AdminController
         }
 
         if (!count($order_invoice_collection)) {
-            die($this->trans('No invoice was found.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('No invoice was found.', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         $this->generatePDF($order_invoice_collection, PDF::TEMPLATE_INVOICE);
@@ -122,7 +122,7 @@ class AdminPdfControllerCore extends AdminController
     {
         $id_order_slips_list = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
         if (!count($id_order_slips_list)) {
-            die($this->trans('No order slips were found.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('No order slips were found.', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         $order_slips = array();
@@ -138,7 +138,7 @@ class AdminPdfControllerCore extends AdminController
         $order_invoice_collection = OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
 
         if (!count($order_invoice_collection)) {
-            die($this->trans('No invoice was found.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('No invoice was found.', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         $this->generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
@@ -147,14 +147,14 @@ class AdminPdfControllerCore extends AdminController
     public function processGenerateSupplyOrderFormPDF()
     {
         if (!Tools::isSubmit('id_supply_order')) {
-            die($this->trans('The supply order ID is missing.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('The supply order ID is missing.', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         $id_supply_order = (int)Tools::getValue('id_supply_order');
         $supply_order = new SupplyOrder($id_supply_order);
 
         if (!Validate::isLoadedObject($supply_order)) {
-            die($this->trans('The supply order cannot be found within your database.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('The supply order cannot be found within your database.', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         $this->generatePDF($supply_order, PDF::TEMPLATE_SUPPLY_ORDER_FORM);
@@ -185,7 +185,7 @@ class AdminPdfControllerCore extends AdminController
     {
         $order = new Order((int)$id_order);
         if (!Validate::isLoadedObject($order)) {
-            die($this->trans('The order cannot be found within your database.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('The order cannot be found within your database.', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         $order_invoice_list = $order->getInvoicesCollection();
@@ -197,7 +197,7 @@ class AdminPdfControllerCore extends AdminController
     {
         $order_invoice = new OrderInvoice((int)$id_order_invoice);
         if (!Validate::isLoadedObject($order_invoice)) {
-            die($this->trans('The order invoice cannot be found within your database.', array(), 'Admin.OrdersCustomers.Notification'));
+            die($this->trans('The order invoice cannot be found within your database.', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => array($order_invoice)));

@@ -45,7 +45,7 @@ class AdminCartsControllerCore extends AdminController
         $this->_orderWay = 'DESC';
 
         $this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier,
-		IF (IFNULL(o.id_order, \''.$this->trans('Non ordered', array(), 'Admin.OrdersCustomers.Feature').'\') = \''.$this->trans('Non ordered', array(), 'Admin.OrdersCustomers.Feature').'\', IF(TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', a.`date_add`)) > 86400, \''.$this->trans('Abandoned cart', array(), 'Admin.OrdersCustomers.Feature').'\', \''.$this->trans('Non ordered', array(), 'Admin.OrdersCustomers.Feature').'\'), o.id_order) AS status, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
+		IF (IFNULL(o.id_order, \''.$this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature').'\') = \''.$this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature').'\', IF(TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', a.`date_add`)) > 86400, \''.$this->trans('Abandoned cart', array(), 'Admin.Orderscustomers.Feature').'\', \''.$this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature').'\'), o.id_order) AS status, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
         $this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.id_carrier = a.id_carrier)
@@ -53,7 +53,7 @@ class AdminCartsControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', co.`date_add`)) < 1800)';
 
         if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts') {
-            $this->_having = 'status = \''.$this->trans('Abandoned cart', array(), 'Admin.OrdersCustomers.Feature').'\'';
+            $this->_having = 'status = \''.$this->trans('Abandoned cart', array(), 'Admin.Orderscustomers.Feature').'\'';
         } else {
             $this->_use_found_rows = false;
         }
@@ -65,7 +65,7 @@ class AdminCartsControllerCore extends AdminController
                 'class' => 'fixed-width-xs'
             ),
             'status' => array(
-                'title' => $this->trans('Order ID', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Order ID', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'text-center',
                 'badge_danger' => true,
                 'havingFilter' => true
@@ -123,7 +123,7 @@ class AdminCartsControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['export_cart'] = array(
                 'href' => self::$currentIndex.'&exportcart&token='.$this->token,
-                'desc' => $this->trans('Export carts', array(), 'Admin.OrdersCustomers.Feature'),
+                'desc' => $this->trans('Export carts', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-export'
             );
         }
@@ -158,10 +158,10 @@ class AdminCartsControllerCore extends AdminController
         $helper->id = 'box-carts';
         $helper->icon = 'icon-shopping-cart';
         $helper->color = 'color2';
-        $helper->title = $this->trans('Abandoned Carts', array(), 'Admin.OrdersCustomers.Feature');
+        $helper->title = $this->trans('Abandoned Carts', array(), 'Admin.Orderscustomers.Feature');
         $date_from = date(Context::getContext()->language->date_format_lite, strtotime('-2 day'));
         $date_to = date(Context::getContext()->language->date_format_lite, strtotime('-1 day'));
-        $helper->subtitle = $this->trans('From %date1% to %date2%', array('%date1%' => $date_from, '%date2%' => $date_to), 'Admin.OrdersCustomers.Feature');
+        $helper->subtitle = $this->trans('From %date1% to %date2%', array('%date1%' => $date_from, '%date2%' => $date_to), 'Admin.Orderscustomers.Feature');
         $helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
         if (ConfigurationKPI::get('ABANDONED_CARTS') !== false) {
             $helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
@@ -174,10 +174,10 @@ class AdminCartsControllerCore extends AdminController
         $helper->id = 'box-average-order';
         $helper->icon = 'icon-money';
         $helper->color = 'color3';
-        $helper->title = $this->trans('Average Order Value', array(), 'Admin.OrdersCustomers.Feature');
+        $helper->title = $this->trans('Average Order Value', array(), 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
         if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false) {
-            $helper->value = $this->trans('%amount% tax excl.', array('%amount%' => ConfigurationKPI::get('AVG_ORDER_VALUE')), 'Admin.OrdersCustomers.Feature');
+            $helper->value = $this->trans('%amount% tax excl.', array('%amount%' => ConfigurationKPI::get('AVG_ORDER_VALUE')), 'Admin.Orderscustomers.Feature');
         }
         if (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time) {
             $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
@@ -188,7 +188,7 @@ class AdminCartsControllerCore extends AdminController
         $helper->id = 'box-net-profit-visitor';
         $helper->icon = 'icon-user';
         $helper->color = 'color4';
-        $helper->title = $this->trans('Net Profit per Visitor', array(), 'Admin.OrdersCustomers.Feature');
+        $helper->title = $this->trans('Net Profit per Visitor', array(), 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
         if (ConfigurationKPI::get('NETPROFIT_VISITOR') !== false) {
             $helper->value = ConfigurationKPI::get('NETPROFIT_VISITOR');
@@ -214,7 +214,7 @@ class AdminCartsControllerCore extends AdminController
         $this->context->cart = $cart;
         $this->context->currency = $currency;
         $this->context->customer = $customer;
-        $this->toolbar_title = $this->trans('Cart #%ID%', array('%ID%' => $this->context->cart->id), 'Admin.OrdersCustomers.Feature');
+        $this->toolbar_title = $this->trans('Cart #%ID%', array('%ID%' => $this->context->cart->id), 'Admin.Orderscustomers.Feature');
         $products = $cart->getProducts();
         $summary = $cart->getSummaryDetails();
 
@@ -274,8 +274,8 @@ class AdminCartsControllerCore extends AdminController
         $helper->id = 'box-kpi-cart';
         $helper->icon = 'icon-shopping-cart';
         $helper->color = 'color1';
-        $helper->title = $this->trans('Total Cart', array(), 'Admin.OrdersCustomers.Feature');
-        $helper->subtitle = $this->trans('Cart #%ID%', array('%ID%' => $cart->id), 'Admin.OrdersCustomers.Feature');
+        $helper->title = $this->trans('Total Cart', array(), 'Admin.Orderscustomers.Feature');
+        $helper->subtitle = $this->trans('Cart #%ID%', array('%ID%' => $cart->id), 'Admin.Orderscustomers.Feature');
         $helper->value = Tools::displayPrice($total_price, $currency);
         $kpi = $helper->generate();
 
@@ -560,14 +560,14 @@ class AdminCartsControllerCore extends AdminController
         if ($this->access('edit')) {
             $errors = array();
             if (!$id_order = Tools::getValue('id_order')) {
-                $errors[] = $this->trans('Invalid order', array(), 'Admin.OrdersCustomers.Notification');
+                $errors[] = $this->trans('Invalid order', array(), 'Admin.Orderscustomers.Notification');
             }
             $cart = Cart::getCartByOrderId($id_order);
             $new_cart = $cart->duplicate();
             if (!$new_cart || !Validate::isLoadedObject($new_cart['cart'])) {
-                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.OrdersCustomers.Notification');
+                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.Orderscustomers.Notification');
             } elseif (!$new_cart['success']) {
-                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.OrdersCustomers.Notification');
+                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.Orderscustomers.Notification');
             } else {
                 $this->context->cart = $new_cart['cart'];
                 echo json_encode($this->ajaxReturnVars());
@@ -590,7 +590,7 @@ class AdminCartsControllerCore extends AdminController
             if (!$id_cart_rule = CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id)) {
                 $cart_rule = new CartRule();
                 $cart_rule->code = CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id;
-                $cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->trans('Free Shipping', array(), 'Admin.OrdersCustomers.Feature'));
+                $cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->trans('Free Shipping', array(), 'Admin.Orderscustomers.Feature'));
                 $cart_rule->id_customer = (int)$this->context->cart->id_customer;
                 $cart_rule->free_shipping = true;
                 $cart_rule->quantity = 1;

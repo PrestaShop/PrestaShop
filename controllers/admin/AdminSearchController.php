@@ -42,7 +42,7 @@ class AdminSearchControllerCore extends AdminController
         $this->context = Context::getContext();
         $this->query = trim(Tools::getValue('bo_query'));
         $searchType = (int)Tools::getValue('bo_search_type');
-        
+
         /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product */
         $action = Tools::getValue('action');
         if ($action == 'redirectToProduct') {
@@ -50,7 +50,7 @@ class AdminSearchControllerCore extends AdminController
             $link = $this->context->link->getAdminLink('AdminProducts', false, array('id_product' => $id_product));
             Tools::redirectAdmin($link);
         }
-        
+
         /* Handle empty search field */
         if (!empty($this->query)) {
             if (!$searchType && strlen($this->query) > 1) {
@@ -121,7 +121,7 @@ class AdminSearchControllerCore extends AdminController
                             $this->_list['orders'][] = $row;
                         }
                     } elseif ($searchType == 3) {
-                        $this->errors[] = $this->trans('No order was found with this ID:', array(), 'Admin.OrdersCustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
+                        $this->errors[] = $this->trans('No order was found with this ID:', array(), 'Admin.Orderscustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
                     }
                 }
             }
@@ -131,7 +131,7 @@ class AdminSearchControllerCore extends AdminController
                 if (Validate::isOrderInvoiceNumber($this->query) && ($invoice = OrderInvoice::getInvoiceByNumber($this->query))) {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicePDF&id_order='.(int)($invoice->id_order));
                 }
-                $this->errors[] = $this->trans('No invoice was found with this ID:', array(), 'Admin.OrdersCustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
+                $this->errors[] = $this->trans('No invoice was found with this ID:', array(), 'Admin.Orderscustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
             }
 
             /* Cart */
@@ -139,7 +139,7 @@ class AdminSearchControllerCore extends AdminController
                 if ((int)$this->query && Validate::isUnsignedInt((int)$this->query) && ($cart = new Cart($this->query)) && Validate::isLoadedObject($cart)) {
                     Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart='.(int)($cart->id).'&viewcart'.'&token='.Tools::getAdminToken('AdminCarts'.(int)(Tab::getIdFromClassName('AdminCarts')).(int)$this->context->employee->id));
                 }
-                $this->errors[] = $this->trans('No cart was found with this ID:', array(), 'Admin.OrdersCustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
+                $this->errors[] = $this->trans('No cart was found with this ID:', array(), 'Admin.Orderscustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
             }
             /* IP */
             // 6 - but it is included in the customer block
@@ -162,7 +162,7 @@ class AdminSearchControllerCore extends AdminController
     public function searchIP()
     {
         if (!ip2long(trim($this->query))) {
-            $this->errors[] = $this->trans('This is not a valid IP address:', array(), 'Admin.ShopParameters.Notification').' '.Tools::htmlentitiesUTF8($this->query);
+            $this->errors[] = $this->trans('This is not a valid IP address:', array(), 'Admin.Shopparameters.Notification').' '.Tools::htmlentitiesUTF8($this->query);
             return;
         }
         $this->_list['customers'] = Customer::searchByIp($this->query);
@@ -294,7 +294,7 @@ class AdminSearchControllerCore extends AdminController
             'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global'), 'align' => 'left', 'width' => 250),
             'company' => array('title' => $this->trans('Company', array(), 'Admin.Global'), 'align' => 'left', 'width' => 150),
             'birthday' => array('title' => $this->trans('Birth date', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'date', 'width' => 75),
-            'date_add' => array('title' => $this->trans('Registration date', array(), 'Admin.ShopParameters.Feature'), 'align' => 'center', 'type' => 'date', 'width' => 75),
+            'date_add' => array('title' => $this->trans('Registration date', array(), 'Admin.Shopparameters.Feature'), 'align' => 'center', 'type' => 'date', 'width' => 75),
             'orders' => array('title' => $this->trans('Orders', array(), 'Admin.Global'), 'align' => 'center', 'width' => 50),
             'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 25),
         ));

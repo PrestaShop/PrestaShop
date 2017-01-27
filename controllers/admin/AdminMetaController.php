@@ -63,8 +63,8 @@ class AdminMetaControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_meta' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'page' => array('title' => $this->trans('Page', array(), 'Admin.ShopParameters.Feature')),
-            'title' => array('title' => $this->trans('Page title', array(), 'Admin.ShopParameters.Feature')),
+            'page' => array('title' => $this->trans('Page', array(), 'Admin.Shopparameters.Feature')),
+            'title' => array('title' => $this->trans('Page title', array(), 'Admin.Shopparameters.Feature')),
             'url_rewrite' => array('title' => $this->trans('Friendly URL', array(), 'Admin.Global'))
         );
         $this->_where = ' AND a.configurable = 1';
@@ -76,28 +76,28 @@ class AdminMetaControllerCore extends AdminController
         $general_fields = array(
             'PS_REWRITING_SETTINGS' => array(
                 'title' => $this->trans('Friendly URL', array(), 'Admin.Global'),
-                'hint' => ($mod_rewrite ? $this->trans('Enable this option only if your server allows URL rewriting (recommended).', array(), 'Admin.ShopParameters.Help') : ''),
+                'hint' => ($mod_rewrite ? $this->trans('Enable this option only if your server allows URL rewriting (recommended).', array(), 'Admin.Shopparameters.Help') : ''),
                 'validation' => 'isBool',
                 'cast' => 'intval',
                 'type' => 'bool',
-                'desc' => (!$mod_rewrite ? $this->trans('URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.', array(), 'Admin.ShopParameters.Help') : '')
+                'desc' => (!$mod_rewrite ? $this->trans('URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.', array(), 'Admin.Shopparameters.Help') : '')
             ),
             'PS_ALLOW_ACCENTED_CHARS_URL' => array(
-                'title' => $this->trans('Accented URL', array(), 'Admin.ShopParameters.Feature'),
-                'hint' => $this->trans('Enable this option if you want to allow accented characters in your friendly URLs.').' '.$this->trans('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.', array(), 'Admin.ShopParameters.Help'),
+                'title' => $this->trans('Accented URL', array(), 'Admin.Shopparameters.Feature'),
+                'hint' => $this->trans('Enable this option if you want to allow accented characters in your friendly URLs.').' '.$this->trans('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.', array(), 'Admin.Shopparameters.Help'),
                 'validation' => 'isBool',
                 'cast' => 'intval',
                 'type' => 'bool'
             ),
             'PS_CANONICAL_REDIRECT' => array(
-                'title' => $this->trans('Redirect to the canonical URL', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Redirect to the canonical URL', array(), 'Admin.Shopparameters.Feature'),
                 'validation' => 'isUnsignedInt',
                 'cast' => 'intval',
                 'type' => 'select',
                 'list' => array(
-                    array('value' => 0, 'name' => $this->trans('No redirection (you may have duplicate content issues)', array(), 'Admin.ShopParameters.Feature')),
-                    array('value' => 1, 'name' => $this->trans('302 Moved Temporarily (recommended while setting up your store)', array(), 'Admin.ShopParameters.Feature')),
-                    array('value' => 2, 'name' => $this->trans('301 Moved Permanently (recommended once you have gone live)', array(), 'Admin.ShopParameters.Feature'))
+                    array('value' => 0, 'name' => $this->trans('No redirection (you may have duplicate content issues)', array(), 'Admin.Shopparameters.Feature')),
+                    array('value' => 1, 'name' => $this->trans('302 Moved Temporarily (recommended while setting up your store)', array(), 'Admin.Shopparameters.Feature')),
+                    array('value' => 2, 'name' => $this->trans('301 Moved Permanently (recommended once you have gone live)', array(), 'Admin.Shopparameters.Feature'))
                 ),
                 'identifier' => 'value',
             ),
@@ -107,40 +107,40 @@ class AdminMetaControllerCore extends AdminController
         if (!defined('_PS_HOST_MODE_')) {
             if ($this->checkConfiguration($this->ht_file)) {
                 $general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
-                    'title' => $this->trans('Disable Apache\'s MultiViews option', array(), 'Admin.ShopParameters.Feature'),
-                    'hint' => $this->trans('Enable this option only if you have problems with URL rewriting.', array(), 'Admin.ShopParameters.Help'),
+                    'title' => $this->trans('Disable Apache\'s MultiViews option', array(), 'Admin.Shopparameters.Feature'),
+                    'hint' => $this->trans('Enable this option only if you have problems with URL rewriting.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
                 );
 
                 $general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
-                    'title' => $this->trans('Disable Apache\'s mod_security module', array(), 'Admin.ShopParameters.Feature'),
-                    'hint' => $this->trans('Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.', array(), 'Admin.ShopParameters.Help'),
+                    'title' => $this->trans('Disable Apache\'s mod_security module', array(), 'Admin.Shopparameters.Feature'),
+                    'hint' => $this->trans('Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.', array(), 'Admin.Shopparameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
                 );
             } else {
-                $url_description = $this->trans('Before you can use this tool, you need to:', array(), 'Admin.ShopParameters.Notification');
-                $url_description .= $this->trans('1) Create a blank .htaccess file in your root directory.', array(), 'Admin.ShopParameters.Notification');
-                $url_description .= $this->trans('2) Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.ShopParameters.Notification');
+                $url_description = $this->trans('Before you can use this tool, you need to:', array(), 'Admin.Shopparameters.Notification');
+                $url_description .= $this->trans('1) Create a blank .htaccess file in your root directory.', array(), 'Admin.Shopparameters.Notification');
+                $url_description .= $this->trans('2) Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
             }
         }
 
         // Options to generate robot.txt
-        $robots_description = $this->trans('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).', array(), 'Admin.ShopParameters.Notification');
+        $robots_description = $this->trans('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).', array(), 'Admin.Shopparameters.Notification');
         if ($this->checkConfiguration($this->rb_file)) {
-            $robots_description .= $this->trans('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)', array(), 'Admin.ShopParameters.Notification');
-            $robots_submit = array('name' => 'submitRobots', 'title' => $this->trans('Generate robots.txt file', array(), 'Admin.ShopParameters.Feature'));
+            $robots_description .= $this->trans('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)', array(), 'Admin.Shopparameters.Notification');
+            $robots_submit = array('name' => 'submitRobots', 'title' => $this->trans('Generate robots.txt file', array(), 'Admin.Shopparameters.Feature'));
         } else {
-            $robots_description .= $this->trans('Before you can use this tool, you need to:', array(), 'Admin.ShopParameters.Notification');
-            $robots_description .= $this->trans('1) Create a blank robots.txt file in your root directory.', array(), 'Admin.ShopParameters.Notification');
-            $robots_description .= $this->trans('2) Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.ShopParameters.Notification');
+            $robots_description .= $this->trans('Before you can use this tool, you need to:', array(), 'Admin.Shopparameters.Notification');
+            $robots_description .= $this->trans('1) Create a blank robots.txt file in your root directory.', array(), 'Admin.Shopparameters.Notification');
+            $robots_description .= $this->trans('2) Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
         }
 
         $robots_options = array(
-            'title' => $this->trans('Robots file generation', array(), 'Admin.ShopParameters.Feature'),
+            'title' => $this->trans('Robots file generation', array(), 'Admin.Shopparameters.Feature'),
             'description' => $robots_description,
         );
 
@@ -151,29 +151,29 @@ class AdminMetaControllerCore extends AdminController
         if (!defined('_PS_HOST_MODE_')) {
             // Options for shop URL if multishop is disabled
             $shop_url_options = array(
-                'title' => $this->trans('Set shop URL', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Set shop URL', array(), 'Admin.Shopparameters.Feature'),
                 'fields' => array(),
             );
 
             if (!Shop::isFeatureActive()) {
                 $this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
                 if ($this->url) {
-                    $shop_url_options['description'] = $this->trans('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.', array(), 'Admin.ShopParameters.Notification');
+                    $shop_url_options['description'] = $this->trans('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.', array(), 'Admin.Shopparameters.Notification');
                     $shop_url_options['fields'] = array(
                         'domain' => array(
-                            'title' =>    $this->trans('Shop domain', array(), 'Admin.ShopParameters.Feature'),
+                            'title' =>    $this->trans('Shop domain', array(), 'Admin.Shopparameters.Feature'),
                             'validation' => 'isString',
                             'type' => 'text',
                             'defaultValue' => $this->url->domain,
                         ),
                         'domain_ssl' => array(
-                            'title' =>    $this->trans('SSL domain', array(), 'Admin.ShopParameters.Feature'),
+                            'title' =>    $this->trans('SSL domain', array(), 'Admin.Shopparameters.Feature'),
                             'validation' => 'isString',
                             'type' => 'text',
                             'defaultValue' => $this->url->domain_ssl,
                         ),
                         'uri' => array(
-                            'title' =>    $this->trans('Base URI', array(), 'Admin.ShopParameters.Feature'),
+                            'title' =>    $this->trans('Base URI', array(), 'Admin.Shopparameters.Feature'),
                             'validation' => 'isString',
                             'type' => 'text',
                             'defaultValue' => $this->url->physical_uri,
@@ -182,14 +182,14 @@ class AdminMetaControllerCore extends AdminController
                     $shop_url_options['submit'] = array('title' => $this->trans('Save', array(), 'Admin.Actions'));
                 }
             } else {
-                $shop_url_options['description'] = $this->trans('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.', array(), 'Admin.ShopParameters.Notification');
+                $shop_url_options['description'] = $this->trans('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.', array(), 'Admin.Shopparameters.Notification');
             }
         }
 
         // List of options
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Set up URLs', array(), 'Admin.ShopParameters.Feature'),
+                'title' =>    $this->trans('Set up URLs', array(), 'Admin.Shopparameters.Feature'),
                 'description' => $url_description,
                 'fields' =>    $general_fields,
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
@@ -200,11 +200,11 @@ class AdminMetaControllerCore extends AdminController
             $this->fields_options['shop_url'] = $shop_url_options;
         } else {
             $this->fields_options['manage_domain_name'] = array(
-                'title' => $this->trans('Manage domain name', array(), 'Admin.ShopParameters.Feature'),
-                'description' => $this->trans('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.', array(), 'Admin.ShopParameters.Help'),
+                'title' => $this->trans('Manage domain name', array(), 'Admin.Shopparameters.Feature'),
+                'description' => $this->trans('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.', array(), 'Admin.Shopparameters.Help'),
                 'buttons' => array(
                     array(
-                        'title' => $this->trans('Add a domain name', array(), 'Admin.ShopParameters.Feature'),
+                        'title' => $this->trans('Add a domain name', array(), 'Admin.Shopparameters.Feature'),
                         'href' => 'https://www.prestashop.com/cloud/',
                         'class' => 'pull-right', 'icon' => 'process-icon-new',
                         'js' => 'return !window.open(this.href);'
@@ -218,8 +218,8 @@ class AdminMetaControllerCore extends AdminController
             if (Configuration::get('PS_REWRITING_SETTINGS')) {
                 $this->addAllRouteFields();
             }
-            $this->fields_options['routes']['title'] = $this->trans('Schema of URLs', array(), 'Admin.ShopParameters.Feature');
-            $this->fields_options['routes']['description'] = $this->trans('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.', array(), 'Admin.ShopParameters.Notification').'<br />'.$this->trans('There are several available keywords for each route listed below; note that keywords with * are required!', array(), 'Admin.ShopParameters.Notification').'<br />'.$this->trans('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.', array(), 'Admin.ShopParameters.Notification');
+            $this->fields_options['routes']['title'] = $this->trans('Schema of URLs', array(), 'Admin.Shopparameters.Feature');
+            $this->fields_options['routes']['description'] = $this->trans('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.', array(), 'Admin.Shopparameters.Notification').'<br />'.$this->trans('There are several available keywords for each route listed below; note that keywords with * are required!', array(), 'Admin.Shopparameters.Notification').'<br />'.$this->trans('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.', array(), 'Admin.Shopparameters.Notification');
             $this->fields_options['routes']['submit'] = array('title' => $this->trans('Save', array(), 'Admin.Actions'));
         }
 
@@ -231,7 +231,7 @@ class AdminMetaControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_meta'] = array(
                 'href' => self::$currentIndex.'&addmeta&token='.$this->token,
-                'desc' => $this->trans('Add a new page', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add a new page', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -264,7 +264,7 @@ class AdminMetaControllerCore extends AdminController
 
         $this->fields_options['routes']['fields']['PS_ROUTE_'.$route_id] = array(
             'title' =>    $title,
-            'desc' => sprintf($this->trans('Keywords: %s', array(), 'Admin.ShopParameters.Feature'), implode(', ', $keywords)),
+            'desc' => sprintf($this->trans('Keywords: %s', array(), 'Admin.Shopparameters.Feature'), implode(', ', $keywords)),
             'validation' => 'isString',
             'type' => 'text',
             'size' => 70,
@@ -287,11 +287,11 @@ class AdminMetaControllerCore extends AdminController
 
         $pages = array(
             'common' => array(
-                'name' => $this->trans('Default pages', array(), 'Admin.ShopParameters.Feature'),
+                'name' => $this->trans('Default pages', array(), 'Admin.Shopparameters.Feature'),
                 'query' => array(),
             ),
             'module' => array(
-                'name' => $this->trans('Module pages', array(), 'Admin.ShopParameters.Feature'),
+                'name' => $this->trans('Module pages', array(), 'Admin.Shopparameters.Feature'),
                 'query' => array(),
             ),
         );
@@ -306,7 +306,7 @@ class AdminMetaControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Meta tags', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Meta tags', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-tags'
             ),
             'input' => array(
@@ -316,7 +316,7 @@ class AdminMetaControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->trans('Page name', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Page name', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'page',
 
                     'options' => array(
@@ -330,17 +330,17 @@ class AdminMetaControllerCore extends AdminController
                             'query' => 'query',
                         ),
                     ),
-                    'hint' => $this->trans('Name of the related page.', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('Name of the related page.', array(), 'Admin.Shopparameters.Help'),
                     'required' => true,
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Page title', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Page title', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'title',
                     'lang' => true,
                     'hint' => array(
-                        $this->trans('Title of this page.', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.ShopParameters.Help').' &lt;&gt;;=#{}'
+                        $this->trans('Title of this page.', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('Invalid characters:', array(), 'Admin.Shopparameters.Help').' &lt;&gt;;=#{}'
                     )
                 ),
                 array(
@@ -349,7 +349,7 @@ class AdminMetaControllerCore extends AdminController
                     'name' => 'description',
                     'lang' => true,
                     'hint' => array(
-                        $this->trans('A short description of your shop.', array(), 'Admin.ShopParameters.Help'),
+                        $this->trans('A short description of your shop.', array(), 'Admin.Shopparameters.Help'),
                         $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                     )
                 ),
@@ -359,21 +359,21 @@ class AdminMetaControllerCore extends AdminController
                     'name' => 'keywords',
                     'lang' => true,
                     'hint' =>  array(
-                        $this->trans('List of keywords for search engines.', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.ShopParameters.Help'),
+                        $this->trans('List of keywords for search engines.', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.Shopparameters.Help'),
                         $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                     )
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Rewritten URL', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Rewritten URL', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'url_rewrite',
                     'lang' => true,
                     'required' => true,
                     'disabled' => (bool)$is_index,
                     'hint' => array(
-                        $this->trans('For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php', array(), 'Admin.ShopParameters.Help'),
-                        $this->trans('Only letters and hyphens are allowed.', array(), 'Admin.ShopParameters.Help'),
+                        $this->trans('For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('Only letters and hyphens are allowed.', array(), 'Admin.Shopparameters.Help'),
                     )
                 ),
             ),
@@ -449,7 +449,7 @@ class AdminMetaControllerCore extends AdminController
     public function renderList()
     {
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-            $this->displayInformation($this->trans('You can only display the page list in a shop context.', array(), 'Admin.ShopParameters.Notification'));
+            $this->displayInformation($this->trans('You can only display the page list in a shop context.', array(), 'Admin.Shopparameters.Notification'));
         } else {
             return parent::renderList();
         }
@@ -509,9 +509,9 @@ class AdminMetaControllerCore extends AdminController
         } else {
             Configuration::updateValue('PS_REWRITING_SETTINGS', 0);
             // Message copied/pasted from the information tip
-            $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.ShopParameters.Notification');
-            $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.ShopParameters.Notification');
-            $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.ShopParameters.Notification');
+            $message = $this->trans('Before being able to use this tool, you need to:', array(), 'Admin.Shopparameters.Notification');
+            $message .= '<br />- '.$this->trans('Create a blank .htaccess in your root directory.', array(), 'Admin.Shopparameters.Notification');
+            $message .= '<br />- '.$this->trans('Give it write permissions (CHMOD 666 on Unix system).', array(), 'Admin.Shopparameters.Notification');
             $this->errors[] = $message;
         }
     }
@@ -639,14 +639,14 @@ class AdminMetaControllerCore extends AdminController
      */
     public function addAllRouteFields()
     {
-        $this->addFieldRoute('product_rule', $this->trans('Route to products', array(), 'Admin.ShopParameters.Feature'));
-        $this->addFieldRoute('category_rule', $this->trans('Route to category', array(), 'Admin.ShopParameters.Feature'));
-        $this->addFieldRoute('layered_rule', $this->trans('Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module', array(), 'Admin.ShopParameters.Feature'));
-        $this->addFieldRoute('supplier_rule', $this->trans('Route to supplier', array(), 'Admin.ShopParameters.Feature'));
-        $this->addFieldRoute('manufacturer_rule', $this->trans('Route to brand', array(), 'Admin.ShopParameters.Feature'));
-        $this->addFieldRoute('cms_rule', $this->trans('Route to page', array(), 'Admin.ShopParameters.Feature'));
-        $this->addFieldRoute('cms_category_rule', $this->trans('Route to page category', array(), 'Admin.ShopParameters.Feature'));
-        $this->addFieldRoute('module', $this->trans('Route to modules', array(), 'Admin.ShopParameters.Feature'));
+        $this->addFieldRoute('product_rule', $this->trans('Route to products', array(), 'Admin.Shopparameters.Feature'));
+        $this->addFieldRoute('category_rule', $this->trans('Route to category', array(), 'Admin.Shopparameters.Feature'));
+        $this->addFieldRoute('layered_rule', $this->trans('Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module', array(), 'Admin.Shopparameters.Feature'));
+        $this->addFieldRoute('supplier_rule', $this->trans('Route to supplier', array(), 'Admin.Shopparameters.Feature'));
+        $this->addFieldRoute('manufacturer_rule', $this->trans('Route to brand', array(), 'Admin.Shopparameters.Feature'));
+        $this->addFieldRoute('cms_rule', $this->trans('Route to page', array(), 'Admin.Shopparameters.Feature'));
+        $this->addFieldRoute('cms_category_rule', $this->trans('Route to page category', array(), 'Admin.Shopparameters.Feature'));
+        $this->addFieldRoute('module', $this->trans('Route to modules', array(), 'Admin.Shopparameters.Feature'));
     }
 
     /**

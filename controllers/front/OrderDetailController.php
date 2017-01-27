@@ -206,7 +206,7 @@ class OrderDetailControllerCore extends FrontController
 
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
         $breadcrumb['links'][] = array(
-            'title' => $this->trans('Order history', array(), 'Shop.Theme.CustomerAccount'),
+            'title' => $this->trans('Order history', array(), 'Shop.Theme.Customeraccount'),
             'url' => $this->context->link->getPageLink('history'),
         );
 

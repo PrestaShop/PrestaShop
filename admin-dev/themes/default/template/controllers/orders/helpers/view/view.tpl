@@ -596,7 +596,7 @@
 									</form>
 								{else}
 									<div class="alert alert-warning">
-										{l s='A registered customer account has already claimed this email address' d='Admin.OrdersCustomers.Notification'}
+										{l s='A registered customer account has already claimed this email address' d='Admin.Orderscustomers.Notification'}
 									</div>
 								{/if}
 							{else}
@@ -993,7 +993,7 @@
                     '[1]' => '<strong>',
                     '[/1]' => '</strong>'
                   ]
-                  d='Admin.OrdersCustomers.Notification'
+                  d='Admin.Orderscustomers.Notification'
                 }
 								{if !Configuration::get('PS_ORDER_RETURN')}
 									<br/><strong>{l s='Merchandise returns are disabled'}</strong>

@@ -49,27 +49,27 @@ class AdminShopControllerCore extends AdminController
         $this->list_skip_actions['delete'] = array((int)Configuration::get('PS_SHOP_DEFAULT'));
         $this->fields_list = array(
             'id_shop' => array(
-                'title' => $this->trans('Shop ID', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Shop ID', array(), 'Admin.Shopparameters.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->trans('Shop name', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Shop name', array(), 'Admin.Shopparameters.Feature'),
                 'filter_key' => 'a!name',
                 'width' => 200,
             ),
             'shop_group_name' => array(
-                'title' => $this->trans('Shop group', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Shop group', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 150,
                 'filter_key' => 'gs!name'
             ),
             'category_name' => array(
-                'title' => $this->trans('Root category', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Root category', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 150,
                 'filter_key' => 'cl!name'
             ),
             'url' => array(
-                'title' => $this->trans('Main URL for this shop', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Main URL for this shop', array(), 'Admin.Shopparameters.Feature'),
                 'havingFilter' => 'url',
             ),
         );
@@ -99,13 +99,13 @@ class AdminShopControllerCore extends AdminController
             }
 
             $this->page_header_toolbar_btn['edit'] = array(
-                'desc' => $this->trans('Edit this shop group', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Edit this shop group', array(), 'Admin.Shopparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShopGroup').'&updateshop_group&id_shop_group='
                     .$this->id_shop_group,
             );
 
             $this->page_header_toolbar_btn['new'] = array(
-                'desc' => $this->trans('Add new shop', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new shop', array(), 'Admin.Shopparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop').'&add'.$this->table.'&id_shop_group='
                     .$this->id_shop_group,
             );
@@ -126,7 +126,7 @@ class AdminShopControllerCore extends AdminController
             }
 
             $this->toolbar_btn['new'] = array(
-                'desc' => $this->trans('Add new shop', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new shop', array(), 'Admin.Shopparameters.Feature'),
                 'href' => $this->context->link->getAdminLink('AdminShop').'&add'.$this->table.'&id_shop_group='
                     .$this->id_shop_group,
             );
@@ -157,7 +157,7 @@ class AdminShopControllerCore extends AdminController
             }
         }
 
-        $shops_tree = new HelperTreeShops('shops-tree', $this->trans('Multistore tree', array(), 'Admin.ShopParameters.Feature'));
+        $shops_tree = new HelperTreeShops('shops-tree', $this->trans('Multistore tree', array(), 'Admin.Shopparameters.Feature'));
         $shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
             ->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
                 new TreeToolbarLink(
@@ -240,7 +240,7 @@ class AdminShopControllerCore extends AdminController
         if (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) {
             $shop_group = new ShopGroup((int)Tools::getValue('id_shop_group'));
             if ($shop_group->shopNameExists(Tools::getValue('name'), (int)Tools::getValue('id_shop'))) {
-                $this->errors[] = $this->trans('You cannot have two shops with the same name in the same group.', array(), 'Admin.AdvParameters.Notification');
+                $this->errors[] = $this->trans('You cannot have two shops with the same name in the same group.', array(), 'Admin.Advparameters.Notification');
             }
         }
 
@@ -265,7 +265,7 @@ class AdminShopControllerCore extends AdminController
     public function processDelete()
     {
         if (!Validate::isLoadedObject($object = $this->loadObject())) {
-            $this->errors[] = $this->trans('Unable to load this shop.', array(), 'Admin.AdvParameters.Notification');
+            $this->errors[] = $this->trans('Unable to load this shop.', array(), 'Admin.Advparameters.Notification');
         } elseif (!Shop::hasDependency($object->id)) {
             $result = Category::deleteCategoriesFromShop($object->id) && parent::processDelete();
             Tools::generateHtaccess();
@@ -311,14 +311,14 @@ class AdminShopControllerCore extends AdminController
         $categories = Tools::getValue('categoryBox');
 
         if (!is_array($categories)) {
-            $this->errors[] = $this->trans('Please create some sub-categories for this root category.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('Please create some sub-categories for this root category.', array(), 'Admin.Shopparameters.Notification');
             return false;
         }
 
         array_unshift($categories, Configuration::get('PS_ROOT_CATEGORY'));
 
         if (!Category::updateFromShop($categories, $new_shop->id)) {
-            $this->errors[] = $this->trans('You need to select at least the root category.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('You need to select at least the root category.', array(), 'Admin.Shopparameters.Notification');
         }
         if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data)) {
             $new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
@@ -365,9 +365,9 @@ class AdminShopControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Shop name', array(), 'Admin.ShopParameters.Feature'),
-                    'desc' => array($this->trans('This field does not refer to the shop name visible in the front office.', array(), 'Admin.ShopParameters.Help'),
-                            sprintf($this->trans('Follow %sthis link%s to edit the shop name used on the front office.', array(), 'Admin.ShopParameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
+                    'label' => $this->trans('Shop name', array(), 'Admin.Shopparameters.Feature'),
+                    'desc' => array($this->trans('This field does not refer to the shop name visible in the front office.', array(), 'Admin.Shopparameters.Help'),
+                            sprintf($this->trans('Follow %sthis link%s to edit the shop name used on the front office.', array(), 'Admin.Shopparameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
                     'name' => 'name',
                     'required' => true,
                 )
@@ -397,14 +397,14 @@ class AdminShopControllerCore extends AdminController
             }
 
             if ($this->display == 'add') {
-                $group_desc = $this->trans('Warning: You won\'t be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.', array(), 'Admin.ShopParameters.Notification');
+                $group_desc = $this->trans('Warning: You won\'t be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.', array(), 'Admin.Shopparameters.Notification');
             } else {
-                $group_desc = $this->trans('You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.', array(), 'Admin.ShopParameters.Notification');
+                $group_desc = $this->trans('You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.', array(), 'Admin.Shopparameters.Notification');
             }
 
             $this->fields_form['input'][] = array(
                 'type' => 'select',
-                'label' => $this->trans('Shop group', array(), 'Admin.ShopParameters.Feature'),
+                'label' => $this->trans('Shop group', array(), 'Admin.Shopparameters.Feature'),
                 'desc' => $group_desc,
                 'name' => 'id_shop_group',
                 'options' => array(
@@ -421,8 +421,8 @@ class AdminShopControllerCore extends AdminController
             );
             $this->fields_form['input'][] = array(
                 'type' => 'textShopGroup',
-                'label' => $this->trans('Shop group', array(), 'Admin.ShopParameters.Feature'),
-                'desc' => $this->trans('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.', array(), 'Admin.ShopParameters.Help'),
+                'label' => $this->trans('Shop group', array(), 'Admin.Shopparameters.Feature'),
+                'desc' => $this->trans('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.', array(), 'Admin.Shopparameters.Help'),
                 'name' => 'id_shop_group',
                 'value' => $group->name
             );
@@ -432,7 +432,7 @@ class AdminShopControllerCore extends AdminController
         $this->fields_form['input'][] = array(
             'type' => 'select',
             'label' => $this->trans('Category root', array(), 'Admin.Catalog.Feature'),
-            'desc' => sprintf($this->trans('This is the root category of the store that you\'ve created. To define a new root category for your store, %splease click here%s.', array(), 'Admin.ShopParameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">', '</a>'),
+            'desc' => sprintf($this->trans('This is the root category of the store that you\'ve created. To define a new root category for your store, %splease click here%s.', array(), 'Admin.Shopparameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">', '</a>'),
             'name' => 'id_category',
             'options' => array(
                 'query' => $categories,
@@ -484,7 +484,7 @@ class AdminShopControllerCore extends AdminController
                 'use_search' => true,
                 'use_checkbox' => true
             ),
-            'desc' => $this->trans('By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.', array(), 'Admin.ShopParameters.Help')
+            'desc' => $this->trans('By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.', array(), 'Admin.Shopparameters.Help')
         );
         /*$this->fields_form['input'][] = array(
             'type' => 'switch',
@@ -502,7 +502,7 @@ class AdminShopControllerCore extends AdminController
                     'value' => 0
                 )
             ),
-            'desc' => $this->trans('Enable or disable your store?', array(), 'Admin.ShopParameters.Help')
+            'desc' => $this->trans('Enable or disable your store?', array(), 'Admin.Shopparameters.Help')
         );*/
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
@@ -529,31 +529,31 @@ class AdminShopControllerCore extends AdminController
         $import_data = array(
             'carrier' => $this->trans('Carriers', array(), 'Admin.Shipping.Feature'),
             'cms' => $this->trans('Pages', array(), 'Admin.Design.Feature'),
-            'contact' => $this->trans('Contact information', array(), 'Admin.AdvParameters.Feature'),
+            'contact' => $this->trans('Contact information', array(), 'Admin.Advparameters.Feature'),
             'country' => $this->trans('Countries', array(), 'Admin.Global'),
             'currency' => $this->trans('Currencies', array(), 'Admin.Global'),
-            'discount' => $this->trans('Discount prices', array(), 'Admin.AdvParameters.Feature'),
-            'employee' => $this->trans('Employees', array(), 'Admin.AdvParameters.Feature'),
+            'discount' => $this->trans('Discount prices', array(), 'Admin.Advparameters.Feature'),
+            'employee' => $this->trans('Employees', array(), 'Admin.Advparameters.Feature'),
             'image' => $this->trans('Images', array(), 'Admin.Global'),
             'lang' => $this->trans('Languages', array(), 'Admin.Global'),
             'manufacturer' => $this->trans('Brands', array(), 'Admin.Global'),
             'module' => $this->trans('Modules', array(), 'Admin.Global'),
-            'hook_module' => $this->trans('Module hooks', array(), 'Admin.AdvParameters.Feature'),
-            'meta_lang' => $this->trans('Meta information', array(), 'Admin.AdvParameters.Feature'),
+            'hook_module' => $this->trans('Module hooks', array(), 'Admin.Advparameters.Feature'),
+            'meta_lang' => $this->trans('Meta information', array(), 'Admin.Advparameters.Feature'),
             'product' => $this->trans('Products', array(), 'Admin.Global'),
-            'product_attribute' => $this->trans('Product combinations', array(), 'Admin.AdvParameters.Feature'),
-            'stock_available' => $this->trans('Available quantities for sale', array(), 'Admin.AdvParameters.Feature'),
+            'product_attribute' => $this->trans('Product combinations', array(), 'Admin.Advparameters.Feature'),
+            'stock_available' => $this->trans('Available quantities for sale', array(), 'Admin.Advparameters.Feature'),
             'store' => $this->trans('Stores', array(), 'Admin.Global'),
-            'warehouse' => $this->trans('Warehouses', array(), 'Admin.AdvParameters.Feature'),
-            'webservice_account' => $this->trans('Webservice accounts', array(), 'Admin.AdvParameters.Feature'),
-            'attribute_group' => $this->trans('Attribute groups', array(), 'Admin.AdvParameters.Feature'),
+            'warehouse' => $this->trans('Warehouses', array(), 'Admin.Advparameters.Feature'),
+            'webservice_account' => $this->trans('Webservice accounts', array(), 'Admin.Advparameters.Feature'),
+            'attribute_group' => $this->trans('Attribute groups', array(), 'Admin.Advparameters.Feature'),
             'feature' => $this->trans('Features', array(), 'Admin.Global'),
-            'group' => $this->trans('Customer groups', array(), 'Admin.AdvParameters.Feature'),
-            'tax_rules_group' => $this->trans('Tax rules groups', array(), 'Admin.AdvParameters.Feature'),
+            'group' => $this->trans('Customer groups', array(), 'Admin.Advparameters.Feature'),
+            'tax_rules_group' => $this->trans('Tax rules groups', array(), 'Admin.Advparameters.Feature'),
             'supplier' => $this->trans('Suppliers', array(), 'Admin.Global'),
-            'referrer' => $this->trans('Referrers/affiliates', array(), 'Admin.AdvParameters.Feature'),
+            'referrer' => $this->trans('Referrers/affiliates', array(), 'Admin.Advparameters.Feature'),
             'zone' => $this->trans('Zones', array(), 'Admin.International.Feature'),
-            'cart_rule' => $this->trans('Cart rules', array(), 'Admin.AdvParameters.Feature'),
+            'cart_rule' => $this->trans('Cart rules', array(), 'Admin.Advparameters.Feature'),
         );
 
         // Hook for duplication of shop data
@@ -570,14 +570,14 @@ class AdminShopControllerCore extends AdminController
             $this->fields_import_form = array(
                 'radio' => array(
                     'type' => 'radio',
-                    'label' => $this->trans('Import data', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Import data', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'useImportData',
                     'value' => 1
                 ),
                 'select' => array(
                     'type' => 'select',
                     'name' => 'importFromShop',
-                    'label' => $this->trans('Choose the source shop', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Choose the source shop', array(), 'Admin.Advparameters.Feature'),
                     'options' => array(
                         'query' => Shop::getShops(false),
                         'name' => 'name'
@@ -585,10 +585,10 @@ class AdminShopControllerCore extends AdminController
                 ),
                 'allcheckbox' => array(
                     'type' => 'checkbox',
-                    'label' => $this->trans('Choose data to import', array(), 'Admin.AdvParameters.Feature'),
+                    'label' => $this->trans('Choose data to import', array(), 'Admin.Advparameters.Feature'),
                     'values' => $import_data
                 ),
-                'desc' => $this->trans('Use this option to associate data (products, modules, etc.) the same way for each selected shop.', array(), 'Admin.AdvParameters.Help')
+                'desc' => $this->trans('Use this option to associate data (products, modules, etc.) the same way for each selected shop.', array(), 'Admin.Advparameters.Help')
             );
         }
 
@@ -636,7 +636,7 @@ class AdminShopControllerCore extends AdminController
     public function processAdd()
     {
         if (!Tools::getValue('categoryBox') || !in_array(Tools::getValue('id_category'), Tools::getValue('categoryBox'))) {
-            $this->errors[] = $this->trans('You need to select at least the root category.', array(), 'Admin.AdvParameters.Notification');
+            $this->errors[] = $this->trans('You need to select at least the root category.', array(), 'Admin.Advparameters.Notification');
         }
 
         if (Tools::isSubmit('id_category_default')) {
@@ -765,7 +765,7 @@ class AdminShopControllerCore extends AdminController
                         'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-groups.png',
                         'attr' => array(
                             'href' => $this->context->link->getAdminLink('AdminShop').'&id_shop_group='.$id_shop_group,
-                            'title' => sprintf($this->trans('Click here to display the shops in the %s shop group', array(), 'Admin.AdvParameters.Help'), $row['group_name']),
+                            'title' => sprintf($this->trans('Click here to display the shops in the %s shop group', array(), 'Admin.Advparameters.Help'), $row['group_name']),
                         ),
                     ),
                     'attr' => array(
@@ -787,7 +787,7 @@ class AdminShopControllerCore extends AdminController
                         'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-shop.png',
                         'attr' => array(
                             'href' => $this->context->link->getAdminLink('AdminShopUrl').'&shop_id='.(int)$id_shop,
-                            'title' => sprintf($this->trans('Click here to display the URLs of the %s shop', array(), 'Admin.AdvParameters.Help'), $row['shop_name']),
+                            'title' => sprintf($this->trans('Click here to display the URLs of the %s shop', array(), 'Admin.Advparameters.Help'), $row['shop_name']),
                         )
                     ),
                     'attr' => array(
@@ -835,11 +835,11 @@ class AdminShopControllerCore extends AdminController
 
         $tree = array(array(
             'data' => array(
-                'title' => '<b>'.$this->trans('Shop groups list', array(), 'Admin.AdvParameters.Feature').'</b>',
+                'title' => '<b>'.$this->trans('Shop groups list', array(), 'Admin.Advparameters.Feature').'</b>',
                 'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-root.png',
                 'attr' => array(
                     'href' => $this->context->link->getAdminLink('AdminShopGroup'),
-                    'title' => $this->trans('Click here to display the list of shop groups', array(), 'Admin.AdvParameters.Help'),
+                    'title' => $this->trans('Click here to display the list of shop groups', array(), 'Admin.Advparameters.Help'),
                 )
             ),
             'attr' => array(

@@ -207,7 +207,7 @@ class AdminLoginControllerCore extends AdminController
                 $this->errors[] = $this->trans('This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).', array(), 'Admin.Login.Notification');
                 $this->context->employee->logout();
             } else {
-                PrestaShopLogger::addLog(sprintf($this->trans('Back office connection from %s', array(), 'Admin.AdvParameters.Feature'), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
+                PrestaShopLogger::addLog(sprintf($this->trans('Back office connection from %s', array(), 'Admin.Advparameters.Feature'), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
 
                 $this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
                 // Update cookie

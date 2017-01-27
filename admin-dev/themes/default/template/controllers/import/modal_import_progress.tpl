@@ -85,11 +85,11 @@
   <div class="modal-footer">
     <div class="input-group pull-right">
       <button type="button" class="btn btn-primary" tabindex="-1" id="import_continue_button" style="display: none;">
-        {l s="Ignore warnings and continue?" d="Admin.AdvParameters.Notification"}
+        {l s="Ignore warnings and continue?" d="Admin.Advparameters.Notification"}
       </button>
       &nbsp;
       <button type="button" class="btn btn-default" tabindex="-1" id="import_stop_button">
-        {l s="Abort import" d="Admin.AdvParameters.Feature"}
+        {l s="Abort import" d="Admin.Advparameters.Feature"}
       </button>
       &nbsp;
       <button type="button" class="btn btn-success" data-dismiss="modal" tabindex="-1" id="import_close_button" style="display: none;">

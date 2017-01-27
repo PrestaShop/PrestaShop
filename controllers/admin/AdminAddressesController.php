@@ -101,7 +101,7 @@ class AdminAddressesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_address'] = array(
                 'href' => self::$currentIndex.'&addaddress&token='.$this->token,
-                'desc' => $this->trans('Add new address', array(), 'Admin.OrdersCustomers.Feature'),
+                'desc' => $this->trans('Add new address', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -113,7 +113,7 @@ class AdminAddressesControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Addresses', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Addresses', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-envelope-alt'
             ),
             'input' => array(
@@ -125,15 +125,15 @@ class AdminAddressesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Identification number', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Identification number', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'dni',
                     'required' => false,
                     'col' => '4',
-                    'hint' => $this->trans('The national ID card number of this person, or a unique tax identification number.', array(), 'Admin.OrdersCustomers.Feature')
+                    'hint' => $this->trans('The national ID card number of this person, or a unique tax identification number.', array(), 'Admin.Orderscustomers.Feature')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Address alias', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Address alias', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'alias',
                     'required' => true,
                     'col' => '4',
@@ -208,7 +208,7 @@ class AdminAddressesControllerCore extends AdminController
                 );
                 $temp_fields[] = array(
                     'type' => 'text',
-                    'label' => $this->trans('VAT number', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('VAT number', array(), 'Admin.Orderscustomers.Feature'),
                     'col' => '2',
                     'name' => 'vat_number',
                     'required' => in_array('vat_number', $required_fields)
@@ -347,20 +347,20 @@ class AdminAddressesControllerCore extends AdminController
             if (Validate::isLoadedObject($customer)) {
                 $_POST['id_customer'] = $customer->id;
             } else {
-                $this->errors[] = $this->trans('This email address is not registered.', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('This email address is not registered.', array(), 'Admin.Orderscustomers.Notification');
             }
         } elseif ($id_customer = Tools::getValue('id_customer')) {
             $customer = new Customer((int)$id_customer);
             if (Validate::isLoadedObject($customer)) {
                 $_POST['id_customer'] = $customer->id;
             } else {
-                $this->errors[] = $this->trans('This customer ID is not recognized.', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('This customer ID is not recognized.', array(), 'Admin.Orderscustomers.Notification');
             }
         } else {
-            $this->errors[] = $this->trans('This email address is not valid. Please use an address like bob@example.com.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('This email address is not valid. Please use an address like bob@example.com.', array(), 'Admin.Orderscustomers.Notification');
         }
         if (Country::isNeedDniByCountryId(Tools::getValue('id_country')) && !Tools::getValue('dni')) {
-            $this->errors[] = $this->trans('The identification number is incorrect or has already been used.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('The identification number is incorrect or has already been used.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         /* If the selected country does not contain states */
@@ -368,12 +368,12 @@ class AdminAddressesControllerCore extends AdminController
         $id_country = (int)Tools::getValue('id_country');
         $country = new Country((int)$id_country);
         if ($country && !(int)$country->contains_states && $id_state) {
-            $this->errors[] = $this->trans('You have selected a state for a country that does not contain states.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('You have selected a state for a country that does not contain states.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         /* If the selected country contains states, then a state have to be selected */
         if ((int)$country->contains_states && !$id_state) {
-            $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', array(), 'Admin.OrdersCustomers.Notification');
+            $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         $postcode = Tools::getValue('postcode');
@@ -413,7 +413,7 @@ class AdminAddressesControllerCore extends AdminController
 
         if ($this->action == 'save' && ($id_order = (int)Tools::getValue('id_order')) && !count($this->errors) && !empty($address_type)) {
             if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.bqSQL($address_type).'` = '.(int)$this->object->id.' WHERE `id_order` = '.(int)$id_order)) {
-                $this->errors[] = $this->trans('An error occurred while linking this address to its order.', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('An error occurred while linking this address to its order.', array(), 'Admin.Orderscustomers.Notification');
             } else {
                 //update order shipping cost
                 $order = new Order($id_order);

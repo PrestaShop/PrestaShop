@@ -52,7 +52,7 @@ class AdminLogsControllerCore extends AdminController
                 'callback_object' => $this
             ),
             'severity' => array(
-                'title' => $this->trans('Severity (1-4)', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Severity (1-4)', array(), 'Admin.Advparameters.Feature'),
                 'align' => 'text-center',
                 'class' => 'fixed-width-xs'
             ),
@@ -60,16 +60,16 @@ class AdminLogsControllerCore extends AdminController
                 'title' => $this->trans('Message', array(), 'Admin.Global')
             ),
             'object_type' => array(
-                'title' => $this->trans('Object type', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Object type', array(), 'Admin.Advparameters.Feature'),
                 'class' => 'fixed-width-sm'
             ),
             'object_id' => array(
-                'title' => $this->trans('Object ID', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Object ID', array(), 'Admin.Advparameters.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'error_code' => array(
-                'title' => $this->trans('Error code', array(), 'Admin.AdvParameters.Feature'),
+                'title' => $this->trans('Error code', array(), 'Admin.Advparameters.Feature'),
                 'align' => 'center',
                 'prefix' => '0x',
                 'class' => 'fixed-width-xs'
@@ -83,15 +83,15 @@ class AdminLogsControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Logs by email', array(), 'Admin.AdvParameters.Feature'),
+                'title' =>    $this->trans('Logs by email', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-envelope',
                 'fields' =>    array(
                     'PS_LOGS_BY_EMAIL' => array(
-                        'title' => $this->trans('Minimum severity level', array(), 'Admin.AdvParameters.Feature'),
+                        'title' => $this->trans('Minimum severity level', array(), 'Admin.Advparameters.Feature'),
                         'hint' => Tools::safeOutput(
-                            $this->trans('Enter "5" if you do not want to receive any emails.', array(), 'Admin.AdvParameters.Help').
+                            $this->trans('Enter "5" if you do not want to receive any emails.', array(), 'Admin.Advparameters.Help').
                             '<br>'.
-                            $this->trans('Emails will be sent to the shop owner.', array(), 'Admin.AdvParameters.Help'),
+                            $this->trans('Emails will be sent to the shop owner.', array(), 'Admin.Advparameters.Help'),
                             true
                         ),
                         'cast' => 'intval',
@@ -119,7 +119,7 @@ class AdminLogsControllerCore extends AdminController
         parent::initToolbar();
         $this->toolbar_btn['delete'] = array(
             'short' => 'Erase',
-            'desc' => $this->trans('Erase all', array(), 'Admin.AdvParameters.Feature'),
+            'desc' => $this->trans('Erase all', array(), 'Admin.Advparameters.Feature'),
             'js' => 'if (confirm(\''.$this->trans('Are you sure?', array(), 'Admin.Notifications.Warning').'\')) document.location = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminLogs')).'&amp;token='.$this->token.'&amp;deletelog=1\';'
         );
         unset($this->toolbar_btn['new']);

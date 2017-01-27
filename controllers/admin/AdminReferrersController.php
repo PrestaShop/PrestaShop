@@ -79,22 +79,22 @@ class AdminReferrersControllerCore extends AdminController
                 'width' => 80
             ),
             'cache_visitors' => array(
-                'title' => $this->trans('Visitors', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Visitors', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 30,
                 'align' => 'center'
             ),
             'cache_visits' => array(
-                'title' => $this->trans('Visits', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Visits', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 30,
                 'align' => 'center'
             ),
             'cache_pages' => array(
-                'title' => $this->trans('Pages', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Pages', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 30,
                 'align' => 'center'
             ),
             'cache_registrations' => array(
-                'title' => $this->trans('Reg.', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Reg.', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 30,
                 'align' => 'center'
             ),
@@ -112,31 +112,31 @@ class AdminReferrersControllerCore extends AdminController
                 'price' => true
             ),
             'cart' => array(
-                'title' => $this->trans('Avg. cart', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Avg. cart', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 50,
                 'align' => 'right',
                 'price' => true,
                 'havingFilter' => true
             ),
             'cache_reg_rate' => array(
-                'title' => $this->trans('Reg. rate', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Reg. rate', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 30,
                 'align' => 'center'
             ),
             'cache_order_rate' => array(
-                'title' => $this->trans('Order rate', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Order rate', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 30,
                 'align' => 'center'
             ),
             'fee0' => array(
-                'title' => $this->trans('Click', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Click', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 30,
                 'align' => 'right',
                 'price' => true,
                 'havingFilter' => true
             ),
             'fee1' => array(
-                'title' => $this->trans('Base', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Base', array(), 'Admin.Shopparameters.Feature'),
                 'width' => 30,
                 'align' => 'right',
                 'price' => true,
@@ -171,7 +171,7 @@ class AdminReferrersControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_referrer'] = array(
                 'href' => self::$currentIndex.'&addreferrer&token='.$this->token,
-                'desc' => $this->trans('Add new referrer', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new referrer', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -211,7 +211,7 @@ class AdminReferrersControllerCore extends AdminController
 
         $this->fields_form[0] = array('form' => array(
             'legend' => array(
-                'title' => $this->trans('Affiliate', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Affiliate', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-group'
             ),
             'input' => array(
@@ -226,7 +226,7 @@ class AdminReferrersControllerCore extends AdminController
                     'type' => 'password',
                     'label' => $this->trans('Password', array(), 'Admin.Global'),
                     'name' => 'passwd',
-                    'desc' => $this->trans('Leave blank if no change.', array(), 'Admin.ShopParameters.Help'),
+                    'desc' => $this->trans('Leave blank if no change.', array(), 'Admin.Shopparameters.Help'),
                     'autocomplete' => false
                 )
             ),
@@ -238,8 +238,8 @@ class AdminReferrersControllerCore extends AdminController
 
         if ($moduleManager->isInstalled('trackingfront')) {
             $this->fields_form[0]['form']['desc'] = array(
-                $this->trans('Affiliates can access their data with this name and password.', array(), 'Admin.ShopParameters.Feature'),
-                $this->trans('Front access:', array(), 'Admin.ShopParameters.Feature').' <a class="btn btn-link" href="'.$uri.'modules/trackingfront/stats.php" onclick="return !window.open(this.href);"><i class="icon-external-link-sign"></i> '.$uri.'modules/trackingfront/stats.php</a>'
+                $this->trans('Affiliates can access their data with this name and password.', array(), 'Admin.Shopparameters.Feature'),
+                $this->trans('Front access:', array(), 'Admin.Shopparameters.Feature').' <a class="btn btn-link" href="'.$uri.'modules/trackingfront/stats.php" onclick="return !window.open(this.href);"><i class="icon-external-link-sign"></i> '.$uri.'modules/trackingfront/stats.php</a>'
             );
         } else {
             $this->fields_form[0]['form']['desc'] = array(
@@ -248,34 +248,34 @@ class AdminReferrersControllerCore extends AdminController
                     array(
                         '%modulename%' => Module::getModuleName('trackingfront'),
                     ),
-                    'Admin.ShopParameters.Notification'
+                    'Admin.Shopparameters.Notification'
                 ),
             );
         }
 
         $this->fields_form[1] = array('form' => array(
             'legend' => array(
-                'title' => $this->trans('Commission plan', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Commission plan', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-dollar'
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Click fee', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Click fee', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'click_fee',
-                    'desc' => $this->trans('Fee given for each visit.', array(), 'Admin.ShopParameters.Help')
+                    'desc' => $this->trans('Fee given for each visit.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Base fee', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Base fee', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'base_fee',
-                    'desc' => $this->trans('Fee given for each order placed.', array(), 'Admin.ShopParameters.Help')
+                    'desc' => $this->trans('Fee given for each order placed.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Percent fee', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Percent fee', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'percent_fee',
-                    'desc' => $this->trans('Percent of the sales.', array(), 'Admin.ShopParameters.Notification')
+                    'desc' => $this->trans('Percent of the sales.', array(), 'Admin.Shopparameters.Notification')
                 )
             ),
             'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
@@ -291,37 +291,37 @@ class AdminReferrersControllerCore extends AdminController
 
         $this->fields_form[2] = array('form' => array(
             'legend' => array(
-                'title' => $this->trans('Technical information -- Simple mode', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Technical information -- Simple mode', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs'
             ),
             'help' => true,
             'input' => array(
                 array(
                     'type' => 'textarea',
-                    'label' => $this->trans('Include', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Include', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'http_referer_like',
                     'cols' => 40,
                     'rows' => 1,
-                    'legend' => $this->trans('HTTP referrer', array(), 'Admin.ShopParameters.Feature')
+                    'legend' => $this->trans('HTTP referrer', array(), 'Admin.Shopparameters.Feature')
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->trans('Exclude', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Exclude', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'http_referer_like_not',
                     'cols' => 40,
                     'rows' => 1
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->trans('Include', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Include', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'request_uri_like',
                     'cols' => 40,
                     'rows' => 1,
-                    'legend' => $this->trans('Request URI', array(), 'Admin.ShopParameters.Feature')
+                    'legend' => $this->trans('Request URI', array(), 'Admin.Shopparameters.Feature')
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->trans('Exclude', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Exclude', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'request_uri_like_not',
                     'cols' => 40,
                     'rows' => 1
@@ -333,7 +333,7 @@ class AdminReferrersControllerCore extends AdminController
                     '[1]' => '<a style="cursor: pointer; font-weight: bold;" onclick="$(\'#tracking_expert\').slideToggle();">',
                     '[/1]' => '</a>',
                 ),
-                'Admin.ShopParameters.Help'
+                'Admin.Shopparameters.Help'
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
@@ -342,36 +342,36 @@ class AdminReferrersControllerCore extends AdminController
 
         $this->fields_form[3] = array('form' => array(
             'legend' => array(
-                'title' => $this->trans('Technical information -- Expert mode', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Technical information -- Expert mode', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs'
             ),
             'input' => array(
                 array(
                     'type' => 'textarea',
-                    'label' => $this->trans('Include', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Include', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'http_referer_regexp',
                     'cols' => 40,
                     'rows' => 1,
-                    'legend' => $this->trans('HTTP referrer', array(), 'Admin.ShopParameters.Feature')
+                    'legend' => $this->trans('HTTP referrer', array(), 'Admin.Shopparameters.Feature')
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->trans('Exclude', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Exclude', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'http_referer_regexp_not',
                     'cols' => 40,
                     'rows' => 1
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->trans('Include', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Include', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'request_uri_regexp',
                     'cols' => 40,
                     'rows' => 1,
-                    'legend' => $this->trans('Request URI', array(), 'Admin.ShopParameters.Feature')
+                    'legend' => $this->trans('Request URI', array(), 'Admin.Shopparameters.Feature')
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->trans('Exclude', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Exclude', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'request_uri_regexp_not',
                     'cols' => 40,
                     'rows' => 1
@@ -492,18 +492,18 @@ class AdminReferrersControllerCore extends AdminController
         $referrer = new Referrer((int)Tools::getValue('id_referrer'));
 
         $display_tab = array(
-            'uniqs' => $this->trans('Unique visitors', array(), 'Admin.ShopParameters.Feature'),
-            'visitors' => $this->trans('Visitors', array(), 'Admin.ShopParameters.Feature'),
-            'visits' => $this->trans('Visits', array(), 'Admin.ShopParameters.Feature'),
-            'pages' => $this->trans('Pages viewed', array(), 'Admin.ShopParameters.Feature'),
-            'registrations' => $this->trans('Registrations', array(), 'Admin.ShopParameters.Feature'),
+            'uniqs' => $this->trans('Unique visitors', array(), 'Admin.Shopparameters.Feature'),
+            'visitors' => $this->trans('Visitors', array(), 'Admin.Shopparameters.Feature'),
+            'visits' => $this->trans('Visits', array(), 'Admin.Shopparameters.Feature'),
+            'pages' => $this->trans('Pages viewed', array(), 'Admin.Shopparameters.Feature'),
+            'registrations' => $this->trans('Registrations', array(), 'Admin.Shopparameters.Feature'),
             'orders' => $this->trans('Orders', array(), 'Admin.Global'),
             'sales' => $this->trans('Sales', array(), 'Admin.Global'),
-            'reg_rate' => $this->trans('Registration rate', array(), 'Admin.ShopParameters.Feature'),
-            'order_rate' => $this->trans('Order rate', array(), 'Admin.ShopParameters.Feature'),
-            'click_fee' => $this->trans('Click fee', array(), 'Admin.ShopParameters.Feature'),
-            'base_fee' => $this->trans('Base fee', array(), 'Admin.ShopParameters.Feature'),
-            'percent_fee' => $this->trans('Percent fee', array(), 'Admin.ShopParameters.Feature'));
+            'reg_rate' => $this->trans('Registration rate', array(), 'Admin.Shopparameters.Feature'),
+            'order_rate' => $this->trans('Order rate', array(), 'Admin.Shopparameters.Feature'),
+            'click_fee' => $this->trans('Click fee', array(), 'Admin.Shopparameters.Feature'),
+            'base_fee' => $this->trans('Base fee', array(), 'Admin.Shopparameters.Feature'),
+            'percent_fee' => $this->trans('Percent fee', array(), 'Admin.Shopparameters.Feature'));
 
         $this->tpl_view_vars = array(
             'enable_calendar' => $this->enableCalendar(),

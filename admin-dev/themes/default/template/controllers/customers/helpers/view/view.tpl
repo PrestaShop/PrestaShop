@@ -125,12 +125,12 @@
 								{if $customer->optin}
 									<span class="label label-success">
 										<i class="icon-check"></i>
-										{l s='Partner offers' d='Admin.OrdersCustomers.Feature'}
+										{l s='Partner offers' d='Admin.Orderscustomers.Feature'}
 									</span>
 									{else}
 									<span class="label label-danger">
 										<i class="icon-remove"></i>
-										{l s='Partner offers' d='Admin.OrdersCustomers.Feature'}
+										{l s='Partner offers' d='Admin.Orderscustomers.Feature'}
 									</span>
 								{/if}
 							</p>

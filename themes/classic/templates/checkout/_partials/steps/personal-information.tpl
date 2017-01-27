@@ -6,7 +6,7 @@
     <p class="identity">
       {* [1][/1] is for a HTML tag. *}
       {l s='Connected as [1]%firstname% %lastname%[/1].'
-        d='Shop.Theme.CustomerAccount'
+        d='Shop.Theme.Customeraccount'
         sprintf=[
           '[1]' => "<a href='{$urls.pages.identity}'>",
           '[/1]' => "</a>",
@@ -19,7 +19,7 @@
       {* [1][/1] is for a HTML tag. *}
       {l
         s='Not you? [1]Log out[/1]'
-        d='Shop.Theme.CustomerAccount'
+        d='Shop.Theme.Customeraccount'
         sprintf=[
         '[1]' => "<a href='{$urls.actions.logout}'>",
         '[/1]' => "</a>"
@@ -38,7 +38,7 @@
           {if $guest_allowed}
             {l s='Order as a guest' d='Shop.Theme.Checkout'}
           {else}
-            {l s='Create an account' d='Shop.Theme.CustomerAccount'}
+            {l s='Create an account' d='Shop.Theme.Customeraccount'}
           {/if}
         </a>
       </li>

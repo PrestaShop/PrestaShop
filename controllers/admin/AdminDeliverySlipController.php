@@ -35,22 +35,22 @@ class AdminDeliverySlipControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Delivery slip options', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' =>    $this->trans('Delivery slip options', array(), 'Admin.Orderscustomers.Feature'),
                 'fields' =>    array(
                     'PS_DELIVERY_PREFIX' => array(
-                        'title' => $this->trans('Delivery prefix', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('Prefix used for delivery slips.', array(), 'Admin.OrdersCustomers.Help'),
+                        'title' => $this->trans('Delivery prefix', array(), 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('Prefix used for delivery slips.', array(), 'Admin.Orderscustomers.Help'),
                         'type' => 'textLang'
                     ),
                     'PS_DELIVERY_NUMBER' => array(
-                        'title' => $this->trans('Delivery number', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('The next delivery slip will begin with this number and then increase with each additional slip.', array(), 'Admin.OrdersCustomers.Help'),
+                        'title' => $this->trans('Delivery number', array(), 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('The next delivery slip will begin with this number and then increase with each additional slip.', array(), 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'text'
                     ),
                     'PS_PDF_IMG_DELIVERY' => array(
-                        'title' => $this->trans('Enable product image', array(), 'Admin.OrdersCustomers.Feature'),
-                        'hint' => $this->trans('Adds an image before product name on Delivery-slip', array(), 'Admin.OrdersCustomers.Help'),
+                        'title' => $this->trans('Enable product image', array(), 'Admin.Orderscustomers.Feature'),
+                        'hint' => $this->trans('Adds an image before product name on Delivery-slip', array(), 'Admin.Orderscustomers.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
@@ -65,7 +65,7 @@ class AdminDeliverySlipControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Print PDF', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Print PDF', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-print'
             ),
             'input' => array(
@@ -75,7 +75,7 @@ class AdminDeliverySlipControllerCore extends AdminController
                     'name' => 'date_from',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'date',
@@ -83,11 +83,11 @@ class AdminDeliverySlipControllerCore extends AdminController
                     'name' => 'date_to',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', array(), 'Admin.OrdersCustomers.Help')
+                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help')
                 )
             ),
             'submit' => array(
-                'title' => $this->trans('Generate PDF', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Generate PDF', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-download-alt'
             )
         );
@@ -113,7 +113,7 @@ class AdminDeliverySlipControllerCore extends AdminController
                 if (count(OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to')))) {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateDeliverySlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
                 } else {
-                    $this->errors[] = $this->trans('No delivery slip was found for this period.', array(), 'Admin.OrdersCustomers.Notification');
+                    $this->errors[] = $this->trans('No delivery slip was found for this period.', array(), 'Admin.Orderscustomers.Notification');
                 }
             }
         } else {

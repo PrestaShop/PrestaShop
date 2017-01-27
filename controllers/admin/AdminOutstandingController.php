@@ -77,7 +77,7 @@ class AdminOutstandingControllerCore extends AdminController
                 'align' => 'center'
             ),
             'risk' => array(
-                'title' => $this->trans('Risk', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Risk', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'orderby' => false,
                 'type' => 'select',
@@ -87,14 +87,14 @@ class AdminOutstandingControllerCore extends AdminController
                 'filter_type' => 'int'
             ),
             'outstanding_allow_amount' => array(
-                'title' => $this->trans('Outstanding Allowance', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Outstanding Allowance', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'prefix' => '<b>',
                 'suffix' => '</b>',
                 'type' => 'price'
             ),
             'outstanding' => array(
-                'title' => $this->trans('Current Outstanding', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Current Outstanding', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'callback' => 'printOutstandingCalculation',
                 'orderby' => false,

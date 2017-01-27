@@ -45,28 +45,28 @@ class AdminReturnControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_order_return' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
-            'id_order' => array('title' => $this->trans('Order ID', array(), 'Admin.OrdersCustomers.Feature'), 'width' => 100, 'align' => 'center', 'filter_key'=>'a!id_order'),
+            'id_order' => array('title' => $this->trans('Order ID', array(), 'Admin.Orderscustomers.Feature'), 'width' => 100, 'align' => 'center', 'filter_key'=>'a!id_order'),
             'name' => array('title' => $this->trans('Status', array(), 'Admin.Global'),'color' => 'color', 'width' => 'auto', 'align' => 'left'),
-            'date_add' => array('title' => $this->trans('Date issued', array(), 'Admin.OrdersCustomers.Feature'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key'=>'a!date_add'),
+            'date_add' => array('title' => $this->trans('Date issued', array(), 'Admin.Orderscustomers.Feature'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key'=>'a!date_add'),
         );
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Merchandise return (RMA) options', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' =>    $this->trans('Merchandise return (RMA) options', array(), 'Admin.Orderscustomers.Feature'),
                 'fields' =>    array(
                     'PS_ORDER_RETURN' => array(
-                        'title' => $this->trans('Enable returns', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('Would you like to allow merchandise returns in your shop?', array(), 'Admin.OrdersCustomers.Help'),
+                        'title' => $this->trans('Enable returns', array(), 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('Would you like to allow merchandise returns in your shop?', array(), 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval', 'type' => 'bool'),
                     'PS_ORDER_RETURN_NB_DAYS' => array(
-                        'title' => $this->trans('Time limit of validity', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('How many days after the delivery date does the customer have to return a product?', array(), 'Admin.OrdersCustomers.Help'),
+                        'title' => $this->trans('Time limit of validity', array(), 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('How many days after the delivery date does the customer have to return a product?', array(), 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'text',
                         'size' => '2'),
                     'PS_RETURN_PREFIX' => array(
-                        'title' => $this->trans('Returns prefix', array(), 'Admin.OrdersCustomers.Feature'),
-                        'desc' => $this->trans('Prefix used for return name (e.g. RE00001).', array(), 'Admin.OrdersCustomers.Help'),
+                        'title' => $this->trans('Returns prefix', array(), 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('Prefix used for return name (e.g. RE00001).', array(), 'Admin.Orderscustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang'
                     ),
@@ -83,7 +83,7 @@ class AdminReturnControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Return Merchandise Authorization (RMA)', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Return Merchandise Authorization (RMA)', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-clipboard'
             ),
             'input' => array(
@@ -111,7 +111,7 @@ class AdminReturnControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'free',
-                    'label' => $this->trans('Customer explanation', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Customer explanation', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'question',
                     'size' => '',
                     'required' => false,
@@ -126,7 +126,7 @@ class AdminReturnControllerCore extends AdminController
                         'id' => 'id_order_return_state',
                         'name' => 'name'
                     ),
-                    'desc' => $this->trans('Merchandise return (RMA) status.', array(), 'Admin.OrdersCustomers.Help')
+                    'desc' => $this->trans('Merchandise return (RMA) status.', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'list_products',
@@ -134,15 +134,15 @@ class AdminReturnControllerCore extends AdminController
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                    'desc' => $this->trans('List of products in return package.', array(), 'Admin.OrdersCustomers.Help')
+                    'desc' => $this->trans('List of products in return package.', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'pdf_order_return',
-                    'label' => $this->trans('Returns form', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Returns form', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                    'desc' => $this->trans('The link is only available after validation and before the parcel gets delivered.', array(), 'Admin.OrdersCustomers.Help')
+                    'desc' => $this->trans('The link is only available after validation and before the parcel gets delivered.', array(), 'Admin.Orderscustomers.Help')
                 ),
             ),
             'submit' => array(
@@ -174,7 +174,7 @@ class AdminReturnControllerCore extends AdminController
                     '%id%' => $order->id,
                     '%date%' => Tools::displayDate($order->date_upd)
                 ),
-                'Admin.OrdersCustomers.Feature'
+                'Admin.Orderscustomers.Feature'
             ),
             'url_order' => 'index.php?tab=AdminOrders&id_order='.(int)$order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)Tab::getIdFromClassName('AdminOrders').(int)$this->context->employee->id),
             'picture_folder' => _THEME_PROD_PIC_DIR_,
@@ -221,16 +221,16 @@ class AdminReturnControllerCore extends AdminController
                             if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int)(Tools::getValue('id_customization', 0)))) {
                                 Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
                             } else {
-                                $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', array(), 'Admin.OrdersCustomers.Notification');
+                                $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', array(), 'Admin.Orderscustomers.Notification');
                             }
                         } else {
-                            $this->errors[] = $this->trans('You need at least one product.', array(), 'Admin.OrdersCustomers.Notification');
+                            $this->errors[] = $this->trans('You need at least one product.', array(), 'Admin.Orderscustomers.Notification');
                         }
                     } else {
-                        $this->errors[] = $this->trans('The order return is invalid.', array(), 'Admin.OrdersCustomers.Notification');
+                        $this->errors[] = $this->trans('The order return is invalid.', array(), 'Admin.Orderscustomers.Notification');
                     }
                 } else {
-                    $this->errors[] = $this->trans('The order return content is invalid.', array(), 'Admin.OrdersCustomers.Notification');
+                    $this->errors[] = $this->trans('The order return content is invalid.', array(), 'Admin.Orderscustomers.Notification');
                 }
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
@@ -278,7 +278,7 @@ class AdminReturnControllerCore extends AdminController
                         }
                     }
                 } else {
-                    $this->errors[] = $this->trans('No order return ID has been specified.', array(), 'Admin.OrdersCustomers.Notification');
+                    $this->errors[] = $this->trans('No order return ID has been specified.', array(), 'Admin.Orderscustomers.Notification');
                 }
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');

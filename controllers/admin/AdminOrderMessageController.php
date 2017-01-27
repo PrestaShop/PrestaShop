@@ -71,7 +71,7 @@ class AdminOrderMessageControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Order messages', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Order messages', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-mail'
             ),
             'input' => array(
@@ -102,7 +102,7 @@ class AdminOrderMessageControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_order_message'] = array(
                 'href' => self::$currentIndex.'&addorder_message&token='.$this->token,
-                'desc' => $this->trans('Add new order message', array(), 'Admin.OrdersCustomers.Feature'),
+                'desc' => $this->trans('Add new order message', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-new'
             );
         }

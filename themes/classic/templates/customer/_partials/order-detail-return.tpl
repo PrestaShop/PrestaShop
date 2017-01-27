@@ -31,7 +31,7 @@
         <th class="head-checkbox"><input type="checkbox"/></th>
         <th>{l s='Product' d='Shop.Theme.Catalog'}</th>
         <th>{l s='Quantity' d='Shop.Theme.Catalog'}</th>
-        <th>{l s='Returned' d='Shop.Theme.CustomerAccount'}</th>
+        <th>{l s='Returned' d='Shop.Theme.Customeraccount'}</th>
         <th>{l s='Unit price' d='Shop.Theme.Catalog'}</th>
         <th>{l s='Total price' d='Shop.Theme.Catalog'}</th>
       </tr>
@@ -201,7 +201,7 @@
                     {/if}
                   {/if}
                   {if $product.qty_returned > 0}
-                    <div>{l s='Returned' d='Shop.Theme.CustomerAccount'}: {$product.qty_returned}</div>
+                    <div>{l s='Returned' d='Shop.Theme.Customeraccount'}: {$product.qty_returned}</div>
                   {/if}
                 </div>
                 <div class="col-xs-4 text-xs-right">
@@ -232,8 +232,8 @@
 
 <div class="box">
   <header>
-    <h3>{l s='Merchandise return' d='Shop.Theme.CustomerAccount'}</h3>
-    <p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.' d='Shop.Theme.CustomerAccount'}</p>
+    <h3>{l s='Merchandise return' d='Shop.Theme.Customeraccount'}</h3>
+    <p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.' d='Shop.Theme.Customeraccount'}</p>
   </header>
   <section class="form-fields">
     <div class="form-group">
@@ -243,7 +243,7 @@
   <footer class="form-footer">
     <input type="hidden" name="id_order" value="{$order.details.id}">
     <button class="form-control-submit btn btn-primary" type="submit" name="submitReturnMerchandise">
-      {l s='Request a return' d='Shop.Theme.CustomerAccount'}
+      {l s='Request a return' d='Shop.Theme.Customeraccount'}
     </button>
   </footer>
 </div>

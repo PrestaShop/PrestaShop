@@ -22,13 +22,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-{l s='We have logged your return request.' d='Shop.PDF' pdf='true'}<br />
-{l s='Your package must be returned to us within' pdf='true'} {$return_nb_days} {l s='days of receiving your order.' d='Shop.PDF' pdf='true'}<br /><br />
+{l s='We have logged your return request.' d='Shop.Pdf' pdf='true'}<br />
+{l s='Your package must be returned to us within' pdf='true'} {$return_nb_days} {l s='days of receiving your order.' d='Shop.Pdf' pdf='true'}<br /><br />
 
 <table id="summary-tab" width="100%">
 	<tr>
-		<th class="header small" valign="middle">{l s='Return Number' d='Shop.PDF' pdf='true'}</th>
-		<th class="header small" valign="middle">{l s='Date' d='Shop.PDF' pdf='true'}</th>
+		<th class="header small" valign="middle">{l s='Return Number' d='Shop.Pdf' pdf='true'}</th>
+		<th class="header small" valign="middle">{l s='Date' d='Shop.Pdf' pdf='true'}</th>
 	</tr>
 	<tr>
 		<td class="center small white">{'%06d'|sprintf:$order_return->id}</td>

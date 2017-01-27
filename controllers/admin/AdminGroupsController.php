@@ -63,27 +63,27 @@ class AdminGroupsControllerCore extends AdminController
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->trans('Group name', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Group name', array(), 'Admin.Shopparameters.Feature'),
                 'filter_key' => 'b!name'
             ),
             'reduction' => array(
-                'title' => $this->trans('Discount (%)', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Discount (%)', array(), 'Admin.Shopparameters.Feature'),
                 'align' => 'right',
                 'type' => 'percent'
             ),
             'nb' => array(
-                'title' => $this->trans('Members', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Members', array(), 'Admin.Shopparameters.Feature'),
                 'align' => 'center',
                 'havingFilter' => true,
             ),
             'show_prices' => array(
-                'title' => $this->trans('Show prices', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Show prices', array(), 'Admin.Shopparameters.Feature'),
                 'align' => 'center',
                 'type' => 'bool',
                 'orderby' => false
             ),
             'date_add' => array(
-                'title' => $this->trans('Creation date', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Creation date', array(), 'Admin.Shopparameters.Feature'),
                 'type' => 'date',
                 'align' => 'right'
             )
@@ -104,27 +104,27 @@ class AdminGroupsControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_options = array(
                 'general' => array(
-                    'title' =>    $this->trans('Default groups options', array(), 'Admin.ShopParameters.Feature'),
+                    'title' =>    $this->trans('Default groups options', array(), 'Admin.Shopparameters.Feature'),
                     'fields' =>    array(
                         'PS_UNIDENTIFIED_GROUP' => array(
-                            'title' => $this->trans('Visitors group', array(), 'Admin.ShopParameters.Feature'),
-                            'desc' => $this->trans('The group defined for your un-identified visitors.', array(), 'Admin.ShopParameters.Help'),
+                            'title' => $this->trans('Visitors group', array(), 'Admin.Shopparameters.Feature'),
+                            'desc' => $this->trans('The group defined for your un-identified visitors.', array(), 'Admin.Shopparameters.Help'),
                             'cast' => 'intval',
                             'type' => 'select',
                             'list' => $groups,
                             'identifier' => 'id_group'
                         ),
                         'PS_GUEST_GROUP' => array(
-                            'title' => $this->trans('Guests group', array(), 'Admin.ShopParameters.Feature'),
-                            'desc' => $this->trans('The group defined for your identified guest customers (used in guest checkout).', array(), 'Admin.ShopParameters.Help'),
+                            'title' => $this->trans('Guests group', array(), 'Admin.Shopparameters.Feature'),
+                            'desc' => $this->trans('The group defined for your identified guest customers (used in guest checkout).', array(), 'Admin.Shopparameters.Help'),
                             'cast' => 'intval',
                             'type' => 'select',
                             'list' => $groups,
                             'identifier' => 'id_group'
                         ),
                         'PS_CUSTOMER_GROUP' => array(
-                            'title' => $this->trans('Customers group', array(), 'Admin.ShopParameters.Feature'),
-                            'desc' => $this->trans('The group defined for your identified registered customers.', array(), 'Admin.ShopParameters.Help'),
+                            'title' => $this->trans('Customers group', array(), 'Admin.Shopparameters.Feature'),
+                            'desc' => $this->trans('The group defined for your identified registered customers.', array(), 'Admin.Shopparameters.Help'),
                             'cast' => 'intval',
                             'type' => 'select',
                             'list' => $groups,
@@ -152,7 +152,7 @@ class AdminGroupsControllerCore extends AdminController
             $this->toolbar_btn['save-and-stay'] = array(
                 'short' => 'SaveAndStay',
                 'href' => '#',
-                'desc' => $this->trans('Save, then add a category reduction.', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Save, then add a category reduction.', array(), 'Admin.Shopparameters.Feature'),
                 'force_desc' => true,
             );
         }
@@ -164,7 +164,7 @@ class AdminGroupsControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_group'] = array(
                 'href' => self::$currentIndex.'&addgroup&token='.$this->token,
-                'desc' => $this->trans('Add new group', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('Add new group', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -236,7 +236,7 @@ class AdminGroupsControllerCore extends AdminController
             'lastname' => array('title' => $this->trans('Last name', array(), 'Admin.Global')),
             'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global'), 'filter_key' => 'c!email', 'orderby' => true),
             'birthday' => array('title' => $this->trans('Date of birth', array(), 'Admin.Global'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
-            'date_add' => array('title' => $this->trans('Registration date', array(), 'Admin.ShopParameters.Feature'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
+            'date_add' => array('title' => $this->trans('Registration date', array(), 'Admin.Shopparameters.Feature'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
             'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-sm', 'type' => 'bool', 'search' => false, 'orderby' => false, 'filter_key' => 'c!active', 'callback' => 'printOptinIcon')
         ));
         $this->_select = 'c.*, a.id_group';
@@ -263,7 +263,7 @@ class AdminGroupsControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->trans('Customer group', array(), 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Customer group', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-group'
             ),
             'submit' => array(
@@ -285,14 +285,14 @@ class AdminGroupsControllerCore extends AdminController
                     'name' => 'reduction',
                     'suffix' => '%',
                     'col' => 1,
-                    'hint' => $this->trans('Automatically apply this value as a discount on all products for members of this customer group.', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Automatically apply this value as a discount on all products for members of this customer group.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->trans('Price display method', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Price display method', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'price_display_method',
                     'col' => 2,
-                    'hint' => $this->trans('How prices are displayed in the order summary for this customer group.', array(),'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('How prices are displayed in the order summary for this customer group.', array(), 'Admin.Shopparameters.Help'),
                     'options' => array(
                         'query' => array(
                             array(
@@ -310,7 +310,7 @@ class AdminGroupsControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->trans('Show prices', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Show prices', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'show_prices',
                     'required' => false,
                     'class' => 't',
@@ -327,17 +327,17 @@ class AdminGroupsControllerCore extends AdminController
                             'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->trans('Customers in this group can view prices.', array(), 'Admin.ShopParameters.Help')
+                    'hint' => $this->trans('Customers in this group can view prices.', array(), 'Admin.Shopparameters.Help')
                 ),
                 array(
                     'type' => 'group_discount_category',
-                    'label' => $this->trans('Category discount', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Category discount', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'reduction',
                     'values' => ($group->id ? $this->formatCategoryDiscountList((int)$group->id) : array())
                 ),
                 array(
                     'type' => 'modules',
-                    'label' => $this->trans('Modules authorization', array(), 'Admin.ShopParameters.Feature'),
+                    'label' => $this->trans('Modules authorization', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'auth_modules',
                     'values' => $this->formatModuleListAuth($group->id)
                 )
@@ -451,7 +451,7 @@ class AdminGroupsControllerCore extends AdminController
     public function processSave()
     {
         if (!$this->validateDiscount(Tools::getValue('reduction'))) {
-            $this->errors[] = $this->trans('The discount value is incorrect (must be a percentage).', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('The discount value is incorrect (must be a percentage).', array(), 'Admin.Shopparameters.Notification');
         } else {
             $this->updateCategoryReduction();
             $object = parent::processSave();
@@ -476,10 +476,10 @@ class AdminGroupsControllerCore extends AdminController
 
         $result = array();
         if (!Validate::isUnsignedId($id_category)) {
-            $result['errors'][] = $this->trans('Wrong category ID.', array(), 'Admin.ShopParameters.Notification');
+            $result['errors'][] = $this->trans('Wrong category ID.', array(), 'Admin.Shopparameters.Notification');
             $result['hasError'] = true;
         } elseif (!$this->validateDiscount($category_reduction)) {
-            $result['errors'][] = $this->trans('The discount value is incorrect (must be a percentage).', array(), 'Admin.ShopParameters.Notification');
+            $result['errors'][] = $this->trans('The discount value is incorrect (must be a percentage).', array(), 'Admin.Shopparameters.Notification');
             $result['hasError'] = true;
         } else {
             $result['id_category'] = (int)$id_category;
@@ -529,7 +529,7 @@ class AdminGroupsControllerCore extends AdminController
             }
             foreach ($category_reduction as $cat => $reduction) {
                 if (!Validate::isUnsignedId($cat) || !$this->validateDiscount($reduction)) {
-                    $this->errors[] = $this->trans('The discount value is incorrect.', array(), 'Admin.ShopParameters.Notification');
+                    $this->errors[] = $this->trans('The discount value is incorrect.', array(), 'Admin.Shopparameters.Notification');
                 } else {
                     $category = new Category((int)$cat);
                     $category->addGroupsIfNoExist((int)Tools::getValue('id_group'));
@@ -538,7 +538,7 @@ class AdminGroupsControllerCore extends AdminController
                     $group_reduction->reduction = (float)($reduction / 100);
                     $group_reduction->id_category = (int)$cat;
                     if (!$group_reduction->save()) {
-                        $this->errors[] = $this->trans('You cannot save group reductions.', array(), 'Admin.ShopParameters.Notification');
+                        $this->errors[] = $this->trans('You cannot save group reductions.', array(), 'Admin.Shopparameters.Notification');
                     }
                 }
             }
@@ -552,11 +552,11 @@ class AdminGroupsControllerCore extends AdminController
     {
         $group = new Group($this->id_object);
         if (!Validate::isLoadedObject($group)) {
-            $this->errors[] = $this->trans('An error occurred while updating this group.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating this group.', array(), 'Admin.Shopparameters.Notification');
         }
         $update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'group` SET show_prices = '.($group->show_prices ? 0 : 1).' WHERE `id_group` = '.(int)$group->id);
         if (!$update) {
-            $this->errors[] = $this->trans('An error occurred while updating this group.', array(), 'Admin.ShopParameters.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating this group.', array(), 'Admin.Shopparameters.Notification');
         }
         Tools::clearSmartyCache();
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
@@ -569,19 +569,19 @@ class AdminGroupsControllerCore extends AdminController
         $default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
         $unidentified_group_information = sprintf(
-            $this->trans('%s - All persons without a customer account or customers that are not logged in.', array(), 'Admin.ShopParameters.Help'),
+            $this->trans('%s - All persons without a customer account or customers that are not logged in.', array(), 'Admin.Shopparameters.Help'),
             '<b>'.$unidentified->name[$this->context->language->id].'</b>'
         );
         $guest_group_information = sprintf(
-            $this->trans('%s - All persons who placed an order through Guest Checkout.', array(),'Admin.ShopParameters.Help'),
+            $this->trans('%s - All persons who placed an order through Guest Checkout.', array(), 'Admin.Shopparameters.Help'),
             '<b>'.$guest->name[$this->context->language->id].'</b>'
         );
         $default_group_information = sprintf(
-            $this->trans('%s - All persons who created an account on this site.', array(), 'Admin.ShopParameters.Help'),
+            $this->trans('%s - All persons who created an account on this site.', array(), 'Admin.Shopparameters.Help'),
             '<b>'.$default->name[$this->context->language->id].'</b>'
         );
 
-        $this->displayInformation($this->trans('PrestaShop has three default customer groups:', array(), 'Admin.ShopParameters.Help'));
+        $this->displayInformation($this->trans('PrestaShop has three default customer groups:', array(), 'Admin.Shopparameters.Help'));
         $this->displayInformation($unidentified_group_information);
         $this->displayInformation($guest_group_information);
         $this->displayInformation($default_group_information);

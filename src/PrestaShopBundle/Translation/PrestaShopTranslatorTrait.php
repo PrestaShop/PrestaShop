@@ -57,6 +57,22 @@ trait PrestaShopTranslatorTrait
         return $translated;
     }
 
+    public function getSourceString($translated, $domain, $locale = null)
+    {
+        if (empty($domain)) {
+            return $translated;
+        }
+
+        $domain = str_replace('.', '', $domain);
+        $contextCatalog = $this->getCatalogue()->all($domain);
+
+        if ($untranslated = array_search($translated, $contextCatalog)) {
+            return $untranslated;
+        }
+
+        return $translated;
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -546,12 +546,6 @@ class MetaCore extends ObjectModel
         if (empty($metaTags['meta_title'])) {
             $metaTags['meta_title'] = $defaultValue;
         }
-        if (empty($metaTags['meta_description'])) {
-            $metaTags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', $context->language->id) ? Configuration::get('PS_META_DESCRIPTION', $context->language->id) : '';
-        }
-        if (empty($metaTags['meta_keywords'])) {
-            $metaTags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', $context->language->id) ? Configuration::get('PS_META_KEYWORDS', $context->language->id) : '';
-        }
 
         return $metaTags;
     }

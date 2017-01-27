@@ -25,7 +25,7 @@
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {l s='Forgot your password?' d='Shop.Theme.CustomerAccount'}
+  {l s='Forgot your password?' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='page_content'}
@@ -45,7 +45,7 @@
     </ul>
 
     <header>
-      <p class="send-renew-password-link">{l s='Please enter the email address you used to register. You will receive a temporary link to reset your password.' d='Shop.Theme.CustomerAccount'}</p>
+      <p class="send-renew-password-link">{l s='Please enter the email address you used to register. You will receive a temporary link to reset your password.' d='Shop.Theme.Customeraccount'}</p>
     </header>
 
     <section class="form-fields">

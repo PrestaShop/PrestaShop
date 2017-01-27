@@ -278,6 +278,7 @@ class XmlLoader
             }
         }
 
+
         // Load all row for current entity and prepare data to be populated
         foreach ($xml->entities->$entity as $node) {
             $data = array();
@@ -348,6 +349,11 @@ class XmlLoader
         return file_exists($this->lang_path.$iso.'/data/') ? $iso : 'en';
     }
 
+    protected function getFallBackToDefaultEntityLanguage($iso, $entity)
+    {
+        return file_exists($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml') ? $iso : 'en';
+    }
+
     /**
      * Special case for "tag" entity
      */
@@ -397,7 +403,7 @@ class XmlLoader
 
             $path = $this->data_path.$entity.'.xml';
             if ($iso) {
-                $path = $this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml';
+                $path = $this->lang_path.$this->getFallBackToDefaultEntityLanguage($iso, $entity).'/data/'.$entity.'.xml';
             }
 
             if (!file_exists($path)) {
@@ -1028,7 +1034,7 @@ class XmlLoader
 
                 $xml_node = new SimplexmlElement('<entity_'.$entity.' />');
                 $this->createXmlEntityNodes($entity, $nodes, $xml_node);
-                $xml_node->asXML($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml');
+                $xml_node->asXML($this->lang_path.$this->getFallBackToDefaultEntityLanguage($iso, $entity).'/data/'.$entity.'.xml');
             }
         }
 
