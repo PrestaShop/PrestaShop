@@ -59,14 +59,15 @@ export default function(callback) {
     let warningPlaceholder = $('#domain .missing-translations');
     let totalPlaceholder = $('#domain .total-expressions');
     let separator = $('#domain .separator');
+    totalPlaceholder.text(editTranslationForms.data('total-translations'));
     if (missingTranslationWarning.length > 0) {
       warningPlaceholder.text(missingTranslationWarning.text());
-      totalPlaceholder.text($('.total-translations').text());
       separator.removeClass('hide');
     } else {
       warningPlaceholder.text('');
       separator.addClass('hide');
     }
+    separator.first().removeClass('hide');
 
     let domain = $('#domain .name');
     let title = editTranslationForms.attr('data-domain');

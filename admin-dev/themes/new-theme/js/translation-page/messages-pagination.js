@@ -41,10 +41,6 @@ export default function () {
         let pageLinkAnchor;
         let totalPages = $(nav).parents('.translation-domains').find('.page').length;
 
-        if (totalPages > 10 && totalPages <= MAX_PAGINATION) {
-          $(nav).parent().addClass('relative-position');
-        }
-
         if (totalPages === 1) {
           return $('.pagination').addClass('hide');
         }

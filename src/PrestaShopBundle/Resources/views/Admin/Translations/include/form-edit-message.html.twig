@@ -36,11 +36,10 @@
           {{- edited_translation_value -}}
       </textarea>
         <span class="breadcrumb">
-          <small>{{breadcrumb_parts[0]|default(false)}}
-            {% if breadcrumb_parts[1]|default(false) %}
-              >
-              {{breadcrumb_parts[1]|default(false)}}
-            {% endif %}
+          <small>
+            {% for breadcrumb_part in breadcrumb_parts %}
+              {{ breadcrumb_part|default(false) }}{% if not loop.last %} > {% endif %}
+            {% endfor %}
         </small>
       </span>
     </div>

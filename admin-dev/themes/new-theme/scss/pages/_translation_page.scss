@@ -102,6 +102,7 @@ $color-active: #25B9D7;
 
   .card {
     padding: rem(15px) rem(15px) 0 rem(15px);
+    border-radius: 0;
   }
 
   .domain-first-part,
@@ -110,10 +111,12 @@ $color-active: #25B9D7;
     height: rem(22px);
     object-fit: contain;
     font-size: $font-size-base;
-    font-weight: 600;
+    font-weight: 400;
     font-style: normal;
     font-stretch: normal;
     margin-left: rem(-5px);
+    margin-bottom: rem(15px);
+    overflow: hidden;
     text-align: left;
     color: #363a41;
 
@@ -138,6 +141,10 @@ $color-active: #25B9D7;
       }
     }
 
+    &:hover {
+      color: $color-active;
+    }
+
     .missing-translations {
       line-height: rem(25px);
       color: $color-error;
@@ -145,19 +152,16 @@ $color-active: #25B9D7;
   }
 
   .domain-first-part {
-    margin-bottom: rem(5px);
+    &.active {
+      font-weight: 600;
+    }
     .material-icons {
       cursor: pointer;
     }
   }
 
   .domain-part {
-    color: #70848b;
-    font-weight: 400;
     margin-left: rem(20px);
-    .delegate-toggle-messages:not(.missing-translations):hover {
-      color: $color-active;
-    }
   }
 
   .translation-domain {
