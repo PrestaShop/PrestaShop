@@ -34,6 +34,13 @@ $filePrefix = 'PREFIX_';
 $engineType = 'ENGINE_TYPE';
 define('PS_IN_UPGRADE', 1);
 
+$classes14 = ['Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper','ImportModule',
+	'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine',
+	'MySQL', 'Order', 'OrderDetail', 'OrderDiscount', 'OrderHistory', 'OrderMessage', 'OrderReturn',
+	'OrderReturnState', 'OrderSlip', 'OrderState', 'PDF', 'RangePrice', 'RangeWeight', 'StockMvt',
+	'StockMvtReason', 'SubDomain', 'Shop', 'Tax', 'TaxRule', 'TaxRulesGroup', 'WebserviceKey', 'WebserviceRequest', ''];
+
+
 $incompatibleModules = [
     'bankwire',
     'blockbanner',
@@ -523,6 +530,37 @@ if (!$upgrade->hasFailure()) {
             }
         }
     }
+
+	if (version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
+		$dir = _PS_ROOT_DIR_ . '/controllers/';
+		if (file_exists($dir)) {
+			foreach (scandir($dir) as $file) {
+				if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
+					if (file_exists($dir . basename(str_replace('.php', '', $file) . '.php'))) {
+						unlink($dir . basename($file));
+					}
+				}
+			}
+		}
+
+		$dir = _PS_ROOT_DIR_ . '/classes/';
+		foreach ($classes14 as $class) {
+			if (file_exists($dir . basename($class) . '.php')) {
+				unlink($dir . basename($class) . '.php');
+			}
+		}
+
+		$dir = _PS_ADMIN_DIR_ . '/tabs/';
+		if (file_exists($dir)) {
+			foreach (scandir($dir) as $file) {
+				if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
+					if (file_exists($dir . basename(str_replace('.php', '', $file) . '.php'))) {
+						unlink($dir . basename($file));
+					}
+				}
+			}
+		}
+	}
 
     // Upgrade languages
     if (!defined('_PS_TOOL_DIR_')) {
