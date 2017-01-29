@@ -41,7 +41,7 @@ class AttributeGroup
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_attribute_group", type="integer")
+     * @ORM\Column(name="id_attribute_group", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */

@@ -33,9 +33,12 @@ use \Doctrine\Common\Collections\ArrayCollection;
 /**
  * Attribute
  *
- * @ORM\Table()
+ * @ORM\Table(
+ *     indexes={@ORM\Index(name="attribute_group", columns={"id_attribute_group"})}
+ * )
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeRepository")
  */
+
 class Attribute
 {
     /**

@@ -427,7 +427,7 @@ namespace PrestaShopBundle\Install {
             $output = $sf2Refresh->execute();
 
             if (0 !== $output['doctrine:schema:update']['exitCode']) {
-                $msgErrors = explode("\n", $output['doctrine:schema:update']['output']);
+                $msgErrors = $output['doctrine:schema:update']['output'];
                 $this->logError('Error upgrading doctrine schema : '.$msgErrors, 43);
             }
         }
@@ -905,7 +905,7 @@ namespace PrestaShopBundle\Install {
         }
 
         public function logWarning($quickInfo, $id,
-                                    $transVariables = array(), $dbInfo = false)
+                                   $transVariables = array(), $dbInfo = false)
         {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables,
                 'Install.Upgrade.Error');
