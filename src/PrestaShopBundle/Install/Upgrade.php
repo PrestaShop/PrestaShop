@@ -422,9 +422,14 @@ namespace PrestaShopBundle\Install {
 
         private function upgradeDoctrineSchema()
         {
-            $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-            $sf2Refresh->addDoctrineSchemaUpdate();
-            $output = $sf2Refresh->execute();
+            $i = 0;
+            do {
+                $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+                $sf2Refresh->addDoctrineSchemaUpdate();
+                $output = $sf2Refresh->execute();
+                $i++;
+                // Doctrine could need several tries before being able to properly upgrade the schema...
+            } while((0 !== $output['doctrine:schema:update']['exitCode']) && $i < 10);
 
             if (0 !== $output['doctrine:schema:update']['exitCode']) {
                 $msgErrors = $output['doctrine:schema:update']['output'];
