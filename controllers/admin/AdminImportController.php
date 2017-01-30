@@ -90,6 +90,7 @@ class AdminImportControllerCore extends AdminController
             $this->l('Manufacturers'),
             $this->l('Suppliers'),
             $this->l('Alias'),
+            $this->l('Stores'),
         );
 
         // @since 1.5.0
@@ -437,6 +438,55 @@ class AdminImportControllerCore extends AdminController
                     );
                 self::$default_values = array(
                     'active' => '1',
+                );
+            break;
+            case $this->entities[$this->l('Stores')]:
+                //Overwrite validators AS name is not MultiLangField
+                self::$validators = array(
+                    'active' => array('AdminImportController', 'getBoolean'),
+                );
+                
+                $this->required_fields = array(
+                    'address1',
+                    'city',
+                    'country',
+                    'latitude',                    
+                    'longitude',                    
+                );
+                
+                $this->available_fields = array(
+                    'no' => array('label' => $this->l('Ignore this column')),
+                    'id' => array('label' => $this->l('ID')),
+                    'active' => array('label' => $this->l('Active (0/1)')),
+                    'name' => array('label' => $this->l('Name')),
+                    'address1' => array('label' => $this->l('Address 1 *')),
+                    'address2' => array('label' => $this->l('Address 2')),
+                    'postcode' => array('label' => $this->l('Zip/postal code *')),
+                    'city' => array('label' => $this->l('City *')),
+                    'country' => array('label' => $this->l('Country *')),
+                    'state' => array('label' => $this->l('State')),
+                    'latitude' => array('label' => $this->l('Latitude *')),
+                    'longitude' => array('label' => $this->l('Longitude *')),
+                    'phone' => array('label' => $this->l('Phone')),
+                    'fax' => array('label' => $this->l('Fax')),
+                    'email' => array('label' => $this->l('Email address')),
+                    'note' => array('label' => $this->l('Note')),
+                    'picture' => array('label' => $this->l('Picture')),
+                    'hours_1' => array('label' => $this->l('Hours (Monday)')),
+                    'hours_2' => array('label' => $this->l('Hours (Tuesday)')),
+                    'hours_3' => array('label' => $this->l('Hours (Wednesday)')),
+                    'hours_4' => array('label' => $this->l('Hours (Thursday)')),
+                    'hours_5' => array('label' => $this->l('Hours (Friday)')),
+                    'hours_6' => array('label' => $this->l('Hours (Saturday)')),
+                    'hours_7' => array('label' => $this->l('Hours (Sunday)')),
+                    'shop' => array(
+                        'label' => $this->l('ID / Name of shop'),
+                        'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
+                    ),
+                );
+                
+                self::$default_values = array(
+                    'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
                 );
             break;
         }
@@ -1041,6 +1091,9 @@ class AdminImportControllerCore extends AdminController
             break;
             case 'suppliers':
                 $path = _PS_SUPP_IMG_DIR_.(int)$id_entity;
+            break;
+            case 'stores':
+                $path = _PS_STORE_IMG_DIR_.(int)$id_entity;
             break;
         }
 
@@ -3064,6 +3117,133 @@ class AdminImportControllerCore extends AdminController
         }
         $this->closeCsvFile($handle);
     }
+    
+    public function storeImport()
+    {
+        $this->receiveTab();
+        $handle = $this->openCsvFile();
+        AdminImportController::setLocale();
+
+        $convert = Tools::getValue('convert');
+        $force_ids = Tools::getValue('forceIDs');
+
+        for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++) {
+            if ($convert) {
+                $line = $this->utf8EncodeArray($line);
+            }
+            $info = AdminImportController::getMaskedRow($line);
+
+            AdminImportController::setDefaultValues($info);
+            
+            $storeExistsInDatabase = false;
+            if(array_key_exists('id', $info) && (int)$info['id'] && Store::existsInDatabase((int)$info['id'], 'store')){
+                $storeExistsInDatabase = true;
+            }
+
+            if ($force_ids && isset($info['id']) && (int)$info['id']) {
+                $store = new Store((int)$info['id']);
+            } else {
+                if ($storeExistsInDatabase) {
+                    $store = new Store((int)$info['id']);
+                } else {
+                    $store = new Store();
+                }
+            }
+
+            AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $store);
+            
+            $store->hours = array();
+            for($index = 1; $index <= 7; $index++){
+                $store->hours[] = (isset($store->{'hours_'.$index}))? $store->{'hours_'.$index} : '';
+                unset($store->{'hours_'.$index});                
+            }
+            $store->hours = serialize($store->hours);
+            
+            if (isset($store->country) && is_numeric($store->country)) {
+                if (Country::getNameById(Configuration::get('PS_LANG_DEFAULT'), (int)$store->country)) {
+                    $store->id_country = (int)$store->country;
+                }
+            } elseif (isset($store->country) && is_string($store->country) && !empty($store->country)) {
+                if ($id_country = (int)Country::getIdByName(null, $store->country)) {
+                    $store->id_country = $id_country;
+                } else {
+                    $country = new Country();
+                    $country->active = 1;
+                    $country->name = AdminImportController::createMultiLangField($store->country);
+                    $country->id_zone = 0; // Default zone for country to create
+                    $country->iso_code = Tools::strtoupper(Tools::substr($store->country, 0, 2)); // Default iso for country to create
+                    $country->contains_states = 0; // Default value for country to create
+                    $lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
+                    if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+                        ($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $country->add()) {
+                        $store->id_country = (int)$country->id;
+                    } else {
+                        $this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $country->name[$default_language_id]);
+                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                            Db::getInstance()->getMsgError();
+                    }
+                }
+            }
+            if (isset($store->state) && is_numeric($store->state)) {
+                if (State::getNameById((int)$store->state)) {
+                    $store->id_state = (int)$store->state;
+                }
+            } elseif (isset($store->state) && is_string($store->state) && !empty($store->state)) {
+                if ($id_state = State::getIdByName($store->state)) {
+                    $store->id_state = (int)$id_state;
+                } else {
+                    $state = new State();
+                    $state->active = 1;
+                    $state->name = $store->state;
+                    $state->id_country = isset($country->id) ? (int)$country->id : 0;
+                    $state->id_zone = 0; // Default zone for state to create
+                    $state->iso_code = Tools::strtoupper(Tools::substr($store->state, 0, 2)); // Default iso for state to create
+                    $state->tax_behavior = 0;
+                    if (($field_error = $state->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+                        ($lang_field_error = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $state->add()) {
+                        $store->id_state = (int)$state->id;
+                    } else {
+                        $this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $state->name);
+                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                            Db::getInstance()->getMsgError();
+                    }
+                }
+            }
+            
+            
+            
+            $res = false;
+            if (($field_error = $store->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+                ($lang_field_error = $store->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
+                if ($storeExistsInDatabase) {
+                    $res = $store->update();
+                }
+                $store->force_id = (bool)$force_ids;
+                if (!$res) {
+                    $res = $store->add();
+                }
+                
+                // Copying store's picture
+                if (isset($store->picture) && !empty($store->picture)) {
+                    if (!AdminImportController::copyImg($store->id, null, $store->picture, 'stores', !$regenerate)) {
+                        $this->warnings[] = $store->picture.' '.Tools::displayError('cannot be copied.');
+                    }
+                }
+
+                if (!$res) {
+                    $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                        Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                        $info['name'],
+                        (isset($info['id']) ? $info['id'] : 'null')
+                    );
+                }
+            } else {
+                $this->errors[] = $this->l('Store is invalid').' ('.$store->name.')';
+                $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
+            }
+        }
+        $this->closeCsvFile($handle);
+    }
 
     /**
      * @since 1.5.0
@@ -3517,6 +3697,9 @@ class AdminImportControllerCore extends AdminController
                         break;
                     case $this->entities[$import_type = $this->l('Alias')]:
                         $this->aliasImport();
+                        break;
+                    case $this->entities[$import_type = $this->l('Stores')]:
+                        $this->storeImport();
                         break;
                 }
 

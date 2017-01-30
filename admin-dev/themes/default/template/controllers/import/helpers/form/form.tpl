@@ -341,6 +341,9 @@
 				<a class="list-group-item _blank" href="../docs/csv_import/alias_import.csv">
 					{l s='Sample Aliases file'}
 				</a>
+                                <a class="list-group-item _blank" href="../docs/csv_import/stores_import.csv">
+					{l s='Sample Stores file'}
+				</a>
 				{if $PS_ADVANCED_STOCK_MANAGEMENT}
 				<a class="list-group-item _blank" href="../docs/csv_import/supply_orders_import.csv">
 					{l s='Sample Supply Orders file'}
