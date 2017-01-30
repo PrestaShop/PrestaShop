@@ -318,7 +318,7 @@ class FrontControllerCore extends Controller
         if (!is_dir(_PS_THEME_DIR_)) {
             throw new PrestaShopException(
                 $this->trans(
-                    'Current theme unavailable "%s". Please check your theme directory name and permissions.',
+                    'Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.',
                     array(basename(rtrim(_PS_THEME_DIR_, '/\\'))),
                     'Admin.Design.Notification'
                 ));

@@ -1061,12 +1061,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 if ($human_errors) {
                     if (isset($data['lang']) && $data['lang']) {
                         $language = new Language((int)$id_lang);
-                        return $this->trans('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).', array($this->displayFieldName($field, get_class($this)), $language->name, $size['max']), 'Admin.Notifications.Error');
+                        return $this->trans('The field %1$s (in the %2$s language) is too long (%3$d chars max, html chars including).', array($this->displayFieldName($field, get_class($this)), $language->name, $size['max']), 'Admin.Notifications.Error');
                     } else {
                         return $this->trans('The %1$s field is too long (%2$d chars max).', array($this->displayFieldName($field, get_class($this)), $size['max']), 'Admin.Notifications.Error');
                     }
                 } else {
-                    return $this->trans('Property %1$s length (%2$d) must be between %3$d and %4$d',
+                    return $this->trans('The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.',
                         array(
                             get_class($this).'->'.$field,
                             $length,
@@ -1181,8 +1181,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0')) {
                 if (isset($data['validate'])) {
                     if (!call_user_func('Validate::'.$data['validate'],$value) && (!empty($value) || $data['required'])) {
-                        $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).
-                            '</b> '.$this->trans('is invalid.', array(), 'Admin.Notifications.Error');
+                        $errors[$field] = $this->trans(
+                            '%s is invalid.',
+                            array(
+                                '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b>'
+                            ),
+                            'Admin.Notifications.Error'
+                        );
                     }
                 } else {
                     if (isset($data['copy_post']) && !$data['copy_post']) {

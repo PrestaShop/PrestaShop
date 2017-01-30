@@ -137,7 +137,7 @@ class OrderHistoryCore extends ObjectModel
                     $links .= '<li>';
                     $links .= '<a href="'.$product['link'].'">'.Tools::htmlentitiesUTF8($product['name']).'</a>';
                     if (isset($product['deadline'])) {
-                        $links .= '&nbsp;'.$this->trans('expires on ', array($product['deadline']), 'Admin.Orderscustomers.Notification');
+                        $links .= '&nbsp;'.$this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
                     }
                     if (isset($product['downloadable'])) {
                         $links .= '&nbsp;'.$this->trans('downloadable %d time(s)', array((int)$product['downloadable']), 'Admin.Orderscustomers.Notification');
