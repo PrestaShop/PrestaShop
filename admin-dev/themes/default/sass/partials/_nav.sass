@@ -356,11 +356,36 @@ $min-height: 950px
 			position: absolute
 			z-index: 1200
 			@include left(0)
+	#employee_infos
+		display: none
+	#header_employee_box, .admin-link
+		display: none
+	#header_shopname
+		.bootstrap &
+			float: none
+	#header_logout
+		border-bottom: 0
+		color: #bbcdd2
+	.icon-signout::before
+		font-family: 'Material Icons'
+		content: "\E8AC"
+		color: #bbcdd2
+		font-size: 25px
+	.shopname
+		text-align: center
+		margin: 15px 0
+		font-weight: bold
+	.username a
+		color: white
+	.employee_avatar
+		width: 60px
+		height: 60px
 	ul.menu
 		position: absolute
 		display: none
 		width: 90%
-		height: 100%
+		overflow: scroll
+		min-height: 100%
 		background-color: #363A41
 		padding: 0
 		border-top: 1px black solid
@@ -368,6 +393,12 @@ $min-height: 950px
 		@include margin(0, 0, 100px, 0)
 		@include transition(all 0.35s ease-out)
 		@include animate(fadeInLeft, 0.3s)
+		.submenu
+			a
+				background-color: #282b30
+				padding-left: 40px
+			&.list-group
+				margin-bottom: 0
 		> li.searchtab
 			padding: 15px
 			position: relative
@@ -381,22 +412,21 @@ $min-height: 950px
 				position: absolute
 				top: 5px
 				@include right(5px)
-		> li
+		> li.maintab
 			background: $main-color
 			position: relative
-			padding: 10px 0
 			&#tab-SELL, &#tab-IMPROVE, &#tab-CONFIGURE
 				display: none
-			> a
+			a
 				display: block
-				height: $menu-item-size
+				height: 50px
 				position: relative
 				border-bottom: 1px solid #6c868e
 				font-size: 16px
 				color: mix($main-color, contrast-color($main-color, white, #333), 30%)
 				background-color: $main-color
 				text-decoration: none
-				@include padding(0, 0, 0, 10px)
+				@include padding(15px, 0, 0, 15px)
 				@include transition-property(background-color)
 				@include transition-duration(0.4s)
 				@include transition-timing-function(ease-out)
@@ -415,12 +445,11 @@ $min-height: 950px
 				display: inline-block
 				height: $menu-item-size
 				width: $menu-item-size
-				font-size: 20px
+				font-size: 30px
 				line-height: $menu-item-size
 				color: white
 				text-align: center
-	ul.submenu
-		display: none
+				margin-top: -5px
 	#nav-mobile-submenu
 		a:not(#nav-mobile-submenu-back)
 			font-size: 1.2em
@@ -437,6 +466,9 @@ $min-height: 950px
 		height: 35px
 		text-align: center
 		line-height: 2.3em
+	#subtab-AdminParentThemes, #subtab-AdminParentShipping, #subtab-AdminParentPayment, #subtab-AdminInternational,
+	#subtab-ShopParameters, #subtab-AdminAdvancedParameters
+		display: none
 
 .menu-collapse
 	cursor: pointer

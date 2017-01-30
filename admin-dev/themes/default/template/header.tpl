@@ -228,14 +228,14 @@
 									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
 								</span>
 							</li>
-							<li class="text-center text-nowrap">{$employee->firstname} {$employee->lastname}</li>
+							<li class="text-center text-nowrap username">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
-							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
+							<li><a class="admin-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
 							{if $host_mode}
 							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
 							{/if}
 							<li class="divider"></li>
-							<li><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
+							<li class="signout"><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -318,7 +318,7 @@
 				{* Shop name *}
 				{if {$base_url}}
 					<ul class="header-list navbar-right">
-						<li>
+						<li class="shopname">
               {if isset($debug_mode) && $debug_mode == true}
                 <span class="shop-state hidden-xs" id="debug-mode">
                   <i class="material-icons">bug_report</i>

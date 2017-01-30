@@ -95,7 +95,6 @@ $header-height: 36px
 
 #header_employee_box
 	@extend .nav
-	@extend .hidden-xs
 	@extend .navbar-nav
 	margin: 0 !important
 	@include ltr
@@ -158,11 +157,6 @@ $header-height: 36px
 	i
 		font-size: $icon-size-base
 	@media (max-width: $screen-sm)
-		position: fixed !important
-		top: 36px !important
-		width: 100% !important
-		height: 100% !important
-		background-color: #383F50 !important
 		@include ltr
 			left: 0 !important
 		@include rtl

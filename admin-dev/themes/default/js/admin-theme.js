@@ -219,44 +219,42 @@ $(document).ready(function() {
 		// get it in navigation whatever type it is
 		var navigation = $('#nav-sidebar,#nav-topbar');
 		navigation.find('.menu').hide();
+	var adminLink = $('.admin-link').attr('href');
 		var submenu = "";
 		// clean trigger
 		navigation.off().attr('id','nav-mobile');
 		$('span.menu-collapse').off();
 		navigation.on('click.collapse','span.menu-collapse', expand);
-		$('#nav-mobile').on('click',expand);
+	$('.menu').height(window.innerHeight);
+	$('#nav-mobile .menu').prepend($('#employee_links').contents());
+	$('.username, .employee_avatar').contents().wrap('<a href="' + adminLink + '"></a>');
+  $('.username').after($('.shopname'));
+	$('.maintab:last').after($('.signout').addClass('maintab'));
 		function expand(event) {
-			event.stopPropagation();
-			if ($(this).hasClass('expanded')){
+			if ($(event.target).is('#nav-mobile.expanded') || $(event.currentTarget).is('span.menu-collapse.expanded')){
 				navigation.find('ul.menu').hide();
 				navigation.removeClass('expanded');
 				$('span.menu-collapse').removeClass('expanded');
 				//remove submenu when closing nav
 				$('#nav-mobile-submenu').remove();
+				$('#header_employee_box').hide();
 			}
 			else {
 				navigation.find('ul.menu').removeClass('menu-close').show();
 				navigation.addClass('expanded');
 				$('span.menu-collapse').addClass('expanded');
+				$('#nav-mobile.expanded').off().on('click',expand);
+				$('#header_employee_box, #employee_links').show();
 			}
 		};
-		//get click for item which has submenu
-		navigation.on('click.submenu','.maintab.has_submenu a.title', function(e){
-			e.preventDefault();
-			navigation.find('.menu').addClass('menu-close');
-			$('#nav-mobile-submenu').remove();
-			//create submenu
-			submenu = $('<ul id="nav-mobile-submenu" class="menu"><li><a href="#" id="nav-mobile-submenu-back"><i class="icon-arrow-left"></i>'+ $(this).html() +'</a></li></ul>');
-			submenu.append($(this).closest('.maintab').find('.submenu').html());
-			//show submenu
-			navigation.append(submenu);
-			submenu.show();
-		});
-		navigation.on('click.back','#nav-mobile-submenu-back',function(e){
-			e.preventDefault();
-			submenu.remove();
-			navigation.find('.menu').removeClass('menu-close').show();
-		});
+
+	$('.title.has_submenu').each(function(index, el) {
+	  $(el).attr('href', '#'+$(el).parent().find('.collapse').attr('id')).attr('data-toggle','collapse');
+	});
+
+	$('.collapse').collapse({
+	  toggle: false
+	});
 	}
 
 	//unset mobile nav
