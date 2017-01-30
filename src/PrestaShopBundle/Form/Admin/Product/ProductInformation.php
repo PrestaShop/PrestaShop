@@ -44,7 +44,10 @@ class ProductInformation extends CommonAbstractType
     private $context;
     private $translator;
     private $locales;
+    private $productDataProvider;
     private $nested_categories;
+    private $categoryDataProvider;
+    private $manufacturerDataProvider;
     private $manufacturers;
     private $productAdapter;
     private $configuration;
@@ -65,20 +68,40 @@ class ProductInformation extends CommonAbstractType
         $this->context = $legacyContext;
         $this->translator = $translator;
         $this->router = $router;
-        $this->categoryDataProvider = $categoryDataProvider;
         $this->productDataProvider = $productDataProvider;
-        $this->featureDataProvider = $featureDataProvider;
-        $this->manufacturerDataProvider = $manufacturerDataProvider;
-        $this->configuration = new Configuration();
-
-        $this->categories = $this->formatDataChoicesList($this->categoryDataProvider->getAllCategoriesName(), 'id_category');
-        $this->nested_categories = $this->categoryDataProvider->getNestedCategories();
         $this->productAdapter = $this->productDataProvider;
+        $this->categoryDataProvider = $categoryDataProvider;
+        $this->manufacturerDataProvider = $manufacturerDataProvider;
+        $this->featureDataProvider = $featureDataProvider;
+
+        $this->configuration = new Configuration();
         $this->locales = $this->context->getLanguages();
         $this->currency = $this->context->getContext()->currency;
+
+        $this->categories = $this->formatDataChoicesList(
+            $this->categoryDataProvider->getAllCategoriesName(
+                $root_category = null,
+                $id_lang = false,
+                $active = false
+            ), 'id_category'
+        );
+
+        $this->nested_categories = $this->categoryDataProvider->getNestedCategories(
+            $root_category = null,
+            $id_lang = false,
+            $active = false
+        );
+
         $this->manufacturers = $this->formatDataChoicesList(
-            $this->manufacturerDataProvider->getManufacturers(false, 0, true, false, false, false, true),
-            'id_manufacturer'
+            $this->manufacturerDataProvider->getManufacturers(
+                $get_nb_products = false,
+                $id_lang = 0,
+                $active = true,
+                $p = false,
+                $n = false,
+                $all_group = false,
+                $group_by = true
+            ), 'id_manufacturer'
         );
     }
 
