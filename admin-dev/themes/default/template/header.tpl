@@ -217,7 +217,7 @@
 				{* Employee *}
 				<ul id="header_employee_box">
 					<li id="employee_infos" class="dropdown">
-						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
+						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={if isset($employee)}{$employee->id|intval}{/if}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
 							<span class="employee_avatar_small">
                 <img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
 							</span>
@@ -225,12 +225,14 @@
 						<ul id="employee_links" class="dropdown-menu">
 							<li>
 								<span class="employee_avatar">
+									{if isset($employee)}
 									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
+									{/if}
 								</span>
 							</li>
-							<li class="text-center text-nowrap">{$employee->firstname} {$employee->lastname}</li>
+							<li class="text-center text-nowrap">{if isset($employee)}{$employee->firstname} {$employee->lastname}{/if}</li>
 							<li class="divider"></li>
-							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
+							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={if isset($employee)}{$employee->id|intval}{/if}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
 							{if $host_mode}
 							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
 							{/if}
