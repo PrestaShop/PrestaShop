@@ -25,7 +25,7 @@
  */
 
 
-if (!extension_loaded('SimpleXML') || PHP_VERSION_ID < 50400) {
+if (!extension_loaded('SimpleXML') || !extension_loaded('zip') || PHP_VERSION_ID < 50400) {
     require_once dirname(__FILE__).'/missing_extension.php';
     exit();
 }
