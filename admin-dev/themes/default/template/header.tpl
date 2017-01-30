@@ -219,9 +219,7 @@
 					<li id="employee_infos" class="dropdown">
 						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
 							<span class="employee_avatar_small">
-								{if isset($employee)}
-									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
-								{/if}
+                <img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
 							</span>
 						</a>
 						<ul id="employee_links" class="dropdown-menu">
