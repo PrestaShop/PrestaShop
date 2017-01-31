@@ -52,54 +52,50 @@ File: classes/form/CustomerAddressFormatter.php:214</note>
         <source>First name</source>
         <target>First name</target>
         <note>Context:
-File: classes/form/CustomerFormatter.php:87</note>
+File: classes/form/CustomerFormatter.php:112</note>
       </trans-unit>
       <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
         <source>Last name</source>
         <target>Last name</target>
         <note>Context:
-File: classes/form/CustomerFormatter.php:97</note>
+File: classes/form/CustomerFormatter.php:122</note>
       </trans-unit>
       <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
         <source>Identification number</source>
         <target>Identification number</target>
         <note>Context:
-File: classes/form/CustomerFormatter.php:115
+File: classes/form/CustomerFormatter.php:140
  Comment: Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.</note>
       </trans-unit>
-      <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
-        <source>Social title</source>
-        <target>Social title</target>
-        <note>Context:
-File: classes/form/CustomerFormatter.php:74</note>
-      </trans-unit>
-      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
-        <source>Company</source>
-        <target>Company</target>
-        <note>Context:
-File: classes/form/CustomerFormatter.php:108</note>
-      </trans-unit>
-      <trans-unit id="ccd41dac2cc2284362975a05bd9ce363">
-        <source>Birthdate</source>
-        <target>Birthdate</target>
-        <note>Context:
-File: classes/form/CustomerFormatter.php:161</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerLoginFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
         <source>Email</source>
         <target>Email</target>
         <note>Context:
-File: classes/form/CustomerLoginFormatter.php:25</note>
+File: classes/form/CustomerFormatter.php:149</note>
       </trans-unit>
       <trans-unit id="dc647eb65e6711e155375218212b3964">
         <source>Password</source>
         <target>Password</target>
         <note>Context:
-File: classes/form/CustomerLoginFormatter.php:33</note>
+File: classes/form/CustomerFormatter.php:161</note>
+      </trans-unit>
+      <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
+        <source>Social title</source>
+        <target>Social title</target>
+        <note>Context:
+File: classes/form/CustomerFormatter.php:99</note>
+      </trans-unit>
+      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
+        <source>Company</source>
+        <target>Company</target>
+        <note>Context:
+File: classes/form/CustomerFormatter.php:133</note>
+      </trans-unit>
+      <trans-unit id="ccd41dac2cc2284362975a05bd9ce363">
+        <source>Birthdate</source>
+        <target>Birthdate</target>
+        <note>Context:
+File: classes/form/CustomerFormatter.php:186</note>
       </trans-unit>
     </body>
   </file>
@@ -109,18 +105,54 @@ File: classes/form/CustomerLoginFormatter.php:33</note>
         <source>New password</source>
         <target>New password</target>
         <note>Context:
-File: themes/classic/templates/customer/password-new.tpl:17</note>
+File: themes/classic/templates/customer/password-new.tpl:45</note>
       </trans-unit>
       <trans-unit id="f4d1ea475eaa85102e2b4e6d95da84bd">
         <source>Confirmation</source>
         <target>Confirmation</target>
         <note>Context:
-File: themes/classic/templates/customer/password-new.tpl:22</note>
+File: themes/classic/templates/customer/password-new.tpl:52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/guest-tracking.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3b6bf3c0c07b89dc86f415117a1f0b80">
+        <source>Set your password:</source>
+        <target>Set your password:</target>
+        <note>Context:
+File: themes/classic/templates/customer/guest-tracking.tpl:53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/_partials/order-messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="deb10517653c255364175796ace3553f">
+        <source>Product</source>
+        <target>Product</target>
+        <note>Context:
+File: themes/classic/templates/customer/_partials/order-messages.tpl:53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/_partials/form-fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1625e29c02062efe5dbc42c3efeeebc4">
+        <source>-- please choose --</source>
+        <target>-- please choose --</target>
+        <note>Context:
+File: themes/StarterTheme/templates/_partials/form-fields.tpl:18</note>
       </trans-unit>
     </body>
   </file>
   <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
+        <source>Email address</source>
+        <target>Email address</target>
+        <note>Context:
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:34</note>
+      </trans-unit>
       <trans-unit id="c7892ebbb139886662c6f2fc8c450710">
         <source>Subject</source>
         <target>Subject</target>
@@ -147,13 +179,47 @@ File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/customer/guest-login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
-        <source>Email address</source>
-        <target>Email address</target>
+      <trans-unit id="63c193f613dd3d9d6c16da7678efda2a">
+        <source>Order Reference:</source>
+        <target>Order Reference:</target>
         <note>Context:
-File: themes/classic/templates/customer/password-email.tpl:16</note>
+File: themes/classic/templates/customer/guest-login.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
+        <source>Email:</source>
+        <target>Email:</target>
+        <note>Context:
+File: themes/classic/templates/customer/guest-login.tpl:59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/_partials/form-fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="93332134fd11cffbe680dd8afaa521fc">
+        <source>-- day --</source>
+        <target>-- day --</target>
+        <note>Context:
+File: themes/classic/templates/_partials/form-fields.tpl:109</note>
+      </trans-unit>
+      <trans-unit id="9180b4d5ab8103f244c2d4fd661934e2">
+        <source>-- month --</source>
+        <target>-- month --</target>
+        <note>Context:
+File: themes/classic/templates/_partials/form-fields.tpl:110</note>
+      </trans-unit>
+      <trans-unit id="ae1cc541ba45ce670ea7e0e3a30e3205">
+        <source>-- year --</source>
+        <target>-- year --</target>
+        <note>Context:
+File: themes/classic/templates/_partials/form-fields.tpl:111</note>
+      </trans-unit>
+      <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
+        <source>Optional</source>
+        <target>Optional</target>
+        <note>Context:
+File: themes/classic/templates/_partials/form-fields.tpl:164</note>
       </trans-unit>
     </body>
   </file>
@@ -164,80 +230,6 @@ File: themes/classic/templates/customer/password-email.tpl:16</note>
         <target>Your email address</target>
         <note>Context:
 File: themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl:50</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/_partials/form-fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1625e29c02062efe5dbc42c3efeeebc4">
-        <source>-- please choose --</source>
-        <target>-- please choose --</target>
-        <note>Context:
-File: themes/StarterTheme/templates/_partials/form-fields.tpl:18</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/_partials/form-fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="93332134fd11cffbe680dd8afaa521fc">
-        <source>-- day --</source>
-        <target>-- day --</target>
-        <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:85</note>
-      </trans-unit>
-      <trans-unit id="9180b4d5ab8103f244c2d4fd661934e2">
-        <source>-- month --</source>
-        <target>-- month --</target>
-        <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:86</note>
-      </trans-unit>
-      <trans-unit id="ae1cc541ba45ce670ea7e0e3a30e3205">
-        <source>-- year --</source>
-        <target>-- year --</target>
-        <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:87</note>
-      </trans-unit>
-      <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
-        <source>Optional</source>
-        <target>Optional</target>
-        <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:140</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/_partials/order-messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="deb10517653c255364175796ace3553f">
-        <source>Product</source>
-        <target>Product</target>
-        <note>Context:
-File: themes/classic/templates/customer/_partials/order-messages.tpl:29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/guest-login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="63c193f613dd3d9d6c16da7678efda2a">
-        <source>Order Reference:</source>
-        <target>Order Reference:</target>
-        <note>Context:
-File: themes/classic/templates/customer/guest-login.tpl:17</note>
-      </trans-unit>
-      <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
-        <source>Email:</source>
-        <target>Email:</target>
-        <note>Context:
-File: themes/classic/templates/customer/guest-login.tpl:35</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/customer/guest-tracking.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3b6bf3c0c07b89dc86f415117a1f0b80">
-        <source>Set your password:</source>
-        <target>Set your password:</target>
-        <note>Context:
-File: themes/classic/templates/customer/guest-tracking.tpl:29</note>
       </trans-unit>
     </body>
   </file>

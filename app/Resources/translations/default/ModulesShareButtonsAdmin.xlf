@@ -6,13 +6,13 @@
         <source>Social media share buttons</source>
         <target>Social media share buttons</target>
         <note>Context:
-File: modules/ps_sharebuttons/ps_sharebuttons.php:50</note>
+File: modules/ps_sharebuttons/ps_sharebuttons.php:52</note>
       </trans-unit>
       <trans-unit id="221c46a34f553f08f4c5e7685a9dcc89">
         <source>Displays social media sharing buttons (Twitter, Facebook, Google+ and Pinterest) on every product page.</source>
         <target>Displays social media sharing buttons (Twitter, Facebook, Google+ and Pinterest) on every product page.</target>
         <note>Context:
-File: modules/ps_sharebuttons/ps_sharebuttons.php:51</note>
+File: modules/ps_sharebuttons/ps_sharebuttons.php:53</note>
       </trans-unit>
     </body>
   </file>
