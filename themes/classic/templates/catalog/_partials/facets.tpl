@@ -132,4 +132,3 @@
       {/if}
     {/foreach}
   </div>
-{debug}
