@@ -86,7 +86,6 @@ function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_enc
 
 smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
-smartyRegisterFunction($smarty, 'function', 'dump', 'smartyDump'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
 smartyRegisterFunction($smarty, 'modifier', 'json_encode', array('Tools', 'jsonEncode'));
@@ -97,11 +96,6 @@ smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
-
-function smartyDump($params, &$smarty)
-{
-    return Tools::dump($params['var']);
-}
 
 function smarty_modifier_htmlentitiesUTF8($string)
 {
