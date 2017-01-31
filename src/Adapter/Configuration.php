@@ -27,19 +27,11 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use Shop;
 
 class Configuration implements ConfigurationInterface
 {
     private $shop;
-
-    public function __construct(\Shop $shop = null)
-    {
-        if (is_null($shop)) {
-            $this->shop = \Context::getContext()->shop;
-        } else {
-            $this->shop = $shop;
-        }
-    }
 
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
@@ -58,19 +50,32 @@ class Configuration implements ConfigurationInterface
 
     /**
      * Set configuration value
+     * @param $key
+     * @param $value
+     * @return $this
+     * @throws \Exception
      */
     public function set($key, $value)
     {
+        // By default, set a piece of configuration for all available shops and shop groups
+        $shopGroupId = 0;
+        $shopId = 0;
+
+        if ($this->shop instanceof Shop) {
+            $shopGroupId = $this->shop->id_shop_group;
+            $shopId = $this->shop->id;
+        }
+
         $success = \Configuration::updateValue(
             $key,
             $value,
             false,
-            $this->shop->id_shop_group,
-            $this->shop->id
+            $shopGroupId,
+            $shopId
         );
 
         if (!$success) {
-            throw new Exception("Could not update configuration");
+            throw new \Exception("Could not update configuration");
         }
 
         return $this;
@@ -92,5 +97,14 @@ class Configuration implements ConfigurationInterface
     public function combinationIsActive()
     {
         return  \CombinationCore::isFeatureActive();
+    }
+
+    /**
+     * Restrict updates of a piece of configuration to a single shop.
+     * @param Shop $shop
+     */
+    public function restrictUpdatesTo(Shop $shop)
+    {
+        $this->shop = $shop;
     }
 }

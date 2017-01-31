@@ -43,7 +43,7 @@ class LegacyContext
      *
      * @throws LogicException If legacy context is not set properly
      *
-     * @return \Context The Legacy context, for Adapter use only.
+     * @return \ContextCore The Legacy context, for Adapter use only.
      */
     public function getContext()
     {

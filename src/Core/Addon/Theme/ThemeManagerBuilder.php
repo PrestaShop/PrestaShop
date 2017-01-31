@@ -49,9 +49,12 @@ class ThemeManagerBuilder
 
     public function build()
     {
+        $configuration = new Configuration();
+        $configuration->restrictUpdatesTo($this->context->shop);
+
         return new ThemeManager(
             $this->context->shop,
-            new Configuration($this->context->shop),
+            $configuration,
             new ThemeValidator($this->context->getTranslator()),
             $this->context->getTranslator(),
             $this->context->employee,
@@ -78,8 +81,11 @@ class ThemeManagerBuilder
             $shop = $this->context->shop;
         }
 
+        $configuration = new Configuration($shop);
+        $configuration->restrictUpdatesTo($shop);
+
         return new ThemeRepository(
-            new Configuration($shop),
+            $configuration,
             new Filesystem(),
             $shop
         );

@@ -25,7 +25,6 @@
  */
 
 use PrestaShop\PrestaShop\Core\Cldr\Update;
-use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 

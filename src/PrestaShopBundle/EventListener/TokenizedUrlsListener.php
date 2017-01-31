@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\EventListener;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -50,13 +51,19 @@ class TokenizedUrlsListener
         CsrfTokenManager $tokenManager,
         RouterInterface $router,
         $username,
-        Employee $employee
+        LegacyContext $legacyContext
     )
     {
         $this->tokenManager = $tokenManager;
         $this->router = $router;
         $this->username = $username;
-        $this->employeeId = $employee->id;
+        $context = $legacyContext->getContext();
+
+        if (!is_null($context)) {
+            if ($context->employee instanceof Employee) {
+                $this->employeeId = $context->employee->id;
+            }
+        }
     }
 
     public function onKernelRequest(GetResponseEvent $event)

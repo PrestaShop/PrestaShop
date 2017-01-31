@@ -87,7 +87,6 @@ services:
     # Legacy context service, transitional
     prestashop.adapter.legacy.configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration
-        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().shop"]
 
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
@@ -112,7 +111,7 @@ services:
             - "@security.csrf.token_manager"
             - "@router"
             - "@=service('prestashop.user_provider').getUsername()"
-            - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+            - "@prestashop.adapter.legacy.context"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
