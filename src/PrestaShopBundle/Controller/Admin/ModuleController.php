@@ -37,7 +37,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 
 class ModuleController extends FrameworkBundleAdminController
@@ -338,60 +337,39 @@ class ModuleController extends FrameworkBundleAdminController
         return new JsonResponse($content);
     }
 
+    /**
+     * @return Response
+     */
     public function notificationAction()
     {
+        $modulesPresenter = function (array &$modules) {
+            return $this->getPresentedProducts($modules);
+        };
+
+        $moduleManager = $this->get('prestashop.module.manager');
         $translator = $this->get('translator');
-        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-
-        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
-
-        $filters = new AddonListFilter();
-        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(AddonListFilterStatus::INSTALLED);
-        $installedProducts = $moduleRepository->getFilteredList($filters);
-
-        $modules = new \stdClass();
-        foreach (array('to_configure', 'to_update') as $subpart) {
-            $modules->{$subpart} = array();
-        }
-
-        foreach ($installedProducts as $installedProduct) {
-            $warnings = array();
-            $moduleProvider = $this->get('prestashop.adapter.data_provider.module');
-            $moduleName = $installedProduct->attributes->get('name');
-
-            if ($moduleProvider->isModuleMainClassValid($moduleName)) {
-                require_once _PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php';
-
-                $module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($moduleName);
-                $warnings = $module->warning;
-            }
-            if (!empty($warnings)) {
-                $modules->to_configure[] = (object) $installedProduct;
-            }
-
-            if ($installedProduct->canBeUpgraded()) {
-                $modules->to_update[] = (object) $installedProduct;
-            }
-        }
-
-        foreach ($modules as $moduleLabel => $modulesPart) {
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart, str_replace("to_", "", $moduleLabel));
-            $modules->{$moduleLabel} = $this->getPresentedProducts($modulesPart);
-        }
+        $layoutTitle = $translator->trans(
+            'Module notifications',
+            array(),
+            'Admin.Modules.Feature'
+        );
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
-                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Module notifications', array(), 'Admin.Modules.Feature'),
-                'modules' => $modules,
-                'requireAddonsSearch' => false,
-                'requireBulkActions' => false,
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminModules'),
-                'requireFilterStatus' => false,
+            'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+            'layoutTitle' => $layoutTitle,
+            'help_link' => $this->generateSidebarLink('AdminModules'),
+            'modules' => $moduleManager->getModulesWithNotifications($modulesPresenter),
+            'requireAddonsSearch' => false,
+            'requireBulkActions' => false,
+            'requireFilterStatus' => false,
         ));
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function getPreferredModulesAction(Request $request)
     {
         $tabModulesList = $request->get('tab_modules_list');
