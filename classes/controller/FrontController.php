@@ -1576,7 +1576,7 @@ class FrontControllerCore extends Controller
                 'address2' => $address->address2,
                 'postcode' => $address->postcode,
                 'city' => $address->city,
-                'state' => (new State($address->id_state))->name[$this->context->language->id],
+                'state' => (new State($address->id_state))->name,
                 'country' => (new Country($address->id_country))->name[$this->context->language->id],
             ),
             'phone' => Configuration::get('PS_SHOP_PHONE'),
