@@ -127,6 +127,7 @@ class ModuleTabRegister
             
             $tabs[] = array(
                 'class_name' => $adminControllerName,
+                'visible' => false,
             );
         }
         return $tabs;
@@ -209,10 +210,11 @@ class ModuleTabRegister
         // won't be directly linked to the tab creation
         // @ToDo
         $tab = new Tab();
-        $tab->active = $data->getBoolean('visible', false);
+        $tab->active = $data->getBoolean('visible', true);
         $tab->class_name = $data->get('class_name');
         $tab->module = $module->get('name');
         $tab->name = $data->get('name', array($tab->class_name));
+        $tab->icon = $data->get('icon');
 
         // Handle parent menu
         $parentClassName = $data->get('ParentClassName', null);
