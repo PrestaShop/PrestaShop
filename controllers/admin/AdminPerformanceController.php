@@ -893,16 +893,16 @@ class AdminPerformanceControllerCore extends AdminController
             if (!empty($debug_mode_status)) {
                 switch ($debug_mode_status) {
                     case self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
-                        $this->errors[] = $this->trans('Error: could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
+                        $this->errors[] = $this->trans('Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
                         break;
                     case self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS:
-                        $this->errors[] = $this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
+                        $this->errors[] = $this->trans('Error: Could not write to file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
                         break;
                     case self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
-                        $this->errors[] = $this->trans('Error: could not write to file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines_custom.inc.php'), 'Admin.Advparameters.Notification');
+                        $this->errors[] = $this->trans('Error: Could not write to file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines_custom.inc.php'), 'Admin.Advparameters.Notification');
                         break;
                     case self::DEBUG_MODE_ERROR_NO_READ_ACCESS:
-                        $this->errors[] = $this->trans('Error: could not read file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
+                        $this->errors[] = $this->trans('Error: Could not read file. Make sure that the correct permissions are set on the file %s', array(_PS_ROOT_DIR_.'/config/defines.inc.php'), 'Admin.Advparameters.Notification');
                         break;
                     default:
                         break;
