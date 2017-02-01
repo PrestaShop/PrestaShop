@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
+        <source>Store information</source>
+        <target>Store information</target>
+        <note>Context:
+File: modules/ps_contactinfo/ps_contactinfo-rich.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="da6eb684bd77243a780629a180c9d19b">
+        <source>Fax: [1]%fax%[/1]</source>
+        <target>Fax: [1]%fax%[/1]</target>
+        <note>Context:
+File: modules/ps_contactinfo/ps_contactinfo-rich.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="077d21d48dae9586405c0d264f6d32e7">
+        <source>Email us: [1]%email%[/1]</source>
+        <target>Email us: [1]%email%[/1]</target>
+        <note>Context:
+File: modules/ps_contactinfo/ps_contactinfo-rich.tpl:57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_contactinfo/nav.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
+        <source>Call us: [1]%phone%[/1]</source>
+        <target>Call us: [1]%phone%[/1]</target>
+        <note>Context:
+File: modules/ps_contactinfo/nav.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
@@ -25,34 +57,6 @@ File: modules/ps_contactinfo/ps_contactinfo.tpl:43</note>
         <target>Email: %email%</target>
         <note>Context:
 File: modules/ps_contactinfo/ps_contactinfo.tpl:54</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
-        <source>Call us: [1]%phone%[/1]</source>
-        <target>Call us: [1]%phone%[/1]</target>
-        <note>Context:
-File: modules/ps_contactinfo/ps_contactinfo-rich.tpl:32</note>
-      </trans-unit>
-      <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
-        <source>Store information</source>
-        <target>Store information</target>
-        <note>Context:
-File: modules/ps_contactinfo/ps_contactinfo-rich.tpl:27</note>
-      </trans-unit>
-      <trans-unit id="da6eb684bd77243a780629a180c9d19b">
-        <source>Fax: [1]%fax%[/1]</source>
-        <target>Fax: [1]%fax%[/1]</target>
-        <note>Context:
-File: modules/ps_contactinfo/ps_contactinfo-rich.tpl:44</note>
-      </trans-unit>
-      <trans-unit id="077d21d48dae9586405c0d264f6d32e7">
-        <source>Email us: [1]%email%[/1]</source>
-        <target>Email us: [1]%email%[/1]</target>
-        <note>Context:
-File: modules/ps_contactinfo/ps_contactinfo-rich.tpl:57</note>
       </trans-unit>
     </body>
   </file>

@@ -6,13 +6,13 @@
         <source>Our Products</source>
         <target>Our Products</target>
         <note>Context:
-File: modules/ps_featuredproducts/views/templates/hook/ps_featuredproducts.tpl:2</note>
+File: modules/ps_featuredproducts/views/templates/hook/ps_featuredproducts.tpl:27</note>
       </trans-unit>
       <trans-unit id="40dec546414c1ebdfde8d9858f0938c3">
         <source>All products</source>
         <target>All products</target>
         <note>Context:
-File: modules/ps_featuredproducts/views/templates/hook/ps_featuredproducts.tpl:8</note>
+File: modules/ps_featuredproducts/views/templates/hook/ps_featuredproducts.tpl:33</note>
       </trans-unit>
     </body>
   </file>

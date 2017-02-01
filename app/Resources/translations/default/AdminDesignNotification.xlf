@@ -1,5 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
+        <source>Your theme has been correctly exported: %path%</source>
+        <target>Your theme has been correctly exported: %path%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Command/ExportThemeCommand.php:59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="412b4a82ba6153e19f17f490b5f1aa88">
+        <source>This theme is not valid for PrestaShop 1.7</source>
+        <target>This theme is not valid for PrestaShop 1.7</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeManager.php:310</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Theme/ThemeValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="832e8c53e8d05c52c824912c28933917">
+        <source>An error occurred. The information "%s" is missing.</source>
+        <target>An error occurred. The information "%s" is missing.</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeValidator.php:69</note>
+      </trans-unit>
+      <trans-unit id="7d88c564a7f74d56564402cd5e054b13">
+        <source>An error occurred. The template "%s" is missing.</source>
+        <target>An error occurred. The template "%s" is missing.</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeValidator.php:113</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f003149576f4755d74550952febe14bb">
+        <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
+        <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
+        <note>Context:
+File: src/Core/Shop/LogoUploader.php:172</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c402321a8e5818b776007e8a2d00474a">
+        <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
+        <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
+        <note>Context:
+File: classes/controller/FrontController.php:321</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCmsCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="29dae1d163226f90bb206b333bbffe1d">
@@ -7,16 +63,6 @@
         <target>The page Category cannot be moved here.</target>
         <note>Context:
 File: controllers/admin/AdminCmsCategoriesController.php:105</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
-        <source>No items found</source>
-        <target>No items found</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:274</note>
       </trans-unit>
     </body>
   </file>
@@ -76,6 +122,12 @@ File: controllers/admin/AdminImagesController.php:539</note>
         <note>Context:
 File: controllers/admin/AdminImagesController.php:552</note>
       </trans-unit>
+      <trans-unit id="8b772dad7cc4ed15eaf0c433f861e55c">
+        <source>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</source>
+        <target>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:672</note>
+      </trans-unit>
       <trans-unit id="d4f225ec09e4b0eba6558753f4bd8edd">
         <source>Only part of the images have been regenerated. The server timed out before finishing.</source>
         <target>Only part of the images have been regenerated. The server timed out before finishing.</target>
@@ -87,6 +139,12 @@ File: controllers/admin/AdminImagesController.php:675</note>
         <target>Server timed out. The watermark may not have been applied to all images.</target>
         <note>Context:
 File: controllers/admin/AdminImagesController.php:679</note>
+      </trans-unit>
+      <trans-unit id="606495559093a136ed6f2c9daee2645f">
+        <source>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</source>
+        <target>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:684</note>
       </trans-unit>
       <trans-unit id="4004c7590c68a8cbbe499736c56bc33c">
         <source>Error: Your server configuration is not compatible with the new image system. No images were moved.</source>
@@ -120,61 +178,35 @@ File: controllers/admin/AdminImagesController.php:737</note>
         <source>The uploaded file is too large.</source>
         <target>The uploaded file is too large.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:314</note>
+File: controllers/admin/AdminThemesController.php:319</note>
       </trans-unit>
       <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
         <source>Invalid file format.</source>
         <target>Invalid file format.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:330</note>
+File: controllers/admin/AdminThemesController.php:354</note>
       </trans-unit>
       <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
         <source>Failed to move uploaded file.</source>
         <target>Failed to move uploaded file.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:342</note>
+File: controllers/admin/AdminThemesController.php:367</note>
       </trans-unit>
       <trans-unit id="3cb5c48f468125102a98fe83a277029d">
         <source>Warning: if no email logo is available, the main logo will be used instead.</source>
         <target>Warning: if no email logo is available, the main logo will be used instead.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:388</note>
+File: controllers/admin/AdminThemesController.php:413</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="412b4a82ba6153e19f17f490b5f1aa88">
-        <source>This theme is not valid for PrestaShop 1.7</source>
-        <target>This theme is not valid for PrestaShop 1.7</target>
+      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
+        <source>No items found</source>
+        <target>No items found</target>
         <note>Context:
-File: src/Core/Addon/Theme/ThemeManager.php:310</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Addon/Theme/ThemeValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="832e8c53e8d05c52c824912c28933917">
-        <source>An error occurred. The information "%s" is missing.</source>
-        <target>An error occurred. The information "%s" is missing.</target>
-        <note>Context:
-File: src/Core/Addon/Theme/ThemeValidator.php:69</note>
-      </trans-unit>
-      <trans-unit id="7d88c564a7f74d56564402cd5e054b13">
-        <source>An error occurred. The template "%s" is missing.</source>
-        <target>An error occurred. The template "%s" is missing.</target>
-        <note>Context:
-File: src/Core/Addon/Theme/ThemeValidator.php:113</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
-        <source>Your theme has been correctly exported: %path%</source>
-        <target>Your theme has been correctly exported: %path%</target>
-        <note>Context:
-File: src/PrestaShopBundle/Command/ExportThemeCommand.php:58</note>
+File: controllers/admin/AdminCmsController.php:274</note>
       </trans-unit>
     </body>
   </file>

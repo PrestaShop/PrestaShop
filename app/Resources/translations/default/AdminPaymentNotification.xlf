@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/PaymentModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ed9b5732158eef63ac4d236e04101d2b">
+        <source>No currency mode for payment module</source>
+        <target>No currency mode for payment module</target>
+        <note>Context:
+File: classes/PaymentModule.php:52</note>
+      </trans-unit>
+      <trans-unit id="1c106307711b3cc7bbea282c0ecc37d6">
+        <source>The cart rule named "%2s" (ID %1s) used in this cart is not valid and has been withdrawn from cart</source>
+        <target>The cart rule named "%2s" (ID %1s) used in this cart is not valid and has been withdrawn from cart</target>
+        <note>Context:
+File: classes/PaymentModule.php:284</note>
+      </trans-unit>
+      <trans-unit id="3a1048f8aa3a9f6b604fcf7982811752">
+        <source>Warning: the secure key is empty, check your payment account before validation</source>
+        <target>Warning: the secure key is empty, check your payment account before validation</target>
+        <note>Context:
+File: classes/PaymentModule.php:457</note>
+      </trans-unit>
+      <trans-unit id="26beb437d3323bd4bfb0811b3e891315">
+        <source>%d image(s)</source>
+        <target>%d image(s)</target>
+        <note>Context:
+File: classes/PaymentModule.php:520</note>
+      </trans-unit>
+      <trans-unit id="0791970c961c09eb8caaa61aba6a3ca4">
+        <source>An error occurred while saving message</source>
+        <target>An error occurred while saving message</target>
+        <note>Context:
+File: classes/PaymentModule.php:695</note>
+      </trans-unit>
+      <trans-unit id="ed13b3693357ebed3751cb71cb639e65">
+        <source>No carrier</source>
+        <target>No carrier</target>
+        <note>Context:
+File: classes/PaymentModule.php:787</note>
+      </trans-unit>
+      <trans-unit id="b08d3867be98e6fff3233cd40ab8134a">
+        <source>Order creation failed</source>
+        <target>Order creation failed</target>
+        <note>Context:
+File: classes/PaymentModule.php:857</note>
+      </trans-unit>
+      <trans-unit id="43423b4056880b08f2c9aa50d8670531">
+        <source>Cart cannot be loaded or an order has already been placed using this cart</source>
+        <target>Cart cannot be loaded or an order has already been placed using this cart</target>
+        <note>Context:
+File: classes/PaymentModule.php:874</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
