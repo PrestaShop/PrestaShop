@@ -99,6 +99,8 @@
           {else}
             <form>
               <input type="hidden" name="order" value="{$sort_order}">
+              <input type="hidden" name="controller" value="category">
+              <input type="hidden" name="id_category" value="{$category['id']}">
               <select name="q">
                 <option disabled selected hidden>{l s='(no filter)' d='Shop.Theme'}</option>
                 {foreach from=$facet.filters item="filter"}
