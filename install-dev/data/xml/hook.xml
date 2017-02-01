@@ -661,5 +661,10 @@
       <title>Event triggered after search product completed</title>
       <description>This hook is called after the product search. Parameters are already filter</description>
     </hook>
+    <hook id="actionEmailSendBefore">
+      <name>actionEmailSendBefore</name>
+      <title>Before sending an email</title>
+      <description>This hook is used to filter the content or the metadata of an email before sending it or even prevent its sending</description>
+    </hook>
   </entities>
 </entity_hook>

@@ -109,6 +109,35 @@ class MailCore extends ObjectModel
             $idShop = Context::getContext()->shop->id;
         }
 
+        $skip = array_reduce(Hook::exec(
+           'actionEmailSendBefore',
+            array(
+                'idLang' => &$idLang,
+                'template' => &$template,
+                'subject' => &$subject,
+                'templateVars' => &$templateVars,
+                'to' => &$to,
+                'toName' => &$toName,
+                'from' => &$from,
+                'fromName' => &$fromName,
+                'fileAttachment' => &$fileAttachment,
+                'mode_smtp' => &$mode_smtp,
+                'templatePath' => &$templatePath,
+                'die' => &$die,
+                'idShop' => &$idShop,
+                'bcc' => &$bcc,
+                'replyTo' => &$replyTo
+            ),
+            null,
+            true
+        ), function ($carry, $item) {
+            return $carry && $item;
+        }, true);
+
+        if (!$skip) {
+	        return true;
+        }
+
         if (is_numeric($idShop) && $idShop) {
             $shop = new Shop((int) $idShop);
         }
