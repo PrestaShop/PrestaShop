@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
@@ -123,12 +124,15 @@ class ModuleRepositoryTest extends UnitTestCase
             array(
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
-                new ModuleDataUpdater($this->addonsDataProviderS, new AdminModuleDataProvider(
-                    'en',
-                    $this->sfRouter,
+                new ModuleDataUpdater(
                     $this->addonsDataProviderS,
-                    $this->categoriesProviderS
-                )),
+                    new AdminModuleDataProvider(
+                        'en',
+                        $this->sfRouter,
+                        $this->addonsDataProviderS,
+                        $this->categoriesProviderS
+                    )
+                ),
                 new FakeLogger(),
                 $this->translatorStub,
                 'en'

@@ -161,6 +161,12 @@ abstract class ModuleCore
     protected static $_defered_clearCache = array();
     protected static $_defered_func_call = array();
 
+    /**
+     * @var array Array of arrays representing tabs added by this module.
+     * @see PrestaShop\PrestaShop\Adapter\Module\Tab\RegisterTabs($module)
+     */
+    protected $tabs = array();
+
     /** @var bool If true, allow push */
     public $allow_push;
 
@@ -345,6 +351,7 @@ abstract class ModuleCore
 
         if (!$this->installControllers()) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Could not install module controllers.', array(), 'Admin.Modules.Notification');
+            $this->uninstallOverrides();
             return false;
         }
 
@@ -352,6 +359,8 @@ abstract class ModuleCore
         $result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
         if (!$result) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Technical error: PrestaShop could not install this module.', array(), 'Admin.Modules.Notification');
+            $this->uninstallTabs();
+            $this->uninstallOverrides();
             return false;
         }
         $this->id = Db::getInstance()->Insert_ID();
@@ -985,7 +994,6 @@ abstract class ModuleCore
 
         return $result;
     }
-
 
     /**
      * This function is used to determine the module name
@@ -2653,6 +2661,16 @@ abstract class ModuleCore
             AND `id_shop` = '.(int)Context::getContext()->shop->id);
 
         return $result['position'];
+    }
+
+    /**
+     * Getter for $tabs attribute
+     * 
+     * @return array
+     */
+    public function getTabs()
+    {
+        return $this->tabs;
     }
 
     /**

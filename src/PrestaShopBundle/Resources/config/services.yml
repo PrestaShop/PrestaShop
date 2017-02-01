@@ -253,6 +253,7 @@ services:
             - "@prestashop.core.admin.data_provider.addons_interface"
             - "@prestashop.adapter.admin.data_provider.module"
 
+
     # Repositories
     prestashop.core.admin.module.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
@@ -281,6 +282,12 @@ services:
           - "@prestashop.core.admin.lang.repository"
           - "@prestashop.translation.theme.exporter"
 
+    prestashop.core.admin.tab.repository:
+        class: PrestaShopBundle\Entity\Repository\TabRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\Tab
+
     prestashop.core.admin.translation.repository:
         class: PrestaShopBundle\Entity\Repository\TranslationRepository
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
@@ -307,6 +314,7 @@ services:
             - "@prestashop.core.admin.module.repository"
             - "@prestashop.module.zip.manager"
             - "@translator"
+            - "@event_dispatcher"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
 
     prestashop.module.zip.manager:

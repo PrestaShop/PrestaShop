@@ -421,6 +421,7 @@ class ModuleController extends FrameworkBundleAdminController
         $addonsProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+        $tabRepository = $this->get('prestashop.core.admin.tab.repository');
 
         $modulesOnDisk = $moduleRepository->getList();
 
@@ -436,7 +437,7 @@ class ModuleController extends FrameworkBundleAdminController
                 if ($module->get('id')) {
                     $perm &= \Module::getPermissionStatic($module->get('id'), 'configure');
                 } else {
-                    $id_admin_module = \Tab::getIdFromClassName('AdminModules');
+                    $id_admin_module = $tabRepository->findOneIdByClassName('AdminModules');
                     $access = \Profile::getProfileAccess($this->getContext()->employee->id_profile, $id_admin_module);
                     if (!$access['edit']) {
                         $perm &= false;
