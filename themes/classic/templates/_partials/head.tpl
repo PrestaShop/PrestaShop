@@ -22,8 +22,12 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<meta charset="utf-8">
-<meta http-equiv="x-ua-compatible" content="ie=edge">
+{block name='head_charset'}
+  <meta charset="utf-8">
+{/block}
+{block name='head_ie_compatibility'}
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+{/block}
 
 {block name='head_seo'}
   <title>{block name='head_seo_title'}{$page.meta.title}{/block}</title>
@@ -37,10 +41,14 @@
   {/if}
 {/block}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{block name='head_viewport'}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+{/block}
 
-<link rel="icon" type="image/vnd.microsoft.icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
-<link rel="shortcut icon" type="image/x-icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
+{block name='head_icons'}
+  <link rel="icon" type="image/vnd.microsoft.icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
+  <link rel="shortcut icon" type="image/x-icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
+{/block}
 
 {block name='stylesheets'}
   {include file="_partials/stylesheets.tpl" stylesheets=$stylesheets}
@@ -53,3 +61,5 @@
 {block name='hook_header'}
   {$HOOK_HEADER nofilter}
 {/block}
+
+{block name='hook_extra'}{/block}
