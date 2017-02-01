@@ -53,3 +53,4 @@
     </div>
   {/block}
 </div>
+{hook h='displayAfterProductThumbs'}

@@ -621,5 +621,10 @@
       <title>Before HTML output</title>
       <description>This hook is used to filter the whole HTML page before it is rendered (only front)</description>
     </hook>
+    <hook id="displayAfterProductThumbs">
+      <name>displayAfterProductThumbs</name>
+      <title>Display extra content below product thumbs</title>
+      <description>This hook displays new elements below product images ex. additonal media</description>
+    </hook>
   </entities>
 </entity_hook>
