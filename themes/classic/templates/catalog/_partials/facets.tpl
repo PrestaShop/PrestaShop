@@ -32,7 +32,7 @@
     </div>
     {foreach from=$facets item="facet"}
       {if $facet.displayed}
-        <section class="facet">
+        <section class="facet clearfix">
           <h1 class="h6 facet-title hidden-sm-down">{$facet.label}</h1>
           {assign var=_expand_id value=10|mt_rand:100000}
           {assign var=_collapse value=true}
@@ -77,7 +77,7 @@
                             name="filter {$facet.label}"
                             {if $filter.active } checked {/if}
                           >
-                          <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                          <span {if !$js_enabled} class="ps-shown-by-js" {/if}></span>
                         </span>
                       {/if}
 
@@ -97,34 +97,46 @@
               {/foreach}
             </ul>
           {else}
-            <form>
-              <input type="hidden" name="order" value="{$sort_order}">
-              <select name="q">
-                <option disabled selected hidden>{l s='(no filter)' d='Shop.Theme'}</option>
-                {foreach from=$facet.filters item="filter"}
-                  {if $filter.displayed}
-                    <option
+          <ul id="facet_{$_expand_id}" class="collapse{if !$_collapse} in{/if}">
+            <li>
+              <div class="col-sm-12 col-xs-12 col-md-12 facet-dropdown dropdown">
+                <a class="select-title" rel="nofollow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {$active_found = false}
+                  <span>
+                    {foreach from=$facet.filters item="filter"}
                       {if $filter.active}
-                        selected
-                        value="{$smarty.get.q}"
-                      {else}
-                        value="{$filter.nextEncodedFacets}"
+                        {$filter.label}
+                        {if $filter.magnitude}
+                          ({$filter.magnitude})
+                        {/if}
+                        {$active_found = true}
                       {/if}
-                    >
-                      {$filter.label}
-                      {if $filter.magnitude}
-                        ({$filter.magnitude})
-                      {/if}
-                    </option>
-                  {/if}
-                {/foreach}
-              </select>
-              {if !$js_enabled}
-                <button class="ps-hidden-by-js" type="submit">
-                  {l s='Filter' d='Shop.Theme.Actions'}
-                </button>
-              {/if}
-            </form>
+                    {/foreach}
+                    {if !$active_found}
+                      {l s='(no filter)' d='Shop.Theme'}
+                    {/if}
+                  </span>
+                  <i class="material-icons pull-xs-right">&#xE5C5;</i>
+                </a>
+                <div class="dropdown-menu">
+                  {foreach from=$facet.filters item="filter"}
+                    {if !$filter.active}
+                      <a
+                        rel="nofollow"
+                        href="{$filter.nextEncodedFacetsURL}"
+                        class="select-list"
+                      >
+                        {$filter.label}
+                        {if $filter.magnitude}
+                          ({$filter.magnitude})
+                        {/if}
+                      </a>
+                    {/if}
+                  {/foreach}
+                </div>
+              </div>
+            </li>
+          </ul>
           {/if}
         </section>
       {/if}
