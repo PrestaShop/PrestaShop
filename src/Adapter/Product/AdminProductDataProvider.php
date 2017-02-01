@@ -353,24 +353,15 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     public function countAllProducts()
     {
         $idShop = \ContextCore::getContext()->shop->id;
-        $sqlSelect = array(
-            'id_product' => array('table' => 'p', 'field' => 'id_product'),
-        );
-        $sqlTable = array(
-            'p' => 'product',
-            'sa' => array(
-                'table' => 'product_shop',
-                'join' => 'JOIN',
-                'on' => 'p.`id_product` = sa.`id_product` AND sa.id_shop = '.$idShop,
-            ),
-        );
 
-        $sql = $this->compileSqlQuery($sqlSelect, $sqlTable);
-        \Db::getInstance()->executeS($sql, true, false);
-        $total = \Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
-        $total = $total[0]['FOUND_ROWS()'];
+        $query = new \DbQuery();
+        $query->select('COUNT(ps.id_product)');
+        $query->from('product_shop', 'ps');
+        $query->where('ps.id_shop = '.(int)$idShop);
 
-        return $total;
+        $total = \Db::getInstance()->getValue($query);
+
+        return (int) $total;
     }
 
     /**
