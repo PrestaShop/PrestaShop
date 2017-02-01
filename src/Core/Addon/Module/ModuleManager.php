@@ -100,8 +100,9 @@ class ModuleManager implements AddonManagerInterface
         ModuleRepository $moduleRepository,
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
-        Employee $employee = null,
-        EventDispatcherInterface $dispatcher = null)
+        EventDispatcherInterface $dispatcher,
+        Employee $employee = null
+        )
     {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->moduleProvider = $modulesProvider;
@@ -574,8 +575,6 @@ class ModuleManager implements AddonManagerInterface
      */
     private function dispatch($event, $module)
     {
-        if ($this->dispatcher) {
-            $this->dispatcher->dispatch($event, new ModuleManagementEvent($module));
-        }
+        $this->dispatcher->dispatch($event, new ModuleManagementEvent($module));
     }
 }

@@ -24,29 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Event;
+namespace PrestaShopBundle\Event\Dispatcher;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ModuleManagementEvent extends Event
+class NullDispatcher implements EventDispatcherInterface
 {
-    const INSTALL = 'module.install';
-    const UNINSTALL = 'module.uninstall';
-    const DISABLE = 'module.disable';
-    const ENABLE = 'module.enable';
-    const UPGRADE = 'module.upgrade';
-    const RESET = 'module.reset';
-
-    private $module;
-
-    public function __construct(Module $module)
+    public function addListener($eventName, $listener, $priority = 0)
     {
-        $this->module = $module;
     }
 
-    public function getModule()
+    public function addSubscriber(EventSubscriberInterface $subscriber)
     {
-        return $this->module;
     }
+
+    public function dispatch($eventName, \Symfony\Component\EventDispatcher\Event $event = null)
+    {
+    }
+
+    public function getListeners($eventName = null)
+    {
+    }
+
+    public function hasListeners($eventName = null)
+    {
+    }
+
+    public function removeListener($eventName, $listener)
+    {
+    }
+
+    public function removeSubscriber(EventSubscriberInterface $subscriber)
+    {
+    }
+
 }

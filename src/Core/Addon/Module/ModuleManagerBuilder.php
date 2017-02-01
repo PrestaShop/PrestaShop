@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
@@ -97,6 +98,7 @@ class ModuleManagerBuilder
                 $this->buildRepository(),
                 self::$moduleZipManager,
                 self::$translator,
+                new NullDispatcher(),
                 Context::getContext()->employee
             );
         }
