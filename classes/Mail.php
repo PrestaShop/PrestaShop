@@ -109,6 +109,10 @@ class MailCore extends ObjectModel
             $idShop = Context::getContext()->shop->id;
         }
 
+        if (is_numeric($idShop) && $idShop) {
+            $shop = new Shop((int) $idShop);
+        }
+
         $configuration = Configuration::getMultiple(
             array(
                 'PS_SHOP_EMAIL',
@@ -139,18 +143,6 @@ class MailCore extends ObjectModel
                 'template_vars' => &$templateVars,
             )
         );
-
-        $themePath = _PS_THEME_DIR_;
-
-        // Get the path of theme by id_shop if exist
-        if (is_numeric($idShop) && $idShop) {
-            $shop = new Shop((int) $idShop);
-            $themeName = $shop->theme->getName();
-
-            if (_THEME_NAME_ != $themeName) {
-                $themePath = _PS_ROOT_DIR_.'/themes/'.$themeName.'/';
-            }
-        }
 
         if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']) || Tools::strtolower($configuration['PS_MAIL_SMTP_ENCRYPTION']) === 'off') {
             $configuration['PS_MAIL_SMTP_ENCRYPTION'] = false;
@@ -292,15 +284,7 @@ class MailCore extends ObjectModel
             }
             foreach ($isoArray as $isoCode) {
                 $isoTemplate = $isoCode.'/'.$template;
-                $overrideMail = false;
-
-                if ($moduleName !== false && (file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.txt') ||
-                        file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.html'))) {
-                    $templatePath = $themePath.'modules/'.$moduleName.'/mails/';
-                } elseif (file_exists($themePath.'mails/'.$isoTemplate.'.txt') || file_exists($themePath.'mails/'.$isoTemplate.'.html')) {
-                    $templatePath = $themePath.'mails/';
-                    $overrideMail  = true;
-                }
+                $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
 
                 if (!file_exists($templatePath.$isoTemplate.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)) {
                     PrestaShopLogger::addLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($templatePath.$isoTemplate.'.txt'), 'Admin.Advparameters.Notification'));
@@ -460,6 +444,30 @@ class MailCore extends ObjectModel
 
             return false;
         }
+    }
+
+    protected static function getTemplateBasePath($isoTemplate, $moduleName, $theme)
+    {
+        $basePathList = [
+            _PS_ROOT_DIR_.'/themes/'.$theme->getName().'/',
+            _PS_ROOT_DIR_.'/themes/'.$theme->get('parent').'/',
+            _PS_ROOT_DIR_,
+        ];
+
+        if ($moduleName !== false) {
+            $templateRelativePath = '/modules/'.$moduleName.'/mails/';
+        } else {
+            $templateRelativePath = '/mails/';
+        }
+
+        foreach ($basePathList as $base) {
+            $templatePath = $base.$templateRelativePath;
+            if (file_exists($templatePath.$isoTemplate.'.txt') || file_exists($templatePath.$isoTemplate.'.html')) {
+                return $templatePath;
+            }
+        }
+
+        return '';
     }
 
     /**
