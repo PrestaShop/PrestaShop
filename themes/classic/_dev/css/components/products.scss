@@ -319,7 +319,7 @@
     width: 100%;
   }
   .product-image {
-    width: rem(210px);
+    width: 100%;
   }
   .modal-title {
     font-weight: 600;
@@ -338,8 +338,14 @@
   }
   .cart-content {
     padding-left: $extra-large-space;
-    button {
-      margin-right: rem(5px);
+    .cart-content-btn {
+      display: inline-flex;
+      button {
+        margin-right: rem(5px);
+      }
+      .btn {
+        white-space: inherit;
+      }
     }
   }
   .divide-right {
