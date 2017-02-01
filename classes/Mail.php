@@ -145,7 +145,7 @@ class MailCore extends ObjectModel
         // Get the path of theme by id_shop if exist
         if (is_numeric($idShop) && $idShop) {
             $shop = new Shop((int) $idShop);
-            $themeName = $shop->theme->getDirectory();
+            $themeName = $shop->theme->getName();
 
             if (_THEME_NAME_ != $themeName) {
                 $themePath = _PS_ROOT_DIR_.'/themes/'.$themeName.'/';
@@ -274,13 +274,13 @@ class MailCore extends ObjectModel
             $iso = Language::getIsoById((int) $idLang);
             $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
             $isoArray = array();
-            if( $iso ) {
+            if ($iso) {
                 $isoArray[] = $iso;
             }
-            if( $isoDefault && $iso !== $isoDefault ) {
+            if ($isoDefault && $iso !== $isoDefault) {
                 $isoArray[] = $isoDefault;
             }
-            if( !in_array('en', $isoArray) ) {
+            if (!in_array('en', $isoArray)) {
                 $isoArray[] = 'en';
             }
 

@@ -100,6 +100,11 @@
         PrestaShop installation requires at least the <b>SimpleXML extension</b> to be enabled.
     </li>
     <?php endif; ?>
+    <?php if (!extension_loaded('zip')): ?>
+      <li>
+          PrestaShop installation requires at least the <b>zip extension</b> to be enabled.
+      </li>
+    <?php endif; ?>
     <?php if (PHP_VERSION_ID < 50400): ?>
       <li>
           PrestaShop requires at least PHP 5.4 or newer versions.

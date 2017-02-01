@@ -61,8 +61,7 @@ class ThemeExporter
         XliffFileDumper $dumper,
         ZipManager $zipManager,
         Filesystem $filesystem
-    )
-    {
+    ) {
         $this->themeExtractor = $themeExtractor;
         $this->themeExtractor
             ->setThemeProvider($themeProvider);
@@ -114,8 +113,14 @@ class ThemeExporter
 
         $archiveParentDirectory = $this->makeArchiveParentDirectory($themeName, $locale);
 
-        // Clean up previously exported archives
-        $this->filesystem->remove($archiveParentDirectory);
+        if (
+            $this->filesystem->exists($archiveParentDirectory) &&
+            $this->ensureFileBelongsToExportDirectory($archiveParentDirectory)
+        ) {
+            // Clean up previously exported archives
+            $this->filesystem->remove($archiveParentDirectory);
+        }
+
         $this->filesystem->mkdir($archiveParentDirectory);
 
         $this->dumper->dump($mergedTranslations, array(
@@ -126,6 +131,22 @@ class ThemeExporter
         $this->renameCatalogues($locale, $archiveParentDirectory);
 
         return $archiveParentDirectory;
+    }
+
+    /**
+     * @param $filePath
+     * @return bool
+     * @throws \Exception
+     */
+    protected function ensureFileBelongsToExportDirectory($filePath)
+    {
+        $validFileLocation = substr(realpath($filePath), 0, strlen($this->exportDir)) === $this->exportDir;
+
+        if (!$validFileLocation) {
+            throw new \Exception('Invalid file location. This file should belong to the export directory');
+        }
+
+        return $validFileLocation;
     }
 
     /**
@@ -218,6 +239,10 @@ class ThemeExporter
      */
     protected function makeZipFilename($themeName, $locale)
     {
+        if (!file_exists($this->exportDir)) {
+            mkdir($this->exportDir);
+        }
+
         $zipFilenameParts = array(
             $this->exportDir,
             $themeName,
@@ -232,12 +257,14 @@ class ThemeExporter
      * @param $themeName
      * @param $locale
      * @return string
+     * @throws \Exception
      */
     protected function makeArchiveParentDirectory($themeName, $locale)
     {
         $zipFilename = $this->makeZipFilename($themeName, $locale);
+        $archiveParentDirectory = dirname($zipFilename);
 
-        return dirname($zipFilename);
+        return $archiveParentDirectory;
     }
 
     /**

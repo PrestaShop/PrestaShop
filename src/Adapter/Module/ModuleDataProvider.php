@@ -43,7 +43,7 @@ class ModuleDataProvider
 
     /**
      * Translator
-     * @var Symfony\Component\Translation\TranslatorInterface
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
 
@@ -164,6 +164,10 @@ class ModuleDataProvider
      */
     public function isModuleMainClassValid($name)
     {
+        if (!\Validate::isModuleName($name)) {
+            return false;
+        }
+
         $file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
         // Check if file exists (slightly faster than file_exists)
         if (!(int)@filemtime($file_path)) {
@@ -184,10 +188,10 @@ class ModuleDataProvider
 
         $logger = $this->logger;
         // -> Even if we do not detect any parse error in the file, we may have issues
-        // when trying to load the file. (i.e with additionnal require_once).
-        // -> We use an anonymous function here because if a test is made two times
-        // on the same module, the test on require_once would return immediately
-        // true (Because the file has already been evaluated by PHP).
+        // when trying to load the file. (i.e with additional require_once).
+        // -> We use an anonymous function here because if a test is made twice
+        // on the same module, the test on require_once would immediately return true
+        // (as the file would have already been evaluated).
         $require_correct = function ($name) use ($file_path, $logger) {
             try {
                 require_once $file_path;
@@ -203,6 +207,7 @@ class ModuleDataProvider
             }
             return true;
         };
+
         return $require_correct($name);
     }
 

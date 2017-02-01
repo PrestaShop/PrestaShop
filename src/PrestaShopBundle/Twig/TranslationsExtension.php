@@ -526,30 +526,6 @@ class TranslationsExtension extends \Twig_Extension
     }
 
     /**
-     * @param $view
-     * @param array $parameters
-     *
-     * @return mixed|string
-     */
-    protected function render($view, $parameters = array())
-    {
-        $viewsDirectory = __DIR__.'/../Resources/views/Admin/Translations/include';
-        $viewPath = $viewsDirectory.'/'.$view;
-        if (!file_exists($viewPath)) {
-            $message = sprintf('A view ("%s") does not exist.', $viewPath);
-            $this->logger->error($message);
-        }
-
-        $view = file_get_contents($viewPath);
-
-        foreach ($parameters as $key => $value) {
-            $view = str_replace('{{ '.$key.' }}', $value, $view);
-        }
-
-        return $view;
-    }
-
-    /**
      * @param $subject
      * @param $isLastChild
      * @param null $id

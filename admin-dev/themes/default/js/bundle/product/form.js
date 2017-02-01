@@ -841,7 +841,7 @@ var form = (function() {
         $('*.has-danger').removeClass('has-danger');
         $('#form-nav li.has-error').removeClass('has-error');
       },
-      success: function(response) {
+      success: function() {
         showSuccessMessage(translate_javascripts['Form update success']);
         //update the customization ids
         if (typeof response.customization_fields_ids != "undefined") {
@@ -849,17 +849,26 @@ var form = (function() {
               $("#form_step6_custom_fields_" + k + "_id_customization_field").val(v);
           });
         }
-        if (redirect) {
-          if (target) {
-            if (target == '_blank') {
-              openBlank.location = redirect;
-            } else {
-              window.open(redirect, target);
-            }
-          } else {
-            window.location = redirect;
-          }
+
+        $('.js-spinner').hide();
+
+        if (!redirect) {
+          return;
         }
+
+        if (false === target) {
+          window.location = redirect;
+
+          return;
+        }
+
+        if ('_blank' !== target) {
+          window.open(redirect, target);
+
+          return;
+        }
+
+        openBlank.location = redirect;
       },
       error: function(response) {
         showErrorMessage(translate_javascripts['Form update errors']);
@@ -1005,6 +1014,12 @@ var form = (function() {
       $('.btn-submit', elem).click(function(event) {
         event.preventDefault();
         send($(this).attr('data-redirect'), $(this).attr('target'));
+      });
+
+      $('.js-btn-save').on('click', function () {
+        event.preventDefault();
+        $('.js-spinner').show();
+        send($(this).attr('href'));
       });
 
       /** on active field change, send form */
