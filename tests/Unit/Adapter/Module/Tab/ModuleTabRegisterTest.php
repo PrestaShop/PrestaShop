@@ -84,6 +84,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $this->sfKernel->getContainer()->get('translator'),
                 $this->sfKernel->getContainer()->get('finder'),
                 $this->sfKernel->getContainer()->get('filesystem'),
+                array(),
             )
         );
         $this->tabRegister

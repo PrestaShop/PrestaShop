@@ -71,7 +71,12 @@ class ModuleTabRegister
      */
     private $filesystem;
     
-    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Finder $finder, Filesystem $filesystem)
+    /**
+     * @var array List all active languages on the shop
+     */
+    private $languages;
+    
+    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Finder $finder, Filesystem $filesystem, array $languages)
     {
         $this->langRepository = $langRepository;
         $this->tabRepository = $tabRepository;
@@ -79,6 +84,7 @@ class ModuleTabRegister
         $this->translator = $translator;
         $this->finder = $finder;
         $this->filesystem = $filesystem;
+        $this->languages = $languages;
     }
     
     /**
@@ -194,6 +200,25 @@ class ModuleTabRegister
         }, $this->getModuleAdminControllers($moduleName));
     }
     
+    protected function getTabNames($names)
+    {
+        $translatedNames = array();
+        
+        foreach($this->languages as $lang) {
+            // In case we just receive a string, we apply it to all languages
+            if (!is_array($names)) {
+                $translatedNames[$lang['id_lang']] = $names;
+            } elseif (array_key_exists($lang['locale'], $names)) {
+                $translatedNames[$lang['id_lang']] = $names[$lang['locale']];
+            } elseif (array_key_exists($lang['language_code'], $names)) {
+                $translatedNames[$lang['id_lang']] = $names[$lang['language_code']];
+            } else {
+                $translatedNames[$lang['id_lang']] = $names[$lang[0]];
+            }
+        }
+        return $translatedNames;
+    }
+    
     /**
      * Install a tab according to its defined structure
      *
@@ -213,11 +238,11 @@ class ModuleTabRegister
         $tab->active = $data->getBoolean('visible', true);
         $tab->class_name = $data->get('class_name');
         $tab->module = $module->get('name');
-        $tab->name = $data->get('name', array($tab->class_name));
+        $tab->name = $this->getTabNames($data->get('name', $tab->class_name));
         $tab->icon = $data->get('icon');
 
         // Handle parent menu
-        $parentClassName = $data->get('ParentClassName', null);
+        $parentClassName = $data->get('ParentClassName');
         if (!empty($parentClassName)) {
             $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
         } elseif (true === $tab->active) {
@@ -230,9 +255,7 @@ class ModuleTabRegister
             throw new Exception(
                 $this->translator->trans(
                     'Failed to install admin tab "%name%".',
-                    array(
-                        '%name%' => $tab->name,
-                    ),
+                    array('%name%' => $tab->name),
                     'Admin.Modules.Notification'));
         }
     }

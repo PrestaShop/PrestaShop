@@ -95,6 +95,7 @@ services:
             - "@translator"
             - "@finder"
             - "@filesystem"
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
             
     prestashop.adapter.module.tab.unregister:
         class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabUnregister
