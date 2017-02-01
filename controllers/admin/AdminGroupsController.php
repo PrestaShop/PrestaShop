@@ -101,7 +101,7 @@ class AdminGroupsControllerCore extends AdminController
 
         $groups = Group::getGroups(Context::getContext()->language->id, true);
 
-        if (Shop::isFeatureActive()) {
+        if (Group::isFeatureActive()) {
             $this->fields_options = array(
                 'general' => array(
                     'title' =>    $this->trans('Default groups options', array(), 'Admin.Shopparameters.Feature'),
