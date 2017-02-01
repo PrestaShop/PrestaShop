@@ -36,19 +36,17 @@
 										{/if}
 									</a>
 									{if $level_2.sub_tabs|@count}
-										<div id="collapse-{$level_2.id_tab}" class="panel-collapse collapse">
-											<ul class="submenu list-group">
-												{foreach $level_2.sub_tabs as $level_3}
-													{if $level_3.active}
-														<li class="{if $level_3.current}active{/if}" id="subtab-{$level_3.class_name|escape:'html':'UTF-8'}" data-submenu="{$level_3.id_tab}">
-															<a href="{$level_3.href|escape:'html':'UTF-8'}" class="title">
-																{if $level_3.name eq ''}{$level_3.class_name|escape:'html':'UTF-8'}{else}{$level_3.name|escape:'html':'UTF-8'}{/if}
-															</a>
-														</li>
-													{/if}
-												{/foreach}
-											</ul>
-										</div>
+										<ul id="collapse-{$level_2.id_tab}" class="submenu list-group panel-collapse">
+											{foreach $level_2.sub_tabs as $level_3}
+												{if $level_3.active}
+													<li class="{if $level_3.current}active{/if}" id="subtab-{$level_3.class_name|escape:'html':'UTF-8'}" data-submenu="{$level_3.id_tab}">
+														<a href="{$level_3.href|escape:'html':'UTF-8'}" class="title">
+															{if $level_3.name eq ''}{$level_3.class_name|escape:'html':'UTF-8'}{else}{$level_3.name|escape:'html':'UTF-8'}{/if}
+														</a>
+													</li>
+												{/if}
+											{/foreach}
+										</ul>
 									{/if}
 								</li>
 							{/if}

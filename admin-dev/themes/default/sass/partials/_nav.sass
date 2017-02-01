@@ -339,6 +339,39 @@ $min-height: 950px
 	.menu-collapse
 		display: none
 
+#header_infos .mobile-notifs
+	background-color: rgba(0,0,0,.8)
+	.notifications
+		background-color: white
+		height: 100%
+		margin-left: 40px
+	.nav-link::before
+		font-family: 'Material Icons'
+		display: block
+		font-size: 30px
+	#orders-tab::before
+		content: "\E8CB"
+	#customers-tab::before
+		content: "\E7FE"
+	#messages-tab::before
+		content: "\E0BE"
+	span[data-nb]
+		font-size: 0
+		&::before
+			position: absolute
+			display: inline-block
+			line-height: .875rem
+			height: .875rem
+			vertical-align: middle
+			position: absolute
+			top: 20px
+			right: 40px
+			color: #fff
+			background: #fb0
+			font-size: .5625rem
+			padding: 0 .25rem
+			border-radius: .625rem
+			content: attr(data-nb)
 #nav-mobile
 	position: fixed
 	top: 0
@@ -356,8 +389,6 @@ $min-height: 950px
 			position: absolute
 			z-index: 1200
 			@include left(0)
-	#employee_infos
-		display: none
 	#header_employee_box, .admin-link
 		display: none
 	#header_shopname
@@ -366,6 +397,8 @@ $min-height: 950px
 	#header_logout
 		border-bottom: 0
 		color: #bbcdd2
+	.onboarding-navbar.displayed
+		display: none
 	.icon-signout::before
 		font-family: 'Material Icons'
 		content: "\E8AC"
@@ -393,12 +426,7 @@ $min-height: 950px
 		@include margin(0, 0, 100px, 0)
 		@include transition(all 0.35s ease-out)
 		@include animate(fadeInLeft, 0.3s)
-		.submenu
-			a
-				background-color: #282b30
-				padding-left: 40px
-			&.list-group
-				margin-bottom: 0
+
 		> li.searchtab
 			padding: 15px
 			position: relative
@@ -415,6 +443,12 @@ $min-height: 950px
 		> li.maintab
 			background: $main-color
 			position: relative
+			.submenu
+				a
+					background-color: #282b30
+					padding-left: 40px
+				&.list-group
+					margin-bottom: 0
 			&#tab-SELL, &#tab-IMPROVE, &#tab-CONFIGURE
 				display: none
 			a

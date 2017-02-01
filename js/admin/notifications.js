@@ -107,7 +107,7 @@ function getPush()
 				{
           $("#orders-notifications").removeClass('empty');
 					$("#orders-notifications").children('.notification-elements').append(html);
-					$("#orders_notif_value").text(' (' + nbOrders + ')');
+					$("#orders_notif_value").text(' (' + nbOrders + ')').attr('data-nb', nbOrders);
 				} else {
           $("#orders-notifications").addClass('empty');
           $("#orders_notif_value").text('');
@@ -129,7 +129,7 @@ function getPush()
 				{
           $("#customers-notifications").removeClass('empty');
           $("#customers-notifications").children('.notification-elements').append(html);
-					$("#customers_notif_value").text(' (' + nbCustomers + ')');
+					$("#customers_notif_value").text(' (' + nbCustomers + ')').attr('data-nb', nbCustomers);
 				} else {
           $("#customers-notifications").addClass('empty');
           $("#customers_notif_value").text('');
@@ -152,7 +152,7 @@ function getPush()
 				{
           $("#messages-notifications").removeClass('empty');
           $("#messages-notifications").children('.notification-elements').append(html);
-					$("#customer_messages_notif_value").text(' (' + nbCustomerMessages + ')');
+					$("#customer_messages_notif_value").text(' (' + nbCustomerMessages + ')').attr('data-nb', nbCustomerMessages);
 				} else {
           $("#messages-notifications").addClass('empty');
           $("#customer_messages_notif_value").text('');

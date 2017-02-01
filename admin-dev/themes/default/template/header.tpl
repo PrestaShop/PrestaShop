@@ -216,26 +216,26 @@
 
 				{* Employee *}
 				<ul id="header_employee_box">
-					<li id="employee_infos" class="dropdown">
+					<li id="employee_infos" class="dropdown hidden-xs">
 						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
 							<span class="employee_avatar_small">
                 <img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
 							</span>
 						</a>
 						<ul id="employee_links" class="dropdown-menu">
-							<li>
+							<li data-mobile="true" data-from="employee_links" data-target="menu"
 								<span class="employee_avatar">
 									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
 								</span>
 							</li>
-							<li class="text-center text-nowrap username">{$employee->firstname} {$employee->lastname}</li>
+							<li class="text-center text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
 							<li><a class="admin-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
 							{if $host_mode}
 							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
 							{/if}
 							<li class="divider"></li>
-							<li class="signout"><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
+							<li class="signout" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -256,13 +256,13 @@
                     {$active = "active"}
                     {if $show_new_orders}
                       <li class="nav-item {$active}">
-                        <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders'}<span id="orders_notif_value"></span></a>
+                        <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Latest orders'}<span id="orders_notif_value"></span></a>
                       </li>
                       {$active = ""}
                     {/if}
                     {if $show_new_customers}
                       <li class="nav-item {$active}">
-                        <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers'}<span id="customers_notif_value"></span></a>
+                        <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='New customers'}<span id="customers_notif_value"></span></a>
                       </li>
                       {$active = ""}
                     {/if}
@@ -317,8 +317,8 @@
 
 				{* Shop name *}
 				{if {$base_url}}
-					<ul class="header-list navbar-right">
-						<li class="shopname">
+					<ul id="header-list" class="header-list navbar-right">
+						<li class="shopname" data-mobile="true" data-from="header-list" data-target="menu">
               {if isset($debug_mode) && $debug_mode == true}
                 <span class="shop-state hidden-xs" id="debug-mode">
                   <i class="material-icons">bug_report</i>
