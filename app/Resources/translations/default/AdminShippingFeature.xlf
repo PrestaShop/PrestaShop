@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/CarrierLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a8bbb000124c9697aa5d63e7e758b64d">
+        <source>Pick up in-store</source>
+        <target>Pick up in-store</target>
+        <note>Context:
+File: classes/lang/CarrierLang.php:40</note>
+      </trans-unit>
+      <trans-unit id="5d671531babe55fff4ae63b94c80ea38">
+        <source>Delivery next day!</source>
+        <target>Delivery next day!</target>
+        <note>Context:
+File: classes/lang/CarrierLang.php:41</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
@@ -13,12 +29,6 @@ File: controllers/admin/AdminCarriersController.php:84</note>
         <target>Free Shipping</target>
         <note>Context:
 File: controllers/admin/AdminCarriersController.php:96</note>
-      </trans-unit>
-      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
-        <source>Carriers</source>
-        <target>Carriers</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:163</note>
       </trans-unit>
       <trans-unit id="c26732c157d7b353c1be9f7ba8962e57">
         <source>Add new carrier</source>
@@ -92,6 +102,16 @@ File: controllers/admin/AdminCarriersController.php:368</note>
         <target>Name:</target>
         <note>Context:
 File: controllers/admin/AdminCarriersController.php:728</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
+        <source>Carriers</source>
+        <target>Carriers</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:528</note>
       </trans-unit>
     </body>
   </file>

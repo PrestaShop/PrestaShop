@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statscatalog/statscatalog.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680">
+        <source>All</source>
+        <target>All</target>
+        <note>Context:
+File: modules/statscatalog/statscatalog.php:188</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

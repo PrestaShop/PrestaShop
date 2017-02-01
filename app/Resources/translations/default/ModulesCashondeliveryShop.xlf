@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_cashondelivery/ps_cashondelivery.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ae74c18eab5441aa8dbd952f6ec76a9a">
+        <source>Pay by CashonDelivery</source>
+        <target>Pay by CashonDelivery</target>
+        <note>Context:
+File: modules/ps_cashondelivery/ps_cashondelivery.php:99</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

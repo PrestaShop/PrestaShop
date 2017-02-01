@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/dashtrends/dashtrends.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ee653ade5f520037ef95e9dc2a42364c">
+        <source>Dashboard Trends</source>
+        <target>Dashboard Trends</target>
+        <note>Context:
+File: modules/dashtrends/dashtrends.php:50</note>
+      </trans-unit>
+      <trans-unit id="f2d0efa68eb71bfd5209abeb9f4b0943">
+        <source>Adds a block with a graphical representation of the development of your store(s) based on selected key data.</source>
+        <target>Adds a block with a graphical representation of the development of your store(s) based on selected key data.</target>
+        <note>Context:
+File: modules/dashtrends/dashtrends.php:51</note>
+      </trans-unit>
+      <trans-unit id="2d125dc25b158f28a1960bd96a9fa8d1">
+        <source>%s points</source>
+        <target>%s points</target>
+        <note>Context:
+File: modules/dashtrends/dashtrends.php:198</note>
+      </trans-unit>
+      <trans-unit id="8c804960da61b637c548c951652b0cac">
+        <source>Average Cart Value</source>
+        <target>Average Cart Value</target>
+        <note>Context:
+File: modules/dashtrends/dashtrends.php:315</note>
+      </trans-unit>
+      <trans-unit id="e4c3da18c66c0147144767efeb59198f">
+        <source>Conversion Rate</source>
+        <target>Conversion Rate</target>
+        <note>Context:
+File: modules/dashtrends/dashtrends.php:317</note>
+      </trans-unit>
+      <trans-unit id="43d729c7b81bfa5fc10e756660d877d1">
+        <source>Net Profit</source>
+        <target>Net Profit</target>
+        <note>Context:
+File: modules/dashtrends/dashtrends.php:318</note>
+      </trans-unit>
+      <trans-unit id="46418a037045b91e6715c4da91a2a269">
+        <source>%s (previous period)</source>
+        <target>%s (previous period)</target>
+        <note>Context:
+File: modules/dashtrends/dashtrends.php:338</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
