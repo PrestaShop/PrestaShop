@@ -217,7 +217,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sav' => array(
                 'table' => 'stock_available',
                 'join' => 'LEFT JOIN',
-                'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 AND sav.id_shop = '.$idShop,
+                'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0'.
+                \StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
             ),
             'sa' => array(
                 'table' => 'product_shop',
