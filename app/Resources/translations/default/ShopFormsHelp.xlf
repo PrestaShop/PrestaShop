@@ -6,7 +6,7 @@
         <source>(E.g.: %date_format%)</source>
         <target>(E.g.: %date_format%)</target>
         <note>Context:
-File: classes/form/CustomerFormatter.php:167</note>
+File: classes/form/CustomerFormatter.php:192</note>
       </trans-unit>
     </body>
   </file>
@@ -17,6 +17,40 @@ File: classes/form/CustomerFormatter.php:167</note>
         <target>Your password must be at least %min% characters long.</target>
         <note>Context:
 File: controllers/front/GuestTrackingController.php:96</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20f4168399201bd498e52bafeb59b478">
+        <source>Don't forget to save your customization to be able to add to cart</source>
+        <target>Don't forget to save your customization to be able to add to cart</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="6ba73729cf3b0503435d54870d993e8d">
+        <source>Your message here</source>
+        <target>Your message here</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
+        <source>250 char. max</source>
+        <target>250 char. max</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:38</note>
+      </trans-unit>
+      <trans-unit id="9378eeabb3f4f2c5122659d50560a448">
+        <source>No selected file</source>
+        <target>No selected file</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="0da3c8b31e3e2d9d769a86cd3f31949c">
+        <source>.png .jpg .gif</source>
+        <target>.png .jpg .gif</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:50</note>
       </trans-unit>
     </body>
   </file>
@@ -45,40 +79,6 @@ File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:
         <target>How can we help?</target>
         <note>Context:
 File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:81</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="20f4168399201bd498e52bafeb59b478">
-        <source>Don't forget to save your customization to be able to add to cart</source>
-        <target>Don't forget to save your customization to be able to add to cart</target>
-        <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:5</note>
-      </trans-unit>
-      <trans-unit id="6ba73729cf3b0503435d54870d993e8d">
-        <source>Your message here</source>
-        <target>Your message here</target>
-        <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:13</note>
-      </trans-unit>
-      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
-        <source>250 char. max</source>
-        <target>250 char. max</target>
-        <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:14</note>
-      </trans-unit>
-      <trans-unit id="9378eeabb3f4f2c5122659d50560a448">
-        <source>No selected file</source>
-        <target>No selected file</target>
-        <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:22</note>
-      </trans-unit>
-      <trans-unit id="0da3c8b31e3e2d9d769a86cd3f31949c">
-        <source>.png .jpg .gif</source>
-        <target>.png .jpg .gif</target>
-        <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:26</note>
       </trans-unit>
     </body>
   </file>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_linklist/ps_linklist.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b5750478c3c490d2c1df5dfdfdd6b7a4">
+        <source>Link List</source>
+        <target>Link List</target>
+        <note>Context:
+File: modules/ps_linklist/ps_linklist.php:57</note>
+      </trans-unit>
+      <trans-unit id="34a65b805d7e94c02bad18890a97f134">
+        <source>Adds a block with several links.</source>
+        <target>Adds a block with several links.</target>
+        <note>Context:
+File: modules/ps_linklist/ps_linklist.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
+        <source>ID</source>
+        <target>ID</target>
+        <note>Context:
+File: modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl:135</note>
+      </trans-unit>
+      <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
+        <source>Position</source>
+        <target>Position</target>
+        <note>Context:
+File: modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl:74</note>
+      </trans-unit>
+      <trans-unit id="83ef1503b3bd9858cc923a74e5f9e917">
+        <source>Name of the block</source>
+        <target>Name of the block</target>
+        <note>Context:
+File: modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl:75</note>
+      </trans-unit>
+      <trans-unit id="7dce122004969d56ae2e0245cb754d35">
+        <source>Edit</source>
+        <target>Edit</target>
+        <note>Context:
+File: modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl:95</note>
+      </trans-unit>
+      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>Context:
+File: modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl:103</note>
+      </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>Context:
+File: modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl:217</note>
+      </trans-unit>
+      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
+        <source>URL</source>
+        <target>URL</target>
+        <note>Context:
+File: modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl:218</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

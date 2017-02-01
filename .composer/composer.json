@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": ">=5.3.7",
-        "hirak/prestissimo": "^0.1"
+        "php": ">=5.4",
+        "hirak/prestissimo": "~0.3"
     }
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="035749e4c50392a661c0f1b220ae0516">
+        <source>1 person is currently watching this product.</source>
+        <target>1 person is currently watching this product.</target>
+        <note>Context:
+File: modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="c24cf2abae9286b8f69a8ccdf7ed8d5e">
+        <source>%nb_people% people are currently watching this product.</source>
+        <target>%nb_people% people are currently watching this product.</target>
+        <note>Context:
+File: modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="247f15e3dc0e7906ab9573685423899f">
+        <source>Last time this product was bought: %date_last_order%</source>
+        <target>Last time this product was bought: %date_last_order%</target>
+        <note>Context:
+File: modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="160b4798999cb85c815beeb40ac268cc">
+        <source>Last time this product was added to a cart: %date_last_cart%</source>
+        <target>Last time this product was added to a cart: %date_last_cart%</target>
+        <note>Context:
+File: modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl:41</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
