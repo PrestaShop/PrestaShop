@@ -327,7 +327,7 @@ class AdminSearchControllerCore extends AdminController
 
     public function initToolbarTitle()
     {
-        $this->toolbar_title = $this->trans('Search results', array(), 'Admin.Navigation.Header');
+        $this->toolbar_title = $this->trans('Search results', array(), 'Admin.Global');
     }
 
     public function renderView()

@@ -438,7 +438,7 @@ class LocalizationPackCore
 
                     unset($module);
                 } else {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error has occurred, this module does not exist: %s', array($name), 'Admin.International.Error');
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error has occurred, this module does not exist: %s', array($name), 'Admin.International.Notification');
                 }
             }
         }
