@@ -57,6 +57,7 @@ INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`
   (NULL, 'actionObjectProductInCartDeleteBefore', 'Cart product removal', 'This hook is called before a product is removed from a cart', '1'),
   (NULL, 'actionObjectProductInCartDeleteAfter', 'Cart product removal', 'This hook is called after a product is removed from a cart', '1'),
   (NULL, 'actionUpdateLangAfter', 'Update "lang" tables', 'Update "lang" tables after adding or updating a language.', '1'),
-  (NULL, 'actionOutputHTMLBefore', 'Filter the whole HTML page', 'This hook is used to filter the whole HTML page before it is rendered (only front)', '1');
+  (NULL, 'actionOutputHTMLBefore', 'Filter the whole HTML page', 'This hook is used to filter the whole HTML page before it is rendered (only front)', '1'),
+  (NULL, 'displayAfterProductThumbs', 'Display extra content below product thumbs', 'This hook displays new elements below product images ex. additonal media', '1');
 
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_META_KEYWORDS');
