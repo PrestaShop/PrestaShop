@@ -963,38 +963,38 @@ var form = (function() {
       });
 
       /** create keyboard event for save */
-      jwerty.key('ctrl+S/cmd+S', function(e) {
+      jwerty.key('alt+Q', function(e) {
         e.preventDefault();
         send();
       });
 
       /** create keyboard event for save & duplicate */
-      jwerty.key('ctrl+D/cmd+D', function(e) {
+      jwerty.key('alt+R', function(e) {
         e.preventDefault();
         send($('.product-footer .duplicate').attr('data-redirect'));
       });
 
       /** create keyboard event for save & new */
-      jwerty.key('ctrl+P/cmd+P', function(e) {
+      jwerty.key('alt+Y', function(e) {
         e.preventDefault();
         send($('.product-footer .new-product').attr('data-redirect'));
       });
 
       /** create keyboard event for save & go catalog */
-      jwerty.key('ctrl+Q', function(e) {
+      jwerty.key('alt+W', function(e) {
         e.preventDefault();
         send($('.product-footer .go-catalog').attr('data-redirect'));
       });
 
       /** create keyboard event for save & go preview */
-      jwerty.key('ctrl+E/cmd+E', function(e) {
+      jwerty.key('alt+C', function(e) {
           e.preventDefault();
           var productFooter = $('.product-footer .preview');
           send(productFooter.attr('data-redirect'), productFooter.attr('target'));
       });
 
       /** create keyboard event for save & active or desactive product*/
-      jwerty.key('ctrl+O/cmd+O', function(e) {
+      jwerty.key('alt+N', function(e) {
         e.preventDefault();
         var step1CheckBox = $('#form_step1_active');
         step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
