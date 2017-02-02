@@ -86,16 +86,6 @@ File: controllers/admin/AdminQuickAccessesController.php:135</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="eb6b06cab0dd72e04c4da68d511facf2">
-        <source>Search results</source>
-        <target>Search results</target>
-        <note>Context:
-File: controllers/admin/AdminSearchController.php:330</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">

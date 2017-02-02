@@ -250,7 +250,7 @@ File: themes/StarterTheme/templates/customer/order-detail.tpl:47</note>
         <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
         <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
         <note>Context:
-File: themes/classic/templates/_partials/footer.tpl:42</note>
+File: themes/classic/templates/_partials/footer.tpl:49</note>
       </trans-unit>
     </body>
   </file>
@@ -260,7 +260,7 @@ File: themes/classic/templates/_partials/footer.tpl:42</note>
         <source>logo</source>
         <target>logo</target>
         <note>Context:
-File: themes/classic/templates/checkout/_partials/header.tpl:31</note>
+File: themes/classic/templates/checkout/_partials/header.tpl:32</note>
       </trans-unit>
     </body>
   </file>
@@ -270,7 +270,7 @@ File: themes/classic/templates/checkout/_partials/header.tpl:31</note>
         <source>Ecommerce software by</source>
         <target>Ecommerce software by</target>
         <note>Context:
-File: themes/classic/templates/checkout/_partials/footer.tpl:25</note>
+File: themes/classic/templates/checkout/_partials/footer.tpl:27</note>
       </trans-unit>
     </body>
   </file>
@@ -296,7 +296,7 @@ File: themes/classic/templates/errors/restricted-country.tpl:44</note>
         <source>We'll be back soon.</source>
         <target>We'll be back soon.</target>
         <note>Context:
-File: themes/classic/templates/errors/maintenance.tpl:36</note>
+File: themes/classic/templates/errors/maintenance.tpl:42</note>
       </trans-unit>
     </body>
   </file>
@@ -316,7 +316,7 @@ File: themes/StarterTheme/templates/errors/not-found.tpl:2</note>
         <source>Search again what you are looking for</source>
         <target>Search again what you are looking for</target>
         <note>Context:
-File: themes/classic/templates/errors/not-found.tpl:27</note>
+File: themes/classic/templates/errors/not-found.tpl:29</note>
       </trans-unit>
     </body>
   </file>

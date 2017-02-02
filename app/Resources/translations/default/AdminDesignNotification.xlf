@@ -16,7 +16,7 @@ File: src/PrestaShopBundle/Command/ExportThemeCommand.php:59</note>
         <source>This theme is not valid for PrestaShop 1.7</source>
         <target>This theme is not valid for PrestaShop 1.7</target>
         <note>Context:
-File: src/Core/Addon/Theme/ThemeManager.php:310</note>
+File: src/Core/Addon/Theme/ThemeManager.php:312</note>
       </trans-unit>
     </body>
   </file>

@@ -112,67 +112,67 @@ File: src/PrestaShopBundle/Install/Install.php:252</note>
         <source>Cannot create group shop</source>
         <target>Cannot create group shop</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:420</note>
+File: src/PrestaShopBundle/Install/Install.php:421</note>
       </trans-unit>
       <trans-unit id="19de782cabcc5cc12fa9730264cd5325">
         <source>Cannot create shop</source>
         <target>Cannot create shop</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:432</note>
+File: src/PrestaShopBundle/Install/Install.php:433</note>
       </trans-unit>
       <trans-unit id="90ae323fee3fa743290c6ebdbd7fea65">
         <source>Cannot create shop URL</source>
         <target>Cannot create shop URL</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:446</note>
+File: src/PrestaShopBundle/Install/Install.php:447</note>
       </trans-unit>
       <trans-unit id="53d7a51998faa87f513eb974a2a596f2">
         <source>File "language.xml" not found for language iso "%iso%"</source>
         <target>File "language.xml" not found for language iso "%iso%"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:475</note>
+File: src/PrestaShopBundle/Install/Install.php:476</note>
       </trans-unit>
       <trans-unit id="9972ad1ade2906747dbb39490a96b191">
         <source>File "language.xml" not valid for language iso "%iso%"</source>
         <target>File "language.xml" not valid for language iso "%iso%"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:479</note>
+File: src/PrestaShopBundle/Install/Install.php:480</note>
       </trans-unit>
       <trans-unit id="54c23cef7fbebba7ee1267cc0cf97b2a">
         <source>Cannot download language pack "%iso%"</source>
         <target>Cannot download language pack "%iso%"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:497</note>
+File: src/PrestaShopBundle/Install/Install.php:498</note>
       </trans-unit>
       <trans-unit id="9d321a378efc308c33c5f345f623dd90">
         <source>Cannot install language "%iso%"</source>
         <target>Cannot install language "%iso%"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:510</note>
+File: src/PrestaShopBundle/Install/Install.php:511</note>
       </trans-unit>
       <trans-unit id="27654955bc85150712aa0bc53bcc6224">
         <source>Cannot create admin account</source>
         <target>Cannot create admin account</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:708</note>
+File: src/PrestaShopBundle/Install/Install.php:709</note>
       </trans-unit>
       <trans-unit id="26b901ba3ecdcb91823f05ce15a70ce4">
         <source>Cannot install module "%module%"</source>
         <target>Cannot install module "%module%"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:914</note>
+File: src/PrestaShopBundle/Install/Install.php:915</note>
       </trans-unit>
       <trans-unit id="4a85cd1d84d691a2e0b73a5f08cd3483">
         <source>Fixtures class "%class%" not found</source>
         <target>Fixtures class "%class%" not found</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:947</note>
+File: src/PrestaShopBundle/Install/Install.php:948</note>
       </trans-unit>
       <trans-unit id="e1120cceb6bcfd9596161e3912b2ad9d">
         <source>"%class%" must be an instance of "InstallXmlLoader"</source>
         <target>"%class%" must be an instance of "InstallXmlLoader"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:953</note>
+File: src/PrestaShopBundle/Install/Install.php:954</note>
       </trans-unit>
     </body>
   </file>

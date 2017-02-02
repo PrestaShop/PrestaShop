@@ -72,7 +72,7 @@ File: src/PrestaShopBundle/Controller/Admin/ProductController.php:148</note>
         <source>Choose language:</source>
         <target>Choose language:</target>
         <note>Context:
-File: classes/module/Module.php:879</note>
+File: classes/module/Module.php:888</note>
       </trans-unit>
     </body>
   </file>
@@ -141,6 +141,16 @@ File: modules/ps_emailsubscription/ps_emailsubscription.php:990</note>
         <target>Search</target>
         <note>Context:
 File: admin-dev/themes/default/template/search_form.tpl:79</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statscatalog/statscatalog.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680">
+        <source>All</source>
+        <target>All</target>
+        <note>Context:
+File: modules/statscatalog/statscatalog.php:188</note>
       </trans-unit>
     </body>
   </file>

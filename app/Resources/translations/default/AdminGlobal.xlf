@@ -1532,6 +1532,12 @@ File: controllers/admin/AdminSearchController.php:283</note>
         <note>Context:
 File: controllers/admin/AdminSearchController.php:296</note>
       </trans-unit>
+      <trans-unit id="eb6b06cab0dd72e04c4da68d511facf2">
+        <source>Search results</source>
+        <target>Search results</target>
+        <note>Context:
+File: controllers/admin/AdminSearchController.php:330</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1635,6 +1641,16 @@ File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_
         <target>Bulk Actions</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Translations/list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="32df01b9cf0491a879250b58ba2744ba">
+        <source>Search Results</source>
+        <target>Search Results</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Translations/list.html.twig:57</note>
       </trans-unit>
     </body>
   </file>

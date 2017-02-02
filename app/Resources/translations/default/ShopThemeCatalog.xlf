@@ -148,13 +148,13 @@ File: src/Core/Product/Search/SortOrderFactory.php:45</note>
         <source>Price</source>
         <target>Price</target>
         <note>Context:
-File: classes/controller/FrontController.php:1499</note>
+File: classes/controller/FrontController.php:1500</note>
       </trans-unit>
       <trans-unit id="104d9898c04874d0fbac36e125fa1369">
         <source>Discount</source>
         <target>Discount</target>
         <note>Context:
-File: classes/controller/FrontController.php:1500</note>
+File: classes/controller/FrontController.php:1501</note>
       </trans-unit>
     </body>
   </file>
@@ -342,19 +342,19 @@ File: themes/StarterTheme/templates/customer/order-return.tpl:46</note>
         <source>Quantity</source>
         <target>Quantity</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-discounts.tpl:31</note>
+File: themes/classic/templates/catalog/_partials/product-discounts.tpl:32</note>
       </trans-unit>
       <trans-unit id="861c0c6ef832cd96c5fe152f9d610973">
         <source>You Save</source>
         <target>You Save</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-discounts.tpl:33</note>
+File: themes/classic/templates/catalog/_partials/product-discounts.tpl:34</note>
       </trans-unit>
       <trans-unit id="64c22a1426c5b8fce46c6314d73dc99e">
         <source>Up to %discount%</source>
         <target>Up to %discount%</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-discounts.tpl:41</note>
+File: themes/classic/templates/catalog/_partials/product-discounts.tpl:42</note>
       </trans-unit>
     </body>
   </file>
@@ -364,13 +364,13 @@ File: themes/classic/templates/catalog/_partials/product-discounts.tpl:41</note>
         <source>Unit price</source>
         <target>Unit price</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-detail-return.tpl:35</note>
+File: themes/classic/templates/customer/_partials/order-detail-return.tpl:36</note>
       </trans-unit>
       <trans-unit id="0eede552438475bdfe820c13f24c9399">
         <source>Total price</source>
         <target>Total price</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-detail-return.tpl:36</note>
+File: themes/classic/templates/customer/_partials/order-detail-return.tpl:37</note>
       </trans-unit>
     </body>
   </file>
@@ -514,7 +514,7 @@ File: themes/StarterTheme/templates/catalog/_partials/product-details.tpl:67</no
         <source>In stock</source>
         <target>In stock</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-details.tpl:30</note>
+File: themes/classic/templates/catalog/_partials/product-details.tpl:31</note>
       </trans-unit>
     </body>
   </file>
@@ -524,7 +524,7 @@ File: themes/classic/templates/catalog/_partials/product-details.tpl:30</note>
         <source>%1$s: </source>
         <target>%1$s: </target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/active_filters.tpl:30</note>
+File: themes/classic/templates/catalog/_partials/active_filters.tpl:35</note>
       </trans-unit>
     </body>
   </file>
@@ -550,25 +550,25 @@ File: themes/classic/templates/catalog/product.tpl:113</note>
         <source>Description</source>
         <target>Description</target>
         <note>Context:
-File: themes/classic/templates/catalog/product.tpl:149</note>
+File: themes/classic/templates/catalog/product.tpl:157</note>
       </trans-unit>
       <trans-unit id="b8900d8adf598b6653bb8c071bc49a1d">
         <source>Product Details</source>
         <target>Product Details</target>
         <note>Context:
-File: themes/classic/templates/catalog/product.tpl:153</note>
+File: themes/classic/templates/catalog/product.tpl:163</note>
       </trans-unit>
       <trans-unit id="7e2708aeb65763c54052f57ed1a1ec1d">
         <source>Attachments</source>
         <target>Attachments</target>
         <note>Context:
-File: themes/classic/templates/catalog/product.tpl:157</note>
+File: themes/classic/templates/catalog/product.tpl:169</note>
       </trans-unit>
       <trans-unit id="3767d4f3efe17bd95a1bc7cf4194bb93">
         <source>You might also like</source>
         <target>You might also like</target>
         <note>Context:
-File: themes/classic/templates/catalog/product.tpl:209</note>
+File: themes/classic/templates/catalog/product.tpl:225</note>
       </trans-unit>
     </body>
   </file>

@@ -6,7 +6,7 @@
         <source>Cannot copy flag language "%flag%"</source>
         <target>Cannot copy flag language "%flag%"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Install.php:518</note>
+File: src/PrestaShopBundle/Install/Install.php:519</note>
       </trans-unit>
     </body>
   </file>
@@ -16,13 +16,13 @@ File: src/PrestaShopBundle/Install/Install.php:518</note>
         <source>You cannot place a new order from your country (%s).</source>
         <target>You cannot place a new order from your country (%s).</target>
         <note>Context:
-File: classes/controller/FrontController.php:851</note>
+File: classes/controller/FrontController.php:852</note>
       </trans-unit>
       <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
         <source>Undefined</source>
         <target>Undefined</target>
         <note>Context:
-File: classes/controller/FrontController.php:851</note>
+File: classes/controller/FrontController.php:852</note>
       </trans-unit>
     </body>
   </file>
@@ -390,6 +390,12 @@ File: classes/controller/AdminController.php:604</note>
         <note>Context:
 File: classes/controller/AdminController.php:608</note>
       </trans-unit>
+      <trans-unit id="ef61fb324d729c341ea8ab9901e23566">
+        <source>Add new</source>
+        <target>Add new</target>
+        <note>Context:
+File: classes/controller/AdminController.php:1605</note>
+      </trans-unit>
       <trans-unit id="a6105c0a611b41b08f1209506350279e">
         <source>yes</source>
         <target>yes</target>
@@ -581,94 +587,6 @@ File: classes/controller/AdminController.php:4315</note>
         <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
         <note>Context:
 File: classes/controller/AdminController.php:4322</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/blockreinsurance/blockreinsurance.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ef61fb324d729c341ea8ab9901e23566">
-        <source>Add new</source>
-        <target>Add new</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:323</note>
-      </trans-unit>
-      <trans-unit id="873330fc1881555fffe2bc471d04bf5d">
-        <source>Customer reassurance block</source>
-        <target>Customer reassurance block</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:48</note>
-      </trans-unit>
-      <trans-unit id="7e7f70db3c75e428db8e2d0a1765c4e9">
-        <source>Adds an information block aimed at offering helpful information to reassure customers that your store is trustworthy.</source>
-        <target>Adds an information block aimed at offering helpful information to reassure customers that your store is trustworthy.</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:49</note>
-      </trans-unit>
-      <trans-unit id="d52eaeff31af37a4a7e0550008aff5df">
-        <source>An error occurred while attempting to save.</source>
-        <target>An error occurred while attempting to save.</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:216</note>
-      </trans-unit>
-      <trans-unit id="0366c7b2ea1bb228cd44aec7e3e26a3e">
-        <source>The block configuration has been updated.</source>
-        <target>The block configuration has been updated.</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:213</note>
-      </trans-unit>
-      <trans-unit id="8363eee01f4da190a4cef9d26a36750c">
-        <source>New reassurance block</source>
-        <target>New reassurance block</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:235</note>
-      </trans-unit>
-      <trans-unit id="be53a0541a6d36f6ecb879fa2c584b08">
-        <source>Image</source>
-        <target>Image</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:240</note>
-      </trans-unit>
-      <trans-unit id="9dffbf69ffba8bc38bc4e01abf4b1675">
-        <source>Text</source>
-        <target>Text</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:303</note>
-      </trans-unit>
-      <trans-unit id="23498d91b6017e5d7f4ddde70daba286">
-        <source>ID Shop</source>
-        <target>ID Shop</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:312</note>
-      </trans-unit>
-      <trans-unit id="f3295a93167b56c5a19030e91823f7bf">
-        <source>Money back guarantee.</source>
-        <target>Money back guarantee.</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:348</note>
-      </trans-unit>
-      <trans-unit id="56e140ebd6f399c22c8859a694b247f3">
-        <source>In-store exchange.</source>
-        <target>In-store exchange.</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:349</note>
-      </trans-unit>
-      <trans-unit id="597ce11744f9bbf116ec9e4a719ec9d3">
-        <source>Payment upon shipment.</source>
-        <target>Payment upon shipment.</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:350</note>
-      </trans-unit>
-      <trans-unit id="3aca7ac5cf7e462b658960931946f824">
-        <source>Free Shipping.</source>
-        <target>Free Shipping.</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:351</note>
-      </trans-unit>
-      <trans-unit id="d05244e0e410a6b85ed53a014908c657">
-        <source>100% secure payment processing.</source>
-        <target>100% secure payment processing.</target>
-        <note>Context:
-File: modules/blockreinsurance/blockreinsurance.php:352</note>
       </trans-unit>
     </body>
   </file>
@@ -7305,100 +7223,6 @@ File: modules/ps_emailalerts/mailalerts-account.php:64</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/trackingfront/views/templates/front/account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
-        <source>ID</source>
-        <target>ID</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:68</note>
-      </trans-unit>
-      <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
-        <source>Visitors</source>
-        <target>Visitors</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:70</note>
-      </trans-unit>
-      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
-        <source>Visits</source>
-        <target>Visits</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:71</note>
-      </trans-unit>
-      <trans-unit id="11ff9f68afb6b8b5b8eda218d7c83a65">
-        <source>Sales</source>
-        <target>Sales</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:75</note>
-      </trans-unit>
-      <trans-unit id="c87aacf5673fada1108c9f809d354311">
-        <source>Sign out</source>
-        <target>Sign out</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:31</note>
-      </trans-unit>
-      <trans-unit id="1dd1c5fb7f25cd41b291d43a89e3aefd">
-        <source>Today</source>
-        <target>Today</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:37</note>
-      </trans-unit>
-      <trans-unit id="5fa8aff419bb8e614b178cf1563ac13a">
-        <source>Show products details</source>
-        <target>Show products details</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:49</note>
-      </trans-unit>
-      <trans-unit id="49ee3087348e8d44e1feda1917443987">
-        <source>Name</source>
-        <target>Name</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:69</note>
-      </trans-unit>
-      <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
-        <source>Pages</source>
-        <target>Pages</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:72</note>
-      </trans-unit>
-      <trans-unit id="591411cc8927851db2002208676d8330">
-        <source>Reg.</source>
-        <target>Reg.</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:73</note>
-      </trans-unit>
-      <trans-unit id="a9841e29f2c8180709b16cd2a13c55fe">
-        <source>Ord.</source>
-        <target>Ord.</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:74</note>
-      </trans-unit>
-      <trans-unit id="43005b13d452a4ad6f2d8e29b499c55a">
-        <source>Reg. rate</source>
-        <target>Reg. rate</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:77</note>
-      </trans-unit>
-      <trans-unit id="e14c8640d236365d11a060832b219a11">
-        <source>Ord. rate</source>
-        <target>Ord. rate</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:78</note>
-      </trans-unit>
-      <trans-unit id="316853cc3718335f11c048e33b9be98a">
-        <source>Click</source>
-        <target>Click</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:79</note>
-      </trans-unit>
-      <trans-unit id="b450fdef2453e92c31263a70f14fbd7b">
-        <source>¤</source>
-        <target>¤</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/account.tpl:80</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/pscleaner/pscleaner.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e5a8af934462c05509c7de5f2f2c18a3">
@@ -8104,6 +7928,100 @@ File: modules/trackingfront/trackingfront.php:197</note>
         <target>Order rate</target>
         <note>Context:
 File: modules/trackingfront/trackingfront.php:198</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/trackingfront/views/templates/front/account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
+        <source>Visitors</source>
+        <target>Visitors</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:70</note>
+      </trans-unit>
+      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
+        <source>Visits</source>
+        <target>Visits</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:71</note>
+      </trans-unit>
+      <trans-unit id="11ff9f68afb6b8b5b8eda218d7c83a65">
+        <source>Sales</source>
+        <target>Sales</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:75</note>
+      </trans-unit>
+      <trans-unit id="c87aacf5673fada1108c9f809d354311">
+        <source>Sign out</source>
+        <target>Sign out</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="1dd1c5fb7f25cd41b291d43a89e3aefd">
+        <source>Today</source>
+        <target>Today</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="5fa8aff419bb8e614b178cf1563ac13a">
+        <source>Show products details</source>
+        <target>Show products details</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
+        <source>ID</source>
+        <target>ID</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:68</note>
+      </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:69</note>
+      </trans-unit>
+      <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
+        <source>Pages</source>
+        <target>Pages</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:72</note>
+      </trans-unit>
+      <trans-unit id="591411cc8927851db2002208676d8330">
+        <source>Reg.</source>
+        <target>Reg.</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:73</note>
+      </trans-unit>
+      <trans-unit id="a9841e29f2c8180709b16cd2a13c55fe">
+        <source>Ord.</source>
+        <target>Ord.</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:74</note>
+      </trans-unit>
+      <trans-unit id="43005b13d452a4ad6f2d8e29b499c55a">
+        <source>Reg. rate</source>
+        <target>Reg. rate</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:77</note>
+      </trans-unit>
+      <trans-unit id="e14c8640d236365d11a060832b219a11">
+        <source>Ord. rate</source>
+        <target>Ord. rate</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:78</note>
+      </trans-unit>
+      <trans-unit id="316853cc3718335f11c048e33b9be98a">
+        <source>Click</source>
+        <target>Click</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:79</note>
+      </trans-unit>
+      <trans-unit id="b450fdef2453e92c31263a70f14fbd7b">
+        <source>¤</source>
+        <target>¤</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/account.tpl:80</note>
       </trans-unit>
     </body>
   </file>

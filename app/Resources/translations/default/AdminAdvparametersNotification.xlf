@@ -46,43 +46,43 @@ File: classes/PrestaShopBackup.php:317</note>
         <source>Error: parameter "to" is corrupted</source>
         <target>Error: parameter "to" is corrupted</target>
         <note>Context:
-File: classes/Mail.php:182</note>
+File: classes/Mail.php:174</note>
       </trans-unit>
       <trans-unit id="99806fb2aff84eaa304cb249fa190339">
         <source>Error: parameter "bcc" is corrupted</source>
         <target>Error: parameter "bcc" is corrupted</target>
         <note>Context:
-File: classes/Mail.php:189</note>
+File: classes/Mail.php:181</note>
       </trans-unit>
       <trans-unit id="46c30f8c8c478bbb52647c27a5f4fe95">
         <source>Error: invalid e-mail template</source>
         <target>Error: invalid e-mail template</target>
         <note>Context:
-File: classes/Mail.php:203</note>
+File: classes/Mail.php:195</note>
       </trans-unit>
       <trans-unit id="97fc9862b0bebc68aa03f466bfc2c6bf">
         <source>Error: invalid e-mail subject</source>
         <target>Error: invalid e-mail subject</target>
         <note>Context:
-File: classes/Mail.php:209</note>
+File: classes/Mail.php:201</note>
       </trans-unit>
       <trans-unit id="aa99af205bcf9ebf7976064542d58ab6">
         <source>Error: invalid e-mail address</source>
         <target>Error: invalid e-mail address</target>
         <note>Context:
-File: classes/Mail.php:244</note>
+File: classes/Mail.php:236</note>
       </trans-unit>
       <trans-unit id="1769b5ab48b8e2ce733fb38663ec853a">
         <source>Error: invalid SMTP server or SMTP port</source>
         <target>Error: invalid SMTP server or SMTP port</target>
         <note>Context:
-File: classes/Mail.php:257</note>
+File: classes/Mail.php:249</note>
       </trans-unit>
       <trans-unit id="3ed07fe73e25bba69e3e5dac234b1941">
         <source>Error - The following e-mail template is missing: %s</source>
         <target>Error - The following e-mail template is missing: %s</target>
         <note>Context:
-File: classes/Mail.php:316</note>
+File: classes/Mail.php:300</note>
       </trans-unit>
     </body>
   </file>
@@ -292,21 +292,21 @@ File: controllers/admin/AdminPerformanceController.php:842</note>
         <note>Context:
 File: controllers/admin/AdminPerformanceController.php:862</note>
       </trans-unit>
-      <trans-unit id="ebf43a833996bcd1f3f3f232900eaa61">
-        <source>Error: could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</source>
-        <target>Error: could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</target>
+      <trans-unit id="d4fb191ef219af010cc664bf47393e97">
+        <source>Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</target>
         <note>Context:
 File: controllers/admin/AdminPerformanceController.php:896</note>
       </trans-unit>
-      <trans-unit id="e08f0841f81dda4244a9242838efbf73">
-        <source>Error: could not write to file. Make sure that the correct permissions are set on the file %s</source>
-        <target>Error: could not write to file. Make sure that the correct permissions are set on the file %s</target>
+      <trans-unit id="667685497be44ab0fc2d4334a512405b">
+        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
         <note>Context:
 File: controllers/admin/AdminPerformanceController.php:902</note>
       </trans-unit>
-      <trans-unit id="b179e717a8f99e9dfbb3b33dd0a33cd1">
-        <source>Error: could not read file. Make sure that the correct permissions are set on the file %s</source>
-        <target>Error: could not read file. Make sure that the correct permissions are set on the file %s</target>
+      <trans-unit id="a22bb81de6e3b8e82ac5a09f2bb7e0b4">
+        <source>Error: Could not read file. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not read file. Make sure that the correct permissions are set on the file %s</target>
         <note>Context:
 File: controllers/admin/AdminPerformanceController.php:905</note>
       </trans-unit>

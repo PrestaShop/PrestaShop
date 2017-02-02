@@ -131,7 +131,7 @@ File: themes/classic/templates/customer/guest-tracking.tpl:53</note>
         <source>Product</source>
         <target>Product</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-messages.tpl:53</note>
+File: themes/classic/templates/customer/_partials/order-messages.tpl:56</note>
       </trans-unit>
     </body>
   </file>
@@ -201,25 +201,25 @@ File: themes/classic/templates/customer/guest-login.tpl:59</note>
         <source>-- day --</source>
         <target>-- day --</target>
         <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:109</note>
+File: themes/classic/templates/_partials/form-fields.tpl:122</note>
       </trans-unit>
       <trans-unit id="9180b4d5ab8103f244c2d4fd661934e2">
         <source>-- month --</source>
         <target>-- month --</target>
         <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:110</note>
+File: themes/classic/templates/_partials/form-fields.tpl:123</note>
       </trans-unit>
       <trans-unit id="ae1cc541ba45ce670ea7e0e3a30e3205">
         <source>-- year --</source>
         <target>-- year --</target>
         <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:111</note>
+File: themes/classic/templates/_partials/form-fields.tpl:124</note>
       </trans-unit>
       <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
         <source>Optional</source>
         <target>Optional</target>
         <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:164</note>
+File: themes/classic/templates/_partials/form-fields.tpl:186</note>
       </trans-unit>
     </body>
   </file>

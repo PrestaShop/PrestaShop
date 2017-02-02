@@ -226,6 +226,12 @@ File: classes/LocalizationPack.php:430</note>
         <note>Context:
 File: classes/LocalizationPack.php:435</note>
       </trans-unit>
+      <trans-unit id="962f6e835582ebb404a37893f46c60f3">
+        <source>An error has occurred, this module does not exist: %s</source>
+        <target>An error has occurred, this module does not exist: %s</target>
+        <note>Context:
+File: classes/LocalizationPack.php:441</note>
+      </trans-unit>
       <trans-unit id="e7ae5e7fbebb7b087110d07b06bd2418">
         <source>An error occurred during the configuration setup: %1$s</source>
         <target>An error occurred during the configuration setup: %1$s</target>

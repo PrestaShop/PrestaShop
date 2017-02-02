@@ -138,19 +138,19 @@ File: themes/classic/templates/customer/guest-tracking.tpl:46</note>
         <source>Returned</source>
         <target>Returned</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-detail-return.tpl:204</note>
+File: themes/classic/templates/customer/_partials/order-detail-return.tpl:205</note>
       </trans-unit>
       <trans-unit id="3956298bcfc047e15b0e0d218492ce09">
         <source>Merchandise return</source>
         <target>Merchandise return</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-detail-return.tpl:235</note>
+File: themes/classic/templates/customer/_partials/order-detail-return.tpl:236</note>
       </trans-unit>
       <trans-unit id="bef8403608dc4cb3ade799f63dd4bf59">
         <source>If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.</source>
         <target>If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-detail-return.tpl:236</note>
+File: themes/classic/templates/customer/_partials/order-detail-return.tpl:237</note>
       </trans-unit>
     </body>
   </file>
@@ -180,19 +180,19 @@ File: themes/StarterTheme/templates/customer/_partials/my-account-links.tpl:2</n
         <source>Messages</source>
         <target>Messages</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-messages.tpl:27</note>
+File: themes/classic/templates/customer/_partials/order-messages.tpl:28</note>
       </trans-unit>
       <trans-unit id="58b3d8603dffe8484e90c0ca371921ac">
         <source>Add a message</source>
         <target>Add a message</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-messages.tpl:46</note>
+File: themes/classic/templates/customer/_partials/order-messages.tpl:49</note>
       </trans-unit>
       <trans-unit id="d93651d012e77dac5581b08db33195b2">
         <source>If you would like to add a comment about your order, please write it in the field below.</source>
         <target>If you would like to add a comment about your order, please write it in the field below.</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-messages.tpl:47</note>
+File: themes/classic/templates/customer/_partials/order-messages.tpl:50</note>
       </trans-unit>
     </body>
   </file>

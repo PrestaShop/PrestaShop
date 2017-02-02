@@ -327,6 +327,16 @@ File: controllers/admin/AdminSearchEnginesController.php:93</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/statsforecast/statsforecast.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
+        <source>Undefined</source>
+        <target>Undefined</target>
+        <note>Context:
+File: modules/statsforecast/statsforecast.php:529</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/statslive/statslive.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a55533db46597bee3cd16899c007257e">
@@ -344,16 +354,6 @@ File: modules/statslive/statslive.php:216</note>
         <target>Unknown</target>
         <note>Context:
 File: modules/statspersonalinfos/statspersonalinfos.php:332</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/statsforecast/statsforecast.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
-        <source>Undefined</source>
-        <target>Undefined</target>
-        <note>Context:
-File: modules/statsforecast/statsforecast.php:529</note>
       </trans-unit>
     </body>
   </file>

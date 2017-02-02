@@ -140,13 +140,13 @@ File: themes/classic/templates/customer/addresses.tpl:43</note>
         <source>Show</source>
         <target>Show</target>
         <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:135</note>
+File: themes/classic/templates/_partials/form-fields.tpl:150</note>
       </trans-unit>
       <trans-unit id="62a5e490880a92eef74f167d9dc6dca0">
         <source>Hide</source>
         <target>Hide</target>
         <note>Context:
-File: themes/classic/templates/_partials/form-fields.tpl:133</note>
+File: themes/classic/templates/_partials/form-fields.tpl:148</note>
       </trans-unit>
     </body>
   </file>
@@ -198,7 +198,7 @@ File: themes/StarterTheme/templates/checkout/_partials/login-form.tpl:5</note>
         <source>Add</source>
         <target>Add</target>
         <note>Context:
-File: themes/classic/templates/checkout/_partials/cart-voucher.tpl:51</note>
+File: themes/classic/templates/checkout/_partials/cart-voucher.tpl:57</note>
       </trans-unit>
     </body>
   </file>
@@ -224,7 +224,7 @@ File: themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl:15</note
         <source>show details</source>
         <target>show details</target>
         <note>Context:
-File: themes/classic/templates/checkout/_partials/cart-summary.tpl:35</note>
+File: themes/classic/templates/checkout/_partials/cart-summary.tpl:38</note>
       </trans-unit>
     </body>
   </file>
@@ -276,19 +276,19 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
         <source>Remove Image</source>
         <target>Remove Image</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:43</note>
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:45</note>
       </trans-unit>
       <trans-unit id="cbe55e77ffa67d13322eb1ce7d22f1ba">
         <source>Choose file</source>
         <target>Choose file</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:48</note>
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:50</note>
       </trans-unit>
       <trans-unit id="f346acd7aed7508df8fec4da8353c81e">
         <source>Save Customization</source>
         <target>Save Customization</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:56</note>
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:58</note>
       </trans-unit>
     </body>
   </file>
@@ -308,23 +308,13 @@ File: themes/StarterTheme/templates/catalog/_partials/miniatures/product.tpl:31<
         <source>Filter By</source>
         <target>Filter By</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/facets.tpl:26</note>
+File: themes/classic/templates/catalog/_partials/facets.tpl:28</note>
       </trans-unit>
       <trans-unit id="81aa2078d1eceede831b2976dbf32e62">
         <source>Clear all</source>
         <target>Clear all</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/facets.tpl:30</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/facets.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d7778d0c64b6ba21494c97f77a66885a">
-        <source>Filter</source>
-        <target>Filter</target>
-        <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/facets.tpl:69</note>
+File: themes/classic/templates/catalog/_partials/facets.tpl:35</note>
       </trans-unit>
     </body>
   </file>
@@ -338,13 +328,33 @@ File: themes/classic/templates/catalog/_partials/sort-orders.tpl:28</note>
       </trans-unit>
     </body>
   </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/facets.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d7778d0c64b6ba21494c97f77a66885a">
+        <source>Filter</source>
+        <target>Filter</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/facets.tpl:69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/products.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7c491b68fcdc8169f7aadfffbafaf47d">
+        <source>Back to top</source>
+        <target>Back to top</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/products.tpl:14</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="themes/classic/templates/catalog/_partials/miniatures/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c91e4ee170226d66e90f99ba917e4c20">
         <source>Quick view</source>
         <target>Quick view</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/miniatures/product.tpl:79</note>
+File: themes/classic/templates/catalog/_partials/miniatures/product.tpl:78</note>
       </trans-unit>
     </body>
   </file>
@@ -426,7 +436,7 @@ File: modules/ps_shoppingcart/ps_shoppingcart-product-line.tpl:17</note>
         <source>proceed to checkout</source>
         <target>proceed to checkout</target>
         <note>Context:
-File: themes/classic/modules/ps_shoppingcart/modal.tpl:42</note>
+File: themes/classic/modules/ps_shoppingcart/modal.tpl:43</note>
       </trans-unit>
     </body>
   </file>

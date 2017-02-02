@@ -376,7 +376,7 @@ File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:20</note
         <source>Have a promo code?</source>
         <target>Have a promo code?</target>
         <note>Context:
-File: themes/classic/templates/checkout/_partials/cart-voucher.tpl:43</note>
+File: themes/classic/templates/checkout/_partials/cart-voucher.tpl:47</note>
       </trans-unit>
     </body>
   </file>
@@ -396,7 +396,7 @@ File: themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl:14</note
         <source>There are no more items in your cart</source>
         <target>There are no more items in your cart</target>
         <note>Context:
-File: themes/classic/templates/checkout/_partials/cart-detailed.tpl:36</note>
+File: themes/classic/templates/checkout/_partials/cart-detailed.tpl:39</note>
       </trans-unit>
     </body>
   </file>
@@ -406,7 +406,7 @@ File: themes/classic/templates/checkout/_partials/cart-detailed.tpl:36</note>
         <source>Gift</source>
         <target>Gift</target>
         <note>Context:
-File: themes/classic/templates/checkout/_partials/cart-detailed-product-line.tpl:122</note>
+File: themes/classic/templates/checkout/_partials/cart-detailed-product-line.tpl:124</note>
       </trans-unit>
     </body>
   </file>
@@ -636,19 +636,19 @@ File: themes/StarterTheme/templates/checkout/order-confirmation.tpl:53</note>
         <source>Order reference: %reference%</source>
         <target>Order reference: %reference%</target>
         <note>Context:
-File: themes/classic/templates/checkout/order-confirmation.tpl:51</note>
+File: themes/classic/templates/checkout/order-confirmation.tpl:60</note>
       </trans-unit>
       <trans-unit id="e120387480bc284c5347ae1baa480670">
         <source>Payment method: %method%</source>
         <target>Payment method: %method%</target>
         <note>Context:
-File: themes/classic/templates/checkout/order-confirmation.tpl:52</note>
+File: themes/classic/templates/checkout/order-confirmation.tpl:61</note>
       </trans-unit>
       <trans-unit id="080753487a8bc0bb9a5275bcb9951516">
         <source>Shipping method: %method%</source>
         <target>Shipping method: %method%</target>
         <note>Context:
-File: themes/classic/templates/checkout/order-confirmation.tpl:55</note>
+File: themes/classic/templates/checkout/order-confirmation.tpl:64</note>
       </trans-unit>
     </body>
   </file>
