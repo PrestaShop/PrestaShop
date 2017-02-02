@@ -154,5 +154,5 @@
       </div>
     {/if}
   </div>
-  {hook h='dashboardTop'}
+  {hook h='displayDashboardTop'}
 </div>
