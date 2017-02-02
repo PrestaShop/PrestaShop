@@ -383,6 +383,20 @@ class SearchCore
      * @param int $id_lang
      * @return string
      */
+    public static function getSecondaryCategories($db, $id_product, $id_lang)
+    {
+        $categoriesArray = $db->executeS(sprintf('
+    SELECT cl.name FROM %1$scategory_product cp LEFT JOIN %1$scategory_lang cl ON (cp.id_category = cl.id_category AND id_lang = %2$d) WHERE id_product = %3$d',
+                                                 _DB_PREFIX_, $id_lang, $id_product));
+        return implode(' ', array_map(function ($e) { return $e['name']; }, $categoriesArray));
+    }
+
+    /**
+     * @param Db $db
+     * @param int $id_product
+     * @param int $id_lang
+     * @return string
+     */
     public static function getAttributes($db, $id_product, $id_lang)
     {
         if (!Combination::isFeatureActive()) {
@@ -627,6 +641,7 @@ class SearchCore
             'description_short' => Configuration::get('PS_SEARCH_WEIGHT_SHORTDESC'),
             'description' => Configuration::get('PS_SEARCH_WEIGHT_DESC'),
             'cname' => Configuration::get('PS_SEARCH_WEIGHT_CNAME'),
+            'cnames2' => Configuration::get('PS_SEARCH_WEIGHT_CNAMES2'),
             'mname' => Configuration::get('PS_SEARCH_WEIGHT_MNAME'),
             'tags' => Configuration::get('PS_SEARCH_WEIGHT_TAG'),
             'attributes' => Configuration::get('PS_SEARCH_WEIGHT_ATTRIBUTE'),
@@ -654,6 +669,9 @@ class SearchCore
                 }
                 if ((int)$weight_array['features']) {
                     $product['features'] = Search::getFeatures($db, (int)$product['id_product'], (int)$product['id_lang']);
+                }
+                if ((int)$weight_array['cnames2']) {
+                    $product['cnames2'] = Search::getSecondaryCategories($db, (int)$product['id_product'], (int)$product['id_lang']);
                 }
                 if ($sql_attribute) {
                     $attribute_fields = Search::getAttributesFields($db, (int)$product['id_product'], $sql_attribute);
