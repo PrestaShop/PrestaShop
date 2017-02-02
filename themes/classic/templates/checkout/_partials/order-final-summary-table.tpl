@@ -34,4 +34,5 @@
     {/if}
   	<a href="{url entity=cart params=['action' => 'show']}"><span class="step-edit"><i class="material-icons edit">mode_edit</i> edit</span></a>
   </h3>
+</div>
 {/block}
