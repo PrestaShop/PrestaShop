@@ -10,4 +10,4 @@ window.tinyMCEPreInit = {};
 window.tinyMCEPreInit.base = final_path+'/js/tiny_mce';
 window.tinyMCEPreInit.suffix = '.min';
 
-$.getScript(final_path+'/js/tiny_mce/tinymce.min.js');
+$.ajax({url: final_path+'/js/tiny_mce/tinymce.min.js',dataType: "script",cache: true});
