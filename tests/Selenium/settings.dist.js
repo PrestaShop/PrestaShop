@@ -23,6 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 module.exports = {
-  baseUrl: 'http://localhost/PrestaShop/',
+  baseUrl: 'http://localhost/',
   browserName: 'chrome'
 };
