@@ -95,7 +95,7 @@ class CmsControllerCore extends FrontController
             $cmsVar = $this->objectPresenter->present($this->cms);
 
             $filteredCmsContent = Hook::exec(
-                'filteredCmsContent',
+                'filterCmsContent',
                 array('object' => $cmsVar),
                 $id_module = null,
                 $array_return = false,
@@ -125,7 +125,7 @@ class CmsControllerCore extends FrontController
             $cmsCategoryVar = $this->getTemplateVarCategoryCms();
 
             $filteredCmsCategoryContent = Hook::exec(
-                'filteredCmsCategoryContent',
+                'filterCmsCategoryContent',
                 array('object' => $cmsCategoryVar),
                 $id_module = null,
                 $array_return = false,

@@ -81,7 +81,7 @@ class CategoryControllerCore extends ProductListingFrontController
         $categoryVar = $this->getTemplateVarCategory();
 
         $filteredCategory= Hook::exec(
-            'filteredCategoryContent',
+            'filterCategoryContent',
             array('object' => $categoryVar),
             $id_module = null,
             $array_return = false,

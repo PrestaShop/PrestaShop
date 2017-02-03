@@ -123,7 +123,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
         $manufacturerVar = $this->objectPresenter->present($this->manufacturer);
 
         $filteredManufacturer = Hook::exec(
-            'filteredManufacturerContent',
+            'filterManufacturerContent',
             array('filtered_content' => $manufacturerVar['description']),
             $id_module = null,
             $array_return = false,
@@ -151,7 +151,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
         if (!empty($manufacturersVar)) {
             foreach ($manufacturersVar as $k => $manufacturer) {
                 $filteredManufacturer = Hook::exec(
-                    'filteredManufacturerContent',
+                    'filterManufacturerContent',
                     array('filtered_content' => $manufacturer['text']),
                     $id_module = null,
                     $array_return = false,

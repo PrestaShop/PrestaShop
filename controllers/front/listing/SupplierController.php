@@ -124,7 +124,7 @@ class SupplierControllerCore extends ProductListingFrontController
         $supplierVar = $this->objectPresenter->present($this->supplier);
 
         $filteredSupplier = Hook::exec(
-            'filteredSupplierContent',
+            'filterSupplierContent',
             array('object' => $supplierVar),
             $id_module = null,
             $array_return = false,
@@ -152,7 +152,7 @@ class SupplierControllerCore extends ProductListingFrontController
         if (!empty($suppliersVar)) {
             foreach ($suppliersVar as $k => $supplier) {
                 $filteredSupplier = Hook::exec(
-                    'filteredSupplierContent',
+                    'filterSupplierContent',
                     array('object' => $supplier),
                     $id_module = null,
                     $array_return = false,

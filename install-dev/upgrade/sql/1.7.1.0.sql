@@ -46,13 +46,13 @@ ALTER TABLE `PREFIX_product` CHANGE `id_product_redirected` `id_type_redirected`
 ALTER TABLE `PREFIX_product_shop` CHANGE `id_product_redirected` `id_type_redirected` INT(10) NOT NULL DEFAULT '0';
 
 INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
-  (NULL, 'filteredCmsContent', 'Filter the content page', 'This hook is called just before fetching content page', '1'),
-  (NULL, 'filteredCmsCategoryContent', 'Filter the content page category', 'This hook is called just before fetching content page category', '1'),
-  (NULL, 'filteredProductContent', 'Filter the content page product', 'This hook is called just before fetching content page product', '1'),
-  (NULL, 'filteredCategoryContent', 'Filter the content page category', 'This hook is called just before fetching content page category', '1'),
-  (NULL, 'filteredManufacturerContent', 'Filter the content page manufacturer', 'This hook is called just before fetching content page manufacturer', '1'),
-  (NULL, 'filteredSupplierContent', 'Filter the content page supplier', 'This hook is called just before fetching content page supplier', '1'),
-  (NULL, 'filteredHtmlContent', 'Filter HTML field before rending a page', 'This hook is called just before fetching a page on HTML field', '1'),
+  (NULL, 'filterCmsContent', 'Filter the content page', 'This hook is called just before fetching content page', '1'),
+  (NULL, 'filterCmsCategoryContent', 'Filter the content page category', 'This hook is called just before fetching content page category', '1'),
+  (NULL, 'filterProductContent', 'Filter the content page product', 'This hook is called just before fetching content page product', '1'),
+  (NULL, 'filterCategoryContent', 'Filter the content page category', 'This hook is called just before fetching content page category', '1'),
+  (NULL, 'filterManufacturerContent', 'Filter the content page manufacturer', 'This hook is called just before fetching content page manufacturer', '1'),
+  (NULL, 'filterSupplierContent', 'Filter the content page supplier', 'This hook is called just before fetching content page supplier', '1'),
+  (NULL, 'filterHtmlContent', 'Filter HTML field before rending a page', 'This hook is called just before fetching a page on HTML field', '1'),
   (NULL, 'displayDashboardTop', 'Dashboard Top', 'Displays the content in the dashboard''s top area', '1'),
   (NULL, 'actionObjectProductInCartDeleteBefore', 'Cart product removal', 'This hook is called before a product is removed from a cart', '1'),
   (NULL, 'actionObjectProductInCartDeleteAfter', 'Cart product removal', 'This hook is called after a product is removed from a cart', '1'),
@@ -65,6 +65,6 @@ INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`
   (NULL, 'actionClearCompileCache', 'Clear smarty compile cache', 'This hook is called when smarty''s compile cache is cleared', '1'),
   (NULL, 'actionClearSf2Cache', 'Clear Sf2 cache', 'This hook is called when the Symfony cache is cleared', '1'),
   (NULL, 'filterProductSearch', 'Filter search products result', 'This hook is called in order to allow to modify search product result', '1'),
-  (NULL, 'actionProductSearchAfter', 'Event triggered after search product completed', 'This hook is called after the product search. Parameters are already filtered', '1');
+  (NULL, 'actionProductSearchAfter', 'Event triggered after search product completed', 'This hook is called after the product search. Parameters are already filter', '1');
 
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_META_KEYWORDS');
