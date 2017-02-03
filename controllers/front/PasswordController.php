@@ -97,7 +97,7 @@ class PasswordControllerCore extends FrontController
                         $customer->firstname.' '.$customer->lastname
                     )
                 ) {
-                    $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', array('%email%', $customer->email), 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', array('%email%' => $customer->email), 'Shop.Notifications.Success');
                     $this->setTemplate('customer/password-infos');
                 } else {
                     $this->errors[] = $this->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');
