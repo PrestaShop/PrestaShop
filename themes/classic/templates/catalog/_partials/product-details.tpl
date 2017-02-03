@@ -57,7 +57,7 @@
           <dl class="data-sheet">
             {foreach from=$product.feature_to_display item=feature}
               <dt class="name">{$feature.name}</dt>
-              <dd class="value">{$feature.value}</dd>
+              <dd class="value">{$feature.value|nl2br nofilter}</dd>
             {/foreach}
           </dl>
         </section>

@@ -555,7 +555,7 @@ class ProductPresenter
                 $features[0] = $presentedProduct['features'][0];
             } else {
                 if (array_search($feature['id_feature'], array_column($features, 'id_feature')) !== false) {
-                    $features[array_search($feature['id_feature'], array_column($features, 'id_feature'))]['value'] .= ', ' . $feature['value'];
+                    $features[array_search($feature['id_feature'], array_column($features, 'id_feature'))]['value'] .= "\n" . $feature['value'];
                 } else {
                     array_push($features, $feature);
                 }
