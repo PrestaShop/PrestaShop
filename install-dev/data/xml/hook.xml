@@ -624,7 +624,17 @@
     <hook id="displayAfterProductThumbs">
       <name>displayAfterProductThumbs</name>
       <title>Display extra content below product thumbs</title>
-      <description>This hook displays new elements below product images ex. additonal media</description>
+      <description>This hook displays new elements below product images ex. additional media</description>
+    </hook>
+    <hook id="actionDispatcherBefore">
+      <name>actionDispatcherBefore</name>
+      <title>Before dispatch</title>
+      <description>This hook is called at the beginning of the dispatch method of the Dispatcher</description>
+    </hook>
+    <hook id="actionDispatcherAfter">
+      <name>actionDispatcherAfter</name>
+      <title>After dispatch</title>
+      <description>This hook is called at the end of the dispatch method of the Dispatcher</description>
     </hook>
   </entities>
 </entity_hook>
