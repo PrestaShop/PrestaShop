@@ -21,11 +21,15 @@ php:
   - 5.4
   - 5.6
   - 7.0
-  - 7.1
   
 env:
     global:
         - SYMFONY_DEPRECATIONS_HELPER=disabled
+  
+matrix:
+  include:
+    - php: 7.1
+      env: EXTRA_TESTS=functionnal
 
 before_install:
   # Apache & php-fpm configuration
@@ -48,6 +52,7 @@ script:
   - composer phpunit-controllers
   - bash ./travis-scripts/run-selenium-tests
   - bash ./travis-scripts/test-startertheme
+  - bash ./travis-scripts/run-functionnal-tests
 
 after_script:
   - sudo cat /var/log/apache2/error.log
