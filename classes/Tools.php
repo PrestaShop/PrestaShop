@@ -2980,7 +2980,11 @@ exit;
             return $smarty->clearAllCache();
         }
 
-        return $smarty->clearCache($tpl, $cache_id, $compile_id);
+        $ret = $smarty->clearCache($tpl, $cache_id, $compile_id);
+
+        Hook::exec('actionClearCache');
+
+        return $ret;
     }
 
     /**
@@ -2996,7 +3000,11 @@ exit;
             return;
         }
 
-        return $smarty->clearCompiledTemplate();
+        $ret = $smarty->clearCompiledTemplate();
+
+        Hook::exec('actionClearCompileCache');
+
+        return $ret;
     }
 
     /**
@@ -3020,7 +3028,11 @@ exit;
 
         $sf2Refresh = new Refresh($env);
         $sf2Refresh->addCacheClear();
-        return $sf2Refresh->execute();
+        $ret = $sf2Refresh->execute();
+
+        Hook::exec('actionClearSf2Cache');
+
+        return $ret;
     }
 
     /**

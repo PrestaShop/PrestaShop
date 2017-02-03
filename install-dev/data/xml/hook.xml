@@ -551,6 +551,21 @@
       <title>Display elements after login form</title>
       <description>This hook displays new elements after the login form</description>
     </hook>
+    <hook id="actionClearCache">
+      <name>actionClearCache</name>
+      <title>Clear smarty cache</title>
+      <description>This hook is called when smarty's cache is cleared</description>
+    </hook>
+    <hook id="actionClearCompileCache">
+      <name>actionClearCompileCache</name>
+      <title>Clear smarty compile cache</title>
+      <description>This hook is called when smarty's compile cache is cleared</description>
+    </hook>
+    <hook id="actionClearSf2Cache">
+      <name>actionClearSf2Cache</name>
+      <title>Clear Sf2 cache</title>
+      <description>This hook is called when the Symfony cache is cleared</description>
+    </hook>
     <hook id="actionValidateCustomerAddressForm">
       <name>actionValidateCustomerAddressForm</name>
       <title>Customer address form validation</title>

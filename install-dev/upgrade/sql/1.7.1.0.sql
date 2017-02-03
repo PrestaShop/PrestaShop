@@ -61,5 +61,8 @@ INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`
   (NULL, 'displayAfterProductThumbs', 'Display extra content below product thumbs', 'This hook displays new elements below product images ex. additional media', '1'),
   (NULL, 'actionDispatcherBefore', 'Before dispatch', 'This hook is called at the beginning of the dispatch method of the Dispatcher', '1'),
   (NULL, 'actionDispatcherAfter', 'After dispatch', 'This hook is called at the end of the dispatch method of the Dispatcher', '1');
+  (NULL, 'actionClearCache', 'Clear smarty cache', 'This hook is called when the cache of the theme is cleared', '1'),
+  (NULL, 'actionClearCompileCache', 'Clear smarty compile cache', 'This hook is called when smarty''s compile cache is cleared', '1'),
+  (NULL, 'actionClearSf2Cache', 'Clear Sf2 cache', 'This hook is called when the Symfony cache is cleared', '1');
 
 DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_META_KEYWORDS');
