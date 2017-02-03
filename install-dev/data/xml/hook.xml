@@ -651,5 +651,15 @@
       <title>After dispatch</title>
       <description>This hook is called at the end of the dispatch method of the Dispatcher</description>
     </hook>
+    <hook id="filterProductSearch">
+      <name>filterProductSearch</name>
+      <title>Filter search products result</title>
+      <description>This hook is called in order to allow to modify search product result</description>
+    </hook>
+    <hook id="actionProductSearchAfter">
+      <name>actionProductSearchAfter</name>
+      <title>Event triggered after search product completed</title>
+      <description>This hook is called after the product search. Parameters are already filtered</description>
+    </hook>
   </entities>
 </entity_hook>
