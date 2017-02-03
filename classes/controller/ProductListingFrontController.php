@@ -385,7 +385,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             )),
         );
 
-        Hook::exec('actionProductSearchComplete', $searchVariables);
+        Hook::exec('actionProductSearchComplete', array('searchVariables' => &$searchVariables));
 
         return $searchVariables;
     }
