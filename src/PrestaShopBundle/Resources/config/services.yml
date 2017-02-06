@@ -209,7 +209,7 @@ services:
 
     prestashop.twig.extension.hook:
         class: PrestaShopBundle\Twig\HookExtension
-        arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module"]
+        arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module", "@prestashop.core.admin.module.repository"]
         tags:
             - { name: twig.extension }
 
@@ -334,4 +334,3 @@ services:
             - "@prestashop.adapter.tools"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
-
