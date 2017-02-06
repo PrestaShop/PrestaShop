@@ -207,12 +207,6 @@ services:
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
 
-    prestashop.twig.extension.hook:
-        class: PrestaShopBundle\Twig\HookExtension
-        arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module"]
-        tags:
-            - { name: twig.extension }
-
     prestashop.twig.extension.stringloader:
         class: Twig_Extension_StringLoader
         tags:
@@ -324,6 +318,15 @@ services:
             - "@finder"
             - "@translator"
 
+    prestashop.twig.extension.hook:
+        class: PrestaShopBundle\Twig\HookExtension
+        arguments:
+            - "@prestashop.hook.dispatcher"
+            - "@prestashop.adapter.data_provider.module"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.core.admin.module.repository'):null"
+        tags:
+            - { name: twig.extension }
+
 # Addons API Client
     prestashop.addons.client_api:
         class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
@@ -334,4 +337,3 @@ services:
             - "@prestashop.adapter.tools"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
-
