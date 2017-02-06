@@ -50,7 +50,7 @@ class OrderConfirmationControllerCore extends FrontController
         $redirectLink = 'index.php?controller=history';
 
         $this->id_module = (int) (Tools::getValue('id_module', 0));
-        $this->id_order = Order::getOrderByCartId((int) ($this->id_cart));
+        $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
         $order = new Order((int) ($this->id_order));
 
@@ -80,7 +80,7 @@ class OrderConfirmationControllerCore extends FrontController
         }
 
         parent::initContent();
-        $order = new Order(Order::getOrderByCartId((int) ($this->id_cart)));
+        $order = new Order(Order::getIdByCartId((int) ($this->id_cart)));
         $presentedOrder = $this->order_presenter->present($order);
         $register_form = $this
             ->makeCustomerForm()
