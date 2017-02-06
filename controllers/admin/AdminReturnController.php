@@ -45,7 +45,7 @@ class AdminReturnControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_order_return' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
-            'id_order' => array('title' => $this->trans('Order ID', array(), 'Admin.Orderscustomers.Feature'), 'width' => 100, 'align' => 'center', 'filter_key'=>'a!id_order'),
+            'id_order' => array('title' => $this->trans('Order ID', array(), 'Admin.Orderscustomers.Feature'), 'width' => 100, 'align' => 'center', 'filter_key'=>'a!id_order', 'havingFilter' => true),
             'name' => array('title' => $this->trans('Status', array(), 'Admin.Global'),'color' => 'color', 'width' => 'auto', 'align' => 'left'),
             'date_add' => array('title' => $this->trans('Date issued', array(), 'Admin.Orderscustomers.Feature'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key'=>'a!date_add'),
         );
