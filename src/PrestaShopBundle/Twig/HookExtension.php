@@ -41,6 +41,11 @@ class HookExtension extends \Twig_Extension
     private $hookDispatcher;
 
     /**
+     * @var ModuleDataProvider
+     */
+     private $moduleDataProvider;
+
+    /**
      * @var ModuleRepository
      */
      private $moduleRepository;
