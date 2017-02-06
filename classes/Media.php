@@ -306,7 +306,8 @@ class MediaCore
             $return[] = Media::getJSPath(Context::getContext()->shop->getBaseURL(true, false)._PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
         }
 
-        //added query migrate for compatibility with new version of jquery will be removed in ps 1.6
+        // added jQuery migrate for compatibility with new version of jQuery
+        // will be removed when using latest version of jQuery
         $return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.min.js');
 
         return $return;
