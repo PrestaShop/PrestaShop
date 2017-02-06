@@ -74,12 +74,12 @@
     <hook id="displayAfterBodyOpeningTag">
       <name>displayAfterBodyOpeningTag</name>
       <title>Very top of pages</title>
-      <description>Use this hook for advertisement or modals you want to load first.</description>
+      <description>Use this hook for advertisement or modals you want to load first</description>
     </hook>
     <hook id="displayBeforeBodyClosingTag">
       <name>displayBeforeBodyClosingTag</name>
       <title>Very bottom of pages</title>
-      <description>Use this hook for your modals or any content you want to load at the very end.</description>
+      <description>Use this hook for your modals or any content you want to load at the very end</description>
     </hook>
     <hook id="displayTop">
       <name>displayTop</name>
@@ -124,7 +124,7 @@
     <hook id="actionOrderStatusUpdate">
       <name>actionOrderStatusUpdate</name>
       <title>Order status update - Event</title>
-      <description>This hook launches modules when the status of an order changes.</description>
+      <description>This hook launches modules when the status of an order changes</description>
     </hook>
     <hook id="displayAdminOrder">
       <name>displayAdminOrder</name>
@@ -509,7 +509,7 @@
     <hook id="actionOrderEdited">
       <name>actionOrderEdited</name>
       <title>Order edited</title>
-      <description>This hook is called when an order is edited.</description>
+      <description>This hook is called when an order is edited</description>
     </hook>
     <hook id="actionEmailAddBeforeContent">
       <name>actionEmailAddBeforeContent</name>
@@ -574,7 +574,7 @@
     <hook id="displayCarrierExtraContent">
       <name>displayCarrierExtraContent</name>
       <title>Display additional content for a carrier (e.g pickup points)</title>
-      <description>This hook calls only the module related to the carrier, in order to add options when needed.</description>
+      <description>This hook calls only the module related to the carrier, in order to add options when needed</description>
     </hook>
     <hook id="validateCustomerFormFields">
       <name>validateCustomerFormFields</name>
@@ -584,52 +584,52 @@
     <hook id="displayProductExtraContent">
       <name>displayProductExtraContent</name>
       <title>Display extra content on the product page</title>
-      <description>This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page.</description>
+      <description>This hook expects ProductExtraContent instances, which will be properly displayed by the template on the product page</description>
     </hook>
-    <hook id="filteredCmsContent">
-      <name>filteredCmsContent</name>
+    <hook id="filterCmsContent">
+      <name>filterCmsContent</name>
       <title>Filter the content page</title>
-      <description>This hook is called just before fetching content page.</description>
+      <description>This hook is called just before fetching content page</description>
     </hook>
-    <hook id="filteredCmsCategoryContent">
-      <name>filteredCmsCategoryContent</name>
+    <hook id="filterCmsCategoryContent">
+      <name>filterCmsCategoryContent</name>
       <title>Filter the content page category</title>
-      <description>This hook is called just before fetching content page category.</description>
+      <description>This hook is called just before fetching content page category</description>
     </hook>
-    <hook id="filteredProductContent">
-      <name>filteredProductContent</name>
+    <hook id="filterProductContent">
+      <name>filterProductContent</name>
       <title>Filter the content page product</title>
-      <description>This hook is called just before fetching content page product.</description>
+      <description>This hook is called just before fetching content page product</description>
     </hook>
-    <hook id="filteredCategoryContent">
-      <name>filteredCategoryContent</name>
+    <hook id="filterCategoryContent">
+      <name>filterCategoryContent</name>
       <title>Filter the content page category</title>
-      <description>This hook is called just before fetching content page category.</description>
+      <description>This hook is called just before fetching content page category</description>
     </hook>
-    <hook id="filteredManufacturerContent">
-      <name>filteredManufacturerContent</name>
+    <hook id="filterManufacturerContent">
+      <name>filterManufacturerContent</name>
       <title>Filter the content page manufacturer</title>
-      <description>This hook is called just before fetching content page manufacturer.</description>
+      <description>This hook is called just before fetching content page manufacturer</description>
     </hook>
-    <hook id="filteredSupplierContent">
-      <name>filteredSupplierContent</name>
+    <hook id="filterSupplierContent">
+      <name>filterSupplierContent</name>
       <title>Filter the content page supplier</title>
-      <description>This hook is called just before fetching content page supplier.</description>
+      <description>This hook is called just before fetching content page supplier</description>
     </hook>
-    <hook id="filteredHtmlContent">
-      <name>filteredHtmlContent</name>
+    <hook id="filterHtmlContent">
+      <name>filterHtmlContent</name>
       <title>Filter HTML field before rending a page</title>
-      <description>This hook is called just before fetching a page on HTML field.</description>
+      <description>This hook is called just before fetching a page on HTML field</description>
     </hook>
     <hook id="displayDashboardTop">
       <name>displayDashboardTop</name>
       <title>Dashboard Top</title>
-      <description>Displays the content in the dashboard's top area.</description>
+      <description>Displays the content in the dashboard's top area</description>
     </hook>
     <hook id="actionUpdateLangAfter">
       <name>actionUpdateLangAfter</name>
       <title>Update "lang" tables</title>
-      <description>Update "lang" tables after adding or updating a language.</description>
+      <description>Update "lang" tables after adding or updating a language</description>
     </hook>
     <hook id="actionOutputHTMLBefore">
       <name>actionOutputHTMLBefore</name>
@@ -659,7 +659,7 @@
     <hook id="actionProductSearchAfter">
       <name>actionProductSearchAfter</name>
       <title>Event triggered after search product completed</title>
-      <description>This hook is called after the product search. Parameters are already filtered</description>
+      <description>This hook is called after the product search. Parameters are already filter</description>
     </hook>
   </entities>
 </entity_hook>

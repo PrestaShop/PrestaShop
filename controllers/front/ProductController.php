@@ -307,7 +307,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $product_for_template = $this->getTemplateVarProduct();
 
             $filteredProduct = Hook::exec(
-                'filteredProductContent',
+                'filterProductContent',
                 array('object' => $product_for_template),
                 $id_module = null,
                 $array_return = false,
