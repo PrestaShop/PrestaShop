@@ -310,7 +310,24 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop);
         }
 
+        $pdf = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'));
+        $barcode_params = $pdf->serializeTCPDFtagParameters(array(
+            $this->order->getUniqReference(), 'C128', '', '', 0, 0, 0.2,
+            array(
+                'position'=>'S',
+                'border'=>false,
+                'padding'=>0,
+                'fgcolor'=>array(0,0,0),
+                'bgcolor'=>array(255,255,255),
+                'text'=>true, 'font'=>'Helvetica',
+                'fontsize'=>8,
+                'stretchtext'=>0
+            ),
+            'N')
+        );
+
         $data = array(
+            'barcode_params' => $barcode_params,
             'order' => $this->order,
             'order_invoice' => $this->order_invoice,
             'order_details' => $order_details,
