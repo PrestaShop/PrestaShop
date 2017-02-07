@@ -944,13 +944,12 @@ class LanguageCore extends ObjectModel
 
         if ($install) {
             Language::installLanguagePack($iso, $params, $errors);
+            Language::updateMultilangTable($iso);
         } else {
             $lang_pack = self::getLangDetails($iso);
             self::installSfLanguagePack($lang_pack['locale'], $errors);
             self::installEmailsLanguagePack($lang_pack, $errors);
         }
-
-        Language::updateMultilangTable($iso);
 
         return count($errors) ? $errors : true;
     }

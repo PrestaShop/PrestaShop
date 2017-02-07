@@ -49,7 +49,7 @@ class TabLang
      *
      * @param string $name
      *
-     * @return AttributeLang
+     * @return TabLang
      */
     public function setName($name)
     {
@@ -69,35 +69,11 @@ class TabLang
     }
 
     /**
-     * Set attribute
-     *
-     * @param \PrestaShopBundle\Entity\Attribute $attribute
-     *
-     * @return AttributeLang
-     */
-    public function setAttribute(\PrestaShopBundle\Entity\Attribute $attribute)
-    {
-        $this->attribute = $attribute;
-
-        return $this;
-    }
-
-    /**
-     * Get attribute
-     *
-     * @return \PrestaShopBundle\Entity\Attribute
-     */
-    public function getAttribute()
-    {
-        return $this->attribute;
-    }
-
-    /**
      * Set lang
      *
      * @param \PrestaShopBundle\Entity\Lang $lang
      *
-     * @return AttributeLang
+     * @return TabLang
      */
     public function setLang(\PrestaShopBundle\Entity\Lang $lang)
     {

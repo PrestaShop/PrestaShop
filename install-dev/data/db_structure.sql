@@ -1770,27 +1770,6 @@ CREATE TABLE `PREFIX_supplier_lang` (
   PRIMARY KEY (`id_supplier`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_tab` (
-  `id_tab` int(10) unsigned NOT NULL auto_increment,
-  `id_parent` int(11) NOT NULL,
-  `class_name` varchar(64) NOT NULL,
-  `module` varchar(64) NULL,
-  `position` int(10) unsigned NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `hide_host_mode` tinyint(1) NOT NULL DEFAULT '0',
-  `icon` varchar(32) DEFAULT '',
-  PRIMARY KEY (`id_tab`),
-  KEY `class_name` (`class_name`),
-  KEY `id_parent` (`id_parent`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_tab_lang` (
-  `id_tab` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`id_tab`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_tag` (
   `id_tag` int(10) unsigned NOT NULL auto_increment,
   `id_lang` int(10) unsigned NOT NULL,
