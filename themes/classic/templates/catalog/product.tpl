@@ -132,10 +132,6 @@
                     {include file='catalog/_partials/product-additional-info.tpl'}
                   {/block}
 
-                  {block name='hook_product_buttons'}
-                    {hook h='displayProductButtons' product=$product}
-                  {/block}
-
                   {block name='product_refresh'}
                     <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}">
                   {/block}
