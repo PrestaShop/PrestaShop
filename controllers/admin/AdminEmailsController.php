@@ -32,18 +32,18 @@ class AdminEmailsControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
+        
+        $this->table = 'mail';
+        $this->className = 'Mail';
+        
+        parent::__construct();
 
         if (Configuration::get('PS_LOG_EMAILS')) {
-            $this->table = 'mail';
-            $this->className = 'Mail';
-
             $this->lang = false;
             $this->noLink = true;
             $this->list_no_link = true;
             $this->explicitSelect = true;
             $this->addRowAction('delete');
-
-            parent::__construct();
 
             $this->bulk_actions = array(
                 'delete' => array(
