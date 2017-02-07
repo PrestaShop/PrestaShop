@@ -864,7 +864,7 @@ class AdminModulesControllerCore extends AdminController
                         $this->errors[] = $this->trans('You do not have permission to install this module.', array(), 'Admin.Modules.Notification');
                     } elseif ($key == 'delete' && (!$this->access('delete') || !$module->getPermission('configure'))) {
                         $this->errors[] = $this->trans('You do not have permission to delete this module.', array(), 'Admin.Modules.Notification');
-                    } elseif ($key == 'configure' && (!$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
+                    } elseif ($key == 'configure' && (!$this->access('edit') || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
                         $this->errors[] = $this->trans('You do not have permission to configure this module.', array(), 'Admin.Modules.Notification');
                     } elseif ($key == 'install' && $moduleManager->isInstalled($module->name)) {
                         $this->errors[] = $this->trans('This module is already installed: %s.', array($module->name), 'Admin.Modules.Notification');
