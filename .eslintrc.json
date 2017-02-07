@@ -7,8 +7,8 @@
     "browser": true
   },
   "parserOptions": {
-    ecmaVersion: 6,
-    sourceType: "module"
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "rules": {
     "semi": 2,
