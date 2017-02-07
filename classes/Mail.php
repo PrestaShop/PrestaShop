@@ -243,12 +243,14 @@ class MailCore extends ObjectModel
                     return false;
                 }
 
-                if (is_array($toName) && $toName && is_array($toName) && Validate::isGenericName($toName[$key])) {
-                    $toName = $toName[$key];
+                if (is_array($toName) && isset($toName[$key])) {
+                    $addrName = $toName[$key];
+                } else {
+                    $addrName = $toName;
                 }
 
-                $toName = (($toName == null || $toName == $addr) ? '' : self::mimeEncode($toName));
-                $message->addTo($addr, $toName);
+                $addrName = (($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ? '' : self::mimeEncode($addrName));
+                $message->addTo($addr, $addrName);
             }
             $toPlugin = $to[0];
         } else {
