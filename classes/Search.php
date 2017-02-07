@@ -758,11 +758,11 @@ class SearchCore
     protected static function saveIndex(&$queryArray3)
     {
         if (is_array($queryArray3) && !empty($queryArray3)) {
-            Db::getInstance()->execute(
-                'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
+            $query = 'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
 				VALUES '.implode(',', $queryArray3).'
-				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)', false
-        );
+				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)';
+
+            Db::getInstance()->execute($query, false);
         }
         $queryArray3 = array();
     }
