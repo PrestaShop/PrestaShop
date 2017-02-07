@@ -769,11 +769,11 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.0.1
+     * @deprecated 1.5.0.1 use Order::getCartRules() instead
      */
     public function getDiscounts($details = false)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Order::getCartRules() instead');
         return Order::getCartRules();
     }
 
@@ -1133,7 +1133,7 @@ class OrderCore extends ObjectModel
      */
     public function addDiscount($id_cart_rule, $name, $value)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Order::addCartRule($id_cart_rule, $name, array(\'tax_incl\' => $value, \'tax_excl\' => \'0.00\')) instead');
         return Order::addCartRule($id_cart_rule, $name, array('tax_incl' => $value, 'tax_excl' => '0.00'));
     }
 

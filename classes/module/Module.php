@@ -2665,7 +2665,7 @@ abstract class ModuleCore
 
     /**
      * Getter for $tabs attribute
-     * 
+     *
      * @return array
      */
     public function getTabs()

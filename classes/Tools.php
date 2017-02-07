@@ -2091,7 +2091,7 @@ class ToolsCore
 
     public static function replaceByAbsoluteURL($matches)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::replaceByAbsoluteURL($matches) instead');
         return Media::replaceByAbsoluteURL($matches);
     }
 

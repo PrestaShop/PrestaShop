@@ -885,7 +885,7 @@ abstract class PaymentModuleCore extends Module
      */
     public function formatProductAndVoucherForEmail($content)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use $content instead');
         return $content;
     }
 

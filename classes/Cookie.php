@@ -210,7 +210,7 @@ class CookieCore
      */
     public function isLogged($withGuest = false)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Customer::isLogged() instead');
         if (!$withGuest && $this->is_guest == 1) {
             return false;
         }
@@ -232,7 +232,7 @@ class CookieCore
      */
     public function isLoggedBack()
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Employee::isLoggedBack() instead');
         /* Employee is valid only if it can be load and if cookie password is the same as database one */
         return $this->id_employee
             && Validate::isUnsignedId($this->id_employee)
