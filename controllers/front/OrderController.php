@@ -32,7 +32,7 @@ class OrderControllerCore extends FrontController
     public $php_self = 'order';
     public $page_name = 'checkout';
 
-    private $checkoutProcess;
+    protected $checkoutProcess;
 
     public function init()
     {
