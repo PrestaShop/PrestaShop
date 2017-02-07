@@ -594,6 +594,49 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                 }
             }
+            
+            // wash attributes list depending on available attributes depending on selected preceding attributes
+            $current_selected_attributes = array();
+            $count = 0;
+            foreach ($groups as &$group) {
+                $count++;
+                if ($count > 1) {
+                    //find attributes of current group, having a possible combination with current selected
+                    $id_attributes = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` pac2 
+                        WHERE `id_product_attribute` IN (
+                            SELECT pac.`id_product_attribute`
+                                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+                                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                                WHERE id_product = '.$this->product->id.' AND id_attribute IN ('.implode(',', array_map('intval', $current_selected_attributes)).')
+                                GROUP BY id_product_attribute
+                                HAVING COUNT(id_product) = '.count($current_selected_attributes).'
+                        ) AND id_attribute NOT IN ('.implode(',', array_map('intval', $current_selected_attributes)).')');
+                    foreach ($id_attributes as $k => $row) {
+                        $id_attributes[$k] = (int)$row['id_attribute'];
+                    }
+                    foreach ($group['attributes'] as $key => $attribute) {
+                        if (!in_array((int)$key, $id_attributes)) {
+                            unset($group['attributes'][$key]);
+                            unset($group['attributes_quantity'][$key]);
+                        }
+                    }
+                }
+                //find selected attribute or first of group
+                $index = 0;
+                $current_selected_attribute = 0;
+                foreach ($group['attributes'] as $key => $attribute) {
+                    if ($index === 0) {
+                        $current_selected_attribute = $key;
+                    }
+                    if ($attribute['selected']) {
+                        $current_selected_attribute = $key;
+                        break;
+                    }
+                }
+                if ($current_selected_attribute > 0) {
+                    $current_selected_attributes[] = $current_selected_attribute;
+                }
+            }
 
             // wash attributes list (if some attributes are unavailables and if allowed to wash it)
             if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0) {

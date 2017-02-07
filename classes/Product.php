@@ -5727,19 +5727,44 @@ class ProductCore extends ObjectModel
         return $result;
     }
 
-    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes)
+    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
     {
         if (!is_array($id_attributes)) {
             return 0;
         }
 
-        return Db::getInstance()->getValue('
+        $id_product_attribute =  Db::getInstance()->getValue('
         SELECT pac.`id_product_attribute`
         FROM `'._DB_PREFIX_.'product_attribute_combination` pac
         INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
         WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $id_attributes)).')
         GROUP BY id_product_attribute
         HAVING COUNT(id_product) = '.count($id_attributes));
+
+        if ($id_product_attribute === false && $find_best) {
+            //find the best possible combination
+            //first we order $id_attributes by the group position
+            $orderred = array();
+            $result = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'attribute` a
+            INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
+            WHERE `id_attribute` IN ('.implode(',', array_map('intval', $id_attributes)).') ORDER BY g.`position` ASC');
+
+            foreach ($result as $row) {
+                $orderred[] = $row['id_attribute'];
+            }
+
+            while ($id_product_attribute === false && count($orderred) > 0) {
+                array_pop($orderred);
+                $id_product_attribute =  Db::getInstance()->getValue('
+                SELECT pac.`id_product_attribute`
+                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
+                GROUP BY id_product_attribute
+                HAVING COUNT(id_product) = '.count($orderred));
+            }
+        }
+        return $id_product_attribute;
     }
 
     /**
