@@ -989,15 +989,15 @@
           class="btn btn-tertiary btn-submit preview"
           data-toggle="tooltip"
           id="product_form_preview_btn"
-          title="{{ 'See how your product sheet will look online: CTRL+E'|trans({}, 'Admin.Catalog.Help') }}"
+          title="{{ 'See how your product sheet will look online: ALT+SHIFT+V'|trans({}, 'Admin.Catalog.Help') }}"
          >
           {{ 'Preview'|trans({}, 'Admin.Actions')}}
         </a>
 
         <h2 class="for-switch online-title" {% if not form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
-            title="{{ 'Enable or disable the product on your shop: CTRL+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Online'|trans({}, 'Admin.Global') }}</h2>
+            title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Online'|trans({}, 'Admin.Global') }}</h2>
         <h2 class="for-switch offline-title" {% if form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
-            title="{{ 'Enable or disable the product on your shop: CTRL+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
+            title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+0'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
         <input
           id="form_step1_active"
           data-toggle="switch"
@@ -1016,7 +1016,7 @@
             id="product_form_save_duplicate_btn"
             data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
             data-toggle="tooltip"
-            title="{{ 'Save and duplicate this product, then go to the new product: CTRL+D'|trans({}, 'Admin.Catalog.Help') }}"
+            title="{{ 'Save and duplicate this product, then go to the new product: ALT+SHIFT+D'|trans({}, 'Admin.Catalog.Help') }}"
             >
             {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
           </button>
@@ -1027,7 +1027,7 @@
           id="product_form_save_go_to_catalog_btn"
           data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
           data-toggle="tooltip"
-          title="{{ 'Save and go back to the catalog: CTRL+Q'|trans({}, 'Admin.Catalog.Help') }}"
+          title="{{ 'Save and go back to the catalog: ALT+SHIFT+Q'|trans({}, 'Admin.Catalog.Help') }}"
           >
           {{ 'Go to catalog'|trans({}, 'Admin.Catalog.Feature')|raw }}
         </button>
@@ -1037,7 +1037,7 @@
           id="product_form_save_new_btn"
           data-redirect="{{ path('admin_product_new') }}"
           data-toggle="tooltip"
-          title="{{ 'Save and create a new product: CTRL+P'|trans({}, 'Admin.Catalog.Help') }}"
+          title="{{ 'Save and create a new product: ALT+SHIFT+P'|trans({}, 'Admin.Catalog.Help') }}"
           >
           {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
         </button>
@@ -1047,7 +1047,7 @@
           class="btn btn-primary save uppercase"
           value="{{ 'Save'|trans({}, 'Admin.Actions') }}"
           data-toggle="tooltip"
-          title="{{ 'Save the product and stay on the current page: CTRL+S'|trans({}, 'Admin.Catalog.Help') }}"
+          title="{{ 'Save the product and stay on the current page: ALT+SHIFT+S'|trans({}, 'Admin.Catalog.Help') }}"
           />
 
           <div class="btn-group hide dropdown pull-right">
