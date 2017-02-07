@@ -532,12 +532,12 @@ class Install extends AbstractInstall
         }
 
         $list = array(
-            'products' =>        _PS_PROD_IMG_DIR_,
-            'categories' =>        _PS_CAT_IMG_DIR_,
-            'manufacturers' =>    _PS_MANU_IMG_DIR_,
-            'suppliers' =>        _PS_SUPP_IMG_DIR_,
-            'stores' =>            _PS_STORE_IMG_DIR_,
-            null =>                _PS_IMG_DIR_.'l/', // Little trick to copy images in img/l/ path with all types
+            'products' => _PS_PROD_IMG_DIR_,
+            'categories' => _PS_CAT_IMG_DIR_,
+            'manufacturers' => _PS_MANU_IMG_DIR_,
+            'suppliers' => _PS_SUPP_IMG_DIR_,
+            'stores' => _PS_STORE_IMG_DIR_,
+            null => _PS_IMG_DIR_.'l/', // Little trick to copy images in img/l/ path with all types
         );
 
         foreach ($list as $cat => $dst_path) {
@@ -609,21 +609,21 @@ class Install extends AbstractInstall
         $id_country = (int)Country::getByIso($data['shop_country']);
 
         // Set default configuration
-        Configuration::updateGlobalValue('PS_SHOP_DOMAIN',                Tools::getHttpHost());
-        Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL',            Tools::getHttpHost());
-        Configuration::updateGlobalValue('PS_INSTALL_VERSION',            _PS_INSTALL_VERSION_);
-        Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE',            $this->language->getLanguageIso());
-        Configuration::updateGlobalValue('PS_SHOP_NAME',                $data['shop_name']);
-        Configuration::updateGlobalValue('PS_SHOP_ACTIVITY',                $data['shop_activity']);
-        Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT',            $id_country);
-        Configuration::updateGlobalValue('PS_LOCALE_COUNTRY',            $data['shop_country']);
-        Configuration::updateGlobalValue('PS_TIMEZONE',                $data['shop_timezone']);
-        Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT',        (int)$data['configuration_agrement']);
+        Configuration::updateGlobalValue('PS_SHOP_DOMAIN', Tools::getHttpHost());
+        Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL', Tools::getHttpHost());
+        Configuration::updateGlobalValue('PS_INSTALL_VERSION', _PS_INSTALL_VERSION_);
+        Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE', $this->language->getLanguageIso());
+        Configuration::updateGlobalValue('PS_SHOP_NAME', $data['shop_name']);
+        Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', $data['shop_activity']);
+        Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT', $id_country);
+        Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', $data['shop_country']);
+        Configuration::updateGlobalValue('PS_TIMEZONE', $data['shop_timezone']);
+        Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT', (int)$data['configuration_agrement']);
 
         // Set mails configuration
-        Configuration::updateGlobalValue('PS_MAIL_METHOD',            ($data['use_smtp']) ? 2 : 1);
-        Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION',    $data['smtp_encryption']);
-        Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT',        $data['smtp_port']);
+        Configuration::updateGlobalValue('PS_MAIL_METHOD', ($data['use_smtp']) ? 2 : 1);
+        Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', $data['smtp_encryption']);
+        Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', $data['smtp_port']);
 
         // Set default rewriting settings
         Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', $data['rewrite_engine']);
@@ -990,6 +990,11 @@ class Install extends AbstractInstall
 
         // Index products in search tables
         Search::indexation(true);
+
+        // Update fixtures lang
+        foreach ($languages as $lang) {
+            \Language::updateMultilangTable($lang);
+        }
 
         return true;
     }
