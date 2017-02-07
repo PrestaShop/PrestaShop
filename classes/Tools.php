@@ -3657,6 +3657,7 @@ exit;
                 $config = HTMLPurifier_Config::createDefault();
 
                 $config->set('Attr.EnableID', true);
+                $config->set('Attr.AllowedRel', array('nofollow'));
                 $config->set('HTML.Trusted', true);
                 $config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
                 $config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_parent', '_top'));
