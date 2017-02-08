@@ -266,38 +266,95 @@ class ThemeExporter
     protected function makeArchiveParentDirectory($themeName, $locale)
     {
         $zipFilename = $this->makeZipFilename($themeName, $locale);
-        $archiveParentDirectory = dirname($zipFilename);
 
-        return $archiveParentDirectory;
+        return dirname($zipFilename);
     }
 
     /**
-     * @param MessageCatalogue $mergedTranslations
+     * @param MessageCatalogue $catalogue
      */
-    protected function updateCatalogueMetadata(MessageCatalogue $mergedTranslations)
+    protected function updateCatalogueMetadata(MessageCatalogue $catalogue)
     {
-        foreach ($mergedTranslations->all() as $domain => $messages) {
-            foreach ($messages as $translationKey => $translationValue) {
-                $metadata = $mergedTranslations->getMetadata($translationKey, $domain);
-                if (is_null($metadata) || !array_key_exists('file', $metadata)) {
-                    $mergedTranslations->setMetadata($translationKey, array('line' => '', 'file' => ''), $domain);
-                }
+        foreach ($catalogue->all() as $domain => $messages) {
+            $this->ensureCatalogueHasRequiredMetadata($catalogue, $messages, $domain);
+        }
+    }
+
+    /**
+     * @param MessageCatalogue $catalogue
+     * @param $messages
+     * @param $domain
+     */
+    protected function ensureCatalogueHasRequiredMetadata(
+        MessageCatalogue $catalogue,
+        $messages,
+        $domain
+    )
+    {
+        foreach ($messages as $id => $translation) {
+            $metadata = $catalogue->getMetadata($id, $domain);
+            if ($this->shouldAddFileMetadata($metadata)) {
+                $catalogue->setMetadata($id, $this->parseMetadataNotes($metadata), $domain);
             }
         }
     }
 
     /**
+     * @param array $metadata
+     * @return bool
+     */
+    protected function metadataContainNotes(array $metadata = null)
+    {
+        return !is_null($metadata) && array_key_exists('notes', $metadata) && is_array($metadata['notes']) &&
+            array_key_exists(0, $metadata['notes']) && is_array($metadata['notes'][0]) &&
+            array_key_exists('content', $metadata['notes'][0])
+        ;
+    }
+
+    /**
+     * @param $metadata
+     * @return bool
+     */
+    protected function shouldAddFileMetadata($metadata)
+    {
+        return is_null($metadata) || !array_key_exists('file', $metadata);
+    }
+
+    /**
      * @param $locale
-     * @param MessageCatalogue $databaseCatalogue
+     * @param MessageCatalogue $sourceCatalogue
      * @return MessageCatalogue
      */
-    protected function addLocaleToDomain($locale, MessageCatalogue $databaseCatalogue)
+    protected function addLocaleToDomain($locale, MessageCatalogue $sourceCatalogue)
     {
         $catalogue = new MessageCatalogue($locale, array());
-        foreach ($databaseCatalogue->all() as $domain => $messages) {
+        foreach ($sourceCatalogue->all() as $domain => $messages) {
             $catalogue->add($messages, $domain . '.' . $locale);
         }
 
         return $catalogue;
+    }
+
+    /**
+     * @param array|null $metadata
+     * @return array
+     */
+    protected function parseMetadataNotes(array $metadata = null)
+    {
+        $defaultMetadata = array('file' => '', 'line' => '');
+
+        if (!$this->metadataContainNotes($metadata)) {
+            return $defaultMetadata;
+        }
+
+        $notes = $metadata['notes'][0]['content'];
+        if (1 !== preg_match('/(?<file>\S+):(?<line>\S+)/m', $notes, $matches)) {
+            return $defaultMetadata;
+        }
+
+        return array(
+            'file' => $matches['file'],
+            'line' => $matches['line'],
+        );
     }
 }
