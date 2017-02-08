@@ -35,8 +35,9 @@ class PaymentOptionFormDecorator
     public function addHiddenSubmitButton($formHTML, $optionId)
     {
         $doc = new DOMDocument();
+        $doc->encoding = 'UTF-8';
 
-        $doc->loadHTML($formHTML);
+        $doc->loadHTML('<?xml encoding="UTF-8">' . $formHTML);
 
         $forms = $doc->getElementsByTagName('form');
         if ($forms->length !== 1) {
