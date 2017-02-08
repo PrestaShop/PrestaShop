@@ -34,6 +34,10 @@ class OrderControllerCore extends FrontController
 
     protected $checkoutProcess;
 
+    /**
+     * Initialize order controller
+     * @see FrontController::init()
+     */
     public function init()
     {
         parent::init();

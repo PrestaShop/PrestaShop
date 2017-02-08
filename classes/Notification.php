@@ -47,13 +47,11 @@ class NotificationCore
      */
     public function getLastElements()
     {
-        global $cookie;
-
         $notifications = array();
         $employeeInfos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT id_last_order, id_last_customer_message, id_last_customer
 		FROM `'._DB_PREFIX_.'employee`
-		WHERE `id_employee` = '.(int) $cookie->id_employee);
+		WHERE `id_employee` = '.(int)Context::getContext()->employee->id);
 
         foreach ($this->types as $type) {
             $notifications[$type] = Notification::getLastElementsIdsByType($type, $employeeInfos['id_last_'.$type]);
@@ -151,8 +149,6 @@ class NotificationCore
      */
     public function updateEmployeeLastElement($type)
     {
-        global $cookie;
-
         if (in_array($type, $this->types)) {
             // We update the last item viewed
             return Db::getInstance()->execute('
@@ -161,7 +157,7 @@ class NotificationCore
 				SELECT IFNULL(MAX(`id_'.bqSQL($type).'`), 0)
 				FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`
 			)
-			WHERE `id_employee` = '.(int) $cookie->id_employee);
+			WHERE `id_employee` = '.(int)Context::getContext()->employee->id);
         }
 
         return false;

@@ -2518,21 +2518,21 @@ class AdminProductsControllerCore extends AdminController
      */
     public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
     {
-        global $done;
         static $irow;
+        static $done;
         $content = '';
 
         if (!$id_category) {
             $id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
         }
 
-        if (!isset($done[$current['infos']['id_parent']])) {
-            $done[$current['infos']['id_parent']] = 0;
+        if (!isset(self::$done[$current['infos']['id_parent']])) {
+            self::$done[$current['infos']['id_parent']] = 0;
         }
-        $done[$current['infos']['id_parent']] += 1;
+        self::$done[$current['infos']['id_parent']] += 1;
 
         $todo = count($categories[$current['infos']['id_parent']]);
-        $doneC = $done[$current['infos']['id_parent']];
+        $doneC = self::$done[$current['infos']['id_parent']];
 
         $level = $current['infos']['level_depth'] + 1;
 
