@@ -457,6 +457,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
     }
 
+    private function getFullyQualifiedName()
+    {
+        return str_replace('\\', '_', get_class($this));
+    }
+
     /**
      * Saves current object to database (add or update)
      *
@@ -489,7 +494,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // @hook actionObject*AddBefore
         Hook::exec('actionObjectAddBefore', array('object' => $this));
-        Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
+        Hook::exec('actionObject'.$this->getFullyQualifiedName().'AddBefore', array('object' => $this));
 
         // Automatically fill dates
         if ($auto_date && property_exists($this, 'date_add')) {
@@ -560,7 +565,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // @hook actionObject*AddAfter
         Hook::exec('actionObjectAddAfter', array('object' => $this));
-        Hook::exec('actionObject'.get_class($this).'AddAfter', array('object' => $this));
+        Hook::exec('actionObject'.$this->getFullyQualifiedName().'AddAfter', array('object' => $this));
 
         return $result;
     }
@@ -646,7 +651,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         // @hook actionObject*UpdateBefore
         Hook::exec('actionObjectUpdateBefore', array('object' => $this));
-        Hook::exec('actionObject'.get_class($this).'UpdateBefore', array('object' => $this));
+        Hook::exec('actionObject'.$this->getFullyQualifiedName().'UpdateBefore', array('object' => $this));
 
         $this->clearCache();
 
@@ -755,7 +760,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // @hook actionObject*UpdateAfter
         Hook::exec('actionObjectUpdateAfter', array('object' => $this));
-        Hook::exec('actionObject'.get_class($this).'UpdateAfter', array('object' => $this));
+        Hook::exec('actionObject'.$this->getFullyQualifiedName().'UpdateAfter', array('object' => $this));
 
         return $result;
     }
@@ -770,7 +775,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         // @hook actionObject*DeleteBefore
         Hook::exec('actionObjectDeleteBefore', array('object' => $this));
-        Hook::exec('actionObject'.get_class($this).'DeleteBefore', array('object' => $this));
+        Hook::exec('actionObject'.$this->getFullyQualifiedName().'DeleteBefore', array('object' => $this));
 
         $this->clearCache();
         $result = true;
@@ -805,7 +810,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // @hook actionObject*DeleteAfter
         Hook::exec('actionObjectDeleteAfter', array('object' => $this));
-        Hook::exec('actionObject'.get_class($this).'DeleteAfter', array('object' => $this));
+        Hook::exec('actionObject'.$this->getFullyQualifiedName().'DeleteAfter', array('object' => $this));
 
         return $result;
     }
