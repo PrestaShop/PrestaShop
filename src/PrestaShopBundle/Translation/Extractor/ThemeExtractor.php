@@ -63,7 +63,7 @@ class ThemeExtractor
         return $this;
     }
 
-    public function extract(Theme $theme, $locale = 'en-US')
+    public function extract(Theme $theme, $locale = 'en-US', $rootDir = false)
     {
         $this->catalog = new MessageCatalogue($locale);
         // remove the last "/"
@@ -72,8 +72,9 @@ class ThemeExtractor
         $options = array(
             'path' => $themeDirectory,
             'default_locale' => $locale,
+            'root_dir' => $rootDir,
         );
-        $this->smartyExtractor->extract($themeDirectory, $this->catalog);
+        $this->smartyExtractor->extract($themeDirectory, $this->catalog, $options['root_dir']);
 
         if ($this->overrideFromDatabase) {
             $this->overrideFromDatabase($theme->getName(), $locale, $this->catalog);

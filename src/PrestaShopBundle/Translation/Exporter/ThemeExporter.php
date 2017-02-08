@@ -76,11 +76,12 @@ class ThemeExporter
     /**
      * @param $themeName
      * @param $locale
+     * @param $rootDir
      * @return string
      */
-    public function createZipArchive($themeName, $locale)
+    public function createZipArchive($themeName, $locale, $rootDir = false)
     {
-        $archiveParentDirectory = $this->exportCatalogues($themeName, $locale);
+        $archiveParentDirectory = $this->exportCatalogues($themeName, $locale, $rootDir);
         $zipFilename = $this->makeZipFilename($themeName, $locale);
         $this->zipManager->createArchive($zipFilename, $archiveParentDirectory);
 
@@ -90,14 +91,15 @@ class ThemeExporter
     /**
      * @param $themeName
      * @param $locale
+     * @param $rootDir
      * @return string
      */
-    public function exportCatalogues($themeName, $locale)
+    public function exportCatalogues($themeName, $locale, $rootDir = false)
     {
         $this->themeProvider->setLocale($locale);
         $this->themeProvider->setThemeName($themeName);
 
-        $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale);
+        $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir);
         try {
             $themeCatalogue = $this->themeProvider->getThemeCatalogue();
         } catch (\Exception $exception) {
@@ -125,7 +127,8 @@ class ThemeExporter
 
         $this->dumper->dump($mergedTranslations, array(
             'path' => $archiveParentDirectory,
-            'default_locale' => $locale
+            'default_locale' => $locale,
+            'root_dir' => $rootDir,
         ));
 
         $this->renameCatalogues($locale, $archiveParentDirectory);
@@ -152,9 +155,10 @@ class ThemeExporter
     /**
      * @param $themeName
      * @param $locale
+     * @param $rootDir
      * @return \Symfony\Component\Translation\MessageCatalogue
      */
-    protected function getCatalogueExtractedFromTemplates($themeName, $locale)
+    protected function getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir = false)
     {
         $tmpFolderPath = $this->getTemporaryExtractionFolder($themeName);
         $folderPath = $this->getFlattenizationFolder($themeName);
@@ -168,7 +172,7 @@ class ThemeExporter
         $theme = $this->themeRepository->getInstanceByName($themeName);
         $this->themeExtractor
             ->setOutputPath($tmpFolderPath)
-            ->extract($theme, $locale);
+            ->extract($theme, $locale, $rootDir);
 
         Flattenizer::flatten($tmpFolderPath . '/' . $locale, $folderPath . '/' . $locale, $locale);
 
@@ -262,38 +266,95 @@ class ThemeExporter
     protected function makeArchiveParentDirectory($themeName, $locale)
     {
         $zipFilename = $this->makeZipFilename($themeName, $locale);
-        $archiveParentDirectory = dirname($zipFilename);
 
-        return $archiveParentDirectory;
+        return dirname($zipFilename);
     }
 
     /**
-     * @param MessageCatalogue $mergedTranslations
+     * @param MessageCatalogue $catalogue
      */
-    protected function updateCatalogueMetadata(MessageCatalogue $mergedTranslations)
+    protected function updateCatalogueMetadata(MessageCatalogue $catalogue)
     {
-        foreach ($mergedTranslations->all() as $domain => $messages) {
-            foreach ($messages as $translationKey => $translationValue) {
-                $metadata = $mergedTranslations->getMetadata($translationKey, $domain);
-                if (is_null($metadata) || !array_key_exists('file', $metadata)) {
-                    $mergedTranslations->setMetadata($translationKey, array('line' => '', 'file' => ''), $domain);
-                }
+        foreach ($catalogue->all() as $domain => $messages) {
+            $this->ensureCatalogueHasRequiredMetadata($catalogue, $messages, $domain);
+        }
+    }
+
+    /**
+     * @param MessageCatalogue $catalogue
+     * @param $messages
+     * @param $domain
+     */
+    protected function ensureCatalogueHasRequiredMetadata(
+        MessageCatalogue $catalogue,
+        $messages,
+        $domain
+    )
+    {
+        foreach ($messages as $id => $translation) {
+            $metadata = $catalogue->getMetadata($id, $domain);
+            if ($this->shouldAddFileMetadata($metadata)) {
+                $catalogue->setMetadata($id, $this->parseMetadataNotes($metadata), $domain);
             }
         }
     }
 
     /**
+     * @param array $metadata
+     * @return bool
+     */
+    protected function metadataContainNotes(array $metadata = null)
+    {
+        return !is_null($metadata) && array_key_exists('notes', $metadata) && is_array($metadata['notes']) &&
+            array_key_exists(0, $metadata['notes']) && is_array($metadata['notes'][0]) &&
+            array_key_exists('content', $metadata['notes'][0])
+        ;
+    }
+
+    /**
+     * @param $metadata
+     * @return bool
+     */
+    protected function shouldAddFileMetadata($metadata)
+    {
+        return is_null($metadata) || !array_key_exists('file', $metadata);
+    }
+
+    /**
      * @param $locale
-     * @param MessageCatalogue $databaseCatalogue
+     * @param MessageCatalogue $sourceCatalogue
      * @return MessageCatalogue
      */
-    protected function addLocaleToDomain($locale, MessageCatalogue $databaseCatalogue)
+    protected function addLocaleToDomain($locale, MessageCatalogue $sourceCatalogue)
     {
         $catalogue = new MessageCatalogue($locale, array());
-        foreach ($databaseCatalogue->all() as $domain => $messages) {
+        foreach ($sourceCatalogue->all() as $domain => $messages) {
             $catalogue->add($messages, $domain . '.' . $locale);
         }
 
         return $catalogue;
+    }
+
+    /**
+     * @param array|null $metadata
+     * @return array
+     */
+    protected function parseMetadataNotes(array $metadata = null)
+    {
+        $defaultMetadata = array('file' => '', 'line' => '');
+
+        if (!$this->metadataContainNotes($metadata)) {
+            return $defaultMetadata;
+        }
+
+        $notes = $metadata['notes'][0]['content'];
+        if (1 !== preg_match('/(?<file>\S+):(?<line>\S+)/m', $notes, $matches)) {
+            return $defaultMetadata;
+        }
+
+        return array(
+            'file' => $matches['file'],
+            'line' => $matches['line'],
+        );
     }
 }

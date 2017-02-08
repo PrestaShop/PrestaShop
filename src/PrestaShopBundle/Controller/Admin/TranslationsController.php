@@ -208,7 +208,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $locale = $langRepository->getLocaleByIsoCode($isoCode);
 
         $themeExporter = $this->get('prestashop.translation.theme.exporter');
-        $zipFile = $themeExporter->createZipArchive($themeName, $locale);
+        $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_.DIRECTORY_SEPARATOR);
 
         $response = new BinaryFileResponse($zipFile);
         $response->deleteFileAfterSend(true);
