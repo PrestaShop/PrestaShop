@@ -3766,9 +3766,18 @@ class CartCore extends ObjectModel
             'carrier' => new Carrier($this->id_carrier, $id_lang),
         );
 
-        $hook = Hook::exec('actionCartSummary', $summary, null, true);
-        if (is_array($hook)) {
-            $summary = array_merge($summary, (array)array_shift($hook));
+        $hook = Hook::exec(
+            'actionCartSummary',
+            $summary,
+            null,
+            true,
+            true,
+            false,
+            null,
+            true
+        );
+        if (is_array($hook) && !empty($hook)) {
+            $summary = array_merge($summary, $hook);
         }
 
         return $summary;
