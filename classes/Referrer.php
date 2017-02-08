@@ -253,11 +253,21 @@ class ReferrerCore extends ObjectModel
         }
 
         if ($implode) {
-            $sql = 'SELECT COUNT(id_order) AS orders, SUM(total_paid_real / conversion_rate) AS sales
-					FROM '._DB_PREFIX_.'orders
-					WHERE id_order IN ('.implode($implode, ',').')
-						'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
-						AND valid = 1';
+            $sql = 'SELECT COUNT(`id_order`) AS orders, ';
+
+            if (Configuration::get('REFERER_SHIPPING')) {
+                $sql .= '(
+                    SUM('.(Configuration::get('REFERER_TAX') ? 'total_paid_tax_excl' : 'total_paid_real').' / conversion_rate)
+                     - SUM('.(Configuration::get('REFERER_TAX') ? 'total_shipping_tax_excl' : 'total_shipping_tax_incl').' / conversion_rate)
+                ) AS sales ';
+            } else {
+                $sql .= 'SUM('.(Configuration::get('REFERER_TAX') ? 'total_paid_tax_excl':'total_paid_real').' / conversion_rate) AS sales ';
+            }
+
+            $sql .= ' FROM `'._DB_PREFIX_.'orders`
+                WHERE `id_order` IN ('.implode($implode, ',').')
+                '.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
+                AND `valid` = 1';
 
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
         } else {
