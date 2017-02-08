@@ -242,7 +242,7 @@ class AdminOrdersControllerCore extends AdminController
 
         parent::renderForm();
         unset($this->toolbar_btn['save']);
-        $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
+        $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch', 'highlight'));
 
         $defaults_order_state = array('cheque' => (int)Configuration::get('PS_OS_CHEQUE'),
                                                 'bankwire' => (int)Configuration::get('PS_OS_BANKWIRE'),
