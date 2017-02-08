@@ -190,6 +190,22 @@ class OrderControllerCore extends FrontController
         )));
     }
 
+    public function displayAjaxselectPaymentOption()
+    {
+        $cart = $this->cart_presenter->present(
+            $this->context->cart
+        );
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxDie(Tools::jsonEncode(array(
+            'preview' => $this->render('checkout/_partials/cart-summary', array(
+                'cart' => $cart,
+                'static_token' => Tools::getToken(false),
+            ))
+        )));
+    }
+
     public function initContent()
     {
         if (Configuration::isCatalogMode()) {

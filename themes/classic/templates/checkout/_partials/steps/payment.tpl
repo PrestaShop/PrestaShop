@@ -4,7 +4,10 @@
 
   {hook h='displayPaymentTop'}
 
-  <div class="payment-options">
+  <div
+    class="payment-options js-payment-options"
+    data-update-url="{url entity='order' params=['ajax' => 1, 'action' => 'selectPaymentOption']}"
+  >
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
         <div>
@@ -18,13 +21,13 @@
                 name="payment-option"
                 type="radio"
                 required
-                {if $selected_payment_option == $option.id} checked {/if}
+                {if $option.module_name === $selected_payment_option} checked {/if}
               >
               <span></span>
             </span>
             {* This is the way an option should be selected when Javascript is disabled *}
             <form method="GET" class="ps-hidden-by-js">
-              {if $option.id === $selected_payment_option}
+              {if $option.module_name === $selected_payment_option}
                 {l s='Selected' d='Shop.Theme.Checkout'}
               {else}
                 <button class="ps-hidden-by-js" type="submit" name="select_payment_option" value="{$option.id}">
@@ -46,7 +49,7 @@
         {if $option.additionalInformation}
           <div
             id="{$option.id}-additional-information"
-            class="js-additional-information definition-list additional-information{if $option.id != $selected_payment_option} ps-hidden {/if}"
+            class="js-additional-information definition-list additional-information{if $option.module_name != $selected_payment_option} ps-hidden {/if}"
           >
             {$option.additionalInformation nofilter}
           </div>
@@ -54,7 +57,7 @@
 
         <div
           id="pay-with-{$option.id}-form"
-          class="js-payment-option-form {if $option.id != $selected_payment_option} ps-hidden {/if}"
+          class="js-payment-option-form {if $option.module_name != $selected_payment_option} ps-hidden {/if}"
         >
           {if $option.form}
             {$option.form nofilter}
@@ -115,7 +118,7 @@
 
   <div id="payment-confirmation">
     <div class="ps-shown-by-js">
-      <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-primary center-block">
+      <button type="submit" {if !($selected_payment_option and isset($all_conditions_approved))} disabled {/if} class="btn btn-primary center-block">
         {l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}
       </button>
       {if $show_final_summary}
@@ -134,7 +137,7 @@
       {/if}
     </div>
     <div class="ps-hidden-by-js">
-      {if $selected_payment_option and $all_conditions_approved}
+      {if $selected_payment_option and isset($all_conditions_approved)}
         <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}</label>
       {/if}
     </div>

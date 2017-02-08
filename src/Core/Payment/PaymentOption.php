@@ -103,7 +103,6 @@ class PaymentOption implements HookContentClassInterface
     /**
      * For internal reasons, the name of the module
      * that provided this option.
-     * Is this still necessary?
      *
      * @var string
      */

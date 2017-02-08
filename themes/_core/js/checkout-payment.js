@@ -31,7 +31,8 @@ class Payment {
     this.conditionsSelector = '#conditions-to-approve';
     this.conditionAlertSelector = '.js-alert-payment-conditions';
     this.additionalInformatonSelector = '.js-additional-information';
-    this.optionsForm = '.js-payment-option-form';
+    this.optionsForm = '.js-payment-options'
+    this.optionForm = '.js-payment-option-form';
   }
 
   init() {
@@ -43,11 +44,11 @@ class Payment {
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
     $body.on('click', this.confirmationSelector + ' button', $.proxy(this.confirm, this));
 
-    this.collapseOptions();
+    $(this.additionalInformatonSelector + '.ps-hidden, ' + this.optionForm).hide();
   }
 
   collapseOptions() {
-    $(this.additionalInformatonSelector + ', ' + this.optionsForm).hide();
+    $(this.additionalInformatonSelector + ', ' + this.optionForm).hide();
   }
 
   getSelectedOption() {
@@ -101,6 +102,11 @@ class Payment {
         $(this.conditionAlertSelector).show();
       }
     }
+    $.post($(this.optionsForm).data('update-url'), {select_payment_option: $('#' + selectedOption).data('module-name')}).then((resp) => {
+      prestashop.emit('selectPaymentOption', {select_payment_option: $('#' + selectedOption).data('module-name')});
+    }).fail((resp) => {
+      prestashop.trigger('handleError', {eventType: 'selectPaymentOption', resp: resp})
+    });
   }
 
   getPaymentOptionSelector(option) {

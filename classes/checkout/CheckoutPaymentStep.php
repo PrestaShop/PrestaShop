@@ -47,6 +47,11 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
     {
         if (isset($requestParams['select_payment_option'])) {
             $this->selected_payment_option = $requestParams['select_payment_option'];
+            $this->getCheckoutSession()->setPaymentOption(
+                $requestParams['select_payment_option']
+            );
+        } else {
+          $this->selected_payment_option = $this->getCheckoutSession()->getPaymentOption();
         }
 
         $this->setTitle(
