@@ -761,16 +761,27 @@ class CustomerCore extends ObjectModel
      */
     public static function searchByName($query, $limit = null)
     {
-        $sqlBase = 'SELECT *
-                FROM `'._DB_PREFIX_.'customer`';
-        $sql = '('.$sqlBase.' WHERE `email` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sqlBase.' WHERE `id_customer` = '.(int) $query.' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sqlBase.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sqlBase.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-
+        $sql = 'SELECT *
+                FROM `'._DB_PREFIX_.'customer`
+                WHERE 1';
+        $search_items = explode(' ', $query);
+        $research_fields = array('id_customer', 'firstname', 'lastname', 'email');
         if (Configuration::get('PS_B2B_ENABLE')) {
-            $sql .= ' UNION ('.$sqlBase.' WHERE `company` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+            $research_fields[] = 'company';
         }
+
+        $items = array();
+        foreach ($research_fields as $field) {
+            foreach ($search_items as $item) {
+                $items[$item][] = $field.' LIKE \'%'.pSQL($item).'%\' ';
+            }
+        }
+
+        foreach ($items as $likes) {
+            $sql .= ' AND ('.implode(' OR ', $likes).') ';
+        }
+
+        $sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
 
         if ($limit) {
             $sql .= ' LIMIT 0, '.(int) $limit;
