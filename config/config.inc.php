@@ -53,6 +53,13 @@ if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && !file_exists(_PS
 }
 
 /* include settings file only if we are not in multi-tenancy mode */
+require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
+require_once(_PS_CONFIG_DIR_.'autoload.php');
+
+if (isset($timer_start) && $timer_start) {
+    AdminController::$timer_start = $timer_start;
+}
+
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 /* Improve PHP configuration on Windows */
