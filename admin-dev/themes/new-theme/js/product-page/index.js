@@ -45,4 +45,10 @@ $(() => {
     $('.module-render-container').hide();
     $(`.${e.target.value}`).show();
   });
+  $('.modules-list-button').on("click", (e) => {
+    let target = $(e.target).data('target');
+    $('.module-selection').show();
+    $('.modules-list-select').val(target).trigger('change');
+    return false;
+  });
 });
