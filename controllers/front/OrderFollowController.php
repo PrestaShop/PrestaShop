@@ -97,8 +97,6 @@ class OrderFollowControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        parent::initContent();
-
         $ordersReturn = $this->getTemplateVarOrdersReturns();
         if (count($ordersReturn) <= 0) {
             $this->errors[] = $this->trans(
@@ -108,6 +106,7 @@ class OrderFollowControllerCore extends FrontController
 
         $this->context->smarty->assign('ordersReturn', $ordersReturn);
 
+        parent::initContent();
         $this->setTemplate('customer/order-follow');
     }
 

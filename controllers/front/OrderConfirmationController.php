@@ -79,7 +79,6 @@ class OrderConfirmationControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        parent::initContent();
         $order = new Order(Order::getIdByCartId((int) ($this->id_cart)));
         $presentedOrder = $this->order_presenter->present($order);
         $register_form = $this
@@ -87,6 +86,8 @@ class OrderConfirmationControllerCore extends FrontController
             ->setGuestAllowed(false)
             ->fillWith(Tools::getAllValues());
 
+        parent::initContent();
+        
         $this->context->smarty->assign(array(
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($order),
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
@@ -98,7 +99,6 @@ class OrderConfirmationControllerCore extends FrontController
             /* If guest we clear the cookie for security reason */
             $this->context->customer->mylogout();
         }
-
         $this->setTemplate('checkout/order-confirmation');
     }
 

@@ -50,13 +50,12 @@ class AddressesControllerCore extends FrontController
      */
     public function initContent()
     {
-        parent::initContent();
-
         if (count($this->context->customer->getSimpleAddresses()) <= 0) {
             $link = '<a href="'.$this->context->link->getPageLink('address', true).'">'.$this->trans('Add a new address', array(), 'Shop.Theme.Actions').'</a>';
             $this->warning[] = $this->trans('No addresses are available. %s', array($link), 'Shop.Notifications.Success');
         }
 
+        parent::initContent();
         $this->setTemplate('customer/addresses');
     }
 

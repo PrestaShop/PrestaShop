@@ -103,7 +103,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 } else {
                     if (!$this->product->id_type_redirected ||
                         (in_array($this->product->redirect_type, array('301-product', '302-product')) && $this->product->id_type_redirected == $this->product->id)
-                    ){
+                    ) {
                         $this->product->redirect_type = '404';
                     }
 
@@ -185,8 +185,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function initContent()
     {
-        parent::initContent();
-
         if (!$this->errors) {
             if (Pack::isPack((int) $this->product->id) && !Pack::isInStock((int) $this->product->id)) {
                 $this->product->quantity = 0;
@@ -346,6 +344,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // Assign attribute groups to the template
             $this->assignAttributesGroups($product_for_template);
         }
+
+        parent::initContent();
     }
 
     public function displayAjaxQuickview()

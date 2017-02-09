@@ -74,8 +74,6 @@ class CartControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        parent::initContent();
-
         $presenter = new CartPresenter();
         $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
 
@@ -92,6 +90,7 @@ class CartControllerCore extends FrontController
             ]);
             $this->setTemplate('checkout/cart-empty');
         }
+        parent::initContent();
     }
 
     public function displayAjaxUpdate()

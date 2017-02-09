@@ -38,7 +38,6 @@ class IdentityControllerCore extends FrontController
     public function initContent()
     {
         $should_redirect = false;
-        parent::initContent();
 
         $customer_form = $this->makeCustomerForm();
         $customer = new Customer();
@@ -71,6 +70,7 @@ class IdentityControllerCore extends FrontController
             $this->redirectWithNotifications($this->getCurrentURL());
         }
 
+        parent::initContent();
         $this->setTemplate('customer/identity');
     }
 

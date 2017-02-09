@@ -196,8 +196,6 @@ class OrderControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        parent::initContent();
-
         $this->restorePersistedData($this->checkoutProcess);
         $this->checkoutProcess->handleRequest(
             Tools::getAllValues()
@@ -228,6 +226,8 @@ class OrderControllerCore extends FrontController
             'checkout_process' => new RenderableProxy($this->checkoutProcess),
             'cart' => $presentedCart,
         ]);
+
+        parent::initContent();
         $this->setTemplate('checkout/checkout');
     }
 }

@@ -44,7 +44,6 @@ class HistoryControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        parent::initContent();
         $this->order_presenter = new OrderPresenter();
 
         if (Tools::isSubmit('slowvalidation')) {
@@ -61,6 +60,7 @@ class HistoryControllerCore extends FrontController
             'orders' => $orders,
         ));
 
+        parent::initContent();
         $this->setTemplate('customer/history');
     }
 

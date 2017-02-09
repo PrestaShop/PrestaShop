@@ -121,7 +121,7 @@ class GuestTrackingControllerCore extends FrontController
     public function initContent()
     {
         parent::initContent();
-
+        
         if (!Validate::isLoadedObject($this->order)) {
             return $this->setTemplate('customer/guest-login');
         }

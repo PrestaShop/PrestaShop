@@ -68,16 +68,16 @@ class CmsControllerCore extends FrontController
         if (Validate::isLoadedObject($this->cms)) {
             $adtoken = Tools::getAdminToken('AdminCmsContent'.(int) Tab::getIdFromClassName('AdminCmsContent').(int) Tools::getValue('id_employee'));
             if (!$this->cms->isAssociatedToShop() || !$this->cms->active && Tools::getValue('adtoken') != $adtoken) {
-              $this->redirect_after = '404';
-              $this->redirect();
+                $this->redirect_after = '404';
+                $this->redirect();
             } else {
                 $this->assignCase = 1;
             }
         } elseif (Validate::isLoadedObject($this->cms_category) && $this->cms_category->active) {
             $this->assignCase = 2;
         } else {
-          $this->redirect_after = '404';
-          $this->redirect();
+            $this->redirect_after = '404';
+            $this->redirect();
         }
     }
 
@@ -88,10 +88,7 @@ class CmsControllerCore extends FrontController
      */
     public function initContent()
     {
-        parent::initContent();
-
         if ($this->assignCase == 1) {
-
             $cmsVar = $this->objectPresenter->present($this->cms);
 
             $filteredCmsContent = Hook::exec(
@@ -121,7 +118,6 @@ class CmsControllerCore extends FrontController
                 array('entity' => 'cms', 'id' => $this->cms->id)
             );
         } elseif ($this->assignCase == 2) {
-
             $cmsCategoryVar = $this->getTemplateVarCategoryCms();
 
             $filteredCmsCategoryContent = Hook::exec(
@@ -141,6 +137,7 @@ class CmsControllerCore extends FrontController
             $this->context->smarty->assign($cmsCategoryVar);
             $this->setTemplate('cms/category');
         }
+        parent::initContent();
     }
 
     /**

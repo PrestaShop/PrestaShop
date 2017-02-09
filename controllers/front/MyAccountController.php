@@ -37,10 +37,11 @@ class MyAccountControllerCore extends FrontController
      */
     public function initContent()
     {
-        parent::initContent();
         $this->context->smarty->assign([
             'logout_url' => $this->context->link->getPageLink('index', true, null, 'mylogout')
         ]);
+
+        parent::initContent();
         $this->setTemplate('customer/my-account');
     }
 }
