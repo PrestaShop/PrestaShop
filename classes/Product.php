@@ -3664,8 +3664,13 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        foreach ($result as &$row) {
-            $row['id_product_attribute'] = Product::getDefaultAttribute((int)$row['id_product']);
+        foreach ($result as $k => &$row) {
+            if (!Product::checkAccessStatic((int)$row['id_product'], false)) {
+                unset($result[$k]);
+                continue;
+            } else {
+                $row['id_product_attribute'] = Product::getDefaultAttribute((int)$row['id_product']);
+            }
         }
 
         return $this->getProductsProperties($id_lang, $result);
