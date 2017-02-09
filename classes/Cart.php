@@ -2184,6 +2184,7 @@ class CartCore extends ObjectModel
             );
         }
 
+        $wrapping_fees = Tools::convertPrice($wrapping_fees, (int)$this->id_currency);
         return $wrapping_fees;
     }
 
