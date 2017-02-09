@@ -2908,8 +2908,8 @@ class ProductCore extends ObjectModel
             }
         } elseif (isset($context->customer->geoloc_id_country)) {
             $id_country = (int)$context->customer->geoloc_id_country;
-            $id_state = (int)$context->customer->id_state;
-            $zipcode = $context->customer->postcode;
+            $id_state = (int)$context->customer->geoloc_id_state;
+            $zipcode = $context->customer->geoloc_postcode;
         }
 
         if (Tax::excludeTaxeOption()) {
