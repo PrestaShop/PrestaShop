@@ -496,6 +496,9 @@ class AdminOrdersControllerCore extends AdminController
                         if (!empty($tracking_number) && $old_tracking_number != $tracking_number) {
                             if ($order_carrier->sendInTransitEmail($order))
                             {
+                                $customer = new Customer((int)$order->id_customer);
+                                $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
+
                                 Hook::exec('actionAdminOrdersTrackingNumberUpdate', array(
                                     'order' => $order,
                                     'customer' => $customer,
