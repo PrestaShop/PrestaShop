@@ -223,7 +223,7 @@
 							</span>
 						</a>
 						<ul id="employee_links" class="dropdown-menu">
-							<li data-mobile="true" data-from="employee_links" data-target="menu"
+							<li data-mobile="true" data-from="employee_links" data-target="menu">
 								<span class="employee_avatar">
 									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
 								</span>
