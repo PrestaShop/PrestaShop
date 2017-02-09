@@ -494,44 +494,8 @@ class AdminOrdersControllerCore extends AdminController
                     if ($order_carrier->update()) {
                         //send mail only if tracking number is different AND not empty
                         if (!empty($tracking_number) && $old_tracking_number != $tracking_number) {
-                            $customer = new Customer((int)$order->id_customer);
-                            $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
-                            if (!Validate::isLoadedObject($customer)) {
-                                throw new PrestaShopException('Can\'t load Customer object');
-                            }
-                            if (!Validate::isLoadedObject($carrier)) {
-                                throw new PrestaShopException('Can\'t load Carrier object');
-                            }
-                            $orderLanguage = new Language((int) $order->id_lang);
-                            $templateVars = array(
-                                '{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
-                                '{firstname}' => $customer->firstname,
-                                '{lastname}' => $customer->lastname,
-                                '{id_order}' => $order->id,
-                                '{shipping_number}' => $order->shipping_number,
-                                '{order_name}' => $order->getUniqReference()
-                            );
-
-                            if (@Mail::Send(
-                                (int)$order->id_lang,
-                                'in_transit',
-                                $this->trans(
-                                    'Package in transit',
-                                    array(),
-                                    'Emails.Subject',
-                                    $orderLanguage->locale
-                                ),
-                                $templateVars,
-                                $customer->email,
-                                $customer->firstname . ' ' . $customer->lastname,
-                                null,
-                                null,
-                                null,
-                                null,
-                                _PS_MAIL_DIR_,
-                                true,
-                                (int)$order->id_shop
-                            )) {
+                            if ($order_carrier->sendInTransitEmail($order))
+                            {
                                 Hook::exec('actionAdminOrdersTrackingNumberUpdate', array(
                                     'order' => $order,
                                     'customer' => $customer,
