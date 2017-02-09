@@ -5081,7 +5081,8 @@ class ProductCore extends ObjectModel
 
     public function getNoPackPrice()
     {
-        return Pack::noPackPrice((int)$this->id);
+        $noPackPrice = Tools::displayPrice(Pack::noPackPrice((int)$this->id));
+        return $noPackPrice;
     }
 
     public function checkAccess($id_customer)
