@@ -316,7 +316,7 @@ class CartPresenter implements PresenterInterface
                 'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
                 'amount' => $giftWrappingPrice,
                 'value' => ($giftWrappingPrice > 0)
-                    ? $this->priceFormatter->format($giftWrappingPrice)
+                    ? $this->priceFormatter->convertAndFormat($giftWrappingPrice)
                     : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
             );
         }
