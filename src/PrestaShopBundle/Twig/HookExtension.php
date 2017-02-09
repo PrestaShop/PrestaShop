@@ -127,10 +127,12 @@ class HookExtension extends \Twig_Extension
 
         $render = [];
         foreach ($hookRenders as $module => $hookRender) {
+            $moduleAttributes = $this->moduleRepository->getModuleAttributes($module);
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),
                 'content' => $hookRender,
+                'attributes' => $moduleAttributes->all(),
             ];
         }
 
