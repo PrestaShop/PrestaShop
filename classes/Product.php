@@ -2018,27 +2018,34 @@ class ProductCore extends ObjectModel
     */
     public function deleteFeatures()
     {
+        $all_shops = Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL ? true : false;
+
         // List products features
         $features = Db::getInstance()->executeS('
-		SELECT p.*, f.*
-		FROM `'._DB_PREFIX_.'feature_product` as p
-		LEFT JOIN `'._DB_PREFIX_.'feature_value` as f ON (f.`id_feature_value` = p.`id_feature_value`)
-		WHERE `id_product` = '.(int)$this->id);
+            SELECT p.*, f.*
+            FROM `'._DB_PREFIX_.'feature_product` as p
+            LEFT JOIN `'._DB_PREFIX_.'feature_value` as f ON (f.`id_feature_value` = p.`id_feature_value`)
+            '.(!$all_shops ? 'LEFT JOIN `'._DB_PREFIX_.'feature_shop` fs ON (f.`id_feature` = fs.`id_feature`)' : null).'
+            WHERE `id_product` = '.(int)$this->id
+                .(!$all_shops ? ' AND fs.`id_shop` = '.(int)Context::getContext()->shop->id : '')
+        );
+
         foreach ($features as $tab) {
             // Delete product custom features
             if ($tab['custom']) {
-                Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'feature_value`
-				WHERE `id_feature_value` = '.(int)$tab['id_feature_value']);
-                Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'feature_value_lang`
-				WHERE `id_feature_value` = '.(int)$tab['id_feature_value']);
+                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature_value` = '.(int)$tab['id_feature_value']);
+                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_value_lang` WHERE `id_feature_value` = '.(int)$tab['id_feature_value']);
             }
         }
         // Delete product features
         $result = Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'feature_product`
-		WHERE `id_product` = '.(int)$this->id);
+    		DELETE `'._DB_PREFIX_.'feature_product` FROM `'._DB_PREFIX_.'feature_product`
+    		WHERE `id_product` = '.(int)$this->id.(!$all_shops ? '
+                AND `id_feature` IN (
+                    SELECT `id_feature`
+                    FROM `'._DB_PREFIX_.'feature_shop`
+                    WHERE `id_shop` = '.(int)Context::getContext()->shop->id.'
+                )' : ''));
 
         SpecificPriceRule::applyAllRules(array((int)$this->id));
         return ($result);

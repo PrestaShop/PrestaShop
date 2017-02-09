@@ -44,7 +44,9 @@ trait PrestaShopTranslatorTrait
         }
 
         $translated = parent::trans($id, array(), $domain, $locale);
-        if (isset($legacy)) {
+        if (isset($legacy) && 'htmlspecialchars' === $legacy) {
+            $translated = call_user_func($legacy, $translated, ENT_NOQUOTES);
+        } elseif (isset($legacy)) {
             $translated = call_user_func($legacy, $translated);
         }
 

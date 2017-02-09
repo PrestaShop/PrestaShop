@@ -475,6 +475,7 @@
 
 	function searchCustomers()
 	{
+    var customer_search = $('#customer').val();
 		$.ajax({
 			type:"POST",
 			url : "{$link->getAdminLink('AdminCustomers')}",
@@ -484,11 +485,11 @@
 				ajax: "1",
 				tab: "AdminCustomers",
 				action: "searchCustomers",
-				customer_search: $('#customer').val()},
+				customer_search: customer_search
+			},
 			success : function(res)
 			{
-				if(res.found)
-				{
+				if(res.found) {
 					var html = '';
 					$.each(res.customers, function() {
 						html += '<div class="customerCard col-lg-4">';
@@ -505,11 +506,17 @@
 						html += '</div>';
 					});
 				}
-				else
-					html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
-				$('#customers').html(html);
-				resetBind();
-			}
+				else {
+          html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
+        }
+
+        $('#customers').html(html);
+        var search_items = customer_search.split(' ');
+        $.each(search_items, function (index, value) {
+          $('#customers').highlight(value);
+        });
+
+        resetBind();
 		});
 	}
 

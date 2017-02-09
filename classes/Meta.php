@@ -306,7 +306,6 @@ class MetaCore extends ObjectModel
                 return Meta::getCmsCategoryMetas($idCmsCategory, $idLang, $pageName);
             }
         }
-
         return Meta::getHomeMetas($idLang, $pageName);
     }
 
