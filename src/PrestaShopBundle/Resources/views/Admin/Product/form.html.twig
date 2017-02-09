@@ -932,21 +932,55 @@
                     <div class="col-md-12">
                       {% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
 
-                      <div class="row module-selection">
+                      <div class="row module-selection" style="display: none;">
                         <div class="col-sm-12 col-md-8">
                           <select class="modules-list-select" data-toggle="select2">
                             {% for module in hooks %}
-                              <option value="module-{{ loop.index }}">{{ module.name }}</option>
+                              <option value="module-{{ loop.index }}">{{ module.attributes.displayName }}</option>
                             {% endfor %}
                           </select>
                         </div>
+                      </div>
+
+                      <div class="module-render-container all-modules">
+                        <p>
+                          <h2>{{ 'Choose a module to configure'|trans({}, 'Admin.Catalog.Modules') }}</h2>
+                          {{ 'These modules are relative to the product page of your shop.'|trans({}, 'Admin.Catalog.Modules') }}<br />
+                          {{ 'To manage all your back office modules go to the [1]Installed module page[/1]'|trans({}, 'Admin.Catalog.Modules')|replace({'[1]': '<a href="' ~ path("admin_module_manage") ~ '">', '[/1]': '</a>'})|raw }}
+                        </p>
+                        <div class="row">
+                          {% for module in hooks %}
+                            <div class="col-md-12 col-lg-6 col-xl-4">
+                              <div class="module-item-wrapper-grid">
+                                <div class="module-item-heading-grid" data-toggle="modal" data-target="#module-modal-read-more-webcallback">
+                                  <img class="module-logo-thumb-grid" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}">
+                                  <h3 class="text-ellipsis module-name-grid" title="" data-original-title="{{ module.attributes.displayName }}">
+                                    {{ module.attributes.displayName }}
+                                  </h3>
+                                  <div class="text-ellipsis xsmall module-version-author-grid">
+                                    {{ module.attributes.version }} by {{ module.attributes.author }}
+                                  </div>
+                                </div>
+                                <div class="module-quick-description-grid small no-padding">
+                                  {{ module.attributes.description }}
+                                </div>
+                                <div class="module-container">
+                                  <div class="module-quick-action-grid clearfix">
+                                    <button class="btn btn-primary-outline pull-xs-right">
+                                      {{ 'Configure'|trans({}, 'Admin.Catalog.Modules') }}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
                       </div>
 
                       {% for module in hooks %}
                         <div
                           id="module_{{ module.id }}"
                           class="module-render-container module-{{ loop.index }}"
-                          {% if loop.index != 1 %}style="display: none;"{% endif %}
+                          style="display: none;"
                         >
                           <h2 class="name">{{ module.name }}</h2>
                           <div>
