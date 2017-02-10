@@ -70,7 +70,7 @@ class OrderControllerCore extends FrontController
         $this->bootstrap();
     }
 
-    private function getCheckoutSession()
+    protected function getCheckoutSession()
     {
         $deliveryOptionsFinder = new DeliveryOptionsFinder(
             $this->context,
@@ -87,7 +87,7 @@ class OrderControllerCore extends FrontController
         return $session;
     }
 
-    private function bootstrap()
+    protected function bootstrap()
     {
         $translator = $this->getTranslator();
 
@@ -147,7 +147,7 @@ class OrderControllerCore extends FrontController
         ;
     }
 
-    private function saveDataToPersist(CheckoutProcess $process)
+    protected function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
         $data['checksum'] = $this->cartChecksum->generateChecksum($this->context->cart);
@@ -158,7 +158,7 @@ class OrderControllerCore extends FrontController
         );
     }
 
-    private function restorePersistedData(CheckoutProcess $process)
+    protected function restorePersistedData(CheckoutProcess $process)
     {
         $rawData = Db::getInstance()->getValue(
             'SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int) $this->context->cart->id
