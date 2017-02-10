@@ -621,18 +621,19 @@ class HookCore extends ObjectModel
             throw new PrestaShopException('Invalid id_module or hook_name');
         }
 
-        // Check if hook exists
-        if (!$id_hook = Hook::getIdByName($hook_name)) {
-            return false;
-        }
+        // If no modules associated to hook_name or recompatible hook name, we stop the function
 
-        // If no modules associated to hook_name or retro-compatible hook name, we stop the function
         if (!$module_list = Hook::getHookModuleExecList($hook_name)) {
             if ($array_return) {
                 return array();
             } else {
                 return '';
             }
+        }
+
+        // Check if hook exists
+        if (!$id_hook = Hook::getIdByName($hook_name)) {
+            return false;
         }
 
         if (array_key_exists($hook_name, self::$deprecated_hooks)) {
