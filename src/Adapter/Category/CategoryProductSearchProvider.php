@@ -87,14 +87,16 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
         $count = $this->getProductsOrCount($context, $query, 'count');
 
         $result = new ProductSearchResult();
-        $result
-            ->setProducts($products)
-            ->setTotalProductsCount($count)
-        ;
 
-        $result->setAvailableSortOrders(
-            $this->sortOrderFactory->getDefaultSortOrders()
-        );
+        if (!empty($products)) {
+            $result
+                ->setProducts($products)
+                ->setTotalProductsCount($count);
+
+            $result->setAvailableSortOrders(
+                $this->sortOrderFactory->getDefaultSortOrders()
+            );
+        }
 
         return $result;
     }
