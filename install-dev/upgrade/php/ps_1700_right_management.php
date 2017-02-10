@@ -82,4 +82,6 @@ function ps_1700_right_management()
             }
         }
     }
+
+    return true;
 }

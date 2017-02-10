@@ -40,7 +40,7 @@ class Shop
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer")
+     * @ORM\Column(name="id_shop", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */

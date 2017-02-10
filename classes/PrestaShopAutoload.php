@@ -125,7 +125,8 @@ class PrestaShopAutoload
 
         // regenerate the class index if the requested file doesn't exists
         if ((isset($this->index[$className]) && $this->index[$className]['path'] && !is_file($this->root_dir.$this->index[$className]['path']))
-            || (isset($this->index[$className.'Core']) && $this->index[$className.'Core']['path'] && !is_file($this->root_dir.$this->index[$className.'Core']['path']))) {
+            || (isset($this->index[$className.'Core']) && $this->index[$className.'Core']['path'] && !is_file($this->root_dir.$this->index[$className.'Core']['path']))
+            || !file_exists(self::getNamespacedStubFileIndex())) {
             $this->generateIndex();
         }
 

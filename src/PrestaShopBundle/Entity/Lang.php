@@ -38,7 +38,7 @@ class Lang
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_lang", type="integer")
+     * @ORM\Column(name="id_lang", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */

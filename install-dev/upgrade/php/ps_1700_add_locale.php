@@ -37,4 +37,6 @@ function ps_1700_add_locale()
             Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'lang SET locale="'.$locale.'" WHERE id_lang="'.$id_lang.'"');
         }
     }
+
+    return true;
 }

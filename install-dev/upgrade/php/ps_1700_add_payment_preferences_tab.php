@@ -35,4 +35,6 @@ function ps_1700_add_payment_preferences_tab()
         false,
         'AdminParentModules'
         );
+
+    return true;
 }
