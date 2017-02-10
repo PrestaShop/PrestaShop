@@ -81,7 +81,6 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 // deprecated since 1.7.x
                 'expr' => $queryString,
             ));
-
         } elseif (($tag = $query->getSearchTag())) {
             $queryString = urldecode($tag);
 
@@ -119,14 +118,18 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         }
 
         $result = new ProductSearchResult();
-        $result
-            ->setProducts($products)
-            ->setTotalProductsCount($count)
-        ;
 
-        $result->setAvailableSortOrders(
-            $this->sortOrderFactory->getDefaultSortOrders()
-        );
+        if (!empty($products)) {
+            $result
+                ->setProducts($products)
+                ->setTotalProductsCount($count);
+
+            $result->setAvailableSortOrders(
+                $this->sortOrderFactory->getDefaultSortOrders()
+            );
+        }
+
+        return $result;
 
         return $result;
     }

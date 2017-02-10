@@ -73,33 +73,35 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
         $count = $this->getProductsOrCount($context, $query, 'count');
 
         $result = new ProductSearchResult();
-        $result
-            ->setProducts($products)
-            ->setTotalProductsCount($count)
-        ;
 
-        $result->setAvailableSortOrders(
-            array(
-                (new SortOrder('product', 'date_add', 'desc'))->setLabel(
-                    $this->translator->trans('Date added, newest to oldest', array(), 'Shop.Theme.Catalog')
-                ),
-                (new SortOrder('product', 'date_add', 'asc'))->setLabel(
-                    $this->translator->trans('Date added, oldest to newest', array(), 'Shop.Theme.Catalog')
-                ),
-                (new SortOrder('product', 'name', 'asc'))->setLabel(
-                    $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
-                ),
-                (new SortOrder('product', 'name', 'desc'))->setLabel(
-                    $this->translator->trans('Name, Z to A', array(), 'Shop.Theme.Catalog')
-                ),
-                (new SortOrder('product', 'price', 'asc'))->setLabel(
-                    $this->translator->trans('Price, low to high', array(), 'Shop.Theme.Catalog')
-                ),
-                (new SortOrder('product', 'price', 'desc'))->setLabel(
-                    $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
-                ),
-            )
-        );
+        if (!empty($products)) {
+            $result
+                ->setProducts($products)
+                ->setTotalProductsCount($count);
+
+            $result->setAvailableSortOrders(
+                array(
+                    (new SortOrder('product', 'date_add', 'desc'))->setLabel(
+                        $this->translator->trans('Date added, newest to oldest', array(), 'Shop.Theme.Catalog')
+                    ),
+                    (new SortOrder('product', 'date_add', 'asc'))->setLabel(
+                        $this->translator->trans('Date added, oldest to newest', array(), 'Shop.Theme.Catalog')
+                    ),
+                    (new SortOrder('product', 'name', 'asc'))->setLabel(
+                        $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
+                    ),
+                    (new SortOrder('product', 'name', 'desc'))->setLabel(
+                        $this->translator->trans('Name, Z to A', array(), 'Shop.Theme.Catalog')
+                    ),
+                    (new SortOrder('product', 'price', 'asc'))->setLabel(
+                        $this->translator->trans('Price, low to high', array(), 'Shop.Theme.Catalog')
+                    ),
+                    (new SortOrder('product', 'price', 'desc'))->setLabel(
+                        $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
+                    ),
+                )
+            );
+        }
 
         return $result;
     }
