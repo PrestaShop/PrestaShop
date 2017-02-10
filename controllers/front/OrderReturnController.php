@@ -84,7 +84,6 @@ class OrderReturnControllerCore extends FrontController
         }
 
         parent::initContent();
-
         $this->setTemplate('customer/order-return');
     }
 

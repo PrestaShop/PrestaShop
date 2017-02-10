@@ -159,8 +159,6 @@ class OrderDetailControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        parent::initContent();
-
         $id_order = (int)Tools::getValue('id_order');
         $id_order = $id_order && Validate::isUnsignedId($id_order) ? $id_order : false;
 
@@ -204,6 +202,7 @@ class OrderDetailControllerCore extends FrontController
             unset($order);
         }
 
+        parent::initContent();
         $this->setTemplate('customer/order-detail');
     }
 

@@ -161,8 +161,6 @@ class StoresControllerCore extends FrontController
      */
     public function initContent()
     {
-        parent::initContent();
-
         $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
         if (!in_array($distance_unit, array('km', 'mi'))) {
             $distance_unit = 'km';
@@ -175,6 +173,7 @@ class StoresControllerCore extends FrontController
             'stores' => $this->getTemplateVarStores(),
         ));
 
+        parent::initContent();
         $this->setTemplate('cms/stores');
     }
 

@@ -41,8 +41,6 @@ class OrderSlipControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        parent::initContent();
-
         $credit_slips = $this->getTemplateVarCreditSlips();
 
         if (count($credit_slips) <= 0) {
@@ -52,6 +50,8 @@ class OrderSlipControllerCore extends FrontController
         $this->context->smarty->assign([
             'credit_slips' => $credit_slips,
         ]);
+
+        parent::initContent();
         $this->setTemplate('customer/order-slip');
     }
 

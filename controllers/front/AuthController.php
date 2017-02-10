@@ -42,7 +42,6 @@ class AuthControllerCore extends FrontController
 
     public function initContent()
     {
-        parent::initContent();
         $should_redirect = false;
 
         if (Tools::isSubmit('submitCreate') || Tools::isSubmit('create_account')) {
@@ -86,6 +85,8 @@ class AuthControllerCore extends FrontController
             ]);
             $this->setTemplate('customer/authentication');
         }
+
+        parent::initContent();
 
         if ($should_redirect && !$this->ajax) {
             $back = urldecode(Tools::getValue('back'));
