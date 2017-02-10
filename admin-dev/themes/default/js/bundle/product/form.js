@@ -573,6 +573,17 @@ var specificPrices = (function() {
   var productPriceField = $('#form_step2_specific_price_sp_price');
   var discountTypeField = $('#form_step2_specific_price_sp_reduction_type');
   var discountTaxField = $('#form_step2_specific_price_sp_reduction_tax');
+  var initSpecificPriceForm = new Object();
+
+  /** Get all specific prices */
+  function getInitSpecificPriceForm() {
+    $('#specific_price_form').find('select,input').each(function() {
+        initSpecificPriceForm[$(this).attr('id')] = $(this).val();
+    });
+    $('#specific_price_form').find('input:checkbox').each(function() {
+        initSpecificPriceForm[$(this).attr('id')] = $(this).prop('checked');
+    });
+  }
 
   /** Get all specific prices */
   function getAll() {
@@ -653,6 +664,7 @@ var specificPrices = (function() {
           },
           success: function(response) {
             getAll();
+            resetForm();
             showSuccessMessage(response);
           },
           error: function(response) {
@@ -690,14 +702,22 @@ var specificPrices = (function() {
    * Reset all subform inputs values
    */
   function resetForm() {
-    $('#specific_price_form input').val('');
+    $('#specific_price_form').find('input').each(function() {
+        $(this).val(initSpecificPriceForm[$(this).attr('id')]);
+    });
+    $('#specific_price_form').find('select').each(function() {
+        $(this).val(initSpecificPriceForm[$(this).attr('id')]).change();
+    });
+    $('#specific_price_form').find('input:checkbox').each(function() {
+        $(this).prop("checked", true);
+    });
   }
 
   return {
     'init': function() {
       this.getAll();
 
-      $('#specific-price .add').click(function () {
+      $('#specific-price .add').click(function() {
         $(this).hide();
       });
 
@@ -708,17 +728,16 @@ var specificPrices = (function() {
         productPriceField.prop('disabled', true);
       });
 
-      $('#specific_price_form .js-save').click(function () {
+      $('#specific_price_form .js-save').click(function() {
         add($(this));
-        resetForm();
       });
 
-      $(document).on('click', '#js-specific-price-list .js-delete', function (e) {
+      $(document).on('click', '#js-specific-price-list .js-delete', function(e) {
         e.preventDefault();
         remove($(this));
       });
 
-      $('#form_step2_specific_price_sp_reduction_type').change(function () {
+      $('#form_step2_specific_price_sp_reduction_type').change(function() {
         if ($(this).val() === 'percentage') {
           $('#form_step2_specific_price_sp_reduction_tax').hide();
         } else {
@@ -745,6 +764,8 @@ var specificPrices = (function() {
         }
       });
 
+      this.getInitSpecificPriceForm();
+
     },
     'getAll': function() {
       getAll();
@@ -752,6 +773,9 @@ var specificPrices = (function() {
     'refreshCombinationsList': function() {
       refreshCombinationsList();
     },
+    'getInitSpecificPriceForm' : function() {
+      getInitSpecificPriceForm();
+    }
   };
 })();
 
