@@ -11,6 +11,7 @@ PrestaShop is a free and Open Source e-commerce web application, committed to pr
 
 To download the latest stable public version of PrestaShop (currently, version 1.6), please go to [the download page][2] on the official PrestaShop site.
 
+Just a test
 
 About the 'develop' branch
 --------
