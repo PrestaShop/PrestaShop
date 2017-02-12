@@ -207,12 +207,6 @@ services:
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
 
-    prestashop.twig.extension.hook:
-        class: PrestaShopBundle\Twig\HookExtension
-        arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module", "@prestashop.core.admin.module.repository"]
-        tags:
-            - { name: twig.extension }
-
     prestashop.twig.extension.stringloader:
         class: Twig_Extension_StringLoader
         tags:
@@ -323,6 +317,12 @@ services:
             - "@filesystem"
             - "@finder"
             - "@translator"
+
+    prestashop.twig.extension.hook:
+        class: PrestaShopBundle\Twig\HookExtension
+        arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module", "@prestashop.core.admin.module.repository"]
+        tags:
+            - { name: twig.extension }
 
 # Addons API Client
     prestashop.addons.client_api:
