@@ -24,6 +24,49 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.0.5 - (2017-02-06)
+####################################
+- Back Office:
+   - Bug fix:
+     - #7450: Fix some automator problem
+     - #7408: Fix deletion of virtual product attachment
+     - #7396: Fix products actions
+     - #7383: Add some cast on variables
+     - #7394: Fix fatal on getModulesToEnable()
+     - #7379: Fix image icon
+     - #7318: Fix saving decimals in AdminProduct combination form
+     - #7301: Translate categories tree in product page
+     - #7325: Add success message when import localization is ok
+     - #7324: No default reference on catalog
+     - #7326: Fix attachment file
+
+ - Front Office:
+   - Bug fix:
+     - #7410: Redirect to 404 when CMS page doesn't exist
+     - #7340: Fix translations error from module with sprintf
+     - #6972: Add missing nofilter after display hook
+
+ - Core:
+   - Improvement:
+     - #7360: Add config.php to the file .gitignore
+     - #7353: Update Israel VAT to 17%
+   - Bug fix:
+     - #7465: Protect some folders
+     - #7424: Update composer with modules
+     - #7354: Filter theme / module inputs
+     - #7418: Alter currency name to varchar(64)
+     - #7419: Use the right modules branch
+     - #7411: Refacto to get translation files
+     - #7407: Do not load index.php file in catalogue
+     - #7397: Fix email override path
+     - #7387: Fallback dataformate duplicate value
+     - #7347: Use the right attributes separator into the cart
+     - #7388: Fix clear media cache
+     - #7385: Fix function call
+     - #7351: Replace PCRE e modifier with callback
+
+
+####################################
 #   v1.7.0.4 - (2017-01-10)
 ####################################
 - Back Office:
