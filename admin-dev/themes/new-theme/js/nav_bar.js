@@ -23,9 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
+import MobileDetect from 'mobile-detect';
 
 export default class NavBar {
   constructor() {
+    let md = new MobileDetect(window.navigator.userAgent);
+    const maxPhoneWidth = 600;
+
     $(() => {
       $(".nav-bar").find(".link-levelone").hover(function() {
         $(this).addClass("-hover");
@@ -39,7 +43,7 @@ export default class NavBar {
           url: "index.php",
           cache: false,
           data: {
-            token: employee_token,
+            token: window.employee_token,
             ajax: 1,
             action: 'toggleMenu',
             tab: 'AdminEmployees',
@@ -47,6 +51,40 @@ export default class NavBar {
           },
         });
       });
+      if(md.isPhoneSized(maxPhoneWidth)) {
+        $('body').addClass('mobile');
+        this.mobileNav();
+      }
     });
+  }
+  mobileNav() {
+    let $logout = $('#header_logout').addClass('link').removeClass('m-t-1').prop('outerHTML');
+    let $employee = $('.employee_avatar').prop('outerHTML');
+    let profileLink = $('.profile-link').attr('href');
+    let $shoplist = $('.shop-list');
+
+    $shoplist.find('.link').removeClass('link');
+    $('.nav-bar').addClass('mobile-nav');
+    $('.panel-collapse').addClass('collapse').removeClass('submenu');
+    $('.link-levelone a').each((index, el)=> {
+      let id = $(el).parent().find('.collapse').attr('id');
+      if(id) {
+        $(el).attr('href', `#${id}`).attr('data-toggle','collapse');
+      }
+    });
+    $('.main-menu').append(`<li class="link-levelone">${$logout}</li>`);
+    $('.main-menu').prepend(`<li class="link-levelone">${$employee}</li>`);
+    $('.main-menu li:first').append( $('.shop-list'));
+    $('.employee_avatar img, .employee_avatar span').wrap(`<a href="${profileLink}"></a>`);
+    $('.collapse').collapse({
+      toggle: false
+    });
+
+    $('.js-mobile-menu').on('click', expand);
+
+    function expand (){
+      $('.mobile-layer, .mobile-nav').toggleClass('expanded');
+      $('.mobile-layer').hasClass('expanded') ? $('.mobile-layer').on('click', expand) : $('.mobile-layer').off();
+    };
   }
 }

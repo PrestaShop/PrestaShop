@@ -5,10 +5,53 @@
   width: $size-navbar-width;
   padding-top: rem(10px) + $size-header-height;
   height: 100%;
-
+  @include media-breakpoint-down(sm) {
+    visibility: hidden;
+  }
   .material-icons {
     font-size: rem(20px);
     line-height: rem(28px);
+  }
+  &.mobile-nav {
+    margin-left: -100%;
+    width: 90%;
+    @include transition(all .5s ease-in);
+    &.expanded {
+      visibility: visible;
+      margin-left: 0;
+    }
+    .link-levelone:nth-child(n+11) {
+      display: none;
+      &:last-child {
+        display: block;
+      }
+    }
+    .panel-collapse {
+      padding-left: 0;
+      .link-leveltwo .link {
+        padding-left: rem(50px);
+        background: $gray-dark-hover;
+      }
+    }
+    #header_logout::before {
+      font-family: 'Material Icons';
+      content: "\E8AC";
+    }
+    .employee_avatar {
+      span {
+        color: white;
+        display: block;
+        margin-bottom: rem(10px);
+      }
+      img{
+        width: rem(60px);
+        height: rem(60px);
+      }
+    }
+    .shop-list {
+      text-align: center;
+      font-weight: bold;
+    }
   }
 }
 
@@ -34,14 +77,26 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    @include media-breakpoint-down(sm) {
+      font-size: rem(16px);
+      height: rem(50px);
+      border-bottom: 1px solid $gray-medium;
+      padding-top: rem(10px);
+    }
   }
   &.-active {
     border-right: rem(3px) solid $gray-dark-text-hover;
+    @include media-breakpoint-down(sm) {
+      border-right: none;
+    }
   }
   &.-active > .link,
   &.-hover > .link {
     background: $gray-dark-hover;
     color: $gray-dark-text-hover;
+    @include media-breakpoint-down(sm) {
+      background: $gray-dark;
+    }
   }
   > .link > .material-icons {
     display: none;
@@ -67,6 +122,9 @@
       position: inherit;
       display: block;
       padding-left: $padding-size;
+      @include media-breakpoint-down(sm) {
+        padding-left: 0;
+      }
     }
   }
 }
@@ -77,7 +135,10 @@
     border: none;
   }
   > .link {
-    padding: 0 20px;
+    padding: 0 rem(20px);
+    @include media-breakpoint-down(sm) {
+      padding-top: rem(10px);
+    }
   }
   > .link:hover {
     color: $gray-dark-text-hover;
@@ -180,6 +241,25 @@
     > .link {
       padding: 0 20px;
       text-align: left;
+    }
+  }
+}
+
+.mobile-layer {
+  @include media-breakpoint-down(sm) {
+    @include transition(all 0.2s ease-in-out);
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    background: rgba(0,0,0,.7);
+    width: 100%;
+    height: 100%;
+    z-index: 501;
+    top: 0;
+    left: 0;
+    &.expanded {
+      opacity: 1;
+      visibility: visible;
     }
   }
 }

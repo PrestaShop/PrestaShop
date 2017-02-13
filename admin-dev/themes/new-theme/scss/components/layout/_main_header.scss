@@ -4,6 +4,9 @@
   background: $white;
   height: $size-header-height;
   width: 100%;
+  .mobile & {
+    box-shadow:rgba(black,0.7) 0 0 10px;
+  }
   > .logo {
     display: inline-block;
     background: url(img/logo.png) no-repeat center center;
