@@ -2890,31 +2890,15 @@ class ProductCore extends ObjectModel
 
         $id_currency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int) Configuration::get('PS_CURRENCY_DEFAULT');
 
-        // retrieve address informations
-        $id_country = (int)$context->country->id;
-        $id_state = 0;
-        $zipcode = 0;
-
         if (!$id_address && Validate::isLoadedObject($cur_cart)) {
             $id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
         }
 
-        if ($id_address) {
-            $address_infos = Address::getCountryAndState($id_address);
-            if ($address_infos['id_country']) {
-                $id_country = (int)$address_infos['id_country'];
-                $id_state = (int)$address_infos['id_state'];
-                $zipcode = $address_infos['postcode'];
-            }
-        } elseif (isset($context->customer->geoloc_id_country)) {
-            $id_country = (int)$context->customer->geoloc_id_country;
-            $id_state = (int)$context->customer->geoloc_id_state;
-            $zipcode = $context->customer->geoloc_postcode;
-        }
-
-        if (Tax::excludeTaxeOption()) {
-            $usetax = false;
-        }
+        // retrieve address informations
+        $address = Address::initialize($id_address, true);
+        $id_country = (int)$address->id_country;
+        $id_state = (int)$address->id_state;
+        $zipcode = $address->postcode;
 
         if ($usetax != false
             && !empty($address_infos['vat_number'])
