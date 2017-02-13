@@ -1044,13 +1044,18 @@ namespace PrestaShopBundle\Install {
             $root_dir = realpath(__DIR__ . '/../../../');
 
             $phpParametersFilepath = $root_dir . '/app/config/parameters.php';
+            $addNewCookieKey = false;
             if (file_exists($phpParametersFilepath)) {
-                if ($event !== null) {
-                    $event->getIO()->write('parameters file already exists!');
-                    $event->getIO()->write('Finished...');
+                $default_parameters = require $phpParametersFilepath;
+                if (!array_key_exists('new_cookie_key', $default_parameters['parameters'])) {
+                    $addNewCookieKey = true;
+                } else {
+                    if ($event !== null) {
+                        $event->getIO()->write('parameters file already exists!');
+                        $event->getIO()->write('Finished...');
+                    }
+                    return false;
                 }
-
-                return false;
             }
 
             if (!file_exists($phpParametersFilepath) && !file_exists($root_dir.'/app/config/parameters.yml')
@@ -1074,8 +1079,21 @@ namespace PrestaShopBundle\Install {
             };
 
             $fileMigrated = false;
-            $default_parameters = Yaml::parse(file_get_contents($root_dir . '/app/config/parameters.yml.dist'));
+            if (!$addNewCookieKey) {
+                $default_parameters = Yaml::parse(file_get_contents($root_dir . '/app/config/parameters.yml.dist'));
+            }
             $default_parameters['parameters']['new_cookie_key'] = PhpEncryption::createNewRandomKey();
+
+            if ($addNewCookieKey) {
+                $exportPhpConfigFile($default_parameters, $phpParametersFilepath);
+                if ($event !== null) {
+                    $event->getIO()->write("parameters file already exists!");
+                    $event->getIO()->write("add new parameter 'new_cookie_key'");
+                    $event->getIO()->write("Finished...");
+                }
+                return false;
+            }
+
             if (file_exists($root_dir . '/' . self::SETTINGS_FILE)) {
                 $tmp_settings = file_get_contents($root_dir . '/' . self::SETTINGS_FILE);
             } else {
