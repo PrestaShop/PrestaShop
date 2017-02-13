@@ -697,7 +697,7 @@ class AdminPerformanceControllerCore extends AdminController
 
         if ((bool)Tools::getValue('ccc_up')) {
             if ($this->access('edit')) {
-                $theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';
+                $theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_name.'/cache/';
                 @mkdir($theme_cache_directory, 0777, true);
                 if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory)) {
                     $this->errors[] = $this->trans(
