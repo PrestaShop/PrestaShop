@@ -2900,6 +2900,10 @@ class ProductCore extends ObjectModel
         $id_state = (int)$address->id_state;
         $zipcode = $address->postcode;
 
+        if (Tax::excludeTaxeOption()) {
+            $usetax = false;
+        }
+
         if ($usetax != false
             && !empty($address_infos['vat_number'])
             && $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY')
