@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Twig;
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -58,12 +59,13 @@ class HookExtension extends \Twig_Extension
      */
     public function __construct(
       HookDispatcher $hookDispatcher,
-      ModuleDataProvider $moduleDataProvider,
-      ModuleRepository $moduleRepository = null
+      ModuleDataProvider $moduleDataProvider
     ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->moduleDataProvider = $moduleDataProvider;
-        $this->moduleRepository = $moduleRepository;
+
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $this->moduleRepository = $moduleManagerBuilder->buildRepository();
     }
 
     /**
