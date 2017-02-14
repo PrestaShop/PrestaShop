@@ -5753,6 +5753,18 @@ class ProductCore extends ObjectModel
         return $result;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasCombinations()
+    {
+        if (is_null($this->id) || 0 >= $this->id) {
+            return false;
+        }
+        $attributes = self::getAttributesInformationsByProduct($this->id);
+        return !empty($attributes);
+    }
+
     public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
     {
         if (!is_array($id_attributes)) {

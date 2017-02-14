@@ -723,6 +723,7 @@ class AdminProductWrapper
             return false;
         }
 
+        $id_product_attribute = \Product::getDefaultAttribute($product->id);
         $is_rewrite_active = (bool)\ConfigurationCore::get('PS_REWRITING_SETTINGS');
         $preview_url = $context->link->getProductLink(
             $product,
@@ -731,7 +732,7 @@ class AdminProductWrapper
             null,
             $id_lang,
             (int)$context->shop->id,
-            0,
+            $id_product_attribute,
             $is_rewrite_active
         );
 
