@@ -136,7 +136,7 @@ class HelperListCore extends Helper
     {
         // Append when we get a syntax error in SQL query
         if ($list === false) {
-            $this->context->controller->warnings[] = $this->l('Bad SQL query', 'Helper');
+            $this->context->controller->warnings[] = Context::getContext()->getTranslator()->trans('Bad SQL query', array(), 'Admin.Global');
             return false;
         }
 
@@ -380,11 +380,11 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_duplicate.tpl');
         if (!array_key_exists('Bad SQL query', self::$cache_lang)) {
-            self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'Helper');
+            self::$cache_lang['Duplicate'] = Context::getContext()->getTranslator()->trans('Duplicate', array(), 'Admin.Actions');
         }
 
         if (!array_key_exists('Copy images too?', self::$cache_lang)) {
-            self::$cache_lang['Copy images too?'] = $this->l('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', 'Helper');
+            self::$cache_lang['Copy images too?'] = Context::getContext()->getTranslator()->trans('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', array(), 'Admin.Global');
         }
 
         $duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
@@ -429,7 +429,7 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_details.tpl');
         if (!array_key_exists('Details', self::$cache_lang)) {
-            self::$cache_lang['Details'] = $this->l('Details', 'Helper');
+            self::$cache_lang['Details'] = Context::getContext()->getTranslator()->trans('Details', array(), 'Admin.Global');
         }
 
         $ajax_params = $this->ajax_params;
@@ -456,7 +456,7 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_view.tpl');
         if (!array_key_exists('View', self::$cache_lang)) {
-            self::$cache_lang['View'] = $this->l('View', 'Helper');
+            self::$cache_lang['View'] = Context::getContext()->getTranslator()->trans('View', array(), 'Admin.Actions');
         }
 
         $tpl->assign(array(
@@ -474,7 +474,7 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_edit.tpl');
         if (!array_key_exists('Edit', self::$cache_lang)) {
-            self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
+            self::$cache_lang['Edit'] = Context::getContext()->getTranslator()->trans('Edit', array(), 'Admin.Actions');
         }
 
         $href = $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token);
@@ -510,15 +510,15 @@ class HelperListCore extends Helper
         $tpl = $this->createTemplate('list_action_delete.tpl');
 
         if (!array_key_exists('Delete', self::$cache_lang)) {
-            self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
+            self::$cache_lang['Delete'] = Context::getContext()->getTranslator()->trans('Delete', array(), 'Admin.Actions');
         }
 
         if (!array_key_exists('DeleteItem', self::$cache_lang)) {
-            self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper', true, false);
+            self::$cache_lang['DeleteItem'] = Context::getContext()->getTranslator()->trans('Delete selected item?', 'Admin.Actions');
         }
 
         if (!array_key_exists('Name', self::$cache_lang)) {
-            self::$cache_lang['Name'] = $this->l('Name:', 'Helper', true, false);
+            self::$cache_lang['Name'] = Context::getContext()->getTranslator()->trans('Name:', array(), 'Admin.Global');
         }
 
         if (!is_null($name)) {
@@ -563,7 +563,7 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_default.tpl');
         if (!array_key_exists('Default', self::$cache_lang)) {
-            self::$cache_lang['Default'] = $this->l('Default', 'Helper');
+            self::$cache_lang['Default'] = Context::getContext()->getTranslator()->trans('Default', array(), 'Admin.Global');
         }
 
         $tpl->assign(array(
