@@ -42,14 +42,14 @@
         {{ module.attributes.displayName }}
         <small class="text-muted">v{{ module.attributes.version }} - by {{ module.attributes.author }}</small>
         {% if module.attributes.type is not empty and module.attributes.type == 'addonsBought' %}
-        - <span class="module-badge-bought help-tooltip text-warning" data-title="{{ 'You bought this module on PrestaShop Addons. Thank You.'|trans({}) }}"><i class="icon-pushpin"></i> <small>{{ 'Bought'|trans({}) }}</small></span>
+        - <span class="module-badge-bought help-tooltip text-warning" data-title="{{ 'You bought this module on PrestaShop Addons. Thank You.'|trans({}, 'Admin.Modules.Feature') }}"><i class="icon-pushpin"></i> <small>{{ 'Bought'|trans({}, 'Admin.Modules.Feature') }}</small></span>
         {% elseif module.attributes.type is not empty and module.attributes.type == 'addonsMustHave' %}
-        - <span class="module-badge-popular help-tooltip text-primary" data-title="{{ 'This module is available on PrestaShop Addons.'|trans({}) }}"><i class="icon-group"></i> <small>{{ 'Popular'|trans({}) }}</small></span>
+        - <span class="module-badge-popular help-tooltip text-primary" data-title="{{ 'This module is available on PrestaShop Addons.'|trans({}, 'Admin.Modules.Feature') }}"><i class="icon-group"></i> <small>{{ 'Popular'|trans({}, 'Admin.Modules.Feature') }}</small></span>
         {% elseif module.attributes.type is not empty and module.attributes.type == 'addonsPartner' %}
-        - <span class="module-badge-partner help-tooltip text-warning" data-title="{{ 'This module is available for free thanks to our partner.'|trans({}) }}"><i class="icon-pushpin"></i> <small>{{ 'Official'|trans({}) }}</small></span>
+        - <span class="module-badge-partner help-tooltip text-warning" data-title="{{ 'This module is available for free thanks to our partner.'|trans({}, 'Admin.Modules.Feature') }}"><i class="icon-pushpin"></i> <small>{{ 'Official'|trans({}, 'Admin.Modules.Feature') }}</small></span>
         {% elseif module.attributes.id is defined and module.attributes.id >= 0 %}
           {% if module.attributes.version_addons is defined and module.attributes.version_addons %}
-            <span class="label label-warning">{{ 'Need update'|trans({}) }}</span>
+            <span class="label label-warning">{{ 'Need update'|trans({}, 'Admin.Modules.Feature') }}</span>
           {% endif %}
         {% endif %}
       </div>
