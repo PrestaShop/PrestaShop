@@ -909,7 +909,6 @@
 		//refresh form customization
 		searchProducts();
 
-		addProductProcess();
 	}
 
 	function addProductProcess()
