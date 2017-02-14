@@ -1,6 +1,6 @@
 $widthSidebarNav: 210px
 $widthSidebarSubmenu: 200px
-$menu-item-size: 25px
+$menu-item-size: 34px
 $min-height: 950px
 
 #nav-sidebar
@@ -48,8 +48,6 @@ $min-height: 950px
 						color: $sidebar-menu-color
 						display: block
 						padding: 4px 8px
-						@media (min-height: $min-height)
-							min-height: $menu-item-size
 						background-color: $main-color
 						&:hover
 							color: $sidebar-menu-hover-color
@@ -517,6 +515,8 @@ $min-height: 950px
 	color: #BEBEBE
 
 .mobile-nav
+	#header_infos
+		@include box-shadow(rgba(black,0.7) 0 0 10px)
 	#content
 		h2.page-title
 			@include padding-left(10px!important)
