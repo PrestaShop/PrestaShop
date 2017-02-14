@@ -89,7 +89,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 
 		<div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open(admin)">
 			<img src="theme/img/visu_boBlock.png" alt="" />
-			<h3><?php echo $this->translator->trans('Back Office'); ?></h3>
+			<h3><?php echo $this->translator->trans('Back Office', array(), 'Install'); ?></h3>
 			<p class="description"><?php echo $this->translator->trans('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.', array(), 'Install'); ?></p>
 			<p>
 				<a class="BO" target="_blank"><span><?php echo $this->translator->trans('Manage your store', array(), 'Install'); ?></span></a>
