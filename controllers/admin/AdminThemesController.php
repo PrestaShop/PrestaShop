@@ -78,7 +78,14 @@ class AdminThemesControllerCore extends AdminController
 
     public function downloadAddonsThemes()
     {
-        if (!$this->logged_on_addons) {
+        if (
+            !$this->logged_on_addons
+            || !in_array(
+                    $this->authorizationLevel(),
+                    array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE)
+                )
+            || _PS_MODE_DEMO_
+        ) {
             return false;
         }
 
@@ -226,6 +233,9 @@ class AdminThemesControllerCore extends AdminController
     {
         global $kernel;
 
+        if (isset($_GET['error'])) {
+            $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+        }
         // done here, because if it is true, $_FILES & $_POST are empty, so we don't have any message.
         $post_max_size = Tools::getMaxUploadSize();
         if ($post_max_size && isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && $_SERVER['CONTENT_LENGTH'] > $post_max_size) {
@@ -242,18 +252,28 @@ class AdminThemesControllerCore extends AdminController
             );
         } elseif (Tools::isSubmit('submitAddconfiguration')) {
             try {
-                if ($filename = Tools::getValue('theme_archive_server')) {
-                    $path = _PS_ALL_THEMES_DIR_.$filename;
-                    $this->theme_manager->install($path);
-                } elseif ($filename = Tools::getValue('themearchive')) {
-                    $path = _PS_ALL_THEMES_DIR_.$filename;
-                    $destination = $this->processUploadFile($path);
-                    if (!empty($destination)) {
-                        $this->theme_manager->install($destination);
-                        @unlink($destination);
+                if(
+                    !in_array(
+                        $this->authorizationLevel(),
+                        array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                    || _PS_MODE_DEMO_
+                ) {
+                    Throw new Exception ($this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error'));
+                }
+                else {
+                    if ($filename = Tools::getValue('theme_archive_server')) {
+                        $path = _PS_ALL_THEMES_DIR_.$filename;
+                        $this->theme_manager->install($path);
+                    } elseif ($filename = Tools::getValue('themearchive')) {
+                        $path = _PS_ALL_THEMES_DIR_.$filename;
+                        $destination = $this->processUploadFile($path);
+                        if (!empty($destination)) {
+                            $this->theme_manager->install($destination);
+                            @unlink($destination);
+                        }
+                    } elseif ($source = Tools::getValue('themearchiveUrl')) {
+                        $this->theme_manager->install($source);
                     }
-                } elseif ($source = Tools::getValue('themearchiveUrl')) {
-                    $this->theme_manager->install($source);
                 }
             } catch (Exception $e) {
                 $this->errors[] = $e->getMessage();
@@ -263,46 +283,92 @@ class AdminThemesControllerCore extends AdminController
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
         } elseif (Tools::getValue('action') == 'submitConfigureLayouts') {
-            $this->processSubmitConfigureLayouts();
-            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
-        } elseif (Tools::getValue('action') == 'enableTheme') {
-            $isThemeEnabled = $this->theme_manager->enable(Tools::getValue('theme_name'));
-            // get errors if theme wasn't enabled
-            if (!$isThemeEnabled) {
-                $this->errors[] = $this->theme_manager->getErrors(Tools::getValue('theme_name'));
+            if(
+                !in_array(
+                    $this->authorizationLevel(),
+                    array(AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                || _PS_MODE_DEMO_
+            ) {
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } else {
-                Tools::clearSmartyCache();
-                Tools::clearCache();
+                $this->processSubmitConfigureLayouts();
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
+        } elseif (Tools::getValue('action') == 'enableTheme') {
+            if(
+                !in_array(
+                    $this->authorizationLevel(),
+                    array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                || _PS_MODE_DEMO_
+            ) {
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+            } else {
+                $isThemeEnabled = $this->theme_manager->enable(Tools::getValue('theme_name'));
+                // get errors if theme wasn't enabled
+                if (!$isThemeEnabled) {
+                    $this->errors[] = $this->theme_manager->getErrors(Tools::getValue('theme_name'));
+                } else {
+                    Tools::clearSmartyCache();
+                    Tools::clearCache();
+                    $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+                }
+            }
         } elseif (Tools::getValue('action') == 'deleteTheme') {
-            $this->theme_manager->uninstall(Tools::getValue('theme_name'));
-            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+            if(
+                !in_array(
+                    $this->authorizationLevel(),
+                    array(AdminController::LEVEL_DELETE))
+                || _PS_MODE_DEMO_
+            ) {
+                $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
+            } else {
+                $this->theme_manager->uninstall(Tools::getValue('theme_name'));
+                $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+            }
         } elseif (Tools::getValue('action') == 'resetToDefaults') {
-            $this->theme_manager->reset(Tools::getValue('theme_name'));
+            if(
+                !in_array(
+                    $this->authorizationLevel(),
+                    array(AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                || _PS_MODE_DEMO_
+            ) {
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+            } else {
+                $this->theme_manager->reset(Tools::getValue('theme_name'));
+            }
         }
 
         if (Tools::isSubmit('submitOptionsconfiguration')) {
-            Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
+            if(
+                !in_array(
+                    $this->authorizationLevel(),
+                    array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                || _PS_MODE_DEMO_
+            ) {
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'); 
+                $this->redirect_after = self::$currentIndex.'&token='.$this->token.'&error';
+            } else {
+                Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
 
-            try {
-                if (Tools::getValue('PS_LOGO')) {
-                    $this->logo_uploader->updateHeader();
-                }
-                if (Tools::getValue('PS_LOGO_MAIL')) {
-                    $this->logo_uploader->updateMail();
-                }
-                if (Tools::getValue('PS_LOGO_INVOICE')) {
-                    $this->logo_uploader->updateInvoice();
-                }
-                if (Tools::getValue('PS_FAVICON')) {
-                    $this->logo_uploader->updateFavicon();
-                    $this->redirect_after = self::$currentIndex.'&token='.$this->token;
-                }
+                try {
+                    if (Tools::getValue('PS_LOGO')) {
+                        $this->logo_uploader->updateHeader();
+                    }
+                    if (Tools::getValue('PS_LOGO_MAIL')) {
+                        $this->logo_uploader->updateMail();
+                    }
+                    if (Tools::getValue('PS_LOGO_INVOICE')) {
+                        $this->logo_uploader->updateInvoice();
+                    }
+                    if (Tools::getValue('PS_FAVICON')) {
+                        $this->logo_uploader->updateFavicon();
+                        $this->redirect_after = self::$currentIndex.'&token='.$this->token;
+                    }
 
-                Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');
-            } catch (PrestaShopException $e) {
-                $this->errors[] = $e->getMessage();
+                    Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');
+                } catch (PrestaShopException $e) {
+                    $this->errors[] = $e->getMessage();
+                }
             }
         }
 
@@ -311,6 +377,16 @@ class AdminThemesControllerCore extends AdminController
 
     public function processUploadFile($dest)
     {
+        if(
+            !in_array(
+                $this->authorizationLevel(),
+                array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+            || _PS_MODE_DEMO_
+        ) {
+            $this->errors[] = $this->trans('You do not have permission to upload this.', array(), 'Admin.Notifications.Error');
+            return false;
+        }
+
         switch ($_FILES['themearchive']['error']) {
             case UPLOAD_ERR_OK:
                 break;
@@ -635,8 +711,39 @@ class AdminThemesControllerCore extends AdminController
 
     public function processSubmitConfigureLayouts()
     {
-        $this->context->shop->theme->setPageLayouts(Tools::getValue('layouts'));
-        $this->theme_manager->saveTheme($this->context->shop->theme);
-        Tools::clearCache();
+        if(
+            !in_array(
+                $this->authorizationLevel(),
+                array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+            || _PS_MODE_DEMO_
+        ) {
+            Tools::clearCache();
+        }
+        else {
+            $this->context->shop->theme->setPageLayouts(Tools::getValue('layouts'));
+            $this->theme_manager->saveTheme($this->context->shop->theme);
+            Tools::clearCache();
+        }
+    }
+
+    /**
+     * Return the type of authorization on thèmes action.
+     *
+     * @return int(integer)
+     */
+    public function authorizationLevel()
+    {
+        switch (true) {
+            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_DELETE', $this->context->employee->id_profile)) :
+                return AdminController::LEVEL_DELETE;
+            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_UPDATE', $this->context->employee->id_profile)) :
+                return AdminController::LEVEL_EDIT;
+            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_CREATE', $this->context->employee->id_profile)) :
+                return AdminController::LEVEL_ADD;
+            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_READ', $this->context->employee->id_profile)) :
+                return AdminController::LEVEL_VIEW;
+            default :
+                return 0;
+        }
     }
 }

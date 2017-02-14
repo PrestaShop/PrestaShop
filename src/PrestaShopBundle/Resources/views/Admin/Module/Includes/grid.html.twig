@@ -25,7 +25,7 @@
 <div id="modules-list-container-{{ id }}" class="row modules-list">
   {% if app.request.attributes.get('_route') == 'admin_module_catalog_refresh' %}
     {% for module in modules %}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:card_grid.html.twig' with { 'module': module, 'origin': origin|default('none') } %}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:card_grid.html.twig' with { 'module': module, 'origin': origin|default('none'), 'level' : level } %}
     {% endfor %}
   {% endif %}
   {% for module in modules %}
