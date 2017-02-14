@@ -83,7 +83,7 @@
 
 	<tr class="bold">
 		<td class="grey" width="70%">
-			{if $tax_excluded_display}{l s='Total (Tax Excl.)' pdf='true'}{else}{l s='Total (Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}
+			{if $tax_excluded_display}{l s='Total (Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='Total (Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}
 		</td>
 		<td class="white" width="30%">
 			{if $total_cart_rule}
