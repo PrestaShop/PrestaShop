@@ -27,9 +27,9 @@ import productHeader from './product-header';
 import productSearchAutocomplete from './product-search-autocomplete';
 import categoryTree from './category-tree';
 import attributes from './attributes';
-import bulkCombination from './product-bulk-combinations'
-import nestedCategory from './nested-categories'
-import combination from './combination'
+import bulkCombination from './product-bulk-combinations';
+import nestedCategory from './nested-categories';
+import combination from './combination';
 
 $(() => {
   productHeader();
@@ -44,5 +44,11 @@ $(() => {
   $('.modules-list-select').on("change", (e) => {
     $('.module-render-container').hide();
     $(`.${e.target.value}`).show();
+  });
+  $('.modules-list-button').on("click", (e) => {
+    let target = $(e.target).data('target');
+    $('.module-selection').show();
+    $('.modules-list-select').val(target).trigger('change');
+    return false;
   });
 });
