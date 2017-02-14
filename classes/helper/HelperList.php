@@ -514,7 +514,7 @@ class HelperListCore extends Helper
         }
 
         if (!array_key_exists('DeleteItem', self::$cache_lang)) {
-            self::$cache_lang['DeleteItem'] = Context::getContext()->getTranslator()->trans('Delete selected item?', 'Admin.Actions');
+            self::$cache_lang['DeleteItem'] = Context::getContext()->getTranslator()->trans('Delete selected item?', array(), 'Admin.Actions');
         }
 
         if (!array_key_exists('Name', self::$cache_lang)) {

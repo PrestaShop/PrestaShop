@@ -722,7 +722,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
             if (true !== $this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } elseif (!$object = new Attribute((int)Tools::getValue($this->identifier))) {
-                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').
+                    ' <b>'.$this->table.'</b> '.
+                    $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
             }
 
             if (Tools::getValue('position') !== false && Tools::getValue('id_attribute')) {
