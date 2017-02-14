@@ -47,6 +47,9 @@ smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef
 smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 
+$module_resources['modules'] = _PS_MODULE_DIR_;
+$smarty->registerResource('module', new SmartyResourceModule($module_resources, $isAdmin = true));
+
 function toolsConvertPrice($params, &$smarty)
 {
     return Tools::convertPrice($params['price'], Context::getContext()->currency);

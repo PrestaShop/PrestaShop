@@ -31,9 +31,10 @@
  */
 class SmartyResourceModuleCore extends Smarty_Resource_Custom
 {
-    public function __construct(array $paths)
+    public function __construct(array $paths, $isAdmin = false)
     {
         $this->paths = $paths;
+        $this->isAdmin = $isAdmin;
     }
 
     /**
@@ -45,6 +46,12 @@ class SmartyResourceModuleCore extends Smarty_Resource_Custom
      */
     protected function fetch($name, &$source, &$mtime)
     {
+        if ($this->isAdmin) {
+            $source = '';
+            $mtime = time();
+            return;
+        }
+
         foreach ($this->paths as $path) {
             if (Tools::file_exists_cache($file = $path.$name)) {
                 if (_PS_MODE_DEV_) {
