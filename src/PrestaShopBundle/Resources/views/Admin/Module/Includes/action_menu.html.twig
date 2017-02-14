@@ -57,7 +57,7 @@
           {% if module_action != url_active %}
             <li>
                 <form method="post" action="{{ module_url }}">
-                    <button type="button" class="dropdown-item module_action_menu_{{ module_action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">
+                    <button type="submit" class="dropdown-item module_action_menu_{{ module_action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">
                         {{module_action|capitalize|replace({'_': " "})}}
                     </button>
                 </form>
