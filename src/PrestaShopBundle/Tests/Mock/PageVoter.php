@@ -24,34 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Security\Voter;
+namespace PrestaShopBundle\Tests\Mock;
 
-use Access;
+use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class ProductVoter extends Voter
+class PageVoter extends BaseVoter
 {
-    const CREATE = 'create';
-
-    const UPDATE = 'update';
-
-    const DELETE = 'delete';
-
-    /**
-     * @param string $attribute
-     * @param mixed $subject
-     * @return bool
-     */
-    protected function supports($attribute, $subject)
-    {
-        if (!in_array($attribute, array(self::CREATE, self::UPDATE, self::DELETE))) {
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * @param string $attribute
      * @param mixed $subject
@@ -60,20 +39,6 @@ class ProductVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $user = $token->getUser();
-        $employeeProfileId = $user->getData()->id_profile;
-
-        return $this->can($attribute, $employeeProfileId);
-    }
-
-    /**
-     * @param $action
-     * @param $employeeProfileId
-     * @return bool
-     */
-    protected function can($action, $employeeProfileId)
-    {
-        return Access::isGranted('ROLE_MOD_TAB_ADMINPRODUCTS_' . strtoupper($action), $employeeProfileId) &&
-            Access::isGranted('ROLE_MOD_TAB_ADMINCATALOG_' . strtoupper($action), $employeeProfileId);
+        return true;
     }
 }

@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -214,7 +215,7 @@ class ModuleManager implements AddonManagerInterface
     {
         // in CLI mode, there is no employee set up
         if (!Tools::isPHPCLI()) {
-            if (!$this->employee->can('add', 'AdminModules')) {
+            if (!$this->employee->can('edit', 'AdminModulessf')) {
                 throw new Exception(
                     $this->translator->trans(
                         'You are not allowed to install modules.',
@@ -260,7 +261,7 @@ class ModuleManager implements AddonManagerInterface
         // Check permissions:
         // * Employee can delete
         // * Employee can delete this specific module
-        if (!$this->employee->can('delete', 'AdminModules')
+        if (!$this->employee->can('delete', 'AdminModulessf')
             || !$this->moduleProvider->can('uninstall', $name)) {
             throw new Exception(
                 $this->translator->trans(
@@ -298,7 +299,7 @@ class ModuleManager implements AddonManagerInterface
     */
     public function upgrade($name, $version = 'latest', $source = null)
     {
-        if (!$this->employee->can('edit', 'AdminModules')
+        if (!$this->employee->can('edit', 'AdminModulessf')
             || !$this->moduleProvider->can('configure', $name)) {
             throw new Exception(
                 $this->translator->trans(
@@ -343,7 +344,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disable($name)
     {
-        if (!$this->employee->can('edit', 'AdminModules')
+        if (!$this->employee->can('edit', 'AdminModulessf')
             || !$this->moduleProvider->can('configure', $name)) {
             throw new Exception(
                 $this->translator->trans(
@@ -379,7 +380,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enable($name)
     {
-        if (!$this->employee->can('edit', 'AdminModules')
+        if (!$this->employee->can('edit', 'AdminModulessf')
             || !$this->moduleProvider->can('configure', $name)) {
             throw new Exception(
                 $this->translator->trans(
@@ -414,7 +415,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disable_mobile($name)
     {
-        if (!$this->employee->can('edit', 'AdminModules')
+        if (!$this->employee->can('edit', 'AdminModulessf')
             || !$this->moduleProvider->can('configure', $name)) {
             throw new Exception(
                 $this->translator->trans(
@@ -448,7 +449,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enable_mobile($name)
     {
-        if (!$this->employee->can('edit', 'AdminModules')
+        if (!$this->employee->can('edit', 'AdminModulessf')
             || !$this->moduleProvider->can('configure', $name)) {
             throw new Exception(
                 $this->translator->trans(
@@ -479,8 +480,8 @@ class ModuleManager implements AddonManagerInterface
      */
     public function reset($name, $keep_data = false)
     {
-        if (!$this->employee->can('add', 'AdminModules')
-            || !$this->employee->can('delete', 'AdminModules')
+        if (!$this->employee->can('add', 'AdminModulessf')
+            || !$this->employee->can('delete', 'AdminModulessf')
             || !$this->moduleProvider->can('uninstall', $name)) {
             throw new Exception(
                 $this->translator->trans(
