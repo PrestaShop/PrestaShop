@@ -127,7 +127,7 @@ class AdminCmsControllerCore extends AdminController
                 // custom template
                 array(
                     'type' => 'select_category',
-                    'label' => $this->l('Page Category'),
+                    'label' => $this->trans('Page Category', array(), 'Admin.Global'),
                     'name' => 'id_cms_category',
                     'options' => array(
                         'html' => $html_categories,
