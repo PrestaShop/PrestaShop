@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Twig;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template
@@ -40,15 +41,29 @@ class HookExtension extends \Twig_Extension
     private $hookDispatcher;
 
     /**
+     * @var ModuleDataProvider
+     */
+    private $moduleDataProvider;
+
+    /**
+     * @var ModuleRepository
+     */
+    private $moduleRepository;
+
+    /**
      * Constructor.
      *
      * @param HookDispatcher $hookDispatcher
      * @param ModuleDataProvider $moduleDataProvider
      */
-    public function __construct(HookDispatcher $hookDispatcher, ModuleDataProvider $moduleDataProvider)
-    {
+    public function __construct(
+      HookDispatcher $hookDispatcher,
+      ModuleDataProvider $moduleDataProvider,
+      ModuleRepository $moduleRepository = null
+    ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->moduleDataProvider = $moduleDataProvider;
+        $this->moduleRepository = $moduleRepository;
     }
 
     /**
@@ -112,10 +127,12 @@ class HookExtension extends \Twig_Extension
 
         $render = [];
         foreach ($hookRenders as $module => $hookRender) {
+            $moduleAttributes = $this->moduleRepository->getModuleAttributes($module);
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),
                 'content' => $hookRender,
+                'attributes' => $moduleAttributes->all(),
             ];
         }
 
