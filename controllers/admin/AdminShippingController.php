@@ -77,8 +77,8 @@ class AdminShippingControllerCore extends AdminController
                 ),
                 'description' =>
                     '<ul>
-						<li>'.$this->trans('If you set these parameters to 0, they will be disabled.', array(), 'Admin.Shipping.Feature').'</li>
-						<li>'.$this->trans('Coupons are not taken into account when calculating free shipping.', array(), 'Admin.Shipping.Feature').'</li>
+						<li>'.$this->trans('If you set these parameters to 0, they will be disabled.', array(), 'Admin.Shipping.Help').'</li>
+						<li>'.$this->trans('Coupons are not taken into account when calculating free shipping.', array(), 'Admin.Shipping.Help').'</li>
 					</ul>',
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
@@ -93,14 +93,14 @@ class AdminShippingControllerCore extends AdminController
                         'identifier' => 'id_carrier',
                         'list' => array_merge(
                             array(
-                                -1 => array('id_carrier' => -1, 'name' => $this->trans('Best price', array(), 'Admin.Global')),
-                                -2 => array('id_carrier' => -2, 'name' => $this->trans('Best grade', array(), 'Admin.Global')),
+                                -1 => array('id_carrier' => -1, 'name' => $this->trans('Best price', array(), 'Admin.Shipping.Feature')),
+                                -2 => array('id_carrier' => -2, 'name' => $this->trans('Best grade', array(), 'Admin.Shipping.Feature')),
                             ),
                             Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS))
                     ),
                     'PS_CARRIER_DEFAULT_SORT' => array(
                         'title' => $this->trans('Sort by', array(), 'Admin.Actions'),
-                        'desc' => $this->trans('This will only be visible in the front office.', array(), 'Admin.Shipping.Feature'),
+                        'desc' => $this->trans('This will only be visible in the front office.', array(), 'Admin.Shipping.Help'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'value',
@@ -108,7 +108,7 @@ class AdminShippingControllerCore extends AdminController
                     ),
                     'PS_CARRIER_DEFAULT_ORDER' => array(
                         'title' => $this->trans('Order by', array(), 'Admin.Actions'),
-                        'desc' => $this->trans('This will only be visible in the front office.', array(), 'Admin.Shipping.Feature'),
+                        'desc' => $this->trans('This will only be visible in the front office.', array(), 'Admin.Shipping.Help'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'value',

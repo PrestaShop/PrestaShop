@@ -168,7 +168,7 @@ class HelperCore
         $translator = Context::getContext()->getTranslator();
 
         $translations = array(
-            'selected' => $translator->trans('Selected', array(), 'Admin.Actions'),
+            'selected' => $translator->trans('Selected', array(), 'Admin.Global'),
             'Collapse All' => $translator->trans('Collapse All', array(), 'Admin.Actions'),
             'Expand All' => $translator->trans('Expand All', array(), 'Admin.Actions'),
             'Check All' => $translator->trans('Check All', array(), 'Admin.Actions'),

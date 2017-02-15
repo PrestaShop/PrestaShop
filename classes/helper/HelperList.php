@@ -136,7 +136,7 @@ class HelperListCore extends Helper
     {
         // Append when we get a syntax error in SQL query
         if ($list === false) {
-            $this->context->controller->warnings[] = Context::getContext()->getTranslator()->trans('Bad SQL query', array(), 'Admin.Global');
+            $this->context->controller->warnings[] = Context::getContext()->getTranslator()->trans('Bad SQL query', array(), 'Admin.Notifications.Error');
             return false;
         }
 
@@ -384,7 +384,7 @@ class HelperListCore extends Helper
         }
 
         if (!array_key_exists('Copy images too?', self::$cache_lang)) {
-            self::$cache_lang['Copy images too?'] = Context::getContext()->getTranslator()->trans('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', array(), 'Admin.Global');
+            self::$cache_lang['Copy images too?'] = Context::getContext()->getTranslator()->trans('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', array(), 'Admin.Catalog.Notification');
         }
 
         $duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
@@ -514,7 +514,7 @@ class HelperListCore extends Helper
         }
 
         if (!array_key_exists('DeleteItem', self::$cache_lang)) {
-            self::$cache_lang['DeleteItem'] = Context::getContext()->getTranslator()->trans('Delete selected item?', array(), 'Admin.Actions');
+            self::$cache_lang['DeleteItem'] = Context::getContext()->getTranslator()->trans('Delete selected item?', array(), 'Admin.Notifications.Info');
         }
 
         if (!array_key_exists('Name', self::$cache_lang)) {

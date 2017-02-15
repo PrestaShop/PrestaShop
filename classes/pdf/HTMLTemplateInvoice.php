@@ -180,7 +180,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $tax_temp = array();
             foreach ($taxes as $tax) {
                 $obj = new Tax($tax['id_tax']);
-                $tax_temp[] = $this->trans('%1$s%2$s%%', array(($obj->rate + 0), '&nbsp;'), 'Shop.Pdf');
+                $tax_temp[] = $this->trans('%taxrate%%space%%', array('%taxrate%' => ($obj->rate + 0), '%space%' => '&nbsp;'), 'Shop.Pdf');
             }
 
             $order_detail['order_detail_tax'] = $taxes;
