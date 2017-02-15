@@ -58,11 +58,11 @@ class AdminImagesControllerCore extends AdminController
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
             'width' => array('title' => $this->trans('Width', array(), 'Admin.Global'),  'suffix' => ' px'),
             'height' => array('title' => $this->trans('Height', array(), 'Admin.Global'),  'suffix' => ' px'),
-            'products' => array('title' => $this->trans('Products', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'categories' => array('title' => $this->trans('Categories', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'manufacturers' => array('title' => $this->trans('Brands', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'suppliers' => array('title' => $this->trans('Suppliers', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'stores' => array('title' => $this->trans('Stores', array(), 'Admin.Global'), 'align' => 'center', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
+            'products' => array('title' => $this->trans('Products', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+            'categories' => array('title' => $this->trans('Categories', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+            'manufacturers' => array('title' => $this->trans('Brands', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+            'suppliers' => array('title' => $this->trans('Suppliers', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+            'stores' => array('title' => $this->trans('Stores', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
         );
 
         // No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
