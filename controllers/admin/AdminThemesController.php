@@ -279,7 +279,13 @@ class AdminThemesControllerCore extends AdminController
             $this->theme_manager->uninstall(Tools::getValue('theme_name'));
             $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
         } elseif (Tools::getValue('action') == 'resetToDefaults') {
-            $this->theme_manager->reset(Tools::getValue('theme_name'));
+            if ($this->theme_manager->reset(Tools::getValue('theme_name'))) {
+                $this->confirmations[] = $this->trans(
+                    'Your theme has been correctly reseted to default settings, you may want to regenerate your images again.',
+                    array(),
+                    'Admin.Notifications.Success'
+                );
+            }
         }
 
         if (Tools::isSubmit('submitOptionsconfiguration')) {
