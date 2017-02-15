@@ -656,7 +656,7 @@ class LinkCore
         return Language::getIsoById($id_lang).'/';
     }
 
-    protected function getBaseLink($id_shop = null, $ssl = null, $relative_protocol = false)
+    public function getBaseLink($id_shop = null, $ssl = null, $relative_protocol = false)
     {
         static $force_ssl = null;
 
