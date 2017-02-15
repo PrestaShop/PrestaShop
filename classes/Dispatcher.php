@@ -112,7 +112,7 @@ class DispatcherCore
             'keywords' => array(
                 'id' =>            array('regexp' => '[0-9]+', 'param' => 'id_product'),
                 'id_product_attribute' => array('regexp' => '[0-9]+', 'param' => 'id_product_attribute'),
-                'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*', 'param' => 'rewrite'),
                 'ean13' =>        array('regexp' => '[0-9\pL]*'),
                 'category' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'categories' =>        array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
