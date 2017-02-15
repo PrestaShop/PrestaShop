@@ -167,7 +167,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&updateproduct&key_tab=Combinations&conf=4');
             } else {
-                $this->errors[] = $this->trans('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.');
+                $this->errors[] = $this->trans('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.', array(), 'Admin.Catalog.Notification');
             }
         }
     }

@@ -101,7 +101,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         }
 
         if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname)) {
-            $this->errors['admin_lastname'] = $this->translator->trans('Your lastname contains some invalid characters');
+            $this->errors['admin_lastname'] = $this->translator->trans('Your lastname contains some invalid characters', array(), 'Install');
         } elseif (strlen($this->session->admin_lastname) > 32) {
             $this->errors['admin_lastname'] = $this->translator->trans('The field %field% is limited to %limit% characters', array('%field%' => $this->translator->trans('lastname', array(), 'Install'), '%limit%' => 32), 'Install');
         }
@@ -155,7 +155,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                 $newheight = $height * $percent;
 
                 if (!is_writable(_PS_ROOT_DIR_.'/img/')) {
-                    $error = $this->translator->trans('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/', array(), 'Install');
+                    $error = $this->translator->trans('Image folder %s is not writable', array(_PS_ROOT_DIR_.'/img/'), 'Install');
                 }
                 if (!$error) {
                     list($src_width, $src_height, $type) = getimagesize($tmp_name);
@@ -165,7 +165,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                     imagefilledrectangle($dest_image, 0, 0, $src_width, $src_height, $white);
                     imagecopyresampled($dest_image, $src_image, 0, 0, 0, 0, $src_width, $src_height, $src_width, $src_height);
                     if (!imagejpeg($dest_image, _PS_ROOT_DIR_.'/img/logo.jpg', 95)) {
-                        $error = $this->l('An error occurred during logo copy.');
+                        $error = $this->trans('An error occurred during logo copy.', array(), 'Install');
                     } else {
                         imagedestroy($dest_image);
                         @chmod($filename, 0664);

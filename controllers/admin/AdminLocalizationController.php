@@ -261,10 +261,10 @@ class AdminLocalizationControllerCore extends AdminController
 
                     $xml_pack = @simplexml_load_file(_PS_ROOT_DIR_.'/localization/'.$entry);
                     if (!$xml_pack) {
-                        return $this->displayWarning($this->l(sprintf('%1s could not be loaded', $entry)));
+                        return $this->displayWarning($this->trans('%language% could not be loaded', array('%language%' => $entry),  'Admin.International.Notification'));
                     }
                     $localizations_pack[$i]['iso_localization_pack'] = $iso;
-                    $localizations_pack[$i]['name'] = sprintf($this->l('%s (local)'), (string)$xml_pack['name']);
+                    $localizations_pack[$i]['name'] = $this->trans('%s (local)', array((string)$xml_pack['name']), 'Admin.International.Feature');
                     $i++;
                 }
             }

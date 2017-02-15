@@ -70,7 +70,7 @@ class HelperOptionsCore extends Helper
 
             if (isset($category_data['tabs'])) {
                 $tabs[$category] = $category_data['tabs'];
-                $tabs[$category]['misc'] = $this->l('Miscellaneous');
+                $tabs[$category]['misc'] = Context::getContext()->getTranslator()->trans('Miscellaneous', array(), 'Admin.Global');
             }
 
             foreach ($category_data['fields'] as $key => $field) {

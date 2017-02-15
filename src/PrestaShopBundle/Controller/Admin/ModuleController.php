@@ -381,20 +381,22 @@ class ModuleController extends FrameworkBundleAdminController
 
         $installed = $uninstalled = array();
 
-        foreach ($tabModulesList as $key => $value) {
-            $continue = 0;
-            foreach ($modulesListUnsorted['installed'] as $moduleInstalled) {
-                if ($moduleInstalled['attributes']['name'] == $value) {
-                    $continue = 1;
-                    $installed[] = $moduleInstalled;
+        if (!empty($tabModulesList)) {
+            foreach ($tabModulesList as $key => $value) {
+                $continue = 0;
+                foreach ($modulesListUnsorted['installed'] as $moduleInstalled) {
+                    if ($moduleInstalled['attributes']['name'] == $value) {
+                        $continue = 1;
+                        $installed[] = $moduleInstalled;
+                    }
                 }
-            }
-            if ($continue) {
-                continue;
-            }
-            foreach ($modulesListUnsorted['not_installed'] as $moduleNotInstalled) {
-                if ($moduleNotInstalled['attributes']['name'] == $value) {
-                    $uninstalled[] = $moduleNotInstalled;
+                if ($continue) {
+                    continue;
+                }
+                foreach ($modulesListUnsorted['not_installed'] as $moduleNotInstalled) {
+                    if ($moduleNotInstalled['attributes']['name'] == $value) {
+                        $uninstalled[] = $moduleNotInstalled;
+                    }
                 }
             }
         }
