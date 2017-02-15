@@ -693,22 +693,39 @@
   }
 
   /* Last tab modules selection */
-
-  .module-selection {
-    padding: {
-      top: $grid-gutter-width;
-      bottom: $grid-gutter-width;
+  #hooks.form-contenttab {
+    .top-logo {
+      max-width: 45px;
+      max-height: 45px;
+      float: left;
+      margin: {
+        right: 20px;
+        bottom: 20px;
+      }
     }
-    margin-bottom: $grid-gutter-width;
-    border-bottom: 1px solid $gray-light;
-    background: $gray-soft;
-  }
 
-  .module-render-container {
-    margin-bottom: $grid-gutter-width;
+    .text-ellipsis.module-version,
+    .module-version-author-grid {
+      color: $gray-light;
+      font-weight: normal;
+    }
+    .text-ellipsis.module-version {
+      margin: {
+        top: -10px;
+        bottom: 10px;
+      }
+    }
 
-    > .name {
-      margin-bottom: $grid-gutter-width / 2;
+    .module-item-wrapper-grid {
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,.25);
+    }
+
+    .module-render-container {
+      margin-bottom: $grid-gutter-width;
+
+      > .name {
+        margin-bottom: $grid-gutter-width / 2;
+      }
     }
   }
 }
