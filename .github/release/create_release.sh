@@ -7,4 +7,5 @@ fi
 
 version=$1
 
-node replace_version.js --version $version
+node replace_version.js --version $versiong
+node download_cldr.js
