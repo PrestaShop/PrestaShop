@@ -44,8 +44,8 @@ class Attribute
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_attribute", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="id_attribute", type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
