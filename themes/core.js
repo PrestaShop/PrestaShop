@@ -2184,7 +2184,8 @@
 	    this.conditionsSelector = '#conditions-to-approve';
 	    this.conditionAlertSelector = '.js-alert-payment-conditions';
 	    this.additionalInformatonSelector = '.js-additional-information';
-	    this.optionsForm = '.js-payment-option-form';
+	    this.optionsForm = '.js-payment-options';
+	    this.optionForm = '.js-payment-option-form';
 	  }
 	
 	  _createClass(Payment, [{
@@ -2198,12 +2199,12 @@
 	      $body.on('change', 'input[name="payment-option"]', _jquery2['default'].proxy(this.toggleOrderButton, this));
 	      $body.on('click', this.confirmationSelector + ' button', _jquery2['default'].proxy(this.confirm, this));
 	
-	      this.collapseOptions();
+	      (0, _jquery2['default'])(this.additionalInformatonSelector + '.ps-hidden, ' + this.optionForm).hide();
 	    }
 	  }, {
 	    key: 'collapseOptions',
 	    value: function collapseOptions() {
-	      (0, _jquery2['default'])(this.additionalInformatonSelector + ', ' + this.optionsForm).hide();
+	      (0, _jquery2['default'])(this.additionalInformatonSelector + ', ' + this.optionForm).hide();
 	    }
 	  }, {
 	    key: 'getSelectedOption',
@@ -2261,6 +2262,11 @@
 	          (0, _jquery2['default'])(this.conditionAlertSelector).show();
 	        }
 	      }
+	      _jquery2['default'].post((0, _jquery2['default'])(this.optionsForm).data('update-url'), { select_payment_option: (0, _jquery2['default'])('#' + selectedOption).data('module-name') }).then(function (resp) {
+	        prestashop.emit('selectPaymentOption', { select_payment_option: (0, _jquery2['default'])('#' + selectedOption).data('module-name') });
+	      }).fail(function (resp) {
+	        prestashop.trigger('handleError', { eventType: 'selectPaymentOption', resp: resp });
+	      });
 	    }
 	  }, {
 	    key: 'getPaymentOptionSelector',

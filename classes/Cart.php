@@ -82,6 +82,8 @@ class CartCore extends ObjectModel
 
     public $delivery_option;
 
+    public $payment_option;
+
     /** @var bool Allow to seperate order in multiple package in order to recieve as soon as possible the available products */
     public $allow_seperated_package = false;
 
@@ -119,6 +121,7 @@ class CartCore extends ObjectModel
             'gift_message' => array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
             'mobile_theme' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'delivery_option' => array('type' => self::TYPE_STRING),
+            'payment_option' => array('type' => self::TYPE_STRING),
             'secure_key' => array('type' => self::TYPE_STRING, 'size' => 32),
             'allow_seperated_package' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -1327,6 +1330,7 @@ class CartCore extends ObjectModel
 
         // refresh cache of self::_products
         $this->_products = $this->getProducts(true);
+        $this->payment_option = '';
         $this->update();
         $context = Context::getContext()->cloneContext();
         $context->cart = $this;
@@ -1597,6 +1601,7 @@ class CartCore extends ObjectModel
         '.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
 
         if ($result) {
+            $this->payment_option = '';
             $return = $this->update();
             // refresh cache of self::_products
             $this->_products = $this->getProducts(true);
@@ -3570,7 +3575,7 @@ class CartCore extends ObjectModel
                 SELECT SUM((p.`weight` + pa.`weight`) * cp.`quantity`) as nb
                 FROM `' . _DB_PREFIX_ . 'cart_product` cp
                 LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (cp.`id_product` = p.`id_product`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa 
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa
                 ON (cp.`id_product_attribute` = pa.`id_product_attribute`)
                 WHERE (cp.`id_product_attribute` IS NOT NULL AND cp.`id_product_attribute` != 0)
                 AND cp.`id_cart` = ' . $productId);

@@ -46,6 +46,8 @@ ALTER TABLE `PREFIX_product_shop` CHANGE `redirect_type` `redirect_type`
 ALTER TABLE `PREFIX_product` CHANGE `id_product_redirected` `id_type_redirected` INT(10) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_product_shop` CHANGE `id_product_redirected` `id_type_redirected` INT(10) NOT NULL DEFAULT '0';
 
+ALTER TABLE `PREFIX_cart` ADD `payment_option` text COLLATE 'utf8_general_ci' NOT NULL AFTER `delivery_option`;
+
 INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
   (NULL, 'filterCmsContent', 'Filter the content page', 'This hook is called just before fetching content page', '1'),
   (NULL, 'filterCmsCategoryContent', 'Filter the content page category', 'This hook is called just before fetching content page category', '1'),

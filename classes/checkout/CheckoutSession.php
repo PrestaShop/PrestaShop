@@ -103,6 +103,18 @@ class CheckoutSessionCore
         return $this->deliveryOptionsFinder->getDeliveryOptions();
     }
 
+    public function setPaymentOption($option)
+    {
+        $this->context->cart->payment_option = $option;
+
+        return $this->context->cart->update();
+    }
+
+    public function getPaymentOption()
+    {
+        return $this->context->cart->payment_option;
+    }
+
     public function setRecyclable($option)
     {
         $this->context->cart->recyclable = (int) $option;
