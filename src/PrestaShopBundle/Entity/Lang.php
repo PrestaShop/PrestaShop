@@ -27,6 +27,7 @@
 
 namespace PrestaShopBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,8 +39,8 @@ class Lang
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_lang", type="integer", options={"unsigned":true})
      * @ORM\Id
+     * @ORM\Column(name="id_lang", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;

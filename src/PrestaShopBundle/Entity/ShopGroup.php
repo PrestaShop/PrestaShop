@@ -40,8 +40,8 @@ class ShopGroup
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop_group", type="integer", options={"unsigned":true})
      * @ORM\Id
+     * @ORM\Column(name="id_shop_group", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;

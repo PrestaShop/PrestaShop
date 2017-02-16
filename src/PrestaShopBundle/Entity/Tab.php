@@ -39,8 +39,8 @@ class Tab
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_tab", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="id_tab", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -55,14 +55,14 @@ class Tab
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer", options={"unsigned"=true})
+     * @ORM\Column(name="position", type="integer")
      */
     private $position;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="module", type="string", length=64)
+     * @ORM\Column(name="module", type="string", length=64, nullable=true)
      */
     private $module;
 

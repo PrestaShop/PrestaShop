@@ -42,11 +42,20 @@ class Translation
     /**
      * @var int
      *
-     * @ORM\Column(name="id_translation", type="integer", options={"unsigned": true})
      * @ORM\Id
+     * @ORM\Column(name="id_translation", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var Lang
+     *
+     * @ORM\Column(name="id_lang", type="integer")
+     * @ORM\ManyToOne(targetEntity="Lang", inversedBy="translations")
+     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false)
+     */
+    private $lang;
 
     /**
      * @var string
@@ -61,14 +70,6 @@ class Translation
      * @ORM\Column(name="translation", type="text", length=65500)
      */
     private $translation;
-
-    /**
-     * @var Lang
-     *
-     * @ORM\ManyToOne(targetEntity="Lang", inversedBy="translations")
-     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false)
-     */
-    private $lang;
 
     /**
      * @var string

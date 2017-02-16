@@ -39,7 +39,7 @@ class AttributeLang
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="id_attribute", type="integer", options={"unsigned":true})
+     * @ORM\Column(name="id_attribute", type="integer")
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Attribute", inversedBy="attributeLangs")
      * @ORM\JoinColumn(name="id_attribute", referencedColumnName="id_attribute", nullable=false)
      */
@@ -47,8 +47,9 @@ class AttributeLang
 
     /**
      * @ORM\Id
+     * @ORM\Column(name="id_lang", type="integer")
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Lang")
-     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE" )
+     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE")
      */
     private $lang;
 

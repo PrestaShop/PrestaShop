@@ -40,8 +40,8 @@ class Shop
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", options={"unsigned":true})
      * @ORM\Id
+     * @ORM\Column(name="id_shop", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -62,7 +62,7 @@ class Shop
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_category", type="integer", options={"unsigned": true})
+     * @ORM\Column(name="id_category", type="integer")
      */
     private $idCategory;
 
