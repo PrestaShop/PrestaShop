@@ -9,3 +9,7 @@ version=$1
 
 node replace_version.js --version $versiong
 node download_cldr.js
+
+rootPath=$(realpath $(pwd)/../..)
+
+cd $rootPath; composer install;
