@@ -51,7 +51,8 @@ $(document).ready(function () {
             productUrl: resp.productUrl
           },
           refreshUrl: $productRefresh.data('url-update'),
-          eventType: eventType
+          eventType: eventType,
+          resp: resp
         });
       });
     }

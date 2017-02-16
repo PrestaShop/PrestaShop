@@ -50,7 +50,7 @@ $(document).ready(() => {
         $input.attr('value', $input.val());
       });
 
-      prestashop.emit('updatedCart');
+      prestashop.emit('updatedCart', resp);
     }).fail((resp) => {
       prestashop.emit('handleError', {eventType: 'updateCart', resp: resp})
     });
@@ -102,7 +102,8 @@ $(document).ready(() => {
             idProduct: resp.id_product,
             idProductAttribute: resp.id_product_attribute,
             linkAction: 'add-to-cart'
-          }
+          },
+          resp: resp
         });
       }).fail((resp) => {
         prestashop.emit('handleError', {eventType: 'addProductToCart', resp: resp});
@@ -134,7 +135,7 @@ $(document).ready(() => {
         }
 
         // Refresh cart preview
-        prestashop.emit('updateCart', {reason: event.target.dataset});
+        prestashop.emit('updateCart', {reason: event.target.dataset, resp: resp});
       }).fail((resp) => {
         prestashop.emit('handleError', {eventType: 'addVoucher', resp: resp});
       })
