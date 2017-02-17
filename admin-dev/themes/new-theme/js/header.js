@@ -101,8 +101,11 @@ export default class Header {
 
   initNotificationsToggle() {
     $('.notification.dropdown-toggle').on('click', () => {
-      $('.notification-center.dropdown').addClass('open');
-      this.updateEmployeeNotifications();
+      if(!$('.mobile-nav').hasClass('expanded')) {
+        $('.notification-center.dropdown').addClass('open');
+        $('.mobile-layer').addClass('expanded');
+        this.updateEmployeeNotifications();
+      }
     });
 
     $('body').on('click', function (e) {
@@ -110,10 +113,13 @@ export default class Header {
         && $('div.notification-center.dropdown').has(e.target).length === 0
         && $('.open').has(e.target).length === 0
       ) {
+
         if ($('div.notification-center.dropdown').hasClass('open')) {
+          $('.mobile-layer').removeClass('expanded');
           refreshNotifications();
         }
         $('div.notification-center.dropdown').removeClass('open');
+
       }
     });
 

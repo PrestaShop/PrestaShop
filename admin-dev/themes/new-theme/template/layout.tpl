@@ -20,7 +20,7 @@
     *}
 
     {* Logo *}
-    <i class="material-icons pull-left p-y-1 p-x-1 js-mobile-menu hidden-md-up">menu</i>
+    <i class="material-icons pull-left p-x-1 js-mobile-menu hidden-md-up">menu</i>
     <a class="logo pull-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
 
     <div class="component pull-left hidden-md-down">{include file="components/layout/quick_access.tpl"}</div>

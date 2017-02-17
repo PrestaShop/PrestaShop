@@ -28,7 +28,7 @@ import MobileDetect from 'mobile-detect';
 export default class NavBar {
   constructor() {
     let md = new MobileDetect(window.navigator.userAgent);
-    const maxPhoneWidth = 600;
+    const MAX_MOBILE_WIDTH = 600;
 
     $(() => {
       $(".nav-bar").find(".link-levelone").hover(function() {
@@ -51,9 +51,16 @@ export default class NavBar {
           },
         });
       });
-      if(md.isPhoneSized(maxPhoneWidth)) {
-        $('body').addClass('mobile');
-        this.mobileNav();
+      if(md.isPhoneSized(MAX_MOBILE_WIDTH)) {
+        this.mobileNav(md, MAX_MOBILE_WIDTH);
+        $(window).on('resize', () => {
+          if(!md.isPhoneSized(MAX_MOBILE_WIDTH) && $('body').hasClass('mobile')) {
+            this.unbuildMobileMenu();
+          }
+          else if(md.isPhoneSized(MAX_MOBILE_WIDTH) && !$('body').hasClass('mobile')) {
+            this.mobileNav(md, MAX_MOBILE_WIDTH);
+          }
+        });
       }
     });
   }
@@ -64,6 +71,8 @@ export default class NavBar {
     let $shoplist = $('.shop-list');
 
     $shoplist.find('.link').removeClass('link');
+
+    $('body').addClass('mobile');
     $('.nav-bar').addClass('mobile-nav');
     $('.panel-collapse').addClass('collapse').removeClass('submenu');
     $('.link-levelone a').each((index, el)=> {
@@ -74,7 +83,14 @@ export default class NavBar {
     });
     $('.main-menu').append(`<li class="link-levelone">${$logout}</li>`);
     $('.main-menu').prepend(`<li class="link-levelone">${$employee}</li>`);
-    $('.main-menu li:first').append( $('.shop-list'));
+
+    if($shoplist.hasClass('ps-dropdown')) {
+      $('.main-menu li:first').append( $('.shop-list .items-list'));
+    }
+    else {
+      $('.main-menu li:first').append( $('.shop-list'));
+    }
+
     $('.employee_avatar img, .employee_avatar span').wrap(`<a href="${profileLink}"></a>`);
     $('.collapse').collapse({
       toggle: false
@@ -82,9 +98,30 @@ export default class NavBar {
 
     $('.js-mobile-menu').on('click', expand);
 
+    $('.js-notifs_dropdown').css({
+      'height' : window.innerHeight
+    });
+
     function expand (){
-      $('.mobile-layer, .mobile-nav').toggleClass('expanded');
-      $('.mobile-layer').hasClass('expanded') ? $('.mobile-layer').on('click', expand) : $('.mobile-layer').off();
+      if (!$('div.notification-center.dropdown').hasClass('open')) {
+        $('.mobile-nav').toggleClass('expanded');
+        if(!$('.mobile-nav').hasClass('expanded')){
+          $('.mobile-layer').off();
+          $('.mobile-layer').removeClass('expanded');
+        }
+        else {
+          $('.mobile-layer').on('click', expand);
+          $('.mobile-layer').addClass('expanded');
+        }
+      }
     };
+  }
+  unbuildMobileMenu() {
+    $('body').removeClass('mobile');
+    $('.main-menu li:first').remove();
+    $('.js-notifs_dropdown').removeAttr('style');
+    $('.nav-bar').removeClass('mobile-nav');
+    $('.panel-collapse').removeClass('collapse').addClass('submenu');
+
   }
 }
