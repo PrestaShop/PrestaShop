@@ -46,8 +46,9 @@ class TabLang
 
     /**
      * @ORM\Id
+     * @ORM\Column(name="id_lang", type="integer")
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Lang")
-     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE" )
+     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE")
      */
     private $lang;
 
