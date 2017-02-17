@@ -351,6 +351,10 @@ class XmlLoader
 
     protected function getFallBackToDefaultEntityLanguage($iso, $entity)
     {
+        if ($this->getFallBackToDefaultLanguage($iso) === 'en') {
+            return 'en';
+        }
+
         return file_exists($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml') ? $iso : 'en';
     }
 
