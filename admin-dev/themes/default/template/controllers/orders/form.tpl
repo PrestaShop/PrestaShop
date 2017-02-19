@@ -661,7 +661,14 @@
 							customization_html += '</form></div></div>';
 						}
 
-						$.each(this.combinations, function() {
+
+						var sorted_combinations = $.map(this.combinations, function(value, index) {
+								return [value];
+							}).sort(function(a, b) {
+								var at = a.attributes, bt = b.attributes;
+								return (at > bt)?1:((at < bt)?-1:0);
+							});
+						$.each(sorted_combinations, function() {
 							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'</option>';
 							stock[id_product][this.id_product_attribute] = this.qty_in_stock;
 						});
