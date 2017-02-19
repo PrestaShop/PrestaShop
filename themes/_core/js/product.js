@@ -57,6 +57,12 @@ $(document).ready(function () {
     }
   );
 
+  $('body').on('change', '#quantity_wanted[type="text"]', function (event) {
+    if( isNaN($(event.target).val()) || parseInt($(event.target).val()) < parseInt($(event.target).attr('min')) ) {
+      $this.val( $(event.target).attr('min') );
+    }
+  });
+
   prestashop.on('updateProduct', function (event) {
     if (typeof event.refreshUrl == "undefined") {
         event.refreshUrl = true;
