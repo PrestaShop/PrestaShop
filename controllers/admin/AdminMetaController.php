@@ -84,7 +84,7 @@ class AdminMetaControllerCore extends AdminController
             ),
             'PS_ALLOW_ACCENTED_CHARS_URL' => array(
                 'title' => $this->trans('Accented URL', array(), 'Admin.Shopparameters.Feature'),
-                'hint' => $this->trans('Enable this option if you want to allow accented characters in your friendly URLs.').' '.$this->trans('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.', array(), 'Admin.Shopparameters.Help'),
+                'hint' => $this->trans('Enable this option if you want to allow accented characters in your friendly URLs.', array(), 'Admin.Shopparameters.Help').' '.$this->trans('You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.', array(), 'Admin.Shopparameters.Help'),
                 'validation' => 'isBool',
                 'cast' => 'intval',
                 'type' => 'bool'

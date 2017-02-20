@@ -392,18 +392,18 @@ class AdminDashboardControllerCore extends AdminController
                     array(
                         '{link}' => '<a href="index.php?controller=AdminShopUrl&id_shop_url='.(int)$shop->id.'&updateshop_url&token='.Tools::getAdminTokenLite('AdminShopUrl').'">',
                         '{/link}' => '</a>',
-                        ),
+                    ),
                     'Admin.Dashboard.Notification'
-                    );
+                );
             } else {
                 $warning .= $this->trans('This is different from the domain name set in the "SEO & URLs" tab.', array(), 'Admin.Dashboard.Notification').'
 				'.$this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     array(
                         '{link}' => '<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#meta_fieldset_shop_url">',
-                        '{/link}' => '</a>',
+                        '{/link}' => '</a>'
+                    ),
                     'Admin.Dashboard.Notification'
-                    )
                 );
             }
         }

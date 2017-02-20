@@ -32,10 +32,10 @@ class AdminEmailsControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        
+
         $this->table = 'mail';
         $this->className = 'Mail';
-        
+
         parent::__construct();
 
         if (Configuration::get('PS_LOG_EMAILS')) {
@@ -161,7 +161,7 @@ class AdminEmailsControllerCore extends AdminController
                         'autocomplete' => false
                     ),
                     'PS_MAIL_SMTP_ENCRYPTION' => array(
-                        'title' => $this->trans('Encryption'),
+                        'title' => $this->trans('Encryption', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('Use an encrypt protocol', array(), 'Admin.Advparameters.Help'),
                         'desc' => extension_loaded('openssl') ? '' : '/!\\ '.$this->trans('SSL does not seem to be available on your server.', array(), 'Admin.Advparameters.Notification'),
                         'type' => 'select',

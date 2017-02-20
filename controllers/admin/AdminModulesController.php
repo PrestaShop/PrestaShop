@@ -585,20 +585,20 @@ class AdminModulesControllerCore extends AdminController
                 switch ($_FILES['file']['error']) {
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
-                        $this->errors[] = sprintf($this->l('File too large (limit of %s bytes).'), Tools::getMaxUploadSize());
+                        $this->errors[] = $this->trans('File too large (limit of %s bytes).', array(Tools::getMaxUploadSize()), 'Admin.Notifications.Error');
                     break;
                     case UPLOAD_ERR_PARTIAL:
-                        $this->errors[] = $this->l('File upload was not completed.');
+                        $this->errors[] = $this->trans('File upload was not completed.', array(), 'Admin.Notifications.Error');
                     break;
                     case UPLOAD_ERR_NO_FILE:
-                        $this->errors[] = $this->l('No file was uploaded.');
+                        $this->errors[] = $this->trans('No file was uploaded.', array(), 'Admin.Notifications.Error');
                     break;
                     default:
-                        $this->errors[] = sprintf($this->l('Internal error #%s'), $_FILES['newfile']['error']);
+                        $this->errors[] = $this->trans('Internal error #%s', array($_FILES['newfile']['error']), 'Admin.Notifications.Error');
                     break;
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
-                $this->errors[] = $this->l('No file has been selected');
+                $this->errors[] = $this->trans('No file has been selected', array(), 'Admin.Notifications.Error');
             } elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'
                 && substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz') {
                 $this->errors[] = $this->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
@@ -807,7 +807,9 @@ class AdminModulesControllerCore extends AdminController
                                     'You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s',
                                     array(
                                         '<strong>'.$name.'</strong>',
-                                        '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.$this->l('Click here to log in.').'</a>'
+                                        '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.
+                                            $this->trans('Click here to log in.', array(), 'Admin.Modules.Help').
+                                        '</a>'
                                     ),
                                     'Admin.Modules.Notification'
                                 );

@@ -314,7 +314,7 @@ namespace PrestaShopBundle\Install {
             Language::loadLanguages();
 
             $this->translator = Context::getContext()->getTranslator();
-            $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.');
+            $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
         }
 
         private function getConfValue($name)
@@ -926,7 +926,7 @@ namespace PrestaShopBundle\Install {
                 $this->nextErrors[] = $info;
                 $this->warningList[] = $info;
                 if (empty($this->failureList)) {
-                    $this->nextDesc = $this->getTranslator()->trans('Warning detected during upgrade.');
+                    $this->nextDesc = $this->getTranslator()->trans('Warning detected during upgrade.', array(), 'Install');
                 }
             } else {
                 if (!empty($quickInfo)) {
@@ -956,7 +956,7 @@ namespace PrestaShopBundle\Install {
                 }
                 $this->nextErrors[] = $info;
                 $this->failureList[] = $info;
-                $this->nextDesc = $this->getTranslator()->trans('Error detected during upgrade.');
+                $this->nextDesc = $this->getTranslator()->trans('Error detected during upgrade.', array(), 'Install');
                 $this->next = 'error';
             } else {
                 if (!empty($quickInfo)) {
