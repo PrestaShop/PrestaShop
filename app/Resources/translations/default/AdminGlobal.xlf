@@ -394,7 +394,7 @@ File: controllers/admin/AdminStockManagementController.php:395</note>
         <source>Text</source>
         <target>Text</target>
         <note>Context:
-File: modules/blockreassurance/blockreassurance.php:306</note>
+File: modules/blockreassurance/blockreassurance.php:316</note>
       </trans-unit>
     </body>
   </file>
@@ -404,7 +404,7 @@ File: modules/blockreassurance/blockreassurance.php:306</note>
         <source>Required</source>
         <target>Required</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:3720</note>
+File: controllers/admin/AdminProductsController.php:3264</note>
       </trans-unit>
     </body>
   </file>
@@ -490,7 +490,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:88</note
         <source>Online</source>
         <target>Online</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:998</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1051</note>
       </trans-unit>
       <trans-unit id="1901606ea069a83dc7beea17881ef95a">
         <source>Period</source>
@@ -502,7 +502,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:650</not
         <source>Offline</source>
         <target>Offline</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1000</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1053</note>
       </trans-unit>
     </body>
   </file>
@@ -525,6 +525,46 @@ File: controllers/admin/AdminTaxRulesGroupController.php:322</note>
         <target>Zip/Postal code</target>
         <note>Context:
 File: controllers/admin/AdminTaxRulesGroupController.php:126</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/helper/HelperOptions.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="387baf0199e7c9cc944fae94e96448fa">
+        <source>Miscellaneous</source>
+        <target>Miscellaneous</target>
+        <note>Context:
+File: classes/helper/HelperOptions.php:73</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/helper/Helper.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="91b442d385b54e1418d81adc34871053">
+        <source>Selected</source>
+        <target>Selected</target>
+        <note>Context:
+File: classes/helper/Helper.php:171</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/helper/HelperList.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3ec365dd533ddb7ef3d1c111186ce872">
+        <source>Details</source>
+        <target>Details</target>
+        <note>Context:
+File: classes/helper/HelperList.php:432</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
+        <source>Name:</source>
+        <target>Name:</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:547</note>
       </trans-unit>
     </body>
   </file>
@@ -616,7 +656,7 @@ File: controllers/admin/AdminCountriesController.php:197</note>
         <source>Settings</source>
         <target>Settings</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:60</note>
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:56</note>
       </trans-unit>
     </body>
   </file>
@@ -844,12 +884,6 @@ File: controllers/admin/AdminCartsController.php:92</note>
         <note>Context:
 File: controllers/admin/AdminCartsController.php:192</note>
       </trans-unit>
-      <trans-unit id="e4c3da18c66c0147144767efeb59198f">
-        <source>Conversion Rate</source>
-        <target>Conversion Rate</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:145</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/statsforecast/statsforecast.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -920,7 +954,7 @@ File: modules/statsnewsletter/statsnewsletter.php:123</note>
         <source>Hook</source>
         <target>Hook</target>
         <note>Context:
-File: modules/ps_linklist/controllers/admin/AdminLinkWidgetController.php:131</note>
+File: modules/ps_linklist/controllers/admin/AdminLinkWidgetController.php:138</note>
       </trans-unit>
     </body>
   </file>
@@ -1044,19 +1078,19 @@ File: controllers/admin/AdminReturnController.php:107</note>
         <source>Customer</source>
         <target>Customer</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1096</note>
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1103</note>
       </trans-unit>
       <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
         <source>Price</source>
         <target>Price</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1259</note>
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1266</note>
       </trans-unit>
       <trans-unit id="a6105c0a611b41b08f1209506350279e">
         <source>yes</source>
         <target>yes</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1427</note>
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1434</note>
       </trans-unit>
     </body>
   </file>
@@ -1110,6 +1144,12 @@ File: controllers/admin/AdminShippingController.php:51</note>
         <note>Context:
 File: controllers/admin/AdminShippingController.php:50</note>
       </trans-unit>
+      <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
+        <source>(tax excl.)</source>
+        <target>(tax excl.)</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:61</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_brandlist/ps_brandlist.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1128,7 +1168,7 @@ File: modules/ps_brandlist/ps_brandlist.php:114</note>
         <source>Link</source>
         <target>Link</target>
         <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1337</note>
+File: modules/ps_mainmenu/ps_mainmenu.php:1338</note>
       </trans-unit>
     </body>
   </file>
@@ -1174,13 +1214,13 @@ File: controllers/admin/AdminPreferencesController.php:230</note>
         <source>Drop-down list</source>
         <target>Drop-down list</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:172</note>
+File: controllers/admin/AdminAttributesGroupsController.php:174</note>
       </trans-unit>
       <trans-unit id="8bd90a6d76a77fe0b160e8abd85c8590">
         <source>Radio buttons</source>
         <target>Radio buttons</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:176</note>
+File: controllers/admin/AdminAttributesGroupsController.php:178</note>
       </trans-unit>
     </body>
   </file>
@@ -1229,16 +1269,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_co
         <target>Forgot your password?</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:58</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
-        <source>Name:</source>
-        <target>Name:</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:547</note>
       </trans-unit>
     </body>
   </file>
@@ -1426,13 +1456,13 @@ File: controllers/admin/AdminOrdersController.php:172</note>
         <source>Today</source>
         <target>Today</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1674</note>
+File: controllers/admin/AdminOrdersController.php:1641</note>
       </trans-unit>
       <trans-unit id="ffbb5322a3702b0d8d9c7f506209c540">
         <source>Average Order Value</source>
         <target>Average Order Value</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1687</note>
+File: controllers/admin/AdminOrdersController.php:1654</note>
       </trans-unit>
     </body>
   </file>
@@ -1547,6 +1577,22 @@ File: controllers/admin/AdminSearchController.php:330</note>
         <target>PDF</target>
         <note>Context:
 File: controllers/admin/AdminSlipController.php:63</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/dashtrends/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e4c3da18c66c0147144767efeb59198f">
+        <source>Conversion Rate</source>
+        <target>Conversion Rate</target>
+        <note>Context:
+File: modules/dashtrends/views/templates/hook/dashboard_zone_two.tpl:66</note>
+      </trans-unit>
+      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
+        <source>Visits</source>
+        <target>Visits</target>
+        <note>Context:
+File: modules/dashtrends/views/templates/hook/dashboard_zone_two.tpl:61</note>
       </trans-unit>
     </body>
   </file>

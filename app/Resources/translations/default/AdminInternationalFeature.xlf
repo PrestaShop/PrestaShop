@@ -380,6 +380,12 @@ File: controllers/admin/AdminLocalizationController.php:134</note>
         <note>Context:
 File: controllers/admin/AdminLocalizationController.php:148</note>
       </trans-unit>
+      <trans-unit id="823e3e5a2bec573e4e38853822465914">
+        <source>%s (local)</source>
+        <target>%s (local)</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:267</note>
+      </trans-unit>
       <trans-unit id="892a326e935b414a79a1eb938afd6ba5">
         <source>Units (e.g. weight, volume, distance)</source>
         <target>Units (e.g. weight, volume, distance)</target>

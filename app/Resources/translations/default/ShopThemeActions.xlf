@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/front/AddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/checkout/_partials/steps/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b15e1100a6196acba01ef7aaa5b2a9e5">
         <source>Add a new address</source>
         <target>Add a new address</target>
         <note>Context:
-File: controllers/front/AddressesController.php:56</note>
+File: themes/starterTheme/templates/checkout/_partials/steps/addresses.tpl:81</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/guest-login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
         <source>Send</source>
         <target>Send</target>
         <note>Context:
-File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:90</note>
+File: themes/StarterTheme/templates/customer/guest-login.tpl:34</note>
       </trans-unit>
     </body>
   </file>
@@ -26,19 +26,19 @@ File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:
         <source>Save</source>
         <target>Save</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/address-selector-block.tpl:28</note>
+File: themes/StarterTheme/templates/checkout/_partials/address-selector-block.tpl:29</note>
       </trans-unit>
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
         <target>Delete</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/address-selector-block.tpl:20</note>
+File: themes/StarterTheme/templates/checkout/_partials/address-selector-block.tpl:21</note>
       </trans-unit>
       <trans-unit id="7dce122004969d56ae2e0245cb754d35">
         <source>Edit</source>
         <target>Edit</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/address-selector-block.tpl:16</note>
+File: themes/StarterTheme/templates/checkout/_partials/address-selector-block.tpl:17</note>
       </trans-unit>
     </body>
   </file>
@@ -48,7 +48,7 @@ File: themes/StarterTheme/templates/checkout/_partials/address-selector-block.tp
         <source>Update</source>
         <target>Update</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/block-address.tpl:12</note>
+File: themes/StarterTheme/templates/customer/_partials/block-address.tpl:14</note>
       </trans-unit>
     </body>
   </file>
@@ -68,13 +68,13 @@ File: modules/ps_customersignin/ps_customersignin.tpl:3</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/order-follow.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/order-follow.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="daf51d7d9e10e6a469434ae548d9a173">
         <source>Print out</source>
         <target>Print out</target>
         <note>Context:
-File: themes/classic/templates/customer/order-follow.tpl:88</note>
+File: themes/StarterTheme/templates/customer/order-follow.tpl:30</note>
       </trans-unit>
     </body>
   </file>
@@ -88,14 +88,18 @@ File: themes/StarterTheme/templates/customer/order-detail.tpl:19</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="733ae3eecadd5777cea5ce9a32379d7a">
         <source>Send reset link</source>
         <target>Send reset link</target>
         <note>Context:
-File: themes/classic/templates/customer/password-email.tpl:58</note>
+File: themes/StarterTheme/templates/customer/password-email.tpl:32</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="463e58c1d35fb5a4a8d717c99a60d257">
         <source>Back to login</source>
         <target>Back to login</target>
@@ -104,33 +108,33 @@ File: themes/classic/templates/customer/password-email.tpl:69</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/password-new.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/password-new.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8f1e77e0d2be21da93cd4d9a939148f7">
         <source>Change Password</source>
         <target>Change Password</target>
         <note>Context:
-File: themes/classic/templates/customer/password-new.tpl:65</note>
+File: themes/StarterTheme/templates/customer/password-new.tpl:39</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/password-infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/password-infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="95e6faaba5e8b016e5f9bcf5ea6c8270">
         <source>Back to Login</source>
         <target>Back to Login</target>
         <note>Context:
-File: themes/classic/templates/customer/password-infos.tpl:48</note>
+File: themes/StarterTheme/templates/customer/password-infos.tpl:11</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5144a9adfce5a7d475bb8194a4a310a5">
         <source>Create new address</source>
         <target>Create new address</target>
         <note>Context:
-File: themes/classic/templates/customer/addresses.tpl:43</note>
+File: themes/StarterTheme/templates/customer/addresses.tpl:18</note>
       </trans-unit>
     </body>
   </file>
@@ -156,13 +160,13 @@ File: themes/classic/templates/_partials/form-fields.tpl:148</note>
         <source>Previous</source>
         <target>Previous</target>
         <note>Context:
-File: themes/StarterTheme/templates/_partials/pagination.tpl:15</note>
+File: themes/StarterTheme/templates/_partials/pagination.tpl:19</note>
       </trans-unit>
       <trans-unit id="10ac3d04253ef7e1ddc73e6091c0cd55">
         <source>Next</source>
         <target>Next</target>
         <note>Context:
-File: themes/StarterTheme/templates/_partials/pagination.tpl:17</note>
+File: themes/StarterTheme/templates/_partials/pagination.tpl:21</note>
       </trans-unit>
     </body>
   </file>
@@ -182,13 +186,19 @@ File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:28</note
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/login-form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/checkout/_partials/steps/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
         <source>Continue</source>
         <target>Continue</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/login-form.tpl:5</note>
+File: themes/StarterTheme/templates/checkout/_partials/steps/addresses.tpl:89</note>
+      </trans-unit>
+      <trans-unit id="aaabef1b5d00f671e2c2f5aef3cf25cb">
+        <source>Add another address</source>
+        <target>Add another address</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/steps/addresses.tpl:81</note>
       </trans-unit>
     </body>
   </file>
@@ -208,13 +218,13 @@ File: themes/classic/templates/checkout/_partials/cart-voucher.tpl:57</note>
         <source>Take advantage of our exclusive offers:</source>
         <target>Take advantage of our exclusive offers:</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl:18</note>
+File: themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl:23</note>
       </trans-unit>
       <trans-unit id="444bcb3a3fcf8389296c49467f27e1d6">
         <source>ok</source>
         <target>ok</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl:15</note>
+File: themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl:20</note>
       </trans-unit>
     </body>
   </file>
@@ -228,19 +238,19 @@ File: themes/classic/templates/checkout/_partials/cart-summary.tpl:38</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/checkout/cart.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/checkout/cart-empty.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6ff063fbc860a79759a7369ac32cee22">
         <source>Checkout</source>
         <target>Checkout</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/cart.tpl:47</note>
+File: themes/StarterTheme/templates/checkout/cart-empty.tpl:15</note>
       </trans-unit>
       <trans-unit id="300225ee958b6350abc51805dab83c24">
         <source>Continue shopping</source>
         <target>Continue shopping</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/cart.tpl:14</note>
+File: themes/StarterTheme/templates/checkout/cart-empty.tpl:9</note>
       </trans-unit>
     </body>
   </file>
@@ -270,25 +280,29 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="fc35ec973f5b3a16f0d4b009834f39a6">
         <source>Remove Image</source>
         <target>Remove Image</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:45</note>
-      </trans-unit>
-      <trans-unit id="cbe55e77ffa67d13322eb1ce7d22f1ba">
-        <source>Choose file</source>
-        <target>Choose file</target>
-        <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:50</note>
+File: themes/StarterTheme/templates/catalog/_partials/product-customization.tpl:21</note>
       </trans-unit>
       <trans-unit id="f346acd7aed7508df8fec4da8353c81e">
         <source>Save Customization</source>
         <target>Save Customization</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:58</note>
+File: themes/StarterTheme/templates/catalog/_partials/product-customization.tpl:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cbe55e77ffa67d13322eb1ce7d22f1ba">
+        <source>Choose file</source>
+        <target>Choose file</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:54</note>
       </trans-unit>
     </body>
   </file>
@@ -298,7 +312,7 @@ File: themes/classic/templates/catalog/_partials/product-customization.tpl:58</n
         <source>Add to cart</source>
         <target>Add to cart</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/miniatures/product.tpl:31</note>
+File: themes/StarterTheme/templates/catalog/_partials/miniatures/product.tpl:32</note>
       </trans-unit>
     </body>
   </file>
@@ -344,7 +358,7 @@ File: themes/StarterTheme/templates/catalog/_partials/facets.tpl:69</note>
         <source>Back to top</source>
         <target>Back to top</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/products.tpl:14</note>
+File: themes/StarterTheme/templates/catalog/_partials/products.tpl:13</note>
       </trans-unit>
     </body>
   </file>
@@ -354,7 +368,7 @@ File: themes/StarterTheme/templates/catalog/_partials/products.tpl:14</note>
         <source>Quick view</source>
         <target>Quick view</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/miniatures/product.tpl:78</note>
+File: themes/classic/templates/catalog/_partials/miniatures/product.tpl:82</note>
       </trans-unit>
     </body>
   </file>
@@ -374,13 +388,13 @@ File: themes/StarterTheme/templates/catalog/_partials/miniatures/brand.tpl:10</n
         <source>Refresh</source>
         <target>Refresh</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/product.tpl:137</note>
+File: themes/StarterTheme/templates/catalog/product.tpl:141</note>
       </trans-unit>
       <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
         <source>Download</source>
         <target>Download</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/product.tpl:209</note>
+File: themes/StarterTheme/templates/catalog/product.tpl:213</note>
       </trans-unit>
     </body>
   </file>
@@ -447,6 +461,16 @@ File: themes/classic/modules/ps_shoppingcart/modal.tpl:43</note>
         <target>Reset all filter</target>
         <note>Context:
 File: themes/StarterTheme/templates/catalog/_partials/active_filters.tpl:10</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/history.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bcd1b68617759b1dfcff0403a6b5a8d1">
+        <source>PDF</source>
+        <target>PDF</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/history.tpl:40</note>
       </trans-unit>
     </body>
   </file>

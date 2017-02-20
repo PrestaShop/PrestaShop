@@ -6,7 +6,7 @@
         <source>Failed to install admin tab "%name%".</source>
         <target>Failed to install admin tab "%name%".</target>
         <note>Context:
-File: src/Adapter/Module/Tab/ModuleTabRegister.php:257</note>
+File: src/Adapter/Module/Tab/ModuleTabRegister.php:261</note>
       </trans-unit>
     </body>
   </file>
@@ -64,25 +64,25 @@ File: src/Adapter/Module/ModuleZipManager.php:129</note>
         <source>%module% did not return a valid response on installation.</source>
         <target>%module% did not return a valid response on installation.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:520</note>
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:522</note>
       </trans-unit>
       <trans-unit id="35e839bc1864dd50a75500028c3ebb33">
         <source>Installation of module %module% was successful.</source>
         <target>Installation of module %module% was successful.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:525</note>
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:527</note>
       </trans-unit>
       <trans-unit id="f52c6f7b6fcbd586aee22044aeb6c897">
         <source>Installation of module %module% failed. %error%</source>
         <target>Installation of module %module% failed. %error%</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:532</note>
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:534</note>
       </trans-unit>
       <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
         <source>Synchronized with Addons marketplace!</source>
         <target>Synchronized with Addons marketplace!</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:657</note>
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:659</note>
       </trans-unit>
     </body>
   </file>
@@ -296,79 +296,79 @@ File: controllers/admin/AdminModulesController.php:807</note>
         <source>Module %s cannot be upgraded: Error while downloading the latest version.</source>
         <target>Module %s cannot be upgraded: Error while downloading the latest version.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:832</note>
+File: controllers/admin/AdminModulesController.php:834</note>
       </trans-unit>
       <trans-unit id="e6148a0bace3c593e161009060a7da99">
         <source>Module %s cannot be upgraded: Error while extracting the latest version.</source>
         <target>Module %s cannot be upgraded: Error while extracting the latest version.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:834</note>
+File: controllers/admin/AdminModulesController.php:836</note>
       </trans-unit>
       <trans-unit id="408e2019e00a54bbaace8e6ea29a736b">
         <source>You do not have the rights to update the %s module. Please make sure you are logged in to the PrestaShop Addons account that purchased the module.</source>
         <target>You do not have the rights to update the %s module. Please make sure you are logged in to the PrestaShop Addons account that purchased the module.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:840</note>
+File: controllers/admin/AdminModulesController.php:842</note>
       </trans-unit>
       <trans-unit id="811c568a06f4f5f038609a98512e9416">
         <source>You do not have permission to access this module.</source>
         <target>You do not have permission to access this module.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:860</note>
+File: controllers/admin/AdminModulesController.php:862</note>
       </trans-unit>
       <trans-unit id="81d2521b93f4b3abdc3877f76e04005a">
         <source>You do not have permission to install this module.</source>
         <target>You do not have permission to install this module.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:864</note>
+File: controllers/admin/AdminModulesController.php:866</note>
       </trans-unit>
       <trans-unit id="d7569980257d11fbd66deb501f5efab8">
         <source>You do not have permission to delete this module.</source>
         <target>You do not have permission to delete this module.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:866</note>
+File: controllers/admin/AdminModulesController.php:868</note>
       </trans-unit>
       <trans-unit id="5a69d1cb0ef4096b272b3b441555d737">
         <source>You do not have permission to configure this module.</source>
         <target>You do not have permission to configure this module.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:868</note>
+File: controllers/admin/AdminModulesController.php:870</note>
       </trans-unit>
       <trans-unit id="2c465b2a1769653563dcacfc83ab61d0">
         <source>This module is already installed: %s.</source>
         <target>This module is already installed: %s.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:870</note>
+File: controllers/admin/AdminModulesController.php:872</note>
       </trans-unit>
       <trans-unit id="0ec73cc5b2910764fc221acb633c20bc">
         <source>This module has already been uninstalled: %s.</source>
         <target>This module has already been uninstalled: %s.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:872</note>
+File: controllers/admin/AdminModulesController.php:874</note>
       </trans-unit>
       <trans-unit id="ee043fd10baac04e50a4256d7406e93c">
         <source>This module needs to be installed in order to be updated: %s.</source>
         <target>This module needs to be installed in order to be updated: %s.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:874</note>
+File: controllers/admin/AdminModulesController.php:876</note>
       </trans-unit>
       <trans-unit id="4e03a50f18350f93b8ec321b488a4a8c">
         <source>You do not have permission to uninstall this module.</source>
         <target>You do not have permission to uninstall this module.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:898</note>
+File: controllers/admin/AdminModulesController.php:900</note>
       </trans-unit>
       <trans-unit id="d3c1a921b833767f27ffcc401a87d93b">
         <source>The following module(s) could not be uninstalled properly: %s.</source>
         <target>The following module(s) could not be uninstalled properly: %s.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:1035</note>
+File: controllers/admin/AdminModulesController.php:1037</note>
       </trans-unit>
       <trans-unit id="89bbb6a140e2fc5ff52b2211083a2721">
         <source>The following module(s) could not be installed properly: %s.</source>
         <target>The following module(s) could not be installed properly: %s.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:1037</note>
+File: controllers/admin/AdminModulesController.php:1039</note>
       </trans-unit>
       <trans-unit id="3987153b2cf88c9476ba9dc8d1de52bc">
         <source>The following module(s) were not upgraded successfully: %s.</source>
@@ -384,61 +384,61 @@ File: controllers/admin/AdminModulesController.php:1624</note>
         <source>The module was successfully downloaded.</source>
         <target>The module was successfully downloaded.</target>
         <note>Context:
-File: classes/controller/AdminController.php:448</note>
+File: classes/controller/AdminController.php:443</note>
       </trans-unit>
       <trans-unit id="6832d3339f3238558d9e290f4ff36bb8">
         <source>Module(s) installed successfully.</source>
         <target>Module(s) installed successfully.</target>
         <note>Context:
-File: classes/controller/AdminController.php:452</note>
+File: classes/controller/AdminController.php:447</note>
       </trans-unit>
       <trans-unit id="0be078b247fde4986e320cd2684e7ab9">
         <source>Module(s) uninstalled successfully.</source>
         <target>Module(s) uninstalled successfully.</target>
         <note>Context:
-File: classes/controller/AdminController.php:453</note>
+File: classes/controller/AdminController.php:448</note>
       </trans-unit>
       <trans-unit id="980b6caee06822f8c5df45eb7db277be">
         <source>The module transplanted successfully to the hook.</source>
         <target>The module transplanted successfully to the hook.</target>
         <note>Context:
-File: classes/controller/AdminController.php:456</note>
+File: classes/controller/AdminController.php:451</note>
       </trans-unit>
       <trans-unit id="80e868e8d753c3ec4066aab283e66cbc">
         <source>The module was successfully removed from the hook.</source>
         <target>The module was successfully removed from the hook.</target>
         <note>Context:
-File: classes/controller/AdminController.php:457</note>
+File: classes/controller/AdminController.php:452</note>
       </trans-unit>
       <trans-unit id="7f31b58c32d9112f9bb160a481f6a911">
         <source>Module reset successfully.</source>
         <target>Module reset successfully.</target>
         <note>Context:
-File: classes/controller/AdminController.php:461</note>
+File: classes/controller/AdminController.php:456</note>
       </trans-unit>
       <trans-unit id="3270965aab0523dca0351cefc83e40b0">
         <source>Module deleted successfully.</source>
         <target>Module deleted successfully.</target>
         <note>Context:
-File: classes/controller/AdminController.php:462</note>
+File: classes/controller/AdminController.php:457</note>
       </trans-unit>
       <trans-unit id="35a596598c0477aea67abfa33b053697">
         <source>Successfully signed in to PrestaShop Addons.</source>
         <target>Successfully signed in to PrestaShop Addons.</target>
         <note>Context:
-File: classes/controller/AdminController.php:472</note>
+File: classes/controller/AdminController.php:467</note>
       </trans-unit>
       <trans-unit id="cf28eac3f0fdd7e3d2d705282948f2b9">
         <source>Error found : %1$s in country_module_list.xml file.</source>
         <target>Error found : %1$s in country_module_list.xml file.</target>
         <note>Context:
-File: classes/controller/AdminController.php:2199</note>
+File: classes/controller/AdminController.php:2194</note>
       </trans-unit>
       <trans-unit id="ce7d2844bfe39db351171add1d7348cd">
         <source>Error found : %1$s in must_have_module_list.xml file.</source>
         <target>Error found : %1$s in must_have_module_list.xml file.</target>
         <note>Context:
-File: classes/controller/AdminController.php:2216</note>
+File: classes/controller/AdminController.php:2211</note>
       </trans-unit>
     </body>
   </file>

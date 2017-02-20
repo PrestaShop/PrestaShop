@@ -18,7 +18,7 @@ File: controllers/admin/AdminDashboardController.php:385</note>
         <source>If this is your main domain, please {link}change it now{/link}.</source>
         <target>If this is your main domain, please {link}change it now{/link}.</target>
         <note>Context:
-File: controllers/admin/AdminDashboardController.php:391</note>
+File: controllers/admin/AdminDashboardController.php:401</note>
       </trans-unit>
       <trans-unit id="e3e7221b6b1d51f976fa58ec6131a2aa">
         <source><![CDATA[This is different from the domain name set in the "SEO & URLs" tab.]]></source>

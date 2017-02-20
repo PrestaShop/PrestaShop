@@ -70,6 +70,28 @@ File: src/PrestaShopBundle/Install/Database.php:99</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Install/Upgrade.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="de08f967b14ff56ab63e1b6a6e0c9f4e">
+        <source>Database upgrade completed.</source>
+        <target>Database upgrade completed.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Install/Upgrade.php:317</note>
+      </trans-unit>
+      <trans-unit id="9c7e0ba2c6ecb11af7f39843bbc18ff8">
+        <source>Warning detected during upgrade.</source>
+        <target>Warning detected during upgrade.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Install/Upgrade.php:929</note>
+      </trans-unit>
+      <trans-unit id="bd077be8e2cdf937e5b77300a0131f9a">
+        <source>Error detected during upgrade.</source>
+        <target>Error detected during upgrade.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Install/Upgrade.php:959</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Install/Install.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="13cd0b09fa253a2b524ca2345638aacf">
@@ -150,6 +172,12 @@ File: src/PrestaShopBundle/Install/Install.php:498</note>
         <note>Context:
 File: src/PrestaShopBundle/Install/Install.php:511</note>
       </trans-unit>
+      <trans-unit id="258057c839ab36aa9e3bb60550348c5e">
+        <source>Cannot copy flag language "%flag%"</source>
+        <target>Cannot copy flag language "%flag%"</target>
+        <note>Context:
+File: src/PrestaShopBundle/Install/Install.php:519</note>
+      </trans-unit>
       <trans-unit id="27654955bc85150712aa0bc53bcc6224">
         <source>Cannot create admin account</source>
         <target>Cannot create admin account</target>
@@ -182,37 +210,37 @@ File: src/PrestaShopBundle/Install/Install.php:954</note>
         <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
         <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
         <note>Context:
-File: src/PrestaShopBundle/Install/XmlLoader.php:1114</note>
+File: src/PrestaShopBundle/Install/XmlLoader.php:1118</note>
       </trans-unit>
       <trans-unit id="5b56439cb79f3a01ae56d92e52be2218">
         <source><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></source>
         <target><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></target>
         <note>Context:
-File: src/PrestaShopBundle/Install/XmlLoader.php:452</note>
+File: src/PrestaShopBundle/Install/XmlLoader.php:456</note>
       </trans-unit>
       <trans-unit id="11b53a5381cd2ca843a6089493de6716">
         <source>Cannot create image "%identifier%" for entity "%entity%"</source>
         <target>Cannot create image "%identifier%" for entity "%entity%"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/XmlLoader.php:698</note>
+File: src/PrestaShopBundle/Install/XmlLoader.php:702</note>
       </trans-unit>
       <trans-unit id="a6bc945aa3c279156298ed70872cd20b">
         <source>Cannot create image "%identifier%" (bad permissions on folder "%folder%")</source>
         <target>Cannot create image "%identifier%" (bad permissions on folder "%folder%")</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/XmlLoader.php:710</note>
+File: src/PrestaShopBundle/Install/XmlLoader.php:714</note>
       </trans-unit>
       <trans-unit id="25b42d449f5ebcdb85fb6cae0663c40f">
         <source>Cannot create image "%identifier%"</source>
         <target>Cannot create image "%identifier%"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/XmlLoader.php:661</note>
+File: src/PrestaShopBundle/Install/XmlLoader.php:665</note>
       </trans-unit>
       <trans-unit id="44a700a0c9496b4436c16c5e46351707">
         <source>Cannot create image "%1$s" for entity "%2$s"</source>
         <target>Cannot create image "%1$s" for entity "%2$s"</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/XmlLoader.php:721</note>
+File: src/PrestaShopBundle/Install/XmlLoader.php:725</note>
       </trans-unit>
     </body>
   </file>
@@ -384,6 +412,12 @@ File: install-dev/controllers/http/configure.php:98</note>
         <note>Context:
 File: install-dev/controllers/http/configure.php:100</note>
       </trans-unit>
+      <trans-unit id="2399cf4ca7b49f2706f6e147a32efa78">
+        <source>Your lastname contains some invalid characters</source>
+        <target>Your lastname contains some invalid characters</target>
+        <note>Context:
+File: install-dev/controllers/http/configure.php:104</note>
+      </trans-unit>
       <trans-unit id="8ad75c5a8821cc294f189181722acb56">
         <source>lastname</source>
         <target>lastname</target>
@@ -407,6 +441,18 @@ File: install-dev/controllers/http/configure.php:114</note>
         <target>This e-mail address is invalid</target>
         <note>Context:
 File: install-dev/controllers/http/configure.php:120</note>
+      </trans-unit>
+      <trans-unit id="316ec028b21331289425813b583e4b8f">
+        <source>Image folder %s is not writable</source>
+        <target>Image folder %s is not writable</target>
+        <note>Context:
+File: install-dev/controllers/http/configure.php:158</note>
+      </trans-unit>
+      <trans-unit id="aa2154c174605e6c5bae0daa7ea56352">
+        <source>An error occurred during logo copy.</source>
+        <target>An error occurred during logo copy.</target>
+        <note>Context:
+File: install-dev/controllers/http/configure.php:168</note>
       </trans-unit>
       <trans-unit id="6b6ab7122be1b8361066f56eed537aab">
         <source>An error occurred during logo upload.</source>
@@ -728,11 +774,17 @@ File: install-dev/theme/views/header.php:4</note>
         <note>Context:
 File: install-dev/theme/views/header.php:37</note>
       </trans-unit>
+      <trans-unit id="be8df1f28c0abc85a0ed0c6860e5d832">
+        <source>Blog</source>
+        <target>Blog</target>
+        <note>Context:
+File: install-dev/theme/views/header.php:40</note>
+      </trans-unit>
       <trans-unit id="83b14f196cda2257c76ef2fa682893ca">
         <source>Contact us!</source>
         <target>Contact us!</target>
         <note>Context:
-File: install-dev/theme/views/header.php:44</note>
+File: install-dev/theme/views/header.php:76</note>
       </trans-unit>
       <trans-unit id="301fedbe35369c411966a9e6a396ee95">
         <source>Installation Assistant</source>
@@ -1011,6 +1063,12 @@ File: install-dev/theme/views/process.php:86</note>
         <target>http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Completingtheinstallation</target>
         <note>Context:
 File: install-dev/theme/views/process.php:87</note>
+      </trans-unit>
+      <trans-unit id="eed2839c1e3e5f7069ed03b2f6d4c6dd">
+        <source>Back Office</source>
+        <target>Back Office</target>
+        <note>Context:
+File: install-dev/theme/views/process.php:92</note>
       </trans-unit>
       <trans-unit id="450abc1417292c60121dd3dfde9c9b23">
         <source>Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.</source>

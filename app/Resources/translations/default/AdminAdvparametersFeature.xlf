@@ -646,6 +646,12 @@ File: controllers/admin/AdminEmailsController.php:151</note>
         <note>Context:
 File: controllers/admin/AdminEmailsController.php:157</note>
       </trans-unit>
+      <trans-unit id="d7f2615c71a1567cc13cf3a7f7de0aea">
+        <source>Encryption</source>
+        <target>Encryption</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:164</note>
+      </trans-unit>
       <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
         <source>None</source>
         <target>None</target>
@@ -1590,7 +1596,7 @@ File: controllers/admin/AdminWebserviceController.php:174</note>
         <source>Back office connection from %s</source>
         <target>Back office connection from %s</target>
         <note>Context:
-File: controllers/admin/AdminLoginController.php:210</note>
+File: controllers/admin/AdminLoginController.php:209</note>
       </trans-unit>
     </body>
   </file>

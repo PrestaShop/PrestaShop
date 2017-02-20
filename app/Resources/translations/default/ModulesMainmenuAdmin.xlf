@@ -96,14 +96,14 @@ File: modules/ps_mainmenu/ps_mainmenu.php:332</note>
         <source>All brands</source>
         <target>All brands</target>
         <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1161
+File: modules/ps_mainmenu/ps_mainmenu.php:1162
  Comment: Option to show all Manufacturers</note>
       </trans-unit>
       <trans-unit id="ecf253735ac0cba84a9d2eeff1f1b87c">
         <source>All suppliers</source>
         <target>All suppliers</target>
         <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1149
+File: modules/ps_mainmenu/ps_mainmenu.php:1150
  Comment: Option to show all Suppliers</note>
       </trans-unit>
       <trans-unit id="944d19a34e5fa333a6a0de27e8c971da">
@@ -134,38 +134,38 @@ File: modules/ps_mainmenu/ps_mainmenu.php:1062</note>
         <source>CMS</source>
         <target>CMS</target>
         <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1142</note>
+File: modules/ps_mainmenu/ps_mainmenu.php:1143</note>
       </trans-unit>
       <trans-unit id="12a521af593422cd508f7707662c9eb2">
         <source>Shops</source>
         <target>Shops</target>
         <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1183</note>
+File: modules/ps_mainmenu/ps_mainmenu.php:1184</note>
       </trans-unit>
       <trans-unit id="778118c7dd993db08f704e15efa4a7fa">
         <source>Choose product ID</source>
         <target>Choose product ID</target>
         <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1199</note>
+File: modules/ps_mainmenu/ps_mainmenu.php:1200</note>
       </trans-unit>
       <trans-unit id="56e8bf6c54f1638e7bce5a2fcd5b20fe">
         <source>Menu Top Links</source>
         <target>Menu Top Links</target>
         <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1203
+File: modules/ps_mainmenu/ps_mainmenu.php:1204
  Comment: BEGIN Menu Top Links</note>
       </trans-unit>
       <trans-unit id="449f6d82cde894eafd3c85b6fa918f89">
         <source>Link ID</source>
         <target>Link ID</target>
         <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1325</note>
+File: modules/ps_mainmenu/ps_mainmenu.php:1326</note>
       </trans-unit>
       <trans-unit id="387a8014f530f080bf2f3be723f8c164">
         <source>Link list</source>
         <target>Link list</target>
         <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1356</note>
+File: modules/ps_mainmenu/ps_mainmenu.php:1357</note>
       </trans-unit>
     </body>
   </file>

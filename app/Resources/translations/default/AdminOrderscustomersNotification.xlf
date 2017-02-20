@@ -6,13 +6,13 @@
         <source>The message was successfully sent to the customer.</source>
         <target>The message was successfully sent to the customer.</target>
         <note>Context:
-File: classes/controller/AdminController.php:450</note>
+File: classes/controller/AdminController.php:445</note>
       </trans-unit>
       <trans-unit id="1923e1e610686f1182bf54f573b86921">
         <source>A partial refund was successfully created.</source>
         <target>A partial refund was successfully created.</target>
         <note>Context:
-File: classes/controller/AdminController.php:470</note>
+File: classes/controller/AdminController.php:465</note>
       </trans-unit>
     </body>
   </file>
@@ -316,415 +316,415 @@ File: controllers/admin/AdminOrdersController.php:473</note>
         <source>An error occurred while sending an email to the customer.</source>
         <target>An error occurred while sending an email to the customer.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:707</note>
+File: controllers/admin/AdminOrdersController.php:674</note>
       </trans-unit>
       <trans-unit id="f465ea6c7866853ecc49286449720ac9">
         <source>The order carrier cannot be updated.</source>
         <target>The order carrier cannot be updated.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:547</note>
+File: controllers/admin/AdminOrdersController.php:514</note>
       </trans-unit>
       <trans-unit id="c2572d1fee836c06c88e0bdc9fa7ffa1">
         <source>The new order status is invalid.</source>
         <target>The new order status is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:559</note>
+File: controllers/admin/AdminOrdersController.php:526</note>
       </trans-unit>
       <trans-unit id="4f51deabdeba4ee61b998d3b0cf188b4">
         <source>An error occurred while changing order status, or we were unable to send an email to the customer.</source>
         <target>An error occurred while changing order status, or we were unable to send an email to the customer.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:593</note>
+File: controllers/admin/AdminOrdersController.php:560</note>
       </trans-unit>
       <trans-unit id="c5e4a57d9572678ffbb124db39542928">
         <source>The order has already been assigned this status.</source>
         <target>The order has already been assigned this status.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:595</note>
+File: controllers/admin/AdminOrdersController.php:562</note>
       </trans-unit>
       <trans-unit id="f61c60ff8d82ebd1012606e5bc3a2002">
         <source>The customer is invalid.</source>
         <target>The customer is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:608</note>
+File: controllers/admin/AdminOrdersController.php:575</note>
       </trans-unit>
       <trans-unit id="3dc245110e1f3601860c20299d97c01d">
         <source>The message cannot be blank.</source>
         <target>The message cannot be blank.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:610</note>
+File: controllers/admin/AdminOrdersController.php:577</note>
       </trans-unit>
       <trans-unit id="204c3558e41366f3d558ce8e01426a22">
         <source>field %s is required.</source>
         <target>field %s is required.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:617</note>
+File: controllers/admin/AdminOrdersController.php:584</note>
       </trans-unit>
       <trans-unit id="c4d82e8095bb903683e0b0e73887aef0">
         <source>Please enter a quantity to proceed with your refund.</source>
         <target>Please enter a quantity to proceed with your refund.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:904</note>
+File: controllers/admin/AdminOrdersController.php:871</note>
       </trans-unit>
       <trans-unit id="8a5f368eac3aab699cf8e6e1ec28b695">
         <source>Please enter an amount to proceed with your refund.</source>
         <target>Please enter an amount to proceed with your refund.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:906</note>
+File: controllers/admin/AdminOrdersController.php:873</note>
       </trans-unit>
       <trans-unit id="598db0342f11f89d4268942b9491c455">
         <source>You cannot generate a partial credit slip.</source>
         <target>You cannot generate a partial credit slip.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:792</note>
+File: controllers/admin/AdminOrdersController.php:759</note>
       </trans-unit>
       <trans-unit id="b1db8cec4ec0de83c3934a22bc758a3b">
         <source>You cannot generate a voucher.</source>
         <target>You cannot generate a voucher.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1152</note>
+File: controllers/admin/AdminOrdersController.php:1119</note>
       </trans-unit>
       <trans-unit id="bd4457c0f19f796f3d66726f9fadc041">
         <source>The partial refund data is incorrect.</source>
         <target>The partial refund data is incorrect.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:915</note>
+File: controllers/admin/AdminOrdersController.php:882</note>
       </trans-unit>
       <trans-unit id="991bbcc5660531bc1a1c8f1c235794c0">
         <source>You must select a product.</source>
         <target>You must select a product.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:926</note>
+File: controllers/admin/AdminOrdersController.php:893</note>
       </trans-unit>
       <trans-unit id="6d3fd0eb289900145d482634d6e86b90">
         <source>You must enter a quantity.</source>
         <target>You must enter a quantity.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:928</note>
+File: controllers/admin/AdminOrdersController.php:895</note>
       </trans-unit>
       <trans-unit id="8001500c3284edd9c4dd07ae508e5a95">
         <source>No quantity has been selected for this product.</source>
         <target>No quantity has been selected for this product.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:992</note>
+File: controllers/admin/AdminOrdersController.php:959</note>
       </trans-unit>
       <trans-unit id="38eaecfc1ef14b98b5d6e4eb77494369">
         <source>An invalid quantity was selected for this product.</source>
         <target>An invalid quantity was selected for this product.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:996</note>
+File: controllers/admin/AdminOrdersController.php:963</note>
       </trans-unit>
       <trans-unit id="bf772d53e730d2e0169ed2f746044606">
         <source>An error occurred while attempting to delete the product.</source>
         <target>An error occurred while attempting to delete the product.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1013</note>
+File: controllers/admin/AdminOrdersController.php:980</note>
       </trans-unit>
       <trans-unit id="77d97f5686dfef72ee577e779d5bb74f">
         <source>An error occurred while attempting to delete product customization.</source>
         <target>An error occurred while attempting to delete product customization.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1035</note>
+File: controllers/admin/AdminOrdersController.php:1002</note>
       </trans-unit>
       <trans-unit id="edeff0d68d3d20ce1f6189f6070cb2ba">
         <source>A credit slip cannot be generated.</source>
         <target>A credit slip cannot be generated.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1073</note>
+File: controllers/admin/AdminOrdersController.php:1040</note>
       </trans-unit>
       <trans-unit id="b81f0a0540938a2e7daa684f02866696">
         <source>No product or quantity has been selected.</source>
         <target>No product or quantity has been selected.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1182</note>
+File: controllers/admin/AdminOrdersController.php:1149</note>
       </trans-unit>
       <trans-unit id="fdb259bd3d5479c25f5d23af490b5ec3">
         <source>The order cannot be found</source>
         <target>The order cannot be found</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1207</note>
+File: controllers/admin/AdminOrdersController.php:1174</note>
       </trans-unit>
       <trans-unit id="9391de9e24bd71839f6f72a1517de2d6">
         <source>The amount is invalid.</source>
         <target>The amount is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1209</note>
+File: controllers/admin/AdminOrdersController.php:1176</note>
       </trans-unit>
       <trans-unit id="6ab061ec12504fab2c41f0689579d623">
         <source>The selected payment method is invalid.</source>
         <target>The selected payment method is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1211</note>
+File: controllers/admin/AdminOrdersController.php:1178</note>
       </trans-unit>
       <trans-unit id="7d0d71a3e577be4c20799b52286191d6">
         <source>The transaction ID is invalid.</source>
         <target>The transaction ID is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1213</note>
+File: controllers/admin/AdminOrdersController.php:1180</note>
       </trans-unit>
       <trans-unit id="3b512b6c31ef4f46605159612691eb56">
         <source>The selected currency is invalid.</source>
         <target>The selected currency is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1215</note>
+File: controllers/admin/AdminOrdersController.php:1182</note>
       </trans-unit>
       <trans-unit id="06fc8d486e9f83c5810a21857da7b656">
         <source>The invoice is invalid.</source>
         <target>The invoice is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1217</note>
+File: controllers/admin/AdminOrdersController.php:1184</note>
       </trans-unit>
       <trans-unit id="f50c7cba4df874039d73ee480d678f5e">
         <source>The date is invalid</source>
         <target>The date is invalid</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1219</note>
+File: controllers/admin/AdminOrdersController.php:1186</note>
       </trans-unit>
       <trans-unit id="04e3713831c71d70817d4a69eadbc53c">
         <source>An error occurred during payment.</source>
         <target>An error occurred during payment.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1222</note>
+File: controllers/admin/AdminOrdersController.php:1189</note>
       </trans-unit>
       <trans-unit id="0d906d12a6321e5f13e69dab92e39a4e">
         <source>The invoice note was not saved.</source>
         <target>The invoice note was not saved.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1239</note>
+File: controllers/admin/AdminOrdersController.php:1206</note>
       </trans-unit>
       <trans-unit id="7f5a75ac350db917dc60cfbd8299da5b">
         <source>Failed to upload the invoice and edit its note.</source>
         <target>Failed to upload the invoice and edit its note.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1245</note>
+File: controllers/admin/AdminOrdersController.php:1212</note>
       </trans-unit>
       <trans-unit id="68b7afe49451dbdab7cbeff4f66be369">
         <source>This delivery address country is not active.</source>
         <target>This delivery address country is not active.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1265</note>
+File: controllers/admin/AdminOrdersController.php:1232</note>
       </trans-unit>
       <trans-unit id="a9320eb7be798958cba0a93262521ede">
         <source>This invoice address country is not active.</source>
         <target>This invoice address country is not active.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1267</note>
+File: controllers/admin/AdminOrdersController.php:1234</note>
       </trans-unit>
       <trans-unit id="95aa605fa7f396d370b4c87afad9201c">
         <source>This address can't be loaded</source>
         <target>This address can't be loaded</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1298</note>
+File: controllers/admin/AdminOrdersController.php:1265</note>
       </trans-unit>
       <trans-unit id="b0535e1868ad530e5faadf295516a724">
         <source>You cannot change the currency.</source>
         <target>You cannot change the currency.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1394</note>
+File: controllers/admin/AdminOrdersController.php:1361</note>
       </trans-unit>
       <trans-unit id="8dcb8970b8eeeac73c8d312d1db3d1f9">
         <source>Invoice management has been disabled.</source>
         <target>Invoice management has been disabled.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1401</note>
+File: controllers/admin/AdminOrdersController.php:1368</note>
       </trans-unit>
       <trans-unit id="f98321e34948f600959c5c4200c953c8">
         <source>This order already has an invoice.</source>
         <target>This order already has an invoice.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1403</note>
+File: controllers/admin/AdminOrdersController.php:1370</note>
       </trans-unit>
       <trans-unit id="0da1c0afe7d3d89a53a5d00998bb4295">
         <source>You cannot edit this cart rule.</source>
         <target>You cannot edit this cart rule.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1443</note>
+File: controllers/admin/AdminOrdersController.php:1410</note>
       </trans-unit>
       <trans-unit id="db7cb022c7b6058d0f1668faa22a54fa">
         <source>You must specify a name in order to create a new discount.</source>
         <target>You must specify a name in order to create a new discount.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1451</note>
+File: controllers/admin/AdminOrdersController.php:1418</note>
       </trans-unit>
       <trans-unit id="7b56734426bcdd50629f41c58cb1f241">
         <source>The discount value is invalid.</source>
         <target>The discount value is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1490</note>
+File: controllers/admin/AdminOrdersController.php:1457</note>
       </trans-unit>
       <trans-unit id="8dc19f50ae30ac7d61e67c795b32fd47">
         <source>The discount value is greater than the order invoice total.</source>
         <target>The discount value is greater than the order invoice total.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1510</note>
+File: controllers/admin/AdminOrdersController.php:1477</note>
       </trans-unit>
       <trans-unit id="574875d4553bada6682a07ae86298bc6">
         <source>The discount value is greater than the order total.</source>
         <target>The discount value is greater than the order total.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1521</note>
+File: controllers/admin/AdminOrdersController.php:1488</note>
       </trans-unit>
       <trans-unit id="9a9d54664b6ba23a9588f6b795dc03ab">
         <source>The discount type is invalid.</source>
         <target>The discount type is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1557</note>
+File: controllers/admin/AdminOrdersController.php:1524</note>
       </trans-unit>
       <trans-unit id="b046e96ee00ad2ef4ed135eab1c13df4">
         <source>An error occurred during the OrderCartRule creation</source>
         <target>An error occurred during the OrderCartRule creation</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1610</note>
+File: controllers/admin/AdminOrdersController.php:1577</note>
       </trans-unit>
       <trans-unit id="0fa578512847280157dd62ae18e92979">
         <source>An error occurred while loading order status.</source>
         <target>An error occurred while loading order status.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1621</note>
+File: controllers/admin/AdminOrdersController.php:1588</note>
       </trans-unit>
       <trans-unit id="fded441ef916f653d49abf142b535b52">
         <source>An error occurred while sending the e-mail to the customer.</source>
         <target>An error occurred while sending the e-mail to the customer.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1634</note>
+File: controllers/admin/AdminOrdersController.php:1601</note>
       </trans-unit>
       <trans-unit id="aeddc664f1e95691c69ea44a5c1c18f5">
         <source>This product is out of stock: </source>
         <target>This product is out of stock:</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1825</note>
+File: controllers/admin/AdminOrdersController.php:1792</note>
       </trans-unit>
       <trans-unit id="4174f012bc63b679f092acd1a933bf5c">
         <source>The email was sent to your customer.</source>
         <target>The email was sent to your customer.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2057</note>
+File: controllers/admin/AdminOrdersController.php:2036</note>
       </trans-unit>
       <trans-unit id="773b660773e6106c248814fa87b480f7">
         <source>Error in sending the email to your customer.</source>
         <target>Error in sending the email to your customer.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2061</note>
+File: controllers/admin/AdminOrdersController.php:2040</note>
       </trans-unit>
       <trans-unit id="4dc1c8fa2f766c5e201155ee3737ed3f">
         <source>The order object cannot be loaded.</source>
         <target>The order object cannot be loaded.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2807</note>
+File: controllers/admin/AdminOrdersController.php:2786</note>
       </trans-unit>
       <trans-unit id="7152cf69405fd47a8bd2f7b625ce324e">
         <source>You cannot add products to delivered orders.</source>
         <target>You cannot add products to delivered orders.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2081</note>
+File: controllers/admin/AdminOrdersController.php:2060</note>
       </trans-unit>
       <trans-unit id="9b7508b5ee1050d5c5efb9b1cf76fd36">
         <source>The product object cannot be loaded.</source>
         <target>The product object cannot be loaded.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2426</note>
+File: controllers/admin/AdminOrdersController.php:2405</note>
       </trans-unit>
       <trans-unit id="74bd055cec720c9f41563ff6a6a40b7b">
         <source>The combination object cannot be loaded.</source>
         <target>The combination object cannot be loaded.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2104</note>
+File: controllers/admin/AdminOrdersController.php:2083</note>
       </trans-unit>
       <trans-unit id="0d38c90d843c787c0be14f790998210c">
         <source>You must add %d minimum quantity</source>
         <target>You must add %d minimum quantity</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2169</note>
+File: controllers/admin/AdminOrdersController.php:2148</note>
       </trans-unit>
       <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
         <source>You already have the maximum quantity available for this product.</source>
         <target>You already have the maximum quantity available for this product.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2171</note>
+File: controllers/admin/AdminOrdersController.php:2150</note>
       </trans-unit>
       <trans-unit id="6a94d8492279c2bfd3e81f3158658980">
         <source>[Generated] CartRule for Free Shipping</source>
         <target>[Generated] CartRule for Free Shipping</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2186</note>
+File: controllers/admin/AdminOrdersController.php:2165</note>
       </trans-unit>
       <trans-unit id="4e670964e358534a827dc7e0359281b0">
         <source>The OrderDetail object cannot be loaded.</source>
         <target>The OrderDetail object cannot be loaded.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2418</note>
+File: controllers/admin/AdminOrdersController.php:2397</note>
       </trans-unit>
       <trans-unit id="0c8a625097a9b711bfca4724517eeb01">
         <source>The address object cannot be loaded.</source>
         <target>The address object cannot be loaded.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2434</note>
+File: controllers/admin/AdminOrdersController.php:2413</note>
       </trans-unit>
       <trans-unit id="7da127d075ca24fec224c1d497aac11f">
         <source>An error occurred while editing the product line.</source>
         <target>An error occurred while editing the product line.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2615</note>
+File: controllers/admin/AdminOrdersController.php:2594</note>
       </trans-unit>
       <trans-unit id="fde52aaef1e1e23770e40a458a1cac46">
         <source>An error occurred while attempting to delete the product line.</source>
         <target>An error occurred while attempting to delete the product line.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2685</note>
+File: controllers/admin/AdminOrdersController.php:2664</note>
       </trans-unit>
       <trans-unit id="e3a212006776535d5da7d11f7c62d727">
         <source>The Order Detail object could not be loaded.</source>
         <target>The Order Detail object could not be loaded.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2800</note>
+File: controllers/admin/AdminOrdersController.php:2779</note>
       </trans-unit>
       <trans-unit id="823eba6da615c2a384cf8e13cd70980b">
         <source>The invoice object cannot be loaded.</source>
         <target>The invoice object cannot be loaded.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2734</note>
+File: controllers/admin/AdminOrdersController.php:2713</note>
       </trans-unit>
       <trans-unit id="0af3cc300f35caff086e21bf2f865960">
         <source>You cannot edit the order detail for this order.</source>
         <target>You cannot edit the order detail for this order.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2748</note>
+File: controllers/admin/AdminOrdersController.php:2727</note>
       </trans-unit>
       <trans-unit id="7ea9212dcdaccc580b9e6b548609e7fd">
         <source>You cannot edit a delivered order.</source>
         <target>You cannot edit a delivered order.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2822</note>
+File: controllers/admin/AdminOrdersController.php:2801</note>
       </trans-unit>
       <trans-unit id="675b81dace2c99f5ef5eb6ac3f69dbe4">
         <source>You cannot use this invoice for the order</source>
         <target>You cannot use this invoice for the order</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2763</note>
+File: controllers/admin/AdminOrdersController.php:2742</note>
       </trans-unit>
       <trans-unit id="2591b6d46f45d8f60e24c6c9c96a2a11">
         <source>Invalid price</source>
         <target>Invalid price</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2774</note>
+File: controllers/admin/AdminOrdersController.php:2753</note>
       </trans-unit>
       <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
         <source>Invalid quantity</source>
         <target>Invalid quantity</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2788</note>
+File: controllers/admin/AdminOrdersController.php:2767</note>
       </trans-unit>
       <trans-unit id="c181d4415ea3fd71c407da3697be421f">
         <source>You cannot delete the order detail.</source>
         <target>You cannot delete the order detail.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2814</note>
+File: controllers/admin/AdminOrdersController.php:2793</note>
       </trans-unit>
       <trans-unit id="671cd4e79283dd9931f0452000bf2744">
         <source>This product cannot be re-stocked.</source>
         <target>This product cannot be re-stocked.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2944</note>
+File: controllers/admin/AdminOrdersController.php:2923</note>
       </trans-unit>
     </body>
   </file>

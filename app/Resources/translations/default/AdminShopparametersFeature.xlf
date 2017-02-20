@@ -133,19 +133,19 @@ File: classes/lang/ContactLang.php:48</note>
         <source>Visits</source>
         <target>Visits</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:497</note>
+File: controllers/admin/AdminReferrersController.php:501</note>
       </trans-unit>
       <trans-unit id="a28735af01fbb1e35371cb120985ac47">
         <source>Registrations</source>
         <target>Registrations</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:499</note>
+File: controllers/admin/AdminReferrersController.php:503</note>
       </trans-unit>
       <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
         <source>Visitors</source>
         <target>Visitors</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:496</note>
+File: controllers/admin/AdminReferrersController.php:500</note>
       </trans-unit>
       <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
         <source>Pages</source>
@@ -175,7 +175,7 @@ File: controllers/admin/AdminReferrersController.php:122</note>
         <source>Order rate</source>
         <target>Order rate</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:503</note>
+File: controllers/admin/AdminReferrersController.php:507</note>
       </trans-unit>
       <trans-unit id="316853cc3718335f11c048e33b9be98a">
         <source>Click</source>
@@ -223,19 +223,19 @@ File: controllers/admin/AdminReferrersController.php:258</note>
         <source>Click fee</source>
         <target>Click fee</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:504</note>
+File: controllers/admin/AdminReferrersController.php:508</note>
       </trans-unit>
       <trans-unit id="2e27c4006a026eacfc1f85b41bf9bc4c">
         <source>Base fee</source>
         <target>Base fee</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:505</note>
+File: controllers/admin/AdminReferrersController.php:509</note>
       </trans-unit>
       <trans-unit id="86190054fc32554662ffbb12b717e8d0">
         <source>Percent fee</source>
         <target>Percent fee</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:506</note>
+File: controllers/admin/AdminReferrersController.php:510</note>
       </trans-unit>
       <trans-unit id="7ea17e2c839ae2f8e149a3c437773a0a">
         <source>Technical information -- Simple mode</source>
@@ -277,19 +277,19 @@ File: controllers/admin/AdminReferrersController.php:345</note>
         <source>Unique visitors</source>
         <target>Unique visitors</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:495</note>
+File: controllers/admin/AdminReferrersController.php:499</note>
       </trans-unit>
       <trans-unit id="d3139f39f1ad6324c80a9ddd50cc7867">
         <source>Pages viewed</source>
         <target>Pages viewed</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:498</note>
+File: controllers/admin/AdminReferrersController.php:502</note>
       </trans-unit>
       <trans-unit id="200f5c9c419f0a53d5d361eff7b33abc">
         <source>Registration rate</source>
         <target>Registration rate</target>
         <note>Context:
-File: controllers/admin/AdminReferrersController.php:502</note>
+File: controllers/admin/AdminReferrersController.php:506</note>
       </trans-unit>
     </body>
   </file>

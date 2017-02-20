@@ -48,55 +48,71 @@ File: modules/ps_wirepayment/ps_wirepayment.php:130</note>
         <source>Account details</source>
         <target>Account details</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:295</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:296</note>
       </trans-unit>
       <trans-unit id="857216dd1b374de9bf54068fcd78a8f3">
         <source>Account owner</source>
         <target>Account owner</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:289</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:290</note>
       </trans-unit>
       <trans-unit id="6b154cafbab54ba3a1e76a78c290c02a">
         <source>Such as bank branch, IBAN number, BIC, etc.</source>
         <target>Such as bank branch, IBAN number, BIC, etc.</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:297</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:298</note>
       </trans-unit>
       <trans-unit id="f9a1a1bb716cbae0503d351ea2af4b34">
         <source>Bank address</source>
         <target>Bank address</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:302</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:303</note>
       </trans-unit>
       <trans-unit id="da22c93ccb398c72070f4000cc7b59a1">
         <source>Customization</source>
         <target>Customization</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:315</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:316</note>
       </trans-unit>
       <trans-unit id="873a2778bdb25b9dcca6de640216c4a9">
         <source>Reservation period</source>
         <target>Reservation period</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:321</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:322</note>
       </trans-unit>
       <trans-unit id="120cf2b5eab7f28e5fb03b8fb7bbd07b">
         <source>Number of days the items remain reserved</source>
         <target>Number of days the items remain reserved</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:322</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:323</note>
       </trans-unit>
       <trans-unit id="6b8d5618e646b2ad407158c1da89ca0c">
         <source>Information to the customer</source>
         <target>Information to the customer</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:327</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:328</note>
       </trans-unit>
       <trans-unit id="65ed2ab0c7edcccc96fcedaa594f94c6">
         <source>Information on the bank transfer (processing time, starting of the shipping...)</source>
         <target>Information on the bank transfer (processing time, starting of the shipping...)</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:329</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:330</note>
+      </trans-unit>
+      <trans-unit id="9b07982b472390295e7da7d430c8ec1d">
+        <source>Display the invitation to pay in the order confirmation page</source>
+        <target>Display the invitation to pay in the order confirmation page</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:335</note>
+      </trans-unit>
+      <trans-unit id="75862d7a734d2c0129798ef6a850409a">
+        <source>Your country's legislation may require you to send the invitation 
+                            to pay by email only. Disabling the option will hide the invitation 
+                            on the confirmation page.</source>
+        <target>Your country's legislation may require you to send the invitation 
+                            to pay by email only. Disabling the option will hide the invitation 
+                            on the confirmation page.</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:338</note>
       </trans-unit>
     </body>
   </file>

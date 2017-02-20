@@ -36,13 +36,13 @@ File: controllers/admin/AdminShopUrlController.php:543</note>
         <source>Are you sure to delete this?</source>
         <target>Are you sure to delete this?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1157</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1210</note>
       </trans-unit>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
         <target>Warning</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1100</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1153</note>
       </trans-unit>
     </body>
   </file>

@@ -42,37 +42,37 @@ File: modules/ps_checkpayment/ps_checkpayment.php:105</note>
         <source>Pay by Check</source>
         <target>Pay by Check</target>
         <note>Context:
-File: modules/ps_checkpayment/ps_checkpayment.php:159</note>
+File: modules/ps_checkpayment/ps_checkpayment.php:160</note>
       </trans-unit>
       <trans-unit id="5dd532f0a63d89c5af0243b74732f63c">
         <source>Contact details</source>
         <target>Contact details</target>
         <note>Context:
-File: modules/ps_checkpayment/ps_checkpayment.php:215</note>
+File: modules/ps_checkpayment/ps_checkpayment.php:216</note>
       </trans-unit>
       <trans-unit id="84649906133e37fefda33a301de8cd4f">
         <source>Payee (name)</source>
         <target>Payee (name)</target>
         <note>Context:
-File: modules/ps_checkpayment/ps_checkpayment.php:221</note>
+File: modules/ps_checkpayment/ps_checkpayment.php:222</note>
       </trans-unit>
       <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
         <source>Address</source>
         <target>Address</target>
         <note>Context:
-File: modules/ps_checkpayment/ps_checkpayment.php:227</note>
+File: modules/ps_checkpayment/ps_checkpayment.php:228</note>
       </trans-unit>
       <trans-unit id="0fe62049ad5246bc188ec1bae347269e">
         <source>Address where the check should be sent to.</source>
         <target>Address where the check should be sent to.</target>
         <note>Context:
-File: modules/ps_checkpayment/ps_checkpayment.php:228</note>
+File: modules/ps_checkpayment/ps_checkpayment.php:229</note>
       </trans-unit>
       <trans-unit id="bb56f3a51352fe2ddce129260770c440">
         <source>%amount% (tax incl.)</source>
         <target>%amount% (tax incl.)</target>
         <note>Context:
-File: modules/ps_checkpayment/ps_checkpayment.php:267</note>
+File: modules/ps_checkpayment/ps_checkpayment.php:268</note>
       </trans-unit>
     </body>
   </file>
@@ -95,6 +95,16 @@ File: modules/ps_checkpayment/views/templates/hook/infos.tpl:29</note>
         <target>You will need to manually confirm the order as soon as you receive a check.</target>
         <note>Context:
 File: modules/ps_checkpayment/views/templates/hook/infos.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_checkpayment/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
+        <source>This payment method is not available.</source>
+        <target>This payment method is not available.</target>
+        <note>Context:
+File: modules/ps_checkpayment/validation.php:54</note>
       </trans-unit>
     </body>
   </file>

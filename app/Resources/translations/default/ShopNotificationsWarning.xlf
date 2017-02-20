@@ -16,7 +16,7 @@ File: controllers/front/OrderReturnController.php:56</note>
         <source>You have not received any credit slips.</source>
         <target>You have not received any credit slips.</target>
         <note>Context:
-File: controllers/front/OrderSlipController.php:49</note>
+File: controllers/front/OrderSlipController.php:47</note>
       </trans-unit>
     </body>
   </file>
@@ -36,7 +36,7 @@ File: controllers/front/GuestTrackingController.php:131</note>
         <source>You do not have any vouchers.</source>
         <target>You do not have any vouchers.</target>
         <note>Context:
-File: controllers/front/DiscountController.php:49</note>
+File: controllers/front/DiscountController.php:47</note>
       </trans-unit>
     </body>
   </file>
@@ -56,13 +56,13 @@ File: controllers/front/ProductController.php:101</note>
         <source>If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.</source>
         <target>If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.</target>
         <note>Context:
-File: controllers/front/HistoryController.php:51</note>
+File: controllers/front/HistoryController.php:50</note>
       </trans-unit>
       <trans-unit id="5acc2ceeb883ba07cef2d02ea382f242">
         <source>You have not placed any orders.</source>
         <target>You have not placed any orders.</target>
         <note>Context:
-File: controllers/front/HistoryController.php:57</note>
+File: controllers/front/HistoryController.php:56</note>
       </trans-unit>
     </body>
   </file>
