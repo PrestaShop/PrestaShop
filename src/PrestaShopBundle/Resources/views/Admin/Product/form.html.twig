@@ -119,7 +119,7 @@
           <li id="tab_step5" class="nav-item"><a href="#step5" role="tab" data-toggle="tab" class="nav-link">{{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
           <li id="tab_step6" class="nav-item"><a href="#step6" role="tab" data-toggle="tab" class="nav-link">{{ 'Options'|trans({}, 'Admin.Global') }}</a></li>
           {% if hookcount('displayAdminProductsExtra') > 0 %}
-            <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">&laquo;{{ 'Modules options'|trans({}, 'Admin.Catalog.Feature') }}&raquo;</a></li>
+            <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ 'Modules'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
           {% endif %}
         </ul>
         <div class="arrow js-arrow right-arrow visible pull-right">
@@ -965,7 +965,7 @@
                         <p>
                           <h2>{{ 'Choose a module to configure'|trans({}, 'Admin.Catalog.Modules') }}</h2>
                           {{ 'These modules are relative to the product page of your shop.'|trans({}, 'Admin.Catalog.Modules') }}<br />
-                          {{ 'To manage all your back office modules go to the [1]Installed module page[/1]'|trans({}, 'Admin.Catalog.Modules')|replace({'[1]': '<a href="' ~ path("admin_module_manage") ~ '">', '[/1]': '</a>'})|raw }}
+                          {{ 'To manage all your modules go to the [1]Installed module page[/1]'|trans({}, 'Admin.Catalog.Modules')|replace({'[1]': '<a href="' ~ path("admin_module_manage") ~ '">', '[/1]': '</a>'})|raw }}
                         </p>
                         <div class="row">
                           {% for module in hooks %}
