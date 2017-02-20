@@ -60,22 +60,22 @@ class ModuleTabRegister
      * @var Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
-    
+
     /**
      * @var Finder
      */
     private $finder;
-    
+
     /**
      * @var Filesystem
      */
     private $filesystem;
-    
+
     /**
      * @var array List all active languages on the shop
      */
     private $languages;
-    
+
     public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Finder $finder, Filesystem $filesystem, array $languages)
     {
         $this->langRepository = $langRepository;
@@ -86,18 +86,22 @@ class ModuleTabRegister
         $this->filesystem = $filesystem;
         $this->languages = $languages;
     }
-    
+
     /**
      * Fetch module-defined tabs and find undeclared ModuleAdminControllers.
      *
      * This is done automatically as part of the module installation.
      * @param Module $module
-     * 
+     *
      */
     public function registerTabs(Module $module)
     {
+        if (!$module->getInstance()) {
+            return;
+        }
+
         $tabs = $this->addUndeclaredTabs($module->get('name'), $module->getInstance()->getTabs());
-        
+
         foreach ($tabs as $tab) {
             try {
                 $this->registerTab($module, new ParameterBag($tab));
@@ -107,11 +111,11 @@ class ModuleTabRegister
         }
 
     }
-    
+
     /**
-     * Looks for ModuleAdminControllers not declared as Tab and 
+     * Looks for ModuleAdminControllers not declared as Tab and
      * add them to the list to register
-     * 
+     *
      * @param string $moduleName
      * @param array $tabs
      * @return array
@@ -124,13 +128,13 @@ class ModuleTabRegister
                 return $tab['class_name'];
             }
         }, $tabs);
-        
+
         foreach ($this->getModuleAdminControllersFilename($moduleName) as $adminControllerFileName) {
             $adminControllerName = str_replace('Controller.php', '', $adminControllerFileName);
             if (in_array($adminControllerName, $tabsNames)) {
                 continue;
             }
-            
+
             $tabs[] = array(
                 'class_name' => $adminControllerName,
                 'visible' => false,
@@ -138,10 +142,10 @@ class ModuleTabRegister
         }
         return $tabs;
     }
-    
+
     /**
      * Check mandatory data for tab registration, such as class name and class exists
-     * 
+     *
      * @param string $moduleName
      * @param ParameterBag $data
      * @return boolean (= true) when no issue detected
@@ -159,12 +163,12 @@ class ModuleTabRegister
         }
         return true;
     }
-    
+
     /**
      * Find all ModuleAdminController classes from module.
      * This allow to check a class exists for a registered tab and to register automatically all the classes
      * not explicitely declared by the module developer.
-     * 
+     *
      * @param string $moduleName
      * @return array of Symfony\Component\Finder\SplFileInfo, listing all the ModuleAdminControllers found
      */
@@ -172,24 +176,24 @@ class ModuleTabRegister
     {
         $modulePath = _PS_ROOT_DIR_.'/'.basename(_PS_MODULE_DIR_).
                 '/'.$moduleName.'/controllers/admin/';
-        
+
         if (!$this->filesystem->exists($modulePath)) {
             return array();
         }
-        
+
         $moduleFolder = $this->finder->files()
                     ->in($modulePath)
                     ->depth('== 0')
                     ->name('*.php')
                     ->exclude(['index.php'])
                     ->contains('/extends\s+ModuleAdminController/i');
-        
+
         return iterator_to_array($moduleFolder);
     }
-    
+
     /**
      * Convert SPLFileInfo array to file names. Better & easier to check if a class to register exists.
-     * 
+     *
      * @param string $moduleName
      * @return array of strings
      */
@@ -199,11 +203,11 @@ class ModuleTabRegister
             return $file->getFilename();
         }, $this->getModuleAdminControllers($moduleName));
     }
-    
+
     protected function getTabNames($names)
     {
         $translatedNames = array();
-        
+
         foreach($this->languages as $lang) {
             // In case we just receive a string, we apply it to all languages
             if (!is_array($names)) {
@@ -218,7 +222,7 @@ class ModuleTabRegister
         }
         return $translatedNames;
     }
-    
+
     /**
      * Install a tab according to its defined structure
      *
@@ -230,7 +234,7 @@ class ModuleTabRegister
     protected function registerTab(Module $module, ParameterBag $data)
     {
         $this->checkIsValid($module->get('name'), $data);
-        
+
         // Legacy Tab, to be replaced with Doctrine entity when right management
         // won't be directly linked to the tab creation
         // @ToDo
@@ -250,7 +254,7 @@ class ModuleTabRegister
         } else {
             $tab->id_parent = 0;
         }
-        
+
         if (!$tab->save()) {
             throw new Exception(
                 $this->translator->trans(
