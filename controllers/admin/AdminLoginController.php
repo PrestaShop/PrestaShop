@@ -35,7 +35,6 @@ class AdminLoginControllerCore extends AdminController
         $this->errors = array();
         $this->display_header = false;
         $this->display_footer = false;
-        $this->meta_title = $this->trans('Administration panel', array(), 'Admin.Login.Feature');
         $this->layout = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme
             .DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'login'
             .DIRECTORY_SEPARATOR.'layout.tpl';
