@@ -32,7 +32,7 @@ File: classes/form/CustomerPersister.php:213</note>
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
         <note>Context:
-File: classes/Customer.php:1110</note>
+File: classes/Customer.php:1121</note>
       </trans-unit>
     </body>
   </file>
@@ -43,6 +43,16 @@ File: classes/Customer.php:1110</note>
         <target>The virtual product that you bought is available for download</target>
         <note>Context:
 File: classes/order/OrderHistory.php:163</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/order/OrderCarrier.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="87405e011a2c4166bb685336827fbe81">
+        <source>Package in transit</source>
+        <target>Package in transit</target>
+        <note>Context:
+File: classes/order/OrderCarrier.php:149</note>
       </trans-unit>
     </body>
   </file>
@@ -116,7 +126,7 @@ File: controllers/front/PasswordController.php:91</note>
         <source>Your new password</source>
         <target>Your new password</target>
         <note>Context:
-File: controllers/admin/AdminLoginController.php:367</note>
+File: controllers/admin/AdminLoginController.php:366</note>
       </trans-unit>
     </body>
   </file>
@@ -148,35 +158,29 @@ File: controllers/admin/AdminCustomerThreadsController.php:465</note>
   </file>
   <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="87405e011a2c4166bb685336827fbe81">
-        <source>Package in transit</source>
-        <target>Package in transit</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:519</note>
-      </trans-unit>
       <trans-unit id="abe01af80b6bc9f1fa34feaa068336b2">
         <source>New message regarding your order</source>
         <target>New message regarding your order</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:689</note>
+File: controllers/admin/AdminOrdersController.php:656</note>
       </trans-unit>
       <trans-unit id="10e7889bf2e6fd95e25936d2c11e92be">
         <source>New credit slip regarding your order</source>
         <target>New credit slip regarding your order</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1081</note>
+File: controllers/admin/AdminOrdersController.php:1048</note>
       </trans-unit>
       <trans-unit id="b360ddde7a5a70304c005e45e141cf9d">
         <source>New voucher for your order #%s</source>
         <target>New voucher for your order #%s</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1162</note>
+File: controllers/admin/AdminOrdersController.php:1129</note>
       </trans-unit>
       <trans-unit id="cad374f43e79ca774b2e8e00dcd8b842">
         <source>Process the payment of your order</source>
         <target>Process the payment of your order</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2041</note>
+File: controllers/admin/AdminOrdersController.php:2020</note>
       </trans-unit>
     </body>
   </file>

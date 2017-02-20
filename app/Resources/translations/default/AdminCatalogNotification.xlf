@@ -36,13 +36,13 @@ File: controllers/admin/AdminProductsController.php:1004</note>
         <source>Cannot add image because product creation failed.</source>
         <target>Cannot add image because product creation failed.</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:4012</note>
+File: controllers/admin/AdminProductsController.php:3345</note>
       </trans-unit>
       <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
         <source>Error while creating additional image</source>
         <target>Error while creating additional image</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:4045</note>
+File: controllers/admin/AdminProductsController.php:3378</note>
       </trans-unit>
       <trans-unit id="99a6e6a05b8d706aeddf480c7e492949">
         <source>Invalid description for %s language</source>
@@ -282,49 +282,43 @@ File: controllers/admin/AdminProductsController.php:2311</note>
         <source>The selected currency is not valid</source>
         <target>The selected currency is not valid</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:2950</note>
-      </trans-unit>
-      <trans-unit id="76bea07c1f8c4b2e1b7e65bdff6fd600">
-        <source>A file name is required in order to associate a file</source>
-        <target>A file name is required in order to associate a file</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:3396</note>
+File: controllers/admin/AdminProductsController.php:2823</note>
       </trans-unit>
       <trans-unit id="48b51a11285fae0b1f416165ae8fd489">
         <source>An error occurred while copying image, the file does not exist anymore.</source>
         <target>An error occurred while copying image, the file does not exist anymore.</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:4057</note>
+File: controllers/admin/AdminProductsController.php:3390</note>
       </trans-unit>
       <trans-unit id="9f26cf683839613815feebc0b1e1c6b9">
         <source>An error occurred while copying image, the file width is 0px.</source>
         <target>An error occurred while copying image, the file width is 0px.</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:4061</note>
+File: controllers/admin/AdminProductsController.php:3394</note>
       </trans-unit>
       <trans-unit id="de880a806b9948f168a2e70fff130160">
         <source>An error occurred while copying image, check your memory limit.</source>
         <target>An error occurred while copying image, check your memory limit.</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:4065</note>
+File: controllers/admin/AdminProductsController.php:3398</note>
       </trans-unit>
       <trans-unit id="06b778accab7c14a499bc6e7a68138ec">
         <source>An error occurred while copying the image.</source>
         <target>An error occurred while copying the image.</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:4069</note>
+File: controllers/admin/AdminProductsController.php:3402</note>
       </trans-unit>
       <trans-unit id="c88e73613e3f68ead933cd57e2828323">
         <source>You can't add product packs into a pack</source>
         <target>You can't add product packs into a pack</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:4952</note>
+File: controllers/admin/AdminProductsController.php:3748</note>
       </trans-unit>
       <trans-unit id="5de4038e3ea0841bf6179f99103fcccd">
         <source>An error occurred while attempting to add products to the pack.</source>
         <target>An error occurred while attempting to add products to the pack.</target>
         <note>Context:
-File: controllers/admin/AdminProductsController.php:4954</note>
+File: controllers/admin/AdminProductsController.php:3750</note>
       </trans-unit>
     </body>
   </file>
@@ -446,13 +440,13 @@ File: src/PrestaShopBundle/Controller/Admin/ProductController.php:818</note>
         <source>The discount was successfully generated.</source>
         <target>The discount was successfully generated.</target>
         <note>Context:
-File: classes/controller/AdminController.php:471</note>
+File: classes/controller/AdminController.php:466</note>
       </trans-unit>
       <trans-unit id="801982917ddd7afd63f9e103ba4699bd">
         <source>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</source>
         <target>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</target>
         <note>Context:
-File: classes/controller/AdminController.php:477</note>
+File: classes/controller/AdminController.php:472</note>
       </trans-unit>
     </body>
   </file>
@@ -488,13 +482,23 @@ File: classes/stock/StockAvailable.php:103</note>
         <source>You cannot set a negative position, the minimum for a position is 0.</source>
         <target>You cannot set a negative position, the minimum for a position is 0.</target>
         <note>Context:
-File: classes/Product.php:5494</note>
+File: classes/Product.php:5508</note>
       </trans-unit>
       <trans-unit id="b945599a5e11b76711dad5f1d7eba181">
         <source>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</source>
         <target>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</target>
         <note>Context:
-File: classes/Product.php:5503</note>
+File: classes/Product.php:5517</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/helper/HelperList.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="55ffa325538ec4bd188604c30b29a168">
+        <source>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</source>
+        <target>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</target>
+        <note>Context:
+File: classes/helper/HelperList.php:387</note>
       </trans-unit>
     </body>
   </file>
@@ -505,6 +509,34 @@ File: classes/Product.php:5503</note>
         <target>Error on image caption: "%1s" is not a valid caption.</target>
         <note>Context:
 File: classes/FileUploader.php:116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
+        <source>An error occurred while updating the status for an object.</source>
+        <target>An error occurred while updating the status for an object.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:116</note>
+      </trans-unit>
+      <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
+        <source>(cannot load object)</source>
+        <target>(cannot load object)</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:118</note>
+      </trans-unit>
+      <trans-unit id="caecb49a7eec394177d054db34995bc0">
+        <source>The attribute value "%1$s" already exist for %2$s language</source>
+        <target>The attribute value "%1$s" already exist for %2$s language</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:406</note>
+      </trans-unit>
+      <trans-unit id="7f7cd1de48a84bc7ba0dfcde99de2604">
+        <source>Failed to delete the attribute.</source>
+        <target>Failed to delete the attribute.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:739</note>
       </trans-unit>
     </body>
   </file>
@@ -522,15 +554,11 @@ File: controllers/admin/AdminAttributeGeneratorController.php:234</note>
         <note>Context:
 File: controllers/admin/AdminAttributeGeneratorController.php:118</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7f7cd1de48a84bc7ba0dfcde99de2604">
-        <source>Failed to delete the attribute.</source>
-        <target>Failed to delete the attribute.</target>
+      <trans-unit id="6e89fd17c196488cfac8e63ec415d65f">
+        <source>Unable to initialize these parameters. A combination is missing or an object cannot be loaded.</source>
+        <target>Unable to initialize these parameters. A combination is missing or an object cannot be loaded.</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:732</note>
+File: controllers/admin/AdminAttributeGeneratorController.php:170</note>
       </trans-unit>
     </body>
   </file>
@@ -798,25 +826,25 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/formDisable.html.twig:2
         <source>This will delete all the combinations. Do you wish to proceed?</source>
         <target>This will delete all the combinations. Do you wish to proceed?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1144</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1197</note>
       </trans-unit>
       <trans-unit id="ff8a012ee6cba99838a649d92ad1b34b">
         <source>This will delete the specific price. Do you wish to proceed?</source>
         <target>This will delete the specific price. Do you wish to proceed?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1158</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1211</note>
       </trans-unit>
       <trans-unit id="dfd19ad4f089996c7eabcd5935f75e98">
         <source>A pack of products can't have combinations.</source>
         <target>A pack of products can't have combinations.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1164</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1217</note>
       </trans-unit>
       <trans-unit id="5b75fdc0df647e8ac5275e31554dd0f9">
         <source>A virtual product can't have combinations.</source>
         <target>A virtual product can't have combinations.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1165</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1218</note>
       </trans-unit>
       <trans-unit id="9909f0bb3eb94634e3f8cd0164dbacac">
         <source>You are in a multistore context: any modification will impact all your shops, or each shop of the active group.</source>

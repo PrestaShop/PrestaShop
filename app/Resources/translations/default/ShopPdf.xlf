@@ -8,6 +8,12 @@
         <note>Context:
 File: classes/pdf/HTMLTemplateInvoice.php:74</note>
       </trans-unit>
+      <trans-unit id="a271cee71f5c411446db4f90676dbc96">
+        <source>%taxrate%%space%%</source>
+        <target>%taxrate%%space%%</target>
+        <note>Context:
+File: classes/pdf/HTMLTemplateInvoice.php:183</note>
+      </trans-unit>
     </body>
   </file>
   <file original="classes/pdf/HTMLTemplateOrderSlip.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -92,6 +98,12 @@ File: pdf/supply-order.tax-tab.tpl:32</note>
         <note>Context:
 File: pdf/invoice.product-tab.tpl:31</note>
       </trans-unit>
+      <trans-unit id="ad0d28cdd9113d3ce911bc064b137cde">
+        <source>Base price</source>
+        <target>Base price</target>
+        <note>Context:
+File: pdf/invoice.product-tab.tpl:34</note>
+      </trans-unit>
       <trans-unit id="deb10517653c255364175796ace3553f">
         <source>Product</source>
         <target>Product</target>
@@ -115,6 +127,12 @@ File: pdf/invoice.product-tab.tpl:124</note>
         <target>(Tax excl.)</target>
         <note>Context:
 File: pdf/invoice.product-tab.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="197101c4a1b1fc503dcd6ebee127aa10">
+        <source>Unit Price</source>
+        <target>Unit Price</target>
+        <note>Context:
+File: pdf/invoice.product-tab.tpl:37</note>
       </trans-unit>
       <trans-unit id="49005859f978fcb0dfddcf676e841245">
         <source>ecotax: %s</source>
@@ -149,12 +167,6 @@ File: pdf/invoice.tax-tab.tpl:29</note>
         <target>Tax Detail</target>
         <note>Context:
 File: pdf/invoice.tax-tab.tpl:35</note>
-      </trans-unit>
-      <trans-unit id="ad0d28cdd9113d3ce911bc064b137cde">
-        <source>Base price</source>
-        <target>Base price</target>
-        <note>Context:
-File: pdf/invoice.tax-tab.tpl:38</note>
       </trans-unit>
       <trans-unit id="068f80c7519d0528fb08e82137a72131">
         <source>Products</source>
@@ -206,6 +218,12 @@ File: pdf/delivery-slip.payment-tab.tpl:37</note>
         <note>Context:
 File: pdf/invoice.total-tab.tpl:83</note>
       </trans-unit>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Context:
+File: pdf/invoice.total-tab.tpl:92</note>
+      </trans-unit>
       <trans-unit id="b0f79042ac83c64f3ccc42268c8ade26">
         <source>Total Products</source>
         <target>Total Products</target>
@@ -241,12 +259,6 @@ File: pdf/invoice.total-tab.tpl:66</note>
         <target>Total (Tax excl.)</target>
         <note>Context:
 File: pdf/invoice.total-tab.tpl:74</note>
-      </trans-unit>
-      <trans-unit id="96b0141273eabab320119c467cdcaf17">
-        <source>Total</source>
-        <target>Total</target>
-        <note>Context:
-File: pdf/invoice.total-tab.tpl:92</note>
       </trans-unit>
     </body>
   </file>
@@ -323,6 +335,12 @@ File: pdf/supply-order.product-tab.tpl:31</note>
         <target>Qty</target>
         <note>Context:
 File: pdf/supply-order.product-tab.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="3a6a6d37bea2c7567f8599ea88b47930">
+        <source>Total TE</source>
+        <target>Total TE</target>
+        <note>Context:
+File: pdf/supply-order.product-tab.tpl:37</note>
       </trans-unit>
       <trans-unit id="fa2ce544158555e8f06c69dd9e681832">
         <source>Total TI</source>
@@ -480,13 +498,13 @@ File: pdf/invoice.shipping-tab.tpl:27</note>
         <source>Delivery Address</source>
         <target>Delivery Address</target>
         <note>Context:
-File: pdf/invoice.addresses-tab.tpl:30</note>
+File: pdf/invoice.addresses-tab.tpl:27</note>
       </trans-unit>
       <trans-unit id="28a59051cd90053f87bacd5f1ffbc0b8">
         <source>Billing Address</source>
         <target>Billing Address</target>
         <note>Context:
-File: pdf/invoice.addresses-tab.tpl:34</note>
+File: pdf/invoice.addresses-tab.tpl:31</note>
       </trans-unit>
     </body>
   </file>
@@ -508,9 +526,27 @@ File: pdf/order-return.addresses-tab.tpl:36</note>
         <note>Context:
 File: pdf/order-slip.product-tab.tpl:30</note>
       </trans-unit>
+      <trans-unit id="6c957f72dc8cdacc75762f2cbdcdfaf2">
+        <source>Unit price</source>
+        <target>Unit price</target>
+        <note>Context:
+File: pdf/order-slip.product-tab.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="078ac079d154d21533c57bced9fcb10f">
+        <source>(Tax Excl.)</source>
+        <target>(Tax Excl.)</target>
+        <note>Context:
+File: pdf/order-slip.product-tab.tpl:33</note>
+      </trans-unit>
       <trans-unit id="29103375229a5c363403ec4afb5c3e8f">
         <source>(Tax Incl.)</source>
         <target>(Tax Incl.)</target>
+        <note>Context:
+File: pdf/order-slip.product-tab.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
+        <source>Price</source>
+        <target>Price</target>
         <note>Context:
 File: pdf/order-slip.product-tab.tpl:33</note>
       </trans-unit>
@@ -582,6 +618,12 @@ File: pdf/order-slip.total-tab.tpl:54</note>
         <note>Context:
 File: pdf/order-slip.total-tab.tpl:64</note>
       </trans-unit>
+      <trans-unit id="4118e1a6606ae9bff5134ba3cf50db67">
+        <source>Total (Tax Excl.)</source>
+        <target>Total (Tax Excl.)</target>
+        <note>Context:
+File: pdf/order-slip.total-tab.tpl:86</note>
+      </trans-unit>
       <trans-unit id="11ef70f0c7f9fed90c43dffb9a0e813e">
         <source>Total (Tax Incl.)</source>
         <target>Total (Tax Incl.)</target>
@@ -597,6 +639,12 @@ File: pdf/order-slip.total-tab.tpl:86</note>
         <target>We have logged your return request.</target>
         <note>Context:
 File: pdf/order-return.summary-tab.tpl:25</note>
+      </trans-unit>
+      <trans-unit id="dd0b8feb4eb6c389c284518f5683017c">
+        <source>Your package must be returned to us within</source>
+        <target>Your package must be returned to us within</target>
+        <note>Context:
+File: pdf/order-return.summary-tab.tpl:26</note>
       </trans-unit>
       <trans-unit id="ea62a2e28a800c367509773730120a67">
         <source>days of receiving your order.</source>

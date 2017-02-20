@@ -298,7 +298,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:280</not
         <source>Virtual product</source>
         <target>Virtual product</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1161</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1214</note>
       </trans-unit>
       <trans-unit id="1729a56cfc89021478498fe0c89a843a">
         <source>Visibility</source>
@@ -346,25 +346,25 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:199</not
         <source>Drop images here</source>
         <target>Drop images here</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1152</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1205</note>
       </trans-unit>
       <trans-unit id="aaa5309487aacf50e6413cf7a3074618">
         <source>or select files</source>
         <target>or select files</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1153</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1206</note>
       </trans-unit>
       <trans-unit id="b36c5a58c30cc53bab5e9b3fda84755c">
         <source>Recommended size 800 x 800px for default theme.</source>
         <target>Recommended size 800 x 800px for default theme.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1154</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1207</note>
       </trans-unit>
       <trans-unit id="0d23de90e7f537b035eb79a464eb8ecf">
         <source>JPG, GIF or PNG format.</source>
         <target>JPG, GIF or PNG format.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1155</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1208</note>
       </trans-unit>
       <trans-unit id="c795dfff10a7c952f4c5438951e9ece9">
         <source>Cover</source>
@@ -382,13 +382,13 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:373</not
         <source>tax incl.</source>
         <target>tax incl.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1162</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1215</note>
       </trans-unit>
       <trans-unit id="887ee91702c962a70b87cbef07bbcaec">
         <source>tax excl.</source>
         <target>tax excl.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1163</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1216</note>
       </trans-unit>
       <trans-unit id="81355310011c137fdd21cf9a1394ed6a">
         <source>Product list</source>
@@ -420,9 +420,9 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:118</not
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:119</note>
       </trans-unit>
-      <trans-unit id="9ab564be40d2c7d157c3baeb62fcb774">
-        <source>Modules options</source>
-        <target>Modules options</target>
+      <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
+        <source>Modules</source>
+        <target>Modules</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:122</note>
       </trans-unit>
@@ -580,13 +580,13 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:888</not
         <source>Go to catalog</source>
         <target>Go to catalog</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1083</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1136</note>
       </trans-unit>
       <trans-unit id="3fa8c89ef63fbb7056fc1d8d1b67f97a">
         <source>Add new product</source>
         <target>Add new product</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1089</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1142</note>
       </trans-unit>
     </body>
   </file>
@@ -1363,97 +1363,97 @@ File: controllers/admin/AdminAttributesGroupsController.php:61</note>
         <source>Value</source>
         <target>Value</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:128</note>
+File: controllers/admin/AdminAttributesGroupsController.php:130</note>
       </trans-unit>
       <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
         <source>Color</source>
         <target>Color</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:303</note>
+File: controllers/admin/AdminAttributesGroupsController.php:305</note>
       </trans-unit>
       <trans-unit id="f68b27443f6e6f685cce3f9f422a2b84">
         <source>Color or texture</source>
         <target>Color or texture</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:180</note>
+File: controllers/admin/AdminAttributesGroupsController.php:182</note>
       </trans-unit>
       <trans-unit id="287234a1ff35a314b5b6bc4e5828e745">
         <source>Attributes</source>
         <target>Attributes</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:186</note>
+File: controllers/admin/AdminAttributesGroupsController.php:188</note>
       </trans-unit>
       <trans-unit id="d274013ea65428454962a59b7b373a41">
         <source>Public name</source>
         <target>Public name</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:201</note>
+File: controllers/admin/AdminAttributesGroupsController.php:203</note>
       </trans-unit>
       <trans-unit id="17af8baa9b3f90e936589069e4223280">
         <source>Attribute type</source>
         <target>Attribute type</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:210</note>
+File: controllers/admin/AdminAttributesGroupsController.php:212</note>
       </trans-unit>
       <trans-unit id="0e010c6b3fb88bf4277c880d1657787a">
         <source>Attribute group</source>
         <target>Attribute group</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:259</note>
+File: controllers/admin/AdminAttributesGroupsController.php:261</note>
       </trans-unit>
       <trans-unit id="a3e8ae43188ae76d38f414b2bdb0077b">
         <source>Texture</source>
         <target>Texture</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:310</note>
+File: controllers/admin/AdminAttributesGroupsController.php:312</note>
       </trans-unit>
       <trans-unit id="561f47d9c8a6153b011def4fd72386d5">
         <source>Current texture</source>
         <target>Current texture</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:320</note>
+File: controllers/admin/AdminAttributesGroupsController.php:322</note>
       </trans-unit>
       <trans-unit id="00039b674d8ced58313546dcab88a032">
         <source>Add new attribute</source>
         <target>Add new attribute</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:502</note>
+File: controllers/admin/AdminAttributesGroupsController.php:507</note>
       </trans-unit>
       <trans-unit id="2dce4461e5743f3b01acd4599a38d646">
         <source>Add new value</source>
         <target>Add new value</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:516</note>
+File: controllers/admin/AdminAttributesGroupsController.php:521</note>
       </trans-unit>
       <trans-unit id="71e8f8a090925f75719dfa0a5eae059e">
         <source>Add New Values</source>
         <target>Add New Values</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:554</note>
+File: controllers/admin/AdminAttributesGroupsController.php:559</note>
       </trans-unit>
       <trans-unit id="52729803b243ea9693a892161d5b8e38">
         <source>Add New Attributes</source>
         <target>Add New Attributes</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:566</note>
+File: controllers/admin/AdminAttributesGroupsController.php:571</note>
       </trans-unit>
       <trans-unit id="1f40023e11d8401b0bffadc419135247">
         <source>Edit New Attribute</source>
         <target>Edit New Attribute</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:583</note>
+File: controllers/admin/AdminAttributesGroupsController.php:588</note>
       </trans-unit>
       <trans-unit id="713271e705e5269fc82684445cd063a8">
         <source>Add New Attribute</source>
         <target>Add New Attribute</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:587</note>
+File: controllers/admin/AdminAttributesGroupsController.php:592</note>
       </trans-unit>
       <trans-unit id="f7931413dee107ddf5289c8886baf7ec">
         <source>Edit: %s</source>
         <target>Edit: %s</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:609</note>
+File: controllers/admin/AdminAttributesGroupsController.php:614</note>
       </trans-unit>
     </body>
   </file>
@@ -2167,7 +2167,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.t
         <source>[1][/1] of [2][/2] characters used (recommended)</source>
         <target>[1][/1] of [2][/2] characters used (recommended)</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_max_length.html.twig:3</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_max_length.html.twig:27</note>
       </trans-unit>
     </body>
   </file>

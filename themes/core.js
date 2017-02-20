@@ -1730,8 +1730,10 @@
 	
 	    var updatePrices = function updatePrices(pricesInCart, $cartOverview, $newCart) {
 	      _jquery2['default'].each(pricesInCart, function (index, priceInCart) {
-	        var productUrl = (0, _jquery2['default'])((0, _jquery2['default'])(priceInCart).parents('.product-line-grid')[0]).find('a.label').attr('href');
-	        var productAnchorSelector = '.label[href="' + productUrl + '"]';
+	        var productLabel = (0, _jquery2['default'])((0, _jquery2['default'])(priceInCart).parents('.product-line-grid')[0]).find('a.label');
+	        var productUrl = productLabel.attr('href');
+	        var customizationId = productLabel.data('id_customization');
+	        var productAnchorSelector = '.label[href="' + productUrl + '"][data-id_customization="' + customizationId + '"]';
 	        var newProductAnchor = $newCart.find(productAnchorSelector);
 	        var $cartItem = (0, _jquery2['default'])($cartOverview.find(productAnchorSelector).parents('.cart-item')[0]);
 	

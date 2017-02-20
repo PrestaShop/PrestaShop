@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:724</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/statsbestsuppliers/statsbestsuppliers.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4f29d8c727dcf2022ac241cb96c31083">
@@ -57,16 +67,6 @@ File: controllers/admin/AdminSearchConfController.php:54</note>
         <target>Delete the selected item?</target>
         <note>Context:
 File: controllers/admin/AdminCustomersController.php:1038</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:724</note>
       </trans-unit>
     </body>
   </file>

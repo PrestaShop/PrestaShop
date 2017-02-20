@@ -32,25 +32,29 @@ File: themes/classic/templates/catalog/_partials/product-customization.tpl:29</n
         <source>Your message here</source>
         <target>Your message here</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:39</note>
-      </trans-unit>
-      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
-        <source>250 char. max</source>
-        <target>250 char. max</target>
-        <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:40</note>
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:38</note>
       </trans-unit>
       <trans-unit id="9378eeabb3f4f2c5122659d50560a448">
         <source>No selected file</source>
         <target>No selected file</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:48</note>
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:52</note>
       </trans-unit>
       <trans-unit id="0da3c8b31e3e2d9d769a86cd3f31949c">
         <source>.png .jpg .gif</source>
         <target>.png .jpg .gif</target>
         <note>Context:
-File: themes/classic/templates/catalog/_partials/product-customization.tpl:52</note>
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:56</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
+        <source>250 char. max</source>
+        <target>250 char. max</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-customization.tpl:14</note>
       </trans-unit>
     </body>
   </file>

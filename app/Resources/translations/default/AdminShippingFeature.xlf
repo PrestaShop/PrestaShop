@@ -239,6 +239,52 @@ File: controllers/admin/AdminCarrierWizardController.php:417</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminShippingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2605fbb693837be42d0cd0e701cb5aa3">
+        <source>Handling</source>
+        <target>Handling</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:56</note>
+      </trans-unit>
+      <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
+        <source>Handling charges</source>
+        <target>Handling charges</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:60</note>
+      </trans-unit>
+      <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
+        <source>Free shipping starts at</source>
+        <target>Free shipping starts at</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:72</note>
+      </trans-unit>
+      <trans-unit id="8430a7b1b81635e3df949c2845303303">
+        <source>Carrier options</source>
+        <target>Carrier options</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:86</note>
+      </trans-unit>
+      <trans-unit id="bff13ed1cd5b83b03f024f1eb6524337">
+        <source>Default carrier</source>
+        <target>Default carrier</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:89</note>
+      </trans-unit>
+      <trans-unit id="2d8ee3c32fffdf39872b844a50f08ad9">
+        <source>Best price</source>
+        <target>Best price</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:96</note>
+      </trans-unit>
+      <trans-unit id="156fbbe269edc91f43e240587a21c48b">
+        <source>Best grade</source>
+        <target>Best grade</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:97</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="914419aa32f04011357d3b604a86d7eb">

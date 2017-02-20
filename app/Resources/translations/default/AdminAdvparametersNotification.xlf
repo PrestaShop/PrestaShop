@@ -46,43 +46,43 @@ File: classes/PrestaShopBackup.php:317</note>
         <source>Error: parameter "to" is corrupted</source>
         <target>Error: parameter "to" is corrupted</target>
         <note>Context:
-File: classes/Mail.php:174</note>
+File: classes/Mail.php:203</note>
       </trans-unit>
       <trans-unit id="99806fb2aff84eaa304cb249fa190339">
         <source>Error: parameter "bcc" is corrupted</source>
         <target>Error: parameter "bcc" is corrupted</target>
         <note>Context:
-File: classes/Mail.php:181</note>
+File: classes/Mail.php:210</note>
       </trans-unit>
       <trans-unit id="46c30f8c8c478bbb52647c27a5f4fe95">
         <source>Error: invalid e-mail template</source>
         <target>Error: invalid e-mail template</target>
         <note>Context:
-File: classes/Mail.php:195</note>
+File: classes/Mail.php:224</note>
       </trans-unit>
       <trans-unit id="97fc9862b0bebc68aa03f466bfc2c6bf">
         <source>Error: invalid e-mail subject</source>
         <target>Error: invalid e-mail subject</target>
         <note>Context:
-File: classes/Mail.php:201</note>
+File: classes/Mail.php:230</note>
       </trans-unit>
       <trans-unit id="aa99af205bcf9ebf7976064542d58ab6">
         <source>Error: invalid e-mail address</source>
         <target>Error: invalid e-mail address</target>
         <note>Context:
-File: classes/Mail.php:236</note>
+File: classes/Mail.php:267</note>
       </trans-unit>
       <trans-unit id="1769b5ab48b8e2ce733fb38663ec853a">
         <source>Error: invalid SMTP server or SMTP port</source>
         <target>Error: invalid SMTP server or SMTP port</target>
         <note>Context:
-File: classes/Mail.php:249</note>
+File: classes/Mail.php:280</note>
       </trans-unit>
       <trans-unit id="3ed07fe73e25bba69e3e5dac234b1941">
         <source>Error - The following e-mail template is missing: %s</source>
         <target>Error - The following e-mail template is missing: %s</target>
         <note>Context:
-File: classes/Mail.php:300</note>
+File: classes/Mail.php:331</note>
       </trans-unit>
     </body>
   </file>

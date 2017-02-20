@@ -50,7 +50,7 @@ File: src/Adapter/Order/OrderPresenter.php:453</note>
         <source>Home</source>
         <target>Home</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/my-account-links.tpl:3</note>
+File: themes/StarterTheme/templates/customer/_partials/my-account-links.tpl:4</note>
       </trans-unit>
     </body>
   </file>
@@ -70,7 +70,7 @@ File: controllers/front/AddressController.php:126</note>
         <source>Merchandise returns</source>
         <target>Merchandise returns</target>
         <note>Context:
-File: controllers/front/OrderReturnController.php:175</note>
+File: controllers/front/OrderReturnController.php:174</note>
       </trans-unit>
     </body>
   </file>
@@ -80,7 +80,7 @@ File: controllers/front/OrderReturnController.php:175</note>
         <source>None</source>
         <target>None</target>
         <note>Context:
-File: controllers/front/DiscountController.php:73</note>
+File: controllers/front/DiscountController.php:72</note>
       </trans-unit>
       <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
         <source>No</source>
@@ -112,19 +112,19 @@ File: controllers/front/PageNotFoundController.php:59</note>
         <source>Our Offers</source>
         <target>Our Offers</target>
         <note>Context:
-File: controllers/front/SitemapController.php:41</note>
+File: controllers/front/SitemapController.php:39</note>
       </trans-unit>
       <trans-unit id="bffe9a3c9a7e00ba00a11749e022d911">
         <source>Log in</source>
         <target>Log in</target>
         <note>Context:
-File: controllers/front/SitemapController.php:108</note>
+File: controllers/front/SitemapController.php:107</note>
       </trans-unit>
       <trans-unit id="1aa668d559a3a32a44796aeee6978a59">
         <source>Create new account</source>
         <target>Create new account</target>
         <note>Context:
-File: controllers/front/SitemapController.php:114</note>
+File: controllers/front/SitemapController.php:113</note>
       </trans-unit>
     </body>
   </file>
@@ -188,43 +188,43 @@ File: themes/StarterTheme/templates/cms/sitemap.tpl:4</note>
         <source>Monday</source>
         <target>Monday</target>
         <note>Context:
-File: controllers/front/StoresController.php:206</note>
+File: controllers/front/StoresController.php:205</note>
       </trans-unit>
       <trans-unit id="5792315f09a5d54fb7e3d066672b507f">
         <source>Tuesday</source>
         <target>Tuesday</target>
         <note>Context:
-File: controllers/front/StoresController.php:209</note>
+File: controllers/front/StoresController.php:208</note>
       </trans-unit>
       <trans-unit id="796c163589f295373e171842f37265d5">
         <source>Wednesday</source>
         <target>Wednesday</target>
         <note>Context:
-File: controllers/front/StoresController.php:212</note>
+File: controllers/front/StoresController.php:211</note>
       </trans-unit>
       <trans-unit id="78ae6f0cd191d25147e252dc54768238">
         <source>Thursday</source>
         <target>Thursday</target>
         <note>Context:
-File: controllers/front/StoresController.php:215</note>
+File: controllers/front/StoresController.php:214</note>
       </trans-unit>
       <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
         <source>Friday</source>
         <target>Friday</target>
         <note>Context:
-File: controllers/front/StoresController.php:218</note>
+File: controllers/front/StoresController.php:217</note>
       </trans-unit>
       <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
         <source>Saturday</source>
         <target>Saturday</target>
         <note>Context:
-File: controllers/front/StoresController.php:221</note>
+File: controllers/front/StoresController.php:220</note>
       </trans-unit>
       <trans-unit id="9d1a0949c39e66a0cd65240bc0ac9177">
         <source>Sunday</source>
         <target>Sunday</target>
         <note>Context:
-File: controllers/front/StoresController.php:224</note>
+File: controllers/front/StoresController.php:223</note>
       </trans-unit>
     </body>
   </file>
@@ -234,7 +234,7 @@ File: controllers/front/StoresController.php:224</note>
         <source>Date</source>
         <target>Date</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:102</note>
+File: themes/StarterTheme/templates/customer/order-detail.tpl:106</note>
       </trans-unit>
       <trans-unit id="ec53a8c4f07baed5d8825072c89799be">
         <source>Status</source>
@@ -244,13 +244,13 @@ File: themes/StarterTheme/templates/customer/order-detail.tpl:47</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7601c8e861088bd27255e18afaefab6b">
         <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
         <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
         <note>Context:
-File: themes/classic/templates/_partials/footer.tpl:49</note>
+File: themes/StarterTheme/templates/_partials/footer.tpl:16</note>
       </trans-unit>
     </body>
   </file>
@@ -274,29 +274,29 @@ File: themes/classic/templates/checkout/_partials/footer.tpl:27</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/errors/restricted-country.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/errors/restricted-country.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6351030f724f6f42fd11ec9aa6ee8c76">
         <source>403 Forbidden</source>
         <target>403 Forbidden</target>
         <note>Context:
-File: themes/classic/templates/errors/restricted-country.tpl:43</note>
+File: themes/StarterTheme/templates/errors/restricted-country.tpl:19</note>
       </trans-unit>
       <trans-unit id="cf8092a0be7b972d6cee3db90bfaf923">
         <source>You cannot access this store from your country. We apologize for the inconvenience.</source>
         <target>You cannot access this store from your country. We apologize for the inconvenience.</target>
         <note>Context:
-File: themes/classic/templates/errors/restricted-country.tpl:44</note>
+File: themes/StarterTheme/templates/errors/restricted-country.tpl:20</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/errors/maintenance.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/errors/maintenance.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="27b4383b976d6be981598d457cc7e62d">
         <source>We'll be back soon.</source>
         <target>We'll be back soon.</target>
         <note>Context:
-File: themes/classic/templates/errors/maintenance.tpl:42</note>
+File: themes/StarterTheme/templates/errors/maintenance.tpl:16</note>
       </trans-unit>
     </body>
   </file>
@@ -306,7 +306,7 @@ File: themes/classic/templates/errors/maintenance.tpl:42</note>
         <source>Sorry for the inconvenience.</source>
         <target>Sorry for the inconvenience.</target>
         <note>Context:
-File: themes/StarterTheme/templates/errors/not-found.tpl:2</note>
+File: themes/StarterTheme/templates/errors/not-found.tpl:3</note>
       </trans-unit>
     </body>
   </file>

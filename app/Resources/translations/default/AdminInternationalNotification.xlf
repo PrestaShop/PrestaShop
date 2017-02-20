@@ -22,31 +22,31 @@ File: src/PrestaShopBundle/Twig/TranslationsExtension.php:221</note>
         <source>The translation was successfully copied.</source>
         <target>The translation was successfully copied.</target>
         <note>Context:
-File: classes/controller/AdminController.php:454</note>
+File: classes/controller/AdminController.php:449</note>
       </trans-unit>
       <trans-unit id="f22def68c5c456936078623b6dcd27ff">
         <source>The translations have been successfully added.</source>
         <target>The translations have been successfully added.</target>
         <note>Context:
-File: classes/controller/AdminController.php:455</note>
+File: classes/controller/AdminController.php:450</note>
       </trans-unit>
       <trans-unit id="bb01c8c21884e974df8517110c92b22a">
         <source>The translation was added successfully, but the language has not been created.</source>
         <target>The translation was added successfully, but the language has not been created.</target>
         <note>Context:
-File: classes/controller/AdminController.php:460</note>
+File: classes/controller/AdminController.php:455</note>
       </trans-unit>
       <trans-unit id="c9468b4bd45a165049277af6756db10e">
         <source>Localization pack imported successfully.</source>
         <target>Localization pack imported successfully.</target>
         <note>Context:
-File: classes/controller/AdminController.php:464</note>
+File: classes/controller/AdminController.php:459</note>
       </trans-unit>
       <trans-unit id="ae99f365ee39176c3ab50b76a95cf629">
         <source>Cannot add configuration %1$s for %2$s language</source>
         <target>Cannot add configuration %1$s for %2$s language</target>
         <note>Context:
-File: classes/controller/AdminController.php:1464</note>
+File: classes/controller/AdminController.php:1459</note>
       </trans-unit>
     </body>
   </file>
@@ -68,27 +68,27 @@ File: classes/Language.php:720</note>
         <source>Sorry this language is not available</source>
         <target>Sorry this language is not available</target>
         <note>Context:
-File: classes/Language.php:964</note>
+File: classes/Language.php:963</note>
       </trans-unit>
       <trans-unit id="edeb9e20655b946e4bee4ac44a6c0a7f">
         <source>Server does not have permissions for writing.</source>
         <target>Server does not have permissions for writing.</target>
         <note>Context:
-File: classes/Language.php:993
+File: classes/Language.php:992
  Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="19429992fd747ce8d7606c7ddb7fa272">
         <source>Language pack unavailable.</source>
         <target>Language pack unavailable.</target>
         <note>Context:
-File: classes/Language.php:1019
+File: classes/Language.php:1018
  Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="2e3dec4700000b6db379437f7d8d9fac">
         <source>An error occurred while creating the language: %s</source>
         <target>An error occurred while creating the language: %s</target>
         <note>Context:
-File: classes/Language.php:1064</note>
+File: classes/Language.php:1063</note>
       </trans-unit>
     </body>
   </file>
@@ -719,6 +719,12 @@ File: controllers/admin/AdminLocalizationController.php:190</note>
         <target>Please select at least one item to import.</target>
         <note>Context:
 File: controllers/admin/AdminLocalizationController.php:194</note>
+      </trans-unit>
+      <trans-unit id="e2e54c736346106b561a0795cbaec1b1">
+        <source>%language% could not be loaded</source>
+        <target>%language% could not be loaded</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:264</note>
       </trans-unit>
     </body>
   </file>

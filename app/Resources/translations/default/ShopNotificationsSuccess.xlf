@@ -38,7 +38,7 @@ File: controllers/front/GuestTrackingController.php:102</note>
         <source>No addresses are available. %s</source>
         <target>No addresses are available. %s</target>
         <note>Context:
-File: controllers/front/AddressesController.php:57</note>
+File: controllers/front/AddressesController.php:55</note>
       </trans-unit>
     </body>
   </file>
@@ -64,7 +64,7 @@ File: controllers/front/PasswordController.php:181</note>
         <source>Information successfully updated.</source>
         <target>Information successfully updated.</target>
         <note>Context:
-File: controllers/front/IdentityController.php:55</note>
+File: controllers/front/IdentityController.php:54</note>
       </trans-unit>
     </body>
   </file>
@@ -74,7 +74,7 @@ File: controllers/front/IdentityController.php:55</note>
         <source>Message successfully sent</source>
         <target>Message successfully sent</target>
         <note>Context:
-File: controllers/front/OrderDetailController.php:189</note>
+File: controllers/front/OrderDetailController.php:187</note>
       </trans-unit>
     </body>
   </file>

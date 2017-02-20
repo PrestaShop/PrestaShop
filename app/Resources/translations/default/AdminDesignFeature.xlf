@@ -344,6 +344,12 @@ File: controllers/admin/AdminShopController.php:529</note>
         <note>Context:
 File: controllers/admin/AdminCmsController.php:75</note>
       </trans-unit>
+      <trans-unit id="897b3f9a5dc0ebb8ab90e033e7ce61f3">
+        <source>Page Category</source>
+        <target>Page Category</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:130</note>
+      </trans-unit>
       <trans-unit id="21f93401134586a6c481422bf01fccfd">
         <source>Only letters and the hyphen (-) character are allowed.</source>
         <target>Only letters and the hyphen (-) character are allowed.</target>

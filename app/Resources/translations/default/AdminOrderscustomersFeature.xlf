@@ -710,43 +710,43 @@ File: controllers/admin/AdminOrdersController.php:327</note>
         <source>Credit slip for order #%d</source>
         <target>Credit slip for order #%d</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:833</note>
+File: controllers/admin/AdminOrdersController.php:800</note>
       </trans-unit>
       <trans-unit id="bbee72681d2c075d95355d3d9ccefb4e">
         <source>Credit card slip for order #%d</source>
         <target>Credit card slip for order #%d</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1104</note>
+File: controllers/admin/AdminOrdersController.php:1071</note>
       </trans-unit>
       <trans-unit id="e49701f123af735cf327227e8ab09bac">
         <source>Manual order -- Employee:</source>
         <target>Manual order -- Employee:</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1273</note>
+File: controllers/admin/AdminOrdersController.php:1240</note>
       </trans-unit>
       <trans-unit id="1f065062cdb50b501c5cb5160cf21ab0">
         <source>Net Profit per Visit</source>
         <target>Net Profit per Visit</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1700</note>
+File: controllers/admin/AdminOrdersController.php:1667</note>
       </trans-unit>
       <trans-unit id="947d8520f04473da621f2718138f3bc6">
         <source>30 days</source>
         <target>30 days</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1701</note>
+File: controllers/admin/AdminOrdersController.php:1668</note>
       </trans-unit>
       <trans-unit id="52ec3221b595bb84def222e275d0152b">
         <source>Order #%id% (%ref%) - %firstname% %lastname%</source>
         <target>Order #%id% (%ref%) - %firstname% %lastname%</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1753</note>
+File: controllers/admin/AdminOrdersController.php:1720</note>
       </trans-unit>
       <trans-unit id="e0a1695cc8d58eae2745b55059687db6">
         <source>Shop: %s</source>
         <target>Shop: %s</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:1764</note>
+File: controllers/admin/AdminOrdersController.php:1731</note>
       </trans-unit>
     </body>
   </file>

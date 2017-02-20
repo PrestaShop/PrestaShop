@@ -14,6 +14,12 @@ File: controllers/admin/AdminMetaController.php:79</note>
         <note>Context:
 File: controllers/admin/AdminMetaController.php:83</note>
       </trans-unit>
+      <trans-unit id="1ccf825d454faaa7f8141830469fab8f">
+        <source>Enable this option if you want to allow accented characters in your friendly URLs.</source>
+        <target>Enable this option if you want to allow accented characters in your friendly URLs.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:87</note>
+      </trans-unit>
       <trans-unit id="37d06ba898faba724d13f931b1642b06">
         <source>You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.</source>
         <target>You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.</target>

@@ -66,6 +66,76 @@ File: src/PrestaShopBundle/Controller/Admin/ProductController.php:148</note>
       </trans-unit>
     </body>
   </file>
+  <file original="classes/helper/Helper.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b56c3bda503a8dc4be356edb0cc31793">
+        <source>Collapse All</source>
+        <target>Collapse All</target>
+        <note>Context:
+File: classes/helper/Helper.php:172</note>
+      </trans-unit>
+      <trans-unit id="5ffd7a335dd836b3373f5ec570a58bdc">
+        <source>Expand All</source>
+        <target>Expand All</target>
+        <note>Context:
+File: classes/helper/Helper.php:173</note>
+      </trans-unit>
+      <trans-unit id="5e9df908eafa83cb51c0a3720e8348c7">
+        <source>Check All</source>
+        <target>Check All</target>
+        <note>Context:
+File: classes/helper/Helper.php:174</note>
+      </trans-unit>
+      <trans-unit id="9747d23c8cc358c5ef78c51e59cd6817">
+        <source>Uncheck All</source>
+        <target>Uncheck All</target>
+        <note>Context:
+File: classes/helper/Helper.php:175</note>
+      </trans-unit>
+      <trans-unit id="17f5f00c6d09158f70718e353e91d20e">
+        <source>Find a category</source>
+        <target>Find a category</target>
+        <note>Context:
+File: classes/helper/Helper.php:176</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ed75712b0eb1913c28a3872731ffd48d">
+        <source>Duplicate</source>
+        <target>Duplicate</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/list.html.twig:107</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/message.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4351cfebe4b61d8aa5efa1d020710005">
+        <source>View</source>
+        <target>View</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/message.tpl:85</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7dce122004969d56ae2e0245cb754d35">
+        <source>Edit</source>
+        <target>Edit</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl:106</note>
+      </trans-unit>
+      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl:110</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="classes/module/Module.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="cc3787ca78f445f481069a4c047f7e7a">
@@ -111,16 +181,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:68</not
         <target>Uninstall</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:58</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/message.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4351cfebe4b61d8aa5efa1d020710005">
-        <source>View</source>
-        <target>View</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/message.tpl:85</note>
       </trans-unit>
     </body>
   </file>
@@ -216,22 +276,6 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/ma
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
-        <source>Delete</source>
-        <target>Delete</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl:110</note>
-      </trans-unit>
-      <trans-unit id="7dce122004969d56ae2e0245cb754d35">
-        <source>Edit</source>
-        <target>Edit</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl:106</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f8825c9f08ff15b5ef6bc3a3898817e8">
@@ -249,6 +293,16 @@ File: controllers/admin/AdminCmsController.php:228</note>
         <target>Finish</target>
         <note>Context:
 File: controllers/admin/AdminCarrierWizardController.php:132</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShippingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="01fda57aa6c7e9f07f5aa36b108e95cb">
+        <source>Order by</source>
+        <target>Order by</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:110</note>
       </trans-unit>
     </body>
   </file>
@@ -305,16 +359,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-supplier-c
         <target>Preview</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/statuses/helpers/form/form.tpl:77</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ed75712b0eb1913c28a3872731ffd48d">
-        <source>Duplicate</source>
-        <target>Duplicate</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/list.html.twig:107</note>
       </trans-unit>
     </body>
   </file>
@@ -496,6 +540,16 @@ File: src/PrestaShopBundle/Resources/views/Admin/ProductImage/form.html.twig:43<
       </trans-unit>
     </body>
   </file>
+  <file original="modules/dashproducts/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="63a6a88c066880c5ac42394a22803ca6">
+        <source>Refresh</source>
+        <target>Refresh</target>
+        <note>Context:
+File: modules/dashproducts/views/templates/hook/dashboard_zone_two.tpl:33</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_imageslider/views/templates/admin/_configure/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="92fbf0e5d97b8afd7e73126b52bdc4bb">
@@ -506,13 +560,13 @@ File: modules/ps_imageslider/views/templates/admin/_configure/helpers/form/form.
       </trans-unit>
     </body>
   </file>
-  <file original="modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="63a6a88c066880c5ac42394a22803ca6">
-        <source>Refresh</source>
-        <target>Refresh</target>
+      <trans-unit id="dc30bc0c7914db5918da4263fce93ad2">
+        <source>Clear</source>
+        <target>Clear</target>
         <note>Context:
-File: modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl:49</note>
+File: modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl:237</note>
       </trans-unit>
     </body>
   </file>

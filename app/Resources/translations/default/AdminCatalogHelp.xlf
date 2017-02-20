@@ -108,49 +108,49 @@ File: src/PrestaShopBundle/Controller/Admin/ProductController.php:150</note>
         <source>Your internal name for this attribute.</source>
         <target>Your internal name for this attribute.</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:197</note>
+File: controllers/admin/AdminAttributesGroupsController.php:199</note>
       </trans-unit>
       <trans-unit id="b5e6921c2d093fbcb0088c9466ee9983">
         <source>The public name for this attribute, displayed to the customers.</source>
         <target>The public name for this attribute, displayed to the customers.</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:206</note>
+File: controllers/admin/AdminAttributesGroupsController.php:208</note>
       </trans-unit>
       <trans-unit id="580de47d3bc3e99a0b6aba55066a983a">
         <source>The way the attribute's values will be presented to the customers in the product's page.</source>
         <target>The way the attribute's values will be presented to the customers in the product's page.</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:219</note>
+File: controllers/admin/AdminAttributesGroupsController.php:221</note>
       </trans-unit>
       <trans-unit id="71c476c94d0a0e3dfc0826afd03d2dda">
         <source>Choose the attribute group for this value.</source>
         <target>Choose the attribute group for this value.</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:267</note>
+File: controllers/admin/AdminAttributesGroupsController.php:269</note>
       </trans-unit>
       <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
         <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
         <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:305</note>
+File: controllers/admin/AdminAttributesGroupsController.php:307</note>
       </trans-unit>
       <trans-unit id="dd24a1142c1070a0efbdf43b4f0167cc">
         <source>Upload an image file containing the color texture from your computer.</source>
         <target>Upload an image file containing the color texture from your computer.</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:313</note>
+File: controllers/admin/AdminAttributesGroupsController.php:315</note>
       </trans-unit>
       <trans-unit id="ba353198430b2004efeb1ac6d1f410d0">
         <source>This will override the HTML color!</source>
         <target>This will override the HTML color!</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:314</note>
+File: controllers/admin/AdminAttributesGroupsController.php:316</note>
       </trans-unit>
       <trans-unit id="7d5672f569de406c85249db6f1c99ec0">
         <source>Save then add another value</source>
         <target>Save then add another value</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:541</note>
+File: controllers/admin/AdminAttributesGroupsController.php:546</note>
       </trans-unit>
     </body>
   </file>
@@ -420,9 +420,9 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:255</not
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:271</note>
       </trans-unit>
-      <trans-unit id="00331f284aa5a3fe252b610df78cf50d">
-        <source>Your internal reference code for this product. Allowed special characters: .-_#.</source>
-        <target>Your internal reference code for this product. Allowed special characters: .-_#.</target>
+      <trans-unit id="01cfe41b8ece41634e85248382166271">
+        <source>Your reference code for this product. Allowed special characters: .-_#.</source>
+        <target>Your reference code for this product. Allowed special characters: .-_#.</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:282</note>
       </trans-unit>
@@ -544,43 +544,49 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:840</not
         <source>Permanently delete this product.</source>
         <target>Permanently delete this product.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:981</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1034</note>
       </trans-unit>
-      <trans-unit id="300d234a8aa5cec49b7c428f45a8c812">
-        <source>See how your product sheet will look online: CTRL+E</source>
-        <target>See how your product sheet will look online: CTRL+E</target>
+      <trans-unit id="94e4259ad6f05c74b84eb6cca4d60ce6">
+        <source>See how your product sheet will look online: ALT+SHIFT+V</source>
+        <target>See how your product sheet will look online: ALT+SHIFT+V</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:992</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1045</note>
       </trans-unit>
-      <trans-unit id="9ad1af62d41fa07375d1605a33ec7d7d">
-        <source>Enable or disable the product on your shop: CTRL+O</source>
-        <target>Enable or disable the product on your shop: CTRL+O</target>
+      <trans-unit id="ad7478afcd575d882738a42546bc041a">
+        <source>Enable or disable the product on your shop: ALT+SHIFT+O</source>
+        <target>Enable or disable the product on your shop: ALT+SHIFT+O</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1000</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1051</note>
       </trans-unit>
-      <trans-unit id="8cfaff6242df6f99e64faa3ef58d2809">
-        <source>Save and duplicate this product, then go to the new product: CTRL+D</source>
-        <target>Save and duplicate this product, then go to the new product: CTRL+D</target>
+      <trans-unit id="f6f3f97a2cc75185959029650ba280df">
+        <source>Enable or disable the product on your shop: ALT+SHIFT+0</source>
+        <target>Enable or disable the product on your shop: ALT+SHIFT+0</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1019</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1053</note>
       </trans-unit>
-      <trans-unit id="28d6a75312eb3341efdb095fd1dd9083">
-        <source>Save and go back to the catalog: CTRL+Q</source>
-        <target>Save and go back to the catalog: CTRL+Q</target>
+      <trans-unit id="ac6f66dc450bc768229c1329aa7a48b1">
+        <source>Save and duplicate this product, then go to the new product: ALT+SHIFT+D</source>
+        <target>Save and duplicate this product, then go to the new product: ALT+SHIFT+D</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1030</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1072</note>
       </trans-unit>
-      <trans-unit id="86e4b2daaa59e55dd9eef1fa68740ccf">
-        <source>Save and create a new product: CTRL+P</source>
-        <target>Save and create a new product: CTRL+P</target>
+      <trans-unit id="b110e989a1143b7f44cd5691324d4d11">
+        <source>Save and go back to the catalog: ALT+SHIFT+Q</source>
+        <target>Save and go back to the catalog: ALT+SHIFT+Q</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1040</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1083</note>
       </trans-unit>
-      <trans-unit id="a80733808ab68c4dc8d67a23d23726c4">
-        <source>Save the product and stay on the current page: CTRL+S</source>
-        <target>Save the product and stay on the current page: CTRL+S</target>
+      <trans-unit id="37163a2847189335a934c83e8ae32677">
+        <source>Save and create a new product: ALT+SHIFT+P</source>
+        <target>Save and create a new product: ALT+SHIFT+P</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1050</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1093</note>
+      </trans-unit>
+      <trans-unit id="82e3cb7a4be4e299701a182197dc9410">
+        <source>Save the product and stay on the current page: ALT+SHIFT+S</source>
+        <target>Save the product and stay on the current page: ALT+SHIFT+S</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1103</note>
       </trans-unit>
     </body>
   </file>
