@@ -32,6 +32,7 @@ export default class Header {
       this.initMultiStores();
       this.initNotificationsToggle();
       this.initSearch();
+      refreshNotifications();
     });
   }
 
