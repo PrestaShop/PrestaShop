@@ -98,14 +98,4 @@ File: modules/ps_checkpayment/views/templates/hook/infos.tpl:30</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_checkpayment/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
-        <source>This payment method is not available.</source>
-        <target>This payment method is not available.</target>
-        <note>Context:
-File: modules/ps_checkpayment/validation.php:54</note>
-      </trans-unit>
-    </body>
-  </file>
 </xliff>

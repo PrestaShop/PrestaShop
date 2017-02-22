@@ -16,13 +16,13 @@ File: controllers/admin/AdminCmsContentController.php:113</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a06929291c19a7718975cb8c24dea961">
-        <source>E.g. address, addresses, attachment</source>
-        <target>E.g. address, addresses, attachment</target>
+      <trans-unit id="3ed349365d718a59eadb9df9d5c339f2">
+        <source>To add "tags" click in the field, write something, and then press "Enter."</source>
+        <target>To add "tags" click in the field, write something, and then press "Enter."</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:419</note>
+File: controllers/admin/AdminCmsController.php:159</note>
       </trans-unit>
     </body>
   </file>
@@ -156,6 +156,16 @@ File: controllers/admin/AdminImagesController.php:313</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a06929291c19a7718975cb8c24dea961">
+        <source>E.g. address, addresses, attachment</source>
+        <target>E.g. address, addresses, attachment</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:419</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8ed0c1461337919e3cf576591d74b687">
@@ -217,16 +227,6 @@ File: controllers/admin/AdminThemesController.php:538</note>
         <target>This selector lists the Zip files that you uploaded in the '/themes' folder.</target>
         <note>Context:
 File: controllers/admin/AdminThemesController.php:573</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3ed349365d718a59eadb9df9d5c339f2">
-        <source>To add "tags" click in the field, write something, and then press "Enter."</source>
-        <target>To add "tags" click in the field, write something, and then press "Enter."</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:159</note>
       </trans-unit>
     </body>
   </file>

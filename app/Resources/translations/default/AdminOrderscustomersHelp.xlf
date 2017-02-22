@@ -74,20 +74,30 @@ File: controllers/admin/AdminDeliverySlipController.php:53</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminInvoicesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8a7a048a67746f3877ab6cb1bc1d4afd">
         <source>Format: 2011-12-31 (inclusive).</source>
         <target>Format: 2011-12-31 (inclusive).</target>
         <note>Context:
-File: controllers/admin/AdminInvoicesController.php:146</note>
+File: controllers/admin/AdminSlipController.php:117</note>
       </trans-unit>
       <trans-unit id="e07ffcdf6051874b295597fb64b62635">
         <source>Format: 2012-12-31 (inclusive).</source>
         <target>Format: 2012-12-31 (inclusive).</target>
         <note>Context:
-File: controllers/admin/AdminInvoicesController.php:154</note>
+File: controllers/admin/AdminSlipController.php:125</note>
       </trans-unit>
+      <trans-unit id="0ecbd7a341049250b3da531530e42622">
+        <source>Prefix used for credit slips.</source>
+        <target>Prefix used for credit slips.</target>
+        <note>Context:
+File: controllers/admin/AdminSlipController.php:80</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminInvoicesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="60422879211a12247e5da14751a59ac3">
         <source>If enabled, your customers will receive an invoice for the purchase.</source>
         <target>If enabled, your customers will receive an invoice for the purchase.</target>
@@ -187,16 +197,6 @@ File: controllers/admin/AdminReturnController.php:137</note>
         <target>The link is only available after validation and before the parcel gets delivered.</target>
         <note>Context:
 File: controllers/admin/AdminReturnController.php:145</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0ecbd7a341049250b3da531530e42622">
-        <source>Prefix used for credit slips.</source>
-        <target>Prefix used for credit slips.</target>
-        <note>Context:
-File: controllers/admin/AdminSlipController.php:80</note>
       </trans-unit>
     </body>
   </file>

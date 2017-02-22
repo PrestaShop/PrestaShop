@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8e750875217fe72ff73cda7e57e4d61f">
-        <source>Module selection</source>
-        <target>Module selection</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:55</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/lang/TabLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3068c5a98c003498f1fec0c489212e8b">
@@ -665,6 +655,16 @@ File: classes/lang/TabLang.php:163</note>
         <target>Modules Catalog</target>
         <note>Context:
 File: classes/lang/TabLang.php:164</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8e750875217fe72ff73cda7e57e4d61f">
+        <source>Module selection</source>
+        <target>Module selection</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:55</note>
       </trans-unit>
     </body>
   </file>

@@ -124,7 +124,7 @@ File: modules/dashproducts/views/templates/hook/dashboard_zone_two.tpl:56</note>
         <source>Most Viewed</source>
         <target>Most Viewed</target>
         <note>Context:
-File: modules/dashproducts/views/templates/hook/dashboard_zone_two.tpl:62</note>
+File: modules/dashproducts/views/templates/hook/dashboard_zone_two.tpl:98</note>
       </trans-unit>
       <trans-unit id="1eb5e5713d7363e921dd7f5500b6d212">
         <source>Top Searches</source>

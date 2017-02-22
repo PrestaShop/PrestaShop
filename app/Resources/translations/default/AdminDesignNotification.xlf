@@ -1,51 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
-        <source>Your theme has been correctly exported: %path%</source>
-        <target>Your theme has been correctly exported: %path%</target>
-        <note>Context:
-File: src/PrestaShopBundle/Command/ExportThemeCommand.php:59</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="412b4a82ba6153e19f17f490b5f1aa88">
-        <source>This theme is not valid for PrestaShop 1.7</source>
-        <target>This theme is not valid for PrestaShop 1.7</target>
-        <note>Context:
-File: src/Core/Addon/Theme/ThemeManager.php:312</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Addon/Theme/ThemeValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="832e8c53e8d05c52c824912c28933917">
-        <source>An error occurred. The information "%s" is missing.</source>
-        <target>An error occurred. The information "%s" is missing.</target>
-        <note>Context:
-File: src/Core/Addon/Theme/ThemeValidator.php:69</note>
-      </trans-unit>
-      <trans-unit id="7d88c564a7f74d56564402cd5e054b13">
-        <source>An error occurred. The template "%s" is missing.</source>
-        <target>An error occurred. The template "%s" is missing.</target>
-        <note>Context:
-File: src/Core/Addon/Theme/ThemeValidator.php:113</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f003149576f4755d74550952febe14bb">
-        <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
-        <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
-        <note>Context:
-File: src/Core/Shop/LogoUploader.php:172</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c402321a8e5818b776007e8a2d00474a">
@@ -63,6 +17,16 @@ File: classes/controller/FrontController.php:321</note>
         <target>The page Category cannot be moved here.</target>
         <note>Context:
 File: controllers/admin/AdminCmsCategoriesController.php:105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
+        <source>No items found</source>
+        <target>No items found</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:274</note>
       </trans-unit>
     </body>
   </file>
@@ -200,13 +164,49 @@ File: controllers/admin/AdminThemesController.php:413</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
-        <source>No items found</source>
-        <target>No items found</target>
+      <trans-unit id="412b4a82ba6153e19f17f490b5f1aa88">
+        <source>This theme is not valid for PrestaShop 1.7</source>
+        <target>This theme is not valid for PrestaShop 1.7</target>
         <note>Context:
-File: controllers/admin/AdminCmsController.php:274</note>
+File: src/Core/Addon/Theme/ThemeManager.php:312</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Theme/ThemeValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="832e8c53e8d05c52c824912c28933917">
+        <source>An error occurred. The information "%s" is missing.</source>
+        <target>An error occurred. The information "%s" is missing.</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeValidator.php:69</note>
+      </trans-unit>
+      <trans-unit id="7d88c564a7f74d56564402cd5e054b13">
+        <source>An error occurred. The template "%s" is missing.</source>
+        <target>An error occurred. The template "%s" is missing.</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeValidator.php:113</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f003149576f4755d74550952febe14bb">
+        <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
+        <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
+        <note>Context:
+File: src/Core/Shop/LogoUploader.php:172</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
+        <source>Your theme has been correctly exported: %path%</source>
+        <target>Your theme has been correctly exported: %path%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Command/ExportThemeCommand.php:59</note>
       </trans-unit>
     </body>
   </file>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/contactform/contactform.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c661cf76442d8d2cb318d560285a2a57">
+        <source>Contact form</source>
+        <target>Contact form</target>
+        <note>Context:
+File: modules/contactform/contactform.php:48</note>
+      </trans-unit>
+      <trans-unit id="1f39abbc795766424e52bdb624c6b615">
+        <source>Description for contact form module</source>
+        <target>Description for contact form module</target>
+        <note>Context:
+File: modules/contactform/contactform.php:49</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

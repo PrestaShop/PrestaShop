@@ -1,155 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/front/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a923575984949608ce04c4984806ec2a">
-        <source>There are not enough products in stock</source>
-        <target>There are not enough products in stock</target>
-        <note>Context:
-File: controllers/front/CartController.php:323</note>
-      </trans-unit>
-      <trans-unit id="897bbb78781eb767eee3a4ac3e820185">
-        <source>You must enter a voucher code.</source>
-        <target>You must enter a voucher code.</target>
-        <note>Context:
-File: controllers/front/CartController.php:185</note>
-      </trans-unit>
-      <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
-        <source>The voucher code is invalid.</source>
-        <target>The voucher code is invalid.</target>
-        <note>Context:
-File: controllers/front/CartController.php:187</note>
-      </trans-unit>
-      <trans-unit id="d21c3bf7d25db04b73e7e269aef555fe">
-        <source>This voucher does not exist.</source>
-        <target>This voucher does not exist.</target>
-        <note>Context:
-File: controllers/front/CartController.php:196</note>
-      </trans-unit>
-      <trans-unit id="0d38c90d843c787c0be14f790998210c">
-        <source>You must add %d minimum quantity</source>
-        <target>You must add %d minimum quantity</target>
-        <note>Context:
-File: controllers/front/CartController.php:352</note>
-      </trans-unit>
-      <trans-unit id="9730e222894d4568ed4cd2de30cb233a">
-        <source>Null quantity.</source>
-        <target>Null quantity.</target>
-        <note>Context:
-File: controllers/front/CartController.php:278</note>
-      </trans-unit>
-      <trans-unit id="dfbe69c6d9568ecb0e65e7b32ed92a3a">
-        <source>Product not found</source>
-        <target>Product not found</target>
-        <note>Context:
-File: controllers/front/CartController.php:280</note>
-      </trans-unit>
-      <trans-unit id="84a7c3aeebf09d169aca8555be640bbf">
-        <source>Please fill in all of the required fields, and then save your customizations.</source>
-        <target>Please fill in all of the required fields, and then save your customizations.</target>
-        <note>Context:
-File: controllers/front/CartController.php:342</note>
-      </trans-unit>
-      <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
-        <source>You already have the maximum quantity available for this product.</source>
-        <target>You already have the maximum quantity available for this product.</target>
-        <note>Context:
-File: controllers/front/CartController.php:354</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerForm.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="80cc56c3cda7008e5a32fc5bd23f3452">
-        <source>The email "%s" is already used, please choose another one or sign in</source>
-        <target>The email "%s" is already used, please choose another one or sign in</target>
-        <note>Context:
-File: classes/form/CustomerForm.php:103</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerLoginForm.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="90162cff1b4a1a5a765c542ddc499998">
-        <source>Your account isn't available at this time, please contact us</source>
-        <target>Your account isn't available at this time, please contact us</target>
-        <note>Context:
-File: classes/form/CustomerLoginForm.php:71</note>
-      </trans-unit>
-      <trans-unit id="802b207b05fe5cea22e11b9db804b33d">
-        <source>Authentication failed.</source>
-        <target>Authentication failed.</target>
-        <note>Context:
-File: classes/form/CustomerLoginForm.php:73</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerPersister.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d2f614cac7a0f970168f6d129860a1c0">
-        <source>Invalid email/password combination</source>
-        <target>Invalid email/password combination</target>
-        <note>Context:
-File: classes/form/CustomerPersister.php:73</note>
-      </trans-unit>
-      <trans-unit id="5f377de6cd38d0577c9628eeaecb3d0f">
-        <source>There seems to be an issue with your account, please contact support</source>
-        <target>There seems to be an issue with your account, please contact support</target>
-        <note>Context:
-File: classes/form/CustomerPersister.php:103</note>
-      </trans-unit>
-      <trans-unit id="e3cf2c117615da59fb8930d299eb16f3">
-        <source>An account was already registered with this email address</source>
-        <target>An account was already registered with this email address</target>
-        <note>Context:
-File: classes/form/CustomerPersister.php:182</note>
-      </trans-unit>
-      <trans-unit id="47be05698f8dd87bb445ceefce6abd0d">
-        <source>Password is required</source>
-        <target>Password is required</target>
-        <note>Context:
-File: classes/form/CustomerPersister.php:155</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2af64b8ece83492468fbc41f9b692556">
-        <source>Could not delete address.</source>
-        <target>Could not delete address.</target>
-        <note>Context:
-File: controllers/front/AddressController.php:92</note>
-      </trans-unit>
-      <trans-unit id="0adae640fffe5e6c0208e25f13aaa414">
-        <source>Please fix the error below.</source>
-        <target>Please fix the error below.</target>
-        <note>Context:
-File: controllers/front/AddressController.php:59</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/stock/SupplyOrderDetail.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1f597c6798d6a39dd2bde999d547331a">
-        <source>%s is required.</source>
-        <target>%s is required.</target>
-        <note>Context:
-File: classes/stock/SupplyOrderDetail.php:291</note>
-      </trans-unit>
-      <trans-unit id="0fec856489067e4d21aa315324c441dc">
-        <source>%1$s is too long. Maximum length: %2$d</source>
-        <target>%1$s is too long. Maximum length: %2$d</target>
-        <note>Context:
-File: classes/stock/SupplyOrderDetail.php:305</note>
-      </trans-unit>
-      <trans-unit id="8ae0cb74f9724518e1ce68c503377002">
-        <source>is invalid.</source>
-        <target>is invalid.</target>
-        <note>Context:
-File: classes/stock/SupplyOrderDetail.php:336</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/CartRule.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5a6448a8d8e77fa43df91db2eea79fb1">
@@ -262,83 +112,95 @@ File: classes/CartRule.php:901</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
-        <source>Invalid email address.</source>
-        <target>Invalid email address.</target>
+      <trans-unit id="2af64b8ece83492468fbc41f9b692556">
+        <source>Could not delete address.</source>
+        <target>Could not delete address.</target>
         <note>Context:
-File: controllers/front/PasswordController.php:54</note>
+File: controllers/front/AddressController.php:92</note>
       </trans-unit>
-      <trans-unit id="909179695703d6a048fab0bcc9af4758">
-        <source>We cannot regenerate your password with the data you've submitted</source>
-        <target>We cannot regenerate your password with the data you've submitted</target>
+      <trans-unit id="0adae640fffe5e6c0208e25f13aaa414">
+        <source>Please fix the error below.</source>
+        <target>Please fix the error below.</target>
         <note>Context:
-File: controllers/front/PasswordController.php:194</note>
-      </trans-unit>
-      <trans-unit id="194496a52d41fba1c9e6140c4eb34f83">
-        <source>You cannot regenerate the password for this account.</source>
-        <target>You cannot regenerate the password for this account.</target>
-        <note>Context:
-File: controllers/front/PasswordController.php:120</note>
-      </trans-unit>
-      <trans-unit id="922dc0515643fb69585b67281692644a">
-        <source>You can regenerate your password only every %d minute(s)</source>
-        <target>You can regenerate your password only every %d minute(s)</target>
-        <note>Context:
-File: controllers/front/PasswordController.php:72</note>
-      </trans-unit>
-      <trans-unit id="6e2fc94479ac0c63543886a235e3370c">
-        <source>An error occurred while sending the email.</source>
-        <target>An error occurred while sending the email.</target>
-        <note>Context:
-File: controllers/front/PasswordController.php:185</note>
-      </trans-unit>
-      <trans-unit id="f7ae511276e04d42e9cfe2f714b5128e">
-        <source>Customer account not found</source>
-        <target>Customer account not found</target>
-        <note>Context:
-File: controllers/front/PasswordController.php:118</note>
-      </trans-unit>
-      <trans-unit id="da9aa00ef0107af3e55d9ae1e8a1f361">
-        <source>The password and its confirmation do not match.</source>
-        <target>The password and its confirmation do not match.</target>
-        <note>Context:
-File: controllers/front/PasswordController.php:130</note>
-      </trans-unit>
-      <trans-unit id="cf84bfe60dba837405db6f0a3cb9c086">
-        <source>The password change request expired. You should ask for a new one.</source>
-        <target>The password change request expired. You should ask for a new one.</target>
-        <note>Context:
-File: controllers/front/PasswordController.php:148</note>
-      </trans-unit>
-      <trans-unit id="619469491be87d328254b6f41cd73770">
-        <source>An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.</source>
-        <target>An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.</target>
-        <note>Context:
-File: controllers/front/PasswordController.php:188</note>
+File: controllers/front/AddressController.php:59</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/form/CustomerForm.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ddb329ec6521925a245fbe1334d2ce18">
-        <source>Please provide the required information</source>
-        <target>Please provide the required information</target>
+      <trans-unit id="80cc56c3cda7008e5a32fc5bd23f3452">
+        <source>The email "%s" is already used, please choose another one or sign in</source>
+        <target>The email "%s" is already used, please choose another one or sign in</target>
         <note>Context:
-File: controllers/front/GuestTrackingController.php:63</note>
+File: classes/form/CustomerForm.php:103</note>
       </trans-unit>
-      <trans-unit id="ac68011e87111c9833dab09935bd88f3">
-        <source>We couldn't find your order with the information provided, please try again</source>
-        <target>We couldn't find your order with the information provided, please try again</target>
+    </body>
+  </file>
+  <file original="classes/form/CustomerLoginForm.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="90162cff1b4a1a5a765c542ddc499998">
+        <source>Your account isn't available at this time, please contact us</source>
+        <target>Your account isn't available at this time, please contact us</target>
         <note>Context:
-File: controllers/front/GuestTrackingController.php:83</note>
+File: classes/form/CustomerLoginForm.php:71</note>
       </trans-unit>
-      <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
-        <source>An unexpected error occurred while creating your account.</source>
-        <target>An unexpected error occurred while creating your account.</target>
+      <trans-unit id="802b207b05fe5cea22e11b9db804b33d">
+        <source>Authentication failed.</source>
+        <target>Authentication failed.</target>
         <note>Context:
-File: controllers/front/GuestTrackingController.php:108</note>
+File: classes/form/CustomerLoginForm.php:73</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/form/CustomerPersister.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d2f614cac7a0f970168f6d129860a1c0">
+        <source>Invalid email/password combination</source>
+        <target>Invalid email/password combination</target>
+        <note>Context:
+File: classes/form/CustomerPersister.php:73</note>
+      </trans-unit>
+      <trans-unit id="5f377de6cd38d0577c9628eeaecb3d0f">
+        <source>There seems to be an issue with your account, please contact support</source>
+        <target>There seems to be an issue with your account, please contact support</target>
+        <note>Context:
+File: classes/form/CustomerPersister.php:103</note>
+      </trans-unit>
+      <trans-unit id="e3cf2c117615da59fb8930d299eb16f3">
+        <source>An account was already registered with this email address</source>
+        <target>An account was already registered with this email address</target>
+        <note>Context:
+File: classes/form/CustomerPersister.php:182</note>
+      </trans-unit>
+      <trans-unit id="47be05698f8dd87bb445ceefce6abd0d">
+        <source>Password is required</source>
+        <target>Password is required</target>
+        <note>Context:
+File: classes/form/CustomerPersister.php:155</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/stock/SupplyOrderDetail.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f597c6798d6a39dd2bde999d547331a">
+        <source>%s is required.</source>
+        <target>%s is required.</target>
+        <note>Context:
+File: classes/stock/SupplyOrderDetail.php:291</note>
+      </trans-unit>
+      <trans-unit id="0fec856489067e4d21aa315324c441dc">
+        <source>%1$s is too long. Maximum length: %2$d</source>
+        <target>%1$s is too long. Maximum length: %2$d</target>
+        <note>Context:
+File: classes/stock/SupplyOrderDetail.php:305</note>
+      </trans-unit>
+      <trans-unit id="8ae0cb74f9724518e1ce68c503377002">
+        <source>is invalid.</source>
+        <target>is invalid.</target>
+        <note>Context:
+File: classes/stock/SupplyOrderDetail.php:336</note>
       </trans-unit>
     </body>
   </file>
@@ -352,13 +214,55 @@ File: controllers/front/AddressesController.php:43</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/IdentityController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7cee9e5fd53cf1d3d1677ef3edc4a613">
-        <source>Could not update your information, please check your data.</source>
-        <target>Could not update your information, please check your data.</target>
+      <trans-unit id="897bbb78781eb767eee3a4ac3e820185">
+        <source>You must enter a voucher code.</source>
+        <target>You must enter a voucher code.</target>
         <note>Context:
-File: controllers/front/IdentityController.php:57</note>
+File: controllers/front/CartController.php:185</note>
+      </trans-unit>
+      <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
+        <source>The voucher code is invalid.</source>
+        <target>The voucher code is invalid.</target>
+        <note>Context:
+File: controllers/front/CartController.php:187</note>
+      </trans-unit>
+      <trans-unit id="d21c3bf7d25db04b73e7e269aef555fe">
+        <source>This voucher does not exist.</source>
+        <target>This voucher does not exist.</target>
+        <note>Context:
+File: controllers/front/CartController.php:196</note>
+      </trans-unit>
+      <trans-unit id="0d38c90d843c787c0be14f790998210c">
+        <source>You must add %d minimum quantity</source>
+        <target>You must add %d minimum quantity</target>
+        <note>Context:
+File: controllers/front/CartController.php:352</note>
+      </trans-unit>
+      <trans-unit id="9730e222894d4568ed4cd2de30cb233a">
+        <source>Null quantity.</source>
+        <target>Null quantity.</target>
+        <note>Context:
+File: controllers/front/CartController.php:278</note>
+      </trans-unit>
+      <trans-unit id="dfbe69c6d9568ecb0e65e7b32ed92a3a">
+        <source>Product not found</source>
+        <target>Product not found</target>
+        <note>Context:
+File: controllers/front/CartController.php:280</note>
+      </trans-unit>
+      <trans-unit id="84a7c3aeebf09d169aca8555be640bbf">
+        <source>Please fill in all of the required fields, and then save your customizations.</source>
+        <target>Please fill in all of the required fields, and then save your customizations.</target>
+        <note>Context:
+File: controllers/front/CartController.php:342</note>
+      </trans-unit>
+      <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
+        <source>You already have the maximum quantity available for this product.</source>
+        <target>You already have the maximum quantity available for this product.</target>
+        <note>Context:
+File: controllers/front/CartController.php:354</note>
       </trans-unit>
     </body>
   </file>
@@ -388,147 +292,15 @@ File: controllers/front/ProductController.php:217</note>
         <note>Context:
 File: controllers/front/ProductController.php:773</note>
       </trans-unit>
-      <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
-        <source>Invalid message</source>
-        <target>Invalid message</target>
-        <note>Context:
-File: controllers/front/ProductController.php:801</note>
-      </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/PdfOrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Product/ProductPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
-        <source>Order return not found.</source>
-        <target>Order return not found.</target>
+      <trans-unit id="a923575984949608ce04c4984806ec2a">
+        <source>There are not enough products in stock</source>
+        <target>There are not enough products in stock</target>
         <note>Context:
-File: controllers/front/PdfOrderReturnController.php:47</note>
-      </trans-unit>
-      <trans-unit id="b55e152dc0683c3d315b6baabb98495d">
-        <source>Order return not confirmed.</source>
-        <target>Order return not confirmed.</target>
-        <note>Context:
-File: controllers/front/PdfOrderReturnController.php:49</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/listing/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ba2bfa3216ea97ec1e454239610d089a">
-        <source>You do not have access to this category.</source>
-        <target>You do not have access to this category.</target>
-        <note>Context:
-File: controllers/front/listing/CategoryController.php:75</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="56ca67fde405db4d75fb5fc3350db81b">
-        <source>Sorry. We cannot renew your order.</source>
-        <target>Sorry. We cannot renew your order.</target>
-        <note>Context:
-File: controllers/front/OrderController.php:55</note>
-      </trans-unit>
-      <trans-unit id="b22604f6ddd3fb79ff38568a5a0141e0">
-        <source>Some items are no longer available, and we are unable to renew your order.</source>
-        <target>Some items are no longer available, and we are unable to renew your order.</target>
-        <note>Context:
-File: controllers/front/OrderController.php:58</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ffabab221ec5c24fbdb4a70ad48bc985">
-        <source>The order is no longer valid.</source>
-        <target>The order is no longer valid.</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:58</note>
-      </trans-unit>
-      <trans-unit id="3dc245110e1f3601860c20299d97c01d">
-        <source>The message cannot be blank.</source>
-        <target>The message cannot be blank.</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:60</note>
-      </trans-unit>
-      <trans-unit id="15efe0f18ecffd8e75556c5c60cb1cb6">
-        <source>This message is invalid (HTML is not allowed).</source>
-        <target>This message is invalid (HTML is not allowed).</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:62</note>
-      </trans-unit>
-      <trans-unit id="8a6034d3379499b66d730aa17e007683">
-        <source>You do not have enough products to request an additional merchandise return.</source>
-        <target>You do not have enough products to request an additional merchandise return.</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:177</note>
-      </trans-unit>
-      <trans-unit id="229ca46a5d762e19a428f59449c916ad">
-        <source>Please provide an explanation for your RMA.</source>
-        <target>Please provide an explanation for your RMA.</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:179</note>
-      </trans-unit>
-      <trans-unit id="e6f6a5e58ee6d010f22e4b3dbd756213">
-        <source>Please check at least one product you would like to return.</source>
-        <target>Please check at least one product you would like to return.</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:181</note>
-      </trans-unit>
-      <trans-unit id="1819b587867a9c604a4d21c753756b4a">
-        <source>For each product you wish to add, please specify the desired quantity.</source>
-        <target>For each product you wish to add, please specify the desired quantity.</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:183</note>
-      </trans-unit>
-      <trans-unit id="a3c5d3c6953c588760d90657e4f0b790">
-        <source>This order cannot be returned</source>
-        <target>This order cannot be returned</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:185</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/StoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="046f5d51d8d0da00cba63d33299c2d66">
-        <source>PHP "Dom" extension has not been loaded.</source>
-        <target>PHP "Dom" extension has not been loaded.</target>
-        <note>Context:
-File: controllers/front/StoresController.php:41</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/OrderFollowController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="15ef0f1f63c1e8a9fb8abad024939262">
-        <source>You have no merchandise return authorizations.</source>
-        <target>You have no merchandise return authorizations.</target>
-        <note>Context:
-File: controllers/front/OrderFollowController.php:103</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/PdfInvoiceController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6b9cc232bf4044274ec42062b60736fb">
-        <source>Invoices are disabled in this shop.</source>
-        <target>Invoices are disabled in this shop.</target>
-        <note>Context:
-File: controllers/front/PdfInvoiceController.php:44</note>
-      </trans-unit>
-      <trans-unit id="2ef90fa1b9369f1ad3ca66852ca464a2">
-        <source>The invoice was not found.</source>
-        <target>The invoice was not found.</target>
-        <note>Context:
-File: controllers/front/PdfInvoiceController.php:57</note>
-      </trans-unit>
-      <trans-unit id="8200c4097227159b14dd0669b8dfe22c">
-        <source>No invoice is available.</source>
-        <target>No invoice is available.</target>
-        <note>Context:
-File: controllers/front/PdfInvoiceController.php:61</note>
+File: src/Core/Product/ProductPresenter.php:416</note>
       </trans-unit>
     </body>
   </file>
@@ -587,6 +359,278 @@ File: controllers/front/GetFileController.php:325</note>
         <target>You have reached the maximum number of downloads allowed.</target>
         <note>Context:
 File: controllers/front/GetFileController.php:326</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ddb329ec6521925a245fbe1334d2ce18">
+        <source>Please provide the required information</source>
+        <target>Please provide the required information</target>
+        <note>Context:
+File: controllers/front/GuestTrackingController.php:63</note>
+      </trans-unit>
+      <trans-unit id="ac68011e87111c9833dab09935bd88f3">
+        <source>We couldn't find your order with the information provided, please try again</source>
+        <target>We couldn't find your order with the information provided, please try again</target>
+        <note>Context:
+File: controllers/front/GuestTrackingController.php:83</note>
+      </trans-unit>
+      <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
+        <source>An unexpected error occurred while creating your account.</source>
+        <target>An unexpected error occurred while creating your account.</target>
+        <note>Context:
+File: controllers/front/GuestTrackingController.php:108</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/IdentityController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7cee9e5fd53cf1d3d1677ef3edc4a613">
+        <source>Could not update your information, please check your data.</source>
+        <target>Could not update your information, please check your data.</target>
+        <note>Context:
+File: controllers/front/IdentityController.php:57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/listing/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ba2bfa3216ea97ec1e454239610d089a">
+        <source>You do not have access to this category.</source>
+        <target>You do not have access to this category.</target>
+        <note>Context:
+File: controllers/front/listing/CategoryController.php:75</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="56ca67fde405db4d75fb5fc3350db81b">
+        <source>Sorry. We cannot renew your order.</source>
+        <target>Sorry. We cannot renew your order.</target>
+        <note>Context:
+File: controllers/front/OrderController.php:55</note>
+      </trans-unit>
+      <trans-unit id="b22604f6ddd3fb79ff38568a5a0141e0">
+        <source>Some items are no longer available, and we are unable to renew your order.</source>
+        <target>Some items are no longer available, and we are unable to renew your order.</target>
+        <note>Context:
+File: controllers/front/OrderController.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ffabab221ec5c24fbdb4a70ad48bc985">
+        <source>The order is no longer valid.</source>
+        <target>The order is no longer valid.</target>
+        <note>Context:
+File: controllers/front/OrderDetailController.php:58</note>
+      </trans-unit>
+      <trans-unit id="15efe0f18ecffd8e75556c5c60cb1cb6">
+        <source>This message is invalid (HTML is not allowed).</source>
+        <target>This message is invalid (HTML is not allowed).</target>
+        <note>Context:
+File: controllers/front/OrderDetailController.php:62</note>
+      </trans-unit>
+      <trans-unit id="8a6034d3379499b66d730aa17e007683">
+        <source>You do not have enough products to request an additional merchandise return.</source>
+        <target>You do not have enough products to request an additional merchandise return.</target>
+        <note>Context:
+File: controllers/front/OrderDetailController.php:177</note>
+      </trans-unit>
+      <trans-unit id="229ca46a5d762e19a428f59449c916ad">
+        <source>Please provide an explanation for your RMA.</source>
+        <target>Please provide an explanation for your RMA.</target>
+        <note>Context:
+File: controllers/front/OrderDetailController.php:179</note>
+      </trans-unit>
+      <trans-unit id="e6f6a5e58ee6d010f22e4b3dbd756213">
+        <source>Please check at least one product you would like to return.</source>
+        <target>Please check at least one product you would like to return.</target>
+        <note>Context:
+File: controllers/front/OrderDetailController.php:181</note>
+      </trans-unit>
+      <trans-unit id="1819b587867a9c604a4d21c753756b4a">
+        <source>For each product you wish to add, please specify the desired quantity.</source>
+        <target>For each product you wish to add, please specify the desired quantity.</target>
+        <note>Context:
+File: controllers/front/OrderDetailController.php:183</note>
+      </trans-unit>
+      <trans-unit id="a3c5d3c6953c588760d90657e4f0b790">
+        <source>This order cannot be returned</source>
+        <target>This order cannot be returned</target>
+        <note>Context:
+File: controllers/front/OrderDetailController.php:185</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/contactform/contactform.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3dc245110e1f3601860c20299d97c01d">
+        <source>The message cannot be blank.</source>
+        <target>The message cannot be blank.</target>
+        <note>Context:
+File: modules/contactform/contactform.php:170</note>
+      </trans-unit>
+      <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
+        <source>Invalid message</source>
+        <target>Invalid message</target>
+        <note>Context:
+File: modules/contactform/contactform.php:172</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderFollowController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="15ef0f1f63c1e8a9fb8abad024939262">
+        <source>You have no merchandise return authorizations.</source>
+        <target>You have no merchandise return authorizations.</target>
+        <note>Context:
+File: controllers/front/OrderFollowController.php:103</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="909179695703d6a048fab0bcc9af4758">
+        <source>We cannot regenerate your password with the data you've submitted</source>
+        <target>We cannot regenerate your password with the data you've submitted</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:194</note>
+      </trans-unit>
+      <trans-unit id="194496a52d41fba1c9e6140c4eb34f83">
+        <source>You cannot regenerate the password for this account.</source>
+        <target>You cannot regenerate the password for this account.</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:120</note>
+      </trans-unit>
+      <trans-unit id="922dc0515643fb69585b67281692644a">
+        <source>You can regenerate your password only every %d minute(s)</source>
+        <target>You can regenerate your password only every %d minute(s)</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:72</note>
+      </trans-unit>
+      <trans-unit id="6e2fc94479ac0c63543886a235e3370c">
+        <source>An error occurred while sending the email.</source>
+        <target>An error occurred while sending the email.</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:185</note>
+      </trans-unit>
+      <trans-unit id="f7ae511276e04d42e9cfe2f714b5128e">
+        <source>Customer account not found</source>
+        <target>Customer account not found</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:118</note>
+      </trans-unit>
+      <trans-unit id="da9aa00ef0107af3e55d9ae1e8a1f361">
+        <source>The password and its confirmation do not match.</source>
+        <target>The password and its confirmation do not match.</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:130</note>
+      </trans-unit>
+      <trans-unit id="cf84bfe60dba837405db6f0a3cb9c086">
+        <source>The password change request expired. You should ask for a new one.</source>
+        <target>The password change request expired. You should ask for a new one.</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:148</note>
+      </trans-unit>
+      <trans-unit id="619469491be87d328254b6f41cd73770">
+        <source>An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.</source>
+        <target>An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:188</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
+        <source>Invalid email address.</source>
+        <target>Invalid email address.</target>
+        <note>Context:
+File: modules/ps_emailsubscription/ps_emailsubscription.php:335</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PdfInvoiceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6b9cc232bf4044274ec42062b60736fb">
+        <source>Invoices are disabled in this shop.</source>
+        <target>Invoices are disabled in this shop.</target>
+        <note>Context:
+File: controllers/front/PdfInvoiceController.php:44</note>
+      </trans-unit>
+      <trans-unit id="2ef90fa1b9369f1ad3ca66852ca464a2">
+        <source>The invoice was not found.</source>
+        <target>The invoice was not found.</target>
+        <note>Context:
+File: controllers/front/PdfInvoiceController.php:57</note>
+      </trans-unit>
+      <trans-unit id="8200c4097227159b14dd0669b8dfe22c">
+        <source>No invoice is available.</source>
+        <target>No invoice is available.</target>
+        <note>Context:
+File: controllers/front/PdfInvoiceController.php:61</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PdfOrderSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
+        <source>Order return not found.</source>
+        <target>Order return not found.</target>
+        <note>Context:
+File: controllers/front/PdfOrderSlipController.php:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PdfOrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b55e152dc0683c3d315b6baabb98495d">
+        <source>Order return not confirmed.</source>
+        <target>Order return not confirmed.</target>
+        <note>Context:
+File: controllers/front/PdfOrderReturnController.php:49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/StoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="046f5d51d8d0da00cba63d33299c2d66">
+        <source>PHP "Dom" extension has not been loaded.</source>
+        <target>PHP "Dom" extension has not been loaded.</target>
+        <note>Context:
+File: controllers/front/StoresController.php:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/trackingfront/trackingfront.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a3de4dbbfe3bac5d271a16fb8a6f942e">
+        <source>Login is required</source>
+        <target>Login is required</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:84</note>
+      </trans-unit>
+      <trans-unit id="a6f2a48726b0d36107e00e20795d3d37">
+        <source>Invalid login</source>
+        <target>Invalid login</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:86</note>
+      </trans-unit>
+      <trans-unit id="cba0b206627d45fbf0ae707e20d4a38f">
+        <source>Invalid password</source>
+        <target>Invalid password</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:90</note>
+      </trans-unit>
+      <trans-unit id="d4e6d6c42bf3eb807b8778255a4ce415">
+        <source>Authentication failed</source>
+        <target>Authentication failed</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:99</note>
       </trans-unit>
     </body>
   </file>
