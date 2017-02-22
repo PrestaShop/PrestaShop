@@ -459,7 +459,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
     private function getFullyQualifiedName()
     {
-        return str_replace('\\', '_', get_class($this));
+        return str_replace('\\', '', get_class($this));
     }
 
     /**
