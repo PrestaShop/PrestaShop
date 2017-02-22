@@ -69,6 +69,7 @@ export default class NavBar {
     let $employee = $('.employee_avatar').prop('outerHTML');
     let profileLink = $('.profile-link').attr('href');
     let $shoplist = $('.shop-list');
+    let $shopText =  $('.shop-list .items-list .active a').html();
 
     $shoplist.find('.link').removeClass('link');
 
@@ -84,17 +85,22 @@ export default class NavBar {
     $('.main-menu').append(`<li class="link-levelone">${$logout}</li>`);
     $('.main-menu').prepend(`<li class="link-levelone">${$employee}</li>`);
 
+    $('.collapse').collapse({
+      toggle: false
+    });
+
     if($shoplist.hasClass('ps-dropdown')) {
-      $('.main-menu li:first').append( $('.shop-list .items-list'));
+      $('.main-menu li:first').append(`<p class="shop-list-title"><a href="#shop-list-collapse" data-toggle="collapse" aria-expanded="true">${$shopText}</a></p>`);
+      $('.main-menu li:first').append( $('.shop-list .items-list').addClass('collapse').attr('id', 'shop-list-collapse'));
+      $('#shop-list-collapse').collapse({
+        toggle: true
+      });
     }
     else {
       $('.main-menu li:first').append( $('.shop-list'));
     }
 
     $('.employee_avatar img, .employee_avatar span').wrap(`<a href="${profileLink}"></a>`);
-    $('.collapse').collapse({
-      toggle: false
-    });
 
     $('.js-mobile-menu').on('click', expand);
 
@@ -122,6 +128,6 @@ export default class NavBar {
     $('.js-notifs_dropdown').removeAttr('style');
     $('.nav-bar').removeClass('mobile-nav');
     $('.panel-collapse').removeClass('collapse').addClass('submenu');
-
+    $('.shop-list-title').remove();
   }
 }

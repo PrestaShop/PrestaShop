@@ -20,12 +20,7 @@
       visibility: visible;
       margin-left: 0;
     }
-    .link-levelone:nth-child(n+11) {
-      display: none;
-      &:last-child {
-        display: block;
-      }
-    }
+
     .panel-collapse {
       padding-left: 0;
       .link-leveltwo .link {
@@ -55,16 +50,31 @@
     .main-menu {
       margin-top: rem(10px);
     }
+    .shop-list-title {
+      color: $brand-primary;
+      text-transform: uppercase;
+      font-size: rem(16px);
+      text-align: center;
+      margin-bottom: rem(15px);
+      &::after {
+        font-family: 'Material Icons';
+        content: "\E313";
+        font-size: rem(20px);
+        line-height: rem(22px);
+        margin-left: rem(10px);
+        vertical-align: bottom;
+      }
+    }
     .items-list {
       padding-left: 0;
       a:focus {
           background-color: transparent;
       }
-      li:not(:first-child) {
+      li {
         background-color: white;
         border-bottom: $gray-light 1px solid;
         &.group a{
-          padding: rem(15px) rem(30px);
+          padding: rem(15px) rem(40px);
           font-weight: bold;
         }
         &.shop {
@@ -82,26 +92,11 @@
           }
         }
       }
-      li:nth-child(2) a {
+      li:first-child a {
         color: $brand-primary;
         text-transform: uppercase;
         font-size: rem(15px);
         padding: rem(15px) rem(20px);
-      }
-      li:first-child .dropdown-item {
-        color: $brand-primary;
-        text-transform: uppercase;
-        font-size: rem(16px);
-        text-align: center;
-        margin-bottom: rem(15px);
-        &::after {
-          font-family: 'Material Icons';
-          content: "\E313";
-          font-size: rem(20px);
-          line-height: rem(22px);
-          margin-left: rem(10px);
-          vertical-align: bottom;
-        }
       }
     }
   }
