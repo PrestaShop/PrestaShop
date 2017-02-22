@@ -48,7 +48,7 @@ const refreshNotifications = function () {
         setNotificationsNumber("_nb_new_customers_", nbCustomers);
         setNotificationsNumber("_nb_new_messages_", nbCustomerMessages);
         if(notifications_total) {
-          $('#notifications-total').html(notifications_total);
+          $('#notifications-total').removeClass('hide').html(notifications_total);
         }
         else {
           $('#notifications-total').remove();
