@@ -25,11 +25,11 @@
 {extends file='checkout/_partials/steps/checkout-step.tpl'}
 
 {block name='step_content'}
-  <div class="js-address-form">
+  <div class="js-checkout-address-form">
     <form
       method="POST"
       action="{$urls.pages.order}"
-      data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
+      data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'checkoutAddressStep']}"
     >
 
       {if !$use_same_address}
