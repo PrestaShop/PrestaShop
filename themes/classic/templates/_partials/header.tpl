@@ -22,6 +22,12 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
+{block name='header_banner'}
+  <div class="header-banner">
+    {hook h='displayBanner'}
+  </div>
+{/block}
+
 {block name='header_nav'}
   <nav class="header-nav">
     <div class="container">
