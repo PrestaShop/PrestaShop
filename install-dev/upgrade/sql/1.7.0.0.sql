@@ -139,8 +139,6 @@ CREATE TABLE `PREFIX_module_access` (
 DROP TABLE IF EXISTS `PREFIX_access_old`;
 DROP TABLE IF EXISTS `PREFIX_module_access_old`;
 
-/* PHP:ps_1700_reset_theme(); */;
-
 /* PHP:add_quick_access_tab(); */;
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES
