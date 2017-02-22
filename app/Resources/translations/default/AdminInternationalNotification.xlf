@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="41ca3d8439f6e8beab7af312714e37f0">
-        <source>Translation successfully updated</source>
-        <target>Translation successfully updated</target>
-        <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:219</note>
-      </trans-unit>
-      <trans-unit id="89f207396aadf538daf591675d55a436">
-        <source>Translation unsuccessfully updated</source>
-        <target>Translation unsuccessfully updated</target>
-        <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:221</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6cfb80c26b415f8f6467cf07b0c700dd">
@@ -89,42 +73,6 @@ File: classes/Language.php:1018
         <target>An error occurred while creating the language: %s</target>
         <note>Context:
 File: classes/Language.php:1063</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Translate.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f1cad38daad8d4fad79ffb90cd68877f">
-        <source>Invalid iso lang (%s)</source>
-        <target>Invalid iso lang (%s)</target>
-        <note>Context:
-File: classes/Translate.php:289</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/tax/TaxRulesGroup.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6f3455d187a23443796efdcbe044096b">
-        <source>No tax</source>
-        <target>No tax</target>
-        <note>Context:
-File: classes/tax/TaxRulesGroup.php:151</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/tax/TaxManagerModule.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="253356cdb3cd6af1a6028200326de711">
-        <source>Incorrect Tax Manager class [%s]</source>
-        <target>Incorrect Tax Manager class [%s]</target>
-        <note>Context:
-File: classes/tax/TaxManagerModule.php:41</note>
-      </trans-unit>
-      <trans-unit id="20eb7f9857d85d1d0c8a1e0ddf8545b8">
-        <source>Tax Manager class not found [%s]</source>
-        <target>Tax Manager class not found [%s]</target>
-        <note>Context:
-File: classes/tax/TaxManagerModule.php:47</note>
       </trans-unit>
     </body>
   </file>
@@ -252,6 +200,108 @@ File: classes/LocalizationPack.php:508</note>
       </trans-unit>
     </body>
   </file>
+  <file original="classes/tax/TaxManagerModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="253356cdb3cd6af1a6028200326de711">
+        <source>Incorrect Tax Manager class [%s]</source>
+        <target>Incorrect Tax Manager class [%s]</target>
+        <note>Context:
+File: classes/tax/TaxManagerModule.php:41</note>
+      </trans-unit>
+      <trans-unit id="20eb7f9857d85d1d0c8a1e0ddf8545b8">
+        <source>Tax Manager class not found [%s]</source>
+        <target>Tax Manager class not found [%s]</target>
+        <note>Context:
+File: classes/tax/TaxManagerModule.php:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/tax/TaxRulesGroup.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6f3455d187a23443796efdcbe044096b">
+        <source>No tax</source>
+        <target>No tax</target>
+        <note>Context:
+File: classes/tax/TaxRulesGroup.php:151</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Translate.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f1cad38daad8d4fad79ffb90cd68877f">
+        <source>Invalid iso lang (%s)</source>
+        <target>Invalid iso lang (%s)</target>
+        <note>Context:
+File: classes/Translate.php:289</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e07a23e507642ef04f449a7a78f59d38">
+        <source>This ISO code already exists.You cannot create two countries with the same ISO code.</source>
+        <target>This ISO code already exists.You cannot create two countries with the same ISO code.</target>
+        <note>Context:
+File: controllers/admin/AdminCountriesController.php:409</note>
+      </trans-unit>
+      <trans-unit id="28064049c0d480c2fdeafd456977da8d">
+        <source>Invalid address layout %s</source>
+        <target>Invalid address layout %s</target>
+        <note>Context:
+File: controllers/admin/AdminCountriesController.php:444</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCurrenciesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8246d0c794e7db090587c4797b2a234f">
+        <source>You cannot delete the default currency</source>
+        <target>You cannot delete the default currency</target>
+        <note>Context:
+File: controllers/admin/AdminCurrenciesController.php:179</note>
+      </trans-unit>
+      <trans-unit id="7c77e53206853cb381e91e037554faa3">
+        <source>You cannot disable the default currency</source>
+        <target>You cannot disable the default currency</target>
+        <note>Context:
+File: controllers/admin/AdminCurrenciesController.php:195</note>
+      </trans-unit>
+      <trans-unit id="9289665482a13fc74be054caef49b63e">
+        <source>This currency already exists.</source>
+        <target>This currency already exists.</target>
+        <note>Context:
+File: controllers/admin/AdminCurrenciesController.php:282</note>
+      </trans-unit>
+      <trans-unit id="1a93d2c04e8276471b3c198d1ad95098">
+        <source>The currency conversion rate cannot be equal to 0.</source>
+        <target>The currency conversion rate cannot be equal to 0.</target>
+        <note>Context:
+File: controllers/admin/AdminCurrenciesController.php:285</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminGeolocationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7e093dcb7a9f75c8124b2adc265c5302">
+        <source>The geolocation database is unavailable.</source>
+        <target>The geolocation database is unavailable.</target>
+        <note>Context:
+File: controllers/admin/AdminGeolocationController.php:94</note>
+      </trans-unit>
+      <trans-unit id="493ce56d58c4880dc32df56f12585a23">
+        <source>Country selection is invalid.</source>
+        <target>Country selection is invalid.</target>
+        <note>Context:
+File: controllers/admin/AdminGeolocationController.php:99</note>
+      </trans-unit>
+      <trans-unit id="0861a67f819158c5690a1844d95390b4">
+        <source>Invalid whitelist</source>
+        <target>Invalid whitelist</target>
+        <note>Context:
+File: controllers/admin/AdminGeolocationController.php:110</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminLanguagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4749a02e87a1b69cc421bf97c5353956">
@@ -370,25 +420,31 @@ File: controllers/admin/AdminLanguagesController.php:554</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminGeolocationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7e093dcb7a9f75c8124b2adc265c5302">
-        <source>The geolocation database is unavailable.</source>
-        <target>The geolocation database is unavailable.</target>
+      <trans-unit id="53802fa30d7e83f77eccfa376c33e6fa">
+        <source>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</source>
+        <target>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</target>
         <note>Context:
-File: controllers/admin/AdminGeolocationController.php:94</note>
+File: controllers/admin/AdminLocalizationController.php:169</note>
       </trans-unit>
-      <trans-unit id="493ce56d58c4880dc32df56f12585a23">
-        <source>Country selection is invalid.</source>
-        <target>Country selection is invalid.</target>
+      <trans-unit id="34f9488516199cf18114f12369c71a59">
+        <source>Cannot load the localization pack.</source>
+        <target>Cannot load the localization pack.</target>
         <note>Context:
-File: controllers/admin/AdminGeolocationController.php:99</note>
+File: controllers/admin/AdminLocalizationController.php:190</note>
       </trans-unit>
-      <trans-unit id="0861a67f819158c5690a1844d95390b4">
-        <source>Invalid whitelist</source>
-        <target>Invalid whitelist</target>
+      <trans-unit id="ecb8838ce98cd126849fc083f0070bcd">
+        <source>Please select at least one item to import.</source>
+        <target>Please select at least one item to import.</target>
         <note>Context:
-File: controllers/admin/AdminGeolocationController.php:110</note>
+File: controllers/admin/AdminLocalizationController.php:194</note>
+      </trans-unit>
+      <trans-unit id="e2e54c736346106b561a0795cbaec1b1">
+        <source>%language% could not be loaded</source>
+        <target>%language% could not be loaded</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:264</note>
       </trans-unit>
     </body>
   </file>
@@ -421,6 +477,28 @@ File: controllers/admin/AdminTaxesController.php:151</note>
         <target>This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you'd like to continue?</target>
         <note>Context:
 File: controllers/admin/AdminTaxesController.php:176</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="45f3b37902e09b041709484fd75cab22">
+        <source>A tax rule already exists for this country/state with tax only behavior.</source>
+        <target>A tax rule already exists for this country/state with tax only behavior.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:436</note>
+      </trans-unit>
+      <trans-unit id="97d8fb4588d1efe9731fd4f82e071924">
+        <source>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</source>
+        <target>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:463</note>
+      </trans-unit>
+      <trans-unit id="2ff5095fd8289ccdaeca9c5e7d379fd2">
+        <source>An error has occurred: Cannot save the current tax rule.</source>
+        <target>An error has occurred: Cannot save the current tax rule.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:489</note>
       </trans-unit>
     </body>
   </file>
@@ -650,97 +728,19 @@ File: controllers/admin/AdminTranslationsController.php:3117</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCurrenciesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="8246d0c794e7db090587c4797b2a234f">
-        <source>You cannot delete the default currency</source>
-        <target>You cannot delete the default currency</target>
+      <trans-unit id="41ca3d8439f6e8beab7af312714e37f0">
+        <source>Translation successfully updated</source>
+        <target>Translation successfully updated</target>
         <note>Context:
-File: controllers/admin/AdminCurrenciesController.php:179</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:219</note>
       </trans-unit>
-      <trans-unit id="7c77e53206853cb381e91e037554faa3">
-        <source>You cannot disable the default currency</source>
-        <target>You cannot disable the default currency</target>
+      <trans-unit id="89f207396aadf538daf591675d55a436">
+        <source>Translation unsuccessfully updated</source>
+        <target>Translation unsuccessfully updated</target>
         <note>Context:
-File: controllers/admin/AdminCurrenciesController.php:195</note>
-      </trans-unit>
-      <trans-unit id="9289665482a13fc74be054caef49b63e">
-        <source>This currency already exists.</source>
-        <target>This currency already exists.</target>
-        <note>Context:
-File: controllers/admin/AdminCurrenciesController.php:282</note>
-      </trans-unit>
-      <trans-unit id="1a93d2c04e8276471b3c198d1ad95098">
-        <source>The currency conversion rate cannot be equal to 0.</source>
-        <target>The currency conversion rate cannot be equal to 0.</target>
-        <note>Context:
-File: controllers/admin/AdminCurrenciesController.php:285</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="45f3b37902e09b041709484fd75cab22">
-        <source>A tax rule already exists for this country/state with tax only behavior.</source>
-        <target>A tax rule already exists for this country/state with tax only behavior.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:436</note>
-      </trans-unit>
-      <trans-unit id="97d8fb4588d1efe9731fd4f82e071924">
-        <source>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</source>
-        <target>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:463</note>
-      </trans-unit>
-      <trans-unit id="2ff5095fd8289ccdaeca9c5e7d379fd2">
-        <source>An error has occurred: Cannot save the current tax rule.</source>
-        <target>An error has occurred: Cannot save the current tax rule.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:489</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="53802fa30d7e83f77eccfa376c33e6fa">
-        <source>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</source>
-        <target>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:169</note>
-      </trans-unit>
-      <trans-unit id="34f9488516199cf18114f12369c71a59">
-        <source>Cannot load the localization pack.</source>
-        <target>Cannot load the localization pack.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:190</note>
-      </trans-unit>
-      <trans-unit id="ecb8838ce98cd126849fc083f0070bcd">
-        <source>Please select at least one item to import.</source>
-        <target>Please select at least one item to import.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:194</note>
-      </trans-unit>
-      <trans-unit id="e2e54c736346106b561a0795cbaec1b1">
-        <source>%language% could not be loaded</source>
-        <target>%language% could not be loaded</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:264</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e07a23e507642ef04f449a7a78f59d38">
-        <source>This ISO code already exists.You cannot create two countries with the same ISO code.</source>
-        <target>This ISO code already exists.You cannot create two countries with the same ISO code.</target>
-        <note>Context:
-File: controllers/admin/AdminCountriesController.php:409</note>
-      </trans-unit>
-      <trans-unit id="28064049c0d480c2fdeafd456977da8d">
-        <source>Invalid address layout %s</source>
-        <target>Invalid address layout %s</target>
-        <note>Context:
-File: controllers/admin/AdminCountriesController.php:444</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:221</note>
       </trans-unit>
     </body>
   </file>

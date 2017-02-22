@@ -66,35 +66,19 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_co
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/notification_kpis.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="798f81115f0cdbe07b699cdf392e9408">
-        <source>%nbModules% modules to configure</source>
-        <target>%nbModules% modules to configure</target>
+      <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
+        <source>Discover</source>
+        <target>Discover</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/notification_kpis.html.twig:31</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig:38</note>
       </trans-unit>
-      <trans-unit id="34c81422df0c92bb4d72f8629cc53f03">
-        <source>%nbModules% modules to update</source>
-        <target>%nbModules% modules to update</target>
+      <trans-unit id="90406afefae30826692e7f7480f7467c">
+        <source>Toggle Dropdown</source>
+        <target>Toggle Dropdown</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/notification_kpis.html.twig:36</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1f39a37212f03c5976e447cb62975024">
-        <source>Modules to configure</source>
-        <target>Modules to configure</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:55</note>
-      </trans-unit>
-      <trans-unit id="0c81f6a8e4b7b1d0a812d7285289f17d">
-        <source>Modules to update</source>
-        <target>Modules to update</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:65</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig:53</note>
       </trans-unit>
     </body>
   </file>
@@ -150,41 +134,55 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_manage_installed.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2693dd71600631eed47725291fe5da19">
         <source>v%version% - by %author%</source>
         <target>v%version% - by %author%</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid.html.twig:65</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_manage_installed.html.twig:34</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
         <source>Read More</source>
         <target>Read More</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid.html.twig:80</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig:82</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid_addons.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list_addons.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="24a25a6b874647087c51ea00b7992def">
         <source>Exit to PrestaShop Addons Marketplace</source>
         <target>Exit to PrestaShop Addons Marketplace</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid_addons.html.twig:28</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list_addons.html.twig:29</note>
       </trans-unit>
       <trans-unit id="754475030b0733378b9347e8f9da8bf9">
         <source>See all results for your search on</source>
         <target>See all results for your search on</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid_addons.html.twig:30</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list_addons.html.twig:31</note>
       </trans-unit>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
         <source>PrestaShop Addons Marketplace</source>
         <target>PrestaShop Addons Marketplace</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid_addons.html.twig:31</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list_addons.html.twig:32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a6a2a55bea8760389dfca77132905b7c">
+        <source>All Categories</source>
+        <target>All Categories</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig:38</note>
       </trans-unit>
     </body>
   </file>
@@ -207,40 +205,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_status
         <target>Disabled Modules</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_status.html.twig:45</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9adfc354d13f70ca8172da3cd2d9c06e">
-        <source>%nbModules% modules and services selected for you</source>
-        <target>%nbModules% modules and services selected for you</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:29</note>
-      </trans-unit>
-      <trans-unit id="6ff9dd0d34f65181173c1e4bc39939de">
-        <source>Selection</source>
-        <target>Selection</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:31</note>
-      </trans-unit>
-      <trans-unit id="3d7c1883e8f497290c2aafa2086f49ff">
-        <source>Increasing Price</source>
-        <target>Increasing Price</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:45</note>
-      </trans-unit>
-      <trans-unit id="8e7cce37e14aea45d6d88e8c4aaa1b98">
-        <source>Decreasing Price</source>
-        <target>Decreasing Price</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:46</note>
-      </trans-unit>
-      <trans-unit id="e22269bb51f9f2394e148716babbafbb">
-        <source>Popularity</source>
-        <target>Popularity</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:47</note>
       </trans-unit>
     </body>
   </file>
@@ -306,29 +270,65 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_b
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a6a2a55bea8760389dfca77132905b7c">
-        <source>All Categories</source>
-        <target>All Categories</target>
+      <trans-unit id="798f81115f0cdbe07b699cdf392e9408">
+        <source>%nbModules% modules to configure</source>
+        <target>%nbModules% modules to configure</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig:38</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:53</note>
+      </trans-unit>
+      <trans-unit id="34c81422df0c92bb4d72f8629cc53f03">
+        <source>%nbModules% modules to update</source>
+        <target>%nbModules% modules to update</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:63</note>
+      </trans-unit>
+      <trans-unit id="1f39a37212f03c5976e447cb62975024">
+        <source>Modules to configure</source>
+        <target>Modules to configure</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:55</note>
+      </trans-unit>
+      <trans-unit id="0c81f6a8e4b7b1d0a812d7285289f17d">
+        <source>Modules to update</source>
+        <target>Modules to update</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:65</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
-        <source>Discover</source>
-        <target>Discover</target>
+      <trans-unit id="9adfc354d13f70ca8172da3cd2d9c06e">
+        <source>%nbModules% modules and services selected for you</source>
+        <target>%nbModules% modules and services selected for you</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig:38</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:29</note>
       </trans-unit>
-      <trans-unit id="90406afefae30826692e7f7480f7467c">
-        <source>Toggle Dropdown</source>
-        <target>Toggle Dropdown</target>
+      <trans-unit id="6ff9dd0d34f65181173c1e4bc39939de">
+        <source>Selection</source>
+        <target>Selection</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig:53</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:31</note>
+      </trans-unit>
+      <trans-unit id="3d7c1883e8f497290c2aafa2086f49ff">
+        <source>Increasing Price</source>
+        <target>Increasing Price</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:45</note>
+      </trans-unit>
+      <trans-unit id="8e7cce37e14aea45d6d88e8c4aaa1b98">
+        <source>Decreasing Price</source>
+        <target>Decreasing Price</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:46</note>
+      </trans-unit>
+      <trans-unit id="e22269bb51f9f2394e148716babbafbb">
+        <source>Popularity</source>
+        <target>Popularity</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:47</note>
       </trans-unit>
     </body>
   </file>

@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminPaymentController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c2aa74ac66698f48002031386e2d8776">
+        <source>Active payment</source>
+        <target>Active payment</target>
+        <note>Context:
+File: controllers/admin/AdminPaymentController.php:128</note>
+      </trans-unit>
+      <trans-unit id="b89c0bf4a33aa644189880a46ac301fd">
+        <source>Recommended payment gateways</source>
+        <target>Recommended payment gateways</target>
+        <note>Context:
+File: controllers/admin/AdminPaymentController.php:133</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminPaymentPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b52a626dee6ab468117342c9292a45b6">
@@ -31,22 +47,6 @@ File: controllers/admin/AdminPaymentPreferencesController.php:255</note>
         <target>Carrier restrictions</target>
         <note>Context:
 File: controllers/admin/AdminPaymentPreferencesController.php:262</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminPaymentController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c2aa74ac66698f48002031386e2d8776">
-        <source>Active payment</source>
-        <target>Active payment</target>
-        <note>Context:
-File: controllers/admin/AdminPaymentController.php:128</note>
-      </trans-unit>
-      <trans-unit id="b89c0bf4a33aa644189880a46ac301fd">
-        <source>Recommended payment gateways</source>
-        <target>Recommended payment gateways</target>
-        <note>Context:
-File: controllers/admin/AdminPaymentController.php:133</note>
       </trans-unit>
     </body>
   </file>

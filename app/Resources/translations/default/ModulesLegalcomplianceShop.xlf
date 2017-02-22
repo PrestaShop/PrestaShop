@@ -44,6 +44,18 @@ File: modules/ps_legalcompliance/ps_legalcompliance.php:641</note>
         <note>Context:
 File: modules/ps_legalcompliance/ps_legalcompliance.php:642</note>
       </trans-unit>
+      <trans-unit id="60657eaf863277872e2c9a2d31423842">
+        <source>I agree to the [terms of service] and [revocation terms] and will adhere to them unconditionally.</source>
+        <target>I agree to the [terms of service] and [revocation terms] and will adhere to them unconditionally.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:802</note>
+      </trans-unit>
+      <trans-unit id="6f06a13b9608ee5f2da343a3ca049f31">
+        <source>[1]For digital goods:[/1] I want immediate access to the digital content and I acknowledge that thereby I lose my right to cancel once the service has begun.[2][1]For services:[/1] I agree to the starting of the service and I acknowledge that I lose my right to cancel once the service has been fully performed.</source>
+        <target>[1]For digital goods:[/1] I want immediate access to the digital content and I acknowledge that thereby I lose my right to cancel once the service has begun.[2][1]For services:[/1] I agree to the starting of the service and I acknowledge that I lose my right to cancel once the service has been fully performed.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:817</note>
+      </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
@@ -61,6 +73,16 @@ File: modules/ps_legalcompliance/ps_legalcompliance.php:911</note>
         <target>Shipping excluded</target>
         <note>Context:
 File: modules/ps_legalcompliance/ps_legalcompliance.php:936</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6af90b162bd8ab1c547c76492d8a2380">
+        <source>(Under conditions)</source>
+        <target>(Under conditions)</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl:27</note>
       </trans-unit>
     </body>
   </file>
@@ -107,16 +129,6 @@ File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.
         <target>Information</target>
         <note>Context:
 File: modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl:27</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6af90b162bd8ab1c547c76492d8a2380">
-        <source>(Under conditions)</source>
-        <target>(Under conditions)</target>
-        <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl:27</note>
       </trans-unit>
     </body>
   </file>

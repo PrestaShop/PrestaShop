@@ -48,14 +48,76 @@ File: classes/order/OrderHistory.php:322</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminAddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1c623b291d95f4f1b1d0c03d0dc0ffa1">
+        <source>This email address is not registered.</source>
+        <target>This email address is not registered.</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:350</note>
+      </trans-unit>
+      <trans-unit id="a58058b92c1584b1bdc413ac3d2e6699">
+        <source>This customer ID is not recognized.</source>
+        <target>This customer ID is not recognized.</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:357</note>
+      </trans-unit>
+      <trans-unit id="02c1c5ece60602356e41d407a81cb1fe">
+        <source>This email address is not valid. Please use an address like bob@example.com.</source>
+        <target>This email address is not valid. Please use an address like bob@example.com.</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:360</note>
+      </trans-unit>
+      <trans-unit id="7c77177e0084c27161d63e7de535a1c6">
+        <source>The identification number is incorrect or has already been used.</source>
+        <target>The identification number is incorrect or has already been used.</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:363</note>
+      </trans-unit>
+      <trans-unit id="27ac5352d430b82c99157e2dc13a96e3">
+        <source>You have selected a state for a country that does not contain states.</source>
+        <target>You have selected a state for a country that does not contain states.</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:371</note>
+      </trans-unit>
+      <trans-unit id="86de674d7405670db52e79ec1665b0b1">
+        <source>An address located in a country containing states must have a state selected.</source>
+        <target>An address located in a country containing states must have a state selected.</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:376</note>
+      </trans-unit>
+      <trans-unit id="03c123f62aad70a9533f5049cf3af959">
+        <source>An error occurred while linking this address to its order.</source>
+        <target>An error occurred while linking this address to its order.</target>
+        <note>Context:
+File: controllers/admin/AdminAddressesController.php:416</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
+        <source>You must add a minimum quantity of %d</source>
+        <target>You must add a minimum quantity of %d</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:483</note>
+      </trans-unit>
+      <trans-unit id="996a45aa702d041706f6388d54c53b12">
+        <source>Invalid order</source>
+        <target>Invalid order</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:563</note>
+      </trans-unit>
+      <trans-unit id="5125d7cea2749d85f13a55a023a56c71">
+        <source>The order cannot be renewed.</source>
+        <target>The order cannot be renewed.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:570</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="14542f5997c4a02d4276da364657f501">
-        <source>Direct link</source>
-        <target>Direct link</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:794</note>
-      </trans-unit>
       <trans-unit id="df46bf546fc69b1cda65afe1001b73fc">
         <source>You have to select a shop if you want to create a customer.</source>
         <target>You have to select a shop if you want to create a customer.</target>
@@ -118,6 +180,16 @@ File: controllers/admin/AdminCustomersController.php:1001</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/statsorigin/statsorigin.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="14542f5997c4a02d4276da364657f501">
+        <source>Direct link</source>
+        <target>Direct link</target>
+        <note>Context:
+File: modules/statsorigin/statsorigin.php:57</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9e2dcf2660b82a0204f668565417010a">
@@ -125,78 +197,6 @@ File: controllers/admin/AdminCustomersController.php:1001</note>
         <target>An account already exists for this email address:</target>
         <note>Context:
 File: controllers/admin/AdminEmployeesController.php:433</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminAddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1c623b291d95f4f1b1d0c03d0dc0ffa1">
-        <source>This email address is not registered.</source>
-        <target>This email address is not registered.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:350</note>
-      </trans-unit>
-      <trans-unit id="a58058b92c1584b1bdc413ac3d2e6699">
-        <source>This customer ID is not recognized.</source>
-        <target>This customer ID is not recognized.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:357</note>
-      </trans-unit>
-      <trans-unit id="02c1c5ece60602356e41d407a81cb1fe">
-        <source>This email address is not valid. Please use an address like bob@example.com.</source>
-        <target>This email address is not valid. Please use an address like bob@example.com.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:360</note>
-      </trans-unit>
-      <trans-unit id="7c77177e0084c27161d63e7de535a1c6">
-        <source>The identification number is incorrect or has already been used.</source>
-        <target>The identification number is incorrect or has already been used.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:363</note>
-      </trans-unit>
-      <trans-unit id="27ac5352d430b82c99157e2dc13a96e3">
-        <source>You have selected a state for a country that does not contain states.</source>
-        <target>You have selected a state for a country that does not contain states.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:371</note>
-      </trans-unit>
-      <trans-unit id="86de674d7405670db52e79ec1665b0b1">
-        <source>An address located in a country containing states must have a state selected.</source>
-        <target>An address located in a country containing states must have a state selected.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:376</note>
-      </trans-unit>
-      <trans-unit id="03c123f62aad70a9533f5049cf3af959">
-        <source>An error occurred while linking this address to its order.</source>
-        <target>An error occurred while linking this address to its order.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:416</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="35af021c4bdb02cad86c917022e053da">
-        <source>An error has occurred: Can't save the current order's return status.</source>
-        <target>An error has occurred: Can't save the current order's return status.</target>
-        <note>Context:
-File: controllers/admin/AdminStatusesController.php:555</note>
-      </trans-unit>
-      <trans-unit id="ca215ff3d829e3a6a9c0c672987d5959">
-        <source>An error has occurred: Can't delete the current order's return status.</source>
-        <target>An error has occurred: Can't delete the current order's return status.</target>
-        <note>Context:
-File: controllers/admin/AdminStatusesController.php:575</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminDeliverySlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3ffd1b6c5e4ab9c98104475480477307">
-        <source>No delivery slip was found for this period.</source>
-        <target>No delivery slip was found for this period.</target>
-        <note>Context:
-File: controllers/admin/AdminDeliverySlipController.php:116</note>
       </trans-unit>
     </body>
   </file>
@@ -234,25 +234,63 @@ File: controllers/admin/AdminCustomerThreadsController.php:1157</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminDeliverySlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5844cf5e9f752e6eb7cc1166a3022183">
-        <source>No order was found with this ID:</source>
-        <target>No order was found with this ID:</target>
+      <trans-unit id="3ffd1b6c5e4ab9c98104475480477307">
+        <source>No delivery slip was found for this period.</source>
+        <target>No delivery slip was found for this period.</target>
         <note>Context:
-File: controllers/admin/AdminSearchController.php:124</note>
+File: controllers/admin/AdminDeliverySlipController.php:116</note>
       </trans-unit>
-      <trans-unit id="3b27bc623d860beacbe5d5cde18fdec0">
-        <source>No invoice was found with this ID:</source>
-        <target>No invoice was found with this ID:</target>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9178a1a9fc82617864593a784163d86a">
+        <source>Invalid "From" date</source>
+        <target>Invalid "From" date</target>
         <note>Context:
-File: controllers/admin/AdminSearchController.php:134</note>
+File: controllers/admin/AdminSlipController.php:148</note>
       </trans-unit>
-      <trans-unit id="ec79affe41245b47969a2451211b263a">
-        <source>No cart was found with this ID:</source>
-        <target>No cart was found with this ID:</target>
+      <trans-unit id="915bd2c5cf6e420095a64d309e443849">
+        <source>Invalid "To" date</source>
+        <target>Invalid "To" date</target>
         <note>Context:
-File: controllers/admin/AdminSearchController.php:142</note>
+File: controllers/admin/AdminSlipController.php:151</note>
+      </trans-unit>
+      <trans-unit id="cdbb58c797028e137b1ebf1dcc9efe92">
+        <source>No order slips were found for this period.</source>
+        <target>No order slips were found for this period.</target>
+        <note>Context:
+File: controllers/admin/AdminSlipController.php:158</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminInvoicesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f775c161c8662af8f70a128ad5779036">
+        <source>No invoice has been found for this period.</source>
+        <target>No invoice has been found for this period.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:270</note>
+      </trans-unit>
+      <trans-unit id="eb9173ba78d315a23d8978a2b772bd9a">
+        <source>You must select at least one order status.</source>
+        <target>You must select at least one order status.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:274</note>
+      </trans-unit>
+      <trans-unit id="7af95cd9cbe318a15ef10e5e30000501">
+        <source>No invoice has been found for this status.</source>
+        <target>No invoice has been found for this status.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:282</note>
+      </trans-unit>
+      <trans-unit id="599b433088f71a8712de225a693ce20e">
+        <source>Invalid invoice number.</source>
+        <target>Invalid invoice number.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:292</note>
       </trans-unit>
     </body>
   </file>
@@ -808,75 +846,51 @@ File: controllers/admin/AdminReturnController.php:281</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminInvoicesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9178a1a9fc82617864593a784163d86a">
-        <source>Invalid "From" date</source>
-        <target>Invalid "From" date</target>
+      <trans-unit id="5844cf5e9f752e6eb7cc1166a3022183">
+        <source>No order was found with this ID:</source>
+        <target>No order was found with this ID:</target>
         <note>Context:
-File: controllers/admin/AdminInvoicesController.php:258</note>
+File: controllers/admin/AdminSearchController.php:124</note>
       </trans-unit>
-      <trans-unit id="915bd2c5cf6e420095a64d309e443849">
-        <source>Invalid "To" date</source>
-        <target>Invalid "To" date</target>
+      <trans-unit id="3b27bc623d860beacbe5d5cde18fdec0">
+        <source>No invoice was found with this ID:</source>
+        <target>No invoice was found with this ID:</target>
         <note>Context:
-File: controllers/admin/AdminInvoicesController.php:262</note>
+File: controllers/admin/AdminSearchController.php:134</note>
       </trans-unit>
-      <trans-unit id="f775c161c8662af8f70a128ad5779036">
-        <source>No invoice has been found for this period.</source>
-        <target>No invoice has been found for this period.</target>
+      <trans-unit id="ec79affe41245b47969a2451211b263a">
+        <source>No cart was found with this ID:</source>
+        <target>No cart was found with this ID:</target>
         <note>Context:
-File: controllers/admin/AdminInvoicesController.php:270</note>
-      </trans-unit>
-      <trans-unit id="eb9173ba78d315a23d8978a2b772bd9a">
-        <source>You must select at least one order status.</source>
-        <target>You must select at least one order status.</target>
-        <note>Context:
-File: controllers/admin/AdminInvoicesController.php:274</note>
-      </trans-unit>
-      <trans-unit id="7af95cd9cbe318a15ef10e5e30000501">
-        <source>No invoice has been found for this status.</source>
-        <target>No invoice has been found for this status.</target>
-        <note>Context:
-File: controllers/admin/AdminInvoicesController.php:282</note>
-      </trans-unit>
-      <trans-unit id="599b433088f71a8712de225a693ce20e">
-        <source>Invalid invoice number.</source>
-        <target>Invalid invoice number.</target>
-        <note>Context:
-File: controllers/admin/AdminInvoicesController.php:292</note>
+File: controllers/admin/AdminSearchController.php:142</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="cdbb58c797028e137b1ebf1dcc9efe92">
-        <source>No order slips were found for this period.</source>
-        <target>No order slips were found for this period.</target>
+      <trans-unit id="35af021c4bdb02cad86c917022e053da">
+        <source>An error has occurred: Can't save the current order's return status.</source>
+        <target>An error has occurred: Can't save the current order's return status.</target>
         <note>Context:
-File: controllers/admin/AdminSlipController.php:158</note>
+File: controllers/admin/AdminStatusesController.php:555</note>
+      </trans-unit>
+      <trans-unit id="ca215ff3d829e3a6a9c0c672987d5959">
+        <source>An error has occurred: Can't delete the current order's return status.</source>
+        <target>An error has occurred: Can't delete the current order's return status.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:575</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
-        <source>You must add a minimum quantity of %d</source>
-        <target>You must add a minimum quantity of %d</target>
+      <trans-unit id="2e66149518ba8dc45a9e51c4f153cebf">
+        <source><![CDATA[Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings]]></source>
+        <target><![CDATA[Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings]]></target>
         <note>Context:
-File: controllers/admin/AdminCartsController.php:483</note>
-      </trans-unit>
-      <trans-unit id="996a45aa702d041706f6388d54c53b12">
-        <source>Invalid order</source>
-        <target>Invalid order</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:563</note>
-      </trans-unit>
-      <trans-unit id="5125d7cea2749d85f13a55a023a56c71">
-        <source>The order cannot be renewed.</source>
-        <target>The order cannot be renewed.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:570</note>
+File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:101</note>
       </trans-unit>
     </body>
   </file>
@@ -893,16 +907,6 @@ File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl
         <target>For this customer group, prices are displayed as: [1]%tax_method%[/1]</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:989</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2e66149518ba8dc45a9e51c4f153cebf">
-        <source><![CDATA[Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings]]></source>
-        <target><![CDATA[Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings]]></target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:101</note>
       </trans-unit>
     </body>
   </file>

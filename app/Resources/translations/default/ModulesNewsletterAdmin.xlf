@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/newsletter/newsletter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
+        <source>Newsletter</source>
+        <target>Newsletter</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:46</note>
+      </trans-unit>
+      <trans-unit id="804a924e464fd21ed92f820224c4091d">
+        <source>Generates a .CSV file for mass mailings</source>
+        <target>Generates a .CSV file for mass mailings</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:47</note>
+      </trans-unit>
+      <trans-unit id="c3987e4cac14a8456515f0d200da04ee">
+        <source>All countries</source>
+        <target>All countries</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:235
+ Comment: ...formatting array</note>
+      </trans-unit>
+      <trans-unit id="5353d769bec6eb3977ef36a3d8021682">
+        <source>Customers' country</source>
+        <target>Customers' country</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:282</note>
+      </trans-unit>
+      <trans-unit id="516cdf157ed8ef01602e6f23b7667c69">
+        <source>Filter customers' country.</source>
+        <target>Filter customers' country.</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:283</note>
+      </trans-unit>
+      <trans-unit id="2198f293f5e1e95dddeff819fbca0975">
+        <source>Newsletter subscribers</source>
+        <target>Newsletter subscribers</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:295</note>
+      </trans-unit>
+      <trans-unit id="99006a61d48499231e1be92241cf772a">
+        <source>Filter newsletter subscribers.</source>
+        <target>Filter newsletter subscribers.</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:296</note>
+      </trans-unit>
+      <trans-unit id="7e3a51a56ddd2846e21c33f05e0aea6f">
+        <source>All customers</source>
+        <target>All customers</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:320</note>
+      </trans-unit>
+      <trans-unit id="39f7a3e2b56e9bfd753ba6325533a127">
+        <source>Subscribers</source>
+        <target>Subscribers</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:321</note>
+      </trans-unit>
+      <trans-unit id="011d8c5d94f729f013963d856cd78745">
+        <source>Non-subscribers</source>
+        <target>Non-subscribers</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:322</note>
+      </trans-unit>
+      <trans-unit id="6395c19dc5a1cef9ca125b9736358dc7">
+        <source>Opt-in subscribers</source>
+        <target>Opt-in subscribers</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:313</note>
+      </trans-unit>
+      <trans-unit id="3136b84457870341f29f741f7a07d325">
+        <source>Filter opt-in subscribers.</source>
+        <target>Filter opt-in subscribers.</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:314</note>
+      </trans-unit>
+      <trans-unit id="82e5e0bc0f9c776c98253d569c111c0f">
+        <source>No customers found with these filters!</source>
+        <target>No customers found with these filters!</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:114</note>
+      </trans-unit>
+      <trans-unit id="644ecc2486a059ca16b001a77909bf40">
+        <source>The .CSV file has been successfully exported: %d customers found.</source>
+        <target>The .CSV file has been successfully exported: %d customers found.</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:123</note>
+      </trans-unit>
+      <trans-unit id="48e3d5f66961b621c78f709afcd7d437">
+        <source>Download the file</source>
+        <target>Download the file</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:125</note>
+      </trans-unit>
+      <trans-unit id="dca37b874cf34bd5ebcf1c2fdc59a8b4">
+        <source>WARNING: When opening this .csv file with Excel, choose UTF-8 encoding to avoid strange characters.</source>
+        <target>WARNING: When opening this .csv file with Excel, choose UTF-8 encoding to avoid strange characters.</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:130</note>
+      </trans-unit>
+      <trans-unit id="b40866b115d74009183e06fc86b5c014">
+        <source>Error: Write access limited</source>
+        <target>Error: Write access limited</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:135</note>
+      </trans-unit>
+      <trans-unit id="81573e0ea79138f02fd2cee94786d7e9">
+        <source>Error: cannot write</source>
+        <target>Error: cannot write</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:215</note>
+      </trans-unit>
+      <trans-unit id="73059f9530a1a37563150df4dea4bb70">
+        <source>All Subscribers</source>
+        <target>All Subscribers</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:302</note>
+      </trans-unit>
+      <trans-unit id="a307579714b75082f3f8734971b125cd">
+        <source>Subscribers with account</source>
+        <target>Subscribers with account</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:303</note>
+      </trans-unit>
+      <trans-unit id="d0da5609e4aebc5d532de97511a5a34a">
+        <source>Subscribers without account</source>
+        <target>Subscribers without account</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:304</note>
+      </trans-unit>
+      <trans-unit id="4713ef5f2d6fc1e8f088c850e696a04b">
+        <source>Export customers</source>
+        <target>Export customers</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:276</note>
+      </trans-unit>
+      <trans-unit id="dbb392a2dc9b38722e69f6032faea73e">
+        <source>Export .CSV file</source>
+        <target>Export .CSV file</target>
+        <note>Context:
+File: modules/newsletter/newsletter.php:334</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
