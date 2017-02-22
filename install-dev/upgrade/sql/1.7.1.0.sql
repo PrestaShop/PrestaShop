@@ -73,5 +73,5 @@ DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_META_KEYWORDS');
 
 INSERT INTO `PREFIX_operating_system` (`name`) VALUES ('Windows 8.1'), ('Windows 10');
 
-ALTER TABLE `ps_shop` CHANGE `id_shop_group` `id_shop_group` INT(11) NOT NULL;
-ALTER TABLE `ps_attribute` CHANGE `id_attribute_group` `id_attribute_group` INT(11) NOT NULL;
+ALTER TABLE `PREFIX_shop` CHANGE `id_shop_group` `id_shop_group` INT(11) NOT NULL;
+ALTER TABLE `PREFIX_attribute` CHANGE `id_attribute_group` `id_attribute_group` INT(11) NOT NULL;
