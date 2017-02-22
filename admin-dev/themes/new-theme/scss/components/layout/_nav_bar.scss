@@ -55,6 +55,55 @@
     .main-menu {
       margin-top: rem(10px);
     }
+    .items-list {
+      padding-left: 0;
+      a:focus {
+          background-color: transparent;
+      }
+      li:not(:first-child) {
+        background-color: white;
+        border-bottom: $gray-light 1px solid;
+        &.group a{
+          padding: rem(15px) rem(30px);
+          font-weight: bold;
+        }
+        &.shop {
+          padding: rem(15px) rem(15px) rem(15px) rem(40px);
+          a {
+              display: inline-block;
+              width: auto;
+              &.link-shop {
+                  float: right;
+                  .material-icons {
+                      font-size: rem(20px);
+                      color: $gray-medium;
+                  }
+              }
+          }
+        }
+      }
+      li:nth-child(2) a {
+        color: $brand-primary;
+        text-transform: uppercase;
+        font-size: rem(15px);
+        padding: rem(15px) rem(20px);
+      }
+      li:first-child .dropdown-item {
+        color: $brand-primary;
+        text-transform: uppercase;
+        font-size: rem(16px);
+        text-align: center;
+        margin-bottom: rem(15px);
+        &::after {
+          font-family: 'Material Icons';
+          content: "\E313";
+          font-size: rem(20px);
+          line-height: rem(22px);
+          margin-left: rem(10px);
+          vertical-align: bottom;
+        }
+      }
+    }
   }
 }
 

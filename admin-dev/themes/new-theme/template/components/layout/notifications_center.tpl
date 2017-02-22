@@ -25,7 +25,7 @@
 <div id="notif" class="notification-center dropdown">
   <div class="notification js-notification dropdown-toggle">
     <i class="material-icons">notifications_none</i>
-    <span id="notifications-total" class="count">0</span>
+    <span id="notifications-total" class="count hide">0</span>
   </div>
   <div class="dropdown-menu dropdown-menu-right js-notifs_dropdown">
     <div class="notifications">

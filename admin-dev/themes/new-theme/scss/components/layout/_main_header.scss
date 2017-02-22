@@ -4,10 +4,12 @@
   background: $white;
   height: $size-header-height;
   width: 100%;
-  .mobile & {
+  @include media-breakpoint-down(sm) {
     box-shadow:rgba(black,0.7) 0 0 10px;
     padding: rem(10px) 0;
     height: $size-header-height + 1;
+  }
+  .mobile & {
     > .component {
       margin-right: 0;
     }
