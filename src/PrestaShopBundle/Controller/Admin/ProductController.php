@@ -563,6 +563,19 @@ class ProductController extends FrameworkBundleAdminController
             ->getRepository('PrestaShopBundle:Attribute')
             ->findByLangAndShop(1, 1);
 
+        $drawerModules = array();
+        foreach ((array)\Hook::exec('displayProductPageDrawer', array('product' => $product), null, true) as $module) {
+            if (!empty($module)) {
+                if (isset($module[0])) {
+                    foreach ($module as $item) {
+                        $drawerModules[] = $item;
+                    }
+                } else {
+                    $drawerModules[] = $module;
+                }
+            }
+        }
+
         return array(
             'form' => $form->createView(),
             'formCombinations' => $formBulkCombinations->createView(),
@@ -586,6 +599,7 @@ class ProductController extends FrameworkBundleAdminController
             'max_upload_size' => \Tools::formatBytes(UploadedFile::getMaxFilesize()),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
             'editable' => $this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_'),
+            'drawerModules' => $drawerModules,
         );
     }
 
