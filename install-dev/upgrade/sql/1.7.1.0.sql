@@ -46,7 +46,7 @@ ALTER TABLE `PREFIX_product_shop` CHANGE `redirect_type` `redirect_type`
 ALTER TABLE `PREFIX_product` CHANGE `id_product_redirected` `id_type_redirected` INT(10) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_product_shop` CHANGE `id_product_redirected` `id_type_redirected` INT(10) NOT NULL DEFAULT '0';
 
-INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
+INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
   (NULL, 'filterCmsContent', 'Filter the content page', 'This hook is called just before fetching content page', '1'),
   (NULL, 'filterCmsCategoryContent', 'Filter the content page category', 'This hook is called just before fetching content page category', '1'),
   (NULL, 'filterProductContent', 'Filter the content page product', 'This hook is called just before fetching content page product', '1'),

@@ -730,7 +730,7 @@ $(document).ready(function()
 	}
 
 	$('select.chosen').each(function(k, item){
-		$(item).chosen({disable_search_threshold: 10, search_contains: true});
+		$(item).chosen({disable_search_threshold: 10, search_contains: true, width: '100%', });
 	});
 	// Apply chosen() when modal is loaded
 	$(document).on('shown.bs.modal', function (e) {
