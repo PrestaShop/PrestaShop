@@ -146,6 +146,7 @@ class CustomerFormatterCore implements FormFormatterInterface
         $format['email'] = (new FormField)
             ->setName('email')
             ->setType('email')
+            ->setMaxLength(128)
             ->setLabel(
                 $this->translator->trans(
                     'Email', [], 'Shop.Forms.Labels'
