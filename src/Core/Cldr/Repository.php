@@ -83,7 +83,7 @@ class Repository
         }
 
         $provider = new RunTimeProvider(
-            new FileProvider(new WebProvider, $this->cldrCacheFolder)
+            new FileProvider(new WebProvider('http://i18n.prestashop.com/cldr/json-full/'), $this->cldrCacheFolder)
         );
 
         //if contextLanguage is define, set locale/region from it
