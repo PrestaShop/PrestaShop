@@ -107,7 +107,6 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         $format['firstname'] = (new FormField)
             ->setName('firstname')
-            ->setMaxLength(255)
             ->setLabel(
                 $this->translator->trans(
                     'First name', [], 'Shop.Forms.Labels'
@@ -118,7 +117,6 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         $format['lastname'] = (new FormField)
             ->setName('lastname')
-            ->setMaxLength(255)
             ->setLabel(
                 $this->translator->trans(
                     'Last name', [], 'Shop.Forms.Labels'
@@ -146,7 +144,6 @@ class CustomerFormatterCore implements FormFormatterInterface
         $format['email'] = (new FormField)
             ->setName('email')
             ->setType('email')
-            ->setMaxLength(128)
             ->setLabel(
                 $this->translator->trans(
                     'Email', [], 'Shop.Forms.Labels'
