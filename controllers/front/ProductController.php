@@ -40,6 +40,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /** @var Category */
     protected $category;
 
+    protected $redirectionExtraExcludedKeys = ['id_product_attribute', 'rewrite'];
+
     /**
      * @var array
      */
@@ -50,8 +52,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function canonicalRedirection($canonical_url = '')
     {
-        $id_product_attribute = Tools::getValue('id_product_attribute');
         if (Validate::isLoadedObject($this->product)) {
+            if (!$this->product->hasCombinations()) {
+                unset($_GET['id_product_attribute']);
+            } else if (!Tools::getValue('id_product_attribute') || Tools::getValue('rewrite') !== $this->product->link_rewrite) {
+                $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
+            }
+            $id_product_attribute = Tools::getValue('id_product_attribute');
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -594,7 +601,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                 }
             }
-            
+
             // wash attributes list depending on available attributes depending on selected preceding attributes
             $current_selected_attributes = array();
             $count = 0;

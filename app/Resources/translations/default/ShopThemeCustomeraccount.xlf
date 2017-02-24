@@ -1,44 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_customeraccountlinks/ps_customeraccountlinks.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/my-account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f2fc7490cbdb0db5cd6f1a4e7edb0da1">
         <source>Your account</source>
         <target>Your account</target>
         <note>Context:
-File: modules/ps_customeraccountlinks/ps_customeraccountlinks.tpl:27</note>
+File: themes/StarterTheme/templates/customer/my-account.tpl:4</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a9e3d6296e9b194ee466230d8438935a">
-        <source>Receive offers from our partners</source>
-        <target>Receive offers from our partners</target>
-        <note>Context:
-File: classes/form/CustomerFormatter.php:203</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/my-account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="a82868319826fb092b73968e661b5b38">
         <source>Vouchers</source>
         <target>Vouchers</target>
         <note>Context:
 File: themes/StarterTheme/templates/customer/my-account.tpl:42</note>
-      </trans-unit>
-      <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
-        <source>Merchandise returns</source>
-        <target>Merchandise returns</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/my-account.tpl:48</note>
-      </trans-unit>
-      <trans-unit id="d1a365ea7809ae5831c6d9f86886630c">
-        <source>Credit slips</source>
-        <target>Credit slips</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/my-account.tpl:36</note>
       </trans-unit>
       <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
         <source>Information</source>
@@ -72,13 +46,13 @@ File: themes/StarterTheme/templates/customer/my-account.tpl:10</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/OrderSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/form/CustomerFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7a246d036e78038ce55487038118c419">
-        <source>#%06d</source>
-        <target>#%06d</target>
+      <trans-unit id="a9e3d6296e9b194ee466230d8438935a">
+        <source>Receive offers from our partners</source>
+        <target>Receive offers from our partners</target>
         <note>Context:
-File: controllers/front/OrderSlipController.php:67</note>
+File: classes/form/CustomerFormatter.php:203</note>
       </trans-unit>
     </body>
   </file>
@@ -101,6 +75,244 @@ File: themes/StarterTheme/templates/customer/history.tpl:8</note>
         <target>Details</target>
         <note>Context:
 File: themes/StarterTheme/templates/customer/history.tpl:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7a246d036e78038ce55487038118c419">
+        <source>#%06d</source>
+        <target>#%06d</target>
+        <note>Context:
+File: controllers/front/OrderSlipController.php:67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_customersignin/ps_customersignin.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4b877ba8588b19f1b278510bf2b57ebb">
+        <source>Log me out</source>
+        <target>Log me out</target>
+        <note>Context:
+File: modules/ps_customersignin/ps_customersignin.tpl:3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_customersignin/ps_customersignin.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2cbfb6731610056e1d0aaacde07096c1">
+        <source>View my customer account</source>
+        <target>View my customer account</target>
+        <note>Context:
+File: themes/classic/modules/ps_customersignin/ps_customersignin.tpl:15</note>
+      </trans-unit>
+      <trans-unit id="d4151a9a3959bdd43690735737034f27">
+        <source>Log in to your customer account</source>
+        <target>Log in to your customer account</target>
+        <note>Context:
+File: themes/classic/modules/ps_customersignin/ps_customersignin.tpl:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/checkout/_partials/steps/personal-information.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6280ed214163d6e214763ff970910cdc">
+        <source>Connected as [1]%firstname% %lastname%[/1].</source>
+        <target>Connected as [1]%firstname% %lastname%[/1].</target>
+        <note>Context:
+File: themes/classic/templates/checkout/_partials/steps/personal-information.tpl:11</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8e3ecabff428ab5465ab8feb928436e0">
+        <source>Not you? [1]Log out[/1]</source>
+        <target>Not you? [1]Log out[/1]</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl:13</note>
+      </trans-unit>
+      <trans-unit id="0fc5b0bad7e8ab38a2cdcadc05cb248f">
+        <source>Connected as %first_name% %last_name%.</source>
+        <target>Connected as %first_name% %last_name%.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl:6</note>
+      </trans-unit>
+      <trans-unit id="929c1ec3a80a6e8a557bad8985e63991">
+        <source>No account?</source>
+        <target>No account?</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/registration.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2fdfd506efea08144c0794c32ca8250a">
+        <source>Create an account</source>
+        <target>Create an account</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/registration.tpl:9</note>
+      </trans-unit>
+      <trans-unit id="21bdc5689c12595ae14298354d5550d5">
+        <source>Already have an account?</source>
+        <target>Already have an account?</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/registration.tpl:11</note>
+      </trans-unit>
+      <trans-unit id="54fc27e749c6998fb54cebc1a0879692">
+        <source>Log in instead!</source>
+        <target>Log in instead!</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/registration.tpl:11</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/password-infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
+        <source>Forgot your password?</source>
+        <target>Forgot your password?</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/password-infos.tpl:4</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/_partials/my-account-links.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a958dbb46713e59856c35f89e5092a5e">
+        <source>Back to your account</source>
+        <target>Back to your account</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/my-account-links.tpl:3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/_partials/order-detail-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fdfac28b5ad628f25649d9c2eb4fc62e">
+        <source>Returned</source>
+        <target>Returned</target>
+        <note>Context:
+File: themes/classic/templates/customer/_partials/order-detail-return.tpl:205</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3956298bcfc047e15b0e0d218492ce09">
+        <source>Merchandise return</source>
+        <target>Merchandise return</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:86</note>
+      </trans-unit>
+      <trans-unit id="bef8403608dc4cb3ade799f63dd4bf59">
+        <source>If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.</source>
+        <target>If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:87</note>
+      </trans-unit>
+      <trans-unit id="1af342a10e8238b722ba844facf5768b">
+        <source>Request a return</source>
+        <target>Request a return</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:101</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/_partials/order-messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="41de6d6cfb8953c021bbe4ba0701c8a1">
+        <source>Messages</source>
+        <target>Messages</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:3</note>
+      </trans-unit>
+      <trans-unit id="58b3d8603dffe8484e90c0ca371921ac">
+        <source>Add a message</source>
+        <target>Add a message</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="d93651d012e77dac5581b08db33195b2">
+        <source>If you would like to add a comment about your order, please write it in the field below.</source>
+        <target>If you would like to add a comment about your order, please write it in the field below.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/address.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f469203cd9de85e9583bae25f1cb0557">
+        <source>Update your address</source>
+        <target>Update your address</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/address.tpl:5</note>
+      </trans-unit>
+      <trans-unit id="393d8c6bc7a04264bd9523dc8c92b818">
+        <source>New address</source>
+        <target>New address</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/address.tpl:7</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3908e1afa0ff22fbf112aff3c5ba55c1">
+        <source>Your addresses</source>
+        <target>Your addresses</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/addresses.tpl:4</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/authentication.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="11f4b4ba23dc72ee5e86ff5a90bdde60">
+        <source>Log in to your account</source>
+        <target>Log in to your account</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/authentication.tpl:9</note>
+      </trans-unit>
+      <trans-unit id="952998528c20798fbd22b49d505a29d5">
+        <source>No account? Create one here</source>
+        <target>No account? Create one here</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/authentication.tpl:10</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/discount.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="70b77fea994d1bda0a46cb5f9c9275f3">
+        <source>Your vouchers</source>
+        <target>Your vouchers</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/discount.tpl:4</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/guest-login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6b10b52dc4d44e780e6e38073668be56">
+        <source>Guest Order Tracking</source>
+        <target>Guest Order Tracking</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/guest-login.tpl:4</note>
+      </trans-unit>
+      <trans-unit id="d2948a89e47a4ad7eb8412c1c260ea88">
+        <source>To track your order, please enter the following information:</source>
+        <target>To track your order, please enter the following information:</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/guest-login.tpl:11</note>
+      </trans-unit>
+      <trans-unit id="92dbb751eb9457441af82a53f3cfae54">
+        <source>For example: QIIXJXNUI or QIIXJXNUI#1</source>
+        <target>For example: QIIXJXNUI or QIIXJXNUI#1</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/guest-login.tpl:20</note>
       </trans-unit>
     </body>
   </file>
@@ -138,77 +350,145 @@ File: themes/StarterTheme/templates/customer/guest-tracking.tpl:22</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/customer/_partials/order-detail-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/identity.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="fdfac28b5ad628f25649d9c2eb4fc62e">
-        <source>Returned</source>
-        <target>Returned</target>
+      <trans-unit id="6335a00a08fde0fbb8f6d6630cdadd92">
+        <source>Your personal information</source>
+        <target>Your personal information</target>
         <note>Context:
-File: themes/classic/templates/customer/_partials/order-detail-return.tpl:205</note>
+File: themes/StarterTheme/templates/customer/identity.tpl:4</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/order-slip.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3956298bcfc047e15b0e0d218492ce09">
-        <source>Merchandise return</source>
-        <target>Merchandise return</target>
+      <trans-unit id="d1a365ea7809ae5831c6d9f86886630c">
+        <source>Credit slips</source>
+        <target>Credit slips</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:86</note>
+File: themes/StarterTheme/templates/customer/order-slip.tpl:4</note>
       </trans-unit>
-      <trans-unit id="bef8403608dc4cb3ade799f63dd4bf59">
-        <source>If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.</source>
-        <target>If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.</target>
+      <trans-unit id="a240fa27925a635b08dc28c9e4f9216d">
+        <source>Order</source>
+        <target>Order</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:87</note>
+File: themes/StarterTheme/templates/customer/order-slip.tpl:16</note>
       </trans-unit>
-      <trans-unit id="1af342a10e8238b722ba844facf5768b">
-        <source>Request a return</source>
-        <target>Request a return</target>
+      <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91">
+        <source>Date issued</source>
+        <target>Date issued</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:101</note>
+File: themes/StarterTheme/templates/customer/order-slip.tpl:17</note>
+      </trans-unit>
+      <trans-unit id="5996bd24bf8b740b8205e0d9fe1a0709">
+        <source>Credit slips you have received after canceled orders.</source>
+        <target>Credit slips you have received after canceled orders.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-slip.tpl:8</note>
+      </trans-unit>
+      <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
+        <source>Credit slip</source>
+        <target>Credit slip</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-slip.tpl:15</note>
+      </trans-unit>
+      <trans-unit id="3cb6ea48a427bf3a1687302e3b764c27">
+        <source>View credit slip</source>
+        <target>View credit slip</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-slip.tpl:18</note>
+      </trans-unit>
+      <trans-unit id="bcd1b68617759b1dfcff0403a6b5a8d1">
+        <source>PDF</source>
+        <target>PDF</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-slip.tpl:27</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/_partials/my-account-links.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/order-follow.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a958dbb46713e59856c35f89e5092a5e">
-        <source>Back to your account</source>
-        <target>Back to your account</target>
+      <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
+        <source>Merchandise returns</source>
+        <target>Merchandise returns</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/my-account-links.tpl:3</note>
+File: themes/StarterTheme/templates/customer/order-follow.tpl:4</note>
+      </trans-unit>
+      <trans-unit id="9cf9ab35a1b24314913bb739d25a0b36">
+        <source>Here is a list of pending merchandise returns</source>
+        <target>Here is a list of pending merchandise returns</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-follow.tpl:8</note>
+      </trans-unit>
+      <trans-unit id="988fd738de9c6d177440c5dcf69e73ce">
+        <source>Return</source>
+        <target>Return</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-follow.tpl:14</note>
+      </trans-unit>
+      <trans-unit id="d442cb92c3b031eceacbfe87605b9356">
+        <source>Package status</source>
+        <target>Package status</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-follow.tpl:16</note>
+      </trans-unit>
+      <trans-unit id="6d72e074fdface4ae892543d39434175">
+        <source>Returns form</source>
+        <target>Returns form</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-follow.tpl:18</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/_partials/order-messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="41de6d6cfb8953c021bbe4ba0701c8a1">
-        <source>Messages</source>
-        <target>Messages</target>
+      <trans-unit id="f5d74ea75357b5e139854c14f8e24fe3">
+        <source>Order details</source>
+        <target>Order details</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:3</note>
+File: themes/StarterTheme/templates/customer/order-detail.tpl:4</note>
       </trans-unit>
-      <trans-unit id="58b3d8603dffe8484e90c0ca371921ac">
-        <source>Add a message</source>
-        <target>Add a message</target>
+      <trans-unit id="674592d247a228106f4f0d9f81c0d92c">
+        <source>Order Reference %reference% - placed on %date%</source>
+        <target>Order Reference %reference% - placed on %date%</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:31</note>
+File: themes/StarterTheme/templates/customer/order-detail.tpl:12</note>
       </trans-unit>
-      <trans-unit id="d93651d012e77dac5581b08db33195b2">
-        <source>If you would like to add a comment about your order, please write it in the field below.</source>
-        <target>If you would like to add a comment about your order, please write it in the field below.</target>
+      <trans-unit id="e682495785e844d491378817aa34aa3f">
+        <source>Download your invoice as a PDF file.</source>
+        <target>Download your invoice as a PDF file.</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:32</note>
+File: themes/StarterTheme/templates/customer/order-detail.tpl:26</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/password-infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
-        <source>Forgot your password?</source>
-        <target>Forgot your password?</target>
+      <trans-unit id="755bb0834a77079fd1330b555b69e6bf">
+        <source>You have given permission to receive your order in recycled packaging.</source>
+        <target>You have given permission to receive your order in recycled packaging.</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/password-infos.tpl:4</note>
+File: themes/StarterTheme/templates/customer/order-detail.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="e14bc5cef02df7369b604ea3885adb96">
+        <source>You have requested gift wrapping for this order.</source>
+        <target>You have requested gift wrapping for this order.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
+        <source>Message</source>
+        <target>Message</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="46774573a61204e0aac6c4ab10247d3e">
+        <source>Follow your order's status step-by-step</source>
+        <target>Follow your order's status step-by-step</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="ced55d097872ab13bf177e8d31db396f">
+        <source>Click the following link to track the delivery of your order</source>
+        <target>Click the following link to track the delivery of your order</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:64</note>
       </trans-unit>
     </body>
   </file>
@@ -294,76 +574,6 @@ File: themes/StarterTheme/templates/customer/order-return.tpl:130</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/order-follow.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9cf9ab35a1b24314913bb739d25a0b36">
-        <source>Here is a list of pending merchandise returns</source>
-        <target>Here is a list of pending merchandise returns</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-follow.tpl:8</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/starterTheme/templates/customer/order-slip.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a240fa27925a635b08dc28c9e4f9216d">
-        <source>Order</source>
-        <target>Order</target>
-        <note>Context:
-File: themes/starterTheme/templates/customer/order-slip.tpl:16</note>
-      </trans-unit>
-      <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91">
-        <source>Date issued</source>
-        <target>Date issued</target>
-        <note>Context:
-File: themes/starterTheme/templates/customer/order-slip.tpl:17</note>
-      </trans-unit>
-      <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
-        <source>Credit slip</source>
-        <target>Credit slip</target>
-        <note>Context:
-File: themes/starterTheme/templates/customer/order-slip.tpl:15</note>
-      </trans-unit>
-      <trans-unit id="3cb6ea48a427bf3a1687302e3b764c27">
-        <source>View credit slip</source>
-        <target>View credit slip</target>
-        <note>Context:
-File: themes/starterTheme/templates/customer/order-slip.tpl:18</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/starterTheme/templates/customer/order-follow.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="988fd738de9c6d177440c5dcf69e73ce">
-        <source>Return</source>
-        <target>Return</target>
-        <note>Context:
-File: themes/starterTheme/templates/customer/order-follow.tpl:14</note>
-      </trans-unit>
-      <trans-unit id="d442cb92c3b031eceacbfe87605b9356">
-        <source>Package status</source>
-        <target>Package status</target>
-        <note>Context:
-File: themes/starterTheme/templates/customer/order-follow.tpl:16</note>
-      </trans-unit>
-      <trans-unit id="6d72e074fdface4ae892543d39434175">
-        <source>Returns form</source>
-        <target>Returns form</target>
-        <note>Context:
-File: themes/starterTheme/templates/customer/order-follow.tpl:18</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/order-slip.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5996bd24bf8b740b8205e0d9fe1a0709">
-        <source>Credit slips you have received after canceled orders.</source>
-        <target>Credit slips you have received after canceled orders.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-slip.tpl:8</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/StarterTheme/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f28d8a87d03470521d5a992312bfaed8">
@@ -371,76 +581,6 @@ File: themes/StarterTheme/templates/customer/order-slip.tpl:8</note>
         <target>Please enter the email address you used to register. You will receive a temporary link to reset your password.</target>
         <note>Context:
 File: themes/StarterTheme/templates/customer/password-email.tpl:14</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/address.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f469203cd9de85e9583bae25f1cb0557">
-        <source>Update your address</source>
-        <target>Update your address</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/address.tpl:5</note>
-      </trans-unit>
-      <trans-unit id="393d8c6bc7a04264bd9523dc8c92b818">
-        <source>New address</source>
-        <target>New address</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/address.tpl:7</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/registration.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2fdfd506efea08144c0794c32ca8250a">
-        <source>Create an account</source>
-        <target>Create an account</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/registration.tpl:9</note>
-      </trans-unit>
-      <trans-unit id="54fc27e749c6998fb54cebc1a0879692">
-        <source>Log in instead!</source>
-        <target>Log in instead!</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/registration.tpl:11</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="21bdc5689c12595ae14298354d5550d5">
-        <source>Already have an account?</source>
-        <target>Already have an account?</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl:29</note>
-      </trans-unit>
-      <trans-unit id="8e3ecabff428ab5465ab8feb928436e0">
-        <source>Not you? [1]Log out[/1]</source>
-        <target>Not you? [1]Log out[/1]</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl:13</note>
-      </trans-unit>
-      <trans-unit id="0fc5b0bad7e8ab38a2cdcadc05cb248f">
-        <source>Connected as %first_name% %last_name%.</source>
-        <target>Connected as %first_name% %last_name%.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl:6</note>
-      </trans-unit>
-      <trans-unit id="929c1ec3a80a6e8a557bad8985e63991">
-        <source>No account?</source>
-        <target>No account?</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl:24</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/identity.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6335a00a08fde0fbb8f6d6630cdadd92">
-        <source>Your personal information</source>
-        <target>Your personal information</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/identity.tpl:4</note>
       </trans-unit>
     </body>
   </file>
@@ -457,168 +597,6 @@ File: themes/StarterTheme/templates/customer/password-new.tpl:4</note>
         <target>Email address: %email%</target>
         <note>Context:
 File: themes/StarterTheme/templates/customer/password-new.tpl:17</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/addresses.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3908e1afa0ff22fbf112aff3c5ba55c1">
-        <source>Your addresses</source>
-        <target>Your addresses</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/addresses.tpl:4</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f5d74ea75357b5e139854c14f8e24fe3">
-        <source>Order details</source>
-        <target>Order details</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:4</note>
-      </trans-unit>
-      <trans-unit id="674592d247a228106f4f0d9f81c0d92c">
-        <source>Order Reference %reference% - placed on %date%</source>
-        <target>Order Reference %reference% - placed on %date%</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:12</note>
-      </trans-unit>
-      <trans-unit id="e682495785e844d491378817aa34aa3f">
-        <source>Download your invoice as a PDF file.</source>
-        <target>Download your invoice as a PDF file.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:26</note>
-      </trans-unit>
-      <trans-unit id="755bb0834a77079fd1330b555b69e6bf">
-        <source>You have given permission to receive your order in recycled packaging.</source>
-        <target>You have given permission to receive your order in recycled packaging.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:30</note>
-      </trans-unit>
-      <trans-unit id="e14bc5cef02df7369b604ea3885adb96">
-        <source>You have requested gift wrapping for this order.</source>
-        <target>You have requested gift wrapping for this order.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:34</note>
-      </trans-unit>
-      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
-        <source>Message</source>
-        <target>Message</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:35</note>
-      </trans-unit>
-      <trans-unit id="46774573a61204e0aac6c4ab10247d3e">
-        <source>Follow your order's status step-by-step</source>
-        <target>Follow your order's status step-by-step</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:42</note>
-      </trans-unit>
-      <trans-unit id="ced55d097872ab13bf177e8d31db396f">
-        <source>Click the following link to track the delivery of your order</source>
-        <target>Click the following link to track the delivery of your order</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:64</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/guest-login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6b10b52dc4d44e780e6e38073668be56">
-        <source>Guest Order Tracking</source>
-        <target>Guest Order Tracking</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/guest-login.tpl:4</note>
-      </trans-unit>
-      <trans-unit id="d2948a89e47a4ad7eb8412c1c260ea88">
-        <source>To track your order, please enter the following information:</source>
-        <target>To track your order, please enter the following information:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/guest-login.tpl:11</note>
-      </trans-unit>
-      <trans-unit id="92dbb751eb9457441af82a53f3cfae54">
-        <source>For example: QIIXJXNUI or QIIXJXNUI#1</source>
-        <target>For example: QIIXJXNUI or QIIXJXNUI#1</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/guest-login.tpl:20</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/discount.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="70b77fea994d1bda0a46cb5f9c9275f3">
-        <source>Your vouchers</source>
-        <target>Your vouchers</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/discount.tpl:4</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/authentication.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="11f4b4ba23dc72ee5e86ff5a90bdde60">
-        <source>Log in to your account</source>
-        <target>Log in to your account</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/authentication.tpl:9</note>
-      </trans-unit>
-      <trans-unit id="317329c926641290ed952a546b9eed6f">
-        <source>No account ? Create one here</source>
-        <target>No account ? Create one here</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/authentication.tpl:10</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/starterTheme/templates/customer/authentication.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="952998528c20798fbd22b49d505a29d5">
-        <source>No account? Create one here</source>
-        <target>No account? Create one here</target>
-        <note>Context:
-File: themes/starterTheme/templates/customer/authentication.tpl:10</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/_partials/steps/personal-information.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6280ed214163d6e214763ff970910cdc">
-        <source>Connected as [1]%firstname% %lastname%[/1].</source>
-        <target>Connected as [1]%firstname% %lastname%[/1].</target>
-        <note>Context:
-File: themes/classic/templates/checkout/_partials/steps/personal-information.tpl:11</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_customersignin/ps_customersignin.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2cbfb6731610056e1d0aaacde07096c1">
-        <source>View my customer account</source>
-        <target>View my customer account</target>
-        <note>Context:
-File: modules/ps_customersignin/ps_customersignin.tpl:4</note>
-      </trans-unit>
-      <trans-unit id="d4151a9a3959bdd43690735737034f27">
-        <source>Log in to your customer account</source>
-        <target>Log in to your customer account</target>
-        <note>Context:
-File: modules/ps_customersignin/ps_customersignin.tpl:6</note>
-      </trans-unit>
-      <trans-unit id="4b877ba8588b19f1b278510bf2b57ebb">
-        <source>Log me out</source>
-        <target>Log me out</target>
-        <note>Context:
-File: modules/ps_customersignin/ps_customersignin.tpl:3</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/starterTheme/templates/customer/history.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bcd1b68617759b1dfcff0403a6b5a8d1">
-        <source>PDF</source>
-        <target>PDF</target>
-        <note>Context:
-File: themes/starterTheme/templates/customer/history.tpl:40</note>
       </trans-unit>
     </body>
   </file>

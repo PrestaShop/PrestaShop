@@ -50,37 +50,43 @@ File: controllers/admin/AdminCmsContentController.php:194</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="51a8b3a61ad63d4e5df2ce86870e39b8">
-        <source>Transplant a module</source>
-        <target>Transplant a module</target>
+      <trans-unit id="1f6162e1430a8d5020bf4c20dc02499f">
+        <source>Pages in category "%name%"</source>
+        <target>Pages in category "%name%"</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:302</note>
+File: controllers/admin/AdminCmsController.php:75</note>
       </trans-unit>
-      <trans-unit id="700e2c3b7b442c597c781eac801408b6">
-        <source>___________ CUSTOM ___________</source>
-        <target>___________ CUSTOM ___________</target>
+      <trans-unit id="897b3f9a5dc0ebb8ab90e033e7ce61f3">
+        <source>Page Category</source>
+        <target>Page Category</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:428</note>
+File: controllers/admin/AdminCmsController.php:130</note>
       </trans-unit>
-      <trans-unit id="6957667301f05bce7e2c0b5cd8567df5">
-        <source>____________ CORE ____________</source>
-        <target>____________ CORE ____________</target>
+      <trans-unit id="21f93401134586a6c481422bf01fccfd">
+        <source>Only letters and the hyphen (-) character are allowed.</source>
+        <target>Only letters and the hyphen (-) character are allowed.</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:440</note>
+File: controllers/admin/AdminCmsController.php:169</note>
       </trans-unit>
-      <trans-unit id="1cc06efffbc5252916c871f45098a50f">
-        <source>Admin modules controller</source>
-        <target>Admin modules controller</target>
+      <trans-unit id="45b1bce0ceb1e155fc99d59a21761b9e">
+        <source>Page content</source>
+        <target>Page content</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:446</note>
+File: controllers/admin/AdminCmsController.php:173</note>
       </trans-unit>
-      <trans-unit id="2f75fd5bb638eb1353d6941aac58700e">
-        <source>Front modules controller</source>
-        <target>Front modules controller</target>
+      <trans-unit id="ce1e51212c9df52777620dc9de246da0">
+        <source>Indexation by search engines</source>
+        <target>Indexation by search engines</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:446</note>
+File: controllers/admin/AdminCmsController.php:183</note>
+      </trans-unit>
+      <trans-unit id="cc4fbd30d676ea2f9994b7063a8ada15">
+        <source>Pages in this category</source>
+        <target>Pages in this category</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:260</note>
       </trans-unit>
     </body>
   </file>
@@ -202,8 +208,48 @@ File: controllers/admin/AdminImagesController.php:697</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="51a8b3a61ad63d4e5df2ce86870e39b8">
+        <source>Transplant a module</source>
+        <target>Transplant a module</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:302</note>
+      </trans-unit>
+      <trans-unit id="700e2c3b7b442c597c781eac801408b6">
+        <source>___________ CUSTOM ___________</source>
+        <target>___________ CUSTOM ___________</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:428</note>
+      </trans-unit>
+      <trans-unit id="6957667301f05bce7e2c0b5cd8567df5">
+        <source>____________ CORE ____________</source>
+        <target>____________ CORE ____________</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:440</note>
+      </trans-unit>
+      <trans-unit id="1cc06efffbc5252916c871f45098a50f">
+        <source>Admin modules controller</source>
+        <target>Admin modules controller</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:446</note>
+      </trans-unit>
+      <trans-unit id="2f75fd5bb638eb1353d6941aac58700e">
+        <source>Front modules controller</source>
+        <target>Front modules controller</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:446</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
+        <source>Theme</source>
+        <target>Theme</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:157</note>
+      </trans-unit>
       <trans-unit id="36866999eeb441da24edc6fd075e1765">
         <source>Add new theme</source>
         <target>Add new theme</target>
@@ -322,57 +368,11 @@ File: controllers/admin/AdminThemesController.php:571</note>
   </file>
   <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
-        <source>Theme</source>
-        <target>Theme</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:512</note>
-      </trans-unit>
       <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
         <source>Pages</source>
         <target>Pages</target>
         <note>Context:
 File: controllers/admin/AdminShopController.php:529</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1f6162e1430a8d5020bf4c20dc02499f">
-        <source>Pages in category "%name%"</source>
-        <target>Pages in category "%name%"</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:75</note>
-      </trans-unit>
-      <trans-unit id="897b3f9a5dc0ebb8ab90e033e7ce61f3">
-        <source>Page Category</source>
-        <target>Page Category</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:130</note>
-      </trans-unit>
-      <trans-unit id="21f93401134586a6c481422bf01fccfd">
-        <source>Only letters and the hyphen (-) character are allowed.</source>
-        <target>Only letters and the hyphen (-) character are allowed.</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:169</note>
-      </trans-unit>
-      <trans-unit id="45b1bce0ceb1e155fc99d59a21761b9e">
-        <source>Page content</source>
-        <target>Page content</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:173</note>
-      </trans-unit>
-      <trans-unit id="ce1e51212c9df52777620dc9de246da0">
-        <source>Indexation by search engines</source>
-        <target>Indexation by search engines</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:183</note>
-      </trans-unit>
-      <trans-unit id="cc4fbd30d676ea2f9994b7063a8ada15">
-        <source>Pages in this category</source>
-        <target>Pages in this category</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:260</note>
       </trans-unit>
     </body>
   </file>

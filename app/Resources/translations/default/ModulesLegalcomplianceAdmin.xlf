@@ -68,6 +68,12 @@ File: modules/ps_legalcompliance/ps_legalcompliance.php:270</note>
         <note>Context:
 File: modules/ps_legalcompliance/ps_legalcompliance.php:1322</note>
       </trans-unit>
+      <trans-unit id="0629e092ce60c75222213895157a3799">
+        <source>Please insert here your content about privacy. If you have activated Social Media modules, please provide a notice about third-party access to data.</source>
+        <target>Please insert here your content about privacy. If you have activated Social Media modules, please provide a notice about third-party access to data.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:273</note>
+      </trans-unit>
       <trans-unit id="5fb4f05f62f9967052977077d783fc2d">
         <source>Shipping and payment</source>
         <target>Shipping and payment</target>
@@ -91,6 +97,12 @@ File: modules/ps_legalcompliance/ps_legalcompliance.php:1323</note>
         <target>Please add your Environmental information to this site.</target>
         <note>Context:
 File: modules/ps_legalcompliance/ps_legalcompliance.php:279</note>
+      </trans-unit>
+      <trans-unit id="f9227a2ab59639e217bd44ec47f35fcc">
+        <source>This module helps European merchants to comply with legal requirements. Learn how to configure the module and other shop parameters so that you're in compliance with the law.[1][2]PrestaShop 1.7 legal compliance documentation[/2]</source>
+        <target>This module helps European merchants to comply with legal requirements. Learn how to configure the module and other shop parameters so that you're in compliance with the law.[1][2]PrestaShop 1.7 legal compliance documentation[/2]</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1044</note>
       </trans-unit>
       <trans-unit id="2ad348b570305efbdb00791eab07ccea">
         <source>Failed to associate legal content with an email template.</source>
@@ -259,6 +271,12 @@ File: modules/ps_legalcompliance/ps_legalcompliance.php:1477</note>
         <target>Require customers to renounce their revocation right when purchasing virtual products (digital goods or services).</target>
         <note>Context:
 File: modules/ps_legalcompliance/ps_legalcompliance.php:1478</note>
+      </trans-unit>
+      <trans-unit id="1c37d3c4d123c1b8332711a1c14ac232">
+        <source>'From' price label (when combinations)</source>
+        <target>'From' price label (when combinations)</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1495</note>
       </trans-unit>
       <trans-unit id="f6f7eb6f0c585ab51533c31dd4b1f488">
         <source>Displays a 'From' label before the price on products with combinations.</source>

@@ -152,8 +152,9 @@ class AdminAccessControllerCore extends AdminController
             $enabled = (int)Tools::getValue('enabled');
             $id_tab = (int)Tools::getValue('id_tab');
             $id_profile = (int)Tools::getValue('id_profile');
+            $addFromParent = (int)Tools::getValue('addFromParent');
 
-            die($access->updateLgcAccess((int)$id_profile, $id_tab, $perm, $enabled));
+            die($access->updateLgcAccess((int)$id_profile, $id_tab, $perm, $enabled, $addFromParent));
         }
     }
 

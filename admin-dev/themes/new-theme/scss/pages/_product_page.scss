@@ -728,6 +728,12 @@
       }
     }
   }
+
+  #custom_fields {
+    .required-custom-field {
+      padding: 0.375rem 1rem;
+    }
+  }
 }
 
 .popover-title {

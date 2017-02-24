@@ -239,6 +239,16 @@ File: controllers/admin/AdminCarrierWizardController.php:417</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
+        <source>Carrier</source>
+        <target>Carrier</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:86</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminShippingController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2605fbb693837be42d0cd0e701cb5aa3">
@@ -282,16 +292,6 @@ File: controllers/admin/AdminShippingController.php:96</note>
         <target>Best grade</target>
         <note>Context:
 File: controllers/admin/AdminShippingController.php:97</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
-        <source>Carrier</source>
-        <target>Carrier</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:86</note>
       </trans-unit>
     </body>
   </file>

@@ -1,37 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fc2c8663d58c42bc29edd45a79b4358c">
+        <source>The discount was successfully generated.</source>
+        <target>The discount was successfully generated.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:466</note>
+      </trans-unit>
+      <trans-unit id="801982917ddd7afd63f9e103ba4699bd">
+        <source>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</source>
+        <target>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:472</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminProductsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="22385bf735f96dbe1a4778d0b0d5345d">
-        <source>No reduction value has been submitted</source>
-        <target>No reduction value has been submitted</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:968</note>
-      </trans-unit>
-      <trans-unit id="162c051f703406dd4fab3fde66296a6e">
-        <source>Submitted reduction value (0-100) is out-of-range</source>
-        <target>Submitted reduction value (0-100) is out-of-range</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:972</note>
-      </trans-unit>
-      <trans-unit id="9f0a59f1609218c049435abd2351bd84">
-        <source>An error occurred while updating the specific price.</source>
-        <target>An error occurred while updating the specific price.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:990</note>
-      </trans-unit>
-      <trans-unit id="184a2ae304c9a05459cca0cbf8755b3a">
-        <source>The specific price ID is invalid.</source>
-        <target>The specific price ID is invalid.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:1000</note>
-      </trans-unit>
-      <trans-unit id="0f8b5843f1391991d17f744ce9771e98">
-        <source>An error occurred while attempting to delete the specific price.</source>
-        <target>An error occurred while attempting to delete the specific price.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:1004</note>
-      </trans-unit>
       <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
         <source>Cannot add image because product creation failed.</source>
         <target>Cannot add image because product creation failed.</target>
@@ -43,6 +29,12 @@ File: controllers/admin/AdminProductsController.php:3345</note>
         <target>Error while creating additional image</target>
         <note>Context:
 File: controllers/admin/AdminProductsController.php:3378</note>
+      </trans-unit>
+      <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
+        <source>Invalid quantity</source>
+        <target>Invalid quantity</target>
+        <note>Context:
+File: controllers/admin/AdminProductsController.php:1561</note>
       </trans-unit>
       <trans-unit id="99a6e6a05b8d706aeddf480c7e492949">
         <source>Invalid description for %s language</source>
@@ -322,13 +314,401 @@ File: controllers/admin/AdminProductsController.php:3750</note>
       </trans-unit>
     </body>
   </file>
+  <file original="classes/FileUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2ddbcf3cd6846f895d2520d0227b7810">
+        <source>Error on image caption: "%1s" is not a valid caption.</source>
+        <target>Error on image caption: "%1s" is not a valid caption.</target>
+        <note>Context:
+File: classes/FileUploader.php:116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/helper/HelperList.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="55ffa325538ec4bd188604c30b29a168">
+        <source>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</source>
+        <target>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</target>
+        <note>Context:
+File: classes/helper/HelperList.php:387</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Product.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ffd818d6203d29bd38114292a759cb7d">
+        <source>You cannot set a negative position, the minimum for a position is 0.</source>
+        <target>You cannot set a negative position, the minimum for a position is 0.</target>
+        <note>Context:
+File: classes/Product.php:5508</note>
+      </trans-unit>
+      <trans-unit id="b945599a5e11b76711dad5f1d7eba181">
+        <source>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</source>
+        <target>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</target>
+        <note>Context:
+File: classes/Product.php:5517</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/stock/StockAvailable.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7e4621194575d7804ebfbbafcae9067a">
+        <source>You cannot update the available stock when it depends on stock.</source>
+        <target>You cannot update the available stock when it depends on stock.</target>
+        <note>Context:
+File: classes/stock/StockAvailable.php:103</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/stock/StockManagerModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bc6f653d2d54db1348de50fe0b0192e9">
+        <source>Incorrect Stock Manager class [%s]</source>
+        <target>Incorrect Stock Manager class [%s]</target>
+        <note>Context:
+File: classes/stock/StockManagerModule.php:44</note>
+      </trans-unit>
+      <trans-unit id="65d09c7dfa652d616875eddb50c18d2b">
+        <source>Stock Manager class not found [%s]</source>
+        <target>Stock Manager class not found [%s]</target>
+        <note>Context:
+File: classes/stock/StockManagerModule.php:50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttachmentsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="935b31f32421029fb633ead151d69d83">
+        <source>This file is associated with the following products, do you really want to  delete it?</source>
+        <target>This file is associated with the following products, do you really want to  delete it?</target>
+        <note>Context:
+File: controllers/admin/AdminAttachmentsController.php:91</note>
+      </trans-unit>
+      <trans-unit id="5251010ec9e364492c236bf8b9983928">
+        <source>File not found</source>
+        <target>File not found</target>
+        <note>Context:
+File: controllers/admin/AdminAttachmentsController.php:118</note>
+      </trans-unit>
+      <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
+        <source>Failed to copy the file.</source>
+        <target>Failed to copy the file.</target>
+        <note>Context:
+File: controllers/admin/AdminAttachmentsController.php:230</note>
+      </trans-unit>
+      <trans-unit id="0c6c7ccc80b3bfb8fcb57dc63405f599">
+        <source>The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.</source>
+        <target>The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.</target>
+        <note>Context:
+File: controllers/admin/AdminAttachmentsController.php:246</note>
+      </trans-unit>
+      <trans-unit id="d647666a6c4cef994b4fa1a540ba4481">
+        <source>Upload error. Please check your server configurations for the maximum upload size allowed.</source>
+        <target>Upload error. Please check your server configurations for the maximum upload size allowed.</target>
+        <note>Context:
+File: controllers/admin/AdminAttachmentsController.php:253</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttributeGeneratorController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1ef611e55a4e10ff65c1e64f962281c8">
+        <source>Please select at least one attribute.</source>
+        <target>Please select at least one attribute.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributeGeneratorController.php:118</note>
+      </trans-unit>
+      <trans-unit id="6e89fd17c196488cfac8e63ec415d65f">
+        <source>Unable to initialize these parameters. A combination is missing or an object cannot be loaded.</source>
+        <target>Unable to initialize these parameters. A combination is missing or an object cannot be loaded.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributeGeneratorController.php:170</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminFeaturesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ced303d99586792bb560b5e1d35ea220">
+        <source>This feature has been disabled. You can activate it here: %s.</source>
+        <target>This feature has been disabled. You can activate it here: %s.</target>
+        <note>Context:
+File: controllers/admin/AdminFeaturesController.php:434</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
+        <source>An error occurred while updating the status for an object.</source>
+        <target>An error occurred while updating the status for an object.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:116</note>
+      </trans-unit>
+      <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
+        <source>(cannot load object)</source>
+        <target>(cannot load object)</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:118</note>
+      </trans-unit>
+      <trans-unit id="caecb49a7eec394177d054db34995bc0">
+        <source>The attribute value "%1$s" already exist for %2$s language</source>
+        <target>The attribute value "%1$s" already exist for %2$s language</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:406</note>
+      </trans-unit>
+      <trans-unit id="7f7cd1de48a84bc7ba0dfcde99de2604">
+        <source>Failed to delete the attribute.</source>
+        <target>Failed to delete the attribute.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:739</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fdf5ec6ad9d20c9985038e5d6521159f">
+        <source>The voucher cannot end before it begins.</source>
+        <target>The voucher cannot end before it begins.</target>
+        <note>Context:
+File: controllers/admin/AdminCartRulesController.php:212</note>
+      </trans-unit>
+      <trans-unit id="5c7f52b03569889081067d1413b5edbd">
+        <source>The minimum amount cannot be lower than zero.</source>
+        <target>The minimum amount cannot be lower than zero.</target>
+        <note>Context:
+File: controllers/admin/AdminCartRulesController.php:215</note>
+      </trans-unit>
+      <trans-unit id="93c331edf337bac96fcbac751a492fe1">
+        <source>Reduction percentage must be between 0% and 100%</source>
+        <target>Reduction percentage must be between 0% and 100%</target>
+        <note>Context:
+File: controllers/admin/AdminCartRulesController.php:218</note>
+      </trans-unit>
+      <trans-unit id="a3ad09e600d30676504b705e29be782d">
+        <source>Reduction amount cannot be lower than zero.</source>
+        <target>Reduction amount cannot be lower than zero.</target>
+        <note>Context:
+File: controllers/admin/AdminCartRulesController.php:221</note>
+      </trans-unit>
+      <trans-unit id="7f5ef3543345170784cc954cffa697d6">
+        <source>This cart rule code is already used (conflict with cart rule %rulename%)</source>
+        <target>This cart rule code is already used (conflict with cart rule %rulename%)</target>
+        <note>Context:
+File: controllers/admin/AdminCartRulesController.php:224</note>
+      </trans-unit>
+      <trans-unit id="bbc6a34f03def2d56def8e7685a3fcae">
+        <source>An action is required for this cart rule.</source>
+        <target>An action is required for this cart rule.</target>
+        <note>Context:
+File: controllers/admin/AdminCartRulesController.php:227</note>
+      </trans-unit>
+      <trans-unit id="b4be93136a337fcef40c9eb87004c9d0">
+        <source>No product has been found.</source>
+        <target>No product has been found.</target>
+        <note>Context:
+File: controllers/admin/AdminCartRulesController.php:584</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c1a4c1b929c4f5c81f80ece2d7b196aa">
+        <source>Invalid product</source>
+        <target>Invalid product</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:449</note>
+      </trans-unit>
+      <trans-unit id="e5b55dc69d10c8673f9d5db587591526">
+        <source>Invalid combination</source>
+        <target>Invalid combination</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:367</note>
+      </trans-unit>
+      <trans-unit id="7cc92687130ea12abb80556681538001">
+        <source>An error occurred during the image upload process.</source>
+        <target>An error occurred during the image upload process.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:423</note>
+      </trans-unit>
+      <trans-unit id="b164de93448b61c61dd1c0f68c2c5884">
+        <source>An order has already been placed with this cart.</source>
+        <target>An order has already been placed with this cart.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:447</note>
+      </trans-unit>
+      <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
+        <source>There are not enough products in stock.</source>
+        <target>There are not enough products in stock.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:461</note>
+      </trans-unit>
+      <trans-unit id="89ecb554b799211aca0441e691419963">
+        <source>This product cannot be added to the cart.</source>
+        <target>This product cannot be added to the cart.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:468</note>
+      </trans-unit>
+      <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
+        <source>You already have the maximum quantity available for this product.</source>
+        <target>You already have the maximum quantity available for this product.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:480</note>
+      </trans-unit>
+      <trans-unit id="fac7c1f73a2c97252e59cac143ae1930">
+        <source>Invalid voucher.</source>
+        <target>Invalid voucher.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:622</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="535a56c364d0646b9319bafcb42a1357">
+        <source>The category cannot be moved here.</source>
+        <target>The category cannot be moved here.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:798</note>
+      </trans-unit>
+      <trans-unit id="22d26a77067dac07bf2cfaf501a64870">
+        <source>The category cannot be a parent of itself.</source>
+        <target>The category cannot be a parent of itself.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:801</note>
+      </trans-unit>
+      <trans-unit id="23be63a3d78c7375e59f5965f6ef9efd">
+        <source>Unknown delete mode: %s</source>
+        <target>Unknown delete mode: %s</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:821</note>
+      </trans-unit>
+      <trans-unit id="b50f440e3c9f14988bd0086683e77095">
+        <source>You cannot remove this category because one of your shops uses it as a root category.</source>
+        <target>You cannot remove this category because one of your shops uses it as a root category.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:856</note>
+      </trans-unit>
+      <trans-unit id="1887caa83cfc66cd8ab440cf70eca40b">
+        <source>An error occurred while uploading category image.</source>
+        <target>An error occurred while uploading category image.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:923</note>
+      </trans-unit>
+      <trans-unit id="87a130707b81cc037c9a95e74e7fbf37">
+        <source>An error occurred while uploading thumbnail image.</source>
+        <target>An error occurred while uploading thumbnail image.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:947</note>
+      </trans-unit>
+      <trans-unit id="a874ef298164bbd4d00d55901225cd87">
+        <source>An error occurred while uploading the image:</source>
+        <target>An error occurred while uploading the image:</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:1047</note>
+      </trans-unit>
+      <trans-unit id="b05c3c0bfce943b86e286e8e8103b6e5">
+        <source>An error occurred while uploading the image.</source>
+        <target>An error occurred while uploading the image.</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:1062</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminDeliverySlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="32d3b531ad19ea651820651ca9d40d05">
+        <source>Invalid 'from' date</source>
+        <target>Invalid 'from' date</target>
+        <note>Context:
+File: controllers/admin/AdminDeliverySlipController.php:107</note>
+      </trans-unit>
+      <trans-unit id="afe2d0e6d792e09a2d3e6fb85a37af94">
+        <source>Invalid 'to' date</source>
+        <target>Invalid 'to' date</target>
+        <note>Context:
+File: controllers/admin/AdminDeliverySlipController.php:110</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminManufacturersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="60df675f17670057ec657783db03d35e">
+        <source>Unable to resize one or more of your pictures.</source>
+        <target>Unable to resize one or more of your pictures.</target>
+        <note>Context:
+File: controllers/admin/AdminManufacturersController.php:839</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Adapter/Product/AdminProductWrapper.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="162c051f703406dd4fab3fde66296a6e">
+        <source>Submitted reduction value (0-100) is out-of-range</source>
+        <target>Submitted reduction value (0-100) is out-of-range</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:218</note>
+      </trans-unit>
+      <trans-unit id="9f0a59f1609218c049435abd2351bd84">
+        <source>An error occurred while updating the specific price.</source>
+        <target>An error occurred while updating the specific price.</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:237</note>
+      </trans-unit>
+      <trans-unit id="22385bf735f96dbe1a4778d0b0d5345d">
+        <source>No reduction value has been submitted</source>
+        <target>No reduction value has been submitted</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:214</note>
+      </trans-unit>
+      <trans-unit id="184a2ae304c9a05459cca0cbf8755b3a">
+        <source>The specific price ID is invalid.</source>
+        <target>The specific price ID is invalid.</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:400</note>
+      </trans-unit>
+      <trans-unit id="0f8b5843f1391991d17f744ce9771e98">
+        <source>An error occurred while attempting to delete the specific price.</source>
+        <target>An error occurred while attempting to delete the specific price.</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:404</note>
+      </trans-unit>
       <trans-unit id="c7e56badecce297feefe2a9b50a68794">
         <source>Invalid date range</source>
         <target>Invalid date range</target>
         <note>Context:
 File: src/Adapter/Product/AdminProductWrapper.php:216</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="df1124d59279d11c66e179b7c4e6d9e8">
+        <source>You do not have permission to add suppliers.</source>
+        <target>You do not have permission to add suppliers.</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:446</note>
+      </trans-unit>
+      <trans-unit id="216083c0ecc41612e3355db66a1d2042">
+        <source>The address is not correct. Please make sure all of the required fields are completed.</source>
+        <target>The address is not correct. Please make sure all of the required fields are completed.</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:482</note>
+      </trans-unit>
+      <trans-unit id="925c714b657d85c49a9718ef792fcb95">
+        <source>It is not possible to delete a supplier if there are pending supplier orders.</source>
+        <target>It is not possible to delete a supplier if there are pending supplier orders.</target>
+        <note>Context:
+File: controllers/admin/AdminSuppliersController.php:496</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cf4f33891a4f0566c7afed3776d55446">
+        <source>List of products without available quantities for sale are not displayed because stock management is disabled.</source>
+        <target>List of products without available quantities for sale are not displayed because stock management is disabled.</target>
+        <note>Context:
+File: controllers/admin/AdminTrackingController.php:65</note>
       </trans-unit>
     </body>
   </file>
@@ -357,22 +737,6 @@ File: src/Adapter/Attribute/AdminAttributeGeneratorControllerWrapper.php:108</no
         <target>You cannot delete this attribute.</target>
         <note>Context:
 File: src/Adapter/Attribute/AdminAttributeGeneratorControllerWrapper.php:115</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cf456ee90912d9e25795925d067f8952">
-        <source>This value is too long. It should have %limit% characters or less.</source>
-        <target>This value is too long. It should have %limit% characters or less.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php:182</note>
-      </trans-unit>
-      <trans-unit id="8bc6a12d95b969fb603306eab1f0603b">
-        <source>This pack is empty. You must add at least one product item.</source>
-        <target>This pack is empty. You must add at least one product item.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php:287</note>
       </trans-unit>
     </body>
   </file>
@@ -434,489 +798,19 @@ File: src/PrestaShopBundle/Controller/Admin/ProductController.php:818</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="fc2c8663d58c42bc29edd45a79b4358c">
-        <source>The discount was successfully generated.</source>
-        <target>The discount was successfully generated.</target>
+      <trans-unit id="cf456ee90912d9e25795925d067f8952">
+        <source>This value is too long. It should have %limit% characters or less.</source>
+        <target>This value is too long. It should have %limit% characters or less.</target>
         <note>Context:
-File: classes/controller/AdminController.php:466</note>
+File: src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php:182</note>
       </trans-unit>
-      <trans-unit id="801982917ddd7afd63f9e103ba4699bd">
-        <source>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</source>
-        <target>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</target>
+      <trans-unit id="8bc6a12d95b969fb603306eab1f0603b">
+        <source>This pack is empty. You must add at least one product item.</source>
+        <target>This pack is empty. You must add at least one product item.</target>
         <note>Context:
-File: classes/controller/AdminController.php:472</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/stock/StockManagerModule.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bc6f653d2d54db1348de50fe0b0192e9">
-        <source>Incorrect Stock Manager class [%s]</source>
-        <target>Incorrect Stock Manager class [%s]</target>
-        <note>Context:
-File: classes/stock/StockManagerModule.php:44</note>
-      </trans-unit>
-      <trans-unit id="65d09c7dfa652d616875eddb50c18d2b">
-        <source>Stock Manager class not found [%s]</source>
-        <target>Stock Manager class not found [%s]</target>
-        <note>Context:
-File: classes/stock/StockManagerModule.php:50</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/stock/StockAvailable.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7e4621194575d7804ebfbbafcae9067a">
-        <source>You cannot update the available stock when it depends on stock.</source>
-        <target>You cannot update the available stock when it depends on stock.</target>
-        <note>Context:
-File: classes/stock/StockAvailable.php:103</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Product.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ffd818d6203d29bd38114292a759cb7d">
-        <source>You cannot set a negative position, the minimum for a position is 0.</source>
-        <target>You cannot set a negative position, the minimum for a position is 0.</target>
-        <note>Context:
-File: classes/Product.php:5508</note>
-      </trans-unit>
-      <trans-unit id="b945599a5e11b76711dad5f1d7eba181">
-        <source>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</source>
-        <target>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</target>
-        <note>Context:
-File: classes/Product.php:5517</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/helper/HelperList.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="55ffa325538ec4bd188604c30b29a168">
-        <source>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</source>
-        <target>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</target>
-        <note>Context:
-File: classes/helper/HelperList.php:387</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/FileUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2ddbcf3cd6846f895d2520d0227b7810">
-        <source>Error on image caption: "%1s" is not a valid caption.</source>
-        <target>Error on image caption: "%1s" is not a valid caption.</target>
-        <note>Context:
-File: classes/FileUploader.php:116</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
-        <source>An error occurred while updating the status for an object.</source>
-        <target>An error occurred while updating the status for an object.</target>
-        <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:116</note>
-      </trans-unit>
-      <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
-        <source>(cannot load object)</source>
-        <target>(cannot load object)</target>
-        <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:118</note>
-      </trans-unit>
-      <trans-unit id="caecb49a7eec394177d054db34995bc0">
-        <source>The attribute value "%1$s" already exist for %2$s language</source>
-        <target>The attribute value "%1$s" already exist for %2$s language</target>
-        <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:406</note>
-      </trans-unit>
-      <trans-unit id="7f7cd1de48a84bc7ba0dfcde99de2604">
-        <source>Failed to delete the attribute.</source>
-        <target>Failed to delete the attribute.</target>
-        <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:739</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminAttributeGeneratorController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ced303d99586792bb560b5e1d35ea220">
-        <source>This feature has been disabled. You can activate it here: %s.</source>
-        <target>This feature has been disabled. You can activate it here: %s.</target>
-        <note>Context:
-File: controllers/admin/AdminAttributeGeneratorController.php:234</note>
-      </trans-unit>
-      <trans-unit id="1ef611e55a4e10ff65c1e64f962281c8">
-        <source>Please select at least one attribute.</source>
-        <target>Please select at least one attribute.</target>
-        <note>Context:
-File: controllers/admin/AdminAttributeGeneratorController.php:118</note>
-      </trans-unit>
-      <trans-unit id="6e89fd17c196488cfac8e63ec415d65f">
-        <source>Unable to initialize these parameters. A combination is missing or an object cannot be loaded.</source>
-        <target>Unable to initialize these parameters. A combination is missing or an object cannot be loaded.</target>
-        <note>Context:
-File: controllers/admin/AdminAttributeGeneratorController.php:170</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="df1124d59279d11c66e179b7c4e6d9e8">
-        <source>You do not have permission to add suppliers.</source>
-        <target>You do not have permission to add suppliers.</target>
-        <note>Context:
-File: controllers/admin/AdminSuppliersController.php:446</note>
-      </trans-unit>
-      <trans-unit id="216083c0ecc41612e3355db66a1d2042">
-        <source>The address is not correct. Please make sure all of the required fields are completed.</source>
-        <target>The address is not correct. Please make sure all of the required fields are completed.</target>
-        <note>Context:
-File: controllers/admin/AdminSuppliersController.php:482</note>
-      </trans-unit>
-      <trans-unit id="925c714b657d85c49a9718ef792fcb95">
-        <source>It is not possible to delete a supplier if there are pending supplier orders.</source>
-        <target>It is not possible to delete a supplier if there are pending supplier orders.</target>
-        <note>Context:
-File: controllers/admin/AdminSuppliersController.php:496</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminManufacturersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="60df675f17670057ec657783db03d35e">
-        <source>Unable to resize one or more of your pictures.</source>
-        <target>Unable to resize one or more of your pictures.</target>
-        <note>Context:
-File: controllers/admin/AdminManufacturersController.php:839</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
-        <source>Invalid quantity</source>
-        <target>Invalid quantity</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:451</note>
-      </trans-unit>
-      <trans-unit id="c1a4c1b929c4f5c81f80ece2d7b196aa">
-        <source>Invalid product</source>
-        <target>Invalid product</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:449</note>
-      </trans-unit>
-      <trans-unit id="e5b55dc69d10c8673f9d5db587591526">
-        <source>Invalid combination</source>
-        <target>Invalid combination</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:367</note>
-      </trans-unit>
-      <trans-unit id="7cc92687130ea12abb80556681538001">
-        <source>An error occurred during the image upload process.</source>
-        <target>An error occurred during the image upload process.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:423</note>
-      </trans-unit>
-      <trans-unit id="b164de93448b61c61dd1c0f68c2c5884">
-        <source>An order has already been placed with this cart.</source>
-        <target>An order has already been placed with this cart.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:447</note>
-      </trans-unit>
-      <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
-        <source>There are not enough products in stock.</source>
-        <target>There are not enough products in stock.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:461</note>
-      </trans-unit>
-      <trans-unit id="89ecb554b799211aca0441e691419963">
-        <source>This product cannot be added to the cart.</source>
-        <target>This product cannot be added to the cart.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:468</note>
-      </trans-unit>
-      <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
-        <source>You already have the maximum quantity available for this product.</source>
-        <target>You already have the maximum quantity available for this product.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:480</note>
-      </trans-unit>
-      <trans-unit id="fac7c1f73a2c97252e59cac143ae1930">
-        <source>Invalid voucher.</source>
-        <target>Invalid voucher.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:622</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminDeliverySlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="32d3b531ad19ea651820651ca9d40d05">
-        <source>Invalid 'from' date</source>
-        <target>Invalid 'from' date</target>
-        <note>Context:
-File: controllers/admin/AdminDeliverySlipController.php:107</note>
-      </trans-unit>
-      <trans-unit id="afe2d0e6d792e09a2d3e6fb85a37af94">
-        <source>Invalid 'to' date</source>
-        <target>Invalid 'to' date</target>
-        <note>Context:
-File: controllers/admin/AdminDeliverySlipController.php:110</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="535a56c364d0646b9319bafcb42a1357">
-        <source>The category cannot be moved here.</source>
-        <target>The category cannot be moved here.</target>
-        <note>Context:
-File: controllers/admin/AdminCategoriesController.php:798</note>
-      </trans-unit>
-      <trans-unit id="22d26a77067dac07bf2cfaf501a64870">
-        <source>The category cannot be a parent of itself.</source>
-        <target>The category cannot be a parent of itself.</target>
-        <note>Context:
-File: controllers/admin/AdminCategoriesController.php:801</note>
-      </trans-unit>
-      <trans-unit id="23be63a3d78c7375e59f5965f6ef9efd">
-        <source>Unknown delete mode: %s</source>
-        <target>Unknown delete mode: %s</target>
-        <note>Context:
-File: controllers/admin/AdminCategoriesController.php:821</note>
-      </trans-unit>
-      <trans-unit id="b50f440e3c9f14988bd0086683e77095">
-        <source>You cannot remove this category because one of your shops uses it as a root category.</source>
-        <target>You cannot remove this category because one of your shops uses it as a root category.</target>
-        <note>Context:
-File: controllers/admin/AdminCategoriesController.php:856</note>
-      </trans-unit>
-      <trans-unit id="1887caa83cfc66cd8ab440cf70eca40b">
-        <source>An error occurred while uploading category image.</source>
-        <target>An error occurred while uploading category image.</target>
-        <note>Context:
-File: controllers/admin/AdminCategoriesController.php:923</note>
-      </trans-unit>
-      <trans-unit id="87a130707b81cc037c9a95e74e7fbf37">
-        <source>An error occurred while uploading thumbnail image.</source>
-        <target>An error occurred while uploading thumbnail image.</target>
-        <note>Context:
-File: controllers/admin/AdminCategoriesController.php:947</note>
-      </trans-unit>
-      <trans-unit id="a874ef298164bbd4d00d55901225cd87">
-        <source>An error occurred while uploading the image:</source>
-        <target>An error occurred while uploading the image:</target>
-        <note>Context:
-File: controllers/admin/AdminCategoriesController.php:1047</note>
-      </trans-unit>
-      <trans-unit id="b05c3c0bfce943b86e286e8e8103b6e5">
-        <source>An error occurred while uploading the image.</source>
-        <target>An error occurred while uploading the image.</target>
-        <note>Context:
-File: controllers/admin/AdminCategoriesController.php:1062</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fdf5ec6ad9d20c9985038e5d6521159f">
-        <source>The voucher cannot end before it begins.</source>
-        <target>The voucher cannot end before it begins.</target>
-        <note>Context:
-File: controllers/admin/AdminCartRulesController.php:212</note>
-      </trans-unit>
-      <trans-unit id="5c7f52b03569889081067d1413b5edbd">
-        <source>The minimum amount cannot be lower than zero.</source>
-        <target>The minimum amount cannot be lower than zero.</target>
-        <note>Context:
-File: controllers/admin/AdminCartRulesController.php:215</note>
-      </trans-unit>
-      <trans-unit id="93c331edf337bac96fcbac751a492fe1">
-        <source>Reduction percentage must be between 0% and 100%</source>
-        <target>Reduction percentage must be between 0% and 100%</target>
-        <note>Context:
-File: controllers/admin/AdminCartRulesController.php:218</note>
-      </trans-unit>
-      <trans-unit id="a3ad09e600d30676504b705e29be782d">
-        <source>Reduction amount cannot be lower than zero.</source>
-        <target>Reduction amount cannot be lower than zero.</target>
-        <note>Context:
-File: controllers/admin/AdminCartRulesController.php:221</note>
-      </trans-unit>
-      <trans-unit id="7f5ef3543345170784cc954cffa697d6">
-        <source>This cart rule code is already used (conflict with cart rule %rulename%)</source>
-        <target>This cart rule code is already used (conflict with cart rule %rulename%)</target>
-        <note>Context:
-File: controllers/admin/AdminCartRulesController.php:224</note>
-      </trans-unit>
-      <trans-unit id="bbc6a34f03def2d56def8e7685a3fcae">
-        <source>An action is required for this cart rule.</source>
-        <target>An action is required for this cart rule.</target>
-        <note>Context:
-File: controllers/admin/AdminCartRulesController.php:227</note>
-      </trans-unit>
-      <trans-unit id="b4be93136a337fcef40c9eb87004c9d0">
-        <source>No product has been found.</source>
-        <target>No product has been found.</target>
-        <note>Context:
-File: controllers/admin/AdminCartRulesController.php:584</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cf4f33891a4f0566c7afed3776d55446">
-        <source>List of products without available quantities for sale are not displayed because stock management is disabled.</source>
-        <target>List of products without available quantities for sale are not displayed because stock management is disabled.</target>
-        <note>Context:
-File: controllers/admin/AdminTrackingController.php:65</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminAttachmentsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="935b31f32421029fb633ead151d69d83">
-        <source>This file is associated with the following products, do you really want to  delete it?</source>
-        <target>This file is associated with the following products, do you really want to  delete it?</target>
-        <note>Context:
-File: controllers/admin/AdminAttachmentsController.php:91</note>
-      </trans-unit>
-      <trans-unit id="5251010ec9e364492c236bf8b9983928">
-        <source>File not found</source>
-        <target>File not found</target>
-        <note>Context:
-File: controllers/admin/AdminAttachmentsController.php:118</note>
-      </trans-unit>
-      <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
-        <source>Failed to copy the file.</source>
-        <target>Failed to copy the file.</target>
-        <note>Context:
-File: controllers/admin/AdminAttachmentsController.php:230</note>
-      </trans-unit>
-      <trans-unit id="0c6c7ccc80b3bfb8fcb57dc63405f599">
-        <source>The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.</source>
-        <target>The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.</target>
-        <note>Context:
-File: controllers/admin/AdminAttachmentsController.php:246</note>
-      </trans-unit>
-      <trans-unit id="d647666a6c4cef994b4fa1a540ba4481">
-        <source>Upload error. Please check your server configurations for the maximum upload size allowed.</source>
-        <target>Upload error. Please check your server configurations for the maximum upload size allowed.</target>
-        <note>Context:
-File: controllers/admin/AdminAttachmentsController.php:253</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/formDisable.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e1cc7a5b4545de2fa898ab70a12e2d54">
-        <source>You can't add or edit a product in this shop context: select a shop instead of a group of shops.</source>
-        <target>You can't add or edit a product in this shop context: select a shop instead of a group of shops.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/formDisable.html.twig:29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1b89ef639dabfd2f6eb19886f7c9f8c8">
-        <source>This will delete all the combinations. Do you wish to proceed?</source>
-        <target>This will delete all the combinations. Do you wish to proceed?</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1197</note>
-      </trans-unit>
-      <trans-unit id="ff8a012ee6cba99838a649d92ad1b34b">
-        <source>This will delete the specific price. Do you wish to proceed?</source>
-        <target>This will delete the specific price. Do you wish to proceed?</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1211</note>
-      </trans-unit>
-      <trans-unit id="dfd19ad4f089996c7eabcd5935f75e98">
-        <source>A pack of products can't have combinations.</source>
-        <target>A pack of products can't have combinations.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1217</note>
-      </trans-unit>
-      <trans-unit id="5b75fdc0df647e8ac5275e31554dd0f9">
-        <source>A virtual product can't have combinations.</source>
-        <target>A virtual product can't have combinations.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1218</note>
-      </trans-unit>
-      <trans-unit id="9909f0bb3eb94634e3f8cd0164dbacac">
-        <source>You are in a multistore context: any modification will impact all your shops, or each shop of the active group.</source>
-        <target>You are in a multistore context: any modification will impact all your shops, or each shop of the active group.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:36</note>
-      </trans-unit>
-      <trans-unit id="d80ebf39e80e164a170987dcd4212136">
-        <source>When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.</source>
-        <target>When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:472</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d6df5e0f6b6204bece3852c0817420e9">
-        <source>If no carrier is selected then all the carriers will be available for customers orders.</source>
-        <target>If no carrier is selected then all the carriers will be available for customers orders.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_shipping.html.twig:99</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c292d80ff15bf0d38f63af320f9f7839">
-        <source>Friendly URLs are currently disabled.</source>
-        <target>Friendly URLs are currently disabled.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:80</note>
-      </trans-unit>
-      <trans-unit id="517937df76770fb3c4f9e6100ed69ce9">
-        <source>To enable it, go to [1]SEO and URLs[/1]</source>
-        <target>To enable it, go to [1]SEO and URLs[/1]</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:81</note>
-      </trans-unit>
-      <trans-unit id="9bbbc84f839137c71e79f1b8eaafc5b7">
-        <source>Friendly URLs are currently enabled.</source>
-        <target>Friendly URLs are currently enabled.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:83</note>
-      </trans-unit>
-      <trans-unit id="2d1df068fb2a9a3c4d9e3c361795c59c">
-        <source>To disable it, go to [1]SEO and URLs[/1]</source>
-        <target>To disable it, go to [1]SEO and URLs[/1]</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:84</note>
-      </trans-unit>
-      <trans-unit id="d7e9bf98e857f83943b3b75fce04cea9">
-        <source>The "Force update of friendly URL" option is currently enabled.</source>
-        <target>The "Force update of friendly URL" option is currently enabled.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:89</note>
-      </trans-unit>
-      <trans-unit id="87ffb4b96479e24281064ad98ddfd16f">
-        <source>To disable it, go to [1]Product Settings[/1]</source>
-        <target>To disable it, go to [1]Product Settings[/1]</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:91</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1aa1527fa7dfdbe44acb4be33af88e4c">
-        <source>There is no result for this search. Update your filters to view other products.</source>
-        <target>There is no result for this search. Update your filters to view other products.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/list.html.twig:134</note>
+File: src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php:287</note>
       </trans-unit>
     </body>
   </file>
@@ -1017,6 +911,116 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:517</
         <target>Deleting...</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:521</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1b89ef639dabfd2f6eb19886f7c9f8c8">
+        <source>This will delete all the combinations. Do you wish to proceed?</source>
+        <target>This will delete all the combinations. Do you wish to proceed?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1197</note>
+      </trans-unit>
+      <trans-unit id="ff8a012ee6cba99838a649d92ad1b34b">
+        <source>This will delete the specific price. Do you wish to proceed?</source>
+        <target>This will delete the specific price. Do you wish to proceed?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1211</note>
+      </trans-unit>
+      <trans-unit id="dfd19ad4f089996c7eabcd5935f75e98">
+        <source>A pack of products can't have combinations.</source>
+        <target>A pack of products can't have combinations.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1217</note>
+      </trans-unit>
+      <trans-unit id="5b75fdc0df647e8ac5275e31554dd0f9">
+        <source>A virtual product can't have combinations.</source>
+        <target>A virtual product can't have combinations.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1218</note>
+      </trans-unit>
+      <trans-unit id="9909f0bb3eb94634e3f8cd0164dbacac">
+        <source>You are in a multistore context: any modification will impact all your shops, or each shop of the active group.</source>
+        <target>You are in a multistore context: any modification will impact all your shops, or each shop of the active group.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:36</note>
+      </trans-unit>
+      <trans-unit id="d80ebf39e80e164a170987dcd4212136">
+        <source>When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.</source>
+        <target>When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:472</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/formDisable.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e1cc7a5b4545de2fa898ab70a12e2d54">
+        <source>You can't add or edit a product in this shop context: select a shop instead of a group of shops.</source>
+        <target>You can't add or edit a product in this shop context: select a shop instead of a group of shops.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/formDisable.html.twig:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c292d80ff15bf0d38f63af320f9f7839">
+        <source>Friendly URLs are currently disabled.</source>
+        <target>Friendly URLs are currently disabled.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:80</note>
+      </trans-unit>
+      <trans-unit id="517937df76770fb3c4f9e6100ed69ce9">
+        <source>To enable it, go to [1]SEO and URLs[/1]</source>
+        <target>To enable it, go to [1]SEO and URLs[/1]</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:81</note>
+      </trans-unit>
+      <trans-unit id="9bbbc84f839137c71e79f1b8eaafc5b7">
+        <source>Friendly URLs are currently enabled.</source>
+        <target>Friendly URLs are currently enabled.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:83</note>
+      </trans-unit>
+      <trans-unit id="2d1df068fb2a9a3c4d9e3c361795c59c">
+        <source>To disable it, go to [1]SEO and URLs[/1]</source>
+        <target>To disable it, go to [1]SEO and URLs[/1]</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:84</note>
+      </trans-unit>
+      <trans-unit id="d7e9bf98e857f83943b3b75fce04cea9">
+        <source>The "Force update of friendly URL" option is currently enabled.</source>
+        <target>The "Force update of friendly URL" option is currently enabled.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:89</note>
+      </trans-unit>
+      <trans-unit id="87ffb4b96479e24281064ad98ddfd16f">
+        <source>To disable it, go to [1]Product Settings[/1]</source>
+        <target>To disable it, go to [1]Product Settings[/1]</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.twig:91</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d6df5e0f6b6204bece3852c0817420e9">
+        <source>If no carrier is selected then all the carriers will be available for customers orders.</source>
+        <target>If no carrier is selected then all the carriers will be available for customers orders.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_shipping.html.twig:99</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/list_quicknav.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1aa1527fa7dfdbe44acb4be33af88e4c">
+        <source>There is no result for this search. Update your filters to view other products.</source>
+        <target>There is no result for this search. Update your filters to view other products.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/list_quicknav.html.twig:78</note>
       </trans-unit>
     </body>
   </file>

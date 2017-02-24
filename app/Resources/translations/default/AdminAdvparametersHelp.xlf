@@ -1,45 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0c2afe3d3eb02183ee182aa447608bc4">
-        <source>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</source>
-        <target>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:180</note>
-      </trans-unit>
-      <trans-unit id="ee5d0efc6b5d41f7ee2ac5ea831f2a7f">
-        <source>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</source>
-        <target>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:206</note>
-      </trans-unit>
-      <trans-unit id="dace58c348a19d7bddb7a3fe4fd3ebfa">
-        <source>Warning: you will not be able to disable this option once you have registered customers.</source>
-        <target>Warning: you will not be able to disable this option once you have registered customers.</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:206</note>
-      </trans-unit>
-      <trans-unit id="059a6f0b1a0a28d15ee51fe80670f6f2">
-        <source>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</source>
-        <target>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:245</note>
-      </trans-unit>
-      <trans-unit id="697ce708715d1f771177623968e8c6a4">
-        <source>Warning: You will not be able to disable this option once you've started to accept orders.</source>
-        <target>Warning: You will not be able to disable this option once you've started to accept orders.</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:245</note>
-      </trans-unit>
-      <trans-unit id="e667b16af30e0820218ad32242e284dc">
-        <source>Enable or disable this shop group?</source>
-        <target>Enable or disable this shop group?</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:264</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminAdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="99059a2047f475cdc6428076e3360134">
@@ -160,55 +120,112 @@ File: controllers/admin/AdminEmailsController.php:165</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c688fbbc9468ea3473172ca924290860">
-        <source>If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.</source>
-        <target>If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.</target>
+      <trans-unit id="14a966a005ea5262cd09332f4e50b7b1">
+        <source>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</source>
+        <target>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</target>
         <note>Context:
-File: controllers/admin/AdminShopUrlController.php:122</note>
+File: controllers/admin/AdminEmployeesController.php:263</note>
       </trans-unit>
-      <trans-unit id="05f8f0fab3ff5d86e0de9db902da7045">
-        <source>You can use this option if you want to create a store with a URL that doesn't exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).</source>
-        <target>You can use this option if you want to create a store with a URL that doesn't exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).</target>
+      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
+        <source>Password should be at least %num% characters long.</source>
+        <target>Password should be at least %num% characters long.</target>
         <note>Context:
-File: controllers/admin/AdminShopUrlController.php:126</note>
+File: controllers/admin/AdminEmployeesController.php:302</note>
       </trans-unit>
-      <trans-unit id="f6e7829277b67d5a8805d6728a810362">
-        <source>URL rewriting must be activated on your server to use this feature.</source>
-        <target>URL rewriting must be activated on your server to use this feature.</target>
+      <trans-unit id="0b2827832fff3d973ee0ed2e6c7d4b23">
+        <source>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</source>
+        <target>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</target>
         <note>Context:
-File: controllers/admin/AdminShopUrlController.php:127</note>
+File: controllers/admin/AdminEmployeesController.php:326</note>
       </trans-unit>
-      <trans-unit id="a2e8a639b5fd3e34ab4def1e7aac3383">
-        <source>If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).</source>
-        <target>If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).</target>
+      <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
+        <source>This page will be displayed just after login.</source>
+        <target>This page will be displayed just after login.</target>
         <note>Context:
-File: controllers/admin/AdminShopUrlController.php:172</note>
+File: controllers/admin/AdminEmployeesController.php:332</note>
       </trans-unit>
-      <trans-unit id="819e18d335155ef4a9cdfe926ac8a3de">
-        <source>Since the selected shop has no main URL, you have to set this URL as the Main URL.</source>
-        <target>Since the selected shop has no main URL, you have to set this URL as the Main URL.</target>
+      <trans-unit id="d970370797ba19bba5524b480d3526fb">
+        <source>Allow or disallow this employee to log in to the Admin panel.</source>
+        <target>Allow or disallow this employee to log in to the Admin panel.</target>
         <note>Context:
-File: controllers/admin/AdminShopUrlController.php:174</note>
+File: controllers/admin/AdminEmployeesController.php:367</note>
       </trans-unit>
-      <trans-unit id="fe42e7cf02611b9719a6db6513de19eb">
-        <source>The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.</source>
-        <target>The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.</target>
+      <trans-unit id="7bc873cba11f035df692c3549366c722">
+        <source>-- Choose --</source>
+        <target>-- Choose --</target>
         <note>Context:
-File: controllers/admin/AdminShopUrlController.php:178</note>
+File: controllers/admin/AdminEmployeesController.php:390</note>
       </trans-unit>
-      <trans-unit id="7e7b350e5cee624789b1e263ec59db26">
-        <source>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</source>
-        <target>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</target>
+      <trans-unit id="1a7f0b984884e66e95a86b9b5d857b5b">
+        <source>Select the shops the employee is allowed to access.</source>
+        <target>Select the shops the employee is allowed to access.</target>
         <note>Context:
-File: controllers/admin/AdminShopUrlController.php:241</note>
+File: controllers/admin/AdminEmployeesController.php:400</note>
       </trans-unit>
-      <trans-unit id="29f3eb1bea3049b52600a18ad4d0b96c">
-        <source>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</source>
-        <target>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</target>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="11cd708df7411da4546d8580356e711a">
+        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
+        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
         <note>Context:
-File: controllers/admin/AdminShopUrlController.php:256</note>
+File: controllers/admin/AdminImportController.php:493</note>
+      </trans-unit>
+      <trans-unit id="5702db29cfdd93934ed330edb201ecf3">
+        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</source>
+        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:153</note>
+      </trans-unit>
+      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
+        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
+        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:297</note>
+      </trans-unit>
+      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
+        <source>ID of the warehouse to set as storage.</source>
+        <target>ID of the warehouse to set as storage.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:301</note>
+      </trans-unit>
+      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
+        <source>A category root is where a category tree can begin. This is used with multistore.</source>
+        <target>A category root is where a category tree can begin. This is used with multistore.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:192</note>
+      </trans-unit>
+      <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
+        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
+        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:293</note>
+      </trans-unit>
+      <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
+        <source>or</source>
+        <target>or</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:972
+ Comment: Special case for Product : either one or the other. Not both.</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminLogsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="25047dda7ccdbdb758df436ada087c4e">
+        <source>Enter "5" if you do not want to receive any emails.</source>
+        <target>Enter "5" if you do not want to receive any emails.</target>
+        <note>Context:
+File: controllers/admin/AdminLogsController.php:92</note>
+      </trans-unit>
+      <trans-unit id="0250518090d13c807ece595694bffa98">
+        <source>Emails will be sent to the shop owner.</source>
+        <target>Emails will be sent to the shop owner.</target>
+        <note>Context:
+File: controllers/admin/AdminLogsController.php:94</note>
       </trans-unit>
     </body>
   </file>
@@ -306,130 +323,6 @@ File: controllers/admin/AdminPerformanceController.php:448</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminLogsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="25047dda7ccdbdb758df436ada087c4e">
-        <source>Enter "5" if you do not want to receive any emails.</source>
-        <target>Enter "5" if you do not want to receive any emails.</target>
-        <note>Context:
-File: controllers/admin/AdminLogsController.php:92</note>
-      </trans-unit>
-      <trans-unit id="0250518090d13c807ece595694bffa98">
-        <source>Emails will be sent to the shop owner.</source>
-        <target>Emails will be sent to the shop owner.</target>
-        <note>Context:
-File: controllers/admin/AdminLogsController.php:94</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="14a966a005ea5262cd09332f4e50b7b1">
-        <source>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</source>
-        <target>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:263</note>
-      </trans-unit>
-      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
-        <source>Password should be at least %num% characters long.</source>
-        <target>Password should be at least %num% characters long.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:302</note>
-      </trans-unit>
-      <trans-unit id="0b2827832fff3d973ee0ed2e6c7d4b23">
-        <source>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</source>
-        <target>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:326</note>
-      </trans-unit>
-      <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
-        <source>This page will be displayed just after login.</source>
-        <target>This page will be displayed just after login.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:332</note>
-      </trans-unit>
-      <trans-unit id="d970370797ba19bba5524b480d3526fb">
-        <source>Allow or disallow this employee to log in to the Admin panel.</source>
-        <target>Allow or disallow this employee to log in to the Admin panel.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:367</note>
-      </trans-unit>
-      <trans-unit id="7bc873cba11f035df692c3549366c722">
-        <source>-- Choose --</source>
-        <target>-- Choose --</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:390</note>
-      </trans-unit>
-      <trans-unit id="1a7f0b984884e66e95a86b9b5d857b5b">
-        <source>Select the shops the employee is allowed to access.</source>
-        <target>Select the shops the employee is allowed to access.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:400</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminWebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e8602bda90ef985a71054950e6f1981e">
-        <source>Before activating the webservice, you must be sure to: </source>
-        <target>Before activating the webservice, you must be sure to:</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:81</note>
-      </trans-unit>
-      <trans-unit id="45d7b1d28cb1afbb45fdb620db725c10">
-        <source>Check that URL rewriting is available on this server.</source>
-        <target>Check that URL rewriting is available on this server.</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:83</note>
-      </trans-unit>
-      <trans-unit id="60da463f081084680c973ec554a995bb">
-        <source>Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.</source>
-        <target>Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:84</note>
-      </trans-unit>
-      <trans-unit id="c03f07bc287e77654a26af409b4d93fa">
-        <source>Before choosing "Yes", check that PHP is not configured as an Apache module on your server.</source>
-        <target>Before choosing "Yes", check that PHP is not configured as an Apache module on your server.</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:96</note>
-      </trans-unit>
-      <trans-unit id="a5cb039db72d4c240b6cca34b48d61bc">
-        <source>Quick description of the key: who it is for, what permissions it has, etc.</source>
-        <target>Quick description of the key: who it is for, what permissions it has, etc.</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:151</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c127560c7252928dc38d9a0ebf312ba4">
-        <source>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</source>
-        <target>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:589</note>
-      </trans-unit>
-      <trans-unit id="ff679f8027304451c9561c09dafdb57e">
-        <source>Click here to display the shops in the %s shop group</source>
-        <target>Click here to display the shops in the %s shop group</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:766</note>
-      </trans-unit>
-      <trans-unit id="7dd4fd272f9f2a1d6425cae183777579">
-        <source>Click here to display the URLs of the %s shop</source>
-        <target>Click here to display the URLs of the %s shop</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:788</note>
-      </trans-unit>
-      <trans-unit id="01af4d9c4808ce3ccd662c0e5ef7f203">
-        <source>Click here to display the list of shop groups</source>
-        <target>Click here to display the list of shop groups</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:840</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminRequestSqlController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="68db67219aa1fd6e5f8820e20fd78b25">
@@ -464,50 +357,157 @@ File: controllers/admin/AdminRequestSqlController.php:122</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="11cd708df7411da4546d8580356e711a">
-        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
-        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
+      <trans-unit id="c127560c7252928dc38d9a0ebf312ba4">
+        <source>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</source>
+        <target>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:493</note>
+File: controllers/admin/AdminShopController.php:589</note>
       </trans-unit>
-      <trans-unit id="5702db29cfdd93934ed330edb201ecf3">
-        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</source>
-        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</target>
+      <trans-unit id="ff679f8027304451c9561c09dafdb57e">
+        <source>Click here to display the shops in the %s shop group</source>
+        <target>Click here to display the shops in the %s shop group</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:153</note>
+File: controllers/admin/AdminShopController.php:766</note>
       </trans-unit>
-      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
-        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
-        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
+      <trans-unit id="7dd4fd272f9f2a1d6425cae183777579">
+        <source>Click here to display the URLs of the %s shop</source>
+        <target>Click here to display the URLs of the %s shop</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:297</note>
+File: controllers/admin/AdminShopController.php:788</note>
       </trans-unit>
-      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
-        <source>ID of the warehouse to set as storage.</source>
-        <target>ID of the warehouse to set as storage.</target>
+      <trans-unit id="01af4d9c4808ce3ccd662c0e5ef7f203">
+        <source>Click here to display the list of shop groups</source>
+        <target>Click here to display the list of shop groups</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:301</note>
+File: controllers/admin/AdminShopController.php:840</note>
       </trans-unit>
-      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
-        <source>A category root is where a category tree can begin. This is used with multistore.</source>
-        <target>A category root is where a category tree can begin. This is used with multistore.</target>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0c2afe3d3eb02183ee182aa447608bc4">
+        <source>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</source>
+        <target>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:192</note>
+File: controllers/admin/AdminShopGroupController.php:180</note>
       </trans-unit>
-      <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
-        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
-        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
+      <trans-unit id="ee5d0efc6b5d41f7ee2ac5ea831f2a7f">
+        <source>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</source>
+        <target>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:293</note>
+File: controllers/admin/AdminShopGroupController.php:206</note>
       </trans-unit>
-      <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
-        <source>or</source>
-        <target>or</target>
+      <trans-unit id="dace58c348a19d7bddb7a3fe4fd3ebfa">
+        <source>Warning: you will not be able to disable this option once you have registered customers.</source>
+        <target>Warning: you will not be able to disable this option once you have registered customers.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:972
- Comment: Special case for Product : either one or the other. Not both.</note>
+File: controllers/admin/AdminShopGroupController.php:206</note>
+      </trans-unit>
+      <trans-unit id="059a6f0b1a0a28d15ee51fe80670f6f2">
+        <source>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</source>
+        <target>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:245</note>
+      </trans-unit>
+      <trans-unit id="697ce708715d1f771177623968e8c6a4">
+        <source>Warning: You will not be able to disable this option once you've started to accept orders.</source>
+        <target>Warning: You will not be able to disable this option once you've started to accept orders.</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:245</note>
+      </trans-unit>
+      <trans-unit id="e667b16af30e0820218ad32242e284dc">
+        <source>Enable or disable this shop group?</source>
+        <target>Enable or disable this shop group?</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:264</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c688fbbc9468ea3473172ca924290860">
+        <source>If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.</source>
+        <target>If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:122</note>
+      </trans-unit>
+      <trans-unit id="05f8f0fab3ff5d86e0de9db902da7045">
+        <source>You can use this option if you want to create a store with a URL that doesn't exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).</source>
+        <target>You can use this option if you want to create a store with a URL that doesn't exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:126</note>
+      </trans-unit>
+      <trans-unit id="f6e7829277b67d5a8805d6728a810362">
+        <source>URL rewriting must be activated on your server to use this feature.</source>
+        <target>URL rewriting must be activated on your server to use this feature.</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:127</note>
+      </trans-unit>
+      <trans-unit id="a2e8a639b5fd3e34ab4def1e7aac3383">
+        <source>If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).</source>
+        <target>If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:172</note>
+      </trans-unit>
+      <trans-unit id="819e18d335155ef4a9cdfe926ac8a3de">
+        <source>Since the selected shop has no main URL, you have to set this URL as the Main URL.</source>
+        <target>Since the selected shop has no main URL, you have to set this URL as the Main URL.</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:174</note>
+      </trans-unit>
+      <trans-unit id="fe42e7cf02611b9719a6db6513de19eb">
+        <source>The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.</source>
+        <target>The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older Main URL will be set as a regular URL.</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:178</note>
+      </trans-unit>
+      <trans-unit id="7e7b350e5cee624789b1e263ec59db26">
+        <source>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</source>
+        <target>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:241</note>
+      </trans-unit>
+      <trans-unit id="29f3eb1bea3049b52600a18ad4d0b96c">
+        <source>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</source>
+        <target>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:256</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminWebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e8602bda90ef985a71054950e6f1981e">
+        <source>Before activating the webservice, you must be sure to: </source>
+        <target>Before activating the webservice, you must be sure to:</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:81</note>
+      </trans-unit>
+      <trans-unit id="45d7b1d28cb1afbb45fdb620db725c10">
+        <source>Check that URL rewriting is available on this server.</source>
+        <target>Check that URL rewriting is available on this server.</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:83</note>
+      </trans-unit>
+      <trans-unit id="60da463f081084680c973ec554a995bb">
+        <source>Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.</source>
+        <target>Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:84</note>
+      </trans-unit>
+      <trans-unit id="c03f07bc287e77654a26af409b4d93fa">
+        <source>Before choosing "Yes", check that PHP is not configured as an Apache module on your server.</source>
+        <target>Before choosing "Yes", check that PHP is not configured as an Apache module on your server.</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:96</note>
+      </trans-unit>
+      <trans-unit id="a5cb039db72d4c240b6cca34b48d61bc">
+        <source>Quick description of the key: who it is for, what permissions it has, etc.</source>
+        <target>Quick description of the key: who it is for, what permissions it has, etc.</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:151</note>
       </trans-unit>
     </body>
   </file>
