@@ -130,7 +130,5 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         }
 
         return $result;
-
-        return $result;
     }
 }
