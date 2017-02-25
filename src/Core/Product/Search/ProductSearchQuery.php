@@ -96,12 +96,6 @@ class ProductSearchQuery
         return $this->id_supplier;
     }
 
-    public function setSortOption(SortOption $sortOption)
-    {
-        $this->sortOption = $option;
-        return $this;
-    }
-
     public function setResultsPerPage($resultsPerPage)
     {
         $this->resultsPerPage = (int)$resultsPerPage;
