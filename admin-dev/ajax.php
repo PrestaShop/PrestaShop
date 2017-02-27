@@ -43,14 +43,12 @@ if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.co
 }
 
 if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
-    $jsonArray = array();
     $import = new AdminImportController();
 
-    $fields = $import->getAvailableFields(true);
-    foreach ($fields as $field) {
-        $jsonArray[] = '{"field":"'.addslashes($field).'"}';
-    }
-    die('['.implode(',', $jsonArray).']');
+    $fields = array_map(function ($elem) {
+        return ['field' => $elem];
+    }, $import->getAvailableFields(true));
+    die(json_encode($fields));
 }
 
 if (Tools::isSubmit('ajaxProductPackItems')) {
