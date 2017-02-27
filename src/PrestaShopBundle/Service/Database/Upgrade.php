@@ -23,42 +23,27 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Service\Cache;
+namespace PrestaShopBundle\Service\Database;
 
+use PrestaShopBundle\Command\UpdateSchemaCommand;
 use PrestaShopBundle\Service\Command\AbstractCommand;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Input\ArrayInput;
+
 
 /**
  * Refresh Sf2 cache.
  */
-class Refresh extends AbstractCommand
+class Upgrade extends AbstractCommand
 {
-
     /**
-     * Add cache:clear to the execution.
+     * Run the custom schemaUpgrade command
      */
-    public function addCacheClear()
+    public function addDoctrineSchemaUpdate()
     {
-        $this->commands[] = array(
-            'command' => 'doctrine:cache:clear-metadata',
-            '--flush' => true,
-        );
+        $command = new UpdateSchemaCommand($this->application);
+        $this->application->add($command);
 
         $this->commands[] = array(
-            'command' => 'doctrine:cache:clear-query',
-            '--flush' => true,
-        );
-
-        $this->commands[] = array(
-            'command' => 'doctrine:cache:clear-result',
-            '--flush' => true,
-        );
-
-        $this->commands[] = array(
-            'command' => 'cache:clear',
-            '--no-warmup' => true,
+            'command' => 'doctrine:schema_update'
         );
     }
 }

@@ -61,9 +61,14 @@ if ($tmp = strpos($_SERVER['REQUEST_URI'], '?')) {
 }
 $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 
+if (isset($_GET['adminDir']) && $_GET['adminDir'] && !defined('_PS_ADMIN_DIR_')) {
+    define('_PS_ADMIN_DIR_', base64_decode($_GET['adminDir']));
+}
+
 require_once(dirname(__FILE__).'/../init.php');
 Upgrade::migrateSettingsFile();
 require_once(_PS_CONFIG_DIR_.'bootstrap.php');
+error_reporting(E_ALL & ~E_NOTICE & ~E_USER_DEPRECATED);
 
 $logDir = _PS_ROOT_DIR_.'/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/log/';
 @mkdir($logDir, 0777, true);
@@ -97,8 +102,6 @@ if (isset($_GET['changeToDefaultTheme']) && $_GET['changeToDefaultTheme'] == 1) 
 if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set('Europe/Paris');
 }
-
-error_reporting(E_ALL);
 
 $upgrade->run();
 
