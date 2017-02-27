@@ -243,6 +243,14 @@ $(document).ready(function() {
         }
       });
       $('.nav-item .nav-link span').text('');
+      $('#header_shop .dropdown-menu').attr('id','shop-list-collapse');
+      $('#header_shop li:first').addClass('shop-list-title').find('a').attr({
+        'data-toggle':'collapse',
+        'href':'#shop-list-collapse'
+      });
+      $('#shop-list-collapse').collapse({
+        toggle: true
+      });
     }
     else {
       $('.username a').contents().unwrap();

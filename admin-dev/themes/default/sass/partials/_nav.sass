@@ -391,6 +391,24 @@ $min-height: 950px
 			@include left(0)
 	#header_employee_box, .admin-link
 		display: none
+	#header_shop
+		float: none
+		.shop-list-title
+			width: 100%
+			text-transform: uppercase
+			font-size: 16px
+			text-align: center
+			font-weight: normal
+			.icon-caret-down
+				display: none
+			> a::after
+				font-family: 'Material Icons'
+				content: "\E313"
+				font-size: 20px
+				margin-left: 10px
+				vertical-align: bottom
+		#shop-list-collapse
+			background-color: white
 	#header_shopname
 		.bootstrap &
 			float: none
@@ -426,7 +444,8 @@ $min-height: 950px
 		@include margin(0, 0, 100px, 0)
 		@include transition(all 0.35s ease-out)
 		@include animate(fadeInLeft, 0.3s)
-
+		.username
+			font-size: 16px
 		> li.searchtab
 			padding: 15px
 			position: relative
@@ -495,7 +514,7 @@ $min-height: 950px
 	ul.menu.menu-close
 		@include animate(fadeOutLeft, 0.2s)
 	.menu-collapse
-		color: $gray-light
+		color: #6C868E
 		width: 35px
 		height: 35px
 		text-align: center
