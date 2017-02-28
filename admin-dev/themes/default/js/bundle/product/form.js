@@ -272,7 +272,7 @@ var formCategory = (function() {
   var elem = $('#form_step1_new_category');
 
   /** Send category form and it to nested categories */
-  function send() {
+  function send(form) {
     $.ajax({
       type: 'POST',
       url: elem.attr('data-action'),
@@ -319,6 +319,9 @@ var formCategory = (function() {
           'breadcrumb': ''
         };
         productCategoriesTags.createTag(tag);
+
+        //hide the form
+        form.hideBlock();
       },
       error: function(response) {
         $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
@@ -343,10 +346,7 @@ var formCategory = (function() {
       var that = this;
       /** remove all categories from selector, except pre defined */
       $('#add-categories button.save').click(function(){
-        send();
-        if($('#form_step1_new_category_name').val().length > 2){
-          that.hideBlock();
-        }
+        send(that);
       });
       $('#add-categories button[type="reset"]').click(function(){
         that.hideBlock();
