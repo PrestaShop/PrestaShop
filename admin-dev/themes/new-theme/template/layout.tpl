@@ -127,7 +127,9 @@
   {/if}
 
 </div>
-<div class="mobile-layer"></div>
+
+{include file='components/layout/non-responsive.tpl'}
+
 {* TODO: THIS FOOTER WILL BE REMOVED *}
 {if $display_footer}
   {include file='footer.tpl'}

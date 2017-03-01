@@ -108,6 +108,8 @@ export default class NavBar {
       'height' : window.innerHeight
     });
 
+    $('.js-non-responsive').show();
+
     function expand (){
       if (!$('div.notification-center.dropdown').hasClass('open')) {
         $('.mobile-nav').toggleClass('expanded');
@@ -129,5 +131,6 @@ export default class NavBar {
     $('.nav-bar').removeClass('mobile-nav');
     $('.panel-collapse').removeClass('collapse').addClass('submenu');
     $('.shop-list-title').remove();
+    $('.js-non-responsive').hide();
   }
 }
