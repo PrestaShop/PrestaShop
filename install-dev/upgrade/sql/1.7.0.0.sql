@@ -134,8 +134,8 @@ CREATE TABLE `PREFIX_module_access` (
   PRIMARY KEY (`id_profile`,`id_authorization_role`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-/*DROP TABLE IF EXISTS `PREFIX_access_old`;*/
-/*DROP TABLE IF EXISTS `PREFIX_module_access_old`;*/
+DROP TABLE IF EXISTS `PREFIX_access_old`;
+DROP TABLE IF EXISTS `PREFIX_module_access_old`;
 
 /* PHP:add_quick_access_tab(); */;
 
