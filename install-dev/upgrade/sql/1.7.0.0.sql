@@ -134,9 +134,6 @@ CREATE TABLE `PREFIX_module_access` (
   PRIMARY KEY (`id_profile`,`id_authorization_role`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `PREFIX_access_old`;
-DROP TABLE IF EXISTS `PREFIX_module_access_old`;
-
 /* PHP:add_quick_access_tab(); */;
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES
@@ -203,3 +200,6 @@ ALTER TABLE `PREFIX_profile_lang` ADD UNIQUE KEY (`name`);
 /* PHP:migrate_tabs_17(); */;
 /* Properly migrate the rights associated with each tabs */
 /* PHP:ps_1700_right_management(); */;
+
+DROP TABLE IF EXISTS `PREFIX_access_old`;
+DROP TABLE IF EXISTS `PREFIX_module_access_old`;
