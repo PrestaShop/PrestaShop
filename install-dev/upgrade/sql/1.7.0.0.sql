@@ -17,7 +17,7 @@ INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
   ('actionSubmitAccountBefore', 'actionBeforeSubmitAccount'),
   ('actionDeleteProductInCartAfter', 'actionAfterDeleteProductInCart');
 
-ALTER TABLE `PREFIX_currency` DROP `iso_code_num` ,DROP `sign` ,DROP `blank` ,DROP `format` ,DROP `decimals` ;
+ALTER TABLE `PREFIX_currency` DROP `iso_code_num` , DROP `sign` , DROP `blank` , DROP `format` , DROP `decimals` ;
 
 /* Password reset token for new "Forgot my password screen */
 ALTER TABLE `PREFIX_customer` ADD `reset_password_token` varchar(40) DEFAULT NULL;
@@ -115,7 +115,8 @@ ALTER TABLE `PREFIX_lang` ADD `locale` varchar(5) COLLATE utf8_unicode_ci NOT NU
 CREATE TABLE `PREFIX_authorization_role` (
   `id_authorization_role` int(10) unsigned NOT NULL auto_increment,
   `slug` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id_authorization_role`)
+  PRIMARY KEY (`id_authorization_role`),
+  UNIQUE KEY (`slug`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 RENAME TABLE `PREFIX_access` TO `PREFIX_access_old`;
@@ -132,9 +133,6 @@ CREATE TABLE `PREFIX_module_access` (
   `id_authorization_role` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_profile`,`id_authorization_role`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-/* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
-/* PHP:ps_1700_right_management(); */;
 
 DROP TABLE IF EXISTS `PREFIX_access_old`;
 DROP TABLE IF EXISTS `PREFIX_module_access_old`;
@@ -200,5 +198,8 @@ DELETE FROM `PREFIX_configuration` WHERE `name` IN (
   'SHOP_LOGO_MOBILE_WIDTH');
 
 ALTER TABLE `PREFIX_tab` ADD `icon` varchar(32) DEFAULT '';
+ALTER TABLE `PREFIX_profile_lang` ADD UNIQUE KEY (`name`);
 
 /* PHP:migrate_tabs_17(); */;
+/* Properly migrate the rights associated with each tabs */
+/* PHP:ps_1700_right_management(); */;
