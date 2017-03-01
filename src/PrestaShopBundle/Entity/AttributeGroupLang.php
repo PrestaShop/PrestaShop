@@ -74,7 +74,7 @@ class AttributeGroupLang
      */
     public function getId()
     {
-        return $this->id;
+        return $this->attributeGroup;
     }
 
 
