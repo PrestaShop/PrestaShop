@@ -139,16 +139,17 @@ class ThemeManager implements AddonManagerInterface
     /**
      * Actions to perform when switching from another theme to this one.
      * Example:
-     * 	- update configuration
-     * 	- enable/disable modules.
+     *    - update configuration
+     *    - enable/disable modules.
      *
      * @param string $name The theme name to enable
      *
+     * @param bool $force bypass user privilege checks
      * @return bool True for success
      */
-    public function enable($name)
+    public function enable($name, $force = false)
     {
-        if (!$this->employee->can('edit', 'AdminThemes')) {
+        if (!$force && !$this->employee->can('edit', 'AdminThemes')) {
             return false;
         }
 
