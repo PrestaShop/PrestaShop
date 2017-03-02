@@ -26,7 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Image;
-use ImageManager as ImageManagerLegacy;
+use ImageManager as LegacyImageManager;
 
 class ImageManager
 {
@@ -56,18 +56,80 @@ class ImageManager
      */
     public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = 'p')
     {
-        if ($tableName == 'product') {
-            $image = new Image($imageId);
-            $path_to_image = _PS_IMG_DIR_.$imageDir.'/'.$image->getExistingImgPath().'.'.$imageType;
-        } else {
-            $path_to_image = _PS_IMG_DIR_.$imageDir.'/'.$imageId.'.'.$imageType;
-        }
-        $thumbPath = ImageManagerLegacy::thumbnail($path_to_image, $tableName.'_mini_'.$imageId.'.'.$imageType, 45, $imageType);
+        $thumbPath = $this->getThumbnailTag($imageId, $imageType, $tableName, $imageDir);
 
         // because legacy uses relative path to reach a directory under root directory...
         $replacement = 'src="'.$this->legacyContext->getRootUrl();
         $thumbPath = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $thumbPath);
 
         return $thumbPath;
+    }
+
+    public function getThumbnailPath($imageId)
+    {
+        $imageType = 'jpg';
+        $tableName = 'product';
+        $imageDir = 'p';
+
+        $imagePath = $this->getImagePath($imageId, $imageType, $tableName, $imageDir);
+        $thumbnailCachedImageName = $this->makeCachedImageName($imageId, $imageType, $tableName);
+        LegacyImageManager::thumbnail(
+            $imagePath,
+            $thumbnailCachedImageName,
+            45,
+            $imageType
+        );
+
+        return LegacyImageManager::getThumbnailPath($thumbnailCachedImageName, false);
+    }
+
+    /**
+     * @param $imageId
+     * @param string $imageType
+     * @param string $tableName
+     * @param string $imageDir
+     * @return string
+     */
+    private function getThumbnailTag($imageId, $imageType, $tableName, $imageDir)
+    {
+        $imagePath = $this->getImagePath($imageId, $imageType, $tableName, $imageDir);
+
+        return LegacyImageManager::thumbnail(
+            $imagePath,
+            $this->makeCachedImageName($imageId, $imageType, $tableName),
+            45,
+            $imageType
+        );
+    }
+
+    /**
+     * @param $imageId
+     * @param $imageType
+     * @param $tableName
+     * @param $imageDir
+     * @return string
+     */
+    private function getImagePath($imageId, $imageType, $tableName, $imageDir)
+    {
+        $parentDirectory = _PS_IMG_DIR_ . $imageDir;
+
+        if ($tableName == 'product') {
+            $image = new Image($imageId);
+
+            return $parentDirectory . '/' . $image->getExistingImgPath() . '.' . $imageType;
+        }
+
+        return $parentDirectory . '/' . $imageId . '.' . $imageType;
+    }
+
+    /**
+     * @param $imageId
+     * @param $imageType
+     * @param $tableName
+     * @return string
+     */
+    private function makeCachedImageName($imageId, $imageType, $tableName)
+    {
+        return $tableName . '_mini_' . $imageId . '.' . $imageType;
     }
 }

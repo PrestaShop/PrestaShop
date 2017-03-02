@@ -303,6 +303,14 @@ services:
         arguments:
             - PrestaShopBundle\Entity\Lang
 
+    prestashop.core.api.product_stock.repository:
+        class: PrestaShopBundle\Entity\Repository\ProductStockRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.image_manager"
+            - "%database_prefix%"
+
     # Managers
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager
