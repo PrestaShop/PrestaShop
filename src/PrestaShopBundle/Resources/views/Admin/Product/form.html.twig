@@ -952,7 +952,7 @@
                           {% endfor %}
                         </div>
                         <div class="col-md-12 col-lg-5">
-                          <h2>{{ 'Module to configure'|trans({}, 'Admin.Catalog.Modules') }}</h2>
+                          <h2>{{ 'Module to configure'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                           <select class="modules-list-select" data-toggle="select2">
                             {% for module in hooks %}
                               <option value="module-{{ module.attributes.name }}">{{ module.attributes.displayName }}</option>
@@ -963,9 +963,9 @@
 
                       <div class="module-render-container all-modules">
                         <p>
-                          <h2>{{ 'Choose a module to configure'|trans({}, 'Admin.Catalog.Modules') }}</h2>
-                          {{ 'These modules are relative to the product page of your shop.'|trans({}, 'Admin.Catalog.Modules') }}<br />
-                          {{ 'To manage all your modules go to the [1]Installed module page[/1]'|trans({}, 'Admin.Catalog.Modules')|replace({'[1]': '<a href="' ~ path("admin_module_manage") ~ '">', '[/1]': '</a>'})|raw }}
+                          <h2>{{ 'Choose a module to configure'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+                          {{ 'These modules are relative to the product page of your shop.'|trans({}, 'Admin.Catalog.Feature') }}<br />
+                          {{ 'To manage all your modules go to the [1]Installed module page[/1]'|trans({}, 'Admin.Catalog.Feature')|replace({'[1]': '<a href="' ~ path("admin_module_manage") ~ '">', '[/1]': '</a>'})|raw }}
                         </p>
                         <div class="row">
                           {% for module in hooks %}
@@ -986,7 +986,7 @@
                                 <div class="module-container">
                                   <div class="module-quick-action-grid clearfix">
                                     <button class="modules-list-button btn btn-primary-outline pull-xs-right" data-target="module-{{ module.id }}">
-                                      {{ 'Configure'|trans({}, 'Admin.Catalog.Modules') }}
+                                      {{ 'Configure'|trans({}, 'Admin.Actions') }}
                                     </button>
                                   </div>
                                 </div>
