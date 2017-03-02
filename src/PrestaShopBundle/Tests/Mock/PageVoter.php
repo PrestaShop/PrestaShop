@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\Tests\Mock;
 
-use PrestaShopBundle\Security\Voter\ProductVoter as BaseVoter;
+use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class ProductVoter extends BaseVoter
+class PageVoter extends BaseVoter
 {
     /**
      * @param string $attribute

@@ -31,6 +31,17 @@
         <h4 class="modal-title module-modal-title">{{ 'Connect to Addons marketplace'|trans({}, 'Admin.Modules.Feature') }}</h4>
       </div>
       <div class="modal-body">
+        {% if level <= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_READ') %}
+          <div class="row">
+            <div class="col-md-12">
+              <div class="alert alert-danger">
+                <p>
+                  {{ errorMessage }}
+                </p>
+              </div>
+            </div>
+          </div>
+        {% else %}
           <div class="row">
               <div class="col-md-12">
                   <p>
@@ -59,6 +70,7 @@
                 </p>
               </div>
           </div>
+        {% endif %}
       </div>
     </div>
   </div>

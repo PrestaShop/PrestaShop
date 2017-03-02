@@ -30,13 +30,23 @@ use Access;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class ProductVoter extends Voter
+class PageVoter extends Voter
 {
     const CREATE = 'create';
 
     const UPDATE = 'update';
 
     const DELETE = 'delete';
+
+    const READ   = 'read';
+
+    const LEVEL_DELETE   = 4;
+
+    const LEVEL_UPDATE   = 3;
+
+    const LEVEL_CREATE   = 2;
+
+    const LEVEL_READ   = 1;
 
     /**
      * @param string $attribute
@@ -45,7 +55,7 @@ class ProductVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, array(self::CREATE, self::UPDATE, self::DELETE))) {
+        if (!in_array($attribute, array(self::CREATE, self::UPDATE, self::DELETE, self::READ))) {
             return false;
         }
 
@@ -62,8 +72,9 @@ class ProductVoter extends Voter
     {
         $user = $token->getUser();
         $employeeProfileId = $user->getData()->id_profile;
+        $global =  $subject . $attribute;
 
-        return $this->can($attribute, $employeeProfileId);
+        return $this->can($global, $employeeProfileId);
     }
 
     /**
@@ -73,7 +84,6 @@ class ProductVoter extends Voter
      */
     protected function can($action, $employeeProfileId)
     {
-        return Access::isGranted('ROLE_MOD_TAB_ADMINPRODUCTS_' . strtoupper($action), $employeeProfileId) &&
-            Access::isGranted('ROLE_MOD_TAB_ADMINCATALOG_' . strtoupper($action), $employeeProfileId);
+        return Access::isGranted('ROLE_MOD_TAB_' . strtoupper($action), $employeeProfileId);
     }
 }

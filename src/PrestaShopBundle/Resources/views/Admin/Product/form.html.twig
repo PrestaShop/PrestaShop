@@ -28,6 +28,7 @@
 
   <form name="form" id="form" method="post" class="form-horizontal product-page row" novalidate="novalidate">
 
+    {% if not editable %} <fieldset disabled id="field-disabled"> {% endif %}
     {# PRODUCT HEADER #}
     <div class="product-header">
       {% if is_multishop_context %}
@@ -160,9 +161,11 @@
                             </small>
                         </div>
                         {% if form.step1.vars.value.images is defined %}
-                            <div class="dz-preview disabled openfilemanager">
-                              <div><span>+</span></div>
-                            </div>
+                            {% if editable %}
+                                <div class="dz-preview disabled openfilemanager">
+                                    <div><span>+</span></div>
+                                </div>
+                            {% endif %}
                           {% for image in form.step1.vars.value.images %}
                             <div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle"
                                  data-id="{{ image.id }}"
@@ -969,7 +972,6 @@
       {{ form_widget(form._token) }}
 
     </div>
-
     {# FOOTER #}
     <div class="product-footer">
       <div class="col-lg-5">
@@ -993,7 +995,7 @@
          >
           {{ 'Preview'|trans({}, 'Admin.Actions')}}
         </a>
-
+        {% if editable %}
         <h2 class="for-switch online-title" {% if not form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
             title="{{ 'Enable or disable the product on your shop: CTRL+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Online'|trans({}, 'Admin.Global') }}</h2>
         <h2 class="for-switch offline-title" {% if form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
@@ -1006,7 +1008,7 @@
           value="1"
           {{ form.step1.vars.value.active ? 'checked="checked"' : '' }}
         />
-
+        {% endif %}
       </div>
       <div class="col-lg-6 text-lg-right">
         {% if is_shop_context %}
@@ -1092,6 +1094,7 @@
         </div>
       </div>
     </div>
+    {% if not editable %} </fieldset> {% endif %}
   </form>
 
 
@@ -1138,6 +1141,26 @@
   <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
+
+  <script>
+      $(function() {
+        var editable = '{{ editable }}';
+
+        if (editable !== '1'){
+          $('#field-disabled').find("select").each(function() {
+            $(this).removeClass('select2-hidden-accessible');
+          });
+          $('#field-disabled').find("span.select2").each(function() {
+            $(this).hide();
+          });
+          $('#field-disabled').find("a.pstaggerClosingCross").each(function() {
+            $(this).attr("disabled", "disabled").on("click", function() {
+              return false;
+            });
+          });
+        }
+      });
+  </script>
 {% endblock %}
 
 {% set js_translatable = {
