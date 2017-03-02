@@ -551,7 +551,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         try {
-            if(!in_array($this->authorizationLevel(), array(PageVoter::LEVEL_CREATE, PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE))){
+            if( !in_array($this->authorizationLevel(), array( PageVoter::LEVEL_CREATE, PageVoter::LEVEL_DELETE))){
                 return new JsonResponse(
                     array(
                         'status' => false,
@@ -781,10 +781,10 @@ class ModuleController extends FrameworkBundleAdminController
         switch (true) {
             case ($this->isGranted(PageVoter::DELETE, 'ADMINMODULESSF_')) :
                 return PageVoter::LEVEL_DELETE;
-            case ($this->isGranted(PageVoter::UPDATE, 'ADMINMODULESSF_')) :
-                return PageVoter::LEVEL_UPDATE;
             case ($this->isGranted(PageVoter::CREATE, 'ADMINMODULESSF_')) :
                 return PageVoter::LEVEL_CREATE;
+            case ($this->isGranted(PageVoter::UPDATE, 'ADMINMODULESSF_')) :
+                return PageVoter::LEVEL_UPDATE;
             case ($this->isGranted(PageVoter::READ, 'ADMINMODULESSF_')) :
                 return PageVoter::LEVEL_READ;
             default :

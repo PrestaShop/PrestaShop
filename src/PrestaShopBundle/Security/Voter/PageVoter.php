@@ -42,9 +42,9 @@ class PageVoter extends Voter
 
     const LEVEL_DELETE   = 4;
 
-    const LEVEL_UPDATE   = 3;
+    const LEVEL_UPDATE   = 2;
 
-    const LEVEL_CREATE   = 2;
+    const LEVEL_CREATE   = 3;
 
     const LEVEL_READ   = 1;
 
