@@ -1,0 +1,5 @@
+admin_stock_overview:
+    path:     /overview
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Stock:overview
