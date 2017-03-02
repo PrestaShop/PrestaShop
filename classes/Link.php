@@ -730,6 +730,12 @@ class LinkCore
                 }
                 // New architecture modification: temporary behavior to switch between old and new controllers.
                 return $sfRouter->generate('admin_module_catalog', array(), UrlGeneratorInterface::ABSOLUTE_URL);
+            case 'AdminStockManagement':
+                if (array_key_exists('route', $sfRouteParams)) {
+                    return $sfRouter->generate($sfRouteParams['route'], array(), UrlGeneratorInterface::ABSOLUTE_URL);
+                }
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                return $sfRouter->generate('admin_stock_overview', array(), UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;

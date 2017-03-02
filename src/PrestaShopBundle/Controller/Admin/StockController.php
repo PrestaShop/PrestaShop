@@ -23,22 +23,22 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShopBundle\Controller\Admin;
 
-namespace PrestaShopBundle\Controller\Api;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
-class StockController extends Controller
+/**
+ * Admin controller for the Stock pages.
+ */
+class StockController extends FrameworkBundleAdminController
 {
     /**
-     * @return JsonResponse
+     * @Template
+     *
+     * @return array Template vars
      */
-    public function listAction()
+    public function overviewAction()
     {
-        $productRepository = $this->get('prestashop.core.api.product_stock.repository');
-        $stockOverviewColumns = $productRepository->getStockOverviewRows();
-
-        return new JsonResponse($stockOverviewColumns);
+        return [];
     }
 }
