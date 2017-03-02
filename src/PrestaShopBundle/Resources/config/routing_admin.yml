@@ -47,6 +47,10 @@ _admin_security_routing:
     resource: "admin/routing_security.yml"
     prefix: /security
 
+_admin_stock_routing:
+    resource: "admin/routing_stock.yml"
+    prefix: /stock
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}/{view}
