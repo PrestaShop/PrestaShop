@@ -82,7 +82,7 @@ class AdminThemesControllerCore extends AdminController
             !$this->logged_on_addons
             || !in_array(
                     $this->authorizationLevel(),
-                    array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE)
+                    array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE)
                 )
             || _PS_MODE_DEMO_
         ) {
@@ -255,7 +255,7 @@ class AdminThemesControllerCore extends AdminController
                 if(
                     !in_array(
                         $this->authorizationLevel(),
-                        array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                        array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
                     || _PS_MODE_DEMO_
                 ) {
                     Throw new Exception ($this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error'));
@@ -286,7 +286,7 @@ class AdminThemesControllerCore extends AdminController
             if(
                 !in_array(
                     $this->authorizationLevel(),
-                    array(AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                    array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
                 || _PS_MODE_DEMO_
             ) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
@@ -298,7 +298,7 @@ class AdminThemesControllerCore extends AdminController
             if(
                 !in_array(
                     $this->authorizationLevel(),
-                    array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                    array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
                 || _PS_MODE_DEMO_
             ) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
@@ -329,7 +329,7 @@ class AdminThemesControllerCore extends AdminController
             if(
                 !in_array(
                     $this->authorizationLevel(),
-                    array(AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                    array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
                 || _PS_MODE_DEMO_
             ) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
@@ -342,7 +342,7 @@ class AdminThemesControllerCore extends AdminController
             if(
                 !in_array(
                     $this->authorizationLevel(),
-                    array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                    array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
                 || _PS_MODE_DEMO_
             ) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'); 
@@ -380,7 +380,7 @@ class AdminThemesControllerCore extends AdminController
         if(
             !in_array(
                 $this->authorizationLevel(),
-                array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
             || _PS_MODE_DEMO_
         ) {
             $this->errors[] = $this->trans('You do not have permission to upload this.', array(), 'Admin.Notifications.Error');
@@ -714,7 +714,7 @@ class AdminThemesControllerCore extends AdminController
         if(
             !in_array(
                 $this->authorizationLevel(),
-                array(AdminController::LEVEL_ADD, AdminController::LEVEL_EDIT, AdminController::LEVEL_DELETE))
+                array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
             || _PS_MODE_DEMO_
         ) {
             Tools::clearCache();
@@ -736,10 +736,10 @@ class AdminThemesControllerCore extends AdminController
         switch (true) {
             case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_DELETE', $this->context->employee->id_profile)) :
                 return AdminController::LEVEL_DELETE;
-            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_UPDATE', $this->context->employee->id_profile)) :
-                return AdminController::LEVEL_EDIT;
             case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_CREATE', $this->context->employee->id_profile)) :
                 return AdminController::LEVEL_ADD;
+            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_UPDATE', $this->context->employee->id_profile)) :
+                return AdminController::LEVEL_EDIT;
             case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_READ', $this->context->employee->id_profile)) :
                 return AdminController::LEVEL_VIEW;
             default :

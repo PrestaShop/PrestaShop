@@ -249,10 +249,10 @@ class AdminControllerCore extends Controller
     const LEVEL_DELETE = 4;
 
     /** @var array Cache for translations */
-    const LEVEL_EDIT = 3;
+    const LEVEL_EDIT = 2;
 
     /** @var array Cache for translations */
-    const LEVEL_ADD = 2;
+    const LEVEL_ADD = 3;
 
     /** @var array Cache for translations */
     const LEVEL_VIEW = 1;
