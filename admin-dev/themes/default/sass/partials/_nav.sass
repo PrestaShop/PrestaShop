@@ -409,6 +409,35 @@ $min-height: 950px
 				vertical-align: bottom
 		#shop-list-collapse
 			background-color: white
+			list-style-type: none
+			text-align: left
+			padding-left: 0
+			margin-top: 10px
+			li
+				border-bottom: #BBCDD2 1px solid
+				height: 30px
+				padding-left: 30px
+				line-height: 50px
+				height: 50px
+				&.group
+					padding-left: 50px
+					a
+						color: #363A41
+						font-weight: bold
+						text-transform: none
+				&.shop
+					padding-left: 70px
+					text-transform: none
+					&.disabled a
+						color: #BBCDD2
+					a
+						color: #363A41
+					.link-shop
+						position: absolute
+						right: 20px
+						.material-icons
+							color: #6C868E
+							font-size: 20px
 	#header_shopname
 		.bootstrap &
 			float: none

@@ -229,6 +229,9 @@ $(document).ready(function() {
     if(build) {
       var adminLink = $('.admin-link').attr('href');
       var notificationOffsetLeft = $('#notification').offset().left;
+      var shopText = $('#header_shop a.dropdown-toggle').html();
+
+      $('#header_shop a.dropdown-toggle').remove();
       $('.username').contents().wrap('<a href="' + adminLink + '"></a>');
       $('.employee_avatar img').wrap('<a href="' + adminLink + '"></a>');
       $('.panel-collapse').addClass('collapse');
@@ -243,11 +246,9 @@ $(document).ready(function() {
         }
       });
       $('.nav-item .nav-link span').text('');
-      $('#header_shop .dropdown-menu').attr('id','shop-list-collapse');
-      $('#header_shop li:first').addClass('shop-list-title').find('a').attr({
-        'data-toggle':'collapse',
-        'href':'#shop-list-collapse'
-      });
+      $('#header_shop .dropdown-menu').attr('id','shop-list-collapse').removeClass('dropdown-menu');
+
+      $('#header_shop li:first').addClass('shop-list-title').prepend('<a href="#shop-list-collapse" data-toggle="collapse" aria-expanded="true">'+shopText+'</a>');
       $('#shop-list-collapse').collapse({
         toggle: true
       });
