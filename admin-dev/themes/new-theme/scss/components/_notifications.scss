@@ -148,5 +148,8 @@
     #messages-tab::before {
       content: "\E0BE";
     }
+    .no-notification {
+      top: rem(220px);
+    }
   }
 }
