@@ -19,8 +19,11 @@
     &.expanded {
       visibility: visible;
       margin-left: 0;
+      overflow-y: scroll;
     }
-
+    .onboarding-navbar {
+      display: none;
+    }
     .panel-collapse {
       padding-left: 0;
       .link-leveltwo .link {

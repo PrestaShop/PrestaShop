@@ -382,8 +382,8 @@ $min-height: 950px
 	&.expanded
 		width: 100%
 		height: 100%
-		top: 60px
 		background: rgba(0,0,0,.7)
+		top: 60px
 		.menu-collapse
 			top: -60px
 			position: absolute
@@ -461,18 +461,22 @@ $min-height: 950px
 		width: 60px
 		height: 60px
 	ul.menu
-		position: absolute
+		position: fixed
 		display: none
 		width: 90%
 		overflow: scroll
-		min-height: 100%
+		top: 60px
+		bottom: 0
 		background-color: #363A41
 		padding: 0
 		border-top: 1px black solid
 		list-style: none
-		@include margin(0, 0, 100px, 0)
+		margin-bottom: 0
 		@include transition(all 0.35s ease-out)
 		@include animate(fadeInLeft, 0.3s)
+		.img-thumbnail
+			padding: 0
+			border: 0
 		.username
 			font-size: 16px
 		> li.searchtab

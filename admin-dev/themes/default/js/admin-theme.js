@@ -276,7 +276,6 @@ $(document).ready(function() {
 
     $('span.menu-collapse').off();
 	  $('.menu-collapse').removeClass('icon-rotate-90');
-    $('.menu').height(window.innerHeight);
 
     buildMobileMenu(true);
 
@@ -419,7 +418,7 @@ $(document).ready(function() {
       $('body.page-sidebar').removeClass('page-sidebar-closed');
     }
   });
-  enquire.register('screen and (max-width: 480px)', {
+  enquire.register('screen and (max-width: 570px)', {
     match : function() {
       $('body').addClass('mobile-nav');
       mobileNav();

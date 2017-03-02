@@ -38,7 +38,7 @@
       <i class="material-icons">settings_applications</i> {l s='Your profile'}
     </a>
     <a class="employee-link m-t-1" id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout">
-      <i class="material-icons">power_settings_new</i> {l s='Log out'}
+      <i class="material-icons">power_settings_new</i> {l s='Sign out'}
     </a>
   </div>
 </div>
