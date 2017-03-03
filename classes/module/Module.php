@@ -384,7 +384,7 @@ abstract class ModuleCore
                     FROM '._DB_PREFIX_.'access a
                     LEFT JOIN `'._DB_PREFIX_.'authorization_role` r
                     ON r.id_authorization_role = a.id_authorization_role
-                    WHERE r.slug = "ROLE_MOD_TAB_ADMINMODULES_'.$action.'"
+                    WHERE r.slug = "ROLE_MOD_TAB_ADMINMODULESSF_'.$action.'"
             )');
         }
 

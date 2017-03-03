@@ -78,6 +78,8 @@ class AttributeGroup
     private $shops;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\AttributeGroupLang", mappedBy="attributeGroup", orphanRemoval=true)
      */
     private $attributeGroupLangs;

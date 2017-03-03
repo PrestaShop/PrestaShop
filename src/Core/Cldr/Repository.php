@@ -95,6 +95,10 @@ class Repository
             $this->region = $locale->getRegion();
         }
 
+        if ($this->locale == 'en' && $this->region == 'EN') {
+            $this->region = 'US';
+        }
+
         $this->repository = new cldrRepository($provider);
         $this->localeRepository = $this->repository->locales[$this->getCulture()];
     }

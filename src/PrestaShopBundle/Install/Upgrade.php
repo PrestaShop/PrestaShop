@@ -659,15 +659,16 @@ namespace PrestaShopBundle\Install {
         private function cleanCache()
         {
             // Settings updated, compile and cache directories must be emptied
-            $tools_dir = rtrim(_PS_INSTALL_PATH_, '\\/').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'tools'.DIRECTORY_SEPARATOR;
+            $install_dir = realpath(rtrim(_PS_INSTALL_PATH_, '\\/').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+            $tools_dir = $install_dir.'tools'.DIRECTORY_SEPARATOR;
             $arrayToClean = array(
                 $tools_dir.'smarty'.DIRECTORY_SEPARATOR.'cache',
                 $tools_dir.'smarty'.DIRECTORY_SEPARATOR.'compile',
                 $tools_dir.'smarty_v2'.DIRECTORY_SEPARATOR.'cache',
                 $tools_dir.'smarty_v2'.DIRECTORY_SEPARATOR.'compile',
-                $tools_dir.'app/cache/',
-                $tools_dir.'cache/smarty/cache/',
-                $tools_dir.'cache/smarty/compile/'
+                $install_dir.'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR,
+                $install_dir.'cache'.DIRECTORY_SEPARATOR.'smarty'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR,
+                $install_dir.'cache'.DIRECTORY_SEPARATOR.'smarty'.DIRECTORY_SEPARATOR.'compile'.DIRECTORY_SEPARATOR,
             );
 
             foreach ($arrayToClean as $dir) {
@@ -677,13 +678,14 @@ namespace PrestaShopBundle\Install {
                             if (is_file($dir.$file)) {
                                 unlink($dir . $file);
                             } elseif (is_dir($dir.$file.DIRECTORY_SEPARATOR)) {
-                                \Tools14::deleteDirectory($dir . $file . DIRECTORY_SEPARATOR, true);
+                                //\Tools14::deleteDirectory($dir . $file . DIRECTORY_SEPARATOR, true);
                             }
-                            $this->logInfo('[CLEANING CACHE] File %file% removed', null, array('%file%' => $file));
+                            // To more log
+                            //$this->logInfo('[CLEANING CACHE] File %file% removed', null, array('%file%' => $file));
                         }
                     }
                 } else {
-                    $this->logWarning('[SKIP] directory "%directory%" does not exist and cannot be emptied.', null, array('%directory%' => str_replace($tools_dir, '', $dir)));
+                    $this->logInfo('[SKIP] directory "%directory%" does not exist and cannot be emptied.', null, array('%directory%' => str_replace($tools_dir, '', $dir)));
                 }
             }
 
@@ -804,21 +806,18 @@ namespace PrestaShopBundle\Install {
 
                         $lang_pack = Language::getLangDetails($isoCode);
                         Language::installSfLanguagePack($lang_pack['locale'], $errorsLanguage);
-
-                        if (isset($_GET['keepMails']) && !$_GET['keepMails']) {
-                            Language::installEmailsLanguagePack($lang_pack, $errorsLanguage);
-                        }
+                        Language::installEmailsLanguagePack($lang_pack, $errorsLanguage);
 
                         if (empty($errorsLanguage)) {
                             Language::loadLanguages();
-
-                            // TODO: Update AdminTranslationsController::addNewTabs to install tabs translated
 
                             $cldrUpdate = new \PrestaShop\PrestaShop\Core\Cldr\Update(_PS_TRANSLATIONS_DIR_);
                             $cldrUpdate->fetchLocale(Language::getLocaleByIso($isoCode));
                         } else {
                             $this->logError('Error updating translations', 44);
                         }
+
+                        Language::updateMultilangTable($isoCode);
                     }
                 }
             }
@@ -842,7 +841,7 @@ namespace PrestaShopBundle\Install {
             $themeManager = $this->getThemeManager($this->idEmployee);
             $themeName = ($this->changeToDefaultTheme ? 'classic' : _THEME_NAME_);
 
-            $isThemeEnabled = $themeManager->enable($themeName);
+            $isThemeEnabled = $themeManager->enable($themeName, true);
             if (!$isThemeEnabled) {
                 $themeErrors = $themeManager->getErrors($themeName);
                 $this->logError($themeErrors, 45);
@@ -853,19 +852,27 @@ namespace PrestaShopBundle\Install {
 
         public function run()
         {
+            \Tools::clearAllCache();
+
             $this->defineConst();
             $this->initContext();
             $this->checkVersion();
+
             $sqlContentVersion = $this->getSQLFiles();
-            $this->upgradeDoctrineSchema();
+
             if (!$this->hasFailure()) {
                 if ($this->disableCustomModules) {
                     $this->disableCustomModules();
                 }
                 $this->disableIncompatibleModules();
+
                 $this->upgradeDb($sqlContentVersion);
+                $this->upgradeDoctrineSchema();
+
                 $this->enableNativeModules();
+
                 $this->cleanCache();
+
                 $this->updateDbImagesLegacy();
                 if ($this->updateDefaultTheme) {
                     $this->cleanDefaultThemeCache();
@@ -1175,3 +1182,4 @@ namespace PrestaShopBundle\Install {
         }
     }
 }
+

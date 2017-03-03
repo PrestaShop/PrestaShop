@@ -988,7 +988,8 @@ CREATE TABLE `PREFIX_module` (
 CREATE TABLE `PREFIX_authorization_role` (
   `id_authorization_role` int(10) unsigned NOT NULL auto_increment,
   `slug` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id_authorization_role`)
+  PRIMARY KEY (`id_authorization_role`),
+  UNIQUE KEY (`slug`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_access` (
@@ -1599,7 +1600,8 @@ CREATE TABLE `PREFIX_profile_lang` (
   `id_lang` int(10) unsigned NOT NULL,
   `id_profile` int(10) unsigned NOT NULL,
   `name` varchar(128) NOT NULL,
-  PRIMARY KEY (`id_profile`,`id_lang`)
+  PRIMARY KEY (`id_profile`,`id_lang`),
+  UNIQUE KEY (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_quick_access` (
