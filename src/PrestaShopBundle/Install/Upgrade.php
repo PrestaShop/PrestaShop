@@ -422,17 +422,12 @@ namespace PrestaShopBundle\Install {
 
         private function upgradeDoctrineSchema()
         {
-            $i = 0;
-            do {
-                $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-                $sf2Refresh->addDoctrineSchemaUpdate();
-                $output = $sf2Refresh->execute();
-                $i++;
-                // Doctrine could need several tries before being able to properly upgrade the schema...
-            } while((0 !== $output['doctrine:schema:update']['exitCode']) && $i < 10);
+            $schemaUpgrade = new \PrestaShopBundle\Service\Database\Upgrade();
+            $schemaUpgrade->addDoctrineSchemaUpdate();
+            $output = $schemaUpgrade->execute();
 
-            if (0 !== $output['doctrine:schema:update']['exitCode']) {
-                $msgErrors = explode("\n", $output['doctrine:schema:update']['output']);
+            if (0 !== $output['doctrine:schema_update']['exitCode']) {
+                $msgErrors = explode("\n", $output['doctrine:schema_update']['output']);
                 $this->logError('Error upgrading doctrine schema', 43);
                 foreach($msgErrors as $msgError) {
                     $this->logError('Doctrine SQL Error : '.$msgError, 43);
@@ -683,7 +678,7 @@ namespace PrestaShopBundle\Install {
                         }
                     }
                 } else {
-                    $this->logWarning('[SKIP] directory "%directory%" does not exist and cannot be emptied.', null, array('%directory%' => str_replace($tools_dir, '', $dir)));
+                    $this->logInfo('[SKIP] directory "%directory%" does not exist and cannot be emptied.', null, array('%directory%' => str_replace($tools_dir, '', $dir)));
                 }
             }
 
@@ -839,10 +834,11 @@ namespace PrestaShopBundle\Install {
 
         private function updateTheme()
         {
+            \ProfileCore::resetCacheAccesses();
             $themeManager = $this->getThemeManager($this->idEmployee);
             $themeName = ($this->changeToDefaultTheme ? 'classic' : _THEME_NAME_);
 
-            $isThemeEnabled = $themeManager->enable($themeName);
+            $isThemeEnabled = $themeManager->enable($themeName, true);
             if (!$isThemeEnabled) {
                 $themeErrors = $themeManager->getErrors($themeName);
                 $this->logError($themeErrors, 45);

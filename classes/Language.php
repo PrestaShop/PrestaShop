@@ -103,6 +103,15 @@ class LanguageCore extends ObjectModel
         parent::__construct($id);
     }
 
+    static public function resetCache() {
+        self::$_checkedLangs = null;
+        self::$_LANGUAGES = null;
+        self::$countActiveLanguages = null;
+        self::$_cache_language_installation = null;
+        self::$_cache_language_installation_by_locale = null;
+        self::$_cache_all_language_json = null;
+    }
+
     /**
      * @see ObjectModel::getFields()
      *

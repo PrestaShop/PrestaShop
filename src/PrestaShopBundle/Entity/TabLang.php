@@ -42,7 +42,7 @@ class TabLang
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Tab", inversedBy="tabLangs")
      * @ORM\JoinColumn(name="id_tab", referencedColumnName="id_tab", nullable=false)
      */
-    private $tab;
+    private $id;
 
     /**
      * @ORM\Id

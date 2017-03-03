@@ -57,6 +57,8 @@ function migrate_tabs_17()
     $languageList->setLanguage($defaultLanguage->iso_code);
 
     /* insert the new structure */
+    ProfileCore::resetCacheAccesses();
+    LanguageCore::resetCache();
     $install = new Install();
     $install->populateDatabase('tab');
 
