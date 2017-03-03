@@ -731,25 +731,4 @@ class AdminThemesControllerCore extends AdminController
             Tools::clearCache();
         }
     }
-
-    /**
-     * Return the type of authorization on thèmes action.
-     *
-     * @return int(integer)
-     */
-    public function authorizationLevel()
-    {
-        switch (true) {
-            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_DELETE', $this->context->employee->id_profile)) :
-                return AdminController::LEVEL_DELETE;
-            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_CREATE', $this->context->employee->id_profile)) :
-                return AdminController::LEVEL_ADD;
-            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_UPDATE', $this->context->employee->id_profile)) :
-                return AdminController::LEVEL_EDIT;
-            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_READ', $this->context->employee->id_profile)) :
-                return AdminController::LEVEL_VIEW;
-            default :
-                return 0;
-        }
-    }
 }
