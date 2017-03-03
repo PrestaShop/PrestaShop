@@ -418,7 +418,6 @@ class ModuleController extends FrameworkBundleAdminController
             $modules->{$moduleLabel} = $this->getPresentedProducts($modulesPart);
         }
 
-        $translator = $this->container->get('translator');
         $errorMessage = $translator->trans(
             'You do not have permission to add this.',
             array(),
@@ -428,9 +427,9 @@ class ModuleController extends FrameworkBundleAdminController
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-            'layoutTitle' => $layoutTitle,
+            'layoutTitle' => $translator->trans('Module notifications', array(), 'Admin.Modules.Feature'),
             'help_link' => $this->generateSidebarLink('AdminModules'),
-            'modules' => $moduleManager->getModulesWithNotifications($modulesPresenter),
+            'modules' => $modules,
             'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
