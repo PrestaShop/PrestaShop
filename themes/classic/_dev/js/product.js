@@ -82,8 +82,12 @@ $(document).ready(function () {
 
   function createInputFile()
   {
-    $('.js-file-input').on('change',(event)=>{
-      $('.js-file-name').text($(event.currentTarget).val());
+    $('.js-file-input').on('change', (event) => {
+      let target, file;
+
+      if ((target = $(event.currentTarget)[0]) && (file = target.files[0])) {
+        $(target).prev().text(file.name);
+      }
     });
   }
 
