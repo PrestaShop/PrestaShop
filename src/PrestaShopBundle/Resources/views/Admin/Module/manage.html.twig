@@ -43,26 +43,28 @@
         <div class="col-lg-10 col-lg-offset-1">
             {# Bulk Action confirm modal #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_bulk_action.html.twig' %}
-            {# Addons connect modal #}
-            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' %}
-            {# Contains toolbar-nav for module page #}
-            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' %}
+            {# Addons connect modal with level authorization#}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+            {# Contains toolbar-nav for module page with level authorization #}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
             {# Contains menu with Selection/Categories/Popular and Tag Search #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:menu_top.html.twig' with { 'topMenuData': topMenuData } %}
             <div class="module-sorting-menu">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="module-sorting module-bulk-actions pull-right">
-                            <select class="c-select c-select-sm">
-                              <option value="" disabled selected>{{ 'Bulk Actions'|trans({}, 'Admin.Global') }}</option>
-                              <option value="bulk-uninstall">{{ 'Uninstall'|trans({}, 'Admin.Actions') }}</option>
-                              <option value="bulk-disable">{{ 'Disable'|trans({}, 'Admin.Actions') }}</option>
-                              <option value="bulk-enable">{{ 'Enable'|trans({}, 'Admin.Actions') }}</option>
-                              <option value="bulk-reset">{{ 'Reset'|trans({}, 'Admin.Actions') }}</option>
-                              <option value="bulk-enable-mobile">{{ 'Enable Mobile'|trans({}, 'Admin.Modules.Feature') }}</option>
-                              <option value="bulk-disable-mobile">{{ 'Disable Mobile'|trans({}, 'Admin.Modules.Feature') }}</option>
-                            </select>
-                        </div>
+                        {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') %}
+                            <div class="module-sorting module-bulk-actions pull-right">
+                                <select class="c-select c-select-sm">
+                                  <option value="" disabled selected>{{ 'Bulk Actions'|trans({}, 'Admin.Global') }}</option>
+                                  <option value="bulk-uninstall">{{ 'Uninstall'|trans({}, 'Admin.Actions') }}</option>
+                                  <option value="bulk-disable">{{ 'Disable'|trans({}, 'Admin.Actions') }}</option>
+                                  <option value="bulk-enable">{{ 'Enable'|trans({}, 'Admin.Actions') }}</option>
+                                  <option value="bulk-reset">{{ 'Reset'|trans({}, 'Admin.Actions') }}</option>
+                                  <option value="bulk-enable-mobile">{{ 'Enable Mobile'|trans({}, 'Admin.Modules.Feature') }}</option>
+                                  <option value="bulk-disable-mobile">{{ 'Disable Mobile'|trans({}, 'Admin.Modules.Feature') }}</option>
+                                </select>
+                            </div>
+                        {% endif %}
                         <div class="module-sorting module-sorting-author pull-right">
                             <select class="c-select c-select-sm">
                               <option value="" disabled>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>

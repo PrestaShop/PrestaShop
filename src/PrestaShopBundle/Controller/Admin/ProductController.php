@@ -27,7 +27,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Entity\AdminFilter;
-use PrestaShopBundle\Security\Voter\ProductVoter;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -81,6 +81,14 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'desc')
     {
+        if (
+            !$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
+            && !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
+            && !$this->isGranted(PageVoter::CREATE, 'ADMINPRODUCTS_')
+        ) {
+            return $this->redirect('admin_dashboard');
+        }
+
         $context = $this->get('prestashop.adapter.legacy.context')->getContext();
         $request->getSession()->set('_locale', $context->language->locale);
 
@@ -321,7 +329,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function newAction()
     {
-        if (!$this->isGranted(ProductVoter::CREATE)) {
+        if (!$this->isGranted(PageVoter::CREATE, 'ADMINPRODUCTS_')) {
             $translator = $this->get('translator');
             $errorMessage = $translator->trans(
                 'You do not have permission to add this.',
@@ -368,16 +376,12 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function formAction($id, Request $request)
     {
-        if (!$this->isGranted(ProductVoter::UPDATE)) {
-            $translator = $this->get('translator');
-            $errorMessage = $translator->trans(
-                'You do not have permission to edit this.',
-                array(),
-                'Admin.Notifications.Error'
-            );
-            $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
-
-            return $this->redirectToRoute('admin_product_catalog');
+        if (
+            !$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
+            && !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
+            && !$this->isGranted(PageVoter::CREATE, 'ADMINPRODUCTS_')
+        ) {
+            return $this->redirect('admin_dashboard');
         }
 
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
@@ -581,6 +585,7 @@ class ProductController extends FrameworkBundleAdminController
             'attribute_groups' => $attributeGroups,
             'max_upload_size' => \Tools::formatBytes(UploadedFile::getMaxFilesize()),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
+            'editable' => $this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_'),
         );
     }
 
@@ -689,7 +694,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         $translator = $this->get('translator');
 
-        if (!$this->isGranted(ProductVoter::UPDATE)) {
+        if (!$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')) {
             $errorMessage = $translator->trans(
                 'You do not have permission to edit this.',
                 array(),
@@ -999,13 +1004,13 @@ class ProductController extends FrameworkBundleAdminController
     protected function shouldDenyAction($action, $suffix = '')
     {
         return (
-                $action === 'delete' . $suffix && !$this->isGranted(ProductVoter::DELETE)
+                $action === 'delete' . $suffix && !$this->isGranted(PageVoter::DELETE, 'ADMINPRODUCTS_')
             ) || (
                 ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
-                !$this->isGranted(ProductVoter::UPDATE)
+                !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
             ) || (
                 ($action === 'duplicate' . $suffix) &&
-                (!$this->isGranted(ProductVoter::UPDATE) || !$this->isGranted(ProductVoter::CREATE))
+                (!$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_') || !$this->isGranted(PageVoter::CREATE, 'ADMINPRODUCTS_'))
             )
         ;
     }
