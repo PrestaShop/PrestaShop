@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use Context;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
@@ -71,8 +72,8 @@ class ProductInformation extends CommonAbstractType
         $this->manufacturerDataProvider = $manufacturerDataProvider;
         $this->configuration = new Configuration();
 
-        $this->categories = $this->formatDataChoicesList($this->categoryDataProvider->getAllCategoriesName(), 'id_category');
-        $this->nested_categories = $this->categoryDataProvider->getNestedCategories();
+        $this->categories = $this->formatDataChoicesList($this->categoryDataProvider->getAllCategoriesName(null, Context::getContext()->language->id), 'id_category');
+        $this->nested_categories = $this->categoryDataProvider->getNestedCategories(null, Context::getContext()->language->id);
         $this->productAdapter = $this->productDataProvider;
         $this->locales = $this->context->getLanguages();
         $this->currency = $this->context->getContext()->currency;
