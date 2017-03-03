@@ -182,6 +182,10 @@ class ProfileCore extends ObjectModel
         return self::$_cache_accesses[$idProfile][$type];
     }
 
+    public static function resetCacheAccesses() {
+        self::$_cache_accesses = array();
+    }
+
     /**
      *
      * @param int    $idProfile Profile ID

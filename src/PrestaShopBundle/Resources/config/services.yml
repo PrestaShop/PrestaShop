@@ -3,7 +3,7 @@ imports:
     - { resource: admin/services-form.yml }
 
 parameters:
-    prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\ProductVoter
+    prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter
 
 services:
     finder:

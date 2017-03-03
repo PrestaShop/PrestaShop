@@ -247,6 +247,18 @@ class AdminControllerCore extends Controller
     /** @var HelperList */
     protected $helper;
 
+    /** @var array Cache for translations */
+    const LEVEL_DELETE = 4;
+
+    /** @var array Cache for translations */
+    const LEVEL_EDIT = 2;
+
+    /** @var array Cache for translations */
+    const LEVEL_ADD = 3;
+
+    /** @var array Cache for translations */
+    const LEVEL_VIEW = 1;
+
     /**
      * Actions to execute on multiple selections.
      *

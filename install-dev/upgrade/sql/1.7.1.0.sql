@@ -73,5 +73,30 @@ DELETE FROM `PREFIX_configuration` WHERE `name` IN ('PS_META_KEYWORDS');
 
 INSERT INTO `PREFIX_operating_system` (`name`) VALUES ('Windows 8.1'), ('Windows 10');
 
-ALTER TABLE `PREFIX_shop` CHANGE `id_shop_group` `id_shop_group` INT(11) NOT NULL;
+/* UPDATE TO DOCTRINE */
+ALTER TABLE `PREFIX_attribute` CHANGE `id_attribute` `id_attribute` INT(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `PREFIX_attribute` CHANGE `id_attribute_group` `id_attribute_group` INT(11) NOT NULL;
+
+ALTER TABLE `PREFIX_attribute_group` CHANGE `id_attribute_group` `id_attribute_group` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `PREFIX_attribute_group_lang` CHANGE `id_attribute_group` `id_attribute_group` INT(11) NOT NULL;
+ALTER TABLE `PREFIX_attribute_group_lang` CHANGE `id_lang` `id_lang` INT(11) NOT NULL;
+
+ALTER TABLE `PREFIX_attribute_group_shop` CHANGE `id_attribute_group` `id_attribute_group` INT(11) NOT NULL;
+ALTER TABLE `PREFIX_attribute_group_shop` CHANGE `id_shop` `id_shop` INT(11) NOT NULL;
+
+ALTER TABLE `PREFIX_attribute_lang` CHANGE `id_attribute` `id_attribute` INT(11) NOT NULL;
+ALTER TABLE `PREFIX_attribute_lang` CHANGE `id_lang` `id_lang` INT(11) NOT NULL;
+
+ALTER TABLE `PREFIX_attribute_shop` CHANGE `id_attribute` `id_attribute` INT(11) NOT NULL;
+ALTER TABLE `PREFIX_attribute_shop` CHANGE `id_shop` `id_shop` INT(11) NOT NULL;
+
+ALTER TABLE `PREFIX_lang` CHANGE `id_lang` `id_lang` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `PREFIX_lang_shop` CHANGE `id_lang` `id_lang` INT(11) NOT NULL;
+ALTER TABLE `PREFIX_lang_shop` CHANGE `id_shop` `id_shop` INT(11) NOT NULL;
+
+ALTER TABLE `PREFIX_shop` CHANGE `id_shop` `id_shop` INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `PREFIX_shop` CHANGE `id_shop_group` `id_shop_group` INT(11) NOT NULL;
+
+ALTER TABLE `PREFIX_shop_group` CHANGE `id_shop_group` `id_shop_group` INT(11) NOT NULL AUTO_INCREMENT;

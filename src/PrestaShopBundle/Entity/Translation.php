@@ -51,7 +51,6 @@ class Translation
     /**
      * @var Lang
      *
-     * @ORM\Column(name="id_lang", type="integer")
      * @ORM\ManyToOne(targetEntity="Lang", inversedBy="translations")
      * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false)
      */

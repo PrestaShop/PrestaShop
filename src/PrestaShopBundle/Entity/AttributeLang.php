@@ -67,7 +67,7 @@ class AttributeLang
      */
     public function getId()
     {
-        return $this->id;
+        return $this->attribute;
     }
 
     /**

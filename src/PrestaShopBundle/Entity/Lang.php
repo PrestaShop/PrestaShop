@@ -328,7 +328,7 @@ class Lang
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      *
-     * @return Attribute
+     * @return Lang
      */
     public function addShop(\PrestaShopBundle\Entity\Shop $shop)
     {
