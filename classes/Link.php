@@ -376,7 +376,12 @@ class LinkCore
         if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop)) {
             return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
         } else {
-            return $url.Dispatcher::getInstance()->createUrl('module', $id_lang, $params, $this->allow, '', $id_shop);
+            if ($id_shop) {
+                $allow = (int)Configuration::get('PS_REWRITING_SETTINGS', null, null, $id_shop);
+            } else {
+                $allow = $this->allow;
+            }
+            return $url.Dispatcher::getInstance()->createUrl('module', $id_lang, $params, $allow, '', $id_shop);
         }
     }
 
