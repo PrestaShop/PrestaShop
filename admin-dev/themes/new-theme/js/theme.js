@@ -26,9 +26,6 @@
 // Plugins CSS
 
 import 'dropzone/dist/min/dropzone.min.css';
-import 'bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css';
-import 'bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css';
-import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'magnific-popup/dist/magnific-popup.css';
 import 'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css';
