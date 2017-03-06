@@ -4318,7 +4318,7 @@ class ProductCore extends ObjectModel
     {
         Hook::exec('actionGetProductPropertiesBefore', [
             'id_lang'   => $id_lang,
-            'product'   => $row,
+            'product'   => &$row,
             'context'   => $context
         ]);
 
@@ -4508,7 +4508,7 @@ class ProductCore extends ObjectModel
 
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang'   => $id_lang,
-            'product'   => $row,
+            'product'   => &$row,
             'context'   => $context
         ]);
 
