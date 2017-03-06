@@ -24,6 +24,9 @@ let config = {
       'bootstrap-slider/dist/bootstrap-slider.js',
       'sprintf-js/src/sprintf.js',
       './js/theme.js',
+    ],
+    stock: [
+      './js/app/pages/stock/main.js',
     ]
   },
   output: {
@@ -38,7 +41,8 @@ let config = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      vue$: 'vue/dist/vue.common.js'
+      vue$: 'vue/dist/vue.common.js',
+      app: path.resolve(__dirname, 'js/app')
     }
   },
   module: {
@@ -139,6 +143,9 @@ if (process.env.NODE_ENV === 'production') {
       }
     })
   );
+} else {
+  config.entry.stock.push('webpack/hot/only-dev-server');
+  config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
 }
 
 module.exports = config;
