@@ -383,6 +383,18 @@ class AdminControllerCore extends Controller
     /** @var bool if logged employee has access to AdminImport */
     protected $can_import = false;
 
+    /** @var int level for permissions Delete */
+    const LEVEL_DELETE = 4;
+
+    /** @var int level for permissions edit/update */
+    const LEVEL_EDIT = 2;
+
+    /** @var int level for permissions add/create */
+    const LEVEL_ADD = 3;
+
+    /** @var int level for permissions View/read */
+    const LEVEL_VIEW = 1;
+
     public function __construct()
     {
         global $timer_start;
@@ -4396,6 +4408,31 @@ class AdminControllerCore extends Controller
     {
         if (!isset($this->list_id)) {
             $this->list_id = $this->table;
+        }
+    }
+
+    /**
+     * Return the type of authorization on permissions page and option.
+     *
+     * @return int(integer)
+     */
+    public function authorizationLevel()
+    {
+        $access = Profile::getProfileAccess(
+                $this->context->employee->id_profile,
+                (int)Tab::getIdFromClassName($this->controller_name)
+            );
+
+        if($access['delete']) {
+            return AdminController::LEVEL_DELETE;
+        } elseif($access['add']) {
+            return AdminController::LEVEL_ADD;
+        } elseif($access['edit']){
+            return AdminController::LEVEL_EDIT;
+        } elseif($access['view']){
+            return AdminController::LEVEL_VIEW;
+        } else {
+            return 0;
         }
     }
 }
