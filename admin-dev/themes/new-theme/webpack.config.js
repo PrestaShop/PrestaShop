@@ -21,11 +21,18 @@ module.exports = {
       'bootstrap-slider/dist/bootstrap-slider.js',
       'sprintf-js/src/sprintf.js',
       './js/theme.js'
-    ]
+    ],
+    stock: './js/stock-page/main.js'
   },
   output: {
     path: './public',
     filename: '[name].bundle.js'
+  },
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      vue$: 'vue/dist/vue.common.js'
+    }
   },
   module: {
     rules: [
@@ -77,6 +84,13 @@ module.exports = {
         query: {
           presets: ['es2015']
         }
+      },
+      { test: /\.vue$/,
+        use: 'vue-loader',
+      },
+      {
+        test: /\.json$/,
+        use: 'json-loader',
       },
       {test: /\.css$/, use: ['style-loader', 'css-loader']},
       {test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']},
