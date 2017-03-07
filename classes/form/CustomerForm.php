@@ -154,8 +154,8 @@ class CustomerFormCore extends AbstractForm
     protected function getEmailMaxLengthViolationMessage()
     {
         return $this->translator->trans(
-            'The email is too long (it should count 128 characters at most)',
-            array(),
+            'The %1$s field is too long (%2$d chars max).',
+            array('email', 128),
             'Shop.Notifications.Error'
         );
     }
@@ -163,8 +163,8 @@ class CustomerFormCore extends AbstractForm
     protected function getFirstNameMaxLengthViolationMessage()
     {
         return $this->translator->trans(
-            'The first name is too long (it should count 255 characters at most)',
-            array(),
+            'The %1$s field is too long (%2$d chars max).',
+            array('first name', 255),
             'Shop.Notifications.Error'
         );
     }
@@ -172,8 +172,8 @@ class CustomerFormCore extends AbstractForm
     protected function getLastNameMaxLengthViolationMessage()
     {
         return $this->translator->trans(
-            'The last name is too long (it should count 255 characters at most)',
-            array(),
+            'The %1$s field is too long (%2$d chars max).',
+            array('last name', 255),
             'Shop.Notifications.Error'
         );
     }
