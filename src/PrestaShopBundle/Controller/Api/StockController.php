@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2017 PrestaShop
  *
@@ -23,29 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-// Plugins CSS
+namespace PrestaShopBundle\Controller\Api;
 
-import 'dropzone/dist/min/dropzone.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-import 'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css';
-import 'PrestaKit/dist/css/jquery.growl.css';
-import 'PrestaKit/dist/css/bootstrap-switch.min.css';
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-// Theme SCSS
+class StockController extends Controller
+{
+    /**
+     * @return JsonResponse
+     */
+    public function listAction()
+    {
+        $productRepository = $this->get('prestashop.core.api.product_stock.repository');
+        $stockOverviewColumns = $productRepository->getStockOverviewRows();
 
-import '../scss/theme.scss';
-
-// Theme Javascript
-
-import NavBar from './nav_bar.js';
-
-import './product-page/index';
-import './translation-page/index';
-
-import Header from './header.js';
-import refreshNotifications from './notifications.js';
-
-new NavBar();
-new Header();
-refreshNotifications();
+        return new JsonResponse($stockOverviewColumns);
+    }
+}

@@ -1,5 +1,6 @@
+<?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,34 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-// Plugins CSS
+namespace PrestaShopBundle\Exception;
 
-import 'dropzone/dist/min/dropzone.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-import 'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css';
-import 'PrestaKit/dist/css/jquery.growl.css';
-import 'PrestaKit/dist/css/bootstrap-switch.min.css';
+use Exception;
 
-// Theme SCSS
-
-import '../scss/theme.scss';
-
-// Theme Javascript
-
-import NavBar from './nav_bar.js';
-
-import './product-page/index';
-import './translation-page/index';
-
-import Header from './header.js';
-import refreshNotifications from './notifications.js';
-
-new NavBar();
-new Header();
-refreshNotifications();
+class NotImplementedException extends Exception
+{
+}
