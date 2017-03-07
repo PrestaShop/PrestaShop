@@ -1583,14 +1583,14 @@ class AdminThemesControllerCore extends AdminController
     protected function installTheme($theme_dir, $sandbox = false, $redirect = true)
     {
         if (
-            !in_array(
+            in_array(
                 $this->authorizationLevel(),
                 array(
                     AdminController::LEVEL_ADD,
                     AdminController::LEVEL_DELETE
                     )
             )
-            || _PS_MODE_DEMO_
+            && !_PS_MODE_DEMO_
         ) {
             if (!$sandbox) {
                 $uniqid = uniqid();

@@ -4418,18 +4418,13 @@ class AdminControllerCore extends Controller
      */
     public function authorizationLevel()
     {
-        $access = Profile::getProfileAccess(
-                $this->context->employee->id_profile,
-                (int)Tab::getIdFromClassName($this->controller_name)
-            );
-
-        if($access['delete']) {
+        if($this->tabAccess['delete']) {
             return AdminController::LEVEL_DELETE;
-        } elseif($access['add']) {
+        } elseif($this->tabAccess['add']) {
             return AdminController::LEVEL_ADD;
-        } elseif($access['edit']){
+        } elseif($this->tabAccess['edit']){
             return AdminController::LEVEL_EDIT;
-        } elseif($access['view']){
+        } elseif($this->tabAccess['view']){
             return AdminController::LEVEL_VIEW;
         } else {
             return 0;
