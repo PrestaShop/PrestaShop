@@ -183,7 +183,7 @@ class AdminTranslationsControllerCore extends AdminController
      */
     public function initMain()
     {
-        if(
+        if (
             !in_array(
                 $this->authorizationLevel(),
                 array(

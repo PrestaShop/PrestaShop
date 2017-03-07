@@ -261,7 +261,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     public function moduleAction(Request $request)
     {
-        if(
+        if (
             !in_array(
                 $this->authorizationLevel($this::controller_name),
                 array(
@@ -549,7 +549,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         try {
-            if(
+            if (
                 !in_array(
                         $this->authorizationLevel($this::controller_name),
                         array(

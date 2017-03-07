@@ -252,7 +252,7 @@ class AdminThemesControllerCore extends AdminController
             );
         } elseif (Tools::isSubmit('submitAddconfiguration')) {
             try {
-                if(
+                if (
                     !in_array(
                         $this->authorizationLevel(),
                         array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -283,7 +283,7 @@ class AdminThemesControllerCore extends AdminController
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
         } elseif (Tools::getValue('action') == 'submitConfigureLayouts') {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -295,7 +295,7 @@ class AdminThemesControllerCore extends AdminController
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
         } elseif (Tools::getValue('action') == 'enableTheme') {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -314,7 +314,7 @@ class AdminThemesControllerCore extends AdminController
                 }
             }
         } elseif (Tools::getValue('action') == 'deleteTheme') {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_DELETE))
@@ -326,7 +326,7 @@ class AdminThemesControllerCore extends AdminController
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
         } elseif (Tools::getValue('action') == 'resetToDefaults') {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -345,7 +345,7 @@ class AdminThemesControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitOptionsconfiguration')) {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -383,7 +383,7 @@ class AdminThemesControllerCore extends AdminController
 
     public function processUploadFile($dest)
     {
-        if(
+        if (
             !in_array(
                 $this->authorizationLevel(),
                 array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -717,7 +717,7 @@ class AdminThemesControllerCore extends AdminController
 
     public function processSubmitConfigureLayouts()
     {
-        if(
+        if (
             !in_array(
                 $this->authorizationLevel(),
                 array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))

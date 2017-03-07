@@ -220,14 +220,14 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function authorizationLevel($controller)
     {
-        if(
-            $this->isGranted(PageVoter::DELETE, 'ADMINTRANSLATIONS'.'_')) {
+        if (
+            $this->isGranted(PageVoter::DELETE, $controller.'_')) {
             return PageVoter::LEVEL_DELETE;
-        } elseif($this->isGranted(PageVoter::CREATE, 'ADMINTRANSLATIONS'.'_')) {
+        } elseif ($this->isGranted(PageVoter::CREATE, $controller.'_')) {
             return PageVoter::LEVEL_CREATE;
-        } elseif($this->isGranted(PageVoter::UPDATE, 'ADMINTRANSLATIONS'.'_')) {
+        } elseif ($this->isGranted(PageVoter::UPDATE, $controller.'_')) {
             return PageVoter::LEVEL_UPDATE;
-        } elseif($this->isGranted(PageVoter::READ, 'ADMINTRANSLATIONS'.'_')) {
+        } elseif ($this->isGranted(PageVoter::READ, $controller.'_')) {
             return PageVoter::LEVEL_READ;
         } else {
             return 0;
