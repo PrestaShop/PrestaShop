@@ -503,6 +503,40 @@ class ProductPresenter
     }
 
     /**
+     * @param array $product
+     * @param array $presentedProduct
+     * @return array
+     */
+    public function AddWeightToDisplay(array $product, array $presentedProduct){
+        $product_weight = $this->getProductWeight($product);
+        foreach ($product['attributes'] as $attribute) {
+            if (isset($attribute['weight']) && 0 !== $attribute['weight']) {
+                $presentedProduct['weight_to_display'] = (float) $attribute['weight'] + $product_weight;
+            } else {
+                $presentedProduct['weight_to_display'] = $product_weight;
+            }
+        }
+
+        return $presentedProduct;
+    }
+
+    /**
+     * @param array $product
+     * @return int
+     */
+    public function getProductWeight(array $product){
+        $product_weight = 0;
+        if (isset($product['features'] )) {
+            foreach ($product['features'] as $feature) {
+                if ( '4' === $feature['id_feature']){
+                    $product_weight = (float) $feature['value'];
+                }
+            }
+        }
+        return $product_weight;
+    }
+
+    /**
      * Add all specific references to product
      * @param array $product
      * @param array $presentedProduct
@@ -517,6 +551,7 @@ class ProductPresenter
             $presentedProduct['specific_references']['id_attribute_group'],
             $presentedProduct['specific_references']['name'],
             $presentedProduct['specific_references']['group'],
+            $presentedProduct['specific_references']['weight'],
             $presentedProduct['specific_references']['reference']
         );
 
@@ -627,17 +662,24 @@ class ProductPresenter
         );
 
         // If product has attributes and it's no added to card
-        if (isset($product['attributes']) && !isset($product['cart_quantity'])) {
-            $presentedProduct = $this->addReferenceToDisplay(
-                $product,
-                $presentedProduct
-            );
+        if (isset($product['attributes'])) {
+            if (!isset($product['cart_quantity'])) {
+                $presentedProduct = $this->addReferenceToDisplay(
+                    $product,
+                    $presentedProduct
+                );
 
-            $presentedProduct = $this->addAttributesSpecificReferences(
+                $presentedProduct = $this->addAttributesSpecificReferences(
+                    $product,
+                    $presentedProduct
+                );
+            }
+            $presentedProduct = $this->AddWeightToDisplay(
                 $product,
                 $presentedProduct
             );
         }
+
 
         $presentedProduct['embedded_attributes'] = $this->getProductEmbeddedAttributes($product);
 
