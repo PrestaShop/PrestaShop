@@ -4672,28 +4672,28 @@ class AdminControllerCore extends Controller
         if(
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE', 
-                $context->employee->id_profile
+                $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_DELETE;
         } elseif(
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE', 
-                $context->employee->id_profile
+                $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_ADD;
         } elseif(
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE', 
-                $context->employee->id_profile
+                $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_EDIT;
         } elseif(
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ', 
-                $context->employee->id_profile
+                $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_VIEW;

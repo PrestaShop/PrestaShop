@@ -349,14 +349,14 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3 required" for="fromLang"> {l s='From'}</label>
 				<div class="col-lg-4">
-					<select name="fromLang" id="fromLang">
+					<select name="fromLang" id="fromLang" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $languages as $language}
 							<option value="{$language['iso_code']}">{$language['name']}</option>
 						{/foreach}
 					</select>
 				</div>
 				<div class="col-lg-4">
-					<select name="fromTheme">
+					<select name="fromTheme" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $themes as $theme}
 							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}
@@ -366,14 +366,14 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="toLang">{l s='To'}</label>
 				<div class="col-lg-4">
-					<select name="toLang" id="toLang">
+					<select name="toLang" id="toLang" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $languages as $language}
 							<option value="{$language['iso_code']}">{$language['name']}</option>
 						{/foreach}
 					</select>
 				</div>
 				<div class="col-lg-4">
-					<select name="toTheme">
+					<select name="toTheme" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $themes as $theme}
 							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}
@@ -387,7 +387,7 @@
 				</p>
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitCopyLang" class="btn btn-default pull-right"><i class="process-icon-duplicate"></i> {l s='Copy'}</button>
+				<button type="submit" name="submitCopyLang" class="btn btn-default pull-right" {if $level == 1} disabled="disabled" {/if}><i class="process-icon-duplicate"></i> {l s='Copy'}</button>
 			</div>
 		</div>
 	</form>
