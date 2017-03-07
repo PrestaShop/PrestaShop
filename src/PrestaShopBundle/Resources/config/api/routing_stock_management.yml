@@ -1,0 +1,5 @@
+api_product_stock_list:
+    path: /stock
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Api/Stock:list
