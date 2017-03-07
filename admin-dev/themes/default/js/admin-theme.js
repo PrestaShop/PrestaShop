@@ -229,6 +229,9 @@ $(document).ready(function() {
     if(build) {
       var adminLink = $('.admin-link').attr('href');
       var notificationOffsetLeft = $('#notification').offset().left;
+      var shopText = $('#header_shop a.dropdown-toggle').html();
+
+      $('#header_shop a.dropdown-toggle').remove();
       $('.username').contents().wrap('<a href="' + adminLink + '"></a>');
       $('.employee_avatar img').wrap('<a href="' + adminLink + '"></a>');
       $('.panel-collapse').addClass('collapse');
@@ -243,6 +246,12 @@ $(document).ready(function() {
         }
       });
       $('.nav-item .nav-link span').text('');
+      $('#header_shop .dropdown-menu').attr('id','shop-list-collapse').removeClass('dropdown-menu');
+
+      $('#header_shop li:first').addClass('shop-list-title').prepend('<a href="#shop-list-collapse" data-toggle="collapse" aria-expanded="true">'+shopText+'</a>');
+      $('#shop-list-collapse').collapse({
+        toggle: true
+      });
     }
     else {
       $('.username a').contents().unwrap();
@@ -267,7 +276,6 @@ $(document).ready(function() {
 
     $('span.menu-collapse').off();
 	  $('.menu-collapse').removeClass('icon-rotate-90');
-    $('.menu').height(window.innerHeight);
 
     buildMobileMenu(true);
 
@@ -410,7 +418,7 @@ $(document).ready(function() {
       $('body.page-sidebar').removeClass('page-sidebar-closed');
     }
   });
-  enquire.register('screen and (max-width: 480px)', {
+  enquire.register('screen and (max-width: 570px)', {
     match : function() {
       $('body').addClass('mobile-nav');
       mobileNav();
