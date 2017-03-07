@@ -896,6 +896,11 @@
 	});
 </script>
 {/if}
+{if isset($color) && $color}
+<script type="text/javascript">
+	$.fn.mColorPicker.defaults.imageFolder = baseDir + 'img/admin/';
+</script>
+{/if}
 {if $firstCall}
 	<script type="text/javascript">
 		var module_dir = '{$smarty.const._MODULE_DIR_}';
