@@ -82,7 +82,7 @@ module.exports = {
       {test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']},
       {
         test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-        loader: 'file-loader?name=[hash].[ext]'
+        loader: 'file-loader?name=[hash].[ext]&publicPath=/admin-dev/themes/new-theme/public/'
       }
     ]
   },
