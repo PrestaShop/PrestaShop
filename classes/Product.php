@@ -2973,10 +2973,6 @@ class ProductCore extends ObjectModel
         );
 
         if (isset(self::$_prices[$cache_id])) {
-            /* Affect reference before returning cache */
-            if (isset($specific_price['price']) && $specific_price['price'] > 0) {
-                $specific_price['price'] = self::$_prices[$cache_id];
-            }
             return self::$_prices[$cache_id];
         }
 
