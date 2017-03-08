@@ -1,20 +1,24 @@
 <template>
   <div id="app">
-    <ul class="products-list">
-      <li v-for="product in products">
-       {{ product.product_name }}
-     </li>
-    </ul>
+    <StockHeader />
+    <ProductsActions />
+    <Products />
+    <Pagination />
   </div>
 </template>
 
 <script>
+  import StockHeader from './stock-header';
+  import ProductsActions from './products-actions';
+  import Products from './products-table';
+  import Pagination from './pagination';
   export default {
     name: 'app',
-    computed: {
-      products : function() {
-        return this.$store.state.products;
-      }
-    }
+    components: {
+      StockHeader,
+      ProductsActions,
+      Products,
+      Pagination
+    },
   }
 </script>
