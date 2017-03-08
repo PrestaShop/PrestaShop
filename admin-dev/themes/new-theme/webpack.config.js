@@ -47,16 +47,26 @@ let config = {
       'PrestaKit/dist/js/jquery.growl.js',
       'bootstrap-slider/dist/bootstrap-slider.js',
       'sprintf-js/src/sprintf.js',
+<<<<<<< 1b27a4c6de342fa24caace94a38054e72139a373
       './js/theme.js',
     ],
     stock: [
       './js/app/pages/stock/main.js',
     ]
+||||||| merged common ancestors
+      './js/theme.js'
+    ],
+    stock: './js/stock-page/main.js'
+=======
+      './js/theme.js'
+    ]
+>>>>>>> BO: Split stock-app in components
   },
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].bundle.js'
   },
+<<<<<<< 1b27a4c6de342fa24caace94a38054e72139a373
   devServer: {
     hot: true,
     contentBase: path.resolve(__dirname, 'public'),
@@ -69,6 +79,15 @@ let config = {
       app: path.resolve(__dirname, 'js/app')
     }
   },
+||||||| merged common ancestors
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      vue$: 'vue/dist/vue.common.js'
+    }
+  },
+=======
+>>>>>>> BO: Split stock-app in components
   module: {
     rules: [
       {
@@ -124,6 +143,7 @@ let config = {
           postcss: [require('postcss-cssnext')()]
         }
       },
+<<<<<<< 1b27a4c6de342fa24caace94a38054e72139a373
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
@@ -131,12 +151,26 @@ let config = {
           use: ['css-loader']
         })
       },
+||||||| merged common ancestors
+      { test: /\.vue$/,
+        use: 'vue-loader',
+      },
+=======
+>>>>>>> BO: Split stock-app in components
       {
+<<<<<<< 1b27a4c6de342fa24caace94a38054e72139a373
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: ['css-loader', 'postcss-loader', 'sass-loader']
         })
+||||||| merged common ancestors
+        test: /\.json$/,
+        use: 'json-loader',
+=======
+        test: /\.vue$/,
+        loader: 'vue'
+>>>>>>> BO: Split stock-app in components
       },
       {
         test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
