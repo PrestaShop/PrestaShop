@@ -61,6 +61,7 @@
 									{l s='Delivery slip'}
 								{else}
 									{l s='Invoice'}
+                                    {$invoice_generated = 1}
 								{/if}
 							{elseif get_class($document) eq 'OrderSlip'}
 								{l s='Credit Slip'}
@@ -164,6 +165,12 @@
 							<i class="icon-warning-sign list-empty-icon"></i>
 							{l s='There is no available document'}
 						</div>
+					</td>
+				</tr>
+			{/foreach}
+			{if !isset($invoice_generated)}
+				<tr>
+					<td colspan="5" class="list-empty">
 						{if isset($invoice_management_active) && $invoice_management_active}
 							<a class="btn btn-default" href="{$current_index}&amp;viewOrder&amp;submitGenerateInvoice&amp;id_order={$order->id}{if isset($smarty.get.token)}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}{/if}">
 								<i class="icon-repeat"></i>
@@ -172,7 +179,7 @@
 						{/if}
 					</td>
 				</tr>
-			{/foreach}
+			{/if}
 		</tbody>
 	</table>
 </div>
