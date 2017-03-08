@@ -164,7 +164,7 @@ class ProductStockRepository
     private function formatProductsIdentifiersForWhereInClause($rows)
     {
         $productIdentifiers = array_map(function ($row) {
-            return [$row['product_id'], $row['product_attribute_id']];
+            return array($row['product_id'], $row['product_attribute_id']);
         }, $rows);
 
         return implode(',', array_map(function ($identifiers) {
@@ -212,10 +212,10 @@ class ProductStockRepository
         $query = str_replace([
             '{prefix}',
             '{product_identifiers}'
-        ], [
+        ], array(
             $this->tablePrefix,
             $productIdentifiers
-        ], $query);
+        ), $query);
 
         $statement = $this->connection->prepare($query);
 
