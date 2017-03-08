@@ -1,11 +1,20 @@
 <template>
   <div id="app">
-    <h1>Stock App</h1>
+    <ul class="products-list">
+      <li v-for="product in products">
+       {{ product.product_name }}
+     </li>
+    </ul>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+  export default {
+    name: 'app',
+    computed: {
+      products : function() {
+        return this.$store.state.products;
+      }
+    }
+  }
 </script>
