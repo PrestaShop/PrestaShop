@@ -302,7 +302,7 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($this->fieldsSize as $field => $max_length) {
             if ($value = $this->{$field} && Tools::strlen($value) > $max_length) {
                 $errors[] = $this->trans(
-                    '%1$s is too long. Maximum length: %2$d',
+                    'The %1$s field is too long (%2$d chars max).',
                     array(SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities), $max_length),
                     'Shop.Notifications.Error'
                 );
