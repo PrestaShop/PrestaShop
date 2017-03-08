@@ -6,7 +6,8 @@
   "scripts": {
     "postinstall": "webpack --progress",
     "build": "webpack --progress --colors --debug --display-chunks",
-    "watch": "webpack --progress --colors --debug --display-chunks --watch"
+    "watch": "webpack --progress --colors --debug --display-chunks --watch",
+    "start-dev-server": "webpack-dev-server --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",
@@ -45,6 +46,7 @@
     "vue-resource": "^1.2.1",
     "vue-template-compiler": "^2.1.10",
     "vuex": "^2.1.2",
-    "webpack": "^2.1.1"
+    "webpack": "^2.1.1",
+    "webpack-dev-server": "^2.4.1"
   }
 }
