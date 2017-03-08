@@ -59,6 +59,11 @@ let config = {
     stock: './js/stock-page/main.js'
 =======
       './js/theme.js'
+    ],
+    stock: [
+      'webpack-dev-server/client?http://localhost:8080',
+      'webpack/hot/only-dev-server',
+      './js/stock-page/main.js',
     ]
 >>>>>>> BO: Split stock-app in components
   },
@@ -66,6 +71,7 @@ let config = {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].bundle.js'
   },
+<<<<<<< d0b91cc224faacca458d16294370be2d4aa7d239
 <<<<<<< 1b27a4c6de342fa24caace94a38054e72139a373
   devServer: {
     hot: true,
@@ -88,6 +94,14 @@ let config = {
   },
 =======
 >>>>>>> BO: Split stock-app in components
+||||||| merged common ancestors
+=======
+  devServer: {
+    hot: true,
+    contentBase: path.resolve(__dirname, 'public'),
+    publicPath: '/'
+  },
+>>>>>>> BO: Enable hot module replacement in development
   module: {
     rules: [
       {
@@ -172,13 +186,42 @@ let config = {
         loader: 'vue'
 >>>>>>> BO: Split stock-app in components
       },
+<<<<<<< d0b91cc224faacca458d16294370be2d4aa7d239
+||||||| merged common ancestors
+      {test: /\.css$/, use: ['style-loader', 'css-loader']},
+      {test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']},
+=======
       {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader']
+        })
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'sass-loader']
+        })
+      },
+>>>>>>> BO: Enable hot module replacement in development
+      {
+<<<<<<< d0b91cc224faacca458d16294370be2d4aa7d239
         test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
         use: 'file-loader?name=[hash].[ext]'
+||||||| merged common ancestors
+        test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+        loader: 'file-loader?name=[hash].[ext]&publicPath=../../../admin-dev/themes/new-theme/public/'
+=======
+        test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+        loader: 'file-loader?name=[hash].[ext]'
+>>>>>>> BO: Enable hot module replacement in development
       }
     ]
   },
   plugins: [
+<<<<<<< d0b91cc224faacca458d16294370be2d4aa7d239
     new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('theme.css')
   ]
@@ -186,6 +229,17 @@ let config = {
 
 if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
+||||||| merged common ancestors
+=======
+    new webpack.HotModuleReplacementPlugin(),
+    new ExtractTextPlugin('theme.css'),
+    new webpack.NamedModulesPlugin()
+  ]
+};
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(
+>>>>>>> BO: Enable hot module replacement in development
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: false,
       compress: {
@@ -200,6 +254,7 @@ if (process.env.NODE_ENV === 'production') {
         comments: false
       }
     })
+<<<<<<< d0b91cc224faacca458d16294370be2d4aa7d239
   );
 } else {
   config.entry.stock.push('webpack/hot/only-dev-server');
@@ -207,3 +262,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = config;
+||||||| merged common ancestors
+  ]
+};
+=======
+  );
+}
+
+module.exports = config;
+>>>>>>> BO: Enable hot module replacement in development

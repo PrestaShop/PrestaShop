@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Admin controller for the Stock pages.
@@ -40,5 +41,19 @@ class StockController extends FrameworkBundleAdminController
     public function overviewAction()
     {
         return [];
+    }
+
+    public function hashUpdateJsAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
+
+        return new Response($contents);
+    }
+
+    public function hashUpdateJsonAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
+
+        return new Response($contents);
     }
 }
