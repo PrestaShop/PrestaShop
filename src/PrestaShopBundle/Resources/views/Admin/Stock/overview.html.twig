@@ -28,13 +28,13 @@
      {{ parent() }}
      <script>
       var data = {
-        apiUrl: '{{url('api_product_stock_list')}}'
+        apiUrl: '{{url('api_product_stock_list')}}',
+        baseUrl: '{{ app.request.getBasePath() }}'
       }
      </script>
      <script src="{{ asset('themes/new-theme/public/stock.bundle.js') }}"></script>
  {% endblock %}
 
  {% block content %}
-    <h1>{{ "Stock Management"|trans({}, 'Admin.Catalog.Stock') }}</h1>
     <div id="stock-app"></div>
  {% endblock %}
