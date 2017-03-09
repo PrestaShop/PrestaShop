@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "webpack --progress",
-    "build": "webpack --progress --colors --debug --display-chunks",
-    "watch": "webpack --progress --colors --debug --display-chunks --watch",
+    "postinstall": "webpack",
     "start-dev-server": "webpack-dev-server --config webpack.config.js"
   },
   "author": "",
