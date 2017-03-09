@@ -101,7 +101,17 @@ let config = {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/'
   },
+<<<<<<< 9dd7efaf64e5168446c26b0c2174aebb587b8658
 >>>>>>> BO: Enable hot module replacement in development
+||||||| merged common ancestors
+=======
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      vue$: 'vue/dist/vue.common.js'
+    }
+  },
+>>>>>>> CO: Fix vue scripts loading
   module: {
     rules: [
       {
@@ -183,8 +193,14 @@ let config = {
         use: 'json-loader',
 =======
         test: /\.vue$/,
+<<<<<<< 9dd7efaf64e5168446c26b0c2174aebb587b8658
         loader: 'vue'
 >>>>>>> BO: Split stock-app in components
+||||||| merged common ancestors
+        loader: 'vue'
+=======
+        loader: 'vue-loader'
+>>>>>>> CO: Fix vue scripts loading
       },
 <<<<<<< d0b91cc224faacca458d16294370be2d4aa7d239
 ||||||| merged common ancestors
