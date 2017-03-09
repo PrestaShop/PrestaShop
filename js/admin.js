@@ -566,7 +566,7 @@ function addRelatedProduct(id_product_to_add, product_name)
 	if (!id_product_to_add || id_product == id_product_to_add)
 		return;
 	$('#related_product_name').html(product_name);
-	$('input[name=id_product_redirected]').val(id_product_to_add);
+	$('input[name=id_type_redirected]').val(id_product_to_add);
 	$('#related_product_autocomplete_input').parent().hide();
 	$('#related_product_remove').show();
 }
@@ -574,7 +574,7 @@ function addRelatedProduct(id_product_to_add, product_name)
 function removeRelatedProduct()
 {
 	$('#related_product_name').html(no_related_product);
-	$('input[name=id_product_redirected]').val(0);
+	$('input[name=id_type_redirected]').val(0);
 	$('#related_product_remove').hide();
 	$('#related_product_autocomplete_input').parent().fadeIn();
 }
