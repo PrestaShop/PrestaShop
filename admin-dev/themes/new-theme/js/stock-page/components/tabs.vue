@@ -8,3 +8,14 @@
     </li>
   </ul>
 </template>
+
+<style lang="sass?outputStyle=expanded" scoped>
+  @import "~PrestaKit/scss/custom/_variables.scss";
+  .nav-tabs {
+    border:none;
+  }
+  .nav-link.active, .nav-link.active:hover {
+    border-top: none;
+    border-bottom: 3px solid $brand-primary;
+  }
+</style>
