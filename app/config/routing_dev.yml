@@ -16,3 +16,17 @@ _errors:
 
 _main:
     resource: routing.yml
+
+_admin_stock_hot_reload_json:
+    path:     /stock/{hash}.hot-update.json
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Stock:hashUpdateJson
+
+_admin_stock_hot_reload_js:
+    path:     /stock/{hash}.hot-update.js
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Stock:hashUpdateJs
+    requirements:
+        hash: .+

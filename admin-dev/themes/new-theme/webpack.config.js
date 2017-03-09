@@ -1,7 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = {
+let config = {
   entry: {
     main: [
       'tether/dist/js/tether.js',
@@ -21,11 +22,21 @@ module.exports = {
       'bootstrap-slider/dist/bootstrap-slider.js',
       'sprintf-js/src/sprintf.js',
       './js/theme.js'
+    ],
+    stock: [
+      'webpack-dev-server/client?http://localhost:8080',
+      'webpack/hot/only-dev-server',
+      './js/stock-page/main.js',
     ]
   },
   output: {
-    path: './public',
+    path: path.resolve(__dirname, 'public'),
     filename: '[name].bundle.js'
+  },
+  devServer: {
+    hot: true,
+    contentBase: path.resolve(__dirname, 'public'),
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -82,15 +93,35 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue'
       },
-      {test: /\.css$/, use: ['style-loader', 'css-loader']},
-      {test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']},
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader']
+        })
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'sass-loader']
+        })
+      },
       {
         test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-        loader: 'file-loader?name=[hash].[ext]&publicPath=../../../admin-dev/themes/new-theme/public/'
+        loader: 'file-loader?name=[hash].[ext]'
       }
     ]
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new ExtractTextPlugin('theme.css'),
+    new webpack.NamedModulesPlugin()
+  ]
+};
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: false,
       compress: {
@@ -105,5 +136,7 @@ module.exports = {
         comments: false
       }
     })
-  ]
-};
+  );
+}
+
+module.exports = config;
