@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -164,7 +164,7 @@ class ProductStockRepository
     private function formatProductsIdentifiersForWhereInClause($rows)
     {
         $productIdentifiers = array_map(function ($row) {
-            return [$row['product_id'], $row['product_attribute_id']];
+            return array($row['product_id'], $row['product_attribute_id']);
         }, $rows);
 
         return implode(',', array_map(function ($identifiers) {
@@ -212,10 +212,10 @@ class ProductStockRepository
         $query = str_replace([
             '{prefix}',
             '{product_identifiers}'
-        ], [
+        ], array(
             $this->tablePrefix,
             $productIdentifiers
-        ], $query);
+        ), $query);
 
         $statement = $this->connection->prepare($query);
 
