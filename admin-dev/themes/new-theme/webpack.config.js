@@ -38,6 +38,12 @@ let config = {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/'
   },
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      vue$: 'vue/dist/vue.common.js'
+    }
+  },
   module: {
     rules: [
       {
@@ -91,7 +97,7 @@ let config = {
       },
       {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader'
       },
       {
         test: /\.css$/,
