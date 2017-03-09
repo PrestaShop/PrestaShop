@@ -1,20 +1,12 @@
 <template>
-  <div>
-    <div class="autocomplete">
-      <input type="text" class="form-control search" placeholder="Search and add a related product" autocomplete="off">
-      <ul class="product-list">
-        <li class="media">
-          <div class="media-left">
-            <img class="media-object image" />
-          </div>
-          <div class="media-body media-middle">
-            <span class="label">Faded Short Sleeves T-shirt (ref: demo_1)</span>
-            <i class="material-icons delete">clear</i>
-          </div>
-        </li>
-      </ul>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="autocomplete m-b-2">
+        <label>Search products (search by name,reference,ID,supplier)</label>
+        <input type="text" class="form-control search" autocomplete="off">
+      </div>
+      <SearchFilter />
     </div>
-    <SearchFilter />
   </div>
 </template>
 

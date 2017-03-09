@@ -1,9 +1,8 @@
 <template>
-  <div>
+  <div class="stock-header">
     <Breadcrumb />
     <h1>Stock Management</h1>
     <Tabs />
-    <Search />
   </div>
 </template>
 
@@ -15,8 +14,17 @@
   export default {
     components: {
       Breadcrumb,
-      Tabs,
-      Search
+      Tabs
     }
   }
 </script>
+
+<style lang="sass?outputStyle=expanded" scoped>
+  .stock-header {
+    position: fixed;
+    top: 40px;
+    background: white;
+    width: 100%;
+    z-index: 2;
+  }
+</style>
