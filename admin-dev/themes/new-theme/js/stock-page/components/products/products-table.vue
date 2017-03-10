@@ -2,12 +2,12 @@
   <table class="table">
     <thead>
       <tr>
-        <th class="text-xs-center">Product<i class="material-icons">swap_vert</i></th>
-        <th>Reference<i class="material-icons">swap_vert</i></th>
-        <th>Supplier<i class="material-icons">swap_vert</i></th>
-        <th class="text-xs-center">Physical<i class="material-icons">swap_vert</i></th>
+        <th class="text-xs-center">Product<Sort v-on:sort="sortProducts" /></th>
+        <th class="text-xs-center">Reference<Sort v-on:sort="sortProducts" /></th>
+        <th>Supplier<Sort /></th>
+        <th class="text-xs-center">Physical<Sort v-on:sort="sortProducts" /></th>
         <th class="text-xs-center">Reserved</th>
-        <th class="text-xs-center">Available<i class="material-icons">swap_vert</i></th>
+        <th class="text-xs-center">Available<Sort v-on:sort="sortProducts" /></th>
         <th><i class="material-icons">edit</i>Edit Quantity</th>
       </tr>
     </thead>
@@ -19,14 +19,29 @@
 
 <script>
   import ProductLine from './product-line';
+  import Sort from './sort';
 
   export default {
     components: {
-      ProductLine
+      ProductLine,
+      Sort
     },
     computed: {
       products : function() {
-        return this.$store.state.products;
+        let mainProducts = [];
+        let productId = null;
+        this.$store.state.products.filter(function(product) {
+          if(productId !== product.product_id) {
+            productId = product.product_id;
+            mainProducts.push(product);
+          }
+        });
+        return mainProducts;
+      }
+    },
+    methods: {
+      sortProducts: function() {
+
       }
     }
   }
