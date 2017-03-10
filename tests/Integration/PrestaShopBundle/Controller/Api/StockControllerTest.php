@@ -41,11 +41,29 @@ class StockControllerTest extends WebTestCase
      */
     private $prophet;
 
+    /**
+     * @var \Symfony\Component\Routing\RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var \Symfony\Component\BrowserKit\Client
+     */
+    private $client;
+
     public function setUp()
     {
         parent::setUp();
 
         $this->prophet = new Prophet();
+        $this->client = $this->createClient();
+
+        $container = self::$kernel->getContainer();
+
+        $legacyContextMock = $this->mockContextAdapter();
+        $container->set('prestashop.adapter.legacy.context', $legacyContextMock->reveal());
+
+        $this->router = $container->get('router');
     }
 
     public function tearDown()
@@ -57,22 +75,102 @@ class StockControllerTest extends WebTestCase
 
     public function testListAction()
     {
-        $client = $this->createClient();
-        $container = self::$kernel->getContainer();
+        $listProductStockRoute = $this->router->generate('api_product_stock_list');
 
-        $router = $container->get('router');
-        $productStockListRoute = $router->generate('api_product_stock_list');
+        $this->client->request('GET', $listProductStockRoute);
 
-        $legacyContextMock = $this->mockContextAdapter();
-        $container->set('prestashop.adapter.legacy.context', $legacyContextMock->reveal());
+        $response = $this->client->getResponse();
 
-        $client->request('GET', $productStockListRoute);
+        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+    }
 
-        $response = $client->getResponse();
+    public function testEditProductAction()
+    {
+        $this->assertNotFoundResponseOnEditProductStockQuantity();
+    }
 
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with OK Status.');
+    public function testEditProductCombinationAction()
+    {
+        $this->assertNotFoundResponseOnEditProductCombinationStockQuantity();
+        $this->assertOkResponseOnEditProductCombinationQuantity();
+    }
 
-        $this->tearDown();
+    /**
+     * @return array
+     */
+    private function assertNotFoundResponseOnEditProductStockQuantity()
+    {
+        $editProductStockRoute = $this->router->generate('api_product_stock_edit_product', array(
+            'productId' => 9,
+        ));
+
+        $this->client->request('POST', $editProductStockRoute, array('quantity' => 1));
+
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode(), 'It should return a response with "Not Found" Status.');
+
+        $this->assertResponseBodyValidJson($response);
+    }
+
+    /**
+     * @return array
+     */
+    private function assertNotFoundResponseOnEditProductCombinationStockQuantity()
+    {
+        $editProductStockRoute = $this->router->generate('api_product_stock_edit_product_combination', array(
+            'productId' => 8,
+            'productAttributeId' => 1
+        ));
+
+        $this->client->request('POST', $editProductStockRoute, array('quantity' => 1));
+
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(404, $response->getStatusCode(), 'It should return a response with "Not Found" Status.');
+
+        $this->assertResponseBodyValidJson($response);
+    }
+
+    /**
+     * @param $response
+     * @return mixed
+     */
+    private function assertResponseBodyValidJson($response)
+    {
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertEquals(JSON_ERROR_NONE, json_last_error(), 'The response body should be a valid json document');
+
+        return $content;
+    }
+
+    private function assertOkResponseOnEditProductCombinationQuantity()
+    {
+        $editProductStockRoute = $this->router->generate('api_product_stock_edit_product_combination', array(
+            'productId' => 1,
+            'productAttributeId' => 1,
+        ));
+
+        $expectedQuantity = 10;
+        $this->client->request('POST', $editProductStockRoute, array('quantity' => $expectedQuantity));
+
+        /**
+         * @var \Symfony\Component\HttpFoundation\JsonResponse $response
+         */
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+
+        $content = $this->assertResponseBodyValidJson($response);
+
+        $this->assertArrayHasKey('product_available_quantity', $content,
+            'The response body should contain a "product_available_quantity" property'
+        );
+
+        $this->assertEquals($expectedQuantity , $content['product_available_quantity'],
+            'The response body should contain the newly updated quantity'
+        );
     }
 
     /**
