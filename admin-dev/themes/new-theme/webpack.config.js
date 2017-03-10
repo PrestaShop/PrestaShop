@@ -21,11 +21,9 @@ let config = {
       'PrestaKit/dist/js/jquery.growl.js',
       'bootstrap-slider/dist/bootstrap-slider.js',
       'sprintf-js/src/sprintf.js',
-      './js/theme.js'
+      './js/theme.js',
     ],
     stock: [
-      'webpack-dev-server/client?http://localhost:8080',
-      'webpack/hot/only-dev-server',
       './js/stock-page/main.js',
     ]
   },
@@ -47,23 +45,20 @@ let config = {
   module: {
     rules: [
       {
-        test: require.resolve('jquery'),
+        test: /jquery\/dist\/jquery\.js/,
         use: [
           {
             loader: 'expose-loader',
-            query: 'jQuery'
-          },
-          {
+            query: 'jQuery',
+          }, {
             loader: 'expose-loader',
-            query: '$'
-          },
-          {
+            query: 'jquery',
+          }, {
             loader: 'expose-loader',
-            query: 'jquery'
+            query: '$',
           }
         ]
-      },
-      {
+      }, {
         test: require.resolve('tether'),
         use: [
           {
@@ -71,8 +66,7 @@ let config = {
             query: 'Tether'
           }
         ]
-      },
-      {
+      }, {
         test: /jwerty\/jwerty\.js/,
         loader: 'imports-loader?this=>window&module=>false'
       }, {
@@ -122,7 +116,6 @@ let config = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('theme.css'),
-    new webpack.NamedModulesPlugin()
   ]
 };
 
@@ -143,6 +136,9 @@ if (process.env.NODE_ENV === 'production') {
       }
     })
   );
+} else {
+  config.entry.stock.push('webpack/hot/only-dev-server');
+  config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
 }
 
 module.exports = config;
