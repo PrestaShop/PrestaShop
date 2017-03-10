@@ -2655,7 +2655,7 @@ class AdminControllerCore extends Controller
     {
         if ($isNewTheme) {
             $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/theme.css', 'all', 1);
-            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/bundle.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/main.bundle.js');
             $this->addjQueryPlugin(array('chosen'));
         } else {
 
@@ -3294,7 +3294,7 @@ class AdminControllerCore extends Controller
     {
         $languageJoinClause = '';
         if ($this->lang) {
-            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->table). '_lang` b 
+            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->table). '_lang` b
                 ON (b.`' . bqSQL($this->identifier) . '` = a.`' . bqSQL($this->identifier) . '` AND b.`id_lang` = ' . (int)$idLang;
 
             if ($idLangShop) {

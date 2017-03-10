@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2017 PrestaShop
  *
@@ -22,30 +23,37 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShopBundle\Controller\Admin;
 
-// Plugins CSS
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
 
-import 'dropzone/dist/min/dropzone.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-import 'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css';
-import 'PrestaKit/dist/css/jquery.growl.css';
-import 'PrestaKit/dist/css/bootstrap-switch.min.css';
+/**
+ * Admin controller for the Stock pages.
+ */
+class StockController extends FrameworkBundleAdminController
+{
+    /**
+     * @Template
+     *
+     * @return array Template vars
+     */
+    public function overviewAction()
+    {
+        return [];
+    }
 
-// Theme SCSS
+    public function hashUpdateJsAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
 
-import '../scss/theme.scss';
+        return new Response($contents);
+    }
 
-// Theme Javascript
+    public function hashUpdateJsonAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
 
-import NavBar from './nav_bar.js';
-
-import './product-page/index';
-import './translation-page/index';
-
-import Header from './header.js';
-import refreshNotifications from './notifications.js';
-
-new NavBar();
-new Header();
-refreshNotifications();
+        return new Response($contents);
+    }
+}
