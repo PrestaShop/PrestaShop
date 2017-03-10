@@ -27,11 +27,13 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PDO;
+use PrestaShopBundle\Exception\ProductNotFoundException;
 use Product;
 use RuntimeException;
 use Shop;
@@ -102,38 +104,107 @@ class ProductStockRepository
         $this->shopId = $shop->getContextualShopId();
     }
 
-    public function getStockOverviewRows()
+    /**
+     * @param $productId
+     * @param $quantity
+     * @throws ProductNotFoundException
+     */
+    public function updateProductQuantity($productId, $quantity)
     {
         $query = '
-            SELECT
-            p.id_product AS product_id,
-            COALESCE(pa.id_product_attribute, 0) AS product_attribute_id,
-            IF (LENGTH(p.reference) = 0, "N/A", p.reference) AS product_reference,
-            p.id_supplier AS supplier_id,
-            i.id_image AS image_id,
-            COALESCE(s.name, "N/A") AS supplier_name,
-            pl.name AS product_name,
-            SUM(sa.quantity) as product_available_quantity
-            FROM {prefix}product p
-            LEFT JOIN {prefix}product_attribute pa ON (p.id_product = pa.id_product)
-            LEFT JOIN {prefix}product_lang pl ON (p.id_product = pl.id_product)
-            LEFT JOIN {prefix}product_shop ps ON (p.id_product = ps.id_product)
-            LEFT JOIN {prefix}stock_available sa ON (p.id_product = sa.id_product)
-            LEFT JOIN {prefix}image i ON (p.id_product = i.id_product)
-            LEFT JOIN {prefix}image_shop ims ON (
-                p.id_product = ims.id_product AND
-                i.id_image = ims.id_image
-            )
-            LEFT JOIN {prefix}supplier s ON (p.id_supplier = s.id_supplier)
-            WHERE
-            ps.id_shop = :shop_id AND
-            pl.id_lang = :language_id AND
-            sa.id_shop = :shop_id AND
-            sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0) AND
-            ims.cover = 1 AND
-            p.state = :state
-            GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)
-            ORDER BY p.id_product DESC, COALESCE(pa.id_product_attribute, 0)
+            UPDATE {prefix}stock_available
+            SET quantity = :quantity
+            WHERE id_product = :product_id
+            AND id_product_attribute = 0
+        ';
+
+        $query = str_replace('{prefix}', $this->tablePrefix, $query);
+
+        $statement = $this->connection->prepare($query);
+
+        $statement->bindValue('product_id', $productId, PDO::PARAM_INT);
+        $statement->bindValue('quantity', $quantity, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        $andWhere = 'AND p.id_product = :product_id AND COALESCE(pa.id_product_attribute, 0) = 0';
+        $query = $this->selectProductStock($andWhere);
+
+        $query = str_replace('{prefix}', $this->tablePrefix, $query);
+
+        $statement = $this->connection->prepare($query);
+
+        $this->bindSelectProductStockParams($statement);
+        $statement->bindValue('product_id', $productId, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        $rows = $statement->fetchAll();
+
+        if (count($rows) === 0) {
+            throw new ProductNotFoundException(sprintf('Product with id %d can not be found', $productId));
+        }
+
+        return $this->castNumericToInt($rows)[0];
+    }
+
+    /**
+     * @param $productId
+     * @param $productAttributeId
+     * @param $quantity
+     * @throws ProductNotFoundException
+     */
+    public function updateProductCombinationQuantity($productId, $productAttributeId, $quantity)
+    {
+        $query = '
+            UPDATE {prefix}stock_available
+            SET quantity = :quantity
+            WHERE id_product = :product_id
+            AND id_product_attribute = :product_attribute_id
+        ';
+
+        $query = str_replace('{prefix}', $this->tablePrefix, $query);
+
+        $statement = $this->connection->prepare($query);
+
+        $statement->bindValue('product_id', $productId, PDO::PARAM_INT);
+        $statement->bindValue('product_attribute_id', $productAttributeId, PDO::PARAM_INT);
+        $statement->bindValue('quantity', $quantity, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        $andWhere = 'AND p.id_product = :product_id AND COALESCE(pa.id_product_attribute, 0) = :product_attribute_id';
+        $query = $this->selectProductStock($andWhere);
+
+        $query = str_replace('{prefix}', $this->tablePrefix, $query);
+
+        $statement = $this->connection->prepare($query);
+
+        $this->bindSelectProductStockParams($statement);
+        $statement->bindValue('product_id', $productId, PDO::PARAM_INT);
+        $statement->bindValue('product_attribute_id', $productAttributeId, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        $rows = $statement->fetchAll();
+
+        if (count($rows) === 0) {
+            throw new ProductNotFoundException(
+                sprintf(
+                    'Product with id %d and attribute id %d can not be found',
+                    $productId,
+                    $productAttributeId
+                )
+            );
+        }
+
+        return $this->castNumericToInt($rows)[0];
+    }
+
+    public function getStockOverviewRows()
+    {
+        $query = $this->selectProductStock();
+        $query = $query.'
             LIMIT :first_result, :max_result
         ';
 
@@ -141,11 +212,9 @@ class ProductStockRepository
 
         $statement = $this->connection->prepare($query);
 
-        $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
-        $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
+        $this->bindSelectProductStockParams($statement);
         $statement->bindValue('first_result', 0, PDO::PARAM_INT);
         $statement->bindValue('max_result', 100, PDO::PARAM_INT);
-        $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
 
         $statement->execute();
 
@@ -264,5 +333,55 @@ class ProductStockRepository
         });
 
         return $rows;
+    }
+
+    /**
+     * @param string $andWhere
+     * @return string
+     */
+    private function selectProductStock($andWhere = '')
+    {
+        return str_replace('{and_where}', $andWhere, '
+            SELECT
+            p.id_product AS product_id,
+            COALESCE(pa.id_product_attribute, 0) AS product_attribute_id,
+            IF (LENGTH(p.reference) = 0, "N/A", p.reference) AS product_reference,
+            p.id_supplier AS supplier_id,
+            i.id_image AS image_id,
+            COALESCE(s.name, "N/A") AS supplier_name,
+            pl.name AS product_name,
+            SUM(sa.quantity) as product_available_quantity
+            FROM {prefix}product p
+            LEFT JOIN {prefix}product_attribute pa ON (p.id_product = pa.id_product)
+            LEFT JOIN {prefix}product_lang pl ON (p.id_product = pl.id_product)
+            LEFT JOIN {prefix}product_shop ps ON (p.id_product = ps.id_product)
+            LEFT JOIN {prefix}stock_available sa ON (p.id_product = sa.id_product)
+            LEFT JOIN {prefix}image i ON (p.id_product = i.id_product)
+            LEFT JOIN {prefix}image_shop ims ON (
+                p.id_product = ims.id_product AND
+                i.id_image = ims.id_image
+            )
+            LEFT JOIN {prefix}supplier s ON (p.id_supplier = s.id_supplier)
+            WHERE
+            ps.id_shop = :shop_id AND
+            pl.id_lang = :language_id AND
+            sa.id_shop = :shop_id AND
+            sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0) AND
+            ims.cover = 1 AND
+            p.state = :state
+            {and_where}
+            GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)
+            ORDER BY p.id_product DESC, COALESCE(pa.id_product_attribute, 0)
+        ');
+    }
+
+    /**
+     * @param $statement
+     */
+    private function bindSelectProductStockParams(Statement $statement)
+    {
+        $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
+        $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
+        $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
     }
 }
