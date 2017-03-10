@@ -3,10 +3,12 @@
     <label>Movement type</label>
     <div class="movements">
       <select data-toggle="select2" class="form-control m-r-1">
-        <option selected>Open this select menu</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
+        <option selected>None</option>
+        <option value="1">Supply Order</option>
+        <option value="2">Inventory adjustment</option>
+        <option value="3">Customer Order</option>
+        <option value="4">Transfer</option>
+        <option value="5">Product return</option>
       </select>
       <button type="button" class="btn update-qty"><i class="material-icons">edit</i>APPLY NEW QUANTITY</button>
     </div>
