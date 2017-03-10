@@ -86,7 +86,7 @@ class ContextCore
     public $mode;
 
     /** @var Translator */
-    protected $translator;
+    protected $translator = null;
 
     /**
      * Mobile device of the customer
@@ -343,37 +343,37 @@ class ContextCore
      */
     public function getTranslator()
     {
-        $cacheDir = _PS_CACHE_DIR_.'/translations/'.$this->language->locale;
+        if (null !== $this->translator) {
+            return $this->translator;
+        }
+        
+        $cacheDir = _PS_CACHE_DIR_.'translations';
         $this->translator = new Translator($this->language->locale, null, $cacheDir, false);
 
-        if (!is_dir($cacheDir)) {
-            $fs = new Filesystem();
-            $fs->mkdir($cacheDir);
-            $adminContext = defined('_PS_ADMIN_DIR_');
-            $this->translator->addLoader('xlf', new XliffFileLoader());
+        $adminContext = defined('_PS_ADMIN_DIR_');
+        $this->translator->addLoader('xlf', new XliffFileLoader());
 
-            $sqlTranslationLoader = new SqlTranslationLoader();
-            if (!is_null($this->shop)) {
-                $sqlTranslationLoader->setTheme($this->shop->theme);
-            }
+        $sqlTranslationLoader = new SqlTranslationLoader();
+        if (!is_null($this->shop)) {
+            $sqlTranslationLoader->setTheme($this->shop->theme);
+        }
 
-            $this->translator->addLoader('db', $sqlTranslationLoader);
-            $notName = $adminContext ? '^Shop*' : '^Admin*';
+        $this->translator->addLoader('db', $sqlTranslationLoader);
+        $notName = $adminContext ? '^Shop*' : '^Admin*';
 
-            $finder = Finder::create()
-                ->files()
-                ->name('*.*.xlf')
-                ->notName($notName)
-                ->in($this->getTranslationResourcesDirectories())
-            ;
+        $finder = Finder::create()
+            ->files()
+            ->name('*.'.$this->language->locale.'.xlf')
+            ->notName($notName)
+            ->in($this->getTranslationResourcesDirectories())
+        ;
 
-            foreach ($finder as $file) {
-                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+        foreach ($finder as $file) {
+            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
 
-                $this->translator->addResource($format, $file, $locale, $domain);
-                if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
-                    $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
-                }
+            $this->translator->addResource($format, $file, $locale, $domain);
+            if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
+                $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
             }
         }
 
