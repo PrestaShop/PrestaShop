@@ -21,18 +21,23 @@
       {{ product.product_available_quantity }}
     </td>
     <td>
-      <input>
+      <Spinner :value="product.product_id" />
     </td>
   </tr>
 </template>
 
 <script>
+  import Spinner from './spinner';
+
   export default {
     props: ['product'],
     computed: {
       imagePath: function() {
         return `${data.baseUrl}/${this.product.image_thumbnail_path}`;
       }
+    },
+    components: {
+      Spinner
     }
   }
 </script>
@@ -41,5 +46,10 @@
   @import "~PrestaKit/scss/custom/_variables.scss";
   .thumbnail {
       border: $gray-light 1px solid;
+  }
+  .edit-qty {
+    width: 90px;
+    height: 34px;
+    border: $gray-medium 1px solid;
   }
 </style>

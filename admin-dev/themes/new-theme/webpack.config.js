@@ -115,14 +115,14 @@ let config = {
         })
       },
       {
-        test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-        loader: 'file-loader?name=[hash].[ext]'
+        test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
+        use: 'file-loader?name=[hash].[ext]'
       }
     ]
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin('theme.css'),
+    new ExtractTextPlugin('theme.css')
   ]
 };
 
