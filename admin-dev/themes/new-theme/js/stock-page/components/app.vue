@@ -2,7 +2,7 @@
   <div id="app" class="stock-app">
     <StockHeader />
     <Search />
-    <div class="container card p-t-2">
+    <div class="card p-a-2">
       <ProductsActions />
       <Products />
       <Pagination />
@@ -11,11 +11,11 @@
 </template>
 
 <script>
-  import StockHeader from './stock-header';
-  import Search from './search';
-  import ProductsActions from './products-actions';
-  import Products from './products-table';
-  import Pagination from './pagination';
+  import StockHeader from './header/stock-header';
+  import Search from './header/search';
+  import ProductsActions from './products/products-actions';
+  import Products from './products/products-table';
+  import Pagination from './products/pagination';
   export default {
     name: 'app',
     components: {
