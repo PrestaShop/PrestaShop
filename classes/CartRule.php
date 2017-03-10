@@ -892,11 +892,6 @@ class CartRuleCore extends ObjectModel
         $all_products = $context->cart->getProducts();
         $package_products = (is_null($package) ? $all_products : $package['products']);
 
-        $all_cart_rules_ids = $context->cart->getOrderedCartRulesIds();
-
-        $cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-        $cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-
         $reduction_value = 0;
 
         $cache_id = 'getContextualValue_'.(int)$this->id.'_'.(int)$use_tax.'_'.(int)$context->cart->id.'_'.(int)$filter;
@@ -907,6 +902,11 @@ class CartRuleCore extends ObjectModel
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
+
+        $all_cart_rules_ids = $context->cart->getOrderedCartRulesIds();
+
+        $cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+        $cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 
         // Free shipping on selected carriers
         if ($this->free_shipping && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING))) {
