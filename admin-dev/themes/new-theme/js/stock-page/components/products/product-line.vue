@@ -5,13 +5,13 @@
       <img :src="imagePath" class="thumbnail" />
       <span class="m-l-1">{{ product.product_name }}</span>
     </td>
-    <td>
+    <td class="text-xs-center p-r-1">
       {{ product.product_reference }}
     </td>
-    <td>
+    <td class="p-r-1">
       {{ product.supplier_name }}
     </td>
-    <td class="text-xs-center">
+    <td class="text-xs-center p-r-1">
       {{ product.product_available_quantity + product.product_reserved_quantity }}
     </td>
     <td class="text-xs-center">
