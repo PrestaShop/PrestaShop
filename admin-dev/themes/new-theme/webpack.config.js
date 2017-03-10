@@ -9,6 +9,8 @@ let config = {
       'jquery/dist/jquery.js',
       'jquery-ui/jquery-ui.js',
       'bootstrap/dist/js/npm.js',
+      'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
+      'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
       'jwerty/jwerty.js',
       'magnific-popup/dist/jquery.magnific-popup.js',
       'dropzone/dist/dropzone.js',
@@ -67,11 +69,16 @@ let config = {
           }
         ]
       }, {
+        test: /bloodhound\.min\.js/,
+        use: [
+          {
+            loader: 'expose-loader',
+            query: 'Bloodhound'
+          }
+        ]
+      }, {
         test: /jwerty\/jwerty\.js/,
         loader: 'imports-loader?this=>window&module=>false'
-      }, {
-        test: /bootstrap-tokenfield\/dist\/bootstrap-tokenfield\.js/,
-        loader: 'imports-loader?define=>false&exports-loader=>false'
       }, {
         test: /typeahead\.jquery\.js/,
         loader: 'imports-loader?define=>false&exports-loader=>false&this=>window'
