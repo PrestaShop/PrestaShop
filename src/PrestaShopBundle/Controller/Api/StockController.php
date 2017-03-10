@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use PrestaShopBundle\Exception\ProductNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class StockController extends Controller
 {
@@ -36,9 +38,61 @@ class StockController extends Controller
      */
     public function listAction()
     {
-        $productRepository = $this->get('prestashop.core.api.product_stock.repository');
-        $stockOverviewColumns = $productRepository->getStockOverviewRows();
+        $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
+        $stockOverviewColumns = $productStockRepository->getStockOverviewRows();
 
         return new JsonResponse($stockOverviewColumns);
+    }
+
+    /**
+     * @param $productId
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editProductAction($productId, Request $request)
+    {
+        $quantity = (int) $request->request->get('quantity');
+        $productId = (int) $productId;
+
+        $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
+
+        try {
+            $product = $productStockRepository->updateProductQuantity($productId, $quantity);
+        } catch (ProductNotFoundException $exception) {
+            $this->get('logger')->info($exception->getMessage());
+
+            return new JsonResponse(array('error' => $exception->getMessage()), 404);
+        }
+
+        return new JsonResponse($product);
+    }
+
+    /**
+     * @param $productId
+     * @param $productAttributeId
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editProductCombinationAction($productId, $productAttributeId, Request $request)
+    {
+        $quantity = (int) $request->request->get('quantity');
+        $productAttributeId = (int) $productAttributeId;
+        $productId = (int) $productId;
+
+        $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
+
+        try {
+            $product = $productStockRepository->updateProductCombinationQuantity(
+                $productId,
+                $productAttributeId,
+                $quantity
+            );
+        } catch (ProductNotFoundException $exception) {
+            $this->get('logger')->info($exception->getMessage());
+
+            return new JsonResponse(array('error' => $exception->getMessage()), 404);
+        }
+
+        return new JsonResponse($product);
     }
 }
