@@ -350,6 +350,21 @@ class ContextCore
         $cacheDir = _PS_CACHE_DIR_.'translations';
         $this->translator = new Translator($this->language->locale, null, $cacheDir, false);
 
+        // In case we have at least 1 translated message, we return the current translator.
+        // If some translations are missing, clear cache
+        if (count($this->translator->getCatalogue($this->language->locale)->all())) {
+            return $this->translator;
+        }
+
+        // However, in some case, even empty catalog were stored in the cache and then used as-is.
+        // For this one, we drop the cache and try to regenerate it.
+        $cache_file = Finder::create()
+            ->files()
+            ->in($cacheDir)
+            ->depth('==0')
+            ->name('*.'.$this->language->locale.'.*');
+        (new Filesystem())->remove($cache_file);
+
         $adminContext = defined('_PS_ADMIN_DIR_');
         $this->translator->addLoader('xlf', new XliffFileLoader());
 
