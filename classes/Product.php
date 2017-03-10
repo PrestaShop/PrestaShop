@@ -2117,10 +2117,13 @@ class ProductCore extends ObjectModel
     * @param bool $groupByIdAttributeGroup
     * @return array Product attributes combinations
     */
-    public function getAttributeCombinations($id_lang, $groupByIdAttributeGroup = true)
+    public function getAttributeCombinations($id_lang = null, $groupByIdAttributeGroup = true)
     {
         if (!Combination::isFeatureActive()) {
             return array();
+        }
+        if (is_null($id_lang)) {
+            $id_lang = Context::getContext()->language->id;
         }
 
         $sql = 'SELECT pa.*, product_attribute_shop.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name,
@@ -4315,7 +4318,7 @@ class ProductCore extends ObjectModel
     {
         Hook::exec('actionGetProductPropertiesBefore', [
             'id_lang'   => $id_lang,
-            'product'   => $row,
+            'product'   => &$row,
             'context'   => $context
         ]);
 
@@ -4505,7 +4508,7 @@ class ProductCore extends ObjectModel
 
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang'   => $id_lang,
-            'product'   => $row,
+            'product'   => &$row,
             'context'   => $context
         ]);
 

@@ -293,7 +293,14 @@ class CustomerCore extends ObjectModel
             }
         }
 
-        return parent::update(true);
+        try {
+            return parent::update(true);
+        } catch (\PrestaShopException $exception) {
+            $message = $exception->getMessage();
+            error_log($message);
+
+            return false;
+        }
     }
 
     /**

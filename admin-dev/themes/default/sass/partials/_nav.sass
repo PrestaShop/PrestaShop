@@ -382,8 +382,8 @@ $min-height: 950px
 	&.expanded
 		width: 100%
 		height: 100%
-		top: 60px
 		background: rgba(0,0,0,.7)
+		top: 60px
 		.menu-collapse
 			top: -60px
 			position: absolute
@@ -391,6 +391,53 @@ $min-height: 950px
 			@include left(0)
 	#header_employee_box, .admin-link
 		display: none
+	#header_shop
+		float: none
+		.shop-list-title
+			width: 100%
+			text-transform: uppercase
+			font-size: 16px
+			text-align: center
+			font-weight: normal
+			.icon-caret-down
+				display: none
+			> a::after
+				font-family: 'Material Icons'
+				content: "\E313"
+				font-size: 20px
+				margin-left: 10px
+				vertical-align: bottom
+		#shop-list-collapse
+			background-color: white
+			list-style-type: none
+			text-align: left
+			padding-left: 0
+			margin-top: 10px
+			li
+				border-bottom: #BBCDD2 1px solid
+				height: 30px
+				padding-left: 30px
+				line-height: 50px
+				height: 50px
+				&.group
+					padding-left: 50px
+					a
+						color: #363A41
+						font-weight: bold
+						text-transform: none
+				&.shop
+					padding-left: 70px
+					text-transform: none
+					&.disabled a
+						color: #BBCDD2
+					a
+						color: #363A41
+					.link-shop
+						position: absolute
+						right: 20px
+						.material-icons
+							color: #6C868E
+							font-size: 20px
 	#header_shopname
 		.bootstrap &
 			float: none
@@ -414,19 +461,24 @@ $min-height: 950px
 		width: 60px
 		height: 60px
 	ul.menu
-		position: absolute
+		position: fixed
 		display: none
 		width: 90%
 		overflow: scroll
-		min-height: 100%
+		top: 60px
+		bottom: 0
 		background-color: #363A41
 		padding: 0
 		border-top: 1px black solid
 		list-style: none
-		@include margin(0, 0, 100px, 0)
+		margin-bottom: 0
 		@include transition(all 0.35s ease-out)
 		@include animate(fadeInLeft, 0.3s)
-
+		.img-thumbnail
+			padding: 0
+			border: 0
+		.username
+			font-size: 16px
 		> li.searchtab
 			padding: 15px
 			position: relative
@@ -495,14 +547,11 @@ $min-height: 950px
 	ul.menu.menu-close
 		@include animate(fadeOutLeft, 0.2s)
 	.menu-collapse
-		color: $gray-light
+		color: #6C868E
 		width: 35px
 		height: 35px
 		text-align: center
 		line-height: 2.3em
-	#subtab-AdminParentThemes, #subtab-AdminParentShipping, #subtab-AdminParentPayment, #subtab-AdminInternational,
-	#subtab-ShopParameters, #subtab-AdminAdvancedParameters
-		display: none
 
 .menu-collapse
 	cursor: pointer
@@ -524,6 +573,9 @@ $min-height: 950px
 			@include left(10px!important)
 		ul.page-breadcrumb
 			@include left(10px!important)
+	.no-notification
+		top: 220px
+		left: 20px
 
 .page-topbar:not(.mobile-nav)
 	#main

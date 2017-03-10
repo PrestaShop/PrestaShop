@@ -86,6 +86,9 @@
             bottom: 0;
             width: 100%;
             display: block;
+            .mobile & {
+              bottom: rem(50px);
+            }
           }
         }
       }
@@ -127,6 +130,26 @@
           }
         }
       }
+    }
+  }
+  .mobile & {
+    .nav-link::before {
+      font-family: 'Material Icons';
+      display: block;
+      font-size: 30px;
+      color: $gray-dark;
+    }
+    #orders-tab::before {
+      content: "\E8CB";
+    }
+    #customers-tab::before {
+      content: "\E7FE";
+    }
+    #messages-tab::before {
+      content: "\E0BE";
+    }
+    .no-notification {
+      top: rem(220px);
     }
   }
 }
