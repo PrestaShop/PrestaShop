@@ -91,7 +91,7 @@ class HookDispatcher extends EventDispatcher
                 $listenerName = $event->popListener() ?: $listener[1];
 
                 $eventContent = $event->popContent();
-                $this->renderingContent[$listenerName] = strlen($eventContent) > strlen($obContent)
+                $this->renderingContent[$listenerName] = (!is_string($eventContent) || strlen($eventContent) > strlen($obContent))
                     ? $eventContent
                     : $obContent;
 

@@ -33,6 +33,7 @@ use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShopBundle\Service\Hook\HookFinder;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
@@ -563,18 +564,10 @@ class ProductController extends FrameworkBundleAdminController
             ->getRepository('PrestaShopBundle:Attribute')
             ->findByLangAndShop(1, 1);
 
-        $drawerModules = array();
-        foreach ((array)\Hook::exec('displayProductPageDrawer', array('product' => $product), null, true) as $module) {
-            if (!empty($module)) {
-                if (isset($module[0])) {
-                    foreach ($module as $item) {
-                        $drawerModules[] = $item;
-                    }
-                } else {
-                    $drawerModules[] = $module;
-                }
-            }
-        }
+        $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
+            ->setParams(array('product' => $product))
+            ->addExpectedInstanceClasses('PrestaShop\PrestaShop\Core\Product\ProductAdminDrawer')
+            ->present();
 
         return array(
             'form' => $form->createView(),
