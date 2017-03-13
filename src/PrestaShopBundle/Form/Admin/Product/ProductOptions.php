@@ -213,8 +213,9 @@ class ProductOptions extends CommonAbstractType
             'multiple'  => true,
             'choices'  => $this->attachmentList,
             'choices_as_values' => true,
-            'choice_label' => function ($value, $key, $index) {
-                return $this->fullAttachmentList[$index - 1]['name'];
+            'choice_label' => function ($choice, $key, $value) {
+                $attachmentKey = array_search($key, array_column($this->fullAttachmentList, 'file'));
+                return $this->fullAttachmentList[$attachmentKey]['name'];
             },
             'required' => false,
             'attr' => ['data' => $this->fullAttachmentList],
