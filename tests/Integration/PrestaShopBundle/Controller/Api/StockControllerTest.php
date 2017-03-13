@@ -32,7 +32,7 @@ use Context;
 use Shop;
 
 /**
- * @group admin
+ * @group api
  */
 class StockControllerTest extends WebTestCase
 {
