@@ -385,6 +385,7 @@ class ModuleController extends FrameworkBundleAdminController
         };
 
         $moduleManager = $this->get('prestashop.module.manager');
+        $modules = $moduleManager->getModulesWithNotifications($modulesPresenter);
         $translator = $this->get('translator');
         $layoutTitle = $translator->trans(
             'Module notifications',
@@ -401,7 +402,7 @@ class ModuleController extends FrameworkBundleAdminController
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-            'layoutTitle' => $translator->trans('Module notifications', array(), 'Admin.Modules.Feature'),
+            'layoutTitle' => $layoutTitle,
             'help_link' => $this->generateSidebarLink('AdminModules'),
             'modules' => $modules,
             'requireAddonsSearch' => false,
