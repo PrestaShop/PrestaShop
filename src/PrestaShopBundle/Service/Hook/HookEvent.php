@@ -63,7 +63,7 @@ class HookEvent extends Event
 
         $globalParameters = array('_ps_version' => _PS_VERSION_);
 
-        if (!is_null($kernel)) {
+        if (!is_null($kernel) && !is_null($kernel->getContainer()->get('request_stack')->getCurrentRequest())) {
             $globalParameters['request'] = $kernel->getContainer()->get('request');
         }
 
