@@ -31,6 +31,7 @@ use Doctrine\DBAL\Driver\Statement;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PDO;
 use PrestaShopBundle\Exception\ProductNotFoundException;
@@ -127,8 +128,8 @@ class ProductStockRepository
 
         $statement->execute();
 
-        $andWhere = 'AND p.id_product = :product_id AND COALESCE(pa.id_product_attribute, 0) = 0';
-        $query = $this->selectProductStock($andWhere);
+        $andWhereClause = 'AND p.id_product = :product_id AND COALESCE(pa.id_product_attribute, 0) = 0';
+        $query = $this->selectProductStock($andWhereClause);
 
         $query = str_replace('{prefix}', $this->tablePrefix, $query);
 
@@ -173,8 +174,11 @@ class ProductStockRepository
 
         $statement->execute();
 
-        $andWhere = 'AND p.id_product = :product_id AND COALESCE(pa.id_product_attribute, 0) = :product_attribute_id';
-        $query = $this->selectProductStock($andWhere);
+        $andWhereClause = '
+            AND p.id_product = :product_id AND
+            COALESCE(pa.id_product_attribute, 0) = :product_attribute_id'
+        ;
+        $query = $this->selectProductStock($andWhereClause);
 
         $query = str_replace('{prefix}', $this->tablePrefix, $query);
 
@@ -201,20 +205,30 @@ class ProductStockRepository
         return $this->castNumericToInt($rows)[0];
     }
 
-    public function getStockOverviewRows()
+    /**
+     * @param QueryParamsCollection $queryParams
+     * @return mixed
+     */
+    public function getStockOverviewRows(QueryParamsCollection $queryParams)
     {
-        $query = $this->selectProductStock();
-        $query = $query.'
-            LIMIT :first_result, :max_result
-        ';
+        $orderClause = $this->getOrderClause($queryParams);
+
+        $query = $this->selectProductStock($andWhere = '', $orderClause);
+
+        $query = $query . $this->getLimitClause($queryParams);
 
         $query = str_replace('{prefix}', $this->tablePrefix, $query);
 
         $statement = $this->connection->prepare($query);
 
         $this->bindSelectProductStockParams($statement);
-        $statement->bindValue('first_result', 0, PDO::PARAM_INT);
-        $statement->bindValue('max_result', 100, PDO::PARAM_INT);
+
+        $sqlClauses = $queryParams->toSqlClauses();
+        $limitClauseParams = $sqlClauses[$queryParams::SQL_CLAUSE_LIMIT_PARAMS];
+
+        foreach ($limitClauseParams  as $name => $value) {
+            $statement->bindValue($name, $value, PDO::PARAM_INT);
+        }
 
         $statement->execute();
 
@@ -307,6 +321,10 @@ class ProductStockRepository
      */
     private function addReservedProductQuantities($rows)
     {
+        if (count($rows) === 0) {
+            return $rows;
+        }
+
         $productIdentifiers = $this->formatProductsIdentifiersForWhereInClause($rows);
         $productQuantities = $this->getReservedProductsQuantities($productIdentifiers);
 
@@ -336,12 +354,17 @@ class ProductStockRepository
     }
 
     /**
-     * @param string $andWhere
-     * @return string
+     * @param string $andWhereClause
+     * @param null $orderClause
+     * @return mixed
      */
-    private function selectProductStock($andWhere = '')
+    private function selectProductStock($andWhereClause = '', $orderClause = null)
     {
-        return str_replace('{and_where}', $andWhere, '
+        if (is_null($orderClause)) {
+            $orderClause = $this->getDefaultProductStockOrderClause();
+        }
+
+        return str_replace('{and_where}', $andWhereClause, '
             SELECT
             p.id_product AS product_id,
             COALESCE(pa.id_product_attribute, 0) AS product_attribute_id,
@@ -371,8 +394,7 @@ class ProductStockRepository
             p.state = :state
             {and_where}
             GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)
-            ORDER BY p.id_product DESC, COALESCE(pa.id_product_attribute, 0)
-        ');
+        ' . $orderClause);
     }
 
     /**
@@ -383,5 +405,48 @@ class ProductStockRepository
         $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
         $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
         $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefaultProductStockOrderClause()
+    {
+        return 'ORDER BY p.id_product DESC, COALESCE(pa.id_product_attribute, 0)';
+    }
+
+    /**
+     * @param QueryParamsCollection $queryParams
+     * @return string
+     */
+    private function getOrderClause(QueryParamsCollection $queryParams)
+    {
+        $sqlClauses = $queryParams->toSqlClauses();
+
+        $descendingOrder = false !== strpos($sqlClauses[$queryParams::SQL_CLAUSE_ORDER], ' DESC');
+
+        $productColumns = 'product_id, product_attribute_id';
+        if ($descendingOrder) {
+            $productColumns = 'product_id DESC, product_attribute_id ASC';
+        }
+
+        return strtr($sqlClauses[$queryParams::SQL_CLAUSE_ORDER], array(
+            '{product} DESC' => $productColumns,
+            '{product}' => $productColumns,
+            '{reference}' => 'product_reference',
+            '{supplier}' => 'supplier_name',
+            '{available_quantity}' => 'product_available_quantity'
+        ));
+    }
+
+    /**
+     * @param QueryParamsCollection $queryParams
+     * @return mixed
+     */
+    private function getLimitClause(QueryParamsCollection $queryParams)
+    {
+        $sqlClauses = $queryParams->toSqlClauses();
+
+        return $sqlClauses[$queryParams::SQL_CLAUSE_LIMIT];
     }
 }
