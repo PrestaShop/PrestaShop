@@ -311,6 +311,9 @@ services:
             - "@prestashop.adapter.image_manager"
             - "%database_prefix%"
 
+    prestashop.core.api.query_params_collection:
+        class: PrestaShopBundle\Api\QueryParamsCollection
+
     # Managers
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager

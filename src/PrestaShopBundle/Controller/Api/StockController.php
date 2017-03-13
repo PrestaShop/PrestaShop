@@ -34,12 +34,16 @@ use Symfony\Component\HttpFoundation\Request;
 class StockController extends Controller
 {
     /**
+     * @param Request $request
      * @return JsonResponse
      */
-    public function listAction()
+    public function listAction(Request $request)
     {
         $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
-        $stockOverviewColumns = $productStockRepository->getStockOverviewRows();
+        $queryParamsCollection = $this->get('prestashop.core.api.query_params_collection');
+
+        $queryParamsCollection = $queryParamsCollection->fromRequest($request);
+        $stockOverviewColumns = $productStockRepository->getStockOverviewRows($queryParamsCollection);
 
         return new JsonResponse($stockOverviewColumns);
     }
