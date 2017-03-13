@@ -1,4 +1,4 @@
-/**
+{**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,32 +21,21 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-
-// Plugins CSS
-
-import 'dropzone/dist/min/dropzone.min.css';
-import 'bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css';
-import 'bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css';
-import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-import 'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css';
-import 'PrestaKit/dist/css/jquery.growl.css';
-import 'PrestaKit/dist/css/bootstrap-switch.min.css';
-
-// Theme SCSS
-
-import '../scss/theme.scss';
-
-// Theme Javascript
-
-import NavBar from './nav_bar.js';
-
-import './product-page/index';
-import './translation-page/index';
-
-import Header from './header.js';
-
-new NavBar();
-new Header();
+ *}
+<div id="non-responsive" class="js-non-responsive">
+  <h1>{l s='Oh no!'}</h1>
+  <p class="m-t-3">
+    {l s='The mobile version of this page is not available yet.'}
+  </p>
+  <p class="m-t-2">
+    {l s='Please use a desktop computer to access this page, until is adapted to mobile.'}
+  </p>
+  <p class="m-t-2">
+    {l s='Thank you.'}
+  </p>
+  <a href="{$default_tab_link|escape:'html':'UTF-8'}" class="btn btn-primary p-y-1 m-t-3">
+    <i class="material-icons">arrow_back</i>
+    {l s='Back'}
+  </a>
+</div>
+<div class="mobile-layer"></div>

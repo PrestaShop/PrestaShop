@@ -75,7 +75,10 @@ class ManufacturerControllerCore extends ProductListingFrontController
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
                 $this->label = $this->trans(
-                    'List of products by brand %s', array($this->manufacturer->name), 'Shop.Theme.Catalog'
+                    'List of products by brand %name%', array(
+                        '%name%' => $this->manufacturer->name
+                        ),
+                    'Shop.Theme.Catalog'
                 );
                 $this->doProductSearch(
                     'catalog/listing/manufacturer',

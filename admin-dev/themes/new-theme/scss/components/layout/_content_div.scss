@@ -4,6 +4,10 @@
   padding-top: $size-header-height + $size-header-toolbar-height + ($grid-gutter-width / 2);
   padding-bottom: $grid-gutter-width / 2;
 
+  .mobile & {
+    padding: 0;
+  }
+
   &.-notoolbar {
     padding-top: $size-header-height + $grid-gutter-width / 2;
   }
