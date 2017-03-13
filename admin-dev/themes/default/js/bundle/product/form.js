@@ -2043,7 +2043,9 @@ var seo = (function() {
 var tags = (function() {
   return {
     'init': function() {
-      $('#form_step6_tags .tokenfield').tokenfield();
+      $('#form_step6_tags .tokenfield').tokenfield({
+        minWidth: '768px'
+      });
     }
   };
 })();
