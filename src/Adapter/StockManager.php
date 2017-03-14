@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use StockAvailable;
+use Db;
 
 /**
  * Data provider for new Architecture, about Product stocks.
@@ -56,5 +57,75 @@ class StockManager implements StockInterface
     public function isAsmGloballyActivated()
     {
         return (bool)\Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
+    }
+
+    /**
+     * @param $shopId
+     * @param $errorState
+     * @param $cancellationState
+     * @return bool
+     */
+    public function updatePhysicalProductQuantity($shopId, $errorState, $cancellationState)
+    {
+        $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState);
+
+        $updatePhysicalQuantityQuery = '
+            UPDATE {prefix}stock_available sa
+            SET sa.physical_quantity = sa.quantity - sa.reserved_quantity
+        ';
+        $updatePhysicalQuantityQuery = str_replace('{prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
+
+        return Db::getInstance()->execute($updatePhysicalQuantityQuery);
+    }
+
+    /**
+     * @param $shopId
+     * @param $errorState
+     * @param $cancellationState
+     * @return bool
+     */
+    private function updateReservedProductQuantity($shopId, $errorState, $cancellationState)
+    {
+        $updatePhysicalQuantityQuery = '
+            UPDATE {prefix}stock_available sa
+            SET sa.reserved_quantity = (
+                SELECT SUM(od.product_quantity - od.product_quantity_refunded)
+                FROM {prefix}orders o,
+                {prefix}order_history oh,
+                {prefix}order_state os,
+                {prefix}order_detail od
+                WHERE
+                o.id_order = oh.id_order AND
+                o.current_state = oh.id_order_state AND
+                oh.id_order_state = os.id_order_state AND
+                o.id_order = od.id_order AND
+                od.id_shop = :shop_id AND
+                os.shipped != 1 AND (
+                    o.valid = 1 OR (
+                        os.id_order_state != :error_state AND
+                        os.id_order_state != :cancellation_state
+                    )
+                ) AND sa.id_product = od.product_id AND
+                sa.id_product_attribute = od.product_attribute_id
+                GROUP BY sa.id_product, sa.id_product_attribute
+            )
+        ';
+
+        $updatePhysicalQuantityQuery = str_replace(
+            array(
+                '{prefix}',
+                ':shop_id',
+                ':error_state',
+                ':cancellation_state',
+            ), array(
+                _DB_PREFIX_,
+                (int) $shopId,
+                (int) $errorState,
+                (int) $cancellationState
+            ),
+            $updatePhysicalQuantityQuery
+        );
+
+        return Db::getInstance()->execute($updatePhysicalQuantityQuery);
     }
 }

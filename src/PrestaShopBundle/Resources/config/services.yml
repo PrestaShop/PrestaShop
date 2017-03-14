@@ -309,6 +309,7 @@ services:
             - "@doctrine.dbal.default_connection"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.image_manager"
+            - "@prestashop.adapter.stock_manager"
             - "%database_prefix%"
 
     prestashop.core.api.query_params_collection:

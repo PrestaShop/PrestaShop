@@ -26,11 +26,13 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use Configuration;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShop\PrestaShop\Adapter\StockManager;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PDO;
@@ -67,9 +69,21 @@ class ProductStockRepository
     private $shopId;
 
     /**
+     * @var StockManager
+     */
+    private $stockManager;
+
+    /**
+     * @var array
+     */
+    private $orderStates = array();
+
+    /**
+     * ProductStockRepository constructor.
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
+     * @param StockManager $stockManager
      * @param $tablePrefix
      * @throws NotImplementedException
      */
@@ -77,10 +91,12 @@ class ProductStockRepository
         Connection $connection,
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
+        StockManager $stockManager,
         $tablePrefix
     ) {
         $this->connection = $connection;
         $this->imageManager = $imageManager;
+        $this->stockManager = $stockManager;
 
         $this->tablePrefix = $tablePrefix;
 
@@ -101,6 +117,9 @@ class ProductStockRepository
         if ($shop->getContextType() !== $shop::CONTEXT_SHOP) {
             throw new NotImplementedException('Shop context types other than "single shop" are not supported');
         }
+
+        $this->orderStates['error'] = (int) Configuration::get('PS_OS_ERROR');
+        $this->orderStates['cancellation'] = (int) Configuration::get('PS_OS_CANCELED');
 
         $this->shopId = $shop->getContextualShopId();
     }
@@ -211,6 +230,12 @@ class ProductStockRepository
      */
     public function getStockOverviewRows(QueryParamsCollection $queryParams)
     {
+        $this->stockManager->updatePhysicalProductQuantity(
+            $this->shopId,
+            $this->orderStates['error'],
+            $this->orderStates['cancellation']
+        );
+
         $orderClause = $this->getOrderClause($queryParams);
 
         $query = $this->selectProductStock($andWhere = '', $orderClause);
@@ -234,25 +259,9 @@ class ProductStockRepository
 
         $rows = $statement->fetchAll();
 
-        $rows = $this->addReservedProductQuantities($rows);
         $rows = $this->addImageThumbnailPath($rows);
 
         return $this->castNumericToInt($rows);
-    }
-
-    /**
-     * @param $rows
-     * @return array
-     */
-    private function formatProductsIdentifiersForWhereInClause($rows)
-    {
-        $productIdentifiers = array_map(function ($row) {
-            return array($row['product_id'], $row['product_attribute_id']);
-        }, $rows);
-
-        return implode(',', array_map(function ($identifiers) {
-            return '(' . implode(',', $identifiers) . ')';
-        }, $productIdentifiers));
     }
 
     /**
@@ -269,72 +278,6 @@ class ProductStockRepository
 
         array_walk($rows, function (&$rowColumns) use ($castIdentifiersToIntegers) {
             array_walk($rowColumns, $castIdentifiersToIntegers);
-        });
-
-        return $rows;
-    }
-
-    /**
-     * @param $productIdentifiers
-     * @return array
-     */
-    private function getReservedProductsQuantities($productIdentifiers)
-    {
-        $query = '
-            SELECT
-            od.product_id,
-            od.product_attribute_id,
-            SUM(od.product_quantity) as product_reserved_quantity
-            FROM {prefix}orders o
-            LEFT JOIN {prefix}order_detail od ON (o.id_order = od.id_order)
-            WHERE (od.product_id, od.product_attribute_id) IN ({product_identifiers}) AND
-            od.id_shop = :shop_id
-            GROUP BY product_id, product_attribute_id
-        ';
-
-        $query = str_replace([
-            '{prefix}',
-            '{product_identifiers}'
-        ], array(
-            $this->tablePrefix,
-            $productIdentifiers
-        ), $query);
-
-        $statement = $this->connection->prepare($query);
-
-        $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
-
-        $statement->execute();
-
-        $productQuantities = $statement->fetchAll();
-
-        $productIdentifiersAsKeys = array_map(function ($row) {
-            return $row['product_id'] . '-' . $row['product_attribute_id'];
-        }, $productQuantities);
-
-        return array_combine($productIdentifiersAsKeys, $productQuantities);
-    }
-
-    /**
-     * @param $rows
-     * @return mixed
-     */
-    private function addReservedProductQuantities($rows)
-    {
-        if (count($rows) === 0) {
-            return $rows;
-        }
-
-        $productIdentifiers = $this->formatProductsIdentifiersForWhereInClause($rows);
-        $productQuantities = $this->getReservedProductsQuantities($productIdentifiers);
-
-        array_walk($rows, function (&$row) use ($productQuantities) {
-            $productIdentifier = $row['product_id'] . '-' . $row['product_attribute_id'];
-            $row['product_reserved_quantity'] = 0;
-
-            if (array_key_exists($productIdentifier, $productQuantities)) {
-                $row['product_reserved_quantity'] = $productQuantities[$productIdentifier]['product_reserved_quantity'];
-            }
         });
 
         return $rows;
@@ -373,7 +316,9 @@ class ProductStockRepository
             i.id_image AS image_id,
             COALESCE(s.name, "N/A") AS supplier_name,
             pl.name AS product_name,
-            SUM(sa.quantity) as product_available_quantity
+            sa.quantity as product_available_quantity,
+            sa.physical_quantity as product_physical_quantity,
+            sa.reserved_quantity as product_reserved_quantity
             FROM {prefix}product p
             LEFT JOIN {prefix}product_attribute pa ON (p.id_product = pa.id_product)
             LEFT JOIN {prefix}product_lang pl ON (p.id_product = pl.id_product)
@@ -435,7 +380,8 @@ class ProductStockRepository
             '{product}' => $productColumns,
             '{reference}' => 'product_reference',
             '{supplier}' => 'supplier_name',
-            '{available_quantity}' => 'product_available_quantity'
+            '{available_quantity}' => 'product_available_quantity',
+            '{physical_quantity}' => 'product_physical_quantity'
         ));
     }
 
