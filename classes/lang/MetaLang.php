@@ -85,7 +85,7 @@ class MetaLangCore extends DataLangCore
                     => $this->translator->trans('Enter the e-mail address you use to sign in to receive an e-mail with a new password', array(), 'Shop.Navigation', $this->locale),
 
                 md5('Our special products')
-                    => $this->translator->trans('Our special products', array(), 'Shop.Navigation', $this->locale),
+                    => $this->translator->trans('On-sale products', array(), 'Shop.Navigation', $this->locale),
 
                 md5('Lost ? Find what your are looking for')
                     => $this->translator->trans('Lost ? Find what your are looking for', array(), 'Shop.Navigation', $this->locale),

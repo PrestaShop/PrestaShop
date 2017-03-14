@@ -133,7 +133,7 @@
 {if $show_new_customers}
   <script type="text/html" id="customer-notification-template">
     <a class="notif" href='customer_url'>
-      #_id_customer_ - <strong>_customer_name_</strong>_company_ - {l s="register"} <strong>_date_add_</strong>
+      #_id_customer_ - <strong>_customer_name_</strong>_company_ - {l s="registered"} <strong>_date_add_</strong>
     </a>
   </script>
 {/if}

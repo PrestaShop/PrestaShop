@@ -126,7 +126,6 @@ class ProductSeo extends CommonAbstractType
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'mapping_type' => $options['mapping_type'],
-            'placeholder' => $this->translator->trans('To which page this should redirect?', [], 'Admin.Catalog.Help'),
             'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
             'limit' => 1,
             'required' => false,

@@ -3294,7 +3294,7 @@ class AdminControllerCore extends Controller
     {
         $languageJoinClause = '';
         if ($this->lang) {
-            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->table). '_lang` b 
+            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->table). '_lang` b
                 ON (b.`' . bqSQL($this->identifier) . '` = a.`' . bqSQL($this->identifier) . '` AND b.`id_lang` = ' . (int)$idLang;
 
             if ($idLangShop) {
@@ -3884,7 +3884,7 @@ class AdminControllerCore extends Controller
             if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && $valid_method_exists) {
                 $field_validation = $field['validation'];
                 if (!Validate::$field_validation($value)) {
-                    $this->errors[] = $this->trans('%s : Incorrect value', array($field['title']), 'Admin.Notifications.Error');
+                    $this->errors[] = $this->trans('%s: Incorrect value', array($field['title']), 'Admin.Notifications.Error');
                     return false;
                 }
             }

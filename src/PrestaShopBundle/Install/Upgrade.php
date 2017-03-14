@@ -433,7 +433,7 @@ namespace PrestaShopBundle\Install {
 
             if (0 !== $output['doctrine:schema:update']['exitCode']) {
                 $msgErrors = explode("\n", $output['doctrine:schema:update']['output']);
-                $this->logError('Error upgrading doctrine schema', 43);
+                $this->logError('Error upgrading Doctrine schema', 43);
                 foreach($msgErrors as $msgError) {
                     $this->logError('Doctrine SQL Error : '.$msgError, 43);
                 }

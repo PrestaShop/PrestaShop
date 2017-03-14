@@ -286,7 +286,7 @@ class TranslateCore
 
         if (!Validate::isLangIsoCode($iso)) {
             Context::getContext()->getTranslator()->trans(
-                'Invalid iso lang (%s)',
+                'Invalid language ISO code (%s)',
                 array(Tools::safeOutput($iso)),
                 'Admin.International.Notification'
             );
