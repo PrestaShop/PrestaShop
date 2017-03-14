@@ -117,6 +117,14 @@ class QueryParamsCollectionTest extends WebTestCase
                     'first_result' => 4
                 )
             )),
+            array('physical_quantity', '3', '3', array(
+                'order' => 'ORDER BY {physical_quantity} ',
+                'limit' => 'LIMIT :first_result,:max_result',
+                'limit_params' => array(
+                    'max_result' => 3,
+                    'first_result' => 6
+                )
+            )),
         );
 
         return $filterQueries;

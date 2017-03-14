@@ -121,7 +121,8 @@ class QueryParamsCollection
             'product',
             'reference',
             'supplier',
-            'available_quantity'
+            'available_quantity',
+            'physical_quantity',
         );
     }
 
