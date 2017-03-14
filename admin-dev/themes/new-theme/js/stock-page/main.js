@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import app from './components/app';
-import store from './store/'
+import store from './store/';
 
 Vue.use(VueResource);
+window._ = require('lodash');
 
 const stockApp = new Vue({
   store,

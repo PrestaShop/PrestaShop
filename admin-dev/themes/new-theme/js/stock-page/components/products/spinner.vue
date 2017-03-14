@@ -1,24 +1,41 @@
 <template>
-  <input :id="id" type="number" class="edit-qty" name="qty" value="0">
+  <input :id="id" class="edit-qty" name="qty" v-model="value" >
 </template>
 
 <script>
   import Spinner from './spinner';
 
   export default {
-    props: ['value'],
+    props: ['productId'],
     mounted() {
-      $(`#${this.id}`).spinner();
+      let self = this;
+      $(`#${this.id}`).spinner({
+        max: 999999999,
+        min: -999999999,
+        spin(event, ui) {
+          self.$store.commit('updateQty', {
+            value: ui.value,
+            productId: self.productId
+          });
+        }
+      });
     },
     computed: {
-      id: function () {
-        return `qty-${this.value}`;
+      id () {
+        return `qty-${this.productId}`;
+      }
+    },
+    data() {
+      return {
+        value: 0
       }
     }
   }
 </script>
 
 <style lang="sass?outputStyle=expanded" scoped>
-  @import "~jquery-ui/themes/base/minified/jquery-ui.min.css";
-
+  @import "~jquery-ui/themes/base/minified/jquery.ui.spinner.min.css";
+  .edit-qty {
+    text-indent: 5px;
+  }
 </style>

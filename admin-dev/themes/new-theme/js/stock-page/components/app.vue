@@ -28,7 +28,8 @@
   }
 </script>
 
-<style>
+<style lang="sass?outputStyle=expanded">
+  @import "~PrestaKit/scss/custom/_variables.scss";
   .header-toolbar {
     z-index: 0;
     height: 128px;
@@ -38,5 +39,34 @@
   }
   .table tr td {
     padding: 5px 0;
+  }
+  .ui-spinner {
+    .ui-spinner-button {
+      right: 23px;
+      cursor: pointer;
+    }
+    .ui-spinner-up::before {
+      font-family: 'Material Icons';
+      content: "\E5C7";
+      font-size: 20px;
+      color: $gray-dark;
+      background: white;
+      height: 15px;
+      margin-top:10px;
+      position: relative;
+    }
+    .ui-spinner-down::before {
+      font-family: 'Material Icons';
+      content: "\E5C5";
+      font-size: 20px;
+      color: $gray-dark;
+      bottom: 10px;
+      height: 15px;
+      position: relative;
+      background: white;
+    }
+    span {
+      display: none;
+    }
   }
 </style>

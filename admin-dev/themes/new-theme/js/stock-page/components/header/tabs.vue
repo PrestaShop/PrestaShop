@@ -14,7 +14,7 @@
   .nav-tabs {
     border:none;
   }
-  .nav-link.active, .nav-link.active:hover {
+  .nav-link.active, .nav-link.active:hover, .nav-link.active:focus {
     border-top: none;
     border-bottom: 3px solid $brand-primary;
   }

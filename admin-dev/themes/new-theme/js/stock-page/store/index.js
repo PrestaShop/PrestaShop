@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 // root state object.
-// each Vuex instance is just a single state tree.
+
 const state = {
   products: []
 }
@@ -17,13 +17,28 @@ const state = {
 const mutations = {
   addProducts(state, products) {
     state.products = products;
+  },
+  updateQty(state, payload) {
+    let product = _.find(state.products, {product_id: payload.productId});
+    product.qty = payload.value;
   }
 }
 
 // actions are functions that causes side effects and can involve
 // asynchronous operations.
 const actions = {
+  updateQtyByProductId(state, payload) {
+    let http = payload.http,
+        url = payload.url,
+        quantity = payload.qty;
 
+    http.post(url, {
+      quantity
+    }).then(function(res){
+      //TODO
+      console.log(res);
+    });
+  }
 }
 
 // getters are functions
