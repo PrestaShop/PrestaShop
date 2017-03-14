@@ -116,6 +116,7 @@ let config = {
       },
       {
         test: /\.vue$/,
+<<<<<<< c04e25e36a419f686c55cdafb38fbd96a2e81b0e
         loader: 'vue-loader',
         options: {
           loaders: {
@@ -123,6 +124,16 @@ let config = {
           },
           postcss: [require('postcss-cssnext')()]
         }
+||||||| merged common ancestors
+        loader: 'vue-loader'
+=======
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            js: 'babel-loader?presets[]=es2015&presets[]=stage-2'
+          }
+        }
+>>>>>>> BO: Update webpack babel-loader for vue
       },
       {
         test: /\.css$/,
