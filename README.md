@@ -125,10 +125,10 @@ If you need help using PrestaShop 1.7, ask on the forums: https://www.prestashop
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
 [1]: https://www.prestashop.com/en/online-store-builder
-[2]: http://www.prestashop.com/en/download
+[2]: https://www.prestashop.com/en/download
 [3]: http://doc.prestashop.com/display/PS16/Misc.+information#Misc.information-ActivatingPHP5
-[4]: http://www.prestashop.com
-[5]: http://www.prestashop.com/forums/
+[4]: https://www.prestashop.com
+[5]: https://www.prestashop.com/forums/
 [6]: http://doc.prestashop.com
 [7]: CONTRIBUTING.md
 [8]: http://doc.prestashop.com/display/PS16/Contributing+to+PrestaShop
@@ -143,6 +143,6 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [17]: http://build.prestashop.com/news/prestashop-1-7-faq/
 [18]: http://doc.prestashop.com/display/PS16/Troubleshooting
 [19]: http://doc.prestashop.com/display/PS16/System+Administrator+Guide
-[20]: http://addons.prestashop.com/
+[20]: https://addons.prestashop.com/
 [21]: CONTRIBUTORS.md
 [22]: https://getcomposer.org
