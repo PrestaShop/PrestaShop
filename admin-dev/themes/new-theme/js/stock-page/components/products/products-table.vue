@@ -31,6 +31,7 @@
         let mainProducts = [];
         let productId = null;
         this.$store.state.products.filter(function(product) {
+          product.qty = 0;
           if(productId !== product.product_id) {
             productId = product.product_id;
             mainProducts.push(product);

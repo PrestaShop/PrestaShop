@@ -20,24 +20,38 @@
     <td class="text-xs-center">
       {{ product.product_available_quantity }}
     </td>
-    <td>
-      <Spinner :value="product.product_id" />
+    <td class="text-xs-center">
+      <Spinner :productId="product.product_id" />
+      <button v-on:click="sendQty(product)"><i class="material-icons">check</i></button>
     </td>
   </tr>
 </template>
 
 <script>
   import Spinner from './spinner';
+  import { mapActions } from 'vuex';
 
   export default {
     props: ['product'],
     computed: {
-      imagePath: function() {
+      imagePath() {
         return `${data.baseUrl}/${this.product.image_thumbnail_path}`;
       }
     },
     components: {
       Spinner
+    },
+    methods: {
+      ...mapActions([
+        'updateQtyByProductId'
+      ]),
+      sendQty(product) {
+        this.$store.dispatch('updateQtyByProductId', {
+          http: this.$http,
+          url: `${data.apiUrl}/product/${product.product_id}`,
+          qty: product.qty
+        });
+      }
     }
   }
 </script>
