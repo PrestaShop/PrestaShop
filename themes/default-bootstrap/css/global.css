@@ -5710,7 +5710,8 @@ body {
   color: #777; }
   body.content_only {
     background: none;
-    min-width: 0px; }
+    min-width: 0px;
+  }
 
 textarea {
   resize: none; }
@@ -5838,7 +5839,7 @@ label {
     line-height: 12px; }
 
 .unvisible {
-  display: none !important; }
+  display: none; }
 
 .checkbox {
   line-height: 16px; }
