@@ -153,8 +153,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
         foreach ($this->_list as $k => $list) {
-            $currency = $this->cldr->getCurrency($this->_list[$k]['currency_iso_code']);
-            $this->_list[$k]['currency_name'] = ucfirst($currency['name']);
+            if (!is_null($this->_list[$k]['currency_iso_code'])) {
+                $currency = $this->cldr->getCurrency($this->_list[$k]['currency_iso_code']);
+                $this->_list[$k]['currency_name'] = ucfirst($currency['name']);
+            }
 
             if ($list['reduction_type'] == 'amount') {
                 $this->_list[$k]['reduction_type'] = $this->list_reduction_type['amount'];
