@@ -86,7 +86,7 @@ class ContextCore
     public $mode;
 
     /** @var Translator */
-    protected $translator;
+    protected $translator = null;
 
     /**
      * Mobile device of the customer
@@ -343,37 +343,52 @@ class ContextCore
      */
     public function getTranslator()
     {
-        $cacheDir = _PS_CACHE_DIR_.'/translations/'.$this->language->locale;
+        if (null !== $this->translator) {
+            return $this->translator;
+        }
+        
+        $cacheDir = _PS_CACHE_DIR_.'translations';
         $this->translator = new Translator($this->language->locale, null, $cacheDir, false);
 
-        if (!is_dir($cacheDir)) {
-            $fs = new Filesystem();
-            $fs->mkdir($cacheDir);
-            $adminContext = defined('_PS_ADMIN_DIR_');
-            $this->translator->addLoader('xlf', new XliffFileLoader());
+        // In case we have at least 1 translated message, we return the current translator.
+        // If some translations are missing, clear cache
+        if (count($this->translator->getCatalogue($this->language->locale)->all())) {
+            return $this->translator;
+        }
 
-            $sqlTranslationLoader = new SqlTranslationLoader();
-            if (!is_null($this->shop)) {
-                $sqlTranslationLoader->setTheme($this->shop->theme);
-            }
+        // However, in some case, even empty catalog were stored in the cache and then used as-is.
+        // For this one, we drop the cache and try to regenerate it.
+        $cache_file = Finder::create()
+            ->files()
+            ->in($cacheDir)
+            ->depth('==0')
+            ->name('*.'.$this->language->locale.'.*');
+        (new Filesystem())->remove($cache_file);
 
-            $this->translator->addLoader('db', $sqlTranslationLoader);
-            $notName = $adminContext ? '^Shop*' : '^Admin*';
+        $adminContext = defined('_PS_ADMIN_DIR_');
+        $this->translator->addLoader('xlf', new XliffFileLoader());
 
-            $finder = Finder::create()
-                ->files()
-                ->name('*.*.xlf')
-                ->notName($notName)
-                ->in($this->getTranslationResourcesDirectories())
-            ;
+        $sqlTranslationLoader = new SqlTranslationLoader();
+        if (!is_null($this->shop)) {
+            $sqlTranslationLoader->setTheme($this->shop->theme);
+        }
 
-            foreach ($finder as $file) {
-                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+        $this->translator->addLoader('db', $sqlTranslationLoader);
+        $notName = $adminContext ? '^Shop*' : '^Admin*';
 
-                $this->translator->addResource($format, $file, $locale, $domain);
-                if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
-                    $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
-                }
+        $finder = Finder::create()
+            ->files()
+            ->name('*.'.$this->language->locale.'.xlf')
+            ->notName($notName)
+            ->in($this->getTranslationResourcesDirectories())
+        ;
+
+        foreach ($finder as $file) {
+            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+
+            $this->translator->addResource($format, $file, $locale, $domain);
+            if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
+                $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
             }
         }
 

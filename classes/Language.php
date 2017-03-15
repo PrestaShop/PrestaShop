@@ -1013,6 +1013,7 @@ class LanguageCore extends ObjectModel
             $zipArchive = new ZipArchive();
             $zipArchive->open(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip');
             $zipArchive->extractTo(_PS_ROOT_DIR_.'/app/Resources/translations');
+            $zipArchive->close();
         }
     }
 
@@ -1029,6 +1030,7 @@ class LanguageCore extends ObjectModel
             $zipArchive = new ZipArchive();
             $zipArchive->open($folder.'.zip');
             $zipArchive->extractTo($folder);
+            $zipArchive->close();
 
             $coreDestPath = _PS_ROOT_DIR_.'/mails/'.$lang_pack['iso_code'];
             $fileSystem->mkdir($coreDestPath, 0755);
