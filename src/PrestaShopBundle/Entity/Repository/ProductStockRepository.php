@@ -127,58 +127,25 @@ class ProductStockRepository
     /**
      * @param $productId
      * @param $quantity
-     * @throws ProductNotFoundException
+     * @return mixed
      */
     public function updateProductQuantity($productId, $quantity)
     {
-        $query = '
-            UPDATE {prefix}stock_available
-            SET quantity = :quantity
-            WHERE id_product = :product_id
-            AND id_product_attribute = 0
-        ';
-
-        $query = str_replace('{prefix}', $this->tablePrefix, $query);
-
-        $statement = $this->connection->prepare($query);
-
-        $statement->bindValue('product_id', $productId, PDO::PARAM_INT);
-        $statement->bindValue('quantity', $quantity, PDO::PARAM_INT);
-
-        $statement->execute();
-
-        $andWhereClause = 'AND p.id_product = :product_id AND COALESCE(pa.id_product_attribute, 0) = 0';
-        $query = $this->selectProductStock($andWhereClause);
-
-        $query = str_replace('{prefix}', $this->tablePrefix, $query);
-
-        $statement = $this->connection->prepare($query);
-
-        $this->bindSelectProductStockParams($statement);
-        $statement->bindValue('product_id', $productId, PDO::PARAM_INT);
-
-        $statement->execute();
-
-        $rows = $statement->fetchAll();
-
-        if (count($rows) === 0) {
-            throw new ProductNotFoundException(sprintf('Product with id %d can not be found', $productId));
-        }
-
-        return $this->castNumericToInt($rows)[0];
+        return $this->updateProductCombinationQuantity($productId, 0, $quantity);
     }
 
     /**
      * @param $productId
      * @param $productAttributeId
      * @param $quantity
-     * @throws ProductNotFoundException
+     * @return mixed
      */
     public function updateProductCombinationQuantity($productId, $productAttributeId, $quantity)
     {
         $query = '
             UPDATE {prefix}stock_available
-            SET quantity = :quantity
+            SET quantity = :quantity,
+            physical_quantity = reserved_quantity + quantity
             WHERE id_product = :product_id
             AND id_product_attribute = :product_attribute_id
         ';
@@ -193,12 +160,22 @@ class ProductStockRepository
 
         $statement->execute();
 
+        return $this->getStockRowById($productId, $productAttributeId);
+    }
+
+    /**
+     * @param $productId
+     * @param $productAttributeId
+     * @return mixed
+     * @throws ProductNotFoundException
+     */
+    private function getStockRowById($productId, $productAttributeId)
+    {
         $andWhereClause = '
             AND p.id_product = :product_id AND
             COALESCE(pa.id_product_attribute, 0) = :product_attribute_id'
         ;
         $query = $this->selectProductStock($andWhereClause);
-
         $query = str_replace('{prefix}', $this->tablePrefix, $query);
 
         $statement = $this->connection->prepare($query);
