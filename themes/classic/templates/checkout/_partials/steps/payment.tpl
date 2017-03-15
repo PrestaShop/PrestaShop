@@ -129,8 +129,7 @@
               ]
               d='Shop.Theme.Checkout'
             }
-          {/if}
-          {if $ps_conditions}
+          {else}
             {l
               s='Please make sure you\'ve chosen a [1]payment method[/1] and accepted the [2]terms and conditions[/2].'
               sprintf=[
