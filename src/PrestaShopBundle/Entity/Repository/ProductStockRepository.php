@@ -43,6 +43,8 @@ use Shop;
 
 class ProductStockRepository
 {
+    const MAX_COMBINATIONS_PER_PRODUCT = 50;
+
     /**
      * @var Connection
      */
@@ -215,7 +217,8 @@ class ProductStockRepository
 
         $orderClause = $this->getOrderClause($queryParams);
 
-        $query = $this->selectProductStock($andWhere = '', $orderClause);
+        $clauses = $this->getClausesRestrictingTotalCombinationsPerProduct();
+        $query = $this->selectProductStock($clauses['and_where'], $orderClause, $clauses['left_join']);
 
         $query = $query . $this->getLimitClause($queryParams);
 
@@ -276,16 +279,28 @@ class ProductStockRepository
     /**
      * @param string $andWhereClause
      * @param null $orderClause
+     * @param string $leftJoinClause
      * @return mixed
      */
-    private function selectProductStock($andWhereClause = '', $orderClause = null)
-    {
+    private function selectProductStock(
+        $andWhereClause = '',
+        $orderClause = null,
+        $leftJoinClause = ''
+    ) {
         if (is_null($orderClause)) {
             $orderClause = $this->getDefaultProductStockOrderClause();
         }
 
-        return str_replace('{and_where}', $andWhereClause, '
-            SELECT
+        return str_replace(
+            array(
+                '{and_where}',
+                '{left_join}'
+            ),
+            array(
+                $andWhereClause,
+                $leftJoinClause
+            ),
+            'SELECT
             p.id_product AS product_id,
             COALESCE(pa.id_product_attribute, 0) AS product_attribute_id,
             IF (LENGTH(p.reference) = 0, "N/A", p.reference) AS product_reference,
@@ -307,6 +322,7 @@ class ProductStockRepository
                 i.id_image = ims.id_image
             )
             LEFT JOIN {prefix}supplier s ON (p.id_supplier = s.id_supplier)
+            {left_join}
             WHERE
             ps.id_shop = :shop_id AND
             pl.id_lang = :language_id AND
@@ -320,6 +336,31 @@ class ProductStockRepository
     }
 
     /**
+     * @return string
+     */
+    public function getClausesRestrictingTotalCombinationsPerProduct()
+    {
+        return array(
+            'left_join' => '
+                LEFT JOIN (
+                    SELECT SUBSTRING_INDEX(
+                        GROUP_CONCAT(pa.id_product_attribute),
+                        \',\',
+                        :max_combinations_per_product
+                    ) product_attribute_ids,
+                    pa.id_product
+                    FROM ps_product_attribute pa
+                    GROUP BY pa.id_product
+                ) select_ ON (COALESCE(FIND_IN_SET(pa.id_product_attribute, select_.product_attribute_ids), 0) > 0)',
+            'and_where' => '
+                AND (
+                    ISNULL(pa.id_product_attribute) OR
+                    NOT ISNULL(select_.product_attribute_ids)
+                )'
+        );
+    }
+
+    /**
      * @param $statement
      */
     private function bindSelectProductStockParams(Statement $statement)
@@ -327,6 +368,7 @@ class ProductStockRepository
         $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
         $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
         $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
+        $statement->bindValue('max_combinations_per_product', self::MAX_COMBINATIONS_PER_PRODUCT, PDO::PARAM_INT);
     }
 
     /**
