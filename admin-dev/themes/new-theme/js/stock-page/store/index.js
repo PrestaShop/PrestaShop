@@ -34,9 +34,14 @@ const actions = {
 
     http.post(url, {
       quantity
+    },
+    {
+      emulateJSON: true
     }).then(function(res){
       //TODO
       console.log(res);
+    }, function(error){
+        console.log(error.statusText);
     });
   }
 }

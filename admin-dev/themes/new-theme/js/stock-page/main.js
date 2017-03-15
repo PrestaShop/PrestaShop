@@ -13,7 +13,7 @@ const stockApp = new Vue({
   components: { app },
   methods:{
      getStock: function(){
-       this.$http.get(data.apiUrl).then(function(response){
+       this.$http.get(data.apiRootUrl).then(function(response){
          if(response.status == 200) {
            this.$store.commit('addProducts', response.body);
          }

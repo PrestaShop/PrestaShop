@@ -42,31 +42,32 @@
   }
   .ui-spinner {
     .ui-spinner-button {
-      right: 23px;
+      right: 52px;
       cursor: pointer;
+      display: none;
+      z-index: 3;
     }
     .ui-spinner-up::before {
       font-family: 'Material Icons';
       content: "\E5C7";
       font-size: 20px;
       color: $gray-dark;
-      background: white;
-      height: 15px;
-      margin-top:10px;
       position: relative;
+      top: -4px;
     }
     .ui-spinner-down::before {
       font-family: 'Material Icons';
       content: "\E5C5";
       font-size: 20px;
       color: $gray-dark;
-      bottom: 10px;
-      height: 15px;
+      bottom: 8px;
       position: relative;
-      background: white;
     }
     span {
       display: none;
     }
+  }
+  .qty.active .ui-spinner-button{
+    display: block;
   }
 </style>
