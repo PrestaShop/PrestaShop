@@ -21,8 +21,10 @@
       {{ product.product_available_quantity }}
     </td>
     <td class="text-xs-center">
-      <Spinner :productId="product.product_id" />
-      <button v-on:click="sendQty(product)"><i class="material-icons">check</i></button>
+      <div class="qty" :class="classObject" >
+        <Spinner :productId="product.product_id" v-on:focusIn="toggleCheck" v-on:focusOut="toggleCheck" v-on:enabled="toggleEnabled"/>
+        <button class="check-button" v-on:click="sendQty(product)"><i class="material-icons">check</i></button>
+      </div>
     </td>
   </tr>
 </template>
@@ -36,21 +38,48 @@
     computed: {
       imagePath() {
         return `${data.baseUrl}/${this.product.image_thumbnail_path}`;
+      },
+      classObject() {
+        return {
+          active: this.isActive,
+          disabled: !this.isEnabled
+        }
       }
     },
     components: {
       Spinner
+    },
+    data() {
+      return {
+        isActive: false,
+        isEnabled: false
+      }
     },
     methods: {
       ...mapActions([
         'updateQtyByProductId'
       ]),
       sendQty(product) {
-        this.$store.dispatch('updateQtyByProductId', {
-          http: this.$http,
-          url: `${data.apiUrl}/product/${product.product_id}`,
-          qty: product.qty
-        });
+        let apiRootUrl = data.apiRootUrl.replace(/\?.*/,'');
+        let apiEditProductsUrl = `${apiRootUrl}/product/${product.product_id}`
+        let apiEditCombinationsUrl = `${apiRootUrl}/product/${product.product_id}/combination/${product.product_attribute_id}`;
+        let postUrl = product.product_attribute_id ? apiEditCombinationsUrl : apiEditProductsUrl;
+
+        // POST when qty !=0
+
+        if(this.isEnabled) {
+          this.$store.dispatch('updateQtyByProductId', {
+            http: this.$http,
+            url: postUrl,
+            qty: product.qty
+          });
+        }
+      },
+      toggleCheck(val) {
+        this.isActive = !this.isActive
+      },
+      toggleEnabled(val) {
+        this.isEnabled = (val !==0);
       }
     }
   }
@@ -61,9 +90,35 @@
   .thumbnail {
       border: $gray-light 1px solid;
   }
-  .edit-qty {
-    width: 90px;
-    height: 34px;
-    border: $gray-medium 1px solid;
+  .qty {
+      position: relative;
+      .check-button {
+        outline:none;
+        display: none;
+        position: absolute;
+        top: 3px;
+        right: 27px;
+        border: none;
+        height: 29px;
+        width: 40px;
+        background: $brand-primary;
+        z-index: 2;
+        border-left: 10px solid white;
+        .material-icons {
+          color: white;
+        }
+      }
+  }
+  .qty.active {
+    .check-button {
+      display: block;
+    }
+  }
+  .qty.disabled {
+    .check-button {
+      display: block;
+      background: $gray-light;
+      cursor: default;
+    }
   }
 </style>
