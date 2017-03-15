@@ -30,6 +30,7 @@ use PrestaShopBundle\Exception\ProductNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class StockController extends Controller
 {
@@ -55,7 +56,7 @@ class StockController extends Controller
      */
     public function editProductAction($productId, Request $request)
     {
-        $quantity = (int) $request->request->get('quantity');
+        $quantity = $this->guardAgainstMissingQuantityParameter($request);
         $productId = (int) $productId;
 
         $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
@@ -79,7 +80,7 @@ class StockController extends Controller
      */
     public function editProductCombinationAction($productId, $productAttributeId, Request $request)
     {
-        $quantity = (int) $request->request->get('quantity');
+        $quantity = $this->guardAgainstMissingQuantityParameter($request);
         $productAttributeId = (int) $productAttributeId;
         $productId = (int) $productId;
 
@@ -99,4 +100,17 @@ class StockController extends Controller
 
         return new JsonResponse($product);
     }
+
+    /**
+     * @param Request $request
+     * @return int
+     */
+    private function guardAgainstMissingQuantityParameter(Request $request)
+    {
+        if (!$request->request->has('quantity')) {
+            throw new BadRequestHttpException('Missing "quantity" parameter');
+        }
+
+        return (int)$request->request->get('quantity');
+ti    }
 }
