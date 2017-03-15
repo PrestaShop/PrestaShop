@@ -47,7 +47,7 @@ class ModuleDataUpdater
         // Note : Data caching should be handled by the addons data provider
         // Check if the module can be downloaded from addons
         foreach ($this->adminModuleDataProvider->getCatalogModules(['name' => $name]) as $catalog_module) {
-            if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'partner', 'customer'])) {
+            if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'must-have', 'customer'])) {
                 return $this->addonsDataProvider->downloadModule($catalog_module->id);
             }
         }
