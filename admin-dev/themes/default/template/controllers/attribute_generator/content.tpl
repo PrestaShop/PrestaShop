@@ -135,8 +135,8 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="alert alert-info">{l s='Please click on "Generate these Combinations"'}</div>
-				<button type="submit" class="btn btn-default" name="generate"><i class="icon-random"></i> {l s='Generate these Combinations'}</button>
+				<div class="alert alert-info">{l s='Please click on "Generate these combinations".'}</div>
+				<button type="submit" class="btn btn-default" name="generate"><i class="icon-random"></i> {l s='Generate these combinations'}</button>
 			</div>
 		</div>
 	</div>

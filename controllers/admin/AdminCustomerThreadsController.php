@@ -1148,7 +1148,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
                         if (empty($message) || !Validate::isCleanHtml($message)) {
-                            $str_errors.= $this->trans('Invalid Message Content for subject: %1s', array($subject), 'Admin.Orderscustomers.Notification');
+                            $str_errors.= $this->trans('Invalid message content for subject: %s', array($subject), 'Admin.Orderscustomers.Notification');
                         } else {
                             try {
                                 $cm->message = $message;
