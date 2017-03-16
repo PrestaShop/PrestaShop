@@ -58,9 +58,11 @@ class StockControllerTest extends WebTestCase
         $this->prophet = new Prophet();
         $this->client = $this->createClient();
 
-        $container = self::$kernel->getContainer();
+        $this->restoreQuantityEditionFixtures();
 
         $legacyContextMock = $this->mockContextAdapter();
+
+        $container = self::$kernel->getContainer();
         $container->set('prestashop.adapter.legacy.context', $legacyContextMock->reveal());
 
         $this->router = $container->get('router');
@@ -100,7 +102,7 @@ class StockControllerTest extends WebTestCase
 
     public function testEditProductAction()
     {
-        $this->assertNotFoundResponseOnEditProductStockQuantity();
+        $this->assertErrorResponseOnEditProductStockQuantity();
     }
 
     public function testEditProductCombinationAction()
@@ -112,19 +114,19 @@ class StockControllerTest extends WebTestCase
     /**
      * @return array
      */
-    private function assertNotFoundResponseOnEditProductStockQuantity()
+    private function assertErrorResponseOnEditProductStockQuantity()
     {
-        $editProductStockRoute = $this->router->generate('api_stock_edit_product', array(
-            'productId' => 9,
-        ));
+        $editProductStockRoute = $this->router->generate(
+            'api_stock_edit_product',
+            array('productId' => 9)
+        );
 
-        $this->client->request('POST', $editProductStockRoute, array('quantity' => 1));
+        $this->client->request('POST', $editProductStockRoute);
+        $this->assertResponseBodyValidJson(400);
 
-        $response = $this->client->getResponse();
 
-        $this->assertEquals(404, $response->getStatusCode(), 'It should return a response with "Not Found" Status.');
-
-        $this->assertResponseBodyValidJson($response);
+        $this->client->request('POST', $editProductStockRoute, array('delta' => 1));
+        $this->assertResponseBodyValidJson(404);
     }
 
     /**
@@ -132,74 +134,103 @@ class StockControllerTest extends WebTestCase
      */
     private function assertNotFoundResponseOnEditProductCombinationStockQuantity()
     {
-        $editProductStockRoute = $this->router->generate('api_stock_edit_product_combination', array(
-            'productId' => 8,
-            'productAttributeId' => 1
-        ));
+        $editProductStockRoute = $this->router->generate(
+            'api_stock_edit_product_combination',
+            array(
+                'productId' => 8,
+                'combinationId' => 1
+            )
+        );
 
-        $this->client->request('POST', $editProductStockRoute, array('quantity' => 1));
+        $this->client->request('POST', $editProductStockRoute, array('delta' => 1));
 
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(404, $response->getStatusCode(), 'It should return a response with "Not Found" Status.');
-
-        $this->assertResponseBodyValidJson($response);
+        $this->assertResponseBodyValidJson(404);
     }
 
     /**
-     * @param $response
+     * @param $expectedStatusCode
      * @return mixed
      */
-    private function assertResponseBodyValidJson($response)
+    private function assertResponseBodyValidJson($expectedStatusCode)
     {
+        /**
+         * @var \Symfony\Component\HttpFoundation\JsonResponse $response
+         */
+        $response = $this->client->getResponse();
+
+        $message = 'Unexpected status code.';
+
+        switch ($expectedStatusCode) {
+            case 200:
+                $message = 'It should return a response with "OK" Status.';
+                break;
+            case 400:
+                $message = 'It should return a response with "Bad Request" Status.';
+                break;
+            case 404:
+                $message = 'It should return a response with "Not Found" Status.';
+                break;
+
+            default:
+                $this->fail($message);
+        }
+
+        $this->assertEquals($expectedStatusCode, $response->getStatusCode(), $message);
+
         $content = json_decode($response->getContent(), true);
 
-        $this->assertEquals(JSON_ERROR_NONE, json_last_error(), 'The response body should be a valid json document');
+        $this->assertEquals(
+            JSON_ERROR_NONE,
+            json_last_error(),
+            'The response body should be a valid json document.'
+        );
 
         return $content;
     }
 
     private function assertOkResponseOnEditProductCombinationQuantity()
     {
-        $editProductStockRoute = $this->router->generate('api_stock_edit_product_combination', array(
-            'productId' => 1,
-            'productAttributeId' => 1,
-        ));
+        $editProductStockRoute = $this->router->generate(
+            'api_stock_edit_product_combination',
+            array(
+                'productId' => 1,
+                'combinationId' => 1,
+            )
+        );
 
-        $expectedAvailableQuantity = 10;
-        $expectedPhysicalQuantity = 12;
-        $expectedReservedQuantity = 2;
+        $this->client->request('POST', $editProductStockRoute, array('delta' => 2));
 
-        $this->client->request('POST', $editProductStockRoute, array('quantity' => $expectedAvailableQuantity));
-
-        /**
-         * @var \Symfony\Component\HttpFoundation\JsonResponse $response
-         */
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
-
-        $content = $this->assertResponseBodyValidJson($response);
+        $content = $this->assertResponseBodyValidJson(200);
 
         $this->assertArrayHasKey('product_available_quantity', $content,
             'The response body should contain a "product_available_quantity" property.'
         );
-        $this->assertEquals($expectedAvailableQuantity, $content['product_available_quantity'],
-            'The response body should contain the newly updated physical quantity.'
-        );
-
         $this->assertArrayHasKey('product_physical_quantity', $content,
             'The response body should contain a "product_physical_quantity" property.'
         );
-        $this->assertEquals($expectedPhysicalQuantity, $content['product_physical_quantity'],
-            'The response body should contain the newly updated quantity.'
-        );
-
         $this->assertArrayHasKey('product_reserved_quantity', $content,
             'The response body should contain a "product_reserved_quantity" property.'
         );
-        $this->assertEquals($expectedReservedQuantity, $content['product_reserved_quantity'],
-            'The response body should contain the newly updated physical quantity.'
+
+        $this->assertProductQuantity(
+            array(
+                'available_quantity' => 10,
+                'physical_quantity' => 12,
+                'reserved_quantity' => 2
+            ),
+            $content
+        );
+
+        $this->client->request('POST', $editProductStockRoute, array('delta' => -4));
+        $content = $this->assertResponseBodyValidJson(200);
+
+        $this->assertProductQuantity(
+            array(
+                'available_quantity' => 6,
+                'physical_quantity' => 8,
+                'reserved_quantity' => 2
+            ),
+            $content
         );
     }
 
@@ -215,6 +246,8 @@ class StockControllerTest extends WebTestCase
         $legacyContextMock->getContext()->willReturn($contextMock->reveal());
 
         $legacyContextMock->getEmployeeLanguageIso()->willReturn(null);
+        $legacyContextMock->getEmployeeCurrency()->willReturn(null);
+        $legacyContextMock->getRootUrl()->willReturn(null);
 
         return $legacyContextMock;
     }
@@ -237,6 +270,8 @@ class StockControllerTest extends WebTestCase
 
         $controllerMock = $this->mockController();
         $contextMock->controller = $controllerMock->reveal();
+
+        $contextMock->currency = (object)array('sign' => '$');
 
         Context::setInstanceForTesting($contextMock->reveal());
 
@@ -285,5 +320,36 @@ class StockControllerTest extends WebTestCase
         $controller->controller_type = 'admin';
 
         return $controller;
+    }
+
+    private function restoreQuantityEditionFixtures()
+    {
+        $updateProductQuantity = '
+            UPDATE ps_stock_available
+            SET quantity = 8,
+            physical_quantity = 10,
+            reserved_quantity = 2
+            WHERE id_product = 1 AND id_product_attribute = 1';
+
+        $statement = self::$kernel->getContainer()->get('doctrine.dbal.default_connection')
+            ->prepare($updateProductQuantity);
+        $statement->execute();
+    }
+
+    /**
+     * @param $expectedQuantities
+     * @param $content
+     */
+    private function assertProductQuantity($expectedQuantities, $content)
+    {
+        $this->assertEquals($expectedQuantities['available_quantity'], $content['product_available_quantity'],
+            'The response body should contain the newly updated physical quantity.'
+        );
+        $this->assertEquals($expectedQuantities['physical_quantity'], $content['product_physical_quantity'],
+            'The response body should contain the newly updated quantity.'
+        );
+        $this->assertEquals($expectedQuantities['reserved_quantity'], $content['product_reserved_quantity'],
+            'The response body should contain the newly updated physical quantity.'
+        );
     }
 }

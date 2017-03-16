@@ -26,11 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Exception\ProductNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class StockController extends Controller
 {
@@ -59,52 +61,30 @@ class StockController extends Controller
     }
 
     /**
-     * @param $productId
      * @param Request $request
      * @return JsonResponse
      */
-    public function editProductAction($productId, Request $request)
+    public function editProductAction(Request $request)
     {
-        $quantity = $this->guardAgainstMissingQuantityParameter($request);
-        $productId = (int) $productId;
-
-        $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
-
         try {
-            $product = $productStockRepository->updateProductQuantity($productId, $quantity);
-        } catch (ProductNotFoundException $exception) {
-            $this->get('logger')->info($exception->getMessage());
-
-            return new JsonResponse(array('error' => $exception->getMessage()), 404);
+            $this->guardAgainstMissingDeltaParameter($request);
+        } catch (BadRequestHttpException $exception) {
+            return $this->handleException($exception);
         }
 
-        return new JsonResponse($product);
-    }
+        $delta = (int)$request->request->get('delta');
 
-    /**
-     * @param $productId
-     * @param $productAttributeId
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function editProductCombinationAction($productId, $productAttributeId, Request $request)
-    {
-        $quantity = $this->guardAgainstMissingQuantityParameter($request);
-        $productAttributeId = (int) $productAttributeId;
-        $productId = (int) $productId;
+        $productIdentity = ProductIdentity::fromArray(array(
+            'product_id' => $request->attributes->get('productId'),
+            'combination_id' => $request->attributes->get('combinationId', 0)
+        ));
 
         $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
 
         try {
-            $product = $productStockRepository->updateProductCombinationQuantity(
-                $productId,
-                $productAttributeId,
-                $quantity
-            );
+            $product = $productStockRepository->updateProductQuantity($productIdentity, $delta);
         } catch (ProductNotFoundException $exception) {
-            $this->get('logger')->info($exception->getMessage());
-
-            return new JsonResponse(array('error' => $exception->getMessage()), 404);
+            return $this->handleException($exception);
         }
 
         return new JsonResponse($product);
@@ -114,12 +94,21 @@ class StockController extends Controller
      * @param Request $request
      * @return int
      */
-    private function guardAgainstMissingQuantityParameter(Request $request)
+    private function guardAgainstMissingDeltaParameter(Request $request)
     {
-        if (!$request->request->has('quantity')) {
-            throw new BadRequestHttpException('Missing "quantity" parameter');
+        if (!$request->request->has('delta')) {
+            throw new BadRequestHttpException('The "delta" parameter is required');
         }
+    }
 
-        return (int)$request->request->get('quantity');
+    /**
+     * @param HttpException $exception
+     * @return JsonResponse
+     */
+    private function handleException(HttpException $exception)
+    {
+        $this->get('logger')->info($exception->getMessage());
+
+        return new JsonResponse(array('error' => $exception->getMessage()), $exception->getStatusCode());
     }
 }

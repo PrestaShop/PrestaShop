@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Exception;
 
-use Exception;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ProductNotFoundException extends Exception
+class ProductNotFoundException extends NotFoundHttpException
 {
 }

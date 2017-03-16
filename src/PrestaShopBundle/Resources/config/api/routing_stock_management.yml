@@ -17,7 +17,7 @@ api_stock_edit_product:
         _controller: PrestaShopBundle:Api/Stock:editProduct
 
 api_stock_edit_product_combination:
-    path: /stock/product/{productId}/combination/{productAttributeId}
+    path: /stock/product/{productId}/combination/{combinationId}
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Api/Stock:editProductCombination
+        _controller: PrestaShopBundle:Api/Stock:editProduct
