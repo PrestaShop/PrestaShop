@@ -334,7 +334,13 @@ class AdminThemesControllerCore extends AdminController
             ) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } else {
-                $this->theme_manager->reset(Tools::getValue('theme_name'));
+                if ($this->theme_manager->reset(Tools::getValue('theme_name'))) {
+                    $this->confirmations[] = $this->trans(
+                        'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'Regenerate thumbnails\' button.',
+                        array(),
+                        'Admin.Design.Notifications'
+                    );
+                }
             }
         }
 
