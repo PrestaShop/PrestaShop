@@ -17,15 +17,15 @@
       color: $gray;
       @include placeholder {
         color: rgba($gray, 0.5);
-        text-indent: rem(10px);
+        text-indent: 0.625rem;
       }
     }
     button[type=submit] {
       position: absolute;
       background: none;
       border: none;
-      bottom: rem(5px);
-      right: rem(2px);
+      bottom: 0.3125rem;
+      right: 0.125rem;
       color: $gray-dark;
       .search:hover {
         color: $brand-primary;

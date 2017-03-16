@@ -27,7 +27,7 @@ a:hover {
   text-decoration: none;
 }
 p {
-  font-size: rem(15px);
+  font-size: 0.9375rem;
   color: $gray-dark;
   font-weight: 400;
 }
@@ -37,10 +37,10 @@ p {
 }
 .color,
 .custom-checkbox input[type="checkbox"] + span.color {
-  width: rem(20px);
-  height: rem(20px);
+  width: 1.25rem;
+  height: 1.25rem;
   display: inline-block;
-  margin: rem(5px);
+  margin: 0.3125rem;
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(0,0,0,0.05);
   cursor: pointer;
@@ -73,7 +73,7 @@ p {
   @include box-shadow;
   text-transform: uppercase;
   font-weight: 600;
-  padding: rem(8px) rem(20px);
+  padding: 0.5rem 1.25rem;
   .material-icons {
     margin-right: $small-space;
   }
@@ -82,9 +82,9 @@ p {
   @extend .btn-secondary;
   text-transform: lowercase;
   color: $gray;
-  box-shadow: rem(1px) rem(1px) rem(1px) 0 rgba(0, 0, 0, 0.1);
-  padding: rem(4px);
-  margin: rem(4px) 0;
+  box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.1);
+  padding: 0.25rem;
+  margin: 0.25rem 0;
   font-weight: 400;
   font-size: $font-size-sm;
   .material-icons {
@@ -97,27 +97,27 @@ p {
 label ,.label {
   color: $gray-darker;
   text-align: right;
-  font-size: rem(14px);
+  font-size: 0.875rem;
 }
 small.label, small.value {
-  font-size: rem(13px);
+  font-size: 0.8125rem;
 }
 .form-control-label {
-  padding-top: rem(10px);
+  padding-top: 0.625rem;
 }
 .form-control {
   background: $gray-light;
   color: $gray;
   border: none;
-  padding: rem(8px) rem(16px);
+  padding: 0.5rem 1rem;
   &:focus {
     background-color: white;
-    outline: rem(3px) solid $brand-primary;
+    outline: 0.1875rem solid $brand-primary;
   }
 }
 .input-group {
   &.focus {
-    outline: rem(3px) solid $brand-primary;
+    outline: 0.1875rem solid $brand-primary;
   }
   .form-control:focus {
     outline: none;
@@ -126,26 +126,26 @@ small.label, small.value {
     border: 0;
     box-shadow: none;
     color: #ffffff;
-    font-size: rem(11px);
+    font-size: 0.6875rem;
     font-weight: normal;
     margin-left: 0;
-    padding: rem(10.5px) rem(16px);
+    padding: 0.625rem 1rem;
     text-transform: uppercase;
   }
 }
 .form-control-select {
-  height: rem(42px);
+  height: 2.625rem;
   -moz-appearance: none;
   -webkit-appearance: none;
-  background: $gray-light url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAPklEQVR4Ae3TwREAEBQD0V/6do4SXPZg7EsBhsQ8IEmSMOsiuEfg3gL3oXC7wK0bd1G4o8X9F4yIkyQfSrIByQBjp7QuND8AAAAASUVORK5CYII=") no-repeat scroll right rem(8px) center / rem(20px) rem(20px);
-  padding-right: rem(32px);
+  background: $gray-light url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAPklEQVR4Ae3TwREAEBQD0V/6do4SXPZg7EsBhsQ8IEmSMOsiuEfg3gL3oXC7wK0bd1G4o8X9F4yIkyQfSrIByQBjp7QuND8AAAAASUVORK5CYII=") no-repeat scroll right 0.5rem center / 1.25rem 1.25rem;
+  padding-right: 2rem;
 }
 .form-control-valign {
-  padding-top: rem(8px);
+  padding-top: 0.5rem;
 }
 .form-control-comment {
-  font-size: rem(14px);
-  padding-top: rem(8px);
+  font-size: 0.875rem;
+  padding-top: 0.5rem;
   color: $gray-dark;
 }
 .form-control-submit {
@@ -158,7 +158,7 @@ small.label, small.value {
   &.has-error {
     input,
     select {
-      outline: rem(3px) solid $brand-danger;
+      outline: 0.1875rem solid $brand-danger;
     }
     .help-block {
       color: $brand-danger;
@@ -174,8 +174,8 @@ small.label, small.value {
     color: white;
     text-transform: uppercase;
     border-radius: 0;
-    font-size: rem(14px);
-    padding: rem(8px) rem(16px);
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
   }
 }
 .bootstrap-touchspin {
@@ -215,9 +215,9 @@ small.label, small.value {
       }
     }
     i {
-      top: rem(1px);
-      left: rem(3px);
-      font-size: rem(15px);
+      top: 0.0625rem;
+      left: 0.1875rem;
+      font-size: 0.9375rem;
     }
   }
 }
@@ -231,7 +231,7 @@ small.label, small.value {
   border-radius: 50%;
   border: $gray 2px solid;
   background: white;
-  margin-right: rem(20px);
+  margin-right: 1.25rem;
   input[type="radio"] {
     opacity: 0;
     cursor: pointer;
@@ -243,28 +243,28 @@ small.label, small.value {
     height: 12px;
     border-radius: 50%;
     position: absolute;
-    left: rem(2px);
-    top: rem(2px);
+    left: 0.125rem;
+    top: 0.125rem;
   }
 }
 .custom-checkbox {
   position: relative;
   input[type="checkbox"] {
-    margin-top: rem(4px);
+    margin-top: 0.25rem;
     opacity: 0;
     cursor: pointer;
     position: absolute;
     + span {
       margin-right: 3px;
       display: inline-block;
-      width: rem(15px);
-      height: rem(15px);
+      width: 0.9375rem;
+      height: 0.9375rem;
       vertical-align: middle;
       cursor: pointer;
       border: 2px $gray-darker solid;
       .checkbox-checked {
         display: none;
-        margin: rem(-4px) rem(-2px);
+        margin: -0.25rem -0.125rem;
         font-size: 1.1rem;
         color: $gray-darker;
       }
@@ -280,19 +280,19 @@ small.label, small.value {
   }
 }
 .text-muted {
-  font-size: rem(14px);
+  font-size: 0.875rem;
 }
 .done {
   color: $brand-success;
   display: inline-block;
-  padding: 0 rem(13px);
-  margin-right: rem(25px);
+  padding: 0 0.8125rem;
+  margin-right: 1.563rem;
 }
 .thumb-mask {
   > .mask {
     position: relative;
-    width: rem(55px);
-    height: rem(55px);
+    width: 3.438rem;
+    height: 3.438rem;
     overflow: hidden;
     border: $gray-light 1px solid;
     margin: $small-space 0;
@@ -313,8 +313,8 @@ small.label, small.value {
     dt {
       @include flex(0 0 45%);
       background: $gray-light;
-      padding: rem(10px);
-      margin: rem(2px);
+      padding: 0.625rem;
+      margin: 0.125rem;
       &:nth-of-type(even) {
         background: $gray-lighter;
       }
@@ -331,12 +331,12 @@ small.label, small.value {
 .alert-warning {
   .material-icons {
     color: $warning;
-    font-size: rem(32px);
+    font-size: 2rem;
     margin-right: $small-space;
     padding-top: $extra-small-space;
   }
   .alert-text {
-    font-size: rem(15px);
+    font-size: 0.9375rem;
     padding-top: $small-space;
   }
   .alert-link {
@@ -345,7 +345,7 @@ small.label, small.value {
     margin-left: $small-space;
     padding: $extra-small-space $medium-space;
     font-weight: 600;
-    font-size: rem(13px);
+    font-size: 0.8125rem;
     color: $btn-tertiary-color;
   }
   ul li:last-child .alert-link {
@@ -371,7 +371,7 @@ small.label, small.value {
   }
 }
 .alert {
-  font-size: rem(13px);
+  font-size: 0.8125rem;
 }
 .nav-item {
   .nav-link,
