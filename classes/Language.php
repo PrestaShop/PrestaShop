@@ -960,7 +960,17 @@ class LanguageCore extends ObjectModel
                 $files_list = $other_files;
             }
 
-            if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../')) {
+            // don't know why, but it's needed & doesn't work otherwise
+            $translations_extract = array(
+                'translations/'.(string)$iso.'/admin.php',
+                'translations/'.(string)$iso.'/errors.php',
+                'translations/'.(string)$iso.'/fields.php',
+                'translations/'.(string)$iso.'/pdf.php',
+                'translations/'.(string)$iso.'/tabs.php',
+            );
+
+            if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../') ||
+                !$gz->extractList($translations_extract, _PS_TRANSLATIONS_DIR_.'../')) {
                 $errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), (string)$iso);
             }
 
