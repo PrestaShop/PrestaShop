@@ -55,7 +55,7 @@ class ThemeManagerBuilder
         return new ThemeManager(
             $this->context->shop,
             $configuration,
-            new ThemeValidator($this->context->getTranslator()),
+            new ThemeValidator($this->context->getTranslator(), new Configuration()),
             $this->context->getTranslator(),
             $this->context->employee,
             new Filesystem(),

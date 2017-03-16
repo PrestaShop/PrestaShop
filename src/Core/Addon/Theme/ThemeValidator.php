@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ThemeValidator
@@ -36,12 +37,14 @@ class ThemeValidator
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
+    private $appConfiguration;
 
     private $errors = array();
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, ConfigurationInterface $configuration)
     {
         $this->translator = $translator;
+        $this->appConfiguration = $configuration;
     }
 
     public function getErrors($themeName)
@@ -96,7 +99,7 @@ class ThemeValidator
     private function hasRequiredFiles(Theme $theme)
     {
         $themeName = $theme->getName();
-        $parentDir = realpath($theme->getDirectory().'/../'.$theme->get('parent')).'/';
+        $parentDir = realpath($this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme->get('parent')).'/';
         $parentFile = false;
 
         foreach ($this->getRequiredFiles() as $file) {
