@@ -40,107 +40,149 @@ class QueryParamsCollectionTest extends WebTestCase
      */
     private $prophet;
 
+    /**
+     * @var QueryParamsCollection
+     */
+    private $queryParams;
+
     public function setUp()
     {
         $this->prophet = new Prophet();
+        $this->queryParams = new QueryParamsCollection();
     }
 
     /**
-     * @param $filterQuery
+     * @test
+     *
+     * @param $orderQuery
      * @param $pageIndex
      * @param $pageSize
      * @param $expectedSqlClauses
      *
      * @dataProvider getQueryParams
      */
-    public function testFromRequest(
-        $filterQuery,
+    public function it_should_make_query_params_from_a_request(
+        $orderQuery,
         $pageIndex,
         $pageSize,
         $expectedSqlClauses
-    )
-    {
-        $queryParams = new QueryParamsCollection();
-        $requestMock = $this->mockRequest($filterQuery, $pageIndex, $pageSize);
+    ) {
+        $attributesMock = $this->mockAttributes(array());
+        $requestMock = $this->mockRequest($orderQuery, $pageIndex, $pageSize, $attributesMock);
 
-        $queryParams = $queryParams->fromRequest($requestMock->reveal());
+        $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
 
-        $sqlClauses = $queryParams->toSqlClauses();
+        $sqlParts = array(
+            $this->queryParams->getSqlOrder(),
+            $this->queryParams->getSqlParams(),
+            $this->queryParams->getSqlFilter(),
+        );
 
-        $this->assertInternalType('array', $sqlClauses);
-        $this->assertArrayHasKey('order', $sqlClauses);
-        $this->assertArrayHasKey('limit', $sqlClauses);
-        $this->assertArrayHasKey('limit_params', $sqlClauses);
-        $this->assertEquals($expectedSqlClauses, $sqlClauses);
+        $expectedSqlClauses[2] = '';
+
+        $this->assertInternalType('array', $sqlParts);
+
+        $this->assertEquals($expectedSqlClauses, $sqlParts);
     }
 
+    /**
+     * @test
+     *
+     * @param $orderQuery
+     * @param $pageIndex
+     * @param $pageSize
+     * @param $expectedSqlClauses
+     *
+     * @dataProvider getQueryParams
+     */
+    public function it_should_make_query_params_with_filter_from_a_request(
+        $orderQuery,
+        $pageIndex,
+        $pageSize,
+        $expectedSqlClauses
+    ) {
+        $attributesMock = $this->mockAttributes(array('productId' => 1));
+        $requestMock = $this->mockRequest($orderQuery, $pageIndex, $pageSize, $attributesMock->reveal());
+
+        $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
+
+        $sqlParts = array(
+            $this->queryParams->getSqlOrder(),
+            $this->queryParams->getSqlParams(),
+            $this->queryParams->getSqlFilter(),
+        );
+
+        $expectedSqlClauses[1]['product_id'] = 1;
+        $expectedSqlClauses[2] = 'AND {product_id} = :product_id';
+
+        $this->assertInternalType('array', $sqlParts);
+
+        $this->assertEquals($expectedSqlClauses, $sqlParts);
+    }
+
+    /**
+     * @return array
+     */
     public function getQueryParams()
     {
-        $filterQueries = array(
+        return array(
             array('product', null, '1', array(
-                'order' => 'ORDER BY {product} ',
-                'limit' => 'LIMIT :first_result,:max_result',
-                'limit_params' => array(
+                'ORDER BY {product} ',
+                array(
                     'max_result' => 1,
                     'first_result' => 0
                 )
             )),
             array('reference DESC', '3', null, array(
-                'order' => 'ORDER BY {reference} DESC ',
-                'limit' => 'LIMIT :first_result,:max_result',
-                'limit_params' => array(
+                'ORDER BY {reference} DESC ',
+                array(
                     'max_result' => 100,
                     'first_result' => 200
                 )
             )),
             array('supplier desc', null, null, array(
-                'order' => 'ORDER BY {supplier} DESC ',
-                'limit' => 'LIMIT :first_result,:max_result',
-                'limit_params' => array(
+                'ORDER BY {supplier} DESC ',
+                array(
                     'max_result' => 100,
                     'first_result' => 0
                 )
             )),
             array('available_quantity DESC', null, null, array(
-                'order' => 'ORDER BY {available_quantity} DESC ',
-                'limit' => 'LIMIT :first_result,:max_result',
-                'limit_params' => array(
+                'ORDER BY {available_quantity} DESC ',
+                array(
                     'max_result' => 100,
                     'first_result' => 0
                 )
             )),
             array('available_quantity DESC', '2', '4', array(
-                'order' => 'ORDER BY {available_quantity} DESC ',
-                'limit' => 'LIMIT :first_result,:max_result',
-                'limit_params' => array(
+                'ORDER BY {available_quantity} DESC ',
+                array(
                     'max_result' => 4,
                     'first_result' => 4
                 )
             )),
             array('physical_quantity', '3', '3', array(
-                'order' => 'ORDER BY {physical_quantity} ',
-                'limit' => 'LIMIT :first_result,:max_result',
-                'limit_params' => array(
+                'ORDER BY {physical_quantity} ',
+                array(
                     'max_result' => 3,
                     'first_result' => 6
                 )
             )),
         );
-
-        return $filterQueries;
     }
 
     /**
-     * @param $filterQuery
+     * @param $orderQuery
      * @param $pageIndex
      * @param $pageSize
      * @return \Prophecy\Prophecy\ObjectProphecy
      */
-    private function mockQuery($filterQuery, $pageIndex, $pageSize)
+    private function mockQuery($orderQuery, $pageIndex, $pageSize)
     {
+        /** @var \Symfony\Component\HttpFoundation\ParameterBag $queryMock */
         $queryMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
 
-        $params = array('filter' => $filterQuery);
+        $params = array('order' => $orderQuery);
 
         if (!is_null($pageIndex)) {
             $params['page_index'] = $pageIndex;
@@ -151,20 +193,38 @@ class QueryParamsCollectionTest extends WebTestCase
         }
         $queryMock->all()->willReturn($params);
 
+        /** @var \Prophecy\Prophecy\ObjectProphecy $queryMock */
         return $queryMock;
     }
 
     /**
-     * @param $filterQuery
-     * @param $pageIndex
-     * @param $pageSize
+     * @param array $attributes
      * @return \Prophecy\Prophecy\ObjectProphecy
      */
-    private function mockRequest($filterQuery, $pageIndex, $pageSize)
+    private function mockAttributes(array $attributes)
     {
-        $queryMock = $this->mockQuery($filterQuery, $pageIndex, $pageSize);
+        $queryMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
+        $queryMock->all()->willReturn($attributes);
+
+        return $queryMock;
+    }
+
+    /**
+     * @param $orderQuery
+     * @param $pageIndex
+     * @param $pageSize
+     * @param null $attributesMock
+     * @return \Prophecy\Prophecy\ObjectProphecy
+     */
+    private function mockRequest($orderQuery, $pageIndex, $pageSize, $attributesMock = null)
+    {
+        $queryMock = $this->mockQuery($orderQuery, $pageIndex, $pageSize);
         $requestMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\Request');
         $requestMock->query = $queryMock->reveal();
+
+        if (!is_null($attributesMock)) {
+            $requestMock->attributes = $attributesMock;
+        }
 
         return $requestMock;
     }

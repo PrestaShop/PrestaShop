@@ -73,11 +73,25 @@ class StockControllerTest extends WebTestCase
         parent::tearDown();
     }
 
-    public function testListAction()
+    public function testListProductsAction()
     {
-        $listProductStockRoute = $this->router->generate('api_product_stock_list');
+        $this->assertOkResponseOnListProducts('api_stock_list_products');
+    }
 
-        $this->client->request('GET', $listProductStockRoute);
+    public function testListProductCombinationsAction()
+    {
+        $this->assertOkResponseOnListProducts('api_stock_list_product_combinations', array('productId' => 1));
+    }
+
+    /**
+     * @param $route
+     * @param array $parameters
+     */
+    private function assertOkResponseOnListProducts($route, $parameters = array())
+    {
+        $route = $this->router->generate($route, $parameters);
+
+        $this->client->request('GET', $route);
 
         $response = $this->client->getResponse();
 
@@ -100,7 +114,7 @@ class StockControllerTest extends WebTestCase
      */
     private function assertNotFoundResponseOnEditProductStockQuantity()
     {
-        $editProductStockRoute = $this->router->generate('api_product_stock_edit_product', array(
+        $editProductStockRoute = $this->router->generate('api_stock_edit_product', array(
             'productId' => 9,
         ));
 
@@ -118,7 +132,7 @@ class StockControllerTest extends WebTestCase
      */
     private function assertNotFoundResponseOnEditProductCombinationStockQuantity()
     {
-        $editProductStockRoute = $this->router->generate('api_product_stock_edit_product_combination', array(
+        $editProductStockRoute = $this->router->generate('api_stock_edit_product_combination', array(
             'productId' => 8,
             'productAttributeId' => 1
         ));
@@ -147,7 +161,7 @@ class StockControllerTest extends WebTestCase
 
     private function assertOkResponseOnEditProductCombinationQuantity()
     {
-        $editProductStockRoute = $this->router->generate('api_product_stock_edit_product_combination', array(
+        $editProductStockRoute = $this->router->generate('api_stock_edit_product_combination', array(
             'productId' => 1,
             'productAttributeId' => 1,
         ));

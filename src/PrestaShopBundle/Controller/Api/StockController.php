@@ -38,15 +38,24 @@ class StockController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function listAction(Request $request)
+    public function listProductsAction(Request $request)
     {
         $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
         $queryParamsCollection = $this->get('prestashop.core.api.query_params_collection');
 
         $queryParamsCollection = $queryParamsCollection->fromRequest($request);
-        $stockOverviewColumns = $productStockRepository->getStockOverviewRows($queryParamsCollection);
+        $stockOverviewColumns = $productStockRepository->getProducts($queryParamsCollection);
 
         return new JsonResponse($stockOverviewColumns);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listProductCombinationsAction(Request $request)
+    {
+        return $this->listProductsAction($request);
     }
 
     /**
@@ -112,5 +121,5 @@ class StockController extends Controller
         }
 
         return (int)$request->request->get('quantity');
-ti    }
+    }
 }
