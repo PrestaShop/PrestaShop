@@ -1,14 +1,17 @@
 <template>
-  <form>
-    <input v-on:focus="focusIn" v-on:blur="focusOut" :id="id" class="edit-qty" name="qty" v-model="value" >
+  <form class="qty text-xs-right" :class="classObject">
+    <input v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="value" >
+    <transition name="fade">
+      <button v-if="isActive" class="check-button" v-on:click="sendQty($event)"><i class="material-icons">check</i></button>
+    </transition>
   </form>
 </template>
 
 <script>
-  import Spinner from './spinner';
+  import { mapActions } from 'vuex';
 
   export default {
-    props: ['productId'],
+    props: ['product'],
     mounted() {
       let self = this;
       $(`#${this.id}`).spinner({
@@ -16,30 +19,72 @@
         min: -999999999,
         spin(event, ui) {
           self.value = ui.value;
-          self.$emit('enabled', self.value);
+          self.isEnabled = (self.value !== 0);
           self.$store.commit('updateQty', {
             value: ui.value,
-            productId: self.productId
+            productId: self.product.product_id
           });
         }
       });
     },
     computed: {
       id () {
-        return `qty-${this.productId}`;
+        return `qty-${this.product.product_id}`;
+      },
+      classObject() {
+        return {
+          active: this.isActive,
+          disabled: !this.isEnabled
+        }
       }
     },
     data() {
       return {
-        value: 0
+        value: 0,
+        isActive: false,
+        isEnabled: false
+      }
+    },
+    watch: {
+      value(val) {
+        this.$emit('valueChanged', val);
       }
     },
     methods: {
+      ...mapActions([
+        'updateQtyByProductId'
+      ]),
       focusIn(){
-        this.$emit('focusIn');
+        this.isActive = true;
       },
-      focusOut() {
-        this.$emit('focusOut');
+      focusOut(event) {
+        if(!$(event.relatedTarget).hasClass('check-button')) {
+          this.isActive = false;
+        }
+        this.isEnabled = (this.value !== 0);
+      },
+      sendQty(event) {
+        let apiRootUrl = data.apiRootUrl.replace(/\?.*/,'');
+        let apiEditProductsUrl = `${apiRootUrl}/product/${this.product.product_id}`
+        let apiEditCombinationsUrl = `${apiRootUrl}/product/${this.product.product_id}/combination/${this.product.product_attribute_id}`;
+        let postUrl = this.product.product_attribute_id ? apiEditCombinationsUrl : apiEditProductsUrl;
+
+        event.preventDefault();
+
+        // POST when qty !=0
+        if(this.isEnabled) {
+          this.$store.dispatch('updateQtyByProductId', {
+            http: this.$http,
+            url: postUrl,
+            qty: this.product.qty
+          });
+          this.isActive = false;
+          this.value = 0;
+          this.$store.commit('updateQty', {
+            value: this.value,
+            productId: this.product.product_id
+          });
+        }
       }
     }
   }
@@ -48,6 +93,47 @@
 <style lang="sass?outputStyle=expanded" scoped>
   @import "~jquery-ui/themes/base/minified/jquery.ui.spinner.min.css";
   @import "~PrestaKit/scss/custom/_variables.scss";
+
+  .qty {
+      position: relative;
+      width: 120px;
+      .check-button {
+        outline:none;
+        opacity: 0;
+        position: absolute;
+        top: 4px;
+        right: 23px;
+        border: none;
+        height: 29px;
+        width: 40px;
+        background: $brand-primary;
+        z-index: 2;
+        border-left: 10px solid white;
+        .material-icons {
+          color: white;
+        }
+        &:hover {
+          background: $primary-hover;
+        }
+      }
+  }
+  .qty.active {
+    .check-button {
+      opacity: 1;
+    }
+  }
+  .qty.disabled {
+    .check-button {
+      background: $gray-light;
+      cursor: default;
+    }
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s ease;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0
+  }
   .edit-qty {
     text-indent: 5px;
     height: 31px;

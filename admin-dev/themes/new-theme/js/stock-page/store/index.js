@@ -1,13 +1,14 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 // root state object.
 
 const state = {
-  products: []
-}
+  products: [],
+  hasQty: false
+};
 
 // mutations are operations that actually mutates the state.
 // each mutation handler gets the entire state tree as the
@@ -18,16 +19,26 @@ const mutations = {
   addProducts(state, products) {
     state.products = products;
   },
+  updateProduct(state, product) {
+    // TODO
+  },
   updateQty(state, payload) {
-    let product = _.find(state.products, {product_id: payload.productId});
+    let product = window._.find(state.products, {product_id: payload.productId});
+    let hasQty = false;
     product.qty = payload.value;
+    state.products.filter((product)=> {
+      if(product.qty !== 0) {
+        hasQty = true;
+      }
+    });
+    state.hasQty = hasQty;
   }
-}
+};
 
 // actions are functions that causes side effects and can involve
 // asynchronous operations.
 const actions = {
-  updateQtyByProductId(state, payload) {
+  updateQtyByProductId({ commit, state }, payload) {
     let http = payload.http,
         url = payload.url,
         quantity = payload.qty;
@@ -37,19 +48,33 @@ const actions = {
     },
     {
       emulateJSON: true
-    }).then(function(res){
-      //TODO
-      console.log(res);
+    }).then((res) => {
+      commit('updateProduct', res.body);
+      return window.$.growl.notice({
+        title:'',
+        fixed: true,
+        size: "large",
+        message: "Stock successfully updated",
+        duration: 3000
+      });
     }, function(error){
-        console.log(error.statusText);
+        return window.$.growl.error({
+          title:'',
+          fixed: true,
+          size: "large",
+          message: error.statusText,
+          duration: 3000
+        });
     });
   }
-}
+};
 
 // getters are functions
 const getters = {
-
-}
+  hasQty(state) {
+    return state.hasQty;
+  }
+};
 
 // A Vuex instance is created by combining the state, mutations, actions,
 // and getters.
@@ -58,4 +83,4 @@ export default new Vuex.Store({
   getters,
   actions,
   mutations
-})
+});

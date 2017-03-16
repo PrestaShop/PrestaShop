@@ -46,6 +46,7 @@
       cursor: pointer;
       display: none;
       z-index: 3;
+      transition: all 0.2s ease;
     }
     .ui-spinner-up::before {
       font-family: 'Material Icons';
@@ -69,5 +70,30 @@
   }
   .qty.active .ui-spinner-button{
     display: block;
+  }
+  #growls.default {
+    top: 20px;
+  }
+  .growl.growl-notice {
+    background: white;
+    border: 2px solid $success;
+    border-radius: 0;
+    padding: 0;
+    min-height: 50px;
+    .growl-message {
+      color: $gray-dark;
+      line-height: 46px;
+      &::before {
+        color: white;
+        text-align: center;
+        background: $success;
+        height: 48px;
+        width: 48px;
+      }
+    }
+    .growl-close {
+      color: $success;
+      font-size: 20px
+    }
   }
 </style>
