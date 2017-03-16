@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\StockManager;
 use PrestaShopBundle\Api\QueryParamsCollection;
+use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
 use Product;
@@ -126,55 +127,42 @@ class ProductStockRepository
     }
 
     /**
-     * @param $productId
-     * @param $quantity
+     * @param ProductIdentity $productIdentity
+     * @param $delta
      * @return mixed
      */
-    public function updateProductQuantity($productId, $quantity)
-    {
-        return $this->updateProductCombinationQuantity($productId, 0, $quantity);
-    }
-
-    /**
-     * @param $productId
-     * @param $productAttributeId
-     * @param $quantity
-     * @return mixed
-     */
-    public function updateProductCombinationQuantity($productId, $productAttributeId, $quantity)
+    public function updateProductQuantity(ProductIdentity $productIdentity, $delta)
     {
         $query = '
             UPDATE {prefix}stock_available
-            SET quantity = :quantity,
+            SET quantity = quantity + :delta,
             physical_quantity = reserved_quantity + quantity
             WHERE id_product = :product_id
-            AND id_product_attribute = :product_attribute_id
+            AND id_product_attribute = :combination_id
         ';
 
         $query = str_replace('{prefix}', $this->tablePrefix, $query);
 
         $statement = $this->connection->prepare($query);
 
-        $statement->bindValue('product_id', $productId, PDO::PARAM_INT);
-        $statement->bindValue('product_attribute_id', $productAttributeId, PDO::PARAM_INT);
-        $statement->bindValue('quantity', $quantity, PDO::PARAM_INT);
+        $statement->bindValue('product_id', $productIdentity->getProductId(), PDO::PARAM_INT);
+        $statement->bindValue('combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
+        $statement->bindValue('delta', $delta, PDO::PARAM_INT);
 
         $statement->execute();
 
-        return $this->selectProductsStockById($productId, $productAttributeId);
+        return $this->selectProductsStockById($productIdentity);
     }
 
     /**
-     * @param $productId
-     * @param $productAttributeId
+     * @param ProductIdentity $productIdentity
      * @return mixed
-     * @throws ProductNotFoundException
      */
-    private function selectProductsStockById($productId, $productAttributeId)
+    private function selectProductsStockById(ProductIdentity $productIdentity)
     {
         $andWhereClause = '
             AND p.id_product = :product_id AND
-            COALESCE(pa.id_product_attribute, 0) = :product_attribute_id'
+            COALESCE(pa.id_product_attribute, 0) = :combination_id'
         ;
         $query = $this->selectProductsStock(
             $leftJoinClause = '',
@@ -184,8 +172,8 @@ class ProductStockRepository
         $statement = $this->connection->prepare($query);
 
         $this->bindProductsSelectionValues($statement);
-        $statement->bindValue('product_id', $productId, PDO::PARAM_INT);
-        $statement->bindValue('product_attribute_id', $productAttributeId, PDO::PARAM_INT);
+        $statement->bindValue('product_id', $productIdentity->getProductId(), PDO::PARAM_INT);
+        $statement->bindValue('combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
 
         $statement->execute();
 
@@ -194,9 +182,9 @@ class ProductStockRepository
         if (count($rows) === 0) {
             throw new ProductNotFoundException(
                 sprintf(
-                    'Product with id %d and attribute id %d can not be found',
-                    $productId,
-                    $productAttributeId
+                    'Product with id %d and combination id %d can not be found',
+                    $productIdentity->getProductId(),
+                    $productIdentity->getCombinationId()
                 )
             );
         }
