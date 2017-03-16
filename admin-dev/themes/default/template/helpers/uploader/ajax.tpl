@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 <div class="form-group" style="display: none;">
 	<div class="col-lg-12" id="{$id|escape:'html':'UTF-8'}-images-thumbnails">
 		{if isset($files) && $files|count > 0}
@@ -33,7 +33,7 @@
 			{if isset($file.delete_url)}
 			<p>
 				<a class="btn btn-default" href="{$file.delete_url}">
-					<i class="icon-trash"></i> {l s='Delete'}
+					<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}
 				</a>
 			</p>
 			{/if}
@@ -45,7 +45,7 @@
 </div>
 {if isset($max_files) && $files|count >= $max_files}
 <div class="row">
-	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=$max_files}</div>
+	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=[$max_files]}</div>
 </div>
 <script type="text/javascript">
 	$( document ).ready(function() {
@@ -139,7 +139,7 @@
 										template += data.result.{$name|escape:'html':'UTF-8'}[i].image;
 
 										if (typeof data.result.{$name|escape:'html':'UTF-8'}[i].delete_url !== 'undefined')
-											template += '<p><a class="btn btn-default" href="'+data.result.{$name|escape:'html':'UTF-8'}[i].delete_url+'"><i class="icon-trash"></i> {l s='Delete'}</a></p>';
+											template += '<p><a class="btn btn-default" href="'+data.result.{$name|escape:'html':'UTF-8'}[i].delete_url+'"><i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}</a></p>';
 
 										template += '</div>';
 										$('#{$id|escape:'html':'UTF-8'}-images-thumbnails').html($('#{$id|escape:'html':'UTF-8'}-images-thumbnails').html()+template);
@@ -167,7 +167,7 @@
 			if (typeof {$id|escape:'html':'UTF-8'}_max_files !== 'undefined') {
 				if ({$id|escape:'html':'UTF-8'}_total_files >= {$id|escape:'html':'UTF-8'}_max_files) {
 					e.preventDefault();
-					alert('{l s='You cannot have more than %s images in total. Please remove some of the current images before adding new ones.'|sprintf:$max_files}');
+					alert('{l s='You cannot have more than %s images in total. Please remove some of the current images before adding new ones.' sprintf=[$max_files]}');
 					return;
 				}
 			}

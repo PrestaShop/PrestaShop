@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,12 +27,12 @@
 /**
  * Step 2 : display license form
  */
-class InstallControllerHttpLicense extends InstallControllerHttp
+class InstallControllerHttpLicense extends InstallControllerHttp implements HttpConfigureInterface
 {
     /**
      * Process license form
      *
-     * @see InstallAbstractModel::process()
+     * @see HttpConfigureInterface::process()
      */
     public function processNextStep()
     {
@@ -43,7 +43,7 @@ class InstallControllerHttpLicense extends InstallControllerHttp
     /**
      * Licence agrement must be checked to validate this step
      *
-     * @see InstallAbstractModel::validate()
+     * @see HttpConfigureInterface::validate()
      */
     public function validate()
     {
@@ -53,7 +53,7 @@ class InstallControllerHttpLicense extends InstallControllerHttp
     public function process()
     {
     }
-    
+
     /**
      * Display license step
      */

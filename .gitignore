@@ -3,19 +3,25 @@
 /.htaccess
 *.log
 npm-debug.log.*
+.sass-cache/
 /cache/*
 download/*
 /img/*
 /log/*
-upload/*
+/upload/*
 vendor/*
 docs/phpdoc-sf/
-/composer.lock
-tests/StarterTheme/errorShots/
+composer.lock
+tests/Selenium/errorShots/
+tests/Selenium/errorDumps/
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
 admin-dev/import/*
+
+admin-dev/import/*
+!admin-dev/import/.htaccess
+!admin-dev/import/index.php
 
 themes/*/cache/*
 
@@ -24,20 +30,24 @@ themes/*/cache/*
 config/settings.inc.php
 config/settings.old.php
 config/xml/*
+config/themes/*
 !config/xml/themes/default.xml
-tests/StarterTheme/settings.js
+tests/Selenium/settings.js
+themes/*/config/settings_*.json
+app/config/parameters.old.yml
+app/config/config.php
 
 # Themes, modules and overrides
 
 modules/*
 override/*
+/themes/StarterTheme
 
 # Vendors and dependencies
 
 bower_components/
-vendor/
 node_modules/
-/composer.phar
+composer.phar
 php-cs-fixer
 .grunt/*
 
@@ -63,9 +73,13 @@ themes/default-bootstrap/modules/*/mails/*
 /app/bootstrap.php.cache
 /app/cache/*
 !app/cache/.gitkeep
+/app/Resources/translations/*
+!/app/Resources/translations/default
 /app/test/cache/*
 !app/test/cache/.gitkeep
+/app/config/config.php
 /app/config/parameters.yml
+/app/config/parameters.php
 /app/logs/*
 !app/logs/.gitkeep
 /app/phpunit.xml

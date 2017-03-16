@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-
+require_once(_PS_ADMIN_DIR_.'/../images.inc.php');
 function bindDatepicker($id, $time)
 {
     if ($time) {
@@ -82,7 +83,7 @@ function includeDatepicker($id, $time = false)
  * @param string $baseUri Base URI
  * @param string $theme Theme name (eg. default)
  * @param array $array_db Parameters in order to connect to database
-*/
+ */
 function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 {
     $defines = array();
@@ -128,7 +129,7 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
  * @param string $sql_date Date in SQL format (YYYY-MM-DD HH:mm:ss)
  * @param bool $with_time Display both date and time
  * @todo Several formats (french : DD-MM-YYYY)
-*/
+ */
 function displayDate($sql_date, $with_time = false)
 {
     return strftime('%Y-%m-%d'.($with_time ? ' %H:%M:%S' : ''), strtotime($sql_date));
@@ -142,7 +143,7 @@ function displayDate($sql_date, $with_time = false)
  * @param string $path Current path
  * @param string $highlight String to highlight (in XHTML/CSS)
  * @param string $type Category type (products/cms)
-*/
+ */
 function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
 {
     $context = Context::getContext();
@@ -158,7 +159,7 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
 					WHERE c.nleft <= '.(int)$category['nleft'].'
 						AND c.nright >= '.(int)$category['nright'].'
 						AND cl.id_lang = '.(int)$context->language->id.
-                        ($home ? ' AND c.id_category='.(int)$id_category : '').'
+                ($home ? ' AND c.id_category='.(int)$id_category : '').'
 						AND c.id_category != '.(int)Category::getTopCategory()->id.'
 					GROUP BY c.id_category
 					ORDER BY c.level_depth ASC
@@ -171,10 +172,10 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
                 $link = Context::getContext()->link->getAdminLink('AdminCategories');
                 $edit = '<a href="'.Tools::safeOutput($link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory')).'" title="'.($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify').'"><i class="icon-'.(($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil').'"></i></a> ';
                 $full_path .= $edit.
-                ($n < $n_categories ? '<a href="'.Tools::safeOutput($url_base.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int)Tab::getIdFromClassName('AdminCategories').(int)$context->employee->id)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
-                (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
-                ($n < $n_categories ? '</a>' : '').
-                (($n++ != $n_categories || !empty($path)) ? ' > ' : '');
+                    ($n < $n_categories ? '<a href="'.Tools::safeOutput($url_base.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int)Tab::getIdFromClassName('AdminCategories').(int)$context->employee->id)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+                    (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
+                    ($n < $n_categories ? '</a>' : '').
+                    (($n++ != $n_categories || !empty($path)) ? ' > ' : '');
             }
 
             return $full_path.$path;
@@ -529,7 +530,8 @@ function runAdminTab($tab, $ajax_mode = false)
                         }
 
                         // we can display the correct url
-                        die(json_encode(Translate::getAdminTranslation('Invalid security token')));
+                        // die(Tools::jsonEncode(array(Translate::getAdminTranslation('Invalid security token'),$url)));
+                        die(Tools::jsonEncode(Translate::getAdminTranslation('Invalid security token')));
                     } else {
                         // If this is an XSS attempt, then we should only display a simple, secure page
                         if (ob_get_level() && ob_get_length() > 0) {

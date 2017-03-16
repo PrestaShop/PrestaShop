@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -182,6 +182,7 @@ class CMSCategoryCore extends ObjectModel
 
         $sql = 'SELECT c.`id_cms_category`
 				FROM `'._DB_PREFIX_.'cms_category` c
+				'.Shop::addSqlAssociation('cms_category', 'c').'
 				WHERE c.`id_parent` = '.(int)$current.
                     ($active ? ' AND c.`active` = 1' : '');
         $result = Db::getInstance()->executeS($sql);
@@ -265,7 +266,7 @@ class CMSCategoryCore extends ObjectModel
             $id_shop_list = $this->id_shop_list;
         }
 
-        Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'` IN ('.$list.') AND id_shop IN ('.implode(', ', $id_shop_list).')');
+        Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'` IN ('.$list.') AND id_shop IN ('.implode(', ', array_map('intval', $id_shop_list)).')');
 
         $has_multishop_entries = $this->hasMultishopEntries();
         if (!$has_multishop_entries) {

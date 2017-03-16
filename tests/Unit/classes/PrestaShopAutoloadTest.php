@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,24 +19,24 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
+namespace PrestaShop\PrestaShop\tests\Unit\classes;
 
 use PHPUnit_Framework_TestCase;
 use PrestaShopAutoload;
 
-class    PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
+class PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
 {
     private $file_index_content = null;
+    private $file_index = null;
 
     protected function setUp()
     {
-        $this->file_index = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.PrestaShopAutoload::INDEX_FILE;
-        unlink($this->file_index);
+        $this->file_index = PrestaShopAutoload::getCacheFileIndex();
         PrestaShopAutoload::getInstance()->generateIndex();
         $this->file_index_content = md5(file_get_contents($this->file_index));
     }
@@ -57,7 +57,7 @@ class    PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
 
     public function testClassLoadedFromCoreDir()
     {
-        PrestaShopAutoload::getInstance()->load('Core_Business_Payment_PaymentOption');
-        $this->assertTrue(class_exists('Core_Business_Payment_PaymentOption', false));
+        PrestaShopAutoload::getInstance()->load('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption');
+        $this->assertTrue(class_exists('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption', false));
     }
 }

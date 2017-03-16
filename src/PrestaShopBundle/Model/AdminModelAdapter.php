@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Model;
 /**
  * This form class is responsible to map the form data to the posted object.
  *
- * For this parent class, onyl hook sub fields are handled.
+ * For this parent class, only hook sub fields are handled.
  */
 class AdminModelAdapter
 {
@@ -38,7 +38,7 @@ class AdminModelAdapter
      *
      * This parent method will return only hook sub array.
      *
-     * @return array Transormed form data to model attempt
+     * @return array Transformed form data to model attempt
      */
     public function getHookData()
     {

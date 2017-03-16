@@ -1,5 +1,5 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -805,7 +805,11 @@ product_tabs['Associations'] = new function(){
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
-					return item[1]+' - '+item[0];
+					var itemStringToReturn = item[item.length - 1];
+					for(var istr = 0; istr < item.length - 1;istr++){
+						itemStringToReturn += " " + item[istr];
+					}
+					return itemStringToReturn;
 				}
 			}).result(self.addAccessory);
 
@@ -827,8 +831,11 @@ product_tabs['Associations'] = new function(){
 	{
 		if (data == null)
 			return false;
-		var productId = data[1];
-		var productName = data[0];
+		var productId = data[data.length - 1];
+		var productName;
+		for(var istr = 0; istr < data.length - 1;istr++){
+			productName += " " + data[istr];
+		}
 
 		var $divAccessories = $('#divAccessories');
 		var $inputAccessories = $('#inputAccessories');

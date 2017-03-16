@@ -1,28 +1,56 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
 {% extends(template_from_string(
     getLegacyLayout(
         app.request.attributes.get('_legacy_controller'),
         layoutTitle is defined ? layoutTitle : '',
         layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
-        layoutDisplayType is defined ? layoutDisplayType : ''
+        layoutDisplayType is defined ? layoutDisplayType : '',
+        showContentHeader is defined ? showContentHeader : true,
+        headerTabContent is defined ? headerTabContent : '',
+        enableSidebar is defined ? enableSidebar : false,
+        help_link is defined ? help_link : ''
     )
 )) %}
 
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block stylesheets %}
-    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/*' filter='cssrewrite' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/right-sidebar.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/*' %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/right-sidebar.js') }}"></script>
 {% endblock %}
 
 {% block translate_javascripts %}
     <script>
-        var translate_javascripts = {{ js_translatable|json_encode()|raw }}
+        var translate_javascripts = {{ js_translatable|json_encode()|raw }};
+        var PS_ALLOW_ACCENTED_CHARS_URL = {{ 'PS_ALLOW_ACCENTED_CHARS_URL'|configuration|intCast }};
     </script>
 {% endblock %}
 
@@ -55,3 +83,17 @@
         </div>
     {% endif %}
 {% endblock %}
+
+{% block sidebar_right %}
+    <nav
+            id="right-sidebar"
+            role="navigation"
+            class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-xs-center"
+    >
+        <img
+                src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
+                style="margin-top: 10em;" alt="{{ 'Loading...'|trans({}, 'Admin.Global') }}"
+        />
+    </nav>
+{% endblock %}
+

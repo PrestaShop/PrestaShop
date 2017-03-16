@@ -1,0 +1,84 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<div class="modal fade" id="{{ id }}" tabindex="-1">
+    <div class="modal-dialog {% if class is defined %}{{ class }}{% endif %}">
+        <div class="modal-content">
+            {% block header %}
+                {% if title is defined %}
+                    <div class="modal-header">
+                        {% if closable is defined and closable == true %}<button type="button" class="close" data-dismiss="modal">&times;</button>{% endif %}
+                        <h4 class="modal-title">{{ title }}</h4>
+                    </div>
+                {% endif %}
+            {% endblock %}
+
+            {% block content %}
+            {% endblock %}
+
+            {% if progressbar is defined %}
+                <div class="modal-body" id="{{ progressbar.id }}">
+                    <div class="pull-right progress-details-text" default-value="{{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}">
+                        {{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}
+                    </div>
+                    <div class="progress active progress-striped" style="display: block; width: 100%">
+                        <div class="progress-bar progress-bar-success" role="progressbar" style="width: 0%">
+                            <span>0 %</span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% block footer %}
+                {% if actions is defined %}
+                    <div class="modal-footer">
+                        {% if closable is defined and closable == true %}
+                            <button type="button" class="btn btn-tertiary-outline btn-lg" data-dismiss="modal">{{ 'Close'|trans({}, 'Admin.Actions') }}</button>
+                        {% endif %}
+                        {% for action in actions %}
+                            {% if action.type is defined and action.type == 'link' %}
+                                <a href="{{ action.href|default('#') }}" class="{{ action.class|default('btn') }}">{{ action.label|default('Label is missing') }}</a>
+                            {% elseif action.type is defined and action.type == 'button' %}
+                                <button type="button" value="{{ action.value|default('') }}" class="{{ action.class|default('btn') }}">
+                                    {{ action.label|default('Label is missing') }}
+                                </button>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        var closable = {% if closable is defined and closable == true %}true{% else %}false{% endif %};
+        $('#{{ id }}').modal({
+            backdrop: (closable ? true : 'static'),
+            keyboard: closable,
+            closable: closable,
+            show: false
+        });
+    });
+</script>

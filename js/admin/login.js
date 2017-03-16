@@ -186,7 +186,7 @@ function doAjaxLogin(redirect) {
 		$.ajax({
 			type: "POST",
 			headers: { "cache-control": "no-cache" },
-			url: "ajax-tab.php" + '?rand=' + new Date().getTime(),
+			url: "index.php" + '?rand=' + new Date().getTime(),
 			async: true,
 			dataType: "json",
 			data: {

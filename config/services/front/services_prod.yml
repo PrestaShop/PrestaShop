@@ -1,0 +1,5 @@
+parameters:
+
+services:
+    hashing:
+        class: PrestaShop\PrestaShop\Core\Crypto\Hashing

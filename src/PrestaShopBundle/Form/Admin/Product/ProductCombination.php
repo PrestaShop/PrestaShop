@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,34 +19,41 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use PrestaShopBundle\Form\Admin\Type as PsFormType;
 
 /**
- * This form class is risponsible to generate the basic product informations form
+ * This form class is responsible to generate the product combination form
  */
-class ProductCombination extends AbstractType
+class ProductCombination extends CommonAbstractType
 {
     private $translator;
-    private $container;
+    private $contextLegacy;
+    private $configuration;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext)
     {
-        $this->container = $container;
-        $this->translator = $container->get('prestashop.adapter.translator');
+        $this->translator = $translator;
+        $this->contextLegacy = $legacyContext->getContext();
+        $this->configuration = $this->getConfiguration();
+        $this->currency = $this->contextLegacy->currency;
     }
 
     /**
@@ -56,124 +63,142 @@ class ProductCombination extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('id_product_attribute', 'hidden', array(
+        $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
+
+        $builder->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType', array(
             'required' => false,
         ))
-        ->add('attribute_reference', 'text', array(
+        ->add('attribute_reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
+            'label' => $this->translator->trans('Reference', [], 'Admin.Global')
         ))
-        ->add('attribute_ean13', 'text', array(
+        ->add('attribute_ean13', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'error_bubbling' => true,
-            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
+            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\Regex("/^[0-9]{0,13}$/"),
             )
         ))
-        ->add('attribute_isbn', 'text', array(
+        ->add('attribute_isbn', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
+            'label' => $this->translator->trans('ISBN code', [], 'Admin.Catalog.Feature')
         ))
-        ->add('attribute_upc', 'text', array(
+        ->add('attribute_upc', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
+            'label' => $this->translator->trans('UPC barcode', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\Regex("/^[0-9]{0,12}$/"),
             )
         ))
-        ->add('attribute_wholesale_price', 'number', array(
+        ->add('attribute_wholesale_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts')
+            'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
+            'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_wholesale_price']
         ))
-        ->add('attribute_price_impact', 'choice', array(
-            'choices'  => array(
-                '0' => $this->translator->trans('None', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Increase', [], 'AdminProducts'),
-                '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Impact on price', [], 'AdminProducts'),
-        ))
-        ->add('attribute_price', 'number', array(
+        ->add('attribute_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('(tax excl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
+            'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_priceTE']
         ))
-        ->add('attribute_priceTI', 'number', array(
+        ->add('attribute_priceTI', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('(tax incl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
+            'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_priceTI']
         ))
-        ->add('attribute_weight_impact', 'choice', array(
-            'choices'  => array(
-                '0' => $this->translator->trans('None', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Increase', [], 'AdminProducts'),
-                '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts'),
-        ))
-        ->add('attribute_weight', 'number', array(
+        ->add('attribute_ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Kg', [], 'AdminProducts')
+            'label' => $this->translator->trans('Ecotax', [], 'Admin.Catalog.Feature'),
+            'currency' => $this->currency->iso_code,
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
         ))
-        ->add('attribute_unit_impact', 'choice', array(
-            'choices'  => array(
-                '0' => $this->translator->trans('None', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Increase', [], 'AdminProducts'),
-                '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Impact on unit price', [], 'AdminProducts'),
-        ))
-        ->add('attribute_unity', 'number', array(
+        ->add('attribute_weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('€/', [], 'AdminProducts')
+            'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature')
         ))
-        ->add('attribute_minimal_quantity', 'number', array(
+        ->add('attribute_unity', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
+            'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_unity'],
+        ))
+        ->add('attribute_minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+            'required' => false,
+            'label' => $this->translator->trans('Min. quantity for sale', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('available_date_attribute', 'text', array(
+        ->add('available_date_attribute', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
-            'label' => $this->translator->trans('Availability date', [], 'AdminProducts'),
-            'attr' => ['class' => 'date', 'placeholder' => 'YYY-MM-DD']
+            'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
+            'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
         ))
-        ->add('attribute_default', 'checkbox', array(
-            'label'    => $this->translator->trans('Make this combination the default combination for this product.', [], 'AdminProducts'),
+        ->add('attribute_default', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
+            'label'    => $this->translator->trans('Set as default combination', [], 'Admin.Catalog.Feature'),
             'required' => false,
+            'attr' => array('class' => 'attribute_default_checkbox'),
+        ));
+        if ($is_stock_management){
+           $builder->add('attribute_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+                'required' => true,
+                'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
+                'constraints' => array(
+                    new Assert\NotBlank(),
+                    new Assert\Type(array('type' => 'numeric')),
+                )
+            ));
+        }
+        $builder->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            'choices'  => array(),
+            'choices_as_values' => true,
+            'required' => false,
+            'expanded' => true,
+            'multiple' => true,
+            'label' => $this->translator->trans('Select images of this combination:', [], 'Admin.Catalog.Feature'),
+            'attr' => array('class' => 'images'),
         ))
-        ->add('attribute_quantity', 'number', array(
-            'required' => true,
-            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric')),
-            )
+        ->add('final_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
+            'required' => false,
+            'label' => $this->translator->trans('Final price', [], 'Admin.Catalog.Feature'),
+            'currency' => $this->currency->iso_code,
         ));
 
-        //set default minimal values for collection prototype
-        $builder->setData([
-            'attribute_wholesale_price' => 0,
-            'attribute_price' => 0,
-            'attribute_weight' => 0,
-            'attribute_unity' => 0,
-            'attribute_minimal_quantity' => 1,
-            'available_date_attribute' => '0000-00-00',
-            'attribute_quantity' => 0,
-        ]);
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $choices = [];
+            if (!empty($data['id_image_attr'])) {
+                foreach ($data['id_image_attr'] as $id) {
+                    $choices[$id] = $id;
+                }
+            }
+
+            $form->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices' => $choices,
+                'required' => false,
+                'expanded' => true,
+                'multiple' => true,
+                'choices_as_values' => true,
+            ));
+        });
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_combination';
     }

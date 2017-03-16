@@ -1,0 +1,12 @@
+ModuleController:
+    module_tab_catalog:
+        title: "Selection"
+        route: "admin_module_catalog"
+
+    module_tab_manage:
+        title: "Installed modules"
+        route: "admin_module_manage"
+
+    module_tab_notifications:
+        title: "Notifications"
+        route: "admin_module_notification"

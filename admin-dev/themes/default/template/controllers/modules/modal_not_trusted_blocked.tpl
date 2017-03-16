@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
+* @copyright 2007-2017 PrestaShop SA
 * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
@@ -59,6 +59,6 @@
 
 		<p>{l s='You can search for similar modules on the official marketplace.'}</p>
 
-		<p>{l s="[1]Click here to browse our catalog on PrestaShop Addons[/1]." tags=['<a class="catalog-link" href="#">']}
+		<p>{l s="[1]Click here to browse our catalog on PrestaShop Addons[/1]." html=true sprintf=['[1]' => '<a class="catalog-link" href="#">', '[/1]' => '</a>']}
 	</div>
 </div>

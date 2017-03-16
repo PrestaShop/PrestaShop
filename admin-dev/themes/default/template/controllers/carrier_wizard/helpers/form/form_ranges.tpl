@@ -1,3 +1,27 @@
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 		<script>var zones_nbr = {$zones|count +3} ; /*corresponds to the third input text (max, min and all)*/</script>
 		<div id="zone_ranges" style="overflow:auto">
 			<h4>{l s='Ranges'}</h4>
@@ -71,7 +95,7 @@
 					{foreach from=$zones key=i item=zone}
 					<tr class="fees" data-zoneid="{$zone.id_zone}">
 						<td>
-							<label for="zone_{$zone.id_zone}">{$zone.name}</label>
+							<label for="zone_{$zone.id_zone}">{$zone.name}{if !$zone.active} <small>({l s='inactive'})</small>{/if}</label>
 						</td>
 						<td class="zone">
 							<input class="form-control input_zone" id="zone_{$zone.id_zone}" name="zone_{$zone.id_zone}" value="1" type="checkbox" {if isset($fields_value['zones'][$zone.id_zone]) && $fields_value['zones'][$zone.id_zone]} checked="checked"{/if}/>
@@ -97,7 +121,7 @@
 								<td>&nbsp;</td>
 							{else}
 								<td>
-									<button class="btn btn-default">{l s='Delete'}</button>
+									<button class="btn btn-default">{l s='Delete' d='Admin.Actions'}</button>
 								</td>
 							{/if}
 						{/foreach}

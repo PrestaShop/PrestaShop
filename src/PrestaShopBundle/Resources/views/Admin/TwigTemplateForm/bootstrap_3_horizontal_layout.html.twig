@@ -1,5 +1,28 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
 {% use "PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_3_layout.html.twig" %}
-
 {% block form_start -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-horizontal')|trim}) %}
     {{- parent() -}}
@@ -9,7 +32,7 @@
 
 {% block form_label -%}
     {% spaceless %}
-        {% if label is sameas(false) %}
+        {% if label is same as(false) %}
             <div class="{{ block('form_label_class') }}"></div>
         {% else %}
             {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ block('form_label_class'))|trim}) %}
@@ -35,67 +58,6 @@
         </div>
     {% endspaceless %}
 {%- endblock form_row %}
-
-{% block drop_files_row -%}
-    {% spaceless %}
-        <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
-            {{ form_label(form.files) }}
-            <div class="{{ block('form_group_class') }}">
-                <script>
-                    $(document).ready(function () {
-                        Dropzone.autoDiscover = false;
-                        var dropZoneElem = $("#{{ id }}");
-
-                        var dropzoneOptions = {
-                            url: '{{ dropzonePostUrl }}',
-                            paramName: "form[file]",
-                            addRemoveLinks: true,
-                            success: function (file, response) {
-                                var input = $('<input type="hidden" name="{{ form.vars.full_name }}[files]['+dropZoneElem.find('.dz-preview').length+']" />').val(response);
-                                $(file.previewElement).append(input);
-                            },
-                            error: function (file, response) {
-                                response = JSON.parse(response);
-
-                                var node, _i, _len, _ref, _results;
-                                var message = response.message;
-                                file.previewElement.classList.add("dz-error");
-                                _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
-                                _results = [];
-                                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                                    node = _ref[_i];
-                                    _results.push(node.textContent = message);
-                                }
-                                return _results;
-                            },
-                            init: function () {
-                                {% if dropzoneExsitedFiles %}
-                                    {% for file in dropzoneExsitedFiles %}
-                                    var mockFile = { name: "{{file.file_original_name }}", size: {{file.filesize }}, type: '{{ file.file_type }}'};
-                                    this.options.addedfile.call(this, mockFile);
-                                    this.options.thumbnail.call(this, mockFile, "{{file.file_url_tmp }}");
-
-                                    var input = $('<input type="hidden" name="{{ form.vars.full_name }}[files][{{ loop.index }}]" />').val('{{ file|json_encode()|raw}}');
-                                    $(mockFile.previewElement).append(input);
-
-                                    this.emit("complete", mockFile);
-                                    {% endfor %}
-                                {%  endif  %}
-                            }
-                        };
-
-                        dropZoneElem.dropzone(jQuery.extend( dropzoneOptions, {{ dropzoneOptions|raw }}));
-                    });
-                </script>
-
-                <div id="{{ id }}" class="col-lg-12 panel text-center dropzone">
-                </div>
-
-                {{ form_errors(form) }}
-            </div>
-        </div>
-    {% endspaceless %}
-{%- endblock drop_files_row %}
 
 {% block checkbox_row -%}
     {{- block('checkbox_radio_row') -}}

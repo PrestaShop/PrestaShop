@@ -1,0 +1,87 @@
+// Tools
+@import "~bourbon/app/assets/stylesheets/bourbon";
+@import "../node_modules/PrestaKit/scss/custom/_variables.scss";
+@import "mixins/single_line_block";
+@import "mixins/notification_container";
+@import "mixins/notification_counter";
+@import "mixins/breakpoints";
+// Settings
+@import "config/settings";
+
+// Components
+@import "components/layout/content_div";
+@import "components/layout/header_toolbar";
+@import "components/layout/kpi";
+@import "components/layout/main_header";
+@import "components/layout/nav_bar";
+@import "components/layout/non_responsive";
+@import "components/category_tree";
+@import "components/dropzone";
+@import "components/notifications";
+
+// Pages specifics SCSS files
+@import "pages/product_page";
+@import "pages/products_catalog";
+@import "pages/translation_page";
+
+// Main Layout
+@import "pages/modules";
+
+// Other
+@import "components/tinymce";
+
+// Main Layout
+body {
+  background: $background-grey;
+}
+
+// To put into the PrestaKit
+$color-icons: #6c868e;
+.breadcrumb {
+  padding: rem(5px);
+  background: none;
+  border-radius: 0;
+  font-size: rem(12px);
+  > li + li::before {
+    padding-right: rem(0px);
+    padding-left: rem(3px);
+  }
+  > li > a {
+    color: #363A41; // TODO: Place the text color
+  }
+}
+.toolbar-button {
+  color: $color-icons;
+  text-align: center;
+  display: inline-block;
+  margin: 0 rem(5px);
+  > .material-icons {
+    font-size: rem(24px);
+  }
+  > .title {
+    font-size: rem(12px);
+    color: $color-icons;
+    display: block;
+  }
+  &:hover {
+    text-decoration: none;
+  }
+}
+.col-center {
+  float: none;
+  margin: 0 auto;
+}
+._fullspace {
+  width: 100%;
+  height: 100%;
+}
+.bordered {
+  > .panel {
+    border: 0;
+  }
+  > .nav-item > .nav-link {
+    &.active {
+      border-bottom: 1px solid #FFFFFF;
+    }
+  }
+}

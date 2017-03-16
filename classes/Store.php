@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class StoreCore
+ */
 class StoreCore extends ObjectModel
 {
+    /** @var int Store id */
+    public $id;
+
     /** @var int Country id */
     public $id_country;
 
@@ -84,49 +90,107 @@ class StoreCore extends ObjectModel
         'table' => 'store',
         'primary' => 'id_store',
         'fields' => array(
-            'id_country' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_state' =>        array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
-            'name' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-            'address1' =>        array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'required' => true, 'size' => 128),
-            'address2' =>        array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128),
-            'postcode' =>        array('type' => self::TYPE_STRING, 'size' => 12),
-            'city' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
-            'latitude' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
-            'longitude' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
-            'hours' =>            array('type' => self::TYPE_STRING, 'validate' => 'isSerializedArray', 'size' => 65000),
-            'phone' =>            array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
-            'fax' =>            array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
-            'note' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
-            'email' =>            array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
-            'active' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-            'date_add' =>        array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' =>        array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+            'address1' => array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'required' => true, 'size' => 128),
+            'address2' => array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128),
+            'postcode' => array('type' => self::TYPE_STRING, 'size' => 12),
+            'city' => array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
+            'latitude' => array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
+            'longitude' => array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
+            'hours' => array('type' => self::TYPE_STRING, 'validate' => 'isJson', 'size' => 65000),
+            'phone' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
+            'fax' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
+            'note' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
+            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
+            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
         ),
     );
 
     protected $webserviceParameters = array(
         'fields' => array(
-            'id_country' => array('xlink_resource'=> 'countries'),
-            'id_state' => array('xlink_resource'=> 'states'),
+            'id_country' => array('xlink_resource' => 'countries'),
+            'id_state' => array('xlink_resource' => 'states'),
             'hours' => array('getter' => 'getWsHours', 'setter' => 'setWsHours'),
         ),
     );
 
-    public function __construct($id_store = null, $id_lang = null)
+    /**
+     * StoreCore constructor.
+     *
+     * @param null $idStore
+     * @param null $idLang
+     */
+    public function __construct($idStore = null, $idLang = null)
     {
-        parent::__construct($id_store);
-        $this->id_image = ($this->id && file_exists(_PS_STORE_IMG_DIR_.(int)$this->id.'.jpg')) ? (int)$this->id : false;
+        parent::__construct($idStore);
+        $this->id_image = ($this->id && file_exists(_PS_STORE_IMG_DIR_.(int) $this->id.'.jpg')) ? (int) $this->id : false;
         $this->image_dir = _PS_STORE_IMG_DIR_;
     }
 
-    public function getWsHours()
+    /**
+     * Get Stores
+     *
+     * @return array|false|mysqli_result|null|PDOStatement|resource
+     */
+    public static function getStores()
     {
-        return implode(';', Tools::unSerialize($this->hours));
+        $stores = Db::getInstance()->executeS('
+            SELECT s.id_store AS `id`, s.*
+            FROM '._DB_PREFIX_.'store s
+            '.Shop::addSqlAssociation('store', 's').'
+            WHERE s.active = 1'
+        );
+
+        return $stores;
     }
 
+    /**
+     * Get hours for webservice
+     *
+     * @return string
+     */
+    public function getWsHours()
+    {
+        return $this->hours;
+    }
+
+    /**
+     * Set hours for webservice
+     *
+     * @param string $hours
+     *
+     * @return bool
+     */
     public function setWsHours($hours)
     {
-        $this->hours = serialize(explode(';', $hours));
+        if (!is_string($hours)) {
+            return false;
+        }
+
+        $this->hours = $hours;
+
         return true;
+    }
+
+    /**
+     * This method is allow to know if a store exists for AdminImportController
+     *
+     * @return bool
+     *
+     * @since 1.7.0
+     */
+    public static function storeExists($idStore)
+    {
+        $row = Db::getInstance()->getRow('
+            SELECT `id_store`
+            FROM '._DB_PREFIX_.'store a
+            WHERE a.`id_store` = '.(int) $idStore
+        );
+
+        return isset($row['id_store']);
     }
 }

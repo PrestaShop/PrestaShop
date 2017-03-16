@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 
 /**
  * @since 1.5.0
@@ -35,20 +38,14 @@ class ShopCore extends ObjectModel
     /** @var int ID of shop category */
     public $id_category;
 
-    /** @var int ID of shop theme */
-    public $id_theme;
+    /** @var string directory name of the selected theme */
+    public $theme_name;
 
     /** @var string Shop name */
     public $name;
 
     public $active = true;
     public $deleted;
-
-    /** @var string Shop theme name (read only) */
-    public $theme_name;
-
-    /** @var string Shop theme directory (read only) */
-    public $theme_directory;
 
     /** @var string Physical uri of main url (read only) */
     public $physical_uri;
@@ -75,8 +72,8 @@ class ShopCore extends ObjectModel
             'active' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'deleted' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'name' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'id_theme' =>        array('type' => self::TYPE_INT, 'required' => true),
             'id_category' =>    array('type' => self::TYPE_INT, 'required' => true),
+            'theme_name' =>    array('type' => self::TYPE_STRING, 'validate' => 'isThemeName'),
             'id_shop_group' =>    array('type' => self::TYPE_INT, 'required' => true),
         ),
     );
@@ -92,7 +89,6 @@ class ShopCore extends ObjectModel
         'fields' => array(
             'id_shop_group' => array('xlink_resource' => 'shop_groups'),
             'id_category' => array(),
-            'id_theme' => array(),
         ),
     );
 
@@ -104,6 +100,9 @@ class ShopCore extends ObjectModel
 
     /** @var int ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
     protected static $context_id_shop_group;
+
+    /** @var Theme **/
+    public $theme;
 
     /**
      * There are 3 kinds of shop context : shop, group shop and general
@@ -120,7 +119,7 @@ class ShopCore extends ObjectModel
     const SHARE_STOCK = 'share_stock';
 
     /**
-     * On shop instance, get its theme and URL data too
+     * On shop instance, get its URL data
      *
      * @param int $id
      * @param int $id_lang
@@ -129,8 +128,12 @@ class ShopCore extends ObjectModel
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
+
         if ($this->id) {
             $this->setUrl();
+            if ($this->theme == null) {
+                $this->setTheme();
+            }
         }
     }
 
@@ -167,7 +170,6 @@ class ShopCore extends ObjectModel
             'product_attribute' => array('type' => 'shop'),
             'product_lang' => array('type' => 'fk_shop'),
             'referrer' => array('type' => 'shop'),
-            'scene' => array('type' => 'shop'),
             'store' => array('type' => 'shop'),
             'webservice_account' => array('type' => 'shop'),
             'warehouse' => array('type' => 'shop'),
@@ -195,10 +197,9 @@ class ShopCore extends ObjectModel
         $cache_id = 'Shop::setUrl_'.(int)$this->id;
         if (!Cache::isStored($cache_id)) {
             $row = Db::getInstance()->getRow('
-              SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl, t.id_theme, t.name, t.directory
+              SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl
               FROM '._DB_PREFIX_.'shop s
               LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
-              LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
               WHERE s.id_shop = '.(int)$this->id.'
               AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
             Cache::store($cache_id, $row);
@@ -209,9 +210,6 @@ class ShopCore extends ObjectModel
             return false;
         }
 
-        $this->theme_id = $row['id_theme'];
-        $this->theme_name = $row['name'];
-        $this->theme_directory = $row['directory'];
         $this->physical_uri = $row['physical_uri'];
         $this->virtual_uri = $row['virtual_uri'];
         $this->domain = $row['domain'];
@@ -272,6 +270,18 @@ class ShopCore extends ObjectModel
 
         // Remove urls
         $res &= Db::getInstance()->delete('shop_url', 'id_shop = '.(int)$this->id);
+
+        // Remove currency restrictions
+        $res &= Db::getInstance()->delete('module_currency', 'id_shop = '.(int)$this->id);
+
+        // Remove group restrictions
+        $res &= Db::getInstance()->delete('module_group', 'id_shop = '.(int)$this->id);
+
+        // Remove country restrictions
+        $res &= Db::getInstance()->delete('module_country', 'id_shop = '.(int)$this->id);
+
+        // Remove carrier restrictions
+        $res &= Db::getInstance()->delete('module_carrier', 'id_shop = '.(int)$this->id);
 
         Shop::cacheShops(true);
 
@@ -366,7 +376,11 @@ class ShopCore extends ObjectModel
         }
 
         $http_host = Tools::getHttpHost();
-        $all_media = array_merge(Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'), Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'), Configuration::getMultiShopValues('PS_MEDIA_SERVER_3'));
+        $all_media = array_merge(
+            Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
+            Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
+            Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+        );
 
         if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array($http_host, $all_media)) {
             // If in admin, we can access to the shop without right URL
@@ -464,13 +478,28 @@ class ShopCore extends ObjectModel
     }
 
     /**
-     * Get shop theme name
-     *
-     * @return string
+     * Set shop theme details from Json data
      */
+    public function setTheme()
+    {
+        $context = Context::getContext();
+        $db = Db::getInstance();
+        $themeRepository = (new PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder($context, $db))->buildRepository($this);
+        if (empty($this->theme_name)) {
+            $this->theme_name = 'classic';
+        }
+        $this->theme = $themeRepository->getInstanceByName($this->theme_name);
+    }
+
+    /**
+    * Get theme directory name
+    *
+    * @return string $this->theme->theme_name
+    */
     public function getTheme()
     {
-        return $this->theme_directory;
+        Tools::displayAsDeprecated('Please use $this->theme->getDirectory() instead');
+        return $this->theme->getDirectory();
     }
 
     /**
@@ -673,12 +702,14 @@ class ShopCore extends ObjectModel
                     );
                 }
 
+                $row = $row + array('theme_name' => '');
+
                 self::$shops[$row['id_shop_group']]['shops'][$row['id_shop']] = array(
                     'id_shop' =>        $row['id_shop'],
                     'id_shop_group' =>    $row['id_shop_group'],
                     'name' =>            $row['shop_name'],
-                    'id_theme' =>        $row['id_theme'],
                     'id_category' =>    $row['id_category'],
+                    'theme_name' => $row['theme_name'],
                     'domain' =>            $row['domain'],
                     'domain_ssl' =>        $row['domain_ssl'],
                     'uri' =>            $row['physical_uri'].$row['virtual_uri'],
@@ -980,6 +1011,10 @@ class ShopCore extends ObjectModel
             $alias .= '.';
         }
 
+        if (is_string($alias)) {
+            $alias = Db::getInstance()->escape($alias);
+        }
+
         $group = Shop::getGroupFromShop(Shop::getContextShopID(), false);
         if ($share == Shop::SHARE_CUSTOMER && Shop::getContext() == Shop::CONTEXT_SHOP && $group['share_customer']) {
             $restriction = ' AND '.$alias.'id_shop_group = '.(int)Shop::getContextShopGroupID().' ';
@@ -1039,7 +1074,7 @@ class ShopCore extends ObjectModel
             $id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
         }
 
-        return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$id_shop.' ';
+        return ' AND '.(($alias) ? Db::getInstance()->escape($alias).'.' : '').'id_shop = '.$id_shop.' ';
     }
 
     /**
@@ -1211,10 +1246,10 @@ class ShopCore extends ObjectModel
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT entity.`id_'.pSQL($entity).'`
-            FROM `'._DB_PREFIX_.pSQL($entity).'_shop`es
-            LEFT JOIN '._DB_PREFIX_.pSQL($entity).' entity
-                ON (entity.`id_'.pSQL($entity).'` = es.`id_'.pSQL($entity).'`)
+            'SELECT entity.`id_'.bqSQL($entity).'`
+            FROM `'._DB_PREFIX_.bqSQL($entity).'_shop`es
+            LEFT JOIN '._DB_PREFIX_.bqSQL($entity).' entity
+                ON (entity.`id_'.bqSQL($entity).'` = es.`id_'.bqSQL($entity).'`)
             WHERE es.`id_shop` = '.(int)$id_shop.
             ($active ? ' AND entity.`active` = 1' : '').
             ($delete ? ' AND entity.deleted = 0' : '')

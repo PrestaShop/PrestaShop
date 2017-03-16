@@ -1,4 +1,12 @@
 <phpunit bootstrap="bootstrap.php">
+    <php>
+        <server name="KERNEL_DIR" value="../app/" />
+    </php>
+    <groups>
+        <exclude>
+            <group>admin</group>
+        </exclude>
+    </groups>
     <testsuites>
         <testsuite name="Unit">
             <directory>Unit</directory>

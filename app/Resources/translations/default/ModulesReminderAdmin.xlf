@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_reminder/ps_reminder.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9c34e90380dac7b56fdd19192a99d531">
+        <source>Customer follow-up</source>
+        <target>Customer follow-up</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:75</note>
+      </trans-unit>
+      <trans-unit id="a5f0eae15e15d3226dccdaa6b4b6b581">
+        <source>Follow-up with your customers by sending abandonment cart emails
+		    and other reminders.</source>
+        <target>Follow-up with your customers by sending abandonment cart emails
+		    and other reminders.</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:80</note>
+      </trans-unit>
+      <trans-unit id="e316b4398212d473f7f53c7728fe1c37">
+        <source>Settings updated succesfully</source>
+        <target>Settings updated succesfully</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:136</note>
+      </trans-unit>
+      <trans-unit id="003b06dcfe67596f17e3de26e6a436c8">
+        <source>Error occurred during settings update</source>
+        <target>Error occurred during settings update</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:142</note>
+      </trans-unit>
+      <trans-unit id="edf9feeab43a7623f6afc152d1ede515">
+        <source>Discount for your cancelled cart</source>
+        <target>Discount for your cancelled cart</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:222</note>
+      </trans-unit>
+      <trans-unit id="a053fc9952a7dfc79282eba56ab8ad3a">
+        <source>Thank you for your order.</source>
+        <target>Thank you for your order.</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:353</note>
+      </trans-unit>
+      <trans-unit id="7fcd592dd47028c7c1f2d0ce9168a303">
+        <source>You are one of our best customers!</source>
+        <target>You are one of our best customers!</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:445</note>
+      </trans-unit>
+      <trans-unit id="c2ab23672d4bb31c7664bf8e854a10f7">
+        <source>We miss you!</source>
+        <target>We miss you!</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:551</note>
+      </trans-unit>
+      <trans-unit id="514de3f679514e3ac4a31e243d752f18">
+        <source>Define the settings and paste the following URL in the crontab,
+			     or call it manually on a daily basis:</source>
+        <target>Define the settings and paste the following URL in the crontab,
+			     or call it manually on a daily basis:</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:749</note>
+      </trans-unit>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Information</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:762</note>
+      </trans-unit>
+      <trans-unit id="dc39991835c951202c14fcbabc024224">
+        <source>Four kinds of e-mail alerts are available in order to stay
+				    in touch with your customers!</source>
+        <target>Four kinds of e-mail alerts are available in order to stay
+				    in touch with your customers!</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:769</note>
+      </trans-unit>
+      <trans-unit id="b547c073d144a57761d1d00d0b9d9f27">
+        <source>Cancelled carts</source>
+        <target>Cancelled carts</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:781</note>
+      </trans-unit>
+      <trans-unit id="82589a257511e31a4efd0d2ac92be725">
+        <source>For each cancelled cart (with no order), generate a
+				    discount and send it to the customer.</source>
+        <target>For each cancelled cart (with no order), generate a
+				    discount and send it to the customer.</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:788</note>
+      </trans-unit>
+      <trans-unit id="b30690be173bcd4a83df0cd68f89a385">
+        <source>Discount amount</source>
+        <target>Discount amount</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:1114</note>
+      </trans-unit>
+      <trans-unit id="2018945d252b94aeb99b0909f288717c">
+        <source>Discount validity</source>
+        <target>Discount validity</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:1138</note>
+      </trans-unit>
+      <trans-unit id="225e75c29d32392d311f5dc94c792384">
+        <source>day(s)</source>
+        <target>day(s)</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:1144</note>
+      </trans-unit>
+      <trans-unit id="4c5caf3567f8b9ce900fe5973453b68c">
+        <source>The next process will send %d e-mail(s).</source>
+        <target>The next process will send %d e-mail(s).</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:852</note>
+      </trans-unit>
+      <trans-unit id="a8b8dbd070a92fb8b17baab71d8d633f">
+        <source>Re-order</source>
+        <target>Re-order</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:873</note>
+      </trans-unit>
+      <trans-unit id="bd8737be73ab247b7499b27a507beb20">
+        <source>For each validated order, generate a discount and send
+				    it to the customer.</source>
+        <target>For each validated order, generate a discount and send
+				    it to the customer.</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:880</note>
+      </trans-unit>
+      <trans-unit id="f120254f109d626d73ddddeb9cda26e5">
+        <source>Next process will send: %d e-mail(s)</source>
+        <target>Next process will send: %d e-mail(s)</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:1153</note>
+      </trans-unit>
+      <trans-unit id="00831e3c1d7aa764e38b4dd8396971fd">
+        <source>For each customer raising a threshold, generate a discount
+				    and send it to the customer.</source>
+        <target>For each customer raising a threshold, generate a discount
+				    and send it to the customer.</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:972</note>
+      </trans-unit>
+      <trans-unit id="2a63f555989152ba866b43a1faacd680">
+        <source>Threshold</source>
+        <target>Threshold</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:1021</note>
+      </trans-unit>
+      <trans-unit id="002a4869e4b4fa4b219f90efcb439689">
+        <source>For each customer who has already placed at least one order
+				     and with no orders since a given duration, generate a
+				     discount and send it to the customer.</source>
+        <target>For each customer who has already placed at least one order
+				     and with no orders since a given duration, generate a
+				     discount and send it to the customer.</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:1074</note>
+      </trans-unit>
+      <trans-unit id="d82843c16839bfb05827d1912d89c917">
+        <source>Since x days</source>
+        <target>Since x days</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:1124</note>
+      </trans-unit>
+      <trans-unit id="0db377921f4ce762c62526131097968f">
+        <source>General</source>
+        <target>General</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:1174</note>
+      </trans-unit>
+      <trans-unit id="ae83187f8a46e9158ccc26b2ac0782fb">
+        <source>Delete outdated discounts during each launch to
+						    clean database</source>
+        <target>Delete outdated discounts during each launch to
+						    clean database</target>
+        <note>Context:
+File: modules/ps_reminder/ps_reminder.php:1185</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_reminder/views/templates/hook/stats.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8b83489bd116cb60e2f348e9c63cd7f6">
+        <source>Best customers</source>
+        <target>Best customers</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="7d75b7b0f976b3091f490864c6ffbf97">
+        <source>Bad customers</source>
+        <target>Bad customers</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="c33e404a441c6ba9648f88af3c68a1ca">
+        <source>Statistics</source>
+        <target>Statistics</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="dfc7d0b719158a75e0d324cc74f3185e">
+        <source>Detailed statistics for the last 30 days:</source>
+        <target>Detailed statistics for the last 30 days:</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="d41455f28486975bfab163b66a473502">
+        <source>Sent = Number of sent e-mails</source>
+        <target>Sent = Number of sent e-mails</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="4b416f06e3eea5059973acaa8325c8fa">
+        <source>Used = Number of discounts used (valid orders only)</source>
+        <target>Used = Number of discounts used (valid orders only)</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="3c4d61c4fbde6177beb0f337711bde6c">
+        <source>Conversion % = Conversion rate</source>
+        <target>Conversion % = Conversion rate</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="44749712dbec183e983dcd78a7736c41">
+        <source>Date</source>
+        <target>Date</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="4a43635068b63d16d845f9feb6bcc125">
+        <source>Canceled carts</source>
+        <target>Canceled carts</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="c336ea796ae42ed04ed1ac310a678823">
+        <source>Re-orders</source>
+        <target>Re-orders</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:38</note>
+      </trans-unit>
+      <trans-unit id="7f8c0283f16925caed8e632086b81b9c">
+        <source>Sent</source>
+        <target>Sent</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="019d1ca7d50cc54b995f60d456435e87">
+        <source>Used</source>
+        <target>Used</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:53</note>
+      </trans-unit>
+      <trans-unit id="476d1393bbe84d62f25e2ce2ec3cd61c">
+        <source>Conversion (%)</source>
+        <target>Conversion (%)</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:54</note>
+      </trans-unit>
+      <trans-unit id="85b6769250887ba6c16099596c75164d">
+        <source>No statistics at this time.</source>
+        <target>No statistics at this time.</target>
+        <note>Context:
+File: modules/ps_reminder/views/templates/hook/stats.tpl:67</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

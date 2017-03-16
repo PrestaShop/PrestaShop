@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,84 +37,57 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 
         parent::__construct();
 
-        $registration_process_type = array(
-            array(
-                'value' => PS_REGISTRATION_PROCESS_STANDARD,
-                'name' => $this->l('Only account creation')
-            ),
-            array(
-                'value' => PS_REGISTRATION_PROCESS_AIO,
-                'name' => $this->l('Standard (account creation and address creation)')
-            )
-        );
-
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->l('General'),
+                'title' =>    $this->trans('General', array(), 'Admin.Global'),
                 'icon' =>    'icon-cogs',
                 'fields' =>    array(
-                    'PS_REGISTRATION_PROCESS_TYPE' => array(
-                        'title' => $this->l('Registration process type'),
-                        'hint' => $this->l('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.'),
-                        'validation' => 'isInt',
-                        'cast' => 'intval',
-                        'type' => 'select',
-                        'list' => $registration_process_type,
-                        'identifier' => 'value'
-                    ),
-                    'PS_ONE_PHONE_AT_LEAST' => array(
-                        'title' => $this->l('Phone number is mandatory'),
-                        'hint' => $this->l('If you chose yes, your customer will have to provide at least one phone number to register.'),
-                        'validation' => 'isBool',
-                        'cast' => 'intval',
-                        'type' => 'bool'
-                    ),
                     'PS_CART_FOLLOWING' => array(
-                        'title' => $this->l('Re-display cart at login'),
-                        'hint' => $this->l('After a customer logs in, you can recall and display the content of his/her last shopping cart.'),
+                        'title' => $this->trans('Re-display cart at login', array(), 'Admin.Shopparameters.Feature'),
+                        'hint' => $this->trans('After a customer logs in, you can recall and display the content of his/her last shopping cart.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_CREATION_EMAIL' => array(
-                        'title' => $this->l('Send an email after registration'),
-                        'hint' => $this->l('Send an email with summary of the account information (email, password) after registration.'),
+                        'title' => $this->trans('Send an email after registration', array(), 'Admin.Shopparameters.Feature'),
+                        'hint' => $this->trans('Send an email with summary of the account information (email, password) after registration.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_PASSWD_TIME_FRONT' => array(
-                        'title' => $this->l('Password reset delay'),
-                        'hint' => $this->l('Minimum time required between two requests for a password reset.'),
+                        'title' => $this->trans('Password reset delay', array(), 'Admin.Shopparameters.Feature'),
+                        'hint' => $this->trans('Minimum time required between two requests for a password reset.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isUnsignedInt',
                         'cast' => 'intval',
                         'size' => 5,
                         'type' => 'text',
-                        'suffix' => $this->l('minutes')
+                        'suffix' => $this->trans('minutes', array(), 'Admin.Shopparameters.Feature')
                     ),
                     'PS_B2B_ENABLE' => array(
-                        'title' => $this->l('Enable B2B mode'),
-                        'hint' => $this->l('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'),
+                        'title' => $this->trans('Enable B2B mode', array(), 'Admin.Shopparameters.Feature'),
+                        'hint' => $this->trans('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
-                    'PS_CUSTOMER_NWSL' => array(
-                        'title' => $this->l('Enable newsletter registration'),
-                        'hint' => $this->l('Display or not the newsletter registration tick box.'),
+                    'PS_CUSTOMER_BIRTHDATE' => array(
+                        'title' => $this->trans('Ask for birthdate', array(), 'Admin.Shopparameters.Feature'),
+                        'hint' => $this->trans('Display or not the birthdate field.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_OPTIN' => array(
-                        'title' => $this->l('Enable opt-in'),
-                        'hint' => $this->l('Display or not the opt-in tick box, to receive offers from the store\'s partners.'),
+                        'title' => $this->trans('Enable partner offers', array(), 'Admin.Shopparameters.Feature'),
+                        'hint' => $this->trans('Display or not the partner offers tick box, to receive offers from the store\'s partners.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save')),
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
         );
     }

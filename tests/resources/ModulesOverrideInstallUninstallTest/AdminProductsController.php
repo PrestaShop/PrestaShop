@@ -1,5 +1,7 @@
 <?php
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class AdminProductsController extends AdminProductsControllerCore
 {
     /*
@@ -754,7 +756,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     protected function processBulkDelete()
     {
-        if ($this->tabAccess['delete'] === '1') {
+        if ($this->access('delete')) {
             if (is_array($this->boxes) && !empty($this->boxes)) {
                 $object = new $this->className();
                 if (isset($object->noZeroObject) &&
@@ -861,7 +863,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $product->deleteDefaultAttributes();
                 }
                 if (($id_product_attribute = (int)Tools::getValue('id_product_attribute')) || ($id_product_attribute = $product->productAttributeExists(Tools::getValue('attribute_combination_list'), false, null, true, true))) {
-                    if ($this->tabAccess['edit'] === '1') {
+                    if ($this->access('edit')) {
                         if ($this->isProductFieldUpdated('available_date_attribute') && (Tools::getValue('available_date_attribute') != '' &&!Validate::isDateFormat(Tools::getValue('available_date_attribute')))) {
                             $this->errors[] = Tools::displayError('Invalid date format.');
                         } else {
@@ -886,7 +888,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         $this->errors[] = Tools::displayError('You do not have permission to add this.');
                     }
                 } else {
-                    if ($this->tabAccess['add'] === '1') {
+                    if ($this->access('add')) {
                         if ($product->productAttributeExists(Tools::getValue('attribute_combination_list'))) {
                             $this->errors[] = Tools::displayError('This combination already exists.');
                         } else {
@@ -1086,7 +1088,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     public function ajaxProcessDeleteSpecificPrice()
     {
-        if ($this->tabAccess['delete'] === '1') {
+        if ($this->access('delete')) {
             $id_specific_price = (int)Tools::getValue('id_specific_price');
             if (!$id_specific_price || !Validate::isUnsignedId($id_specific_price)) {
                 $error = Tools::displayError('The specific price ID is invalid.');
@@ -1229,7 +1231,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
         if (Tools::getValue('deleteVirtualProduct')) {
-            if ($this->tabAccess['delete'] === '1') {
+            if ($this->access('delete')) {
                 $this->action = 'deleteVirtualProduct';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
@@ -1242,57 +1244,57 @@ class AdminProductsController extends AdminProductsControllerCore
                 $this->object = new Product((int)Tools::getValue('id_product'));
             }
         } elseif (Tools::isSubmit('submitAttachments')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'attachments';
                 $this->tab_display = 'attachments';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::getIsset('duplicate'.$this->table)) {
-            if ($this->tabAccess['add'] === '1') {
+            if ($this->access('add')) {
                 $this->action = 'duplicate';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
             }
         } elseif (Tools::getValue('id_image') && Tools::getValue('ajax')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'image';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('submitProductAttribute')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'productAttribute';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'features';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('submitPricesModification')) {
-            if ($this->tabAccess['add'] === '1') {
+            if ($this->access('add')) {
                 $this->action = 'pricesModification';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
             }
         } elseif (Tools::isSubmit('deleteSpecificPrice')) {
-            if ($this->tabAccess['delete'] === '1') {
+            if ($this->access('delete')) {
                 $this->action = 'deleteSpecificPrice';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
             }
         } elseif (Tools::isSubmit('submitSpecificPricePriorities')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'specificPricePriorities';
                 $this->tab_display = 'prices';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('submitCustomizationConfiguration')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'customizationConfiguration';
                 $this->tab_display = 'customization';
                 $this->display = 'edit';
@@ -1300,7 +1302,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('submitProductCustomization')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'productCustomization';
                 $this->tab_display = 'customization';
                 $this->display = 'edit';
@@ -1388,7 +1390,7 @@ class AdminProductsController extends AdminProductsControllerCore
         if (!Combination::isFeatureActive()) {
             return;
         }
-        if ($this->tabAccess['delete'] === '1') {
+        if ($this->access('delete')) {
             $id_product = (int)Tools::getValue('id_product');
             $id_product_attribute = (int)Tools::getValue('id_product_attribute');
             if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product))) {
@@ -1441,7 +1443,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     public function ajaxProcessDefaultProductAttribute()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             if (!Combination::isFeatureActive()) {
                 return;
             }
@@ -1468,7 +1470,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     public function ajaxProcessEditProductAttribute()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $id_product = (int)Tools::getValue('id_product');
             $id_product_attribute = (int)Tools::getValue('id_product_attribute');
             if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))) {
@@ -2384,7 +2386,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
         $helper->tooltip = $this->l('X% of your references have been purchased for the past 30 days', null, null, false);
         $helper->refresh = (bool)(ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time);
-        if (Module::isInstalled('statsbestproducts')) {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+
+        if ($moduleManager->isInstalled('statsbestproducts')) {
             $helper->href = Context::getContext()->link->getAdminLink('AdminStats').'&module=statsbestproducts&datepickerFrom='.date('Y-m-d', strtotime('-30 days')).'&datepickerTo='.date('Y-m-d');
         }
         $kpis[] = $helper->generate();
@@ -2445,7 +2450,7 @@ class AdminProductsController extends AdminProductsControllerCore
         global $done;
         static $irow;
         $content = '';
-        if (!$category) {
+        if (!$id_category) {
             $id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
         }
         if (!isset($done[$current['infos']['id_parent']])) {
@@ -2525,7 +2530,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     'confirm_link(\'\', \''.$this->l('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', null, true, false).'\', \''.$this->l('Yes', null, true, false).'\', \''.$this->l('No', null, true, false).'\', \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct'.'\', \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1'.'\')'
                     :
                     'document.location = \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1'.'\'';
-                if ($this->tabAccess['add']) {
+                if ($this->access('add')) {
                     $this->page_header_toolbar_btn['duplicate'] = array(
                         'short' => $this->l('Duplicate', null, null, false),
                         'desc' => $this->l('Duplicate', null, null, false),
@@ -2540,7 +2545,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     'desc' => $this->l('Product sales', null, null, false),
                 );
                 }
-                if ($this->tabAccess['delete']) {
+                if ($this->access('delete')) {
                     $this->page_header_toolbar_btn['delete'] = array(
                         'short' => $this->l('Delete', null, null, false),
                         'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)$product->id.'&deleteproduct',
@@ -3644,7 +3649,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $images = Image::getImages($this->context->language->id, $product->id);
         if (is_array($images)) {
             foreach ($images as $k => $image) {
-                $images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], ImageType::getFormatedName('small'));
+                $images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], ImageType::getFormattedName('small'));
             }
             $data->assign('images', $images);
         }
@@ -3890,7 +3895,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (isset($type['name'])) {
                     $data->assign('imageType', $type['name']);
                 } else {
-                    $data->assign('imageType', ImageType::getFormatedName('small'));
+                    $data->assign('imageType', ImageType::getFormattedName('small'));
                 }
             } else {
                 $this->displayWarning($this->l('You must save the product in this shop before adding images.'));
@@ -3950,7 +3955,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     if (isset($type['name'])) {
                         $data->assign('imageType', $type['name']);
                     } else {
-                        $data->assign('imageType', ImageType::getFormatedName('small'));
+                        $data->assign('imageType', ImageType::getFormattedName('small'));
                     }
                     $data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
                     foreach ($images as $k => $image) {
@@ -3996,48 +4001,47 @@ class AdminProductsController extends AdminProductsControllerCore
             'ean13' => array('title' => $this->l('EAN-13'), 'align' => 'left'),
             'upc' => array('title' => $this->l('UPC'), 'align' => 'left')
         );
+        $comb_array = array();
         if ($product->id) {
             $combinations = $product->getAttributeCombinations($this->context->language->id);
             $groups = array();
-            $comb_array = array();
             if (is_array($combinations)) {
                 $combination_images = $product->getCombinationImages($this->context->language->id);
                 foreach ($combinations as $k => $combination) {
                     $price_to_convert = Tools::convertPrice($combination['price'], $currency);
                     $price = Tools::displayPrice($price_to_convert, $currency);
-                    $comb_array[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
-                    $comb_array[$combination['id_product_attribute']]['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
-                    $comb_array[$combination['id_product_attribute']]['wholesale_price'] = $combination['wholesale_price'];
-                    $comb_array[$combination['id_product_attribute']]['price'] = $price;
-                    $comb_array[$combination['id_product_attribute']]['weight'] = $combination['weight'].Configuration::get('PS_WEIGHT_UNIT');
-                    $comb_array[$combination['id_product_attribute']]['unit_impact'] = $combination['unit_price_impact'];
-                    $comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
-                    $comb_array[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
-                    $comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
-                    $comb_array[$combination['id_product_attribute']]['id_image'] = isset($combination_images[$combination['id_product_attribute']][0]['id_image']) ? $combination_images[$combination['id_product_attribute']][0]['id_image'] : 0;
-                    $comb_array[$combination['id_product_attribute']]['available_date'] = strftime($combination['available_date']);
-                    $comb_array[$combination['id_product_attribute']]['default_on'] = $combination['default_on'];
+                    $container['id_product_attribute'] = $combination['id_product_attribute'];
+                    $container['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
+                    $container['wholesale_price'] = $combination['wholesale_price'];
+                    $container['price'] = $price;
+                    $container['weight'] = $combination['weight'].Configuration::get('PS_WEIGHT_UNIT');
+                    $container['unit_impact'] = $combination['unit_price_impact'];
+                    $container['reference'] = $combination['reference'];
+                    $container['ean13'] = $combination['ean13'];
+                    $container['upc'] = $combination['upc'];
+                    $container['id_image'] = isset($combination_images[$combination['id_product_attribute']][0]['id_image']) ? $combination_images[$combination['id_product_attribute']][0]['id_image'] : 0;
+                    $container['available_date'] = strftime($combination['available_date']);
+                    $container['default_on'] = $combination['default_on'];
                     if ($combination['is_color_group']) {
                         $groups[$combination['id_attribute_group']] = $combination['group_name'];
                     }
+                    $comb_array[$combination['id_product_attribute']] = $container;
                 }
             }
-            if (isset($comb_array)) {
-                foreach ($comb_array as $id_product_attribute => $product_attribute) {
-                    $list = '';
+            foreach ($comb_array as $id_product_attribute => $product_attribute) {
+                $list = '';
 
-                    asort($product_attribute['attributes']);
-                    foreach ($product_attribute['attributes'] as $attribute) {
-                        $list .= $attribute[0].' - '.$attribute[1].', ';
-                    }
-                    $list = rtrim($list, ', ');
-                    $comb_array[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
-                    $comb_array[$id_product_attribute]['available_date'] = $product_attribute['available_date'] != 0 ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
-                    $comb_array[$id_product_attribute]['attributes'] = $list;
-                    $comb_array[$id_product_attribute]['name'] = $list;
-                    if ($product_attribute['default_on']) {
-                        $comb_array[$id_product_attribute]['class'] = $default_class;
-                    }
+                asort($product_attribute['attributes']);
+                foreach ($product_attribute['attributes'] as $attribute) {
+                    $list .= $attribute[0].' - '.$attribute[1].', ';
+                }
+                $list = rtrim($list, ', ');
+                $comb_array[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
+                $comb_array[$id_product_attribute]['available_date'] = $product_attribute['available_date'] != 0 ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
+                $comb_array[$id_product_attribute]['attributes'] = $list;
+                $comb_array[$id_product_attribute]['name'] = $list;
+                if ($product_attribute['default_on']) {
+                    $comb_array[$id_product_attribute]['class'] = $default_class;
                 }
             }
         }
@@ -4577,7 +4581,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     public function ajaxProcessCheckProductName()
     {
-        if ($this->tabAccess['view'] === '1') {
+        if ($this->access('view')) {
             $search = Tools::getValue('q');
             $id_lang = Tools::getValue('id_lang');
             $limit = Tools::getValue('limit');
@@ -4604,7 +4608,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     public function ajaxProcessUpdatePositions()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $way = (int)(Tools::getValue('way'));
             $id_product = (int)(Tools::getValue('id_product'));
             $id_category = (int)(Tools::getValue('id_category'));
@@ -4639,7 +4643,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     public function ajaxProcessPublishProduct()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             if ($id_product = (int)Tools::getValue('id_product')) {
                 $bo_product_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminProducts&id_product='.$id_product.'&updateproduct&token='.$this->token;
                 if (Tools::getValue('redirect')) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,26 +31,54 @@ class OrderSlipControllerCore extends FrontController
     public $authRedirection = 'order-slip';
     public $ssl = true;
 
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(array(_THEME_CSS_DIR_.'history.css', _THEME_CSS_DIR_.'addresses.css'));
-        $this->addJqueryPlugin(array('scrollTo', 'footable', 'footable-sort'));
-        $this->addJS(array(
-            _THEME_JS_DIR_.'history.js',
-            _THEME_JS_DIR_.'tools.js') // retro compat themes 1.5
-        );
-    }
-
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
      */
     public function initContent()
     {
-        parent::initContent();
+        if (Configuration::isCatalogMode()) {
+            Tools::redirect('index.php');
+        }
 
-        $this->context->smarty->assign('ordersSlip', OrderSlip::getOrdersSlip((int)$this->context->cookie->id_customer));
-        $this->setTemplate(_PS_THEME_DIR_.'order-slip.tpl');
+        $credit_slips = $this->getTemplateVarCreditSlips();
+
+        if (count($credit_slips) <= 0) {
+            $this->warning[] = $this->trans('You have not received any credit slips.', array(), 'Shop.Notifications.Warning');
+        }
+
+        $this->context->smarty->assign([
+            'credit_slips' => $credit_slips,
+        ]);
+
+        parent::initContent();
+        $this->setTemplate('customer/order-slip');
+    }
+
+    public function getTemplateVarCreditSlips()
+    {
+        $credit_slips = [];
+        $orders_slip = OrderSlip::getOrdersSlip(((int)$this->context->cookie->id_customer));
+
+        foreach ($orders_slip as $order_slip) {
+            $order = new Order($order_slip['id_order']);
+            $credit_slips[$order_slip['id_order_slip']] = $order_slip;
+            $credit_slips[$order_slip['id_order_slip']]['credit_slip_number'] = sprintf($this->trans('#%06d', array(), 'Shop.Theme.Customeraccount'), $order_slip['id_order_slip']);
+            $credit_slips[$order_slip['id_order_slip']]['order_number'] = sprintf($this->trans('#%06d', array(), 'Shop.Theme.Customeraccount'), $order_slip['id_order']);
+            $credit_slips[$order_slip['id_order_slip']]['order_reference'] = $order->reference;
+            $credit_slips[$order_slip['id_order_slip']]['credit_slip_date'] = Tools::displayDate($order_slip['date_add'], null, false);
+            $credit_slips[$order_slip['id_order_slip']]['url'] = $this->context->link->getPageLink('pdf-order-slip', true, null, 'id_order_slip='.(int)$order_slip['id_order_slip']);
+            $credit_slips[$order_slip['id_order_slip']]['order_url_details'] = $this->context->link->getPageLink('order-detail', true, null, 'id_order='.(int)$order_slip['id_order']);
+        }
+        return $credit_slips;
+    }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
+
+        return $breadcrumb;
     }
 }

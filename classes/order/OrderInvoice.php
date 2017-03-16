@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -78,12 +78,6 @@ class OrderInvoiceCore extends ObjectModel
     /** @var string shop address */
     public $shop_address;
 
-    /** @var string invoice address */
-    public $invoice_address;
-
-    /** @var string delivery address */
-    public $delivery_address;
-
     /** @var string note */
     public $note;
 
@@ -119,8 +113,6 @@ class OrderInvoiceCore extends ObjectModel
             'total_wrapping_tax_excl' =>array('type' => self::TYPE_FLOAT),
             'total_wrapping_tax_incl' =>array('type' => self::TYPE_FLOAT),
             'shop_address' =>        array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
-            'invoice_address' =>        array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
-            'delivery_address' =>        array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
             'note' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
             'date_add' =>                array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
         ),
@@ -130,15 +122,7 @@ class OrderInvoiceCore extends ObjectModel
     {
         $order = new Order($this->id_order);
 
-        $this->shop_address = self::getCurrentFormattedShopAddress($order->id_shop);
-
-        $invoice_address = new Address((int)$order->id_address_invoice);
-        $invoiceAddressPatternRules = json_decode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
-        $this->invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
-
-        $delivery_address = new Address((int)$order->id_address_delivery);
-        $deliveryAddressPatternRules = json_decode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
-        $this->delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
+        $this->shop_address = OrderInvoice::getCurrentFormattedShopAddress($order->id_shop);
 
         return parent::add();
     }
@@ -189,7 +173,6 @@ class OrderInvoiceCore extends ObjectModel
         }
 
         $order = new Order($this->id_order);
-        $customized_datas = Product::getAllCustomizedDatas($order->id_cart);
 
         $result_array = array();
         foreach ($products as $row) {
@@ -208,6 +191,8 @@ class OrderInvoiceCore extends ObjectModel
 
             $this->setProductImageInformations($row);
             $this->setProductCurrentStock($row);
+
+            $customized_datas = Product::getAllCustomizedDatas($order->id_cart, null, true, null, (int)$row['id_customization']);
             $this->setProductCustomizedDatas($row, $customized_datas);
 
             // Add information for virtual product
@@ -252,12 +237,11 @@ class OrderInvoiceCore extends ObjectModel
             $row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'];
             $row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'];
 
+            if ($customized_datas) {
+                Product::addProductCustomizationPrice($row, $customized_datas);
+            }
             /* Stock product */
             $result_array[(int)$row['id_order_detail']] = $row;
-        }
-
-        if ($customized_datas) {
-            Product::addCustomizationPrice($result_array, $customized_datas);
         }
 
         return $result_array;
@@ -725,9 +709,11 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice'
+            'oip2.id_order_payment = oip1.id_order_payment 
+                AND oip2.id_order_invoice <> oip1.id_order_invoice
+                AND oip2.id_order = oip1.id_order'
         );
-        $query->where('oip1.id_order_invoice = '.$this->id);
+        $query->where('oip1.id_order_invoice = '.(int) $this->id);
 
         $invoices = Db::getInstance()->executeS($query);
         if (!$invoices) {
@@ -761,14 +747,16 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice'
+            'oip2.id_order_payment = oip1.id_order_payment 
+                AND oip2.id_order_invoice <> oip1.id_order_invoice
+                AND oip2.id_order = oip1.id_order'
         );
         $query->leftJoin(
             'order_invoice',
             'oi',
             'oi.id_order_invoice = oip2.id_order_invoice'
         );
-        $query->where('oip1.id_order_invoice = '.$this->id);
+        $query->where('oip1.id_order_invoice = '.(int) $this->id);
 
         $row = Db::getInstance()->getRow($query);
 
@@ -913,7 +901,7 @@ class OrderInvoiceCore extends ObjectModel
         $shop_ids = Shop::getShops(false, null, true);
         $db = Db::getInstance();
         foreach ($shop_ids as $id_shop) {
-            $address = self::getCurrentFormattedShopAddress($id_shop);
+            $address = OrderInvoice::getCurrentFormattedShopAddress($id_shop);
             $escaped_address = $db->escape($address, true, true);
 
             $db->execute('UPDATE `'._DB_PREFIX_.'order_invoice` INNER JOIN `'._DB_PREFIX_.'orders` USING (`id_order`)

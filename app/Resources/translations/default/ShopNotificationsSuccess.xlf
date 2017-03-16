@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/front/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2e3e7c5849ac5eefe1cc6c4c73f182af">
+        <source>Address successfully deleted!</source>
+        <target>Address successfully deleted!</target>
+        <note>Context:
+File: controllers/front/AddressController.php:89</note>
+      </trans-unit>
+      <trans-unit id="e8699fcc0a32d2a30f1506e3ab4e3c5f">
+        <source>Address successfully updated!</source>
+        <target>Address successfully updated!</target>
+        <note>Context:
+File: controllers/front/AddressController.php:62</note>
+      </trans-unit>
+      <trans-unit id="fac734224cd546613e8530c66d28f69c">
+        <source>Address successfully added!</source>
+        <target>Address successfully added!</target>
+        <note>Context:
+File: controllers/front/AddressController.php:64</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/AddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0dc57d60348fa2a648d69e8d38ec43cc">
+        <source>No addresses are available. %s</source>
+        <target>No addresses are available. %s</target>
+        <note>Context:
+File: controllers/front/AddressesController.php:55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="228289d31b9bf52373066156f9b0190e">
+        <source>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</source>
+        <target>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</target>
+        <note>Context:
+File: controllers/front/GuestTrackingController.php:102</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/IdentityController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7c8682d92dfb1522b4cc2975608e582d">
+        <source>Information successfully updated.</source>
+        <target>Information successfully updated.</target>
+        <note>Context:
+File: controllers/front/IdentityController.php:54</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0c478a7069ab13f446e9e765cffd1550">
+        <source>Message successfully sent</source>
+        <target>Message successfully sent</target>
+        <note>Context:
+File: controllers/front/OrderDetailController.php:187</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6e05d9291d7796566bb503890da070bf">
+        <source>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</source>
+        <target>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:100</note>
+      </trans-unit>
+      <trans-unit id="19b1f74d6e96f3db9805e8d5c9301b7a">
+        <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>
+        <target>Your password has been successfully reset and a confirmation has been sent to your email address: %s</target>
+        <note>Context:
+File: controllers/front/PasswordController.php:181</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

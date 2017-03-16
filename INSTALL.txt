@@ -1,0 +1,105 @@
+                                         *#&&&&&&&&&&&&.
+                                    #&&&&&&&&&&&&&&&&&&&&&&&&&(
+                                *&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*
+                              &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+                           ,&&&&&&&&&&&&&&&&&&&%%#%%%&&&&&&&&&&&&&&&&&&
+                          &&&&&&&&&&&&&*****************#&&&&&&&&&&&&&&
+                        (&&&&&&&&&&&&*************************&&&&&&&&&&&&(
+                       &&&&&&&&&&&%*****************************%&&&&&&&&&&&
+                      &&&&&&&&&&%*********************************%&&&&&&&&&&
+                     %&&&&&&&&&(********,            *********,    /&&&&&&&&&%
+                    *&&&&&&&&&/*******.     .*(((/.    ******   /#* *&&&&&&&&&*
+                    &&&&&&&&&(*******  /%%%%%%%%%%%&&&&%,*** *&&&&&&%/&&&&&&&&&
+                   *&&&&&&&&%*******/%%%%%%%%%%%%%((&&&&&%#*&&&&&&&&%%%&&&&&&&&
+                   &&&&&&&&&/*****(%%%%%%%%%%%%%%#((%&&&&%%%*&&&&&&&(%%&&&&&&&&&
+                   &&&&&&&&&*****%%%%%%%%%%%%%#/, @@ %&&%%%%#**&&&&/#%%&&&&&&&&&
+                   &&&&&&&&&***&@@@@@@@@@@#/////      @@%%%% ****@@  *@&&&&&&&&&
+                   &&&&&&&&&**%@@@@@@@@@@@@@@@@@@#  /@@@%%%  *****/@@@@&&&&&&&&&
+                   #&&&&&&&*@@@@@@@@@@@@@@@@@@@@@@@@@%%#   *******@@&&&&&&&&
+                    &&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@%%    *********(&&&&&&&&&
+                    &&&&&&&&&&@@@@@@@@@@@@@@@&@@@@@@@%     ************%&&&&&&%
+                     &&&&&&&&&&@@@@@@@@@@@@@@@@ (@@@.     **************(&&&&&
+                      &&&&&&&&&&@@@@@@@@@@@@@@@@@,       ************,,%&&&&&
+                       &&&&&&&&&&&@@@@@@@@@@@@@@@@@*     ,,,,,,,,,,,/&&&&&&&
+                        &&&&&&&&&&&&@@@@@@@@@@@@@@@@     ,,,,,,,,(&&&&&&&&&
+                         &&&&&&&&&(***(@@@@@@@@@@@@@@@#   .,****(&&&&&&&&&
+                           &&&&%*****/(((**#@@@@@@@@@@@#**(((/*****%&&&&
+                             %*******(((/                 /(((*******%
+                               *****/#############((((((((((((/*****
+                                   */#############((((((((((((/*
+                                       ###########((((((((((
+
+
+
+.......                              ...                 .****,    **
+..   ,....                           ...                ***   **   **
+..      .. ......  .......   ....... .....   .........  **.        **,*****.   *******   **.*****,
+..     ... ...    ..     .. ...      ...   ...     ...   ******.   ***    ** ,**     **, ***    ***
+.........  ...   ........     .....  ...   ..      ...        ***  **     ** **       ** **      **
+..         ...    ...    .        .. ...   ,..     ...  *,     **  **     ** ***     *** ***    ,**
+..         ...     .......  ,......   .....  .........  ********   **     **   *******   ** ******
+                                                                                         **
+
+             --- ===== Installation instructions for PrestaShop 1.7 ===== ---
+
+
+
+=== Prerequirements
+
+You will need:
+
+* PHP 5.4+, with:
+  * allow_url_fopen set to On,
+  * register_globals set to Off,
+  * upload_max_filesize set to "16M" (or more).
+* MySQL 5.0+, with:
+  * A database where PrestaShop can store its data tables.
+* At least 128 Mb of RAM for the PHP process.
+
+
+=== Installing PrestaShop
+
+Since you are reading this file, you have already downloaded the latest PrestaShop Zip archive and unzipped.
+
+Here is the content of this archive:
+
+* This INSTALL.txt file
+* The prestashop.zip archive, which contains all the necessary files.
+* The index.php file, which will automatically unzip the prestashop.zip archive for you.
+* The Install_PrestaShop.html file, which redirects you to http://doc.prestashop.com/display/PS17/Installing+PrestaShop
+
+From there on, follow these instructions:
+
+1. Upload at least index.php and prestashop.zip on your web server.
+2. From your web browser, go to the folder where index.html and prestashop.zip have been uploaded. The Zip archive should unzip automatically.
+3. You are redirected to the PrestaShop installer. Simply follow the instructions.
+
+After PrestaShop has successfuly been installed, delete the /install/ folder from your server!
+
+Enjoy your store :)
+
+
+
+
+Essential links about PrestaShop:
+
+* User Guide: http://doc.prestashop.com/display/PS17/User+Guide
+* Tech docs (modules & themes): http://developers.prestashop.com/
+* Official blog: https://www.prestashop.com/blog/en/
+* Devteam blog: http://build.prestashop.com/
+* Get community support: http://www.prestashop.com/forums/
+* Get paid support: https://www.prestashop.com/en/support
+* Find modules and themes: http://addons.prestashop.com/
+* Contribute with code: https://github.com/PrestaShop/PrestaShop
+* Contribute with translation: http://crowdin.net/project/prestashop-official
+
+
+
+
+                       PrestaShop - WeCommerce Is Better eCommerce
+
+
+
+
+
+

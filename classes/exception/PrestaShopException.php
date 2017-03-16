@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,6 +34,10 @@ class PrestaShopExceptionCore extends Exception
      */
     public function displayMessage()
     {
+        if (getenv('kernel.environment') === 'test') {
+            throw $this;
+        }
+
         header('HTTP/1.1 500 Internal Server Error');
         if (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_')) {
             // Display error message
@@ -145,7 +149,7 @@ class PrestaShopExceptionCore extends Exception
     protected function logError()
     {
         $logger = new FileLogger();
-        $logger->setFilename(_PS_ROOT_DIR_.'/log/'.date('Ymd').'_exception.log');
+        $logger->setFilename(_PS_ROOT_DIR_.'/app/logs/'.date('Ymd').'_exception.log');
         $logger->logError($this->getExtendedMessage(false));
     }
 
@@ -154,7 +158,7 @@ class PrestaShopExceptionCore extends Exception
      */
     protected function getExentedMessage($html = true)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use getExtendedMessage instead');
         return $this->getExtendedMessage($html);
     }
 

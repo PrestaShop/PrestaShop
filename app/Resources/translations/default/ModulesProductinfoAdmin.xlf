@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_productinfo/ps_productinfo.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4776f7eb5998034f7bbc63b6457d1ff4">
+        <source>Product tooltips</source>
+        <target>Product tooltips</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:45</note>
+      </trans-unit>
+      <trans-unit id="0406dc99f3d31535975fdddf6f4ae4d3">
+        <source>Shows information on a product page: how many people are viewing it, the last time it was sold and the last time it was added to a cart.</source>
+        <target>Shows information on a product page: how many people are viewing it, the last time it was sold and the last time it was added to a cart.</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:46</note>
+      </trans-unit>
+      <trans-unit id="6a3f9bbed911bae4ffe5ab84294d7b9f">
+        <source>Number of visitors</source>
+        <target>Number of visitors</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:168</note>
+      </trans-unit>
+      <trans-unit id="5c65d0f105e43f5186c1275fb83a661a">
+        <source>Display the number of visitors who are currently watching this product.</source>
+        <target>Display the number of visitors who are currently watching this product.</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:169</note>
+      </trans-unit>
+      <trans-unit id="6ce86506e83863b6414e760c8406e156">
+        <source>If you activate the option above, you must activate the first option ("Save page views for each customer") of the "Data mining for statistics" (StatsData) module.</source>
+        <target>If you activate the option above, you must activate the first option ("Save page views for each customer") of the "Data mining for statistics" (StatsData) module.</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:171</note>
+      </trans-unit>
+      <trans-unit id="18522b8438c82ae472267ff57e8db76f">
+        <source>Period length</source>
+        <target>Period length</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:188</note>
+      </trans-unit>
+      <trans-unit id="3367d7aeafaae0cfdb8334d6e442a58f">
+        <source>Set the reference period length.</source>
+        <target>Set the reference period length.</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:189</note>
+      </trans-unit>
+      <trans-unit id="946e06ba50194b981f04263795ed1433">
+        <source>For instance, if set to 30 minutes, the module will display the number of visitors in the last 30 minutes.</source>
+        <target>For instance, if set to 30 minutes, the module will display the number of visitors in the last 30 minutes.</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:191</note>
+      </trans-unit>
+      <trans-unit id="640fd0cc0ffa0316ae087652871f4486">
+        <source>minutes</source>
+        <target>minutes</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:193</note>
+      </trans-unit>
+      <trans-unit id="788b212e2524ec85463d68861342693c">
+        <source>Last order date</source>
+        <target>Last order date</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:209</note>
+      </trans-unit>
+      <trans-unit id="43e5b083da426132daf3a9fe05362da3">
+        <source>Display the last time the product has been ordered.</source>
+        <target>Display the last time the product has been ordered.</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:210</note>
+      </trans-unit>
+      <trans-unit id="f6916943428105792f433c337f4e9522">
+        <source>Added to a cart</source>
+        <target>Added to a cart</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:227</note>
+      </trans-unit>
+      <trans-unit id="3829b2b4ac783c8e53a25f5cd007224b">
+        <source>If the product has not been ordered yet, display the last time it was added to a cart.</source>
+        <target>If the product has not been ordered yet, display the last time it was added to a cart.</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:228</note>
+      </trans-unit>
+      <trans-unit id="7f2a0ec5efa8b7aaa2d814df0d18b722">
+        <source>Do not display events older than</source>
+        <target>Do not display events older than</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:245</note>
+      </trans-unit>
+      <trans-unit id="44fdec47036f482b68b748f9d786801b">
+        <source>days</source>
+        <target>days</target>
+        <note>Context:
+File: modules/ps_productinfo/ps_productinfo.php:247</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

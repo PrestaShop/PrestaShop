@@ -17,6 +17,7 @@ monolog:
             type:   stream
             path:   "%kernel.logs_dir%/%kernel.environment%.log"
             level:  debug
+            channels: [!event]
         console:
             type:   console
             bubble: false
@@ -41,8 +42,10 @@ monolog:
         #    type:   chromephp
         #    level:  info
 
-assetic:
-    use_controller: true
-
 #swiftmailer:
 #    delivery_address: me@example.com
+
+prestashop:
+    addons:
+        api_client:
+            ttl: 300 # 5min

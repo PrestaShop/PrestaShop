@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,19 +39,19 @@ class AdminCartRulesControllerCore extends AdminController
         $this->addRowAction('delete');
         $this->_orderWay = 'DESC';
 
-        $this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'icon' => 'icon-trash', 'confirm' => $this->l('Delete selected items?')));
+        parent::__construct();
+
+        $this->bulk_actions = array('delete' => array('text' => $this->trans('Delete selected', array(), 'Admin.Actions'),'icon' => 'icon-trash', 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')));
 
         $this->fields_list = array(
-            'id_cart_rule' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->l('Name')),
-            'priority' => array('title' => $this->l('Priority'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'code' => array('title' => $this->l('Code'), 'class' => 'fixed-width-sm'),
-            'quantity' => array('title' => $this->l('Quantity'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'date_to' => array('title' => $this->l('Expiration date'), 'type' => 'datetime', 'class' => 'fixed-width-lg'),
-            'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'align' => 'center', 'class' => 'fixed-width-xs', 'orderby' => false),
+            'id_cart_rule' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
+            'priority' => array('title' => $this->trans('Priority', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'code' => array('title' => $this->trans('Code', array(), 'Admin.Global'), 'class' => 'fixed-width-sm'),
+            'quantity' => array('title' => $this->trans('Quantity', array(), 'Admin.Catalog.Feature'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'date_to' => array('title' => $this->trans('Expiration date', array(), 'Admin.Catalog.Feature'), 'type' => 'datetime', 'class' => 'fixed-width-lg'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'active' => 'status', 'type' => 'bool', 'align' => 'center', 'class' => 'fixed-width-xs', 'orderby' => false),
         );
-
-        parent::__construct();
     }
 
     public function ajaxProcessLoadCartRules()
@@ -133,7 +133,7 @@ class AdminCartRulesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_cart_rule'] = array(
                 'href' => self::$currentIndex.'&addcart_rule&token='.$this->token,
-                'desc' => $this->l('Add new cart rule', null, null, false),
+                'desc' => $this->trans('Add new cart rule', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -209,22 +209,22 @@ class AdminCartRulesControllerCore extends AdminController
 
             // Idiot-proof control
             if (strtotime(Tools::getValue('date_from')) > strtotime(Tools::getValue('date_to'))) {
-                $this->errors[] = Tools::displayError('The voucher cannot end before it begins.');
+                $this->errors[] = $this->trans('The voucher cannot end before it begins.', array(), 'Admin.Catalog.Notification');
             }
             if ((int)Tools::getValue('minimum_amount') < 0) {
-                $this->errors[] = Tools::displayError('The minimum amount cannot be lower than zero.');
+                $this->errors[] = $this->trans('The minimum amount cannot be lower than zero.', array(), 'Admin.Catalog.Notification');
             }
             if ((float)Tools::getValue('reduction_percent') < 0 || (float)Tools::getValue('reduction_percent') > 100) {
-                $this->errors[] = Tools::displayError('Reduction percentage must be between 0% and 100%');
+                $this->errors[] = $this->trans('Reduction percentage must be between 0% and 100%', array(), 'Admin.Catalog.Notification');
             }
             if ((int)Tools::getValue('reduction_amount') < 0) {
-                $this->errors[] = Tools::displayError('Reduction amount cannot be lower than zero.');
+                $this->errors[] = $this->trans('Reduction amount cannot be lower than zero.', array(), 'Admin.Catalog.Notification');
             }
             if (Tools::getValue('code') && ($same_code = (int)CartRule::getIdByCode(Tools::getValue('code'))) && $same_code != Tools::getValue('id_cart_rule')) {
-                $this->errors[] = sprintf(Tools::displayError('This cart rule code is already used (conflict with cart rule %d)'), $same_code);
+                $this->errors[] = $this->trans('This cart rule code is already used (conflict with cart rule %rulename%)', array( '%rulename%' => $same_code), 'Admin.Catalog.Notification');
             }
             if (Tools::getValue('apply_discount') == 'off' && !Tools::getValue('free_shipping') && !Tools::getValue('free_gift')) {
-                $this->errors[] = Tools::displayError('An action is required for this cart rule.');
+                $this->errors[] = $this->trans('An action is required for this cart rule.', array(), 'Admin.Catalog.Notification');
             }
         }
         return parent::postProcess();
@@ -581,7 +581,7 @@ class AdminCartRulesControllerCore extends AdminController
                 'found' => true
             );
         } else {
-            return array('found' => false, 'notfound' => Tools::displayError('No product has been found.'));
+            return array('found' => false, 'notfound' => $this->trans('No product has been found.', array(), 'Admin.Catalog.Notification'));
         }
     }
 
@@ -596,7 +596,7 @@ class AdminCartRulesControllerCore extends AdminController
         $limit = 40;
         $this->toolbar_btn['save-and-stay'] = array(
             'href' => '#',
-            'desc' => $this->l('Save and Stay')
+            'desc' => $this->trans('Save and stay', array(), 'Admin.Actions')
         );
 
         /** @var CartRule $current_object */
@@ -675,7 +675,7 @@ class AdminCartRulesControllerCore extends AdminController
                 'show_toolbar' => true,
                 'toolbar_btn' => $this->toolbar_btn,
                 'toolbar_scroll' => $this->toolbar_scroll,
-                'title' => array($this->l('Payment: '), $this->l('Cart Rules')),
+                'title' => array($this->trans('Payment: ', array(), 'Admin.Catalog.Feature'), $this->trans('Cart Rules', array(), 'Admin.Catalog.Feature')),
                 'defaultDateFrom' => date('Y-m-d H:00:00'),
                 'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
                 'customerFilter' => $customer_filter,

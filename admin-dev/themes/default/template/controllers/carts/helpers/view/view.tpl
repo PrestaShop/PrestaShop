@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 {extends file="helpers/view/view.tpl"}
 
@@ -67,7 +67,7 @@
 		<div class="panel">
 			<h3><i class="icon-shopping-cart"></i> {l s='Order information'}</h3>
 			{if $order->id}
-				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}&amp;vieworder"> {l s='Order #%d' sprintf=$order->id|string_format:"%06d"}</a></h2>
+				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}&amp;vieworder"> {l s='Order #%d' sprintf=[$order->id|string_format:"%06d"]}</a></h2>
 				{l s='Made on:'} {dateFormat date=$order->date_add}
 			{else}
 				<h2>{l s='No order was created from this cart.'}</h2>
@@ -94,10 +94,10 @@
 				</thead>
 				<tbody>
 				{foreach from=$products item='product'}
-					{if isset($customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery])}
+					{if $product['customizedDatas']}
 						<tr>
 							<td>{$product.image}</td>
-							<td><a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&amp;id_product={$product.id_product}&amp;updateproduct">
+							<td><a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
 										<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
 									{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
 									{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
@@ -108,38 +108,42 @@
 							<td class="text-center">{$product.qty_in_stock}</td>
 							<td class="text-right">{displayWtPriceWithCurrency price=$product.total_customization_wt currency=$currency}</td>
 						</tr>
-						{foreach from=$customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery] item='customization'}
-						<tr>
-							<td colspan="2">
-							{foreach from=$customization.datas key='type' item='datas'}
-								{if $type == constant('Product::CUSTOMIZE_FILE')}
-									<ul style="margin: 0; padding: 0; list-style-type: none;">
-									{foreach from=$datas key='index' item='data'}
-											<li style="display: inline; margin: 2px;">
-												<a href="displayImage.php?img={$data.value}&name={$order->id|intval}-file{$index}" class="_blank">
-												<img src="{$pic_dir}{$data.value}_small" alt="" /></a>
-											</li>
-									{/foreach}
-									</ul>
-								{elseif $type == constant('Product::CUSTOMIZE_TEXTFIELD')}
-									<div class="form-horizontal">
-										{foreach from=$datas key='index' item='data'}
-											<div class="form-group">
-												<span class="control-label col-lg-3"><strong>{if $data.name}{$data.name}{else}{l s='Text #'}{$index}{/if}</strong></span>
-												<div class="col-lg-9">
-													<p class="form-control-static">{$data.value}</p>
-												</div>
-											</div>
-										{/foreach}
-									</div>
-								{/if}
-							{/foreach}
-							</td>
-							<td></td>
-							<td class="text-center">{$customization.quantity}</td>
-							<td></td>
-							<td></td>
-						</tr>
+
+            {foreach $product['customizedDatas'] as $customizationPerAddress}
+              {foreach $customizationPerAddress as $customization}
+						    {if count($customizationPerAddress) == 1 && ((int)$customization.id_customization != (int)$product.id_customization)}{continue}{/if}
+						    <tr>
+							    <td colspan="2">
+							    {foreach from=$customization.datas key='type' item='datas'}
+								    {if $type == constant('Product::CUSTOMIZE_FILE')}
+									    <ul style="margin: 0; padding: 0; list-style-type: none;">
+									    {foreach from=$datas key='index' item='data'}
+											    <li style="display: inline; margin: 2px;">
+												    <a href="displayImage.php?img={$data.value}&name={$order->id|intval}-file{$index}" class="_blank">
+												    <img src="{$pic_dir}{$data.value}_small" alt="" /></a>
+											    </li>
+									    {/foreach}
+									    </ul>
+								    {elseif $type == constant('Product::CUSTOMIZE_TEXTFIELD')}
+									    <div class="form-horizontal">
+										    {foreach from=$datas key='index' item='data'}
+											    <div class="form-group">
+												    <span class="control-label col-lg-3"><strong>{if $data.name}{$data.name}{else}{l s='Text #'}{$index}{/if}</strong></span>
+												    <div class="col-lg-9">
+													    <p class="form-control-static">{$data.value}</p>
+												    </div>
+											    </div>
+										    {/foreach}
+									    </div>
+								    {/if}
+							    {/foreach}
+							    </td>
+							    <td></td>
+							    <td class="text-center">{$customization.quantity}</td>
+							    <td></td>
+							    <td></td>
+						    </tr>
+              {/foreach}
 						{/foreach}
 					{/if}
 
@@ -147,7 +151,7 @@
 						<tr>
 							<td>{$product.image}</td>
 							<td>
-								<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&amp;id_product={$product.id_product}&amp;updateproduct">
+								<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
 									<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
 									{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
 									{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}

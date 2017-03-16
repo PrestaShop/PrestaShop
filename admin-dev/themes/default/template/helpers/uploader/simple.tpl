@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 {if isset($files) && $files|count > 0}
 	{assign var='show_thumbnail' value=false}
 	{foreach $files as $file}
@@ -40,7 +40,7 @@
 			{if isset($file.delete_url)}
 			<p>
 				<a class="btn btn-default" href="{$file.delete_url}">
-					<i class="icon-trash"></i> {l s='Delete'}
+					<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}
 				</a>
 			</p>
 			{/if}
@@ -53,7 +53,7 @@
 {/if}
 {if isset($max_files) && $files|count >= $max_files}
 <div class="row">
-	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=$max_files}</div>
+	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=[$max_files]}</div>
 </div>
 {else}
 <div class="form-group">
@@ -61,7 +61,7 @@
 		<input id="{$id|escape:'html':'UTF-8'}" type="file" name="{$name|escape:'html':'UTF-8'}{if isset ($multiple) && $multiple}[]{/if}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
 		<div class="dummyfile input-group">
 			<span class="input-group-addon"><i class="icon-file"></i></span>
-			<input id="{$id|escape:'html':'UTF-8'}-name" type="text" name="filename" readonly />
+			<input id="{$id|escape:'html':'UTF-8'}-name" type="text" name="{$name|escape:'html':'UTF-8'}" readonly />
 			<span class="input-group-btn">
 				<button id="{$id|escape:'html':'UTF-8'}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
 					<i class="icon-folder-open"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}
@@ -69,7 +69,7 @@
 				{if (!isset($multiple) || !$multiple) && isset($files) && $files|count == 1 && isset($files[0].download_url)}
 					<a href="{$files[0].download_url|escape:'html':'UTF-8'}" class="btn btn-default">
 						<i class="icon-cloud-download"></i>
-						{if isset($size)}{l s='Download current file (%skb)' sprintf=$size}{else}{l s='Download current file'}{/if}
+						{if isset($size)}{l s='Download current file (%skb)' sprintf=[$size]}{else}{l s='Download current file'}{/if}
 					</a>
 				{/if}
 			</span>
@@ -131,7 +131,7 @@
 			$('#{$id|escape:'html':'UTF-8'}').closest('form').on('submit', function(e) {
 				if ($('#{$id|escape:'html':'UTF-8'}')[0].files.length > {$id|escape:'html':'UTF-8'}_max_files) {
 					e.preventDefault();
-					alert('{l s='You can upload a maximum of %s files'|sprintf:$max_files}');
+					alert('{l s='You can upload a maximum of %s files' sprintf=[$max_files]}');
 				}
 			});
 		}

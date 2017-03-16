@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -43,6 +43,9 @@ class OrderDetailCore extends ObjectModel
 
     /** @var int */
     public $product_attribute_id;
+
+    /** @var int */
+    public $id_customization;
 
     /** @var string */
     public $product_name;
@@ -174,6 +177,7 @@ class OrderDetailCore extends ObjectModel
             'id_shop' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'product_id' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'product_attribute_id' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_customization' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'product_name' =>                array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
             'product_quantity' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
             'product_quantity_in_stock' =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
@@ -650,6 +654,7 @@ class OrderDetailCore extends ObjectModel
 
         $this->product_id = (int)$product['id_product'];
         $this->product_attribute_id = $product['id_product_attribute'] ? (int)$product['id_product_attribute'] : 0;
+        $this->id_customization = $product['id_customization'] ? (int)$product['id_customization'] : 0;
         $this->product_name = $product['name'].
             ((isset($product['attributes']) && $product['attributes'] != null) ?
                 ' - '.$product['attributes'] : '');
@@ -807,7 +812,7 @@ class OrderDetailCore extends ObjectModel
                     $order_product['image'] = Context::getContext()->link->getImageLink(
                         $order_product['link_rewrite'],
                         (int)$order_product['product_id'].'-'.(int)$order_product['id_image'],
-                        ImageType::getFormatedName('medium')
+                        ImageType::getFormattedName('medium')
                     );
                     $order_product['link'] = Context::getContext()->link->getProductLink(
                         (int)$order_product['product_id'],

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -742,7 +742,7 @@ class SearchCore
     public static function removeProductsSearchIndex($products)
     {
         if (is_array($products) && !empty($products)) {
-            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', array_map('intval', $products)).')');
+            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', array_unique(array_map('intval', $products))).')');
             ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', array_map('intval', $products)).')');
         }
     }
@@ -750,7 +750,7 @@ class SearchCore
     protected static function setProductsAsIndexed(&$products)
     {
         if (is_array($products) && !empty($products)) {
-            ObjectModel::updateMultishopTable('Product', array('indexed' => 1), 'a.id_product IN ('.implode(',', $products).')');
+            ObjectModel::updateMultishopTable('Product', array('indexed' => 1), 'a.id_product IN ('.implode(',', array_map('intval', $products)).')');
         }
     }
 
@@ -758,11 +758,11 @@ class SearchCore
     protected static function saveIndex(&$queryArray3)
     {
         if (is_array($queryArray3) && !empty($queryArray3)) {
-            Db::getInstance()->execute(
-                'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
+            $query = 'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
 				VALUES '.implode(',', $queryArray3).'
-				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)', false
-        );
+				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)';
+
+            Db::getInstance()->execute($query, false);
         }
         $queryArray3 = array();
     }

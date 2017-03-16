@@ -1,0 +1,222 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<tr class="combination loaded" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}">
+  <td width="1%"><input class="js-combination" type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}"></td>
+  <td class="img"><div class="fake-img"></div></td>
+    <td>{{ form.vars.value.name }}</td>
+    <td class="attribute-price">
+        <div class="input-group">
+            <span class="input-group-addon">{{ default_currency }}</span>
+            <input type="number" class="attribute_priceTE form-control text-xs-right" value="{{ form.vars.value.attribute_price }}">
+        </div>
+    </td>
+    <td class="attribute-finalprice text-xs-right">
+      <span data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}
+    </td>
+    {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+      <td class="attribute-quantity">
+          <div>
+              <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control text-xs-right">
+          </div>
+      </td>
+    {% endif %}
+
+    <td class="attribute-actions">
+        <div class="btn-group btn-group-sm" role="group">
+            <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-open btn-invisible btn-sm"><i class="material-icons">mode_edit</i></a>
+        </div>
+        <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide row">
+            <div class="col-xs-12 text-xs-right nav">
+                {# "Prev." is short for "Previous" #}
+                <a class="btn-sensitive prev pull-left"><i class="material-icons">keyboard_arrow_left</i> {{ 'Prev. combination'|trans({}, 'Admin.Catalog.Feature') }}</a>
+                <a class="next btn-sensitive">{{ 'Next combination'|trans({}, 'Admin.Catalog.Feature') }} <i class="material-icons">keyboard_arrow_right</i></a>
+            </div>
+            <div class="panel col-md-12 p-t-2 p-b-2">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-tertiary-outline btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
+                </div>
+                <h2 class="title p-t-2">
+                  {{ "Combination details"|trans({}, 'Admin.Catalog.Feature') }} -
+                  {{ form.vars.value.name }}
+                </h2>
+                {{ form_widget(form.attribute_default) }}
+                <div class="row">
+                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                    <div class="col-md-2">
+                      <fieldset class="form-group">
+                          <label class="form-control-label">
+                            {{ form.attribute_quantity.vars.label }}
+                          </label>
+                          {{ form_errors(form.attribute_quantity) }}
+                          {{ form_widget(form.attribute_quantity) }}
+                      </fieldset>
+                    </div>
+                  {% endif %}
+                    <div class="col-md-3">
+                      <fieldset class="form-group">
+                          <label class="form-control-label">{{ form.available_date_attribute.vars.label }}</label>
+                          {{ form_errors(form.available_date_attribute) }}
+                          {{ form_widget(form.available_date_attribute) }}
+                      </fieldset>
+                    </div>
+                    <div class="col-md-2">
+                      <fieldset class="form-group">
+                          <label class="form-control-label">
+                            {{ form.attribute_minimal_quantity.vars.label }}
+                            <span class="help-box" data-toggle="popover"
+                              data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                          </label>
+                          {{ form_errors(form.attribute_minimal_quantity) }}
+                          {{ form_widget(form.attribute_minimal_quantity) }}
+                      </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                      <fieldset class="form-group">
+                          <label class="form-control-label">{{ form.attribute_reference.vars.label }}</label>
+                          {{ form_errors(form.attribute_reference) }}
+                          {{ form_widget(form.attribute_reference) }}
+                      </fieldset>
+                    </div>
+                </div>
+                <h2 class="title">
+                  {{ "Price and impact"|trans({}, 'Admin.Catalog.Feature') }}
+                </h2>
+                <div class="row">
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">{{ form.attribute_wholesale_price.vars.label|raw }}</label>
+                            {{ form_errors(form.attribute_wholesale_price) }}
+                            {{ form_widget(form.attribute_wholesale_price) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">
+                              {{ form.attribute_price.vars.label }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ "Does this combination have a different price? Is it cheaper or more expensive than the default retail price?"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                            </label>
+                            {{ form_errors(form.attribute_price) }}
+                            {{ form_widget(form.attribute_price) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">{{ form.attribute_priceTI.vars.label }}</label>
+                            {{ form_errors(form.attribute_priceTI) }}
+                            {{ form_widget(form.attribute_priceTI) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                      <small class="form-control-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'Admin.Catalog.Feature') }} <span class="final-price" data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 {% if 'PS_USE_ECOTAX'|configuration != 1 %}hide{% endif %}">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">{{ form.attribute_ecotax.vars.label }}</label>
+                            {{ form_errors(form.attribute_ecotax) }}
+                            {{ form_widget(form.attribute_ecotax) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">
+                              {{ form.attribute_unity.vars.label }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ "Does this combination have a different price per unit?"|trans({}, 'Admin.Catalog.Feature') }}" ></span>
+                            </label>
+                            {{ form_errors(form.attribute_unity) }}
+                            {{ form_widget(form.attribute_unity) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">{{ form.attribute_weight.vars.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">{{ 'PS_WEIGHT_UNIT'|configuration }}</span>
+                                {{ form_errors(form.attribute_weight) }}
+                                {{ form_widget(form.attribute_weight) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <h2 class="title">
+                  {{ "Specific references"|trans({}, 'Admin.Catalog.Feature') }}
+                </h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">{{ form.attribute_isbn.vars.label|raw }}</label>
+                            {{ form_errors(form.attribute_isbn) }}
+                            {{ form_widget(form.attribute_isbn) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">
+                              {{ form.attribute_ean13.vars.label }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                            </label>
+                            {{ form_errors(form.attribute_ean13) }}
+                            {{ form_widget(form.attribute_ean13) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">{{ form.attribute_upc.vars.label }}</label>
+                            {{ form_errors(form.attribute_upc) }}
+                            {{ form_widget(form.attribute_upc) }}
+                        </fieldset>
+                    </div>
+                </div>
+                <h2 class="title">
+                  {{ "Images"|trans({}, 'Admin.Catalog.Feature') }}
+                </h2>
+                <div class="row">
+                  <div class="col-md-12">
+                      <fieldset class="form-group js-combination-images">
+                          <label>
+                              <small class="form-control-label">{{ form.id_image_attr.vars.label }}</small>
+                              <small class="form-control-label number-of-images"></small>
+                          </label>
+                          {{ form_errors(form.id_image_attr) }}
+                          {{ form_widget(form.id_image_attr) }}
+                      </fieldset>
+                  </div>
+                </div>
+                {{ form_widget(form.id_product_attribute) }}
+            </div>
+        </div>
+    </td>
+    <td width="5%">
+      <a href="{{ path('admin_delete_attribute', {'idProduct': form.vars.value.id_product}) }}" class="btn btn-invisible btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
+    </td>
+    <td>
+      {% set checked = form.vars.value.attribute_default == 1 ? 'checked' : '' %}
+      <input class="attribute-default" type="radio" {{ checked }} data-id="{{ form.vars.value.id_product_attribute }}">
+    </td>
+</tr>

@@ -1,36 +1,36 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 {if !$email}
 	<div class="panel">
 		<h3>
 			{if !empty($message.employee_name)}
 				<i>{$employee_avatar}</i>
-					 ({$message.employee_name}) - {$PS_SHOP_NAME} 
+					 ({$message.employee_name}) - {$PS_SHOP_NAME}
 			{else}
-				<i class="icon-user"></i> 
+				<i class="icon-user"></i>
 				{if !empty($message.id_customer)}
 					<a href="index.php?tab=AdminCustomers&amp;id_customer={$message.id_customer}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
 						{$message.customer_name}
@@ -43,7 +43,7 @@
 		<div class="infoCustomer">
 			{if !empty($message.id_customer) && empty($message.id_employee)}
 			<dl class="dl-horizontal">
-				<dt>{l s='Customer ID:'}</dt> 
+				<dt>{l s='Customer ID:'}</dt>
 				<dd>
 					<a href="index.php?tab=AdminCustomers&amp;id_customer={$message.id_customer}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
 						{$message.id_customer} <i class="icon-search"></i>
@@ -51,7 +51,7 @@
 				</dd>
 			</dl>
 			{/if}
-			<dl class="dl-horizontal">			
+			<dl class="dl-horizontal">
 				<dt>{l s='Sent on:'}</dt>
 				<dd>{$message.date_add}&nbsp;</dd>
 			</dl>
@@ -63,7 +63,7 @@
 			{/if}
 			{if !empty($message.file_name) && $file_name}
 			<dl class="dl-horizontal">
-				<dt>{l s='File attachment'}</dt> 
+				<dt>{l s='File attachment'}</dt>
 				<dd>
 					<a href="index.php?tab=AdminCustomerThreads&amp;id_customer_thread={$message.id_customer_thread}&amp;viewcustomer_thread&amp;token={getAdminToken tab='AdminCustomerThreads'}&amp;filename={$message.file_name}"
 					title="{l s='View file'}">
@@ -74,18 +74,18 @@
 			{/if}
 			{if !empty($message.id_order) && $is_valid_order_id && empty($message.id_employee)}
 				<dl class="dl-horizontal">
-					<dt>{l s='Order #'}</dt> 
-					<dd><a href="index.php?tab=AdminOrders&amp;id_order={$message.id_order}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a>
+					<dt>{l s='Order #'}</dt>
+					<dd><a href="index.php?tab=AdminOrders&amp;id_order={$message.id_order}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View' d='Admin.Actions'}" /></a>
 					</dd>
 				</dl>
 			{/if}
 			{if !empty($message.id_product) && empty($message.id_employee)}
 				<dl class="dl-horizontal">
-					<dt>{l s='Product #'}</dt> 
-					<dd><a href="index.php?tab=AdminProducts&amp;id_product={$message.id_product}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" title="{l s='View order'}">{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a></dd>
+					<dt>{l s='Product #'}</dt>
+					<dd><a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $message.id_product, 'updateproduct' => '1'])|escape:'html':'UTF-8'}" title="{l s='View order'}">{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='View' d='Admin.Actions'}" /></a></dd>
 				</dl>
 			{/if}
-			
+
 			<form class="form-inline" action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_customer_thread={$message.id_customer_thread}&amp;viewcustomer_thread" method="post" >
 				<input type="hidden" name="id_customer_message" value="{$message.id_customer_message}" />
 				<div class="form-group">
@@ -162,7 +162,7 @@
 				<dt>{l s='Message:'}</dt>
 				<dd>{$message.message|escape:'html':'UTF-8'|nl2br}</dd>
 			</dl>
-		</div>	
+		</div>
 {if !$email}
 	</div>
 	{if empty($message.id_employee)}
@@ -193,7 +193,7 @@
 						<i class="icon-check"></i> {l s='Send my reply'}</button>
 					<input type="hidden" name="id_customer_thread" value="{$message.id_customer_thread|intval}" />
 					<input type="hidden" name="msg_email" value="{$message.email}" />
-				</div>				
+				</div>
 			</form>
 		</div>
 	</div>

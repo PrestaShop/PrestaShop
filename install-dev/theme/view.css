@@ -256,12 +256,11 @@ div.field {
 }
 
 .errorTxt {
-	background: url(img/pict_error.png) no-repeat scroll 15px center transparent;
-	color: #FF0000;
-	display: block;
-	float: left;
-	padding: 1px 0 1px 38px;
-	width: 150px;
+  background: url(img/pict_error.png) no-repeat scroll 194px 4px transparent;
+  color: #FF0000;
+  clear: both;
+  display: block;
+  padding: 3px 0 1px 217px;
 }
 
 .infosBlock {
@@ -491,6 +490,9 @@ ul#optional {
 	ul#optional li.fail {
 		background: #f8eba8 url(img/pict_error.png) no-repeat 99% 8px;
         padding-right: 20px;
+}
+	ul#optional li.fail {
+		background: #f8eba8 url(img/pict_warning.gif) no-repeat 99% 8px;
 }
 
 /* ETAPE 3 - DB ************************************************************* */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,7 +40,7 @@ function cms_multishop()
         $cms = array(
             'id_cms' => $value['id_cms'],
             'id_lang' => $value['id_lang'],
-            'content' => pSQL($value['content']),
+            'content' => pSQL($value['content'], true),
             'link_rewrite' => pSQL($value['link_rewrite']),
             'meta_title' => pSQL($value['meta_title']),
             'meta_keywords' => pSQL($value['meta_keywords']),

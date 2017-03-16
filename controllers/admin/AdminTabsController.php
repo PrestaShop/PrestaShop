@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,12 +34,14 @@ class AdminTabsControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->table = 'tab';
         $this->list_id = 'tab';
         $this->className = 'Tab';
         $this->lang = true;
+
+        parent::__construct();
+
         $this->fieldImageSettings = array(
             'name' => 'icon',
             'dir' => 't'
@@ -54,12 +56,12 @@ class AdminTabsControllerCore extends AdminController
         );
         $this->fields_list = array(
             'id_tab' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name')
+                'title' => $this->trans('Name', array(), 'Admin.Global')
             ),
             'class_name' => array(
                 'title' => $this->l('Class')
@@ -68,7 +70,7 @@ class AdminTabsControllerCore extends AdminController
                 'title' => $this->l('Module')
             ),
             'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
@@ -82,8 +84,6 @@ class AdminTabsControllerCore extends AdminController
                 'class' => 'fixed-width-md'
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()
@@ -143,7 +143,7 @@ class AdminTabsControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
@@ -170,19 +170,19 @@ class AdminTabsControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Show or hide menu.')
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
 
@@ -252,7 +252,8 @@ class AdminTabsControllerCore extends AdminController
             $this->toolbar_title = $tab->name[$this->context->employee->id_lang];
 
             $this->_select = 'b.*';
-            $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'tab_lang` b ON (b.`id_tab` = a.`id_tab` AND b.`id_lang` = '.$this->context->language->id.')';
+            $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'tab_lang` b ON (b.`id_tab` = a.`id_tab` AND b.`id_lang` = ' .
+                (int) $this->context->language->id.')';
             $this->_where = 'AND a.`id_parent` = '.(int)$id;
             $this->_orderBy = 'position';
             $this->_use_found_rows = false;
@@ -267,7 +268,7 @@ class AdminTabsControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
         /* PrestaShop demo mode*/
@@ -277,19 +278,19 @@ class AdminTabsControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
             }
         } elseif (Tools::getValue('position') && !Tools::isSubmit('submitAdd'.$this->table)) {
-            if ($this->tabAccess['edit'] !== '1') {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            if ($this->access('edit') !== '1') {
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } elseif (!Validate::isLoadedObject($object = new Tab((int)Tools::getValue($this->identifier)))) {
-                $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
-                    ' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').
+                    ' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
             }
             if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position'))) {
-                $this->errors[] = Tools::displayError('Failed to update the position.');
+                $this->errors[] = $this->trans('Failed to update the position.', array(), 'Admin.Notifications.Error');
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
             }
         } elseif (Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue('id_tab') === Tools::getValue('id_parent')) {
-            $this->errors[] = Tools::displayError('You can\'t put this menu inside itself. ');
+            $this->errors[] = $this->trans('You can\'t put this menu inside itself. ', array(), 'Admin.Advparameters.Notification');
         } elseif (Tools::isSubmit('submitAdd'.$this->table) && $id_parent = (int)Tools::getValue('id_parent')) {
             $this->redirect_after = self::$currentIndex.'&id_'.$this->table.'='.$id_parent.'&details'.$this->table.'&conf=4&token='.$this->token;
         } elseif (isset($_GET['details'.$this->table]) && is_array($this->bulk_actions)) {
@@ -305,19 +306,19 @@ class AdminTabsControllerCore extends AdminController
             ), $this->bulk_actions);
             foreach ($submit_bulk_actions as $bulk_action => $params) {
                 if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action)) {
-                    if ($this->tabAccess['edit'] === '1') {
+                    if ($this->access('edit')) {
                         $this->action = 'bulk'.$bulk_action;
                         $this->boxes = Tools::getValue($this->list_id.'Box');
                     } else {
-                        $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                        $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
                     break;
                 } elseif (Tools::isSubmit('submitBulk')) {
-                    if ($this->tabAccess['edit'] === '1') {
+                    if ($this->access('edit')) {
                         $this->action = 'bulk'.Tools::getValue('select_submitBulk');
                         $this->boxes = Tools::getValue($this->list_id.'Box');
                     } else {
-                        $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                        $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
                     break;
                 }

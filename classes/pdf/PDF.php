@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,25 +49,57 @@ class PDFCore
      */
     public function __construct($objects, $template, $smarty, $orientation = 'P')
     {
-        $this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'), $orientation);
+        $this->pdf_renderer = new PDFGenerator((bool) Configuration::get('PS_PDF_USE_CACHE'), $orientation);
         $this->template = $template;
-        $this->smarty = $smarty;
+
+        /*
+         * We need a Smarty instance that does NOT escape HTML.
+         * Since in BO Smarty does not autoescape
+         * and in FO Smarty does autoescape, we use
+         * a new Smarty of which we're sure it does not escape
+         * the HTML.
+         */
+        $this->smarty = clone $smarty;
+        $this->smarty->escape_html = false;
+
+        /* We need to get the old instance of the LazyRegister
+         * because some of the functions are already defined
+         * and we need to check in the old one first
+         */
+        $original_lazy_register = SmartyLazyRegister::getInstance($smarty);
+
+        /* For PDF we restore some functions from Smarty
+         * they've been removed in PrestaShop 1.7 so
+         * new themes don't use them. Although PDF haven't been
+         * reworked so every PDF controller must extend this class.
+         */
+        smartyRegisterFunction($this->smarty, 'function', 'convertPrice', array('Product', 'convertPrice'), true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'), true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'), true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'), true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'), true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice'), true, $original_lazy_register); // used twice
+        smartyRegisterFunction($this->smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'), true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'getWidthSize', array('Image', 'getWidth'), true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'getHeightSize', array('Image', 'getHeight'), true, $original_lazy_register);
 
         $this->objects = $objects;
         if (!($objects instanceof Iterator) && !is_array($objects)) {
             $this->objects = array($objects);
         }
-        
-        if (count($this->objects)>1) { // when bulk mode only
+
+        if (count($this->objects) > 1) { // when bulk mode only
             $this->send_bulk_flag = true;
         }
     }
 
     /**
-     * Render PDF
+     * Render PDF.
      *
      * @param bool $display
+     *
      * @return mixed
+     *
      * @throws PrestaShopException
      */
     public function render($display = true)
@@ -75,6 +107,7 @@ class PDFCore
         $render = false;
         $this->pdf_renderer->setFontForLang(Context::getContext()->language->iso_code);
         foreach ($this->objects as $object) {
+            $this->pdf_renderer->startPageGroup();
             $template = $this->getTemplateObject($object);
             if (!$template) {
                 continue;
@@ -91,6 +124,7 @@ class PDFCore
 
             $this->pdf_renderer->createHeader($template->getHeader());
             $this->pdf_renderer->createFooter($template->getFooter());
+            $this->pdf_renderer->createPagination($template->getPagination());
             $this->pdf_renderer->createContent($template->getContent());
             $this->pdf_renderer->writePage();
             $render = true;
@@ -103,15 +137,18 @@ class PDFCore
             if (ob_get_level() && ob_get_length() > 0) {
                 ob_clean();
             }
+
             return $this->pdf_renderer->render($this->filename, $display);
         }
     }
 
     /**
-     * Get correct PDF template classes
+     * Get correct PDF template classes.
      *
      * @param mixed $object
+     *
      * @return HTMLTemplate|false
+     *
      * @throws PrestaShopException
      */
     public function getTemplateObject($object)

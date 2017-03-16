@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,10 +29,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
     public $outPutHtml = '';
     private $headerToolbarBtn = array();
     private $title;
+    private $showContentHeader = true;
+    private $headerTabContent = '';
+    private $enableSidebar = false;
+    private $helpLink;
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '')
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
-        parent::__construct();
+        parent::__construct($controllerName, 'new-theme');
 
         $this->title = $title;
         $this->display = $displayType;
@@ -40,6 +44,15 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->controller_name = $_GET['controller'] = $controllerName;
         $this->id = Tab::getIdFromClassName($this->controller_name);
         $this->headerToolbarBtn = $headerToolbarBtn;
+        $this->showContentHeader = $showContentHeader;
+        $this->headerTabContent = $headerTabContent;
+        $this->enableSidebar = $enableSidebar;
+        $this->helpLink = $helpLink;
+    }
+
+    public function setMedia()
+    {
+        parent::setMedia(true);
     }
 
     public function viewAccess()
@@ -60,22 +73,30 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
     public function initContent()
     {
-        parent::initToolbar();
-        parent::initTabModuleList();
-        parent::initPageHeaderToolbar();
-
         $this->addHeaderToolbarBtn();
 
-        parent::initContent();
+        $this->show_page_header_toolbar = (bool) $this->showContentHeader;
 
-        if ($this->title) {
-            $this->context->smarty->assign(array('title' => $this->title));
+        $vars = array(
+            'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
+            'debug_mode' => (bool)_PS_MODE_DEV_,
+            'headerTabContent' => $this->headerTabContent,
+            'content' => '{$content}', //replace content by original smarty tag var
+            'enableSidebar' => $this->enableSidebar,
+            'lite_display' => $this->lite_display,
+            'url_post' => self::$currentIndex.'&token='.$this->token,
+            'show_page_header_toolbar' => $this->show_page_header_toolbar,
+            'page_header_toolbar_title' => $this->page_header_toolbar_title,
+            'title' => $this->title ? $this->title : $this->page_header_toolbar_title,
+            'toolbar_btn' => $this->page_header_toolbar_btn,
+            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
+        );
+
+        if (!empty($this->helpLink)) {
+            $vars['help_link'] = $this->helpLink;
         }
 
-        $this->context->smarty->assign(array(
-            'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
-            'content' => '{$content}', //replace content by original smarty tag var
-        ));
+        $this->context->smarty->assign($vars);
     }
 
     public function initToolbarTitle()

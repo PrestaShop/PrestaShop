@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a43fd5e0338751959686921566de352e">
+        <source>Leave this field blank if there's no change.</source>
+        <target>Leave this field blank if there's no change.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:399</note>
+      </trans-unit>
+      <trans-unit id="f44c07e8b6e19d8ea1e551d181993898">
+        <source>Password should be at least %s characters long.</source>
+        <target>Password should be at least %s characters long.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:400</note>
+      </trans-unit>
+      <trans-unit id="6010127763b917fdc47eb0c50a86a6f6">
+        <source>Enable or disable customer login.</source>
+        <target>Enable or disable customer login.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:431</note>
+      </trans-unit>
+      <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
+        <source>This customer will receive your ads via email.</source>
+        <target>This customer will receive your ads via email.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:453</note>
+      </trans-unit>
+      <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
+        <source>Select all the groups that you would like to apply to this customer.</source>
+        <target>Select all the groups that you would like to apply to this customer.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:479</note>
+      </trans-unit>
+      <trans-unit id="395b64636636e968c756f7514313f760">
+        <source>This group will be the user's default group.</source>
+        <target>This group will be the user's default group.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:492</note>
+      </trans-unit>
+      <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
+        <source>Only the discount for the selected group will be applied to this customer.</source>
+        <target>Only the discount for the selected group will be applied to this customer.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:493</note>
+      </trans-unit>
+      <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
+        <source>Valid characters:</source>
+        <target>Valid characters:</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:549</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminDeliverySlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="67342320cb8798c3a911e0c6d8bd026a">
+        <source>Prefix used for delivery slips.</source>
+        <target>Prefix used for delivery slips.</target>
+        <note>Context:
+File: controllers/admin/AdminDeliverySlipController.php:42</note>
+      </trans-unit>
+      <trans-unit id="6998acbd3739a7200586b4421d0ca508">
+        <source>The next delivery slip will begin with this number and then increase with each additional slip.</source>
+        <target>The next delivery slip will begin with this number and then increase with each additional slip.</target>
+        <note>Context:
+File: controllers/admin/AdminDeliverySlipController.php:47</note>
+      </trans-unit>
+      <trans-unit id="8cf7df5b4b5858e73a7f4e75cc658cc3">
+        <source>Adds an image before product name on Delivery-slip</source>
+        <target>Adds an image before product name on Delivery-slip</target>
+        <note>Context:
+File: controllers/admin/AdminDeliverySlipController.php:53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8a7a048a67746f3877ab6cb1bc1d4afd">
+        <source>Format: 2011-12-31 (inclusive).</source>
+        <target>Format: 2011-12-31 (inclusive).</target>
+        <note>Context:
+File: controllers/admin/AdminSlipController.php:117</note>
+      </trans-unit>
+      <trans-unit id="e07ffcdf6051874b295597fb64b62635">
+        <source>Format: 2012-12-31 (inclusive).</source>
+        <target>Format: 2012-12-31 (inclusive).</target>
+        <note>Context:
+File: controllers/admin/AdminSlipController.php:125</note>
+      </trans-unit>
+      <trans-unit id="0ecbd7a341049250b3da531530e42622">
+        <source>Prefix used for credit slips.</source>
+        <target>Prefix used for credit slips.</target>
+        <note>Context:
+File: controllers/admin/AdminSlipController.php:80</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminInvoicesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="60422879211a12247e5da14751a59ac3">
+        <source>If enabled, your customers will receive an invoice for the purchase.</source>
+        <target>If enabled, your customers will receive an invoice for the purchase.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:42</note>
+      </trans-unit>
+      <trans-unit id="afda8f59762167c6720a8afe24345df1">
+        <source>If required, show the total amount per rate of the corresponding tax.</source>
+        <target>If required, show the total amount per rate of the corresponding tax.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:48</note>
+      </trans-unit>
+      <trans-unit id="0e963c5b7a1b6bb67429c7d0e7f45741">
+        <source>Adds an image in front of the product name on the invoice</source>
+        <target>Adds an image in front of the product name on the invoice</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:54</note>
+      </trans-unit>
+      <trans-unit id="7b87585267aed27676374641013ab66e">
+        <source>Freely definable prefix for invoice number (e.g. #IN00001).</source>
+        <target>Freely definable prefix for invoice number (e.g. #IN00001).</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:61</note>
+      </trans-unit>
+      <trans-unit id="a93c4ec4b8ef325acf067112d7437c59">
+        <source>The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).</source>
+        <target>The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:90</note>
+      </trans-unit>
+      <trans-unit id="7a490daaa2605a4a5be08b30a0c6fe24">
+        <source>Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).</source>
+        <target>Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:102</note>
+      </trans-unit>
+      <trans-unit id="e3501dec19c50333c49b4d7d66931abc">
+        <source>This text will appear at the bottom of the invoice, below your company details.</source>
+        <target>This text will appear at the bottom of the invoice, below your company details.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:108</note>
+      </trans-unit>
+      <trans-unit id="4e00dcdfbf2f4a6156c01fb15ded75c5">
+        <source>Choose an invoice model.</source>
+        <target>Choose an invoice model.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:114</note>
+      </trans-unit>
+      <trans-unit id="41d8a2a057a1e1b9663d49896d3162f3">
+        <source>Saves memory but slows down the PDF generation.</source>
+        <target>Saves memory but slows down the PDF generation.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:121</note>
+      </trans-unit>
+      <trans-unit id="fef8859b22e06e4d4918f091612bf958">
+        <source>You can also export orders which have not been charged yet.</source>
+        <target>You can also export orders which have not been charged yet.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:193</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ed4bfa76b661f4b6bc94d32fe6147d57">
+        <source>Would you like to allow merchandise returns in your shop?</source>
+        <target>Would you like to allow merchandise returns in your shop?</target>
+        <note>Context:
+File: controllers/admin/AdminReturnController.php:59</note>
+      </trans-unit>
+      <trans-unit id="c503a53add0f47d2497ca363f9ad1b76">
+        <source>How many days after the delivery date does the customer have to return a product?</source>
+        <target>How many days after the delivery date does the customer have to return a product?</target>
+        <note>Context:
+File: controllers/admin/AdminReturnController.php:63</note>
+      </trans-unit>
+      <trans-unit id="095fcccad5a4585fdc2fe1f97fc89561">
+        <source>Prefix used for return name (e.g. RE00001).</source>
+        <target>Prefix used for return name (e.g. RE00001).</target>
+        <note>Context:
+File: controllers/admin/AdminReturnController.php:69</note>
+      </trans-unit>
+      <trans-unit id="2bf0a7ee96f0cba7f7d530ff08f01bf8">
+        <source>Merchandise return (RMA) status.</source>
+        <target>Merchandise return (RMA) status.</target>
+        <note>Context:
+File: controllers/admin/AdminReturnController.php:129</note>
+      </trans-unit>
+      <trans-unit id="a3d008a6e1f75882761e48de1b001497">
+        <source>List of products in return package.</source>
+        <target>List of products in return package.</target>
+        <note>Context:
+File: controllers/admin/AdminReturnController.php:137</note>
+      </trans-unit>
+      <trans-unit id="db21428a343da97c41ced5ad9ef17d56">
+        <source>The link is only available after validation and before the parcel gets delivered.</source>
+        <target>The link is only available after validation and before the parcel gets delivered.</target>
+        <note>Context:
+File: controllers/admin/AdminReturnController.php:145</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,5 +1,5 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,7 +42,7 @@ function formatedNumberToFloat(price, currencyFormat, currencySign)
 
 /**
  * @deprecated Please use asynchronous formatNumberCldr() instead.
- * 
+ *
  * @param value float The number to format
  * @param numberOfDecimal Size of fractionnal part in the number
  * @param thousenSeparator Not used anymore
@@ -61,14 +61,14 @@ function formatNumber(value, numberOfDecimal, thousenSeparator, virgule)
 /**
  * This call will load CLDR data to format a number according to the page locale, and then send formatted
  * number into parameter of the callback function. This function is asynchronous as AJAX calls may occur.
- * 
+ *
  * @param value float The number to format
  * @param callback The function to call with the resulting formatted number as unique parameter
  * @param numberOfDecimal Size of fractionnal part in the number
  */
 function formatNumberCldr(value, callback, numberOfDecimal) {
 	if (typeof numberOfDecimal === 'undefined') numberOfDecimal = 2;
-	
+
 	cldrForNumber(function(globalize) {
 		var result = globalize.numberFormatter({
 			minimumFractionDigits: 2,
@@ -80,7 +80,7 @@ function formatNumberCldr(value, callback, numberOfDecimal) {
 
 /**
  * @deprecated Please use asynchronous formatCurrencyCldr() instead.
- * 
+ *
  * @param price float The value to format in a price
  * @param currencyFormat Not used anymore
  * @param currencySign Not used anymore
@@ -89,16 +89,29 @@ function formatNumberCldr(value, callback, numberOfDecimal) {
  */
 function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 {
-	var formatter = cldrForCurrencyFormatterWrapper(null, {
-		maximumFractionDigits: priceDisplayPrecision
-	});
-	return formatter(price);
+  // if you modified this function, don't forget to modify the PHP function displayPrice (in the Tools.php class)
+  var blank = '';
+  price = parseFloat(price.toFixed(10));
+  price = ps_round(price, priceDisplayPrecision);
+  if (currencyBlank > 0)
+  	blank = ' ';
+  if (currencyFormat == 1)
+  	return currencySign + blank + formatNumber(price, priceDisplayPrecision, ',', '.');
+  if (currencyFormat == 2)
+  	return (formatNumber(price, priceDisplayPrecision, ' ', ',') + blank + currencySign);
+  if (currencyFormat == 3)
+  	return (currencySign + blank + formatNumber(price, priceDisplayPrecision, '.', ','));
+  if (currencyFormat == 4)
+  	return (formatNumber(price, priceDisplayPrecision, ',', '.') + blank + currencySign);
+  if (currencyFormat == 5)
+  	return (currencySign + blank + formatNumber(price, priceDisplayPrecision, '\'', '.'));
+  return price;
 }
 
 /**
  * This call will load CLDR data to format a price according to the page locale, and then send formatted
  * price into parameter of the callback function. This function is asynchronous as AJAX calls may occur.
- * 
+ *
  * @param price float The price to format
  * @param callback The function to call with the resulting formatted price as unique parameter
  */
@@ -106,8 +119,9 @@ function formatCurrencyCldr(price, callback) {
 	cldrForCurrencyFormatterWrapper(function(formatter) {
 		callback(formatter(price));
 	}, {
-		maximumFractionDigits: priceDisplayPrecision
-	});
+    minimumFractionDigits: 0,
+    maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2,
+  });
 }
 
 function ps_round_helper(value, mode)
@@ -246,6 +260,14 @@ function toggleMultiple(tab)
     for (var i = 0; i < len; i++)
         if (tab[i].style)
             toggle(tab[i], tab[i].style.display == 'none');
+}
+
+function truncateDecimals(value, decimals)
+{
+    var numPower = Math.pow(10, decimals);
+    var tempNumber = value * numPower;
+    var roundedTempNumber = Math.floor(tempNumber);
+    return roundedTempNumber / numPower;
 }
 
 /**

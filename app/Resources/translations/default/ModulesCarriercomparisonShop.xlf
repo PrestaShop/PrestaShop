@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_carriercomparison/template/ps_carriercomparison.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="533bf2149f935df1f934e5ee55f68d20">
+        <source><![CDATA[Estimate the cost of shipping & taxes.]]></source>
+        <target><![CDATA[Estimate the cost of shipping & taxes.]]></target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
+        <source>Country</source>
+        <target>Country</target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="46a2a41cc6e552044816a2d04634545d">
+        <source>State</source>
+        <target>State</target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="5e178542b85fb18ca3c459e9a95f4f2e">
+        <source>Zip Code</source>
+        <target>Zip Code</target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="9207f4078f515ecc8256bae33fa1f497">
+        <source>Needed for certain carriers.</source>
+        <target>Needed for certain carriers.</target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
+        <source>Carrier</source>
+        <target>Carrier</target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:51</note>
+      </trans-unit>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Information</target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
+        <source>Price</source>
+        <target>Price</target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:53</note>
+      </trans-unit>
+      <trans-unit id="1de0f9fcbe30b056483fe964aed55adc">
+        <source>Update cart</source>
+        <target>Update cart</target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:61</note>
+      </trans-unit>
+      <trans-unit id="a305b69f91e8c50117cc540114b9ba06">
+        <source>Estimate Shipping Cost</source>
+        <target>Estimate Shipping Cost</target>
+        <note>Context:
+File: modules/ps_carriercomparison/template/ps_carriercomparison.tpl:62</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2017 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,7 +32,7 @@
 				<span class="star{if $avg_rate == 2} active{/if}"></span>
 				<span class="star{if $avg_rate == 1} active{/if}"></span>
 			</div>
-			<div class="col-md-2">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=$nb_rates}{else}{l s="(%s vote)" sprintf=$nb_rates}{/if}</div>
+			<div class="col-md-2">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=[$nb_rates]}{else}{l s="(%s vote)" sprintf=[$nb_rates]}{/if}</div>
 			<div class="col-md-3">
 			{if isset($badges)}
 				{foreach $badges as $badge}

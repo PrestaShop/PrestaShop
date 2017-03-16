@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -276,13 +276,13 @@ abstract class ModuleGraphCore extends Module
     {
         $context = Context::getContext();
         if (!($render = Configuration::get('PS_STATS_RENDER'))) {
-            return Tools::displayError('No graph engine selected');
+            return Context::getContext()->getTranslator()->trans('No graph engine selected', array(), 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
         if (!file_exists(_PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php')) {
-            return Tools::displayError('Graph engine selected is unavailable.');
+            return Context::getContext()->getTranslator()->trans('Graph engine selected is unavailable.', array(), 'Admin.Modules.Notification');
         }
 
         $id_employee = (int)$context->employee->id;
@@ -345,7 +345,7 @@ abstract class ModuleGraphCore extends Module
     public static function getDateBetween($employee = null)
     {
         if ($employee = ModuleGraph::getEmployee($employee)) {
-            return ' \''.$employee->stats_date_from.' 00:00:00\' AND \''.$employee->stats_date_to.' 23:59:59\' ';
+            return ' \''.pSQL($employee->stats_date_from).' 00:00:00\' AND \''.pSQL($employee->stats_date_to).' 23:59:59\' ';
         }
         return ' \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m-t').' 23:59:59\' ';
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-    include_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
-}
-
 /**
  * Class DbCore
  */
@@ -243,6 +238,11 @@ abstract class DbCore
         return self::$instance[$id_server];
     }
 
+    public function getPrefix()
+    {
+        return _DB_PREFIX_;
+    }
+
     /**
      * @param $test_db Db
      * Unit testing purpose only
@@ -284,11 +284,15 @@ abstract class DbCore
      */
     public static function getClass()
     {
-        $class = 'MySQL';
+        $class = '';
         if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql')) {
             $class = 'DbPDO';
         } elseif (extension_loaded('mysqli')) {
             $class = 'DbMySQLi';
+        }
+
+        if (empty($class)) {
+            throw new PrestaShopException('Cannot select any valid SQL engine.');
         }
 
         return $class;
@@ -347,22 +351,6 @@ abstract class DbCore
         if ($this->link) {
             $this->disconnect();
         }
-    }
-
-    /**
-     * Filter SQL query within a blacklist
-     *
-     * @param string $table Table where insert/update data
-     * @param array $values Data to insert/update
-     * @param string $type INSERT or UPDATE
-     * @param string $where WHERE clause, only for UPDATE (optional)
-     * @param int $limit LIMIT clause (optional)
-     * @return bool
-     * @throws PrestaShopDatabaseException
-     */
-    public function autoExecuteWithNullValues($table, $values, $type, $where = '', $limit = 0)
-    {
-        return $this->autoExecute($table, $values, $type, $where, $limit, 0, true);
     }
 
     /**
@@ -590,7 +578,7 @@ abstract class DbCore
         $this->last_query = $sql;
 
         if ($use_cache && $this->is_cache_enabled && $array) {
-            $this->last_query_hash = Tools::encryptIV($sql);
+            $this->last_query_hash = Tools::hashIV($sql);
             if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
                 $this->last_cached = true;
                 return $result;
@@ -645,7 +633,7 @@ abstract class DbCore
         $this->last_query = $sql;
 
         if ($use_cache && $this->is_cache_enabled) {
-            $this->last_query_hash = Tools::encryptIV($sql);
+            $this->last_query_hash = Tools::hashIV($sql);
             if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
                 $this->last_cached = true;
                 return $result;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,34 +42,34 @@ class AdminShippingControllerCore extends AdminController
         }
 
         $carrier_default_sort = array(
-            array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
-            array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
+            array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->trans('Price', array(), 'Admin.Global')),
+            array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->trans('Position', array(), 'Admin.Global')),
         );
 
         $carrier_default_order = array(
-            array('value' => Carrier::SORT_BY_ASC, 'name' => $this->l('Ascending')),
-            array('value' => Carrier::SORT_BY_DESC, 'name' => $this->l('Descending'))
+            array('value' => Carrier::SORT_BY_ASC, 'name' => $this->trans('Ascending', array(), 'Admin.Global')),
+            array('value' => Carrier::SORT_BY_DESC, 'name' => $this->trans('Descending', array(), 'Admin.Global')),
         );
 
         $this->fields_options = array(
             'handling' => array(
-                'title' =>    $this->l('Handling'),
+                'title' =>    $this->trans('Handling', array(), 'Admin.Shipping.Feature'),
                 'icon' => 'delivery',
                 'fields' =>    array(
                     'PS_SHIPPING_HANDLING' => array(
-                        'title' => $this->l('Handling charges'),
-                        'suffix' => $this->context->currency->getSign().' '.$this->l('(tax excl.)'),
+                        'title' => $this->trans('Handling charges', array(), 'Admin.Shipping.Feature'),
+                        'suffix' => $this->context->currency->getSign().' '.$this->trans('(tax excl.)', array(), 'Admin.Global'),
                         'cast' => 'floatval',
                         'type' => 'text',
                         'validation' => 'isPrice'),
                     'PS_SHIPPING_FREE_PRICE' => array(
-                        'title' => $this->l('Free shipping starts at'),
+                        'title' => $this->trans('Free shipping starts at', array(), 'Admin.Shipping.Feature'),
                         'suffix' => $this->context->currency->getSign(),
                         'cast' => 'floatval',
                         'type' => 'text',
                         'validation' => 'isPrice'),
                     'PS_SHIPPING_FREE_WEIGHT' => array(
-                        'title' => $this->l('Free shipping starts at'),
+                        'title' => $this->trans('Free shipping starts at', array(), 'Admin.Shipping.Feature'),
                         'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -77,45 +77,45 @@ class AdminShippingControllerCore extends AdminController
                 ),
                 'description' =>
                     '<ul>
-						<li>'.$this->l('If you set these parameters to 0, they will be disabled.').'</li>
-						<li>'.$this->l('Coupons are not taken into account when calculating free shipping.').'</li>
+						<li>'.$this->trans('If you set these parameters to 0, they will be disabled.', array(), 'Admin.Shipping.Help').'</li>
+						<li>'.$this->trans('Coupons are not taken into account when calculating free shipping.', array(), 'Admin.Shipping.Help').'</li>
 					</ul>',
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'general' => array(
-                'title' => $this->l('Carrier options'),
+                'title' => $this->trans('Carrier options', array(), 'Admin.Shipping.Feature'),
                 'fields' => array(
                     'PS_CARRIER_DEFAULT' => array(
-                        'title' => $this->l('Default carrier'),
-                        'desc' => $this->l('Your shop\'s default carrier'),
+                        'title' => $this->trans('Default carrier', array(), 'Admin.Shipping.Feature'),
+                        'desc' => $this->trans('Your shop\'s default carrier', array(), 'Admin.Shipping.Help'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'id_carrier',
                         'list' => array_merge(
                             array(
-                                -1 => array('id_carrier' => -1, 'name' => $this->l('Best price')),
-                                -2 => array('id_carrier' => -2, 'name' => $this->l('Best grade'))
+                                -1 => array('id_carrier' => -1, 'name' => $this->trans('Best price', array(), 'Admin.Shipping.Feature')),
+                                -2 => array('id_carrier' => -2, 'name' => $this->trans('Best grade', array(), 'Admin.Shipping.Feature')),
                             ),
                             Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS))
                     ),
                     'PS_CARRIER_DEFAULT_SORT' => array(
-                        'title' => $this->l('Sort by'),
-                        'desc' => $this->l('This will only be visible in the front office.'),
+                        'title' => $this->trans('Sort by', array(), 'Admin.Actions'),
+                        'desc' => $this->trans('This will only be visible in the front office.', array(), 'Admin.Shipping.Help'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'value',
                         'list' => $carrier_default_sort
                     ),
                     'PS_CARRIER_DEFAULT_ORDER' => array(
-                        'title' => $this->l('Order by'),
-                        'desc' => $this->l('This will only be visible in the front office.'),
+                        'title' => $this->trans('Order by', array(), 'Admin.Actions'),
+                        'desc' => $this->trans('This will only be visible in the front office.', array(), 'Admin.Shipping.Help'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'value',
                         'list' => $carrier_default_order
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
     }
@@ -124,7 +124,7 @@ class AdminShippingControllerCore extends AdminController
     {
         /* Shipping fees */
         if (Tools::isSubmit('submitFees'.$this->table)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 if (($id_carrier = (int)(Tools::getValue('id_carrier'))) && $id_carrier == ($id_carrier2 = (int)(Tools::getValue('id_carrier2')))) {
                     $carrier = new Carrier($id_carrier);
                     if (Validate::isLoadedObject($carrier)) {
@@ -165,15 +165,15 @@ class AdminShippingControllerCore extends AdminController
                         $carrier->addDeliveryPrice($priceList);
                         Tools::redirectAdmin(self::$currentIndex.'&conf=6&id_carrier='.$carrier->id.'&token='.$this->token);
                     } else {
-                        $this->errors[] = Tools::displayError('An error occurred while attempting to update fees (cannot load carrier object).');
+                        $this->errors[] = $this->trans('An error occurred while attempting to update fees (cannot load carrier object).', array(), 'Admin.Shipping.Notification');
                     }
                 } elseif (isset($id_carrier2)) {
                     $_POST['id_carrier'] = $id_carrier2;
                 } else {
-                    $this->errors[] = Tools::displayError('An error occurred while attempting to update fees (cannot load carrier object).');
+                    $this->errors[] = $this->trans('An error occurred while attempting to update fees (cannot load carrier object).', array(), 'Admin.Shipping.Notification');
                 }
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         } else {
             return parent::postProcess();

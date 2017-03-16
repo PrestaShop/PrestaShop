@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -70,7 +70,7 @@ class HelperOptionsCore extends Helper
 
             if (isset($category_data['tabs'])) {
                 $tabs[$category] = $category_data['tabs'];
-                $tabs[$category]['misc'] = $this->l('Miscellaneous');
+                $tabs[$category]['misc'] = Context::getContext()->getTranslator()->trans('Miscellaneous', array(), 'Admin.Global');
             }
 
             foreach ($category_data['fields'] as $key => $field) {
@@ -102,8 +102,20 @@ class HelperOptionsCore extends Helper
                     $this->context->controller->addJqueryPlugin('colorpicker');
                 }
 
-                if ($field['type'] == 'texarea' || $field['type'] == 'textareaLang') {
-                    $this->context->controller->addJqueryPlugin('autosize');
+                if ($field['type'] == 'textarea' || $field['type'] == 'textareaLang') {
+
+                    if (isset($field['autoload_rte']) && $field['autoload_rte'] == true) {
+                        $iso = $this->context->language->iso_code;
+                        $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
+                        $this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
+                        $this->tpl_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
+                        $this->tpl_vars['tinymce'] = true;
+
+                        $this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
+                        $this->context->controller->addJS(_PS_JS_DIR_.'admin/tinymce.inc.js');
+                    } else {
+                        $this->context->controller->addJqueryPlugin('autosize');
+                    }
                 }
 
                 if ($field['type'] == 'file') {
@@ -161,6 +173,7 @@ class HelperOptionsCore extends Helper
 
                 // Fill values for all languages for all lang fields
                 if (substr($field['type'], -4) == 'Lang') {
+                    $field['value'] = array();
                     foreach ($languages as $language) {
                         if ($field['type'] == 'textLang') {
                             $value = Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang']));
@@ -169,7 +182,11 @@ class HelperOptionsCore extends Helper
                         } elseif ($field['type'] == 'selectLang') {
                             $value = Configuration::get($key, $language['id_lang']);
                         }
-                        $field['languages'][$language['id_lang']] = $value;
+                        if (isset($value)) {
+                            $field['languages'][$language['id_lang']] = $value;
+                        } else {
+                            $field['languages'][$language['id_lang']] = '';
+                        }
                         $field['value'][$language['id_lang']] = $this->getOptionValue($key.'_'.strtoupper($language['iso_code']), $field);
                     }
                 }
@@ -178,16 +195,19 @@ class HelperOptionsCore extends Helper
                 // @todo move this
                 if ($field['type'] == 'maintenance_ip') {
                     $field['script_ip'] = '
-						<script type="text/javascript">
-							function addRemoteAddr()
-							{
-								var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
-								if (length > 0)
-									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
-								else
-									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
-							}
-						</script>';
+                        <script type="text/javascript">
+                            function addRemoteAddr()
+                            {
+                                var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
+                                if (length > 0) {
+                                    if ($(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').indexOf(\''.Tools::getRemoteAddr().'\') < 0) {
+                                        $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
+                                    }
+                                } else {
+                                    $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
+                                }
+                            }
+                        </script>';
                     $field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> '.$this->l('Add my IP', 'Helper').'</button>';
                 }
 
@@ -245,7 +265,7 @@ class HelperOptionsCore extends Helper
             echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on"> '.Tools::strtolower($theme['name']).'</label>';
             echo '<br />';
             echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on">';
-            echo '<img src="../themes/'.$theme['name'].'/preview.jpg" alt="'.Tools::strtolower($theme['name']).'">';
+            echo '<img src="'.$theme['preview'].'" alt="'.Tools::strtolower($theme['name']).'">';
             echo '</label>';
             echo '</td>';
             if (isset($field['max']) && ($i + 1) % $field['max'] == 0) {

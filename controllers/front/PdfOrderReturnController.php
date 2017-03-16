@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class PdfOrderReturnControllerCore extends FrontController
 {
     public $php_self = 'pdf-order-return';
@@ -32,7 +31,7 @@ class PdfOrderReturnControllerCore extends FrontController
 
     public function postProcess()
     {
-        $from_admin = (Tools::getValue('adtoken') == Tools::getAdminToken('AdminReturn'.(int)Tab::getIdFromClassName('AdminReturn').(int)Tools::getValue('id_employee')));
+        $from_admin = (Tools::getValue('adtoken') == Tools::getAdminToken('AdminReturn'.(int) Tab::getIdFromClassName('AdminReturn').(int) Tools::getValue('id_employee')));
 
         if (!$from_admin && !$this->context->customer->isLogged()) {
             Tools::redirect('index.php?controller=authentication&back=order-follow');
@@ -43,11 +42,11 @@ class PdfOrderReturnControllerCore extends FrontController
         }
 
         if (!isset($this->orderReturn) || !Validate::isLoadedObject($this->orderReturn)) {
-            die(Tools::displayError('Order return not found.'));
+            die($this->trans('Order return not found.', array(), 'Shop.Notifications.Error'));
         } elseif (!$from_admin && $this->orderReturn->id_customer != $this->context->customer->id) {
-            die(Tools::displayError('Order return not found.'));
+            die($this->trans('Order return not found.', array(), 'Shop.Notifications.Error'));
         } elseif ($this->orderReturn->state < 2) {
-            die(Tools::displayError('Order return not confirmed.'));
+            die($this->trans('Order return not confirmed.', array(), 'Shop.Notifications.Error'));
         }
     }
 

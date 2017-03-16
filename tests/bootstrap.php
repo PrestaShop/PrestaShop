@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,9 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+define('_PS_ROOT_DIR_', __DIR__ . '/..');
+define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests/resources/modules/');
 require_once(dirname(__FILE__).'/../config/defines.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
+require_once(dirname(__FILE__).'/../config/bootstrap.php');

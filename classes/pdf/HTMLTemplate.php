@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -196,7 +196,7 @@ abstract class HTMLTemplateCore
     {
         $template = false;
         $default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$template_name.'.tpl';
-        $overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->getTheme().DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
+        $overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->theme->getName().DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
         if (file_exists($overridden_template)) {
             $template = $overridden_template;
         } elseif (file_exists($default_template)) {
@@ -231,5 +231,15 @@ abstract class HTMLTemplateCore
         if (Validate::isLoadedObject($this->shop)) {
             Shop::setContext(Shop::CONTEXT_SHOP, (int)$this->shop->id);
         }
+    }
+
+    /**
+     * Returns the template's HTML pagination block
+     *
+     * @return string HTML pagination block
+     */
+    public function getPagination()
+    {
+        return $this->smarty->fetch($this->getTemplate('pagination'));
     }
 }

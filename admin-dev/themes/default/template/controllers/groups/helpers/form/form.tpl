@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 {extends file="helpers/form/form.tpl"}
 
@@ -104,7 +104,7 @@
 					}
 					else
 					{
-						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}' + ' ' + jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');" class="btn btn-default"><i class="icon-trash"></i> {l s='Delete'}</a></td></tr>');
+						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}' + ' ' + jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');" class="btn btn-default"><i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>');
 						var input_hidden = document.createElement("input");
 						input_hidden.setAttribute('type', 'hidden');
 						input_hidden.setAttribute('value', jsonData.discount);
@@ -133,10 +133,10 @@
 				{foreach $input['values'] key=key item=category }
 					<tr class="alt_row" id="{$category.id_category}">
 						<td>{$category.path}</td>
-						<td>{l s='Discount: %.2f%%' sprintf=$category.reduction}</td>
+						<td>{l s='Discount: %.2f%%' sprintf=[$category.reduction]}</td>
 						<td>
 							<a href="#" onclick="deleteCategoryReduction({$category.id_category});"class="btn btn-default">
-								<i class="icon-trash"></i> {l s='Delete'}
+								<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}
 							</a>
 							<input type="hidden" class="category_reduction" name="category_reduction[{$category.id_category}]" value="{$category.reduction}">
 						</td>
@@ -161,7 +161,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-lg-12">
-						<button type="button" onclick="addCategoryReduction();" class="btn btn-default pull-right">{l s='add'}</button>
+						<button type="button" onclick="addCategoryReduction();" class="btn btn-default pull-right">{l s='add' d='Admin.Actions'}</button>
 					</div>
 				</div>
 			</div>
@@ -185,13 +185,13 @@
 		<div class="col-lg-9" id="authorized-modules">
 			{foreach $input['values']['auth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.gif" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}" /> {$module->displayName|escape:'html':'UTF-8'}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.png" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}" /> {$module->displayName|escape:'html':'UTF-8'}</label>
 				<div class="input-group col-lg-8">
 					<span class="switch prestashop-switch fixed-width-lg">
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1" checked="checked"/>
-						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes'}</label>
+						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes' d='Admin.Global'}</label>
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_off" value="0"/>
-						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No'}</label>
+						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No' d='Admin.Global'}</label>
 						<a class="slide-button btn"></a>
 					</span>
 					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id|intval}"/>
@@ -200,13 +200,13 @@
 			{/foreach}
 			{foreach $input['values']['unauth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.gif" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}"/> {$module->displayName|escape:'html':'UTF-8'}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.png" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}"/> {$module->displayName|escape:'html':'UTF-8'}</label>
 				<div class="input-group col-lg-8">
 					<span class="switch prestashop-switch fixed-width-lg">
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1"/>
-						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes'}</label>
+						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes' d='Admin.Global'}</label>
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_off" value="0" checked="checked"/>
-						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No'}</label>
+						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No' d='Admin.Global'}</label>
 						<a class="slide-button btn"></a>
 					</span>
 					<input type="hidden" name="modulesBoxUnauth[]" value="{$module->id|intval}"/>

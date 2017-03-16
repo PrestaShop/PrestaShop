@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,22 +36,24 @@ class AdminTagsControllerCore extends AdminController
         $this->table = 'tag';
         $this->className = 'Tag';
 
+        parent::__construct();
+
         $this->fields_list = array(
             'id_tag' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'lang' => array(
-                'title' => $this->l('Language'),
+                'title' => $this->trans('Language', array(), 'Admin.Global'),
                 'filter_key' => 'l!name'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'filter_key' => 'a!name'
             ),
             'products' => array(
-                'title' => $this->l('Products'),
+                'title' => $this->trans('Products', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'havingFilter' => true
@@ -60,13 +62,11 @@ class AdminTagsControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->l('Delete selected items?')
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()
@@ -74,7 +74,7 @@ class AdminTagsControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tag'] = array(
                 'href' => self::$currentIndex.'&addtag&token='.$this->token,
-                'desc' => $this->l('Add new tag', null, null, false),
+                'desc' => $this->trans('Add new tag', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -100,7 +100,7 @@ class AdminTagsControllerCore extends AdminController
 
     public function postProcess()
     {
-        if ($this->tabAccess['edit'] === '1' && Tools::getValue('submitAdd'.$this->table)) {
+        if ($this->access('edit') && Tools::getValue('submitAdd'.$this->table)) {
             if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj)) {
                 /** @var Tag $obj */
                 $previous_products = $obj->getProducts();
@@ -132,19 +132,19 @@ class AdminTagsControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Tag'),
+                'title' => $this->trans('Tag', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-tag'
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Language'),
+                    'label' => $this->trans('Language', array(), 'Admin.Global'),
                     'name' => 'id_lang',
                     'required' => true,
                     'options' => array(
@@ -159,7 +159,7 @@ class AdminTagsControllerCore extends AdminController
                 'products_unselected' => $obj->getProducts(false)
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
 

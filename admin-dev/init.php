@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,16 +39,6 @@ try {
     if (!isset($context->employee) || !$context->employee->isLoggedBack()) {
         Tools::redirectAdmin('index.php?controller=AdminLogin&redirect='.$_SERVER['REQUEST_URI']);
     }
-
-    // Set current index
-    // @deprecated global
-    global $currentIndex; // retrocompatibility;
-    $currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
-
-    if ($back = Tools::getValue('back')) {
-        $currentIndex .= '&back='.urlencode($back);
-    }
-    AdminTab::$currentIndex = $currentIndex;
 
     $iso = $context->language->iso_code;
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php')) {

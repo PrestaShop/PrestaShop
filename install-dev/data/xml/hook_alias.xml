@@ -5,10 +5,6 @@
     <field name="name"/>
   </fields>
   <entities>
-    <hook_alias id="payment">
-      <alias>payment</alias>
-      <name>displayPayment</name>
-    </hook_alias>
     <hook_alias id="newOrder">
       <alias>newOrder</alias>
       <name>actionValidateOrder</name>
@@ -113,14 +109,6 @@
       <alias>orderSlip</alias>
       <name>actionOrderSlipAdd</name>
     </hook_alias>
-    <hook_alias id="productTab">
-      <alias>productTab</alias>
-      <name>displayProductTab</name>
-    </hook_alias>
-    <hook_alias id="productTabContent">
-      <alias>productTabContent</alias>
-      <name>displayProductTabContent</name>
-    </hook_alias>
     <hook_alias id="shoppingCart">
       <alias>shoppingCart</alias>
       <name>displayShoppingCartFooter</name>
@@ -143,7 +131,11 @@
     </hook_alias>
     <hook_alias id="productActions">
       <alias>productActions</alias>
-      <name>displayProductButtons</name>
+      <name>displayProductAdditionalInfo</name>
+    </hook_alias>
+    <hook_alias id="productButtons">
+      <alias>displayProductButtons</alias>
+      <name>displayProductAdditionalInfo</name>
     </hook_alias>
     <hook_alias id="backOfficeHome">
       <alias>backOfficeHome</alias>
@@ -181,14 +173,6 @@
       <alias>shoppingCartExtra</alias>
       <name>displayShoppingCart</name>
     </hook_alias>
-    <hook_alias id="search">
-      <alias>search</alias>
-      <name>actionSearch</name>
-    </hook_alias>
-    <hook_alias id="backBeforePayment">
-      <alias>backBeforePayment</alias>
-      <name>displayBeforePayment</name>
-    </hook_alias>
     <hook_alias id="updateCarrier">
       <alias>updateCarrier</alias>
       <name>actionCarrierUpdate</name>
@@ -221,10 +205,6 @@
       <alias>processCarrier</alias>
       <name>actionCarrierProcess</name>
     </hook_alias>
-    <hook_alias id="orderDetail">
-      <alias>orderDetail</alias>
-      <name>actionOrderDetail</name>
-    </hook_alias>
     <hook_alias id="beforeCarrier">
       <alias>beforeCarrier</alias>
       <name>displayBeforeCarrier</name>
@@ -237,10 +217,6 @@
       <alias>paymentCCAdded</alias>
       <name>actionPaymentCCAdd</name>
     </hook_alias>
-    <hook_alias id="extraProductComparison">
-      <alias>extraProductComparison</alias>
-      <name>displayProductComparison</name>
-    </hook_alias>
     <hook_alias id="categoryAddition">
       <alias>categoryAddition</alias>
       <name>actionCategoryAdd</name>
@@ -252,10 +228,6 @@
     <hook_alias id="categoryDeletion">
       <alias>categoryDeletion</alias>
       <name>actionCategoryDelete</name>
-    </hook_alias>
-    <hook_alias id="beforeAuthentication">
-      <alias>beforeAuthentication</alias>
-      <name>actionBeforeAuthentication</name>
     </hook_alias>
     <hook_alias id="paymentTop">
       <alias>paymentTop</alias>
@@ -296,10 +268,6 @@
     <hook_alias id="afterSaveProduct">
       <alias>afterSaveProduct</alias>
       <name>actionProductSave</name>
-    </hook_alias>
-    <hook_alias id="productListAssign">
-      <alias>productListAssign</alias>
-      <name>actionProductListOverride</name>
     </hook_alias>
     <hook_alias id="postProcessAttributeGroup">
       <alias>postProcessAttributeGroup</alias>

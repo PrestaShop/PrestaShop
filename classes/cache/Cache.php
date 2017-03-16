@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,6 +67,7 @@ abstract class CacheCore
         'guest',
         'pagenotfound',
         'page_viewed',
+        'employee',
     );
 
     /**
@@ -257,14 +258,14 @@ abstract class CacheCore
         }
 
         if (is_null($this->sql_tables_cached)) {
-            $this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
+            $this->sql_tables_cached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
             if (!is_array($this->sql_tables_cached)) {
                 $this->sql_tables_cached = array();
             }
         }
 
         // Store query results in cache
-        $key = Tools::encryptIV($query);
+        $key = Tools::hashIV($query);
         // no need to check the key existence before the set : if the query is already
         // in the cache, setQuery is not invoked
         $this->set($key, $result);
@@ -278,7 +279,7 @@ abstract class CacheCore
                 }
             }
         }
-        $this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
     }
 
     /**
@@ -321,8 +322,12 @@ abstract class CacheCore
      */
     public function deleteQuery($query)
     {
+        if ($this->isBlacklist($query)) {
+            return;
+        }
+
         if (is_null($this->sql_tables_cached)) {
-            $this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
+            $this->sql_tables_cached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
             if (!is_array($this->sql_tables_cached)) {
                 $this->sql_tables_cached = array();
             }
@@ -339,7 +344,7 @@ abstract class CacheCore
                 }
             }
         }
-        $this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
     }
 
     /**

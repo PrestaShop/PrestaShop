@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Admin;
 
-use Core_Foundation_IoC_Container;
+use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -39,7 +39,11 @@ class UrlGeneratorTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->context->language = new \stdClass();
+        return $this->markTestSkipped(
+            "Cannot use kernel in unit tests while legacy is here. To fix when legacy will be fully refactored."
+        );
+
+        $this->context->language = new \Language;
         $this->context->language->id = 42;
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
@@ -49,8 +53,6 @@ class UrlGeneratorTest extends UnitTestCase
 
     public function test_generate_equivalent_route()
     {
-        // FIXME: cannot use kernel in unit tests while legacy is here. To fix when legacy will be fully refactored.
-        /*
         $router = $this->sfKernel->getContainer()->get('router');
         $generator = new UrlGenerator($this->legacyContext, $router);
 
@@ -58,6 +60,5 @@ class UrlGeneratorTest extends UnitTestCase
         list($controller, $parameters) = $generator->getLegacyOptions('admin_product_catalog');
         $this->assertEquals('AdminProducts', $controller);
         $this->assertCount(0, $parameters);
-        */
     }
 }

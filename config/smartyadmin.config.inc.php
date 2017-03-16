@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 global $smarty;
 $smarty->debugging = false;
 $smarty->debugging_ctrl = 'NONE';
@@ -33,54 +32,107 @@ $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_S
 // But force compile_check since the performance impact is small and it is better for debugging
 $smarty->compile_check = true;
 
+smartyRegisterFunction($smarty, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
+smartyRegisterFunction($smarty, 'function', 'convertPrice', array('Product', 'convertPrice'));
+smartyRegisterFunction($smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'));
+smartyRegisterFunction($smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'));
+smartyRegisterFunction($smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));
+smartyRegisterFunction($smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'));
+smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
+smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
+smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
+smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
+smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
+smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
+smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
+smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
+
+$module_resources['modules'] = _PS_MODULE_DIR_;
+$smarty->registerResource('module', new SmartyResourceModule($module_resources, $isAdmin = true));
+
+function toolsConvertPrice($params, &$smarty)
+{
+    return Tools::convertPrice($params['price'], Context::getContext()->currency);
+}
+
 function smartyTranslate($params, &$smarty)
 {
-    $htmlentities = !isset($params['js']);
-    $pdf = isset($params['pdf']);
-    $addslashes = (isset($params['slashes']) || isset($params['js']));
-    $sprintf = isset($params['sprintf']) ? $params['sprintf'] : null;
+    $translator = Context::getContext()->getTranslator();
 
-    if ($pdf) {
+    $htmlEntities = !isset($params['html']) && !isset($params['js']);
+    $addSlashes = (isset($params['slashes']) || isset($params['js']));
+    $isInPDF = isset($params['pdf']);
+    $isInModule = isset($params['mod']) && !empty($params['mod']);
+    $sprintf = array();
+
+    if (isset($params['sprintf']) && null !== $params['sprintf'] && !is_array($params['sprintf'])) {
+        $sprintf = array($params['sprintf']);
+    } elseif ((isset($params['sprintf']) && null !== $params['sprintf'])) {
+        $sprintf = $params['sprintf'];
+    }
+
+    if (($htmlEntities || $addSlashes)) {
+        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
+    }
+
+    if (isset($params['d']) && !empty($params['d'])) {
+        if (isset($params['tags'])) {
+            $backTrace = debug_backtrace();
+
+            $errorMessage = sprintf(
+                'Unable to translate "%s" in %s. tags() is not supported anymore, please use sprintf().',
+                $params['s'],
+                $backTrace[0]['args'][1]->template_resource
+            );
+
+            if (_PS_MODE_DEV_) {
+                throw new Exception($errorMessage);
+            } else {
+                PrestaShopLogger::addLog($errorMessage);
+            }
+        }
+
+        if (!is_array($sprintf)) {
+            $backTrace = debug_backtrace();
+
+            $errorMessage = sprintf(
+                'Unable to translate "%s" in %s. sprintf() parameter should be an array.',
+                $params['s'],
+                $backTrace[0]['args'][1]->template_resource
+            );
+
+            if (_PS_MODE_DEV_) {
+                throw new Exception($errorMessage);
+            } else {
+                PrestaShopLogger::addLog($errorMessage);
+
+                return $params['s'];
+            }
+        }
+
+        return $translator->trans($params['s'], $sprintf, $params['d']);
+    }
+
+    if ($isInPDF) {
         return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $sprintf), $params);
     }
 
     $filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 
     // If the template is part of a module
-    if (!empty($params['mod'])) {
+    if ($isInModule) {
         return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'), $sprintf, isset($params['js'])), $params);
     }
 
-    // If the tpl is at the root of the template folder
-    if (dirname($filename) == '.') {
-        $class = 'index';
+    $translatedValue = $translator->trans($params['s'], $sprintf, null);
+
+    if ($htmlEntities) {
+        $translatedValue = htmlspecialchars($translatedValue, ENT_COMPAT, 'UTF-8');
     }
 
-    // If the tpl is used by a Helper
-    if (strpos($filename, 'helpers') === 0) {
-        $class = 'Helper';
-    } else {
-        // If the tpl is used by a Controller
-
-        if (!empty(Context::getContext()->override_controller_name_for_translations)) {
-            $class = Context::getContext()->override_controller_name_for_translations;
-        } elseif (isset(Context::getContext()->controller)) {
-            $class_name = get_class(Context::getContext()->controller);
-            $class = substr($class_name, 0, strpos(Tools::strtolower($class_name), 'controller'));
-        } else {
-            // Split by \ and / to get the folder tree for the file
-            $folder_tree = preg_split('#[/\\\]#', $filename);
-            $key = array_search('controllers', $folder_tree);
-
-            // If there was a match, construct the class name using the child folder name
-            // Eg. xxx/controllers/customers/xxx => AdminCustomers
-            if ($key !== false) {
-                $class = 'Admin'.Tools::toCamelCase($folder_tree[$key + 1], true);
-            } elseif (isset($folder_tree[0])) {
-                $class = 'Admin'.Tools::toCamelCase($folder_tree[0], true);
-            }
-        }
+    if ($addSlashes) {
+        $translatedValue = addslashes($translatedValue);
     }
 
-    return Translate::smartyPostProcessTranslation(Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf), $params);
+    return $translatedValue;
 }

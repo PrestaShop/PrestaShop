@@ -1,0 +1,73 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" />
+  <style>
+    .fake-button {
+      height: 40px;
+      line-height: 30px;
+    }
+
+    #csrf-white-container div:first-child {
+      background: white;
+      padding: 50px;
+    }
+
+    #security-compromised-page h1 {
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+  </style>
+{% endblock %}
+
+{% block title %}
+  {{ 'Invalid token'|trans({},'Admin.Catalog.Help' ) }}
+{% endblock %}
+{% block body %}
+  <div class="fluid-container" id="security-compromised-page" >
+      <div id="csrf-white-container" class="col-md-offset-1 col-md-10">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="alert alert-danger" role="alert">
+            <i class="material-icons">error_outline</i>
+            <p>
+              {{ '[1]Invalid token[/1]: direct access to this link may lead to a potential security breach.'|trans({},'Admin.Catalog.Help')|replace({'[1]' : '<b>', '[/1]' : '</b>'})|raw }}
+            </p>
+          </div>
+
+          <h1 class="text-md-center">{{ 'Do you want to display this page?'|trans({},'Admin.Catalog.Help' ) }}</h1>
+          <div class="col-md-8 col-md-offset-3">
+            <a class="btn btn-danger-outline fake-button col-md-4" href="{{ requestUri }}">
+              {{ 'Yes, I understand the risks'|trans({},'Admin.Catalog.Help' ) }}
+            </a>
+            <a class="btn btn-primary fake-button col-md-4 col-md-offset-1" href="{{ getAdminLink("AdminDashboard") }}">
+              {{ 'Take me out of there!'|trans({},'Admin.Catalog.Help' ) }}
+            </a>
+          </div>
+        </div>
+      </div>
+  </div>
+{% endblock %}

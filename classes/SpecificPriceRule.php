@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,7 +48,7 @@ class SpecificPriceRuleCore extends ObjectModel
         'table' => 'specific_price_rule',
         'primary' => 'id_specific_price_rule',
         'fields' => array(
-            'name' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+            'name' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
             'id_shop' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_country' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_currency' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
@@ -280,7 +280,6 @@ class SpecificPriceRuleCore extends ObjectModel
             } else {
                 $result = array(array('id_product' => 0, 'id_product_attribute' => null));
             }
-
         }
 
         return $result;

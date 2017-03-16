@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShopBundle\Install\XmlLoader;
 
 /**
  * This class is only here to show the possibility of extending InstallXmlLoader, which is the
@@ -30,12 +32,12 @@
  *
  * Please read documentation in ~/install/dev/ folder if you want to customize PrestaShop install / fixtures.
  */
-class InstallFixturesFashion extends InstallXmlLoader
+class InstallFixturesFashion extends XmlLoader
 {
     public function createEntityCustomer($identifier, array $data, array $data_lang)
     {
         if ($identifier == 'John') {
-            $data['passwd'] = Tools::encrypt('123456789');
+            $data['passwd'] = Tools::hash('123456789');
         }
 
         return $this->createEntity('customer', $identifier, 'Customer', $data, $data_lang);

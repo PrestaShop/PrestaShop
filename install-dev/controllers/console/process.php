@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,36 +19,43 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShopBundle\Install\Install;
+use PrestaShopBundle\Install\Database;
 
-class InstallControllerConsoleProcess extends InstallControllerConsole
+class InstallControllerConsoleProcess extends InstallControllerConsole implements HttpConfigureInterface
 {
-    const SETTINGS_FILE = 'config/settings.inc.php';
 
-    protected $model_install;
+    protected $model_database;
     public $process_steps = array();
     public $previous_button = false;
 
     public function init()
     {
-        require_once _PS_INSTALL_MODELS_PATH_.'install.php';
-        require_once _PS_INSTALL_MODELS_PATH_.'database.php';
-        $this->model_install = new InstallModelInstall();
-        $this->model_database = new InstallModelDatabase();
+        $this->model_install = new Install();
+        $this->model_install->setTranslator($this->translator);
+
+        $this->model_database = new Database();
+        $this->model_database->setTranslator($this->translator);
     }
 
     /**
-     * @see InstallAbstractModel::processNextStep()
+     * @see HttpConfigureInterface::processNextStep()
      */
     public function processNextStep()
     {
     }
 
+    public function display()
+    {
+
+    }
+
     /**
-     * @see InstallAbstractModel::validate()
+     * @see HttpConfigureInterface::validate()
      */
     public function validate()
     {
@@ -93,6 +100,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 
     public function process()
     {
+        /* avoid exceptions on re-installation */
+        $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
             $steps = array('database','fixtures','theme','modules','addons_modules');
@@ -273,22 +282,47 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     }
 
     /**
-     * PROCESS : installTheme
-     * Install theme
-     */
-    public function processInstallTheme()
-    {
-        $this->initializeContext();
-
-        return $this->model_install->installTheme();
-    }
-
-    /**
      * PROCESS : installModulesAddons
      * Install modules from addons
      */
     public function processInstallAddonsModules()
     {
         return $this->model_install->installModulesAddons();
+    }
+
+    /**
+     * PROCESS : installTheme
+     * Install theme
+     */
+    public function processInstallTheme()
+    {
+        $this->initializeContext();
+        return $this->model_install->installTheme($this->datas->theme);
+    }
+
+    private function clearConfigXML()
+    {
+        $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
+        $cacheFiles = scandir($configXMLPath);
+        $excludes = ['.htaccess', 'index.php'];
+
+        foreach($cacheFiles as $file) {
+            $filepath = $configXMLPath.$file;
+            if (is_file($filepath) && !in_array($file, $excludes)) {
+                unlink($filepath);
+            }
+        }
+    }
+
+    private function clearConfigThemes()
+    {
+        $themesPath = _PS_ROOT_DIR_.'/config/themes/';
+        $cacheFiles = scandir($themesPath);
+        foreach($cacheFiles as $file) {
+            $file = $themesPath.$file;
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
     }
 }

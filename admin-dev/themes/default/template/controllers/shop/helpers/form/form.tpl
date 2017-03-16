@@ -1,40 +1,40 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 {extends file="helpers/form/form.tpl"}
 
 {block name="input"}
 	{if $input.type == 'theme'}
 		{foreach $input.values as $theme}
-			<div class="col-lg-3 select_theme {if $theme->id == $fields_value.id_theme_checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
+			<div class="col-lg-3 select_theme {if $theme->getName() == $fields_value.theme_name}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
 				<div class="radio">
 					<label>
-						<input type="radio" name="id_theme" value="{$theme->id|intval}"{if $theme->id == $fields_value.id_theme_checked} checked="checked"{/if} /> {$theme->name|escape:'html':'UTF-8'}
+						<input type="radio" name="theme_name" value="{$theme->getName()|escape:'html':'UTF-8'}"{if $theme->getName() == $fields_value.theme_name} checked="checked"{/if} /> {$theme->getName()|escape:'html':'UTF-8'}
 					</label>
 				</div>
 				<div class="theme-container">
-					<img class="thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}" />
+					<img class="thumbnail" src="{$theme->get('preview')|escape:'html':'UTF-8'}" />
 				</div>
 			</div>
 		{/foreach}
@@ -81,11 +81,11 @@
 				<span class="switch prestashop-switch">
 					<input type="radio" name="{$field.name}" id="{$field.name}_on" value="1" {if $field.value } checked="checked" {/if} />
 					<label for="{$field.name}_on">
-						{l s='Yes'}
+						{l s='Yes' d='Admin.Global'}
 					</label>
 					<input type="radio" name="{$field.name}" id="{$field.name}_off" value="0"  {if !$field.value } checked="checked" {/if} />
 					<label for="{$field.name}_off">
-						{l s='No'}
+						{l s='No' d='Admin.Global'}
 					</label>
 					<a class="slide-button btn"></a>
 				</span>
@@ -121,10 +121,10 @@
 		{/foreach}
 		<div class="panel-footer">
 			<button type="submit" value="1" id="shop_form_submit_btn" name="submitAddshop" class="btn btn-default pull-right">
-				<i class="process-icon-save"></i> {l s='Save'}
+				<i class="process-icon-save"></i> {l s='Save' d='Admin.Actions'}
 			</button>
 			<a href="{$currentIndex|escape:'html':'UTF-8'}&amp;id_shop_group=0&amp;token={$token|escape:'html':'UTF-8'}" class="btn btn-default" onclick="window.history.back();">
-				<i class="process-icon-cancel"></i> {l s='Cancel'}
+				<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
 			</a>
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,9 +28,9 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Adapter_ProductPriceCalculator;
-use Adapter_AddressFactory;
-use Core_Business_ConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
+use PrestaShop\PrestaShop\Adapter\AddressFactory;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Address;
 use Cart;
 use Order;
@@ -61,6 +61,7 @@ class FakeProductPriceCalculator
             'id_shop' => null,
             'id_product' => $id,
             'id_product_attribute' => $id,
+            'id_customization' => 0,
             'cart_quantity' => $product->quantity,
             'price' => $product->price
         );
@@ -84,17 +85,14 @@ class CartTest extends UnitTestCase
         parent::setup();
 
         $this->productPriceCalculator = new FakeProductPriceCalculator;
-        $this->container->bind('Adapter_ProductPriceCalculator', $this->productPriceCalculator);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator', $this->productPriceCalculator);
 
-        $addressFactory = Phake::mock('Adapter_AddressFactory');
+        $addressFactory = Phake::mock('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
         $address = new Address;
         $address->id = 1;
 
         Phake::when($addressFactory)->findOrCreate()->thenReturn($address);
-        $this->container->bind('Adapter_AddressFactory', $addressFactory);
-
-        $this->cart = new Cart;
-        $this->cart->id = 1;
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory', $addressFactory);
     }
 
     public function teardown()
@@ -119,16 +117,21 @@ class CartTest extends UnitTestCase
     {
         $this->setRoundType(Order::ROUND_LINE);
 
+        $this->setUpCart();
+
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
 
-        $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $this->productPriceCalculator->getProducts());
+        $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS,
+            $this->productPriceCalculator->getProducts());
         $this->assertEquals(40.51, $orderTotal);
     }
 
     public function test_getOrderTotal_Round_Total_When_No_Tax()
     {
         $this->setRoundType(Order::ROUND_TOTAL);
+
+        $this->setUpCart();
 
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
@@ -141,10 +144,18 @@ class CartTest extends UnitTestCase
     {
         $this->setRoundType(Order::ROUND_ITEM);
 
+        $this->setUpCart();
+
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
 
         $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $this->productPriceCalculator->getProducts());
         $this->assertEquals(40.52, $orderTotal);
+    }
+
+    protected function setUpCart()
+    {
+        $this->cart = new Cart;
+        $this->cart->id = 1;
     }
 }

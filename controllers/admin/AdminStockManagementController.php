@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,12 +33,13 @@ class AdminStockManagementControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'product';
         $this->list_id = 'product';
         $this->className = 'Product';
         $this->lang = true;
         $this->multishop_context = Shop::CONTEXT_ALL;
+
+        parent::__construct();
 
         $this->fields_list = array(
             'reference' => array(
@@ -54,7 +55,7 @@ class AdminStockManagementControllerCore extends AdminController
                 'filter_key' => 'a!upc'
             ),
             'name' => array(
-                'title' => $this->l('Name')
+                'title' => $this->trans('Name', array(), 'Admin.Global')
             ),
             'stock' => array(
                 'title' => $this->l('Quantity'),
@@ -66,8 +67,6 @@ class AdminStockManagementControllerCore extends AdminController
                 'hint' => $this->l('Quantity total for all warehouses.')
             ),
         );
-
-        parent::__construct();
 
         // overrides confirmation messages specifically for this controller
         $this->_conf = array(
@@ -216,7 +215,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'text',
-                            'label' => $this->l('Name'),
+                            'label' => $this->trans('Name', array(), 'Admin.Global'),
                             'name' => 'name',
                             'disabled' => true,
                         ),
@@ -230,7 +229,7 @@ class AdminStockManagementControllerCore extends AdminController
                                         $this->l('Indicate the physical quantity of this product that you want to add.'),
                                         $this->l('Last physical quantity added: %s items (usable for sale: %s).'),
                                         ($last_sm_quantity > 0 ? $last_sm_quantity : $this->l('N/A')),
-                                        ($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->l('Yes') : $this->l('No')) : $this->l('N/A'))),
+                                        ($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->trans('Yes', array(), 'Admin.Global') : $this->trans('No', array(), 'Admin.Global')) : $this->l('N/A'))),
                         ),
                         array(
                             'type' => 'switch',
@@ -242,12 +241,12 @@ class AdminStockManagementControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Enabled')
+                                    'label' => $this->trans('Enabled', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('Disabled')
+                                    'label' => $this->trans('Disabled', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Is this quantity ready to be displayed in your shop, or is it reserved in the warehouse for other purposes?')
@@ -290,7 +289,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'select',
-                            'label' => $this->l('Label'),
+                            'label' => $this->trans('Label', array(), 'Admin.Global'),
                             'name' => 'id_stock_mvt_reason',
                             'required' => true,
                             'options' => array(
@@ -347,7 +346,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'text',
-                            'label' => $this->l('Name'),
+                            'label' => $this->trans('Name', array(), 'Admin.Global'),
                             'name' => 'name',
                             'disabled' => true,
                         ),
@@ -369,12 +368,12 @@ class AdminStockManagementControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Enabled')
+                                    'label' => $this->trans('Enabled', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('Disabled')
+                                    'label' => $this->trans('Disabled', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Do you want to remove this quantity from the usable quantity (yes) or the physical quantity (no)?')
@@ -393,7 +392,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'select',
-                            'label' => $this->l('Label'),
+                            'label' => $this->trans('Label', array(), 'Admin.Global'),
                             'name' => 'id_stock_mvt_reason',
                             'required' => true,
                             'options' => array(
@@ -449,7 +448,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'text',
-                            'label' => $this->l('Name'),
+                            'label' => $this->trans('Name', array(), 'Admin.Global'),
                             'name' => 'name',
                             'disabled' => true,
                         ),
@@ -483,12 +482,12 @@ class AdminStockManagementControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Yes')
+                                    'label' => $this->trans('Yes', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('No')
+                                    'label' => $this->trans('No', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Is this the usable quantity for sale?')
@@ -516,12 +515,12 @@ class AdminStockManagementControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Yes')
+                                    'label' => $this->trans('Yes', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('No')
+                                    'label' => $this->trans('No', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Do you want it to be for sale/usable?')
@@ -546,13 +545,13 @@ class AdminStockManagementControllerCore extends AdminController
         parent::postProcess();
 
         // Checks access
-        if (Tools::isSubmit('addStock') && !($this->tabAccess['add'] === '1')) {
+        if (Tools::isSubmit('addStock') && !($this->access('add'))) {
             $this->errors[] = Tools::displayError('You do not have the required permission to add stock.');
         }
-        if (Tools::isSubmit('removeStock') && !($this->tabAccess['delete'] === '1')) {
+        if (Tools::isSubmit('removeStock') && !($this->access('delete'))) {
             $this->errors[] = Tools::displayError('You do not have the required permission to delete stock');
         }
-        if (Tools::isSubmit('transferStock') && !($this->tabAccess['edit'] === '1')) {
+        if (Tools::isSubmit('transferStock') && !($this->access('edit'))) {
             $this->errors[] = Tools::displayError('You do not have the required permission to transfer stock.');
         }
 
@@ -765,7 +764,7 @@ class AdminStockManagementControllerCore extends AdminController
             case 'transferstock':
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->l('Save')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
                 );
 
                 // Default cancel button - like old back link
@@ -776,7 +775,7 @@ class AdminStockManagementControllerCore extends AdminController
 
                 $this->toolbar_btn['cancel'] = array(
                     'href' => $back,
-                    'desc' => $this->l('Cancel')
+                    'desc' => $this->trans('Cancel', array(), 'Admin.Actions')
                 );
             break;
 
@@ -857,7 +856,7 @@ class AdminStockManagementControllerCore extends AdminController
                     'filter_key' => 'a!upc'
                 ),
                 'name' => array(
-                    'title' => $this->l('Name'),
+                    'title' => $this->trans('Name', array(), 'Admin.Global'),
                     'orderby' => false,
                     'filter' => false,
                     'search' => false
@@ -930,13 +929,13 @@ class AdminStockManagementControllerCore extends AdminController
                 $this->skipActionByStock($item, false);
             }
             // Checks access
-            if (!($this->tabAccess['add'] === '1')) {
+            if (!($this->access('add'))) {
                 $this->addRowActionSkipList('addstock', array($item['id']));
             }
-            if (!($this->tabAccess['delete'] === '1')) {
+            if (!($this->access('delete'))) {
                 $this->addRowActionSkipList('removestock', array($item['id']));
             }
-            if (!($this->tabAccess['edit'] === '1')) {
+            if (!($this->access('edit'))) {
                 $this->addRowActionSkipList('transferstock', array($item['id']));
             }
         }
@@ -1046,8 +1045,6 @@ class AdminStockManagementControllerCore extends AdminController
 
                     $helper = new HelperForm();
 
-                    $this->initPageHeaderToolbar();
-
                     // Check if form template has been overriden
                     if (file_exists($this->context->smarty->getTemplateDir(0).'/'.$this->tpl_folder.'form.tpl')) {
                         $helper->tpl = $this->tpl_folder.'form.tpl';
@@ -1095,9 +1092,6 @@ class AdminStockManagementControllerCore extends AdminController
 
                     $this->context->smarty->assign(array(
                         'content' => $this->content,
-                        'show_page_header_toolbar' => $this->show_page_header_toolbar,
-                        'page_header_toolbar_title' => $this->page_header_toolbar_title,
-                        'page_header_toolbar_btn' => $this->page_header_toolbar_btn
                     ));
                 } else {
                     $this->errors[] = Tools::displayError('The specified product is not valid.');

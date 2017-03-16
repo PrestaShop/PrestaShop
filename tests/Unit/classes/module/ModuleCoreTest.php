@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes\Module;
 
-use Media;
+use DomDocument;
 use Module;
 use PHPUnit_Framework_TestCase;
-
-define('_PS_VERSION_', '1.6.1.0');
+use Symfony\Component\DomCrawler\Crawler;
 
 class FakeModule extends Module
 {
@@ -51,6 +50,13 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
 									</div>
 								</div>';
 
+    public function setup()
+    {
+        if (!defined('_PS_VERSION_')) {
+            define('_PS_VERSION_', '1.6.1.0');
+        }
+    }
+
     public function testDisplayError_shouldReturnSimpleError()
     {
         // given
@@ -58,10 +64,11 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
         $module = new FakeModule();
 
         // when
-        $html_output = $module->displayError($error);
+        $htmlOutput = $module->displayError($error);
 
         // then
-        $this->assertHtmlEquals($this->error_string_res, $html_output);
+        $crawler = new Crawler($htmlOutput);
+        $this->assertContains($error, $crawler->filter('.module_error')->text());
     }
 
     public function testDisplayError_shouldReturnMultipleErrors()
@@ -70,23 +77,16 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
         $errors = array(
             'Error 1',
             'Error 2',
-            'Error 3'
+            'Error 3',
         );
 
         $module = new FakeModule();
 
         // when
-        $html_output = $module->displayError($errors);
+        $htmlOutput = $module->displayError($errors);
 
         // then
-        $this->assertHtmlEquals($this->error_array_res, $html_output);
-    }
-
-    /**
-     * @param $html_output
-     */
-    public function assertHtmlEquals($expected, $html_output)
-    {
-        $this->assertEquals(Media::minifyHTML($expected), Media::minifyHTML($html_output));
+        $crawler = new Crawler($htmlOutput);
+        $this->assertCount(3, $crawler->filter('.module_error li'));
     }
 }

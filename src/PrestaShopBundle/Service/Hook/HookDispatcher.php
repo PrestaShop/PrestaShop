@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -58,6 +58,22 @@ class HookDispatcher extends EventDispatcher
     }
 
     /**
+     * Calls multiple hooks with the same parameter set.
+     *
+     * Each event is independent for each hook call. Parameter set is duplicated.
+     *
+     * @param array $eventNames The hooks to dispatch to.
+     * @param array $eventParameters The parameters set to insert in each HookEvent instance.
+     * @throws \Exception If the Event is not HookEvent or a subclass.
+     */
+    public function dispatchMultiple(array $eventNames, array $eventParameters)
+    {
+        foreach ($eventNames as $name) {
+            $this->dispatch($name, (new HookEvent())->setHookParameters($eventParameters));
+        }
+    }
+
+    /**
      * {@inheritdoc}
      * This override will avoid PropagationStopped to break the dispatching process.
      * After dispatch, in case of RenderingHookEvent, the final content array will be set in event.
@@ -66,13 +82,21 @@ class HookDispatcher extends EventDispatcher
     {
         $this->propagationStoppedCalled = false;
         foreach ($listeners as $listener) {
-            call_user_func($listener, $event, $eventName, null); // removes $this to parameters. Hooks should not have access to dispatcher
+            // removes $this to parameters. Hooks should not have access to dispatcher
+            ob_start();
+            call_user_func($listener, $event, $eventName, null);
+            $obContent = ob_get_clean();
+
             if ($event instanceof RenderingHookEvent) {
                 $listenerName = $event->popListener() ?: $listener[1];
-                $this->renderingContent[$listenerName] = $event->popContent();
+
+                $eventContent = $event->popContent();
+                $this->renderingContent[$listenerName] = strlen($eventContent) > strlen($obContent)
+                    ? $eventContent
+                    : $obContent;
+
             }
             if ($event->isPropagationStopped()) {
-                //break; // No break here to avoid a module stopping hook access to another module.
                 $this->propagationStoppedCalledBy = $listener;
             }
         }
@@ -100,7 +124,7 @@ class HookDispatcher extends EventDispatcher
     /**
      * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
      *
-     * @param $eventName The hook name.
+     * @param string $eventName The hook name.
      * @param array $parameters Hook parameters
      * @return Event The event that has been passed to each listener. Contains the responses.
      * @throws \Exception

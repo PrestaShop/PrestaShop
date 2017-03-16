@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -136,7 +136,7 @@ class HelperListCore extends Helper
     {
         // Append when we get a syntax error in SQL query
         if ($list === false) {
-            $this->context->controller->warnings[] = $this->l('Bad SQL query', 'Helper');
+            $this->context->controller->warnings[] = Context::getContext()->getTranslator()->trans('Bad SQL query', array(), 'Admin.Notifications.Error');
             return false;
         }
 
@@ -148,7 +148,13 @@ class HelperListCore extends Helper
         $this->_list = $list;
         $this->fields_list = $fields_display;
 
-        $this->orderBy = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderBy);
+        $patternsOrderBy = array(
+            '/^([a-z _]*!)/Ui',     // remove a. for example
+            '/^([a-z _]*\.)/Ui',    // remove a! for example
+            '/`/',                  // remove ` char
+        );
+        $this->orderBy = preg_replace($patternsOrderBy, '', $this->orderBy);
+
         $this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
 
         $this->tpl->assign(array(
@@ -332,8 +338,13 @@ class HelperListCore extends Helper
             }
         }
 
+        $showShopColumn = $this->shopLinkType;
+
+        $isMultiShopActive = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+
         $this->content_tpl->assign(array_merge($this->tpl_vars, array(
-            'shop_link_type' => $this->shopLinkType,
+            'shop_link_type' => $showShopColumn,
+            'multishop_active' => $isMultiShopActive,
             'name' => isset($name) ? $name : null,
             'position_identifier' => $this->position_identifier,
             'identifier' => $this->identifier,
@@ -369,11 +380,11 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_duplicate.tpl');
         if (!array_key_exists('Bad SQL query', self::$cache_lang)) {
-            self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'Helper');
+            self::$cache_lang['Duplicate'] = Context::getContext()->getTranslator()->trans('Duplicate', array(), 'Admin.Actions');
         }
 
         if (!array_key_exists('Copy images too?', self::$cache_lang)) {
-            self::$cache_lang['Copy images too?'] = $this->l('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', 'Helper');
+            self::$cache_lang['Copy images too?'] = Context::getContext()->getTranslator()->trans('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', array(), 'Admin.Catalog.Notification');
         }
 
         $duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
@@ -418,7 +429,7 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_details.tpl');
         if (!array_key_exists('Details', self::$cache_lang)) {
-            self::$cache_lang['Details'] = $this->l('Details', 'Helper');
+            self::$cache_lang['Details'] = Context::getContext()->getTranslator()->trans('Details', array(), 'Admin.Global');
         }
 
         $ajax_params = $this->ajax_params;
@@ -445,7 +456,7 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_view.tpl');
         if (!array_key_exists('View', self::$cache_lang)) {
-            self::$cache_lang['View'] = $this->l('View', 'Helper');
+            self::$cache_lang['View'] = Context::getContext()->getTranslator()->trans('View', array(), 'Admin.Actions');
         }
 
         $tpl->assign(array(
@@ -463,11 +474,27 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_edit.tpl');
         if (!array_key_exists('Edit', self::$cache_lang)) {
-            self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
+            self::$cache_lang['Edit'] = Context::getContext()->getTranslator()->trans('Edit', array(), 'Admin.Actions');
+        }
+
+        $href = $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token);
+
+        switch ($this->currentIndex) {
+            case 'index.php?controller=AdminProducts':
+            case 'index.php?tab=AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                global $kernel; // sf kernel
+                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                if (!$redirectLegacy && $this->identifier == 'id_product') {
+                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
+                }
+                break;
+            default:
         }
 
         $tpl->assign(array(
-            'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token),
+            'href' => $href,
             'action' => self::$cache_lang['Edit'],
             'id' => $id
         ));
@@ -483,24 +510,40 @@ class HelperListCore extends Helper
         $tpl = $this->createTemplate('list_action_delete.tpl');
 
         if (!array_key_exists('Delete', self::$cache_lang)) {
-            self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
+            self::$cache_lang['Delete'] = Context::getContext()->getTranslator()->trans('Delete', array(), 'Admin.Actions');
         }
 
         if (!array_key_exists('DeleteItem', self::$cache_lang)) {
-            self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper', true, false);
+            self::$cache_lang['DeleteItem'] = Context::getContext()->getTranslator()->trans('Delete selected item?', array(), 'Admin.Notifications.Info');
         }
 
         if (!array_key_exists('Name', self::$cache_lang)) {
-            self::$cache_lang['Name'] = $this->l('Name:', 'Helper', true, false);
+            self::$cache_lang['Name'] = Context::getContext()->getTranslator()->trans('Name:', array(), 'Admin.Global');
         }
 
         if (!is_null($name)) {
             $name = addcslashes('\n\n'.self::$cache_lang['Name'].' '.$name, '\'');
         }
 
+        $href = $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token);
+
+        switch ($this->currentIndex) {
+            case 'index.php?controller=AdminProducts':
+            case 'index.php?tab=AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                global $kernel; // sf kernel
+                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                if (!$redirectLegacy && $this->identifier == 'id_product') {
+                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
+                }
+                break;
+            default:
+        }
+
         $data = array(
             $this->identifier => $id,
-            'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+            'href' => $href,
             'action' => self::$cache_lang['Delete'],
         );
 
@@ -520,7 +563,7 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_default.tpl');
         if (!array_key_exists('Default', self::$cache_lang)) {
-            self::$cache_lang['Default'] = $this->l('Default', 'Helper');
+            self::$cache_lang['Default'] = Context::getContext()->getTranslator()->trans('Default', array(), 'Admin.Global');
         }
 
         $tpl->assign(array(
@@ -599,7 +642,11 @@ class HelperListCore extends Helper
                 $params['type'] = 'text';
             }
 
-            $value_key = $prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key);
+            $value_key = $prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) ? $params['filter_key'] : $key);
+            if ($key == 'active' && strpos($key, '!') !== false) {
+                $keys = explode('!', $params['filter_key']);
+                $value_key = $keys[1];
+            }
             $value = Context::getContext()->cookie->{$value_key};
             if (!$value && Tools::getIsset($value_key)) {
                 $value = Tools::getValue($value_key);
@@ -684,6 +731,8 @@ class HelperListCore extends Helper
             'filters_has_value' => (bool)$has_value
         ));
 
+        $isMultiShopActive = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+
         $this->header_tpl->assign(array_merge(array(
             'ajax' => $ajax,
             'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
@@ -698,6 +747,7 @@ class HelperListCore extends Helper
             'identifier' => $this->identifier,
             'id_cat' => $id_cat,
             'shop_link_type' => $this->shopLinkType,
+            'multishop_active' => $isMultiShopActive,
             'has_actions' => !empty($this->actions),
             'table_id' => isset($this->table_id) ? $this->table_id : null,
             'table_dnd' => isset($table_dnd) ? $table_dnd : null,

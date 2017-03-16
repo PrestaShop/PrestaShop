@@ -1,0 +1,102 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% set isModuleActive = module.database.active|default('0') %}
+
+<div
+  class="module-item module-item-grid col-md-12 col-lg-6 col-xl-4 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
+  data-id="{{ module.attributes.id }}"
+  data-name="{{ module.attributes.displayName }}"
+  data-scoring="{{ module.attributes.avgRate }}"
+  data-logo="{{ module.attributes.img }}"
+  data-author="{{ module.attributes.author }}"
+  data-version="{{ module.attributes.version }}"
+  data-description="{{ module.attributes.description }}"
+  data-tech-name="{{ module.attributes.name }}"
+  data-child-categories="{{ module.attributes.categoryName }}"
+  data-categories="{{ module.attributes.categoryParent }}"
+  data-type="{{ module.attributes.productType }}"
+  data-price="{{ module.attributes.price.raw }}"
+  data-active="{{ isModuleActive }}"
+>
+  <div class="module-item-wrapper-grid">
+    <div class="module-item-heading-grid">
+      <div class="module-logo-thumb-grid">
+        <img src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
+      </div>
+      <h3
+        class="text-ellipsis module-name-grid"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="{{ module.attributes.displayName|raw }}"
+      >
+        {% if module.attributes.displayName %}
+          {{ module.attributes.displayName|raw }}
+        {% else %}
+          {{ module.attributes.name }}
+        {% endif %}
+      </h3>
+      <div class="text-ellipsis xsmall module-version-author-grid">
+        {% block addon_version %}
+          {% if module.attributes.productType == "service" %}
+            {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
+          {% else %}
+            {{ 'v%version% - by %author%'|trans({ '%version%' : module.attributes.version, '%author%' : '<b>' ~ module.attributes.author ~ '</b>' }, 'Admin.Modules.Feature')|raw }}
+          {% endif %}
+        {% endblock %}
+      </div>
+    </div>
+    <div class="module-quick-description-grid small no-padding">
+      {% block addon_description %}
+        <div class="module-quick-description-text">
+          {{ module.attributes.description|raw }}
+          {% if module.attributes.description|length > 0 and module.attributes.description|length < module.attributes.fullDescription|length %}
+            ...
+          {% endif %}
+        </div>
+        <div class="module-read-more-grid">
+          {% if module.attributes.id != "0" %}
+            <a class="module-read-more-grid-btn url" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
+          {% endif %}
+        </div>
+      {% endblock %}
+    </div>
+
+    <div class="module-container module-quick-action-grid clearfix">
+      {% if module.attributes.nbRates > 0 %}
+        <div class="module-star-ranking-grid-{{ module.attributes.starsRate}} small">
+          ({{ module.attributes.nbRates }})
+        </div>
+      {% endif %}
+      {% if requireBulkActions is defined and requireBulkActions == true %}
+        <div class="pull-right module-checkbox-bulk-grid">
+          <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
+        </div>
+      {% endif %}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module, 'level' : level } %}
+    </div>
+    {% include 'PrestaShopBundle:Admin/Module/Includes:modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default(''), 'level' : level } %}
+    {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm.html.twig' with { 'module': module } %}
+  </div>
+</div>

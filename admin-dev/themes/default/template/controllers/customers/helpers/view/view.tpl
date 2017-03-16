@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 {extends file="helpers/view/view.tpl"}
 
@@ -43,7 +43,7 @@
 					<div class="panel-heading-action">
 						<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 							<i class="icon-edit"></i>
-							{l s='Edit'}
+							{l s='Edit' d='Admin.Actions'}
 						</a>
 					</div>
 				</div>
@@ -88,7 +88,7 @@
 					{/if}
 					{if $shop_is_feature_active}
 						<div class="row">
-							<label class="control-label col-lg-3">{l s='Shop'}</label>
+							<label class="control-label col-lg-3">{l s='Shop' d='Admin.Global'}</label>
 							<div class="col-lg-9">
 								<p class="form-control-static">{$name_shop}</p>
 							</div>
@@ -125,12 +125,12 @@
 								{if $customer->optin}
 									<span class="label label-success">
 										<i class="icon-check"></i>
-										{l s='Opt in'}
+										{l s='Partner offers' d='Admin.Orderscustomers.Feature'}
 									</span>
 									{else}
 									<span class="label label-danger">
 										<i class="icon-remove"></i>
-										{l s='Opt in'}
+										{l s='Partner offers' d='Admin.Orderscustomers.Feature'}
 									</span>
 								{/if}
 							</p>
@@ -191,7 +191,7 @@
 								<i class="icon-ok-circle icon-big"></i>
 								{l s='Valid orders:'}
 								<span class="label label-success">{$count_ok}</span>
-								{l s='for a total amount of %s' sprintf=$total_ok}
+								{l s='for a total amount of %s' sprintf=[$total_ok]}
 							</div>
 							<div class="col-lg-6">
 								<i class="icon-exclamation-sign icon-big"></i>
@@ -205,7 +205,7 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th class="center"><span class="title_box ">{l s='ID'}</span></th>
+									<th class="center"><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
 									<th><span class="title_box">{l s='Date'}</span></th>
 									<th><span class="title_box">{l s='Payment'}</span></th>
 									<th><span class="title_box">{l s='Status'}</span></th>
@@ -225,7 +225,7 @@
 									<td>{$order['total_paid_real']}</td>
 									<td>
 										<a class="btn btn-default" href="?tab=AdminOrders&amp;id_order={$order['id_order']|intval}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
-											<i class='icon-search'></i> {l s='View'}
+											<i class='icon-search'></i> {l s='View' d='Admin.Actions'}
 										</a>
 									</td>
 								</tr>
@@ -238,7 +238,7 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th><span class="title_box ">{l s='ID'}</span></th>
+									<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
 									<th><span class="title_box ">{l s='Date'}</span></th>
 									<th><span class="title_box ">{l s='Payment'}</span></th>
 									<th><span class="title_box ">{l s='Status'}</span></th>
@@ -275,7 +275,7 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box ">{l s='ID'}</span></th>
+								<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
 								<th><span class="title_box ">{l s='Date'}</span></th>
 								<th><span class="title_box ">{l s='Carrier'}</span></th>
 								<th><span class="title_box ">{l s='Total'}</span></th>
@@ -311,7 +311,7 @@
 					<thead>
 						<tr>
 							<th><span class="title_box">{l s='Date'}</span></th>
-							<th><span class="title_box">{l s='Name'}</span></th>
+							<th><span class="title_box">{l s='Name' d='Admin.Global'}</span></th>
 							<th><span class="title_box">{l s='Quantity'}</span></th>
 						</tr>
 					</thead>
@@ -339,8 +339,8 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th><span class="title_box ">{l s='ID'}</span></th>
-							<th><span class="title_box ">{l s='Name'}</span></th>
+							<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
+							<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -372,7 +372,7 @@
 						<div class="col-lg-12">
 							<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled">
 								<i class="icon-save"></i>
-								{l s='Save'}
+								{l s='Save' d='Admin.Actions'}
 							</button>
 						</div>
 					</div>
@@ -416,9 +416,9 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 								<th><span class="title_box">{l s='Code'}</span></th>
-								<th><span class="title_box">{l s='Name'}</span></th>
+								<th><span class="title_box">{l s='Name' d='Admin.Global'}</span></th>
 								<th><span class="title_box">{l s='Status'}</span></th>
 								<th><span class="title_box">{l s='Qty available'}</span></th>
 								<th><span class="title_box">{l s='Actions'}</span></th>
@@ -493,7 +493,7 @@
 				<table class="table">
 					<thead>
 					<tr>
-						<th><span class="title_box">{l s='ID'}</span></th>
+						<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 						<th><span class="title_box">{l s='Date'}</span></th>
 						<th><span class="title_box">{l s='Pages viewed'}</span></th>
 						<th><span class="title_box">{l s='Total time'}</span></th>
@@ -523,15 +523,15 @@
 					{l s='Groups'}
 					<span class="badge">{count($groups)}</span>
 					<a class="btn btn-default pull-right" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
-						<i class="icon-edit"></i> {l s='Edit'}
+						<i class="icon-edit"></i> {l s='Edit' d='Admin.Actions'}
 					</a>
 				</div>
 				{if $groups AND count($groups)}
 				<table class="table">
 					<thead>
 						<tr>
-							<th><span class="title_box ">{l s='ID'}</span></th>
-							<th><span class="title_box ">{l s='Name'}</span></th>
+							<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
+							<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -566,8 +566,8 @@
 					<thead>
 						<tr>
 							<th><span class="title_box ">{l s='Date'}</span></th>
-							<th><span class="title_box ">{l s='Name'}</span></th>
-							{if $shop_is_feature_active}<th>{l s='Shop'}</th>{/if}
+							<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
+							{if $shop_is_feature_active}<th>{l s='Shop' d='Admin.Global'}</th>{/if}
 						</tr>
 					</thead>
 					<tbody>
@@ -592,15 +592,21 @@
 			<div class="panel">
 				<div class="panel-heading">
 					<i class="icon-map-marker"></i> {l s='Addresses'} <span class="badge">{count($addresses)}</span>
+					<div class="panel-heading-action">
+						<a class="btn btn-default" href="?controller=AdminAddresses&amp;addaddress&amp;id_customer={$customer->id|intval}&amp;token={getAdminToken tab='AdminAddresses'}">
+							<i class="icon-plus-sign"></i>
+							{l s='Add'}
+						</a>
+					</div>
 				</div>
 				{if count($addresses)}
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box ">{l s='Company'}</span></th>
-								<th><span class="title_box ">{l s='Name'}</span></th>
+								<th><span class="title_box ">{l s='Company' d='Admin.Global'}</span></th>
+								<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
 								<th><span class="title_box ">{l s='Address'}</span></th>
-								<th><span class="title_box ">{l s='Country'}</span></th>
+								<th><span class="title_box ">{l s='Country' d='Admin.Global'}</span></th>
 								<th><span class="title_box ">{l s='Phone number(s)'}</span></th>
 								<th></th>
 							</tr>
@@ -623,7 +629,7 @@
 								<td class="text-right">
 									<div class="btn-group">
 										<a class="btn btn-default" href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;addaddress=1&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
-											<i class="icon-edit"></i> {l s='Edit'}
+											<i class="icon-edit"></i> {l s='Edit' d='Admin.Actions'}
 										</a>
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 											<span class="caret"></span>
@@ -632,7 +638,7 @@
 											<li>
 												<a href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;deleteaddress&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 													<i class="icon-trash"></i>
-													{l s='Delete'}
+													{l s='Delete' d='Admin.Actions'}
 												</a>
 											</li>
 										</ul>

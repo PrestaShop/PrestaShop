@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once(_PS_CLASS_DIR_.'PrestaShopAutoload.php');
+define('_PS_VERSION_', '1.7.1.0');
+
 require_once(_PS_CONFIG_DIR_.'alias.php');
+require_once(_PS_CLASS_DIR_.'PrestaShopAutoload.php');
 spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
 
-require(_PS_VENDOR_DIR_.'autoload.php');
+require(__DIR__.'/../app/autoload.php');

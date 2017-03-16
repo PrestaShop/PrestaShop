@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -255,7 +255,7 @@ class WebserviceRequestCore
     public static function getResources()
     {
         $resources = array(
-            'addresses' => array('description' => 'The Customer, Manufacturer and Customer addresses','class' => 'Address'),
+            'addresses' => array('description' => 'The Customer, Brand and Customer addresses','class' => 'Address'),
             'carriers' => array('description' => 'The Carriers','class' => 'Carrier'),
             'carts' => array('description' => 'Customer\'s carts', 'class' => 'Cart'),
             'cart_rules' => array('description' => 'Cart rules management', 'class' => 'CartRule'),
@@ -274,7 +274,8 @@ class WebserviceRequestCore
             'images' => array('description' => 'The images', 'specific_management' => true),
             'image_types' => array('description' => 'The image types', 'class' => 'ImageType'),
             'languages' => array('description' => 'Shop languages', 'class' => 'Language'),
-            'manufacturers' => array('description' => 'The product manufacturers','class' => 'Manufacturer'),
+            'manufacturers' => array('description' => 'The product brands','class' => 'Manufacturer'),
+            'messages' => array('description' => 'The Messages','class' => 'Message'),
             'order_carriers' => array('description' => 'The Order carriers','class' => 'OrderCarrier'),
             'order_details' => array('description' => 'Details of an order', 'class' => 'OrderDetail'),
             'order_histories' => array('description' => 'The Order histories','class' => 'OrderHistory'),
@@ -322,6 +323,14 @@ class WebserviceRequestCore
             'product_customization_fields' => array('description' => 'Customization Field', 'class' => 'CustomizationField'),
             'customizations' => array('description' => 'Customization values', 'class' => 'Customization'),
         );
+        $extra_resources = Hook::exec('addWebserviceResources', array('resources' => $resources), null, true, false);
+        if (is_array($extra_resources) && count($extra_resources)) {
+            foreach ($extra_resources as $new_resources) {
+                if (is_array($new_resources) && count($new_resources)) {
+                    $resources = array_merge($resources, $new_resources);
+                }
+            }
+        }
         ksort($resources);
         return $resources;
     }
@@ -584,7 +593,7 @@ class WebserviceRequestCore
         if (isset($this->objOutput)) {
             $this->objOutput->setStatus($status);
         }
-        $this->errors[] = $display_errors ? array($code, $label) : 'Internal error. To see this error please display the PHP errors.';
+        $this->errors[] = array($code, $label);
     }
 
     /**
@@ -1048,7 +1057,7 @@ class WebserviceRequestCore
                                 // if there are linked tables
                                 if (isset($this->resourceConfiguration['linked_tables']) && isset($this->resourceConfiguration['linked_tables'][$field])) {
                                     // contruct SQL join for linked tables
-                                    $sql_join .= 'LEFT JOIN `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['linked_tables'][$field]['table']).'` '.bqSQL($field).' ON (main.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.bqSQL($field).'.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
+                                    $sql_join .= 'LEFT JOIN `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['linked_tables'][$field]['table']).'` `'.bqSQL($field).'` ON (main.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = `'.bqSQL($field).'`.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
 
                                     // construct SQL filter for linked tables
                                     foreach ($url_param as $field2 => $value) {
@@ -1065,7 +1074,7 @@ class WebserviceRequestCore
                                     if (!is_array($url_param)) {
                                         $url_param = array($url_param);
                                     }
-                                    $sql_join .= 'LEFT JOIN `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']).'_lang` AS main_i18n ON (main.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = main_i18n.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
+                                    $sql_join .= 'LEFT JOIN `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']).'_lang` AS main_i18n ON (main.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = main_i18n.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
                                     foreach ($url_param as $field2 => $value) {
                                         $linked_field = $this->resourceConfiguration['fields'][$field];
                                         $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, 'main_i18n.');
@@ -1137,9 +1146,9 @@ class WebserviceRequestCore
                 // for sort on i18n field
                 elseif (in_array($fieldName, $i18n_available_filters)) {
                     if (!preg_match('#main_i18n#', $sql_join)) {
-                        $sql_join .= 'LEFT JOIN `'._DB_PREFIX_.pSQL($this->resourceConfiguration['retrieveData']['table']).'_lang` AS main_i18n ON (main.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = main_i18n.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
+                        $sql_join .= 'LEFT JOIN `'._DB_PREFIX_.bqSQL($this->resourceConfiguration['retrieveData']['table']).'_lang` AS main_i18n ON (main.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = main_i18n.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
                     }
-                    $sql_sort .= 'main_i18n.`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY main_i18n.`field` ASC|DESC
+                    $sql_sort .= 'main_i18n.`'.bqSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY main_i18n.`field` ASC|DESC
                 } else {
                     /** @var ObjectModel $object */
                     $object = new $this->resourceConfiguration['retrieveData']['className']();
@@ -1427,7 +1436,7 @@ class WebserviceRequestCore
                             $this->setError(400, 'parameter "'.$fieldName.'" not writable. Please remove this attribute of this XML', 93);
                             return false;
                         } else {
-                            $object->$fieldProperties['setter']((string)$attributes->$fieldName);
+                            $object->{$fieldProperties['setter']}((string)$attributes->$fieldName);
                         }
                     } elseif (property_exists($object, $sqlId)) {
                         $object->$sqlId = (string)$attributes->$fieldName;
@@ -1505,7 +1514,7 @@ class WebserviceRequestCore
                         $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
                         if ($assoc !== false && $assoc['type'] != 'fk_shop') {
                             // PUT nor POST is destructive, no deletion
-                            $sql = 'INSERT IGNORE INTO `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc['type']).'` (id_shop, '.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).') VALUES ';
+                            $sql = 'INSERT IGNORE INTO `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc['type']).'` (id_shop, `'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`) VALUES ';
                             foreach (self::$shopIDs as $id) {
                                 $sql .= '('.(int)$id.','.(int)$object->id.')';
                                 if ($id != end(self::$shopIDs)) {
@@ -1536,18 +1545,22 @@ class WebserviceRequestCore
      */
     protected function getSQLRetrieveFilter($sqlId, $filterValue, $tableAlias = 'main.')
     {
+        if (!empty($tableAlias)) {
+            $tableAlias = '`'.bqSQL(str_replace('.', '', $tableAlias)).'`.';
+        }
+
         $ret = '';
         preg_match('/^(.*)\[(.*)\](.*)$/', $filterValue, $matches);
         if (count($matches) > 1) {
             if ($matches[1] == '%' || $matches[3] == '%') {
-                $ret .= ' AND '.bqSQL($tableAlias).'`'.bqSQL($sqlId).'` LIKE "'.pSQL($matches[1].$matches[2].$matches[3])."\"\n";
+                $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` LIKE "'.pSQL($matches[1].$matches[2].$matches[3])."\"\n";
             } elseif ($matches[1] == '' && $matches[3] == '') {
                 if (strpos($matches[2], '|') > 0) {
                     $values = explode('|', $matches[2]);
                     $ret .= ' AND (';
                     $temp = '';
                     foreach ($values as $value) {
-                        $temp .= bqSQL($tableAlias).'`'.bqSQL($sqlId).'` = "'.bqSQL($value).'" OR ';
+                        $temp .= $tableAlias.'`'.bqSQL($sqlId).'` = "'.bqSQL($value).'" OR ';
                     }
                     $ret .= rtrim($temp, 'OR ').')'."\n";
                 } elseif (preg_match('/^([\d\.:\-\s]+),([\d\.:\-\s]+)$/', $matches[2], $matches3)) {

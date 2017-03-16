@@ -1,14 +1,14 @@
 <?php
 
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
+ * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
+ * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,16 +20,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\Classes;
+namespace PrestaShop\PrestaShop\tests\Integration\classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
-use PrestaShop\PrestaShop\Tests\Helper\DatabaseDump;
+use PrestaShop\PrestaShop\Tests\TestCase\DatabaseDump;
 use Exception;
 use Address;
 use Carrier;
@@ -39,6 +39,7 @@ use Configuration;
 use Context;
 use Currency;
 use Db;
+use Group;
 use Order;
 use Product;
 use Tools;
@@ -58,7 +59,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         // Save the database to restore it later: we're not the only test running so let's leave things
         // the way we found them.
         self::$dump = DatabaseDump::create();
-
         // Some tests might have cleared the configuration
         Configuration::loadConfiguration();
 
@@ -370,6 +370,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     public function setUp()
     {
+        Group::clearCachedValues();
         self::setRoundingType('line');
         self::setRoundingMode('half_up');
         self::setRoundingDecimals(2);
@@ -377,6 +378,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         self::deactivateCurrentCartRules();
         // Something might have disabled CartRules :)
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
+        Configuration::set('PS_GROUP_FEATURE_ACTIVE', true);
         Configuration::set('PS_ATCP_SHIPWRAP', false);
     }
 

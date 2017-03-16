@@ -1,0 +1,223 @@
+.cart-grid {
+  margin-bottom: rem(16px);
+}
+.cart-items {
+  margin-bottom: 0;
+}
+.cart-item {
+  padding: rem(16px) 0;
+}
+.cart-summary-line {
+  @include clearfix;
+  clear: both;
+  .label {
+    padding-left: 0;
+    font-weight: normal;
+    white-space: inherit;
+  }
+  .value {
+    color: $gray-darker;
+    float: right;
+  }
+  &.cart-summary-subtotals {
+    .label,
+    .value {
+      font-weight: normal;
+    }
+  }
+}
+/** CART BODY **/
+.cart-grid-body {
+  a.label {
+    &:hover {
+      color: $brand-primary;
+    }
+  }
+  .card-block {
+    padding: rem(16px);
+    h1 {
+      margin-bottom: 0;
+    }
+  }
+  hr {
+    margin: 0;
+  }
+  .cart-overview {
+    padding: rem(16px);
+  }
+  margin-bottom: rem(12px);
+}
+/** CART RIGHT **/
+.cart-grid-right {
+  hr {
+    margin: 0;
+  }
+  .promo-discounts {
+    margin-bottom: 0;
+    .cart-summary-line {
+      .label {
+        color: $gray-dark;
+        .code {
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+.block-promo {
+  .promo-code {
+    padding: 1.60rem;
+    background: $gray-light;
+    .alert-danger {
+      position: relative;
+      margin-top: rem(20px);
+      background: $brand-danger;
+      color: white;
+      display: none;
+      &::after {
+        bottom: 100%;
+        left: 10%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-bottom-color:  $brand-danger;
+        border-width: 10px;
+        margin-left: -10px;
+      }
+    }
+  }
+  .promo-input {
+    color: $gray-darker;
+    border: $gray 1px solid;
+    height: rem(40px);
+    text-indent: rem(10px);
+    width: 60%;
+    + button {
+      margin-top: -4px;
+      text-transform: capitalize;
+    }
+  }
+  .cart-summary-line .label,
+  .promo-name {
+    color: $brand-warning;
+    font-weight: 600;
+    a {
+      font-weight: normal;
+      color: $gray-darker;
+      display: inline-block;
+    }
+  }
+  .promo-code-button {
+    padding-left: rem(20px);
+    margin-bottom: rem(20px);
+    display: inline-block;
+  }
+  &.promo-highlighted {
+    padding: rem(20px);
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+/** CONTENT LEFT **/
+.product-line-grid-left {
+  img {
+    max-width: 100%;
+  }
+}
+/** CONTENT BODY **/
+.product-line-grid-body {
+  > .product-line-info {
+    > .label {
+      padding: 0;
+      line-height: inherit;
+      text-align: left;
+      white-space: inherit;
+    }
+    > .out-of-stock {
+      color: red;
+    }
+    > .available {
+      color: $brand-success;
+    }
+    > .unit-price-cart {
+      padding-left: 0.3125rem;
+      font-size: 0.875rem;
+      color: $gray-dark;
+    }
+  }
+}
+/** CONTENT LEFT **/
+.product-line-grid-right {
+  .bootstrap-touchspin {
+    width: rem(68px);
+    float: left;
+    box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15);
+    > .form-control,
+    > .input-group {
+      color: $gray-darker;
+      background-color: white;
+      height: $input-height;
+      padding: 0.175rem 0.5rem;
+      width: rem(48px);
+    }
+    > .input-group-btn-vertical {
+      width: auto;
+    }
+  }
+  .cart-line-product-actions,
+  .product-price {
+    color: $gray-darker;
+    line-height: 36px;
+    .remove-from-cart {
+      color: $gray-darker;
+      display: inline-block;
+      margin-top: rem(5px);
+    }
+  }
+}
+
+/*** Responsive part ***/
+@include media-breakpoint-down(sm) {
+  .product-line-grid-body {
+    margin-bottom: rem(16px);
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .cart-items {
+    padding: rem(16px) 0;
+  }
+  .cart-item {
+    border-bottom: 1px solid $gray-light;
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+  .cart-grid-body {
+    .cart-overview {
+      padding: 0;
+    }
+    .no-items {
+      padding: rem(16px);
+      display: inline-block;
+    }
+  }
+  .product-line-grid-left {
+    padding-right: 0 !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .product-line-grid-right {
+    .qty {
+      width: 100%;
+    }
+    .price {
+      width: 100%;
+    }
+  }
+}

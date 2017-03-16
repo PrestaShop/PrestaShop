@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -108,10 +108,11 @@ class DispatcherCore
         ),
         'product_rule' => array(
             'controller' =>    'product',
-            'rule' =>        '{category:/}{id}-{rewrite}{-:ean13}.html',
+            'rule' =>        '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}.html',
             'keywords' => array(
                 'id' =>            array('regexp' => '[0-9]+', 'param' => 'id_product'),
-                'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'id_product_attribute' => array('regexp' => '[0-9]+', 'param' => 'id_product_attribute'),
+                'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*', 'param' => 'rewrite'),
                 'ean13' =>        array('regexp' => '[0-9\pL]*'),
                 'category' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'categories' =>        array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
@@ -260,6 +261,9 @@ class DispatcherCore
         if (!$this->controller) {
             $this->controller = $this->useDefaultController();
         }
+        // Execute hook dispatcher before
+        Hook::exec('actionDispatcherBefore', array ('controller_type' => $this->front_controller));
+
         // Dispatch with right front controller
         switch ($this->front_controller) {
             // Dispatch front office controller
@@ -268,9 +272,6 @@ class DispatcherCore
                 $controllers['index'] = 'IndexController';
                 if (isset($controllers['auth'])) {
                     $controllers['authentication'] = $controllers['auth'];
-                }
-                if (isset($controllers['compare'])) {
-                    $controllers['productscomparison'] = $controllers['compare'];
                 }
                 if (isset($controllers['contact'])) {
                     $controllers['contactform'] = $controllers['contact'];
@@ -347,6 +348,7 @@ class DispatcherCore
                     runAdminTab($this->controller, !empty($_REQUEST['ajaxMode']));
                     return;
                 }
+
             break;
 
             default :
@@ -365,6 +367,11 @@ class DispatcherCore
 
             // Running controller
             $controller->run();
+
+            // Execute hook dispatcher after
+            if (isset($params_hook_action_dispatcher)) {
+                Hook::exec('actionDispatcherAfter', $params_hook_action_dispatcher);
+            }
         } catch (PrestaShopException $e) {
             $e->displayMessage();
         }
@@ -447,7 +454,7 @@ class DispatcherCore
             // Load routes from meta table
             $sql = 'SELECT m.page, ml.url_rewrite, ml.id_lang
 					FROM `'._DB_PREFIX_.'meta` m
-					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.Shop::addSqlRestrictionOnLang('ml', $id_shop).')
+					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.Shop::addSqlRestrictionOnLang('ml', (int) $id_shop).')
 					ORDER BY LENGTH(ml.url_rewrite) DESC';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
@@ -523,8 +530,8 @@ class DispatcherCore
 
                 $prepend_regexp = $append_regexp = '';
                 if ($prepend || $append) {
-                    $prepend_regexp = '('.preg_quote($prepend);
-                    $append_regexp = preg_quote($append).')?';
+                    $prepend_regexp = '('.$prepend;
+                    $append_regexp = $append.')?';
                 }
 
                 if (isset($keywords[$keyword]['param'])) {

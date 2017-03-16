@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -601,8 +601,6 @@ class OrderCore extends ObjectModel
             $products = $this->getProductsDetail();
         }
 
-        $customized_datas = Product::getAllCustomizedDatas($this->id_cart);
-
         $result_array = array();
         foreach ($products as $row) {
             // Change qty if selected
@@ -624,6 +622,8 @@ class OrderCore extends ObjectModel
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
 
+			$customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int)$row['id_customization']);
+
             $this->setProductCustomizedDatas($row, $customized_datas);
 
             // Add information for virtual product
@@ -635,12 +635,12 @@ class OrderCore extends ObjectModel
 
             $row['id_address_delivery'] = $this->id_address_delivery;
 
+            if ($customized_datas) {
+	            Product::addProductCustomizationPrice($row, $customized_datas);
+	        }
+
             /* Stock product */
             $result_array[(int)$row['id_order_detail']] = $row;
-        }
-
-        if ($customized_datas) {
-            Product::addCustomizationPrice($result_array, $customized_datas);
         }
 
         return $result_array;
@@ -754,26 +754,26 @@ class OrderCore extends ObjectModel
         if (count($products) < 1) {
             return false;
         }
+
         $virtual = true;
+
         foreach ($products as $product) {
-            $pd = ProductDownload::getIdFromIdProduct((int)$product['product_id']);
-            if ($pd && Validate::isUnsignedInt($pd) && $product['download_hash'] && $product['display_filename'] != '') {
-                if ($strict === false) {
-                    return true;
-                }
-            } else {
-                $virtual &= false;
+            if ($strict === false && (bool)$product['is_virtual']) {
+                return true;
             }
+
+            $virtual &= (bool)$product['is_virtual'];
         }
+
         return $virtual;
     }
 
     /**
-     * @deprecated 1.5.0.1
+     * @deprecated 1.5.0.1 use Order::getCartRules() instead
      */
     public function getDiscounts($details = false)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Order::getCartRules() instead');
         return Order::getCartRules();
     }
 
@@ -1080,20 +1080,47 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Get an order by its cart id
+     * Get an order id by its cart id
      *
      * @param int $id_cart Cart id
-     * @return array Order details
+     * @return int Order id
+     *
+     * @deprecated since 1.7.1.0 Use getIdByCartId() instead
      */
     public static function getOrderByCartId($id_cart)
     {
-        $sql = 'SELECT `id_order`
-                FROM `'._DB_PREFIX_.'orders`
-                WHERE `id_cart` = '.(int)$id_cart
-                    .Shop::addSqlRestriction();
-        $result = Db::getInstance()->getRow($sql);
+        return self::getIdByCartId($id_cart);
+    }
 
-        return isset($result['id_order']) ? $result['id_order'] : false;
+    /**
+     * Get an order object by its cart id
+     *
+     * @param int $id_cart Cart id
+     * @return OrderCore
+     */
+    public static function getByCartId($id_cart)
+    {
+        $id_order = (int) self::getIdByCartId((int) $id_cart);
+
+        return ($id_order > 0) ? new self($id_order) : null;
+    }
+
+    /**
+     * Get the order id by its cart id
+     *
+     * @param int $id_cart Cart id
+     * @return int $id_order
+     */
+    public static function getIdByCartId($id_cart)
+    {
+        $sql = 'SELECT `id_order` 
+            FROM `'._DB_PREFIX_.'orders`
+            WHERE `id_cart` = '.(int) $id_cart.
+            Shop::addSqlRestriction();
+
+        $result = Db::getInstance()->getValue($sql);
+
+        return !empty($result) ? (int) $result : false;
     }
 
     /**
@@ -1106,7 +1133,7 @@ class OrderCore extends ObjectModel
      */
     public function addDiscount($id_cart_rule, $name, $value)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Order::addCartRule($id_cart_rule, $name, array(\'tax_incl\' => $value, \'tax_excl\' => \'0.00\')) instead');
         return Order::addCartRule($id_cart_rule, $name, array('tax_incl' => $value, 'tax_excl' => '0.00'));
     }
 
@@ -1190,9 +1217,12 @@ class OrderCore extends ObjectModel
         if ($number) {
             $sql .= (int)$number;
         } else {
-            $sql .= '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
-            FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
+            $getNumberSql = '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
+                FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
                 ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y') : '').') AS result)';
+            $getNumberSqlRow = Db::getInstance()->getRow($getNumberSql);
+            $newInvoiceNumber = $getNumberSqlRow['new_number'];
+            $sql .= $newInvoiceNumber;
         }
 
         $sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
@@ -1319,7 +1349,7 @@ class OrderCore extends ObjectModel
 
         $address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $carrier = new Carrier((int)$this->id_carrier);
-        $tax_calculator = $carrier->getTaxCalculator($address);
+        $tax_calculator = (Configuration::get('PS_ATCP_SHIPWRAP')) ? \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id) : $carrier->getTaxCalculator($address);
         $order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
         $order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
         $order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
@@ -1334,7 +1364,7 @@ class OrderCore extends ObjectModel
         $order_invoice->save();
 
         if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-            $wrapping_tax_calculator = Adapter_ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
+            $wrapping_tax_calculator = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
         } else {
             $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
             $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
@@ -1393,8 +1423,10 @@ class OrderCore extends ObjectModel
         if ($number) {
             $sql .= (int)$number;
         } else {
-            $sql .= '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
-            FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+            $getNumberSql = '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
+                FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+            $newInvoiceNumber = Db::getInstance()->getValue($getNumberSql);
+            $sql .= $newInvoiceNumber;
         }
 
         $sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
@@ -1463,6 +1495,26 @@ class OrderCore extends ObjectModel
         $orders = new PrestaShopCollection('Order');
         $orders->where('reference', '=', $reference);
         return $orders;
+    }
+
+    /**
+     * The combination (reference, email) should be unique, of multiple entries are found, then we take the first one.
+     * @param $reference Order reference
+     * @param $email customer email address
+     *
+     * @return Order The first order found
+     */
+    public static function getByReferenceAndEmail($reference, $email)
+    {
+        $sql = '
+          SELECT id_order
+            FROM `'._DB_PREFIX_.'orders` o
+            LEFT JOIN `'._DB_PREFIX_.'customer` c ON (o.`id_customer` = c.`id_customer`)
+                WHERE o.`reference` = \''.pSQL($reference).'\' AND c.`email` = \''.pSQL($email).'\'
+        ';
+
+        $id = (int) Db::getInstance()->getValue($sql);
+        return new Order($id);
     }
 
     public function getTotalWeight()
@@ -2120,6 +2172,7 @@ class OrderCore extends ObjectModel
     {
         $collection = new PrestaShopCollection('order');
         $collection->where('reference', '=', $this->reference);
+        $collection->where('id_cart', '=', $this->id_cart);
         $collection->where('id_order', '<>', $this->id);
         return $collection;
     }
@@ -2437,5 +2490,66 @@ class OrderCore extends ObjectModel
             'INNER JOIN '._DB_PREFIX_.'tax t ON t.id_tax = odt.id_tax '.
             'WHERE o.id_order = '.(int)$this->id
         );
+    }
+
+    /**
+     * Re calculate shipping cost
+     * @return object $order
+     */
+    public function refreshShippingCost()
+    {
+        if (empty($this->id)) {
+            return false;
+        }
+
+        if (!Configuration::get('PS_ORDER_RECALCULATE_SHIPPING')) {
+            return $this;
+        }
+
+        $fake_cart = new Cart((int) $this->id_cart);
+        $new_cart = $fake_cart->duplicate();
+        $new_cart = $new_cart['cart'];
+
+        // assign order id_address_delivery to cart
+        $new_cart->id_address_delivery = (int) $this->id_address_delivery;
+
+        // assign id_carrier
+        $new_cart->id_carrier = (int) $this->id_carrier;
+
+        //remove all products : cart (maybe change in the meantime)
+        foreach ($new_cart->getProducts() as $product) {
+            $new_cart->deleteProduct((int) $product['id_product'], (int) $product['id_product_attribute']);
+        }
+
+        // add real order products
+        foreach ($this->getProducts() as $product) {
+            $new_cart->updateQty($product['product_quantity'], (int) $product['product_id']);
+        }
+
+        // get new shipping cost
+        $base_total_shipping_tax_incl = (float) $new_cart->getPackageShippingCost((int) $new_cart->id_carrier, true, null);
+        $base_total_shipping_tax_excl = (float) $new_cart->getPackageShippingCost((int) $new_cart->id_carrier, false, null);
+
+        // calculate diff price, then apply new order totals
+        $diff_shipping_tax_incl = $this->total_shipping_tax_incl - $base_total_shipping_tax_incl;
+        $diff_shipping_tax_excl = $this->total_shipping_tax_excl - $base_total_shipping_tax_excl;
+
+        $this->total_shipping_tax_excl = $this->total_shipping_tax_excl - $diff_shipping_tax_excl;
+        $this->total_shipping_tax_incl = $this->total_shipping_tax_incl - $diff_shipping_tax_incl;
+        $this->total_shipping = $this->total_shipping_tax_incl;
+        $this->total_paid_tax_excl = $this->total_paid_tax_excl - $diff_shipping_tax_excl;
+        $this->total_paid_tax_incl = $this->total_paid_tax_incl - $diff_shipping_tax_incl;
+        $this->total_paid = $this->total_paid_tax_incl;
+        $this->update();
+
+        // save order_carrier prices, we'll save order right after this in update() method
+        $order_carrier = new OrderCarrier((int) $this->getIdOrderCarrier());
+        $order_carrier->shipping_cost_tax_excl = $this->total_shipping_tax_excl;
+        $order_carrier->shipping_cost_tax_incl = $this->total_shipping_tax_incl;
+        $order_carrier->update();
+
+        // remove fake cart
+        $new_cart->delete();
+        return $this;
     }
 }

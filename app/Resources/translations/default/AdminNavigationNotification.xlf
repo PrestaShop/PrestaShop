@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c059561b30601ffaf8759ae84f2b44b9">
+        <source>An error occurred while updating new window property.</source>
+        <target>An error occurred while updating new window property.</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:237</note>
+      </trans-unit>
+      <trans-unit id="aeaf2891ec065451798dc21794358950">
+        <source>An error occurred while updating the new window property for this object.</source>
+        <target>An error occurred while updating the new window property for this object.</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:240</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

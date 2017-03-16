@@ -18,7 +18,7 @@
     <meta_title>Allgemeine Gesch&#xE4;ftsbedingungen</meta_title>
     <meta_description>Unsere AGB</meta_description>
     <meta_keywords>AGB, Bedingungen, Nutzung, Verkauf</meta_keywords>
-    <content>&lt;h2&gt;Your terms and conditions of use&lt;/h2&gt;&lt;h3&gt;Rule 1&lt;/h3&gt;&lt;p&gt;Here is the rule 1 content&lt;/p&gt;&#xD;
+    <content>&lt;h2&gt;Ihre AGB&lt;/h2&gt;&lt;h3&gt;Rule 1&lt;/h3&gt;&lt;p&gt;Here is the rule 1 content&lt;/p&gt;&#xD;
 &lt;h3&gt;Rule 2&lt;/h3&gt;&lt;p&gt;Here is the rule 2 content&lt;/p&gt;&#xD;
 &lt;h3&gt;Rule 3&lt;/h3&gt;&lt;p&gt;Here is the rule 3 content&lt;/p&gt;</content>
     <link_rewrite>allgemeine-geschaeftsbedingungen</link_rewrite>
@@ -35,7 +35,7 @@
   </cms>
   <cms id="Secure_payment">
     <meta_title>Sichere Zahlung</meta_title>
-    <meta_description>Unsere Sicherheits-Zahlungsmethoden</meta_description>
+    <meta_description>Unsere sicheren Zahlungsarten</meta_description>
     <meta_keywords>Sichere Zahlung, SSL, Visa, MasterCard, PayPal</meta_keywords>
     <content>&lt;h2&gt;Secure payment&lt;/h2&gt;&#xD;
 &lt;h3&gt;Our secure payment&lt;/h3&gt;&lt;p&gt;With SSL&lt;/p&gt;&#xD;

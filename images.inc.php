@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
-  * @deprecated 1.5.0
-  */
+ * @deprecated 1.5.0
+ */
 function cacheImage($image, $cacheImage, $size, $imageType = 'jpg', $disableCache = false)
 {
     Tools::displayAsDeprecated();
@@ -60,8 +60,8 @@ function isPicture($file, $types = null)
 }
 
 /**
-  * @deprecated 1.5.0
-  */
+ * @deprecated 1.5.0
+ */
 function checkIco($file, $maxFileSize = 0)
 {
     Tools::displayAsDeprecated();
@@ -69,8 +69,8 @@ function checkIco($file, $maxFileSize = 0)
 }
 
 /**
-  * @deprecated 1.5.0
-  */
+ * @deprecated 1.5.0
+ */
 function imageResize($sourceFile, $destFile, $destWidth = null, $destHeight = null, $fileType = 'jpg')
 {
     Tools::displayAsDeprecated();
@@ -134,7 +134,7 @@ function deleteImage($id_item, $id_image = null)
             unlink($path.$id_item.'.jpg');
         }
 
-    /* Auto-generated images */
+        /* Auto-generated images */
         $imagesTypes = ImageType::getImagesTypes();
         foreach ($imagesTypes as $k => $imagesType) {
             if (file_exists($path.$id_item.'-'.$imagesType['name'].'.jpg')) {

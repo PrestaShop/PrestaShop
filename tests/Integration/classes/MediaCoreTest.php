@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -64,15 +64,15 @@ class MediaCoreTest extends IntegrationTestCase
             array('url("//wwww.google.com/images/nav_logo12.png")', '', 'url("//wwww.google.com/images/nav_logo12.png")', false),
             array('url(\'//wwww.google.com/images/nav_logo13.png\')', '', 'url(\'//wwww.google.com/images/nav_logo13.png\')', false),
             array('url(http://cdn.server/uri/img/contact-form.png)', '/path/', 'url(http://cdn.server/uri/img/contact-form.png)', false),
-            array(' url(../img/contact-form1.png)', '/themes/default-bootstrap/css/contact-form.css', 'url(http://server/themes/default-bootstrap/css/../img/contact-form1.png)', true),
-            array(' url(./contact-form2.png)', '/themes/default-bootstrap/css/contact-form.css', 'url(http://server/themes/default-bootstrap/css/./contact-form2.png)', true),
-            array('url(/img/contact-form3.png)', '/themes/default-bootstrap/css/contact-form.css', 'url(http://server/img/contact-form3.png)', true),
-            array('url(\'../img/contact-form4.png\')', '/themes/default-bootstrap/css/contact-form.css', 'url(\'http://server/themes/default-bootstrap/css/../img/contact-form4.png\')', true),
-            array(' url(\'./contact-form5.png\')', '/themes/default-bootstrap/css/contact-form.css', 'url(\'http://server/themes/default-bootstrap/css/./contact-form5.png\')', true),
-            array('url(\'/img/contact-form6.png\')', '/themes/default-bootstrap/css/contact-form.css', 'url(\'http://server/img/contact-form6.png\')', true),
-            array('url("../img/contact-form7.png")', '/themes/default-bootstrap/css/contact-form.css', 'url("http://server/themes/default-bootstrap/css/../img/contact-form7.png")', true),
-            array('url("./contact-form8.png")', '/themes/default-bootstrap/css/contact-form.css', 'url("http://server/themes/default-bootstrap/css/./contact-form8.png")', true),
-            array('url("/img/contact-form9.png")', '/themes/default-bootstrap/css/contact-form.css', 'url("http://server/img/contact-form9.png")', true),
+            array(' url(../img/contact-form1.png)', '/themes/classic/css/contact-form.css', 'url(http://server/themes/classic/css/../img/contact-form1.png)', true),
+            array(' url(./contact-form2.png)', '/themes/classic/css/contact-form.css', 'url(http://server/themes/classic/css/./contact-form2.png)', true),
+            array('url(/img/contact-form3.png)', '/themes/classic/css/contact-form.css', 'url(http://server/img/contact-form3.png)', true),
+            array('url(\'../img/contact-form4.png\')', '/themes/classic/css/contact-form.css', 'url(\'http://server/themes/classic/css/../img/contact-form4.png\')', true),
+            array(' url(\'./contact-form5.png\')', '/themes/classic/css/contact-form.css', 'url(\'http://server/themes/classic/css/./contact-form5.png\')', true),
+            array('url(\'/img/contact-form6.png\')', '/themes/classic/css/contact-form.css', 'url(\'http://server/img/contact-form6.png\')', true),
+            array('url("../img/contact-form7.png")', '/themes/classic/css/contact-form.css', 'url("http://server/themes/classic/css/../img/contact-form7.png")', true),
+            array('url("./contact-form8.png")', '/themes/classic/css/contact-form.css', 'url("http://server/themes/classic/css/./contact-form8.png")', true),
+            array('url("/img/contact-form9.png")', '/themes/classic/css/contact-form.css', 'url("http://server/img/contact-form9.png")', true),
         );
     }
 
@@ -111,14 +111,5 @@ class MediaCoreTest extends IntegrationTestCase
             array('<script type=\'javascript\'>test 11</script>', '<script type=\'javascript\'>/* <![CDATA[ */;test 11;/* ]]> */</script>'),
             array('<script type="application/ld+json">{"@context": https://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>', '<script type="application/ld+json">{"@context": https://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>'),
         );
-    }
-
-    /**
-     * @dataProvider isJsInputsProvider
-     */
-    public function testPackJSinHTML($input, $output)
-    {
-        $return = Media::packJSinHTML($input);
-        $this->assertEquals($output, $return, 'packJSinHTML failed for data input='.$input);
     }
 }

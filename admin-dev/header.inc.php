@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 $con = new AdminController();
 $tab = new Tab((int)Tab::getIdFromClassName(Tools::getValue('controller')));
 $con->id = $tab->id;
@@ -46,9 +47,15 @@ $dir = Context::getContext()->smarty->getTemplateDir(0).'controllers'.DIRECTORY_
 $header_tpl = file_exists($dir.'header.tpl') ? $dir.'header.tpl' : 'header.tpl';
 $tool_tpl = file_exists($dir.'page_header_toolbar.tpl') ? $dir.'page_header_toolbar.tpl' : 'page_header_toolbar.tpl';
 Context::getContext()->smarty->assign(array(
+    'bootstrap' => true,
+    'baseAdminUrl' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/',
     'show_page_header_toolbar' => true,
     'title' => implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $title),
-    'toolbar_btn' => array()
+    'toolbar_btn' => array(),
+    'js_def' => array(
+        'baseAdminDir' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/',
+        'baseDir' => __PS_BASE_URI__,
+    )
 ));
 echo Context::getContext()->smarty->fetch($header_tpl);
 echo Context::getContext()->smarty->fetch($tool_tpl);

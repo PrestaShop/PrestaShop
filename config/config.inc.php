@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,6 +31,7 @@ if (is_file($currentDir.'/defines_custom.inc.php')) {
     include_once($currentDir.'/defines_custom.inc.php');
 }
 require_once($currentDir.'/defines.inc.php');
+require_once(_PS_CONFIG_DIR_.'autoload.php');
 
 $start_time = microtime(true);
 
@@ -40,34 +41,40 @@ define('_PS_SSL_PORT_', 443);
 /* Improve PHP configuration to prevent issues */
 ini_set('default_charset', 'utf-8');
 
-/* correct Apache charset (except if it's too late */
-if (!headers_sent()) {
-    header('Content-Type: text/html; charset=utf-8');
-}
-
 /* in dev mode - check if composer was executed */
 if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
         !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
-    die('Error : please install <a href="https://getcomposer.org/">composer</a> or execute "./getcomposer.sh"<br/>Then run "php composer.phar install"');
+    die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
 /* No settings file? goto installer... */
-if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-    if (file_exists($currentDir.'/../install')) {
-        header('Location: install/');
-    } elseif (file_exists($currentDir.'/../install-dev')) {
-        header('Location: install-dev/');
-    } else {
-        die('Error: "install" directory is missing');
-    }
-    exit;
+if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && !file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
+    Tools::redirectToInstall();
 }
 
 /* include settings file only if we are not in multi-tenancy mode */
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 
+if (isset($timer_start) && $timer_start) {
+    AdminController::$timer_start = $timer_start;
+}
+
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
+
+/* Improve PHP configuration on Windows */
+if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+    Windows::improveFilesytemPerformances();
+}
+
+if (defined('_PS_CREATION_DATE_')) {
+    $creationDate = _PS_CREATION_DATE_;
+    if (empty($creationDate)) {
+        Tools::redirectToInstall();
+    }
+} else {
+    Tools::redirectToInstall();
+}
 
 /* Custom config made by users */
 if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
@@ -116,14 +123,12 @@ $context = Context::getContext();
 /* Initialize the current Shop */
 try {
     $context->shop = Shop::initialize();
-    $context->theme = new Theme((int)$context->shop->id_theme);
-    if ((Tools::isEmpty($theme_name = $context->shop->getTheme()) || !Validate::isLoadedObject($context->theme)) && !defined('_PS_ADMIN_DIR_')) {
-        throw new PrestaShopException(Tools::displayError('Current theme unselected. Please check your theme configuration.'));
-    }
 } catch (PrestaShopException $e) {
     $e->displayMessage();
 }
-define('_THEME_NAME_', $theme_name);
+define('_THEME_NAME_', $context->shop->theme->getName());
+define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
+
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
@@ -203,6 +208,10 @@ if (!isset($language) || !Validate::isLoadedObject($language)) {
 }
 $context->language = $language;
 
+/* Get smarty */
+require_once($currentDir.'/smarty.config.inc.php');
+$context->smarty = $smarty;
+
 if (!defined('_PS_ADMIN_DIR_')) {
     if (isset($cookie->id_customer) && (int)$cookie->id_customer) {
         $customer = new Customer($cookie->id_customer);
@@ -263,7 +272,3 @@ if (!defined('_MEDIA_SERVER_2_')) {
 if (!defined('_MEDIA_SERVER_3_')) {
     define('_MEDIA_SERVER_3_', Configuration::get('PS_MEDIA_SERVER_3'));
 }
-
-/* Get smarty */
-require_once($currentDir.'/smarty.config.inc.php');
-$context->smarty = $smarty;

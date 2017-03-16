@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
+* @copyright 2007-2017 PrestaShop SA
 * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
@@ -38,7 +38,7 @@
 				<tr>
 					<td class="{{$smarty.capture.moduleStatutClass}} text-center" style="width: 1%;">
 						{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
-						<input type="checkbox" name="modules" value="{$module->name|escape:'html':'UTF-8'}" class="noborder" title="{l s='Module %1s '|sprintf:$module->name}"{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)} data-rel="false"{else} data-rel="{$module->confirmUninstall|addslashes}"{/if}/>
+						<input type="checkbox" name="modules" value="{$module->name|escape:'html':'UTF-8'}" class="noborder" title="{l s='Module %1s ' sprintf=[$module->name]}"{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)} data-rel="false"{else} data-rel="{$module->confirmUninstall|addslashes}"{/if}/>
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
@@ -186,7 +186,7 @@
 	</table>
 	<div class="btn-group pull-left">
 		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-			{l s='bulk actions'}
+			{l s='bulk actions' d='Admin.Global'}
 			 <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">

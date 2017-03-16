@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
     public $tax_calculator;
 
     /**
-     * @var Core_Business_ConfigurationInterface
+     * @var \PrestaShop\PrestaShop\Core\ConfigurationInterface
      */
     private $configurationManager;
 
@@ -43,10 +43,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
      * @param Address $address
      * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
      */
-    public function __construct(Address $address, $type, Core_Business_ConfigurationInterface $configurationManager = null)
+    public function __construct(Address $address, $type, \PrestaShop\PrestaShop\Core\ConfigurationInterface $configurationManager = null)
     {
         if ($configurationManager === null) {
-            $this->configurationManager = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+            $this->configurationManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
         } else {
             $this->configurationManager = $configurationManager;
         }

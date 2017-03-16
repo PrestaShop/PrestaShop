@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 {extends file="helpers/view/view.tpl"}
 
@@ -29,7 +29,7 @@
 <div class="panel">
 	<h3>{l s='Addresses'} <span class="badge">{count($addresses)}</span></h3>
 	{if !count($addresses)}
-		{l s='No address has been found for this manufacturer.'}
+		{l s='No address has been found for this brand.'}
 	{else}
 		{foreach $addresses AS $addresse}
 		<div class="panel">
@@ -38,7 +38,7 @@
 				<div class="pull-right">
 					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&amp;id_address={$addresse.id_address}&amp;editaddresses=1">
 						<i class="icon-edit"></i>
-						{l s='Edit'}</a>
+						{l s='Edit' d='Admin.Actions'}</a>
 				</div>
 			</div>
 
@@ -73,11 +73,11 @@
 				<div class="panel-heading">
 					{$product->name}
 					<div class="pull-right">
-						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
-							<i class="icon-edit"></i> {l s='Edit'}
+						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm">
+							<i class="icon-edit"></i> {l s='Edit' d='Admin.Actions'}
 						</a>
-						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
-							<i class="icon-trash"></i> {l s='Delete'}
+						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'deleteproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
+							<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}
 						</a>
 					</div>
 				</div>
@@ -97,17 +97,17 @@
 			<div class="panel">
 				<div class="panel-heading">
 
-					<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
+					<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
 						{$product->name}
 					</a>
 					<div class="pull-right">
-						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
+						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm">
 							<i class="icon-edit"></i>
-							{l s='Edit'}
+							{l s='Edit' d='Admin.Actions'}
 						</a>
-						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
+						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'deleteproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
 							<i class="icon-trash"></i>
-							{l s='Delete'}
+							{l s='Delete' d='Admin.Actions'}
 						</a>
 					</div>
 
@@ -117,7 +117,7 @@
 					<thead>
 						<tr>
 							<th><span class="title_box">{l s='Attribute name'}</span></th>
-							<th><span class="title_box">{l s='Reference'}</span></th>
+							<th><span class="title_box">{l s='Reference' d='Admin.Global'}</span></th>
 							<th><span class="title_box">{l s='EAN13'}</span></th>
 							<th><span class="title_box">{l s='UPC'}</span></th>
 							{if $stock_management && $shopContext != Shop::CONTEXT_ALL}

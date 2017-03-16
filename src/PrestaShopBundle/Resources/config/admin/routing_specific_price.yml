@@ -1,0 +1,24 @@
+admin_specific_price_list:
+    path:     /list/{idProduct}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::listAction
+        _format: json
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_specific_price_add:
+    path:     /add
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::addAction
+
+admin_delete_specific_price:
+    path:     /delete/{idSpecificPrice}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/SpecificPrice:delete
+        idSpecificPrice: 0
+    requirements:
+        idSpecificPrice: \d+

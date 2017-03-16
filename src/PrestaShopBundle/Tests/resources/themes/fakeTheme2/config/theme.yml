@@ -1,0 +1,38 @@
+name: fakeTheme2
+display_name: For testing purposes of translations
+version: 1.7.0
+author:
+  name: "PrestaShop Team"
+
+meta:
+  compatibility:
+      from: 1.7.0.0
+
+  available_layouts: []
+
+global_settings:
+  image_types:
+    cart_default:
+      width: 80
+      height: 80
+      scope: [products]
+    small_default:
+      width: 125
+      height: 125
+      scope: [products, categories, manufacturers, suppliers]
+    medium_default:
+      width: 300
+      height: 300
+      scope: [products, categories, manufacturers, suppliers]
+    large_default:
+      width: 500
+      height: 500
+      scope: [products]
+    home_default:
+      width: 250
+      height: 250
+      scope: [products]
+    category_default:
+      width: 960
+      height: 350
+      scope: [categories]

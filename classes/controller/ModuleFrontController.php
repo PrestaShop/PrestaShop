@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,60 +44,58 @@ class ModuleFrontControllerCore extends FrontController
         parent::__construct();
 
         $this->controller_type = 'modulefront';
-
-        $in_base = isset($this->page_name) && is_object(Context::getContext()->theme) && Context::getContext()->theme->hasColumnsSettings($this->page_name);
-
-        $tmp = isset($this->display_column_left) ? (bool)$this->display_column_left : true;
-        $this->display_column_left = $in_base ? Context::getContext()->theme->hasLeftColumn($this->page_name) : $tmp;
-
-        $tmp = isset($this->display_column_right) ? (bool)$this->display_column_right : true;
-        $this->display_column_right = $in_base ? Context::getContext()->theme->hasRightColumn($this->page_name) : $tmp;
     }
 
     /**
-     * Assigns module template for page content
+     * Assigns module template for page content.
      *
      * @param string $template Template filename
+     *
      * @throws PrestaShopException
      */
-    public function setTemplate($template)
+    public function setTemplate($template, $params = array(), $locale = null)
     {
-        if (!$path = $this->getTemplatePath($template)) {
-            throw new PrestaShopException("Template '$template' not found");
+        if (strpos($template, 'module:') === 0) {
+            $this->template = $template;
+        } else {
+            parent::setTemplate($template, $params, $locale);
         }
-
-        $this->template = $path;
-    }
-
-    /**
-     * Finds and returns module front template that take the highest precedence
-     *
-     * @param string $template Template filename
-     * @return string|false
-     */
-    public function getTemplatePath($template)
-    {
-        if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template)) {
-            return _PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template;
-        } elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template)) {
-            return _PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template;
-        } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$this->module->name.'/views/templates/front/'.$template)) {
-            return _PS_MODULE_DIR_.$this->module->name.'/views/templates/front/'.$template;
-        }
-
-        return false;
     }
 
     public function initContent()
     {
         if (Tools::isSubmit('module') && Tools::getValue('controller') == 'payment') {
-            $currency = Currency::getCurrency((int)$this->context->cart->id_currency);
-            $orderTotal = $this->context->cart->getOrderTotal();
-            $minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
-            if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase) {
+            $currency = Currency::getCurrency((int) $this->context->cart->id_currency);
+            $minimalPurchase = Tools::convertPrice((float) Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
+            Hook::exec('overrideMinimalPurchasePrice', array(
+                'minimalPurchase' => &$minimalPurchase
+            ));
+            if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimalPurchase) {
                 Tools::redirect('index.php?controller=order&step=1');
             }
         }
         parent::initContent();
+    }
+
+    /**
+     * Non-static translation method for frontoffice modules.
+     *
+     * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
+     *
+     * @param string       $string       Term or expression in english
+     * @param false|string $specific     Specific name, only for ModuleFrontController
+     * @param string|null  $class        Name of the class
+     * @param bool         $addslashes   If set to true, the return value will pass through addslashes(). Otherwise, stripslashes()
+     * @param bool         $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+     *
+     * @return string The translation if available, or the english default text
+     */
+    protected function l($string, $specific = false, $class = null, $addslashes = false, $htmlentities = true)
+    {
+        if (isset($this->module) && is_a($this->module, 'Module')) {
+            return $this->module->l($string, $specific);
+        } else {
+            return $string;
+        }
     }
 }

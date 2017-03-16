@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,6 @@ class AdminStockInstantStateControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'stock';
         $this->list_id = 'stock';
         $this->className = 'Stock';
@@ -43,9 +42,11 @@ class AdminStockInstantStateControllerCore extends AdminController
         $this->lang = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
 
+        parent::__construct();
+
         $this->fields_list = array(
             'reference' => array(
-                'title' => $this->l('Reference'),
+                'title' => $this->trans('Reference', array(), 'Admin.Global'),
                 'align' => 'center',
                 'havingFilter' => true
             ),
@@ -58,7 +59,7 @@ class AdminStockInstantStateControllerCore extends AdminController
                 'align' => 'center',
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'havingFilter' => true
             ),
             'price_te' => array(
@@ -103,8 +104,6 @@ class AdminStockInstantStateControllerCore extends AdminController
         $this->addRowAction('details');
         $this->stock_instant_state_warehouses = Warehouse::getWarehouses(true);
         array_unshift($this->stock_instant_state_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,39 +19,42 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Admin controller for the Feature pages
+ * Admin controller for the Feature pages.
  */
 class FeatureController extends FrameworkBundleAdminController
 {
     /**
-     * Get all values for a given feature
+     * Get all values for a given feature.
      *
-     * @param int $id The feature Id
+     * @param int $idFeature The feature Id
      *
      * @return JsonResponse features list
      */
-    public function getFeatureValuesAction($id)
+    public function getFeatureValuesAction($idFeature)
     {
         $response = new JsonResponse();
         $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
-        $data = [];
+        $data = array();
 
-        if ($id == 0) {
+        if ($idFeature == 0) {
             return $response;
         }
 
-        $featuresValues = $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $id);
+        $featuresValues = $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $idFeature);
+
+        if (count($featuresValues) !== 0) {
+            $data['0'] = $this->get('translator')->trans('Choose a value', array(), 'Admin.Catalog.Feature');
+        }
+
         foreach ($featuresValues as $featureValue) {
             if (isset($featureValue['custom']) && $featureValue['custom'] == 1) {
                 continue;
@@ -60,6 +63,7 @@ class FeatureController extends FrameworkBundleAdminController
         }
 
         $response->setData($data);
+
         return $response;
     }
 }

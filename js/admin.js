@@ -1,5 +1,5 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -726,11 +726,11 @@ $(document).ready(function()
 	if (typeof formToMove != 'undefined' && typeof formDestination != 'undefined' )
 	{
 		$('<hr style="margin 24px 0;" />').appendTo('#'+formDestination)
-		$('#theme_fieldset_'+formToMove+' .form-wrapper').appendTo('#'+formDestination);
+		$('#configuration_fieldset_'+formToMove+' .form-wrapper').appendTo('#'+formDestination);
 	}
 
 	$('select.chosen').each(function(k, item){
-		$(item).chosen({disable_search_threshold: 10, search_contains: true});
+		$(item).chosen({disable_search_threshold: 10, search_contains: true, width: '100%', });
 	});
 	// Apply chosen() when modal is loaded
 	$(document).on('shown.bs.modal', function (e) {
@@ -1196,7 +1196,7 @@ function sendBulkAction(form, action)
 }
 
 /**
- * Searches for current controller and current CRUD action. This data can be used to know from where an ajax call is done (source tracking for example). 
+ * Searches for current controller and current CRUD action. This data can be used to know from where an ajax call is done (source tracking for example).
  * Action is 'index' by default.
  * For instance, only used for back-office.
  * @param force_action optional string to override action part of the result.
@@ -1209,12 +1209,12 @@ function getControllerActionMap(force_action) {
 
 	for (i = 0 ; i < vars.length; i++) {
 		pair = vars[i].split("=");
-		
+
 		if (pair[0] == "token")
 			continue;
 		if (pair[0] == "controller")
 			controller = pair[1];
-		
+
 		if (pair.length == 1) {
 			if (pair[0].indexOf("add") != -1)
 				action = "new";
@@ -1226,10 +1226,10 @@ function getControllerActionMap(force_action) {
 				action = "delete";
 		}
 	}
-	
+
 	if (force_action !== undefined)
 		action = force_action;
-	
+
 	if (typeof help_class_name != 'undefined')
 		controller = help_class_name;
 
@@ -1244,7 +1244,7 @@ function openModulesList()
 		header = $('#modules_list_container .modal-header').html();
 
 		$.ajax({
-			type: "POST",
+			type: "GET",
 			url : admin_modules_link,
 			async: true,
 			data : {
@@ -1603,12 +1603,16 @@ function parseDate(date){
 
 function refresh_kpis()
 {
+	var force = (arguments.length == 1 && arguments[0] == true);
 	$('.box-stats').each(function() {
 		if ($(this).attr('id')) {
 			var functionName = 'refresh_' + $(this).attr('id').replace(/-/g, '_');
-
 			if (typeof window[functionName] === 'function') {
-				window[functionName]();
+				if (force) {
+					window[functionName](true); // force refresh, ignoring cache delay
+				} else {
+					window[functionName]();
+				}
 			}
 		}
 	});
@@ -1616,15 +1620,15 @@ function refresh_kpis()
 
 function createSqlQueryName()
 {
-	var container = false;
-	if ($('.breadcrumb-container'))
-		container = $('.breadcrumb-container').first().text().replace(/\s+/g, ' ').trim();
-	var current = false;
-	if ($('.breadcrumb-current'))
-		current = $('.breadcrumb-current').first().text().replace(/\s+/g, ' ').trim();
-	var title = false;
-	if ($('.page-title'))
-		title = $('.page-title').first().text().replace(/\s+/g, ' ').trim();
+  var container = false;
+  var current = false;
+  if ($('.breadcrumb')) {
+    container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
+    current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
+  }
+  var title = false;
+  if ($('h2.title'))
+    title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
 
 	var name = false;
 	if (container && current && container != current)

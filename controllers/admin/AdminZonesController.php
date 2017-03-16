@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,17 +38,19 @@ class AdminZonesControllerCore extends AdminController
         $this->className = 'Zone';
         $this->lang = false;
 
+        parent::__construct();
+
         $this->fields_list = array(
             'id_zone' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Zone'),
+                'title' => $this->trans('Zone', array(), 'Admin.Global'),
             ),
             'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
@@ -58,13 +60,11 @@ class AdminZonesControllerCore extends AdminController
         );
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()
@@ -72,7 +72,7 @@ class AdminZonesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_zone'] = array(
                 'href' => self::$currentIndex.'&addzone&token='.$this->token,
-                'desc' => $this->l('Add new zone', null, null, false),
+                'desc' => $this->trans('Add new zone', array(), 'Admin.International.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -92,20 +92,20 @@ class AdminZonesControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Zones'),
+                'title' => $this->trans('Zones', array(), 'Admin.International.Feature'),
                 'icon' => 'icon-globe'
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
-                    'hint' => $this->l('Zone name (e.g. Africa, West Coast, Neighboring Countries).'),
+                    'hint' => $this->trans('Zone name (e.g. Africa, West Coast, Neighboring Countries).', array(), 'Admin.International.Help'),
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Active'),
+                    'label' => $this->trans('Active', array(), 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
@@ -113,15 +113,15 @@ class AdminZonesControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
-                    'hint' => $this->l('Allow or disallow shipping to this zone.')
+                    'hint' => $this->trans('Allow or disallow shipping to this zone.', array(), 'Admin.International.Help')
                 )
             )
         );
@@ -129,13 +129,13 @@ class AdminZonesControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             );
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         return parent::renderForm();

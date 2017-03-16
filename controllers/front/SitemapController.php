@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,43 +28,139 @@ class SitemapControllerCore extends FrontController
 {
     public $php_self = 'sitemap';
 
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'sitemap.css');
-        $this->addJS(_THEME_JS_DIR_.'tools/treeManagement.js');
-    }
-
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
      */
     public function initContent()
     {
+        $this->context->smarty->assign(
+            array(
+                'our_offers' => $this->trans('Our Offers', array(), 'Shop.Theme'),
+                'categories' => $this->trans('Categories', array(), 'Shop.Theme.Catalog'),
+                'your_account' => $this->trans('Your account', array(), 'Shop.Theme.Customeraccount'),
+                'pages' => $this->trans('Pages', array(), 'Shop.Theme.Catalog'),
+                'links' => array(
+                    'offers' => $this->getOffersLinks(),
+                    'pages' => $this->getPagesLinks(),
+                    'user_account' => $this->getUserAccountLinks(),
+                    'categories' => $this->getCategoriesLinks(),
+                ),
+            )
+        );
+
         parent::initContent();
+        $this->setTemplate('cms/sitemap');
+    }
 
-        $this->context->smarty->assign('categoriesTree', Category::getRootCategory()->recurseLiteCategTree(0));
-        $this->context->smarty->assign('categoriescmsTree', CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1));
-        $this->context->smarty->assign('voucherAllowed', (int)CartRule::isFeatureActive());
+    public function getCategoriesLinks()
+    {
+        return array(Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap'));
+    }
 
-        if (Module::isInstalled('blockmanufacturer') && Module::isEnabled('blockmanufacturer')) {
-            $blockmanufacturer = Module::getInstanceByName('blockmanufacturer');
-            $this->context->smarty->assign('display_manufacturer_link', isset($blockmanufacturer->active) ? (bool)$blockmanufacturer->active : false);
-        } else {
-            $this->context->smarty->assign('display_manufacturer_link', 0);
+    /**
+     * @return array
+     */
+    protected function getPagesLinks()
+    {
+        $links = array();
+
+        $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
+        foreach ($cms['cms'] as $p) {
+            $links[] = array(
+                'id' => 'cms-page-' . $p['id_cms'],
+                'label' => $p['meta_title'],
+                'url' => $this->context->link->getCMSLink(new CMS($p['id_cms'])),
+            );
         }
 
-        if (Module::isInstalled('blocksupplier') && Module::isEnabled('blocksupplier')) {
-            $blocksupplier = Module::getInstanceByName('blocksupplier');
-            $this->context->smarty->assign('display_supplier_link', isset($blocksupplier->active) ? (bool)$blocksupplier->active : false);
-        } else {
-            $this->context->smarty->assign('display_supplier_link', 0);
+        $links[] = array(
+            'id' => 'stores-page',
+            'label' => $this->trans('Our stores', array(), 'Shop.Theme'),
+            'url' => $this->context->link->getPageLink('stores'),
+        );
+
+        $links[] = array(
+            'id' => 'contact-page',
+            'label' => $this->trans('Contact us', array(), 'Shop.Theme'),
+            'url' => $this->context->link->getPageLink('contact'),
+        );
+
+        $links[] = array(
+            'id' => 'sitemap-page',
+            'label' => $this->trans('Sitemap', array(), 'Shop.Theme'),
+            'url' => $this->context->link->getPageLink('sitemap'),
+        );
+
+        return $links;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUserAccountLinks()
+    {
+        $links = array();
+
+        $links[] = array(
+            'id' => 'login-page',
+            'label' => $this->trans('Log in', array(), 'Shop.Theme'),
+            'url' => $this->context->link->getPageLink('authentication'),
+        );
+
+        $links[] = array(
+            'id' => 'register-page',
+            'label' => $this->trans('Create new account', array(), 'Shop.Theme'),
+            'url' => $this->context->link->getPageLink('authentication'),
+        );
+
+        return $links;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getOffersLinks()
+    {
+        $links = array(
+            array(
+                'id' => 'new-product-page',
+                'label' => $this->trans('New products', array(), 'Shop.Theme.Catalog'),
+                'url' => $this->context->link->getPageLink('new-products'),
+            ),
+        );
+
+        if (Configuration::isCatalogMode() && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
+            $links[] = array(
+                'id' => 'best-sales-page',
+                'label' => $this->trans('Best sellers', array(), 'Shop.Theme.Catalog'),
+                'url' => $this->context->link->getPageLink('best-sales'),
+            );
+            $links[] = array(
+                'id' => 'prices-drop-page',
+                'label' => $this->trans('Price drop', array(), 'Shop.Theme.Catalog'),
+                'url' => $this->context->link->getPageLink('prices-drop'),
+            );
         }
 
-        $this->context->smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
-        $this->context->smarty->assign('PS_DISPLAY_BEST_SELLERS', Configuration::get('PS_DISPLAY_BEST_SELLERS'));
-        $this->context->smarty->assign('display_store', Configuration::get('PS_STORES_DISPLAY_SITEMAP'));
+        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+            $manufacturers = Manufacturer::getLiteManufacturersList($this->context->language->id, 'sitemap');
+            $links[] = array(
+                'id' => 'manufacturer-page',
+                'label' => $this->trans('Brands', array(), 'Shop.Theme.Catalog'),
+                'url' => $this->context->link->getPageLink('manufacturer'),
+                'children' => $manufacturers,
+            );
 
-        $this->setTemplate(_PS_THEME_DIR_.'sitemap.tpl');
+            $suppliers = Supplier::getLiteSuppliersList($this->context->language->id, 'sitemap');
+            $links[] = array(
+                'id' => 'supplier-page',
+                'label' => $this->trans('Suppliers', array(), 'Shop.Theme.Catalog'),
+                'url' => $this->context->link->getPageLink('supplier'),
+                'children' => $suppliers,
+            );
+        }
+
+        return $links;
     }
 }

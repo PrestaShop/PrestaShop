@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,10 +40,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             return;
         }
 
-        $this->initTabModuleList();
         $this->addToolBarModulesListButton();
-        $this->toolbar_title = $this->l('Stats', 'AdminStatsTab');
-        $this->initPageHeaderToolbar();
+        $this->toolbar_title = $this->trans('Stats', array(), 'Admin.Stats.Feature');
+
         if ($this->display == 'view') {
             // Some controllers use the view action without an object
             if ($this->className) {
@@ -51,18 +50,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             }
             $this->content .= $this->renderView();
         }
-        
+
         $this->content .= $this->displayMenu();
         $this->content .= $this->displayCalendar();
         $this->content .= $this->displayStats();
 
-
         $this->context->smarty->assign(array(
             'content' => $this->content,
-            'url_post' => self::$currentIndex.'&token='.$this->token,
-            'show_page_header_toolbar' => $this->show_page_header_toolbar,
-            'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
     }
 
@@ -75,13 +69,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
     public function displayCalendar()
     {
         return AdminStatsTabController::displayCalendarForm(array(
-            'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
-            'Day' => $this->l('Day', 'AdminStatsTab'),
-            'Month' => $this->l('Month', 'AdminStatsTab'),
-            'Year' => $this->l('Year', 'AdminStatsTab'),
-            'From' => $this->l('From:', 'AdminStatsTab'),
-            'To' => $this->l('To:', 'AdminStatsTab'),
-            'Save' => $this->l('Save', 'AdminStatsTab')
+            'Calendar' => $this->trans('Calendar', array(), 'Admin.Global'),
+            'Day' => $this->trans('Day', array(), 'Admin.Global'),
+            'Month' => $this->trans('Month', array(), 'Admin.Global'),
+            'Year' => $this->trans('Year', array(), 'Admin.Global'),
+            'From' => $this->trans('From:', array(), 'Admin.Global'),
+            'To' => $this->trans('To:', array(), 'Admin.Global'),
+            'Save' => $this->trans('Save', array(), 'Admin.Global')
         ), $this->token);
     }
 
@@ -97,7 +91,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             $identifier = 'module';
             $id = Tools::getValue('module');
         }
-        
+
         $action = Context::getContext()->link->getAdminLink('AdminStats');
         $action .= ($action && $table ? '&'.Tools::safeOutput($action) : '');
         $action .= ($identifier && $id ? '&'.Tools::safeOutput($identifier).'='.(int)$id : '');
@@ -125,10 +119,10 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         $tpl = $this->createTemplate('engines.tpl');
 
         $autoclean_period = array(
-            'never' =>    $this->l('Never', 'AdminStatsTab'),
-            'week' =>    $this->l('Week', 'AdminStatsTab'),
-            'month' =>    $this->l('Month', 'AdminStatsTab'),
-            'year' =>    $this->l('Year', 'AdminStatsTab')
+            'never' =>    $this->trans('Never', array(), 'Admin.Global'),
+            'week' =>    $this->trans('Week', array(), 'Admin.Global'),
+            'month' =>    $this->trans('Month', array(), 'Admin.Global'),
+            'year' =>    $this->trans('Year', array(), 'Admin.Global')
         );
 
         $tpl->assign(array(
@@ -172,7 +166,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
         return $tpl->fetch();
     }
-    
+
     public function checkModulesNames($a, $b)
     {
         return (bool)($a['displayName'] > $b['displayName']);
@@ -205,7 +199,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             if (!isset($module_instance)) {
                 $module_instance = Module::getInstanceByName($module_name);
             }
-                
+
             if ($module_instance && $module_instance->active) {
                 $hook = Hook::exec('displayAdminStatsModules', null, $module_instance->id);
             }
@@ -223,26 +217,26 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
     public function postProcess()
     {
         $this->context = Context::getContext();
-        
+
         $this->processDateRange();
-        
+
         if (Tools::getValue('submitSettings')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 self::$currentIndex .= '&module='.Tools::getValue('module');
                 Configuration::updateValue('PS_STATS_RENDER', Tools::getValue('PS_STATS_RENDER', Configuration::get('PS_STATS_RENDER')));
                 Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));
                 Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         }
     }
-    
+
     public function processDateRange()
     {
         if (Tools::isSubmit('submitDatePicker')) {
             if ((!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo'))) || (strtotime($from) > strtotime($to))) {
-                $this->errors[] = Tools::displayError('The specified date is invalid.');
+                $this->errors[] = $this->trans('The specified date is invalid.', array(), 'Admin.Stats.Notification');
             }
         }
         if (Tools::isSubmit('submitDateDay')) {
@@ -281,11 +275,11 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             }
         }
     }
-    
+
     public function ajaxProcessSetDashboardDateRange()
     {
         $this->processDateRange();
-        
+
         if ($this->isXmlHttpRequest()) {
             if (is_array($this->errors) && count($this->errors)) {
                 die(json_encode(array(

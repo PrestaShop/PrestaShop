@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 {extends file="helpers/view/view.tpl"}
 
@@ -170,6 +170,7 @@
 							{l s='Partial refund'}
 						</a>
 					{/if}
+					{hook h='displayBackOfficeOrderActions' id_order=$order->id|intval}
 				</div>
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="tabOrder">
@@ -328,10 +329,10 @@
 								<table class="table">
 									<thead>
 										<tr>
-											<th><span class="title_box ">Date</span></th>
-											<th><span class="title_box ">Type</span></th>
-											<th><span class="title_box ">Carrier</span></th>
-											<th><span class="title_box ">Tracking number</span></th>
+											<th><span class="title_box ">{l s='Date'}</span></th>
+											<th><span class="title_box ">{l s='Type'}</span></th>
+											<th><span class="title_box ">{l s='Carrier'}</span></th>
+											<th><span class="title_box ">{l s='Tracking number'}</span></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -354,11 +355,11 @@
 													</span>
 													<button href="#" class="edit_shipping_number_link">
 														<i class="icon-pencil"></i>
-														{l s='Edit'}
+														{l s='Edit' d='Admin.Actions'}
 													</button>
 													<button href="#" class="cancel_shipping_number_link" style="display: none;">
 														<i class="icon-remove"></i>
-														{l s='Cancel'}
+														{l s='Cancel' d='Admin.Actions'}
 													</button>
 												</form>
 												{/if}
@@ -533,7 +534,7 @@
 									</td>
 									<td class="actions">
 										<button class="btn btn-primary" type="submit" name="submitAddPayment">
-											{l s='Add'}
+											{l s='Add' d='Admin.Actions'}
 										</button>
 									</td>
 								</tr>
@@ -570,7 +571,7 @@
 				{if $customer->id}
 					<div class="panel-heading">
 						<i class="icon-user"></i>
-						{l s='Customer'}
+						{l s='Customer' d='Admin.Global'}
 						<span class="badge">
 							<a href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}">
 								{if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
@@ -595,12 +596,12 @@
 									</form>
 								{else}
 									<div class="alert alert-warning">
-										{l s='A registered customer account has already claimed this email address'}
+										{l s='A registered customer account has already claimed this email address' d='Admin.Orderscustomers.Notification'}
 									</div>
 								{/if}
 							{else}
 								<dl class="well list-detail">
-									<dt>{l s='Email'}</dt>
+									<dt>{l s='Email' d='Admin.Global'}</dt>
 										<dd><a href="mailto:{$customer->email}"><i class="icon-envelope-o"></i> {$customer->email}</a></dd>
 									<dt>{l s='Account registered'}</dt>
 										<dd class="text-muted"><i class="icon-calendar-o"></i> {dateFormat date=$customer->date_add full=true}</dd>
@@ -637,7 +638,7 @@
 										<div class="col-lg-12">
 											<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled">
 												<i class="icon-save"></i>
-												{l s='Save'}
+												{l s='Save' d='Admin.Actions'}
 											</button>
 										</div>
 									</div>
@@ -704,7 +705,7 @@
 										<div class="col-sm-6">
 											<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.delivery->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}&amp;address_type=1&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 												<i class="icon-pencil"></i>
-												{l s='Edit'}
+												{l s='Edit' d='Admin.Actions'}
 											</a>
 											{displayAddressDetail address=$addresses.delivery newLine='<br />'}
 											{if $addresses.delivery->other}
@@ -754,7 +755,7 @@
 									<div class="col-sm-6">
 										<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.invoice->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}&amp;address_type=2&amp;back={$smarty.server.REQUEST_URI|urlencode}&amp;token={getAdminToken tab='AdminAddresses'}">
 											<i class="icon-pencil"></i>
-											{l s='Edit'}
+											{l s='Edit' d='Admin.Actions'}
 										</a>
 										{displayAddressDetail address=$addresses.invoice newLine='<br />'}
 										{if $addresses.invoice->other}
@@ -842,11 +843,11 @@
 									<span class="switch prestashop-switch fixed-width-lg">
 										<input type="radio" name="visibility" id="visibility_on" value="0" />
 										<label for="visibility_on">
-											{l s='Yes'}
+											{l s='Yes' d='Admin.Global'}
 										</label>
 										<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" />
 										<label for="visibility_off">
-											{l s='No'}
+											{l s='No' d='Admin.Global'}
 										</label>
 										<a class="slide-button btn"></a>
 									</span>
@@ -941,7 +942,7 @@
 										{elseif ($order->hasBeenPaid())}
 											{l s='Refund'}
 										{else}
-											{l s='Cancel'}
+											{l s='Cancel' d='Admin.Actions'}
 										{/if}
 									</th>
 									<th style="display:none" class="partial_refund_fields">
@@ -984,7 +985,16 @@
 					<div class="row">
 						<div class="col-xs-6">
 							<div class="alert alert-warning">
-								{l s='For this customer group, prices are displayed as: [1]%s[/1]' sprintf=[$smarty.capture.TaxMethod] tags=['<strong>']}
+                {* [1][/1] is for a HTML tag. *}
+								{l
+                  s='For this customer group, prices are displayed as: [1]%tax_method%[/1]'
+                  sprintf=[
+                    '%tax_method%' => $smarty.capture.TaxMethod,
+                    '[1]' => '<strong>',
+                    '[/1]' => '</strong>'
+                  ]
+                  d='Admin.Orderscustomers.Notification'
+                }
 								{if !Configuration::get('PS_ORDER_RETURN')}
 									<br/><strong>{l s='Merchandise returns are disabled'}</strong>
 								{/if}
@@ -1049,11 +1059,13 @@
 											{assign var=order_discount_price value=$order->total_discounts_tax_excl}
 											{assign var=order_wrapping_price value=$order->total_wrapping_tax_excl}
 											{assign var=order_shipping_price value=$order->total_shipping_tax_excl}
+                      {assign var=shipping_refundable value=$shipping_refundable_tax_excl}
 										{else}
 											{assign var=order_product_price value=$order->total_products_wt}
 											{assign var=order_discount_price value=$order->total_discounts_tax_incl}
 											{assign var=order_wrapping_price value=$order->total_wrapping_tax_incl}
 											{assign var=order_shipping_price value=$order->total_shipping_tax_incl}
+                      {assign var=shipping_refundable value=$shipping_refundable_tax_incl}
 										{/if}
 										<tr id="total_products">
 											<td class="text-right">{l s='Products:'}</td>
@@ -1088,7 +1100,7 @@
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
-												<p class="help-block"><i class="icon-warning-sign"></i> {l s='(%s)' sprintf=$smarty.capture.TaxMethod}</p>
+                        <p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($shipping_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]}</p>
 											</td>
 										</tr>
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
@@ -1369,17 +1381,21 @@
 
 		// Fix wrong maps center when map is hidden
 		$('#tabAddresses').click(function(){
-			x = delivery_map.getZoom();
-			c = delivery_map.getCenter();
-			google.maps.event.trigger(delivery_map, 'resize');
-			delivery_map.setZoom(x);
-			delivery_map.setCenter(c);
+			if (delivery_map) {
+				x = delivery_map.getZoom();
+				c = delivery_map.getCenter();
+				google.maps.event.trigger(delivery_map, 'resize');
+				delivery_map.setZoom(x);
+				delivery_map.setCenter(c);
+			}
 
-			x = invoice_map.getZoom();
-			c = invoice_map.getCenter();
-			google.maps.event.trigger(invoice_map, 'resize');
-			invoice_map.setZoom(x);
-			invoice_map.setCenter(c);
+			if (invoice_map) {
+				x = invoice_map.getZoom();
+				c = invoice_map.getCenter();
+				google.maps.event.trigger(invoice_map, 'resize');
+				invoice_map.setZoom(x);
+				invoice_map.setCenter(c);
+			}
 		});
 	</script>
 

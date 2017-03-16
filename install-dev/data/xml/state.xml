@@ -9,6 +9,15 @@
     <field name="active"/>
   </fields>
   <entities>
+     <state id="AA" id_country="US" id_zone="North_America" iso_code="AA" tax_behavior="0" active="1">
+      <name>AA</name>
+    </state>
+    <state id="AE" id_country="US" id_zone="North_America" iso_code="AE" tax_behavior="0" active="1">
+      <name>AE</name>
+    </state>
+    <state id="AP" id_country="US" id_zone="North_America" iso_code="AP" tax_behavior="0" active="1">
+      <name>AP</name>
+    </state>   
     <state id="AL" id_country="US" id_zone="North_America" iso_code="AL" tax_behavior="0" active="1">
       <name>Alabama</name>
     </state>
@@ -705,103 +714,106 @@
     <state id="VT_1" id_country="IT" id_zone="Europe" iso_code="VT" tax_behavior="0" active="1">
       <name>Viterbo</name>
     </state>
-    <state id="AC" id_country="ID" id_zone="Asia" iso_code="AC" tax_behavior="0" active="1">
+    <state id="ID-AC" id_country="ID" id_zone="Asia" iso_code="ID-AC" tax_behavior="0" active="1">
       <name>Aceh</name>
     </state>
-    <state id="BA_1" id_country="ID" id_zone="Asia" iso_code="BA" tax_behavior="0" active="1">
+    <state id="ID-BA" id_country="ID" id_zone="Asia" iso_code="ID-BA" tax_behavior="0" active="1">
       <name>Bali</name>
     </state>
-    <state id="BB" id_country="ID" id_zone="Asia" iso_code="BB" tax_behavior="0" active="1">
-      <name>Bangka</name>
-    </state>
-    <state id="BT_1" id_country="ID" id_zone="Asia" iso_code="BT" tax_behavior="0" active="1">
+    <state id="ID-BT" id_country="ID" id_zone="Asia" iso_code="ID-BT" tax_behavior="0" active="1">
       <name>Banten</name>
     </state>
-    <state id="BE" id_country="ID" id_zone="Asia" iso_code="BE" tax_behavior="0" active="1">
+    <state id="ID-BE" id_country="ID" id_zone="Asia" iso_code="ID-BE" tax_behavior="0" active="1">
       <name>Bengkulu</name>
     </state>
-    <state id="JT" id_country="ID" id_zone="Asia" iso_code="JT" tax_behavior="0" active="1">
-      <name>Central Java</name>
+    <state id="ID-GO" id_country="ID" id_zone="Asia" iso_code="ID-GO" tax_behavior="0" active="1">
+      <name>Gorontalo</name>
     </state>
-    <state id="KT" id_country="ID" id_zone="Asia" iso_code="KT" tax_behavior="0" active="1">
-      <name>Central Kalimantan</name>
-    </state>
-    <state id="ST" id_country="ID" id_zone="Asia" iso_code="ST" tax_behavior="0" active="1">
-      <name>Central Sulawesi</name>
-    </state>
-    <state id="JI" id_country="ID" id_zone="Asia" iso_code="JI" tax_behavior="0" active="1">
-      <name>Coat of arms of East Java</name>
-    </state>
-    <state id="KI" id_country="ID" id_zone="Asia" iso_code="KI" tax_behavior="0" active="1">
-      <name>East kalimantan</name>
-    </state>
-    <state id="NT_1" id_country="ID" id_zone="Asia" iso_code="NT" tax_behavior="0" active="1">
-      <name>East Nusa Tenggara</name>
-    </state>
-    <state id="GO_1" id_country="ID" id_zone="Asia" iso_code="GO" tax_behavior="0" active="1">
-      <name>Lambang propinsi</name>
-    </state>
-    <state id="JK" id_country="ID" id_zone="Asia" iso_code="JK" tax_behavior="0" active="1">
+    <state id="ID-JK" id_country="ID" id_zone="Asia" iso_code="ID-JK" tax_behavior="0" active="1">
       <name>Jakarta</name>
     </state>
-    <state id="JA" id_country="ID" id_zone="Asia" iso_code="JA" tax_behavior="0" active="1">
+    <state id="ID-JA" id_country="ID" id_zone="Asia" iso_code="ID-JA" tax_behavior="0" active="1">
       <name>Jambi</name>
     </state>
-    <state id="LA_1" id_country="ID" id_zone="Asia" iso_code="LA" tax_behavior="0" active="1">
+    <state id="ID-JB" id_country="ID" id_zone="Asia" iso_code="ID-JB" tax_behavior="0" active="1">
+      <name>Jawa Barat</name>
+    </state>
+    <state id="ID-JT" id_country="ID" id_zone="Asia" iso_code="ID-JT" tax_behavior="0" active="1">
+      <name>Jawa Tengah</name>
+    </state>
+    <state id="ID-JI" id_country="ID" id_zone="Asia" iso_code="ID-JI" tax_behavior="0" active="1">
+      <name>Jawa Timur</name>
+    </state>
+    <state id="ID-KB" id_country="ID" id_zone="Asia" iso_code="ID-KB" tax_behavior="0" active="1">
+      <name>Kalimantan Barat</name>
+    </state>
+    <state id="ID-KS" id_country="ID" id_zone="Asia" iso_code="ID-KS" tax_behavior="0" active="1">
+      <name>Kalimantan Selatan</name>
+    </state>
+    <state id="ID-KT" id_country="ID" id_zone="Asia" iso_code="ID-KT" tax_behavior="0" active="1">
+      <name>Kalimantan Tengah</name>
+    </state>
+    <state id="ID-KI" id_country="ID" id_zone="Asia" iso_code="ID-KI" tax_behavior="0" active="1">
+      <name>Kalimantan Timur</name>
+    </state>
+    <state id="ID-KU" id_country="ID" id_zone="Asia" iso_code="ID-KU" tax_behavior="0" active="1">
+      <name>Kalimantan Utara</name>
+    </state>
+    <state id="ID-BB" id_country="ID" id_zone="Asia" iso_code="ID-BB" tax_behavior="0" active="1">
+      <name>Kepulauan Bangka Belitug</name>
+    </state>
+    <state id="ID-KR" id_country="ID" id_zone="Asia" iso_code="ID-KR" tax_behavior="0" active="1">
+      <name>Kepulauan Riau</name>
+    </state>
+    <state id="ID-LA" id_country="ID" id_zone="Asia" iso_code="ID-LA" tax_behavior="0" active="1">
       <name>Lampung</name>
     </state>
-    <state id="MA_1" id_country="ID" id_zone="Asia" iso_code="MA" tax_behavior="0" active="1">
+    <state id="ID-MA" id_country="ID" id_zone="Asia" iso_code="ID-MA" tax_behavior="0" active="1">
       <name>Maluku</name>
     </state>
-    <state id="MU" id_country="ID" id_zone="Asia" iso_code="MU" tax_behavior="0" active="1">
-      <name>North Maluku</name>
+    <state id="ID-MU" id_country="ID" id_zone="Asia" iso_code="ID-MU" tax_behavior="0" active="1">
+      <name>Maluku Utara</name>
     </state>
-    <state id="SA_1" id_country="ID" id_zone="Asia" iso_code="SA" tax_behavior="0" active="1">
-      <name>North Sulawesi</name>
+    <state id="ID-NB" id_country="ID" id_zone="Asia" iso_code="ID-NB" tax_behavior="0" active="1">
+      <name>Nusa Tengara Barat</name>
     </state>
-    <state id="SU" id_country="ID" id_zone="Asia" iso_code="SU" tax_behavior="0" active="1">
-      <name>North Sumatra</name>
+    <state id="ID-NT" id_country="ID" id_zone="Asia" iso_code="ID-NT" tax_behavior="0" active="1">
+      <name>Nusa Tenggara Timur</name>
     </state>
-    <state id="PA_2" id_country="ID" id_zone="Asia" iso_code="PA" tax_behavior="0" active="1">
+    <state id="ID-PA" id_country="ID" id_zone="Asia" iso_code="ID-PA" tax_behavior="0" active="1">
       <name>Papua</name>
     </state>
-    <state id="RI_2" id_country="ID" id_zone="Asia" iso_code="RI" tax_behavior="0" active="1">
+    <state id="ID-PB" id_country="ID" id_zone="Asia" iso_code="ID-PB" tax_behavior="0" active="1">
+      <name>Papua Barat</name>
+    </state>
+    <state id="ID-RI" id_country="ID" id_zone="Asia" iso_code="ID-RI" tax_behavior="0" active="1">
       <name>Riau</name>
     </state>
-    <state id="KR_1" id_country="ID" id_zone="Asia" iso_code="KR" tax_behavior="0" active="1">
-      <name>Lambang Riau</name>
+    <state id="ID-SR" id_country="ID" id_zone="Asia" iso_code="ID-SR" tax_behavior="0" active="1">
+      <name>Sulawesi Barat</name>
     </state>
-    <state id="SG" id_country="ID" id_zone="Asia" iso_code="SG" tax_behavior="0" active="1">
-      <name>Southeast Sulawesi</name>
+    <state id="ID-SN" id_country="ID" id_zone="Asia" iso_code="ID-SN" tax_behavior="0" active="1">
+      <name>Sulawesi Selatan</name>
     </state>
-    <state id="KS_1" id_country="ID" id_zone="Asia" iso_code="KS" tax_behavior="0" active="1">
-      <name>South Kalimantan</name>
+    <state id="ID-ST" id_country="ID" id_zone="Asia" iso_code="ID-ST" tax_behavior="0" active="1">
+      <name>Sulawesi Tengah</name>
     </state>
-    <state id="SN" id_country="ID" id_zone="Asia" iso_code="SN" tax_behavior="0" active="1">
-      <name>South Sulawesi</name>
+    <state id="ID-SG" id_country="ID" id_zone="Asia" iso_code="ID-SG" tax_behavior="0" active="1">
+      <name>Sulawesi Tenggara</name>
     </state>
-    <state id="SS_1" id_country="ID" id_zone="Asia" iso_code="SS" tax_behavior="0" active="1">
-      <name>South Sumatra</name>
+    <state id="ID-SA" id_country="ID" id_zone="Asia" iso_code="ID-SA" tax_behavior="0" active="1">
+      <name>Sulawesi Utara</name>
     </state>
-    <state id="JB" id_country="ID" id_zone="Asia" iso_code="JB" tax_behavior="0" active="1">
-      <name>West Java</name>
+    <state id="ID-SB" id_country="ID" id_zone="Asia" iso_code="ID-SB" tax_behavior="0" active="1">
+      <name>Sumatera Barat</name>
     </state>
-    <state id="KB" id_country="ID" id_zone="Asia" iso_code="KB" tax_behavior="0" active="1">
-      <name>West Kalimantan</name>
+    <state id="ID-SS" id_country="ID" id_zone="Asia" iso_code="ID-SS" tax_behavior="0" active="1">
+      <name>Sumatera Selatan</name>
     </state>
-    <state id="NB_1" id_country="ID" id_zone="Asia" iso_code="NB" tax_behavior="0" active="1">
-      <name>West Nusa Tenggara</name>
+    <state id="ID-SU" id_country="ID" id_zone="Asia" iso_code="ID-SU" tax_behavior="0" active="1">
+      <name>Sumatera Utara</name>
     </state>
-    <state id="PB" id_country="ID" id_zone="Asia" iso_code="PB" tax_behavior="0" active="1">
-      <name>Lambang Provinsi Papua Barat</name>
-    </state>
-    <state id="SR_1" id_country="ID" id_zone="Asia" iso_code="SR" tax_behavior="0" active="1">
-      <name>West Sulawesi</name>
-    </state>
-    <state id="SB" id_country="ID" id_zone="Asia" iso_code="SB" tax_behavior="0" active="1">
-      <name>West Sumatra</name>
-    </state>
-    <state id="YO" id_country="ID" id_zone="Asia" iso_code="YO" tax_behavior="0" active="1">
+    <state id="ID-YO" id_country="ID" id_zone="Asia" iso_code="ID-YO" tax_behavior="0" active="1">
       <name>Yogyakarta</name>
     </state>
     <state id="JP-23" id_country="JP" id_zone="Asia" iso_code="23" tax_behavior="0" active="1">
@@ -945,5 +957,29 @@
     <state id="JP-19" id_country="JP" id_zone="Asia" iso_code="19" tax_behavior="0" active="1">
       <name>Yamanashi</name>
     </state>
+    <state id="AU-ACT" id_country="AU" id_zone="Oceania" iso_code="ACT" tax_behavior="0" active="1">
+      <name>Australian Capital Territory</name>
+    </state>
+    <state id="AU-NSW" id_country="AU" id_zone="Oceania" iso_code="NSW" tax_behavior="0" active="1">
+      <name>New South Wales</name>
+    </state>
+    <state id="AU-NT" id_country="AU" id_zone="Oceania" iso_code="NT" tax_behavior="0" active="1">
+      <name>Northern Territory</name>
+    </state>
+    <state id="AU-QLD" id_country="AU" id_zone="Oceania" iso_code="QLD" tax_behavior="0" active="1">
+      <name>Queensland</name>
+    </state>
+    <state id="AU-SA" id_country="AU" id_zone="Oceania" iso_code="SA" tax_behavior="0" active="1">
+      <name>South Australia</name>
+    </state>
+    <state id="AU-TAS" id_country="AU" id_zone="Oceania" iso_code="TAS" tax_behavior="0" active="1">
+      <name>Tasmania</name>
+    </state>
+    <state id="AU-VIC" id_country="AU" id_zone="Oceania" iso_code="VIC" tax_behavior="0" active="1">
+      <name>Victoria</name>
+    </state>
+    <state id="AU-WA" id_country="AU" id_zone="Oceania" iso_code="WA" tax_behavior="0" active="1">
+      <name>Western Australia</name>
+    </state>  
   </entities>
 </entity_state>

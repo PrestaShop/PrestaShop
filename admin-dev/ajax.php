@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,19 +38,17 @@ if (Tools::isSubmit('ajaxReferrers')) {
     require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
 }
 
-if (Tools::getValue('page') == 'prestastore' and @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
+if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
     readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
 }
 
-if (Tools::isSubmit('getAvailableFields') and Tools::isSubmit('entity')) {
-    $jsonArray = array();
+if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $import = new AdminImportController();
 
-    $fields = $import->getAvailableFields(true);
-    foreach ($fields as $field) {
-        $jsonArray[] = '{"field":"'.addslashes($field).'"}';
-    }
-    die('['.implode(',', $jsonArray).']');
+    $fields = array_map(function ($elem) {
+        return ['field' => $elem];
+    }, $import->getAvailableFields(true));
+    die(json_encode($fields));
 }
 
 if (Tools::isSubmit('ajaxProductPackItems')) {

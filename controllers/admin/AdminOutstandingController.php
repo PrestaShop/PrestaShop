@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,7 @@
 /**
  * @property OrderInvoice $object
  */
-class AdminOutstandingControllerCore  extends AdminController
+class AdminOutstandingControllerCore extends AdminController
 {
     public function __construct()
     {
@@ -36,7 +36,7 @@ class AdminOutstandingControllerCore  extends AdminController
         $this->className = 'OrderInvoice';
         $this->addRowAction('view');
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         $this->_select = '`id_order_invoice` AS `id_invoice`,
 		`id_order_invoice` AS `outstanding`,
@@ -59,25 +59,25 @@ class AdminOutstandingControllerCore  extends AdminController
 
         $this->fields_list = array(
             'number' => array(
-                'title' => $this->l('Invoice')
+                'title' => $this->trans('Invoice', array(), 'Admin.Global')
             ),
             'date_add' => array(
-                'title' => $this->l('Date'),
+                'title' => $this->trans('Date', array(), 'Admin.Global'),
                 'type' => 'date',
                 'align' => 'right',
                 'filter_key' => 'a!date_add'
             ),
             'customer' => array(
-                'title' => $this->l('Customer'),
+                'title' => $this->trans('Customer', array(), 'Admin.Global'),
                 'filter_key' => 'customer',
                 'tmpTableFilter' => true
             ),
             'company' => array(
-                'title' => $this->l('Company'),
+                'title' => $this->trans('Company', array(), 'Admin.Global'),
                 'align' => 'center'
             ),
             'risk' => array(
-                'title' => $this->l('Risk'),
+                'title' => $this->trans('Risk', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'orderby' => false,
                 'type' => 'select',
@@ -87,29 +87,27 @@ class AdminOutstandingControllerCore  extends AdminController
                 'filter_type' => 'int'
             ),
             'outstanding_allow_amount' => array(
-                'title' => $this->l('Outstanding Allowance'),
+                'title' => $this->trans('Outstanding Allowance', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'prefix' => '<b>',
                 'suffix' => '</b>',
                 'type' => 'price'
             ),
             'outstanding' => array(
-                'title' => $this->l('Current Outstanding'),
+                'title' => $this->trans('Current Outstanding', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'callback' => 'printOutstandingCalculation',
                 'orderby' => false,
                 'search' => false
             ),
             'id_invoice' => array(
-                'title' => $this->l('Invoice'),
+                'title' => $this->trans('Invoice', array(), 'Admin.Global'),
                 'align' => 'center',
                 'callback' => 'printPDFIcons',
                 'orderby' => false,
                 'search' => false
             )
         );
-
-        parent::__construct();
     }
 
     /**

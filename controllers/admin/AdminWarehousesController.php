@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,16 +39,18 @@ class AdminWarehousesControllerCore extends AdminController
         $this->lang = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
 
+        parent::__construct();
+
         $this->fields_list = array(
             'id_warehouse'    => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'width' => 50,
             ),
             'reference'    => array(
-                'title' => $this->l('Reference'),
+                'title' => $this->trans('Reference', array(), 'Admin.Global'),
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
             ),
             'management_type' => array(
                 'title' => $this->l('Management type'),
@@ -79,8 +81,6 @@ class AdminWarehousesControllerCore extends AdminController
                 'confirm' => $this->l('Delete selected items?')
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()
@@ -181,7 +181,7 @@ class AdminWarehousesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Reference'),
+                    'label' => $this->trans('Reference', array(), 'Admin.Global'),
                     'name' => 'reference',
                     'maxlength' => 32,
                     'required' => true,
@@ -189,7 +189,7 @@ class AdminWarehousesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'maxlength' => 45,
                     'required' => true,
@@ -238,14 +238,14 @@ class AdminWarehousesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('City'),
+                    'label' => $this->trans('City', array(), 'Admin.Global'),
                     'name' => 'city',
                     'maxlength' => 32,
                     'required' => true,
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Country'),
+                    'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
                     'required' => true,
                     'default_value' => (int)$this->context->country->id,
@@ -367,7 +367,7 @@ class AdminWarehousesControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         $address = null;

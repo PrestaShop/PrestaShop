@@ -1,0 +1,20 @@
+.content-div {
+  padding-left: $size-navbar-width + ($grid-gutter-width / 2);
+  padding-right: $grid-gutter-width / 2;
+  padding-top: $size-header-height + $size-header-toolbar-height + ($grid-gutter-width / 2);
+  padding-bottom: $grid-gutter-width / 2;
+
+  .mobile & {
+    padding: 0;
+  }
+
+  &.-notoolbar {
+    padding-top: $size-header-height + $grid-gutter-width / 2;
+  }
+}
+
+.page-sidebar-closed {
+  .content-div {
+    padding-left: $size-navbar-width-mini + ($grid-gutter-width / 2);
+  }
+}

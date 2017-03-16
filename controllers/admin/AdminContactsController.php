@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,89 +37,90 @@ class AdminContactsControllerCore extends AdminController
         $this->lang = true;
         $this->addRowAction('edit');
         $this->addRowAction('delete');
+
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
 
         $this->fields_list = array(
-            'id_contact' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->l('Title')),
-            'email' => array('title' => $this->l('Email address')),
-            'description' => array('title' => $this->l('Description')),
+            'id_contact' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'name' => array('title' => $this->trans('Title', array(), 'Admin.Global')),
+            'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global')),
+            'description' => array('title' => $this->trans('Description', array(), 'Admin.Global')),
         );
-
-        parent::__construct();
     }
 
     public function renderForm()
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Contacts'),
+                'title' => $this->trans('Contacts', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-envelope-alt'
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Title'),
+                    'label' => $this->trans('Title', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->l('Contact name (e.g. Customer Support).'),
+                    'hint' => $this->trans('Contact name (e.g. Customer Support).', array(), 'Admin.Shopparameters.Help'),
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Email address'),
+                    'label' => $this->trans('Email address', array(), 'Admin.Global'),
                     'name' => 'email',
                     'required' => false,
                     'col' => 4,
-                    'hint' => $this->l('Emails will be sent to this address.'),
+                    'hint' => $this->trans('Emails will be sent to this address.', array(), 'Admin.Shopparameters.Help'),
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Save messages?'),
+                    'label' => $this->trans('Save messages?', array(), 'Admin.Shopparameters.Feature'),
                     'name' => 'customer_service',
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'hint' => $this->l('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.'),
+                    'hint' => $this->trans('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.', array(), 'Admin.Shopparameters.Help'),
                     'values' => array(
                         array(
                             'id' => 'customer_service_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'customer_service_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->l('Description'),
+                    'label' => $this->trans('Description', array(), 'Admin.Global'),
                     'name' => 'description',
                     'required' => false,
                     'lang' => true,
                     'col' => 6,
-                    'hint' => $this->l('Further information regarding this contact.'),
+                    'hint' => $this->trans('Further information regarding this contact.', array(), 'Admin.Shopparameters.Help'),
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
-        
+
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             );
         }
@@ -133,7 +134,7 @@ class AdminContactsControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_contact'] = array(
                 'href' => self::$currentIndex.'&addcontact&token='.$this->token,
-                'desc' => $this->l('Add new contact', null, null, false),
+                'desc' => $this->trans('Add new contact', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }

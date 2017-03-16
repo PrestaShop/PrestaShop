@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 <script type="text/javascript">
 	var id_cart = {$cart->id|intval};
 	var id_customer = 0;
@@ -351,7 +351,7 @@
 				id_product: id_product,
 				id_product_attribute: id_product_attribute,
 				id_customer: id_customer,
-				price: new Number(new_price.replace(",",".")).toFixed(4).toString()
+				price: ps_round(new Number(new_price.replace(",",".")), 6).toString()
 				},
 			success : function(res)
 			{
@@ -475,6 +475,7 @@
 
 	function searchCustomers()
 	{
+    var customer_search = $('#customer').val();
 		$.ajax({
 			type:"POST",
 			url : "{$link->getAdminLink('AdminCustomers')}",
@@ -484,32 +485,38 @@
 				ajax: "1",
 				tab: "AdminCustomers",
 				action: "searchCustomers",
-				customer_search: $('#customer').val()},
-			success : function(res)
-			{
-				if(res.found)
-				{
-					var html = '';
-					$.each(res.customers, function() {
-						html += '<div class="customerCard col-lg-4">';
-						html += '<div class="panel">';
-						html += '<div class="panel-heading">'+this.firstname+' '+this.lastname;
-						html += '<span class="pull-right">#'+this.id_customer+'</span></div>';
-						html += '<span>'+this.email+'</span><br/>';
-						html += '<span class="text-muted">'+((this.birthday != '0000-00-00') ? this.birthday : '')+'</span><br/>';
-						html += '<div class="panel-footer">';
-						html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
-						html += '<button type="button" data-customer="'+this.id_customer+'" class="setup-customer btn btn-default pull-right"><i class="icon-arrow-right"></i> {l s='Choose'}</button>';
-						html += '</div>';
-						html += '</div>';
-						html += '</div>';
-					});
-				}
-				else
-					html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
-				$('#customers').html(html);
-				resetBind();
-			}
+				customer_search: customer_search
+			},
+			success : function(res) {
+        if (res.found) {
+          var html = '';
+          $.each(res.customers, function () {
+            html += '<div class="customerCard col-lg-4">';
+            html += '<div class="panel">';
+            html += '<div class="panel-heading">' + this.firstname + ' ' + this.lastname;
+            html += '<span class="pull-right">#' + this.id_customer + '</span></div>';
+            html += '<span>' + this.email + '</span><br/>';
+            html += '<span class="text-muted">' + ((this.birthday != '0000-00-00') ? this.birthday : '') + '</span><br/>';
+            html += '<div class="panel-footer">';
+            html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer=' + this.id_customer + '&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
+            html += '<button type="button" data-customer="' + this.id_customer + '" class="setup-customer btn btn-default pull-right"><i class="icon-arrow-right"></i> {l s='Choose'}</button>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+          });
+        }
+        else {
+          html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
+        }
+
+        $('#customers').html(html);
+        var search_items = customer_search.split(' ');
+        $.each(search_items, function (index, value) {
+          $('#customers').highlight(value);
+        });
+
+        resetBind();
+      }
 		});
 	}
 
@@ -774,7 +781,7 @@
 				else
 					var value = this.value_real;
 
-				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+value+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete'}</a></td></tr>';
+				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+value+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete' d='Admin.Actions'}</a></td></tr>';
 			});
 		$('#voucher_list tbody').html($.trim(vouchers_html));
 		if ($('#voucher_list tbody').html().length == 0)
@@ -1093,7 +1100,7 @@
 	<div class="panel form-horizontal" id="customer_part">
 		<div class="panel-heading">
 			<i class="icon-user"></i>
-			{l s='Customer'}
+			{l s='Customer' d='Admin.Global'}
 		</div>
 		<div id="search-customer-form-group" class="form-group">
 			<label class="control-label col-lg-3">
@@ -1148,7 +1155,7 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 								<th><span class="title_box">{l s='Date'}</span></th>
 								<th><span class="title_box">{l s='Total'}</span></th>
 								<th></th>
@@ -1162,7 +1169,7 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 								<th><span class="title_box">{l s='Date'}</span></th>
 								<th><span class="title_box">{l s='Products'}</span></th>
 								<th><span class="title_box">{l s='Total paid'}</span></th>
@@ -1252,11 +1259,11 @@
 					<thead>
 						<tr>
 							<th><span class="title_box">{l s='Product'}</span></th>
-							<th><span class="title_box">{l s='Description'}</span></th>
-							<th><span class="title_box">{l s='Reference'}</span></th>
+							<th><span class="title_box">{l s='Description' d='Admin.Global'}</span></th>
+							<th><span class="title_box">{l s='Reference' d='Admin.Global'}</span></th>
 							<th><span class="title_box">{l s='Unit price'}</span></th>
 							<th><span class="title_box">{l s='Quantity'}</span></th>
-							<th><span class="title_box">{l s='Price'}</span></th>
+							<th><span class="title_box">{l s='Price' d='Admin.Global'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -1335,8 +1342,8 @@
 			<table class="table" id="voucher_list">
 				<thead>
 					<tr>
-						<th><span class="title_box">{l s='Name'}</span></th>
-						<th><span class="title_box">{l s='Description'}</span></th>
+						<th><span class="title_box">{l s='Name' d='Admin.Global'}</span></th>
+						<th><span class="title_box">{l s='Description' d='Admin.Global'}</span></th>
 						<th><span class="title_box">{l s='Value'}</span></th>
 						<th></th>
 					</tr>
@@ -1365,7 +1372,7 @@
 					<select id="id_address_delivery" name="id_address_delivery"></select>
 				</div>
 				<div class="well">
-					<a href="" id="edit_delivery_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit'}</a>
+					<a href="" id="edit_delivery_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit' d='Admin.Actions'}</a>
 					<div id="address_delivery_detail"></div>
 				</div>
 			</div>
@@ -1378,7 +1385,7 @@
 					<select id="id_address_invoice" name="id_address_invoice"></select>
 				</div>
 				<div class="well">
-					<a href="" id="edit_invoice_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit'}</a>
+					<a href="" id="edit_invoice_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit' d='Admin.Actions'}</a>
 					<div id="address_invoice_detail"></div>
 				</div>
 			</div>
@@ -1424,11 +1431,11 @@
 					<span class="switch prestashop-switch">
 						<input type="radio" name="free_shipping" id="free_shipping" value="1">
 						<label for="free_shipping" class="radioCheck">
-							{l s='yes'}
+							{l s='yes' d='Admin.Global'}
 						</label>
 						<input type="radio" name="free_shipping" id="free_shipping_off" value="0" checked="checked">
 						<label for="free_shipping_off" class="radioCheck">
-							{l s='No'}
+							{l s='No' d='Admin.Global'}
 						</label>
 						<a class="slide-button btn"></a>
 					</span>

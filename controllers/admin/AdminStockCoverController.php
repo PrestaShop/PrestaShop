@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,7 +36,6 @@ class AdminStockCoverControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'product';
         $this->className = 'Product';
         $this->list_id = 'product';
@@ -45,9 +44,11 @@ class AdminStockCoverControllerCore extends AdminController
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->tpl_list_vars['show_filter'] = true;
 
+        parent::__construct();
+
         $this->fields_list = array(
             'reference' => array(
-                'title' => $this->l('Reference'),
+                'title' => $this->trans('Reference', array(), 'Admin.Global'),
                 'align' => 'center',
                 'filter_key' => 'a!reference'
             ),
@@ -62,7 +63,7 @@ class AdminStockCoverControllerCore extends AdminController
                 'filter_key' => 'a!upc'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'filter_key' => 'b!name'
             ),
             'qty_sold' => array(
@@ -99,8 +100,6 @@ class AdminStockCoverControllerCore extends AdminController
         $this->stock_cover_warehouses = Warehouse::getWarehouses(true);
         // gets the final list of warehouses
         array_unshift($this->stock_cover_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()
@@ -377,7 +376,7 @@ class AdminStockCoverControllerCore extends AdminController
         $quantity = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
         return $quantity;
     }
-    
+
     public function initContent()
     {
         if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
@@ -386,7 +385,7 @@ class AdminStockCoverControllerCore extends AdminController
         }
         parent::initContent();
     }
-    
+
     public function initProcess()
     {
         if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {

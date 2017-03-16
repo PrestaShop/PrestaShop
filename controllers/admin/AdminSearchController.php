@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,11 +32,25 @@ class AdminSearchControllerCore extends AdminController
         parent::__construct();
     }
 
+    public function getTabSlug()
+    {
+        return 'ROLE_MOD_TAB_ADMINSEARCHCONF_';
+    }
+
     public function postProcess()
     {
         $this->context = Context::getContext();
         $this->query = trim(Tools::getValue('bo_query'));
         $searchType = (int)Tools::getValue('bo_search_type');
+
+        /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product */
+        $action = Tools::getValue('action');
+        if ($action == 'redirectToProduct') {
+            $id_product = (int)Tools::getValue('id_product');
+            $link = $this->context->link->getAdminLink('AdminProducts', false, array('id_product' => $id_product));
+            Tools::redirectAdmin($link);
+        }
+
         /* Handle empty search field */
         if (!empty($this->query)) {
             if (!$searchType && strlen($this->query) > 1) {
@@ -107,7 +121,7 @@ class AdminSearchControllerCore extends AdminController
                             $this->_list['orders'][] = $row;
                         }
                     } elseif ($searchType == 3) {
-                        $this->errors[] = Tools::displayError('No order was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+                        $this->errors[] = $this->trans('No order was found with this ID:', array(), 'Admin.Orderscustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
                     }
                 }
             }
@@ -117,7 +131,7 @@ class AdminSearchControllerCore extends AdminController
                 if (Validate::isOrderInvoiceNumber($this->query) && ($invoice = OrderInvoice::getInvoiceByNumber($this->query))) {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicePDF&id_order='.(int)($invoice->id_order));
                 }
-                $this->errors[] = Tools::displayError('No invoice was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+                $this->errors[] = $this->trans('No invoice was found with this ID:', array(), 'Admin.Orderscustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
             }
 
             /* Cart */
@@ -125,7 +139,7 @@ class AdminSearchControllerCore extends AdminController
                 if ((int)$this->query && Validate::isUnsignedInt((int)$this->query) && ($cart = new Cart($this->query)) && Validate::isLoadedObject($cart)) {
                     Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart='.(int)($cart->id).'&viewcart'.'&token='.Tools::getAdminToken('AdminCarts'.(int)(Tab::getIdFromClassName('AdminCarts')).(int)$this->context->employee->id));
                 }
-                $this->errors[] = Tools::displayError('No cart was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+                $this->errors[] = $this->trans('No cart was found with this ID:', array(), 'Admin.Orderscustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
             }
             /* IP */
             // 6 - but it is included in the customer block
@@ -133,7 +147,7 @@ class AdminSearchControllerCore extends AdminController
             /* Module search */
             if (!$searchType || $searchType == 7) {
                 /* Handle module name */
-                if ($searchType == 7 && Validate::isModuleName($this->query) and ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
+                if ($searchType == 7 && Validate::isModuleName($this->query) && ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
                     Tools::redirectAdmin('index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules'));
                 }
 
@@ -148,7 +162,7 @@ class AdminSearchControllerCore extends AdminController
     public function searchIP()
     {
         if (!ip2long(trim($this->query))) {
-            $this->errors[] = Tools::displayError('This is not a valid IP address:').' '.Tools::htmlentitiesUTF8($this->query);
+            $this->errors[] = $this->trans('This is not a valid IP address:', array(), 'Admin.Shopparameters.Notification').' '.Tools::htmlentitiesUTF8($this->query);
             return;
         }
         $this->_list['customers'] = Customer::searchByIp($this->query);
@@ -221,22 +235,13 @@ class AdminSearchControllerCore extends AdminController
 		SELECT class_name, name
 		FROM '._DB_PREFIX_.'tab t
 		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->employee->id_lang.')
-		LEFT JOIN '._DB_PREFIX_.'access a ON (a.id_tab = t.id_tab AND a.id_profile = '.(int)$this->context->employee->id_profile.')
-		WHERE active = 1
-		'.($this->context->employee->id_profile != 1 ? 'AND view = 1' : '').
-        (defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
+		WHERE active = 1'.(defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
         );
         foreach ($result as $row) {
-            $tabs[strtolower($row['class_name'])] = $row['name'];
-            $key_match[strtolower($row['class_name'])] = $row['class_name'];
-        }
-        foreach (AdminTab::$tabParenting as $key => $value) {
-            $value = stripslashes($value);
-            if (!isset($tabs[strtolower($key)]) || !isset($tabs[strtolower($value)])) {
-                continue;
+            if (Access::isGranted('ROLE_MOD_TAB_'.strtoupper($row['class_name']).'_READ', $this->context->employee->id_profile)) {
+                $tabs[strtolower($row['class_name'])] = $row['name'];
+                $key_match[strtolower($row['class_name'])] = $row['class_name'];
             }
-            $tabs[strtolower($key)] = $tabs[strtolower($value)];
-            $key_match[strtolower($key)] = $key;
         }
 
         $this->_list['features'] = array();
@@ -262,35 +267,36 @@ class AdminSearchControllerCore extends AdminController
     protected function initOrderList()
     {
         $this->fields_list['orders'] = array(
-            'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 65),
-            'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-            'customer' => array('title' => $this->l('Customer')),
-            'total_paid_tax_incl' => array('title' => $this->l('Total'), 'width' => 70, 'align' => 'right', 'type' => 'price', 'currency' => true),
-            'payment' => array( 'title' => $this->l('Payment'), 'width' => 100),
-            'osname' => array('title' => $this->l('Status'), 'width' => 280),
-            'date_add' => array('title' => $this->l('Date'), 'width' => 130, 'align' => 'right', 'type' => 'datetime'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global'), 'align' => 'center', 'width' => 65),
+            'id_order' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
+            'customer' => array('title' => $this->trans('Customer', array(), 'Admin.Global')),
+            'total_paid_tax_incl' => array('title' => $this->trans('Total', array(), 'Admin.Global'), 'width' => 70, 'align' => 'right', 'type' => 'price', 'currency' => true),
+            'payment' => array( 'title' => $this->trans('Payment', array(), 'Admin.Global'), 'width' => 100),
+            'osname' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'width' => 280),
+            'date_add' => array('title' => $this->trans('Date', array(), 'Admin.Global'), 'width' => 130, 'align' => 'right', 'type' => 'datetime'),
         );
     }
 
     protected function initCustomerList()
     {
         $genders_icon = array('default' => 'unknown.gif');
-        $genders = array(0 => $this->l('?'));
+        $genders = array(0 => $this->trans('?', array(), 'Admin.Global'));
         foreach (Gender::getGenders() as $gender) {
             /** @var Gender $gender */
             $genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
             $genders[$gender->id] = $gender->name;
         }
         $this->fields_list['customers'] = (array(
-            'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-            'id_gender' => array('title' => $this->l('Social title'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
-            'firstname' => array('title' => $this->l('First Name'), 'align' => 'left', 'width' => 150),
-            'lastname' => array('title' => $this->l('Name'), 'align' => 'left', 'width' => 'auto'),
-            'email' => array('title' => $this->l('Email address'), 'align' => 'left', 'width' => 250),
-            'birthday' => array('title' => $this->l('Birth date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
-            'date_add' => array('title' => $this->l('Registration date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
-            'orders' => array('title' => $this->l('Orders'), 'align' => 'center', 'width' => 50),
-            'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 25),
+            'id_customer' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
+            'id_gender' => array('title' => $this->trans('Social title', array(), 'Admin.Global'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
+            'firstname' => array('title' => $this->trans('First name', array(), 'Admin.Global'), 'align' => 'left', 'width' => 150),
+            'lastname' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'align' => 'left', 'width' => 'auto'),
+            'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global'), 'align' => 'left', 'width' => 250),
+            'company' => array('title' => $this->trans('Company', array(), 'Admin.Global'), 'align' => 'left', 'width' => 150),
+            'birthday' => array('title' => $this->trans('Birth date', array(), 'Admin.Global'), 'align' => 'center', 'type' => 'date', 'width' => 75),
+            'date_add' => array('title' => $this->trans('Registration date', array(), 'Admin.Shopparameters.Feature'), 'align' => 'center', 'type' => 'date', 'width' => 75),
+            'orders' => array('title' => $this->trans('Orders', array(), 'Admin.Global'), 'align' => 'center', 'width' => 50),
+            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 25),
         ));
     }
 
@@ -298,13 +304,13 @@ class AdminSearchControllerCore extends AdminController
     {
         $this->show_toolbar = false;
         $this->fields_list['products'] = array(
-            'id_product' => array('title' => $this->l('ID'), 'width' => 25),
-            'manufacturer_name' => array('title' => $this->l('Manufacturer'), 'align' => 'center', 'width' => 200),
-            'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 150),
-            'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
-            'price_tax_excl' => array('title' => $this->l('Price (tax excl.)'), 'align' => 'right', 'type' => 'price', 'width' => 60),
-            'price_tax_incl' => array('title' => $this->l('Price (tax incl.)'), 'align' => 'right', 'type' => 'price', 'width' => 60),
-            'active' => array('title' => $this->l('Active'), 'width' => 70, 'active' => 'status', 'align' => 'center', 'type' => 'bool')
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'width' => 25),
+            'manufacturer_name' => array('title' => $this->trans('Brand', array(), 'Admin.Global'), 'align' => 'center', 'width' => 200),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global'), 'align' => 'center', 'width' => 150),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto'),
+            'price_tax_excl' => array('title' => $this->trans('Price (tax excl.)', array(), 'Admin.Catalog.Feature'), 'align' => 'right', 'type' => 'price', 'width' => 60),
+            'price_tax_incl' => array('title' => $this->trans('Price (tax incl.)', array(), 'Admin.Catalog.Feature'), 'align' => 'right', 'type' => 'price', 'width' => 60),
+            'active' => array('title' => $this->trans('Active', array(), 'Admin.Global'), 'width' => 70, 'active' => 'status', 'align' => 'center', 'type' => 'bool')
         );
     }
 
@@ -321,7 +327,7 @@ class AdminSearchControllerCore extends AdminController
 
     public function initToolbarTitle()
     {
-        $this->toolbar_title = $this->l('Search results', null, null, false);
+        $this->toolbar_title = $this->trans('Search results', array(), 'Admin.Global');
     }
 
     public function renderView()
@@ -346,7 +352,7 @@ class AdminSearchControllerCore extends AdminController
             if (isset($this->_list['categories']) && count($this->_list['categories'])) {
                 $categories = array();
                 foreach ($this->_list['categories'] as $category) {
-                    $categories[] = getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
+                    $categories[] = Tools::getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
                 }
                 $this->tpl_view_vars['categories'] = $categories;
             }
@@ -361,7 +367,9 @@ class AdminSearchControllerCore extends AdminController
                 $helper->actions = array('edit');
                 $helper->show_toolbar = false;
                 $helper->table = 'product';
-                $helper->currentIndex = $this->context->link->getAdminLink('AdminProducts', false);
+                /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product, a better way need to be find */
+                $helper->currentIndex = $this->context->link->getAdminLink('AdminSearch', false);
+                $helper->currentIndex .= '&action=redirectToProduct';
 
                 $query = trim(Tools::getValue('bo_query'));
                 $searchType = (int)Tools::getValue('bo_search_type');
@@ -370,7 +378,7 @@ class AdminSearchControllerCore extends AdminController
                     $helper->currentIndex .= '&bo_query='.$query.'&bo_search_type='.$searchType;
                 }
 
-                $helper->token = Tools::getAdminTokenLite('AdminProducts');
+                $helper->token = Tools::getAdminTokenLite('AdminSearch');
 
                 if ($this->_list['products']) {
                     $view = $helper->generateList($this->_list['products'], $this->fields_list['products']);
@@ -399,6 +407,7 @@ class AdminSearchControllerCore extends AdminController
                     $view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
                 }
                 $this->tpl_view_vars['customers'] = $view;
+                $this->tpl_view_vars['customerCount'] = count($this->_list['customers']);
             }
             if (isset($this->_list['orders']) && count($this->_list['orders'])) {
                 $view = '';

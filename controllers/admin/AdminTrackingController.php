@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,9 +55,6 @@ class AdminTrackingControllerCore extends AdminController
 
     public function initContent()
     {
-        $this->initTabModuleList();
-        $this->initPageHeaderToolbar();
-
         if ($id_category = Tools::getValue('id_category') && Tools::getIsset('viewcategory')) {
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_category='.(int)$id_category.'&viewcategory');
         }
@@ -65,7 +62,7 @@ class AdminTrackingControllerCore extends AdminController
         $this->_helper_list = new HelperList();
 
         if (!Configuration::get('PS_STOCK_MANAGEMENT')) {
-            $this->warnings[] = $this->l('List of products without available quantities for sale are not displayed because stock management is disabled.');
+            $this->warnings[] = $this->trans('List of products without available quantities for sale are not displayed because stock management is disabled.', array(), 'Admin.Catalog.Notification');
         }
 
         $methods = get_class_methods($this);
@@ -78,10 +75,6 @@ class AdminTrackingControllerCore extends AdminController
         }
         $this->context->smarty->assign(array(
             'content' => $this->content,
-            'url_post' => self::$currentIndex.'&token='.$this->token,
-            'show_page_header_toolbar' => $this->show_page_header_toolbar,
-            'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
     }
 
@@ -104,10 +97,10 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowActionSkipList('edit', array((int)Configuration::get('PS_ROOT_CATEGORY')));
 
         $this->fields_list = (array(
-            'id_category' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-            'description' => array('title' => $this->l('Description'), 'callback' => 'getDescriptionClean'),
-            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+            'id_category' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
+            'description' => array('title' => $this->trans('Description', array(), 'Admin.Global'), 'callback' => 'getDescriptionClean'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         ));
         $this->clearFilters();
 
@@ -118,7 +111,7 @@ class AdminTrackingControllerCore extends AdminController
 			WHERE a.`id_category` = cp.id_category
 		)
 		AND a.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY');
-        $this->toolbar_title = $this->l('List of empty categories:');
+        $this->toolbar_title = $this->trans('List of empty categories:', array(), 'Admin.Catalog.Feature');
         return $this->renderList();
     }
 
@@ -143,10 +136,10 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs', 'filter_key' => 'a!active')
         );
 
         $this->clearFilters();
@@ -162,7 +155,7 @@ class AdminTrackingControllerCore extends AdminController
 			)
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';
-        $this->toolbar_title = $this->l('List of products with attributes but without available quantities for sale:');
+        $this->toolbar_title = $this->trans('List of products with combinations but without available quantities for sale:', array(), 'Admin.Catalog.Feature');
         return $this->renderList();
     }
 
@@ -187,10 +180,10 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name')),
-            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs', 'filter_key' => 'a!active')
         );
         $this->clearFilters();
 
@@ -206,7 +199,7 @@ class AdminTrackingControllerCore extends AdminController
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';
 
-        $this->toolbar_title = $this->l('List of products without attributes and without available quantities for sale:');
+        $this->toolbar_title = $this->trans('List of products without combinations and without available quantities for sale:', array(), 'Admin.Catalog.Feature');
         return $this->renderList();
     }
 
@@ -228,15 +221,15 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name')
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name')
         );
 
         $this->clearFilters();
 
         $this->_join = Shop::addSqlAssociation('product', 'a');
-        $this->toolbar_title = $this->l('List of disabled products');
+        $this->toolbar_title = $this->trans('List of disabled products', array(), 'Admin.Catalog.Feature');
         return $this->renderList();
     }
 
@@ -255,10 +248,10 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         );
         $this->clearFilters();
         $this->_join = Shop::addSqlAssociation('product', 'a');
@@ -267,7 +260,7 @@ class AdminTrackingControllerCore extends AdminController
 			FROM `'._DB_PREFIX_.'image` img
 			WHERE a.id_product = img.id_product
 		)';
-        $this->toolbar_title = $this->l('List of products without images');
+        $this->toolbar_title = $this->trans('List of products without images', array(), 'Admin.Catalog.Feature');
         return $this->renderList(true);
     }
 
@@ -286,10 +279,10 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         );
         $this->clearFilters();
         $defaultLanguage = new Language(Configuration::get('PS_LANG_DEFAULT'));
@@ -303,7 +296,7 @@ class AdminTrackingControllerCore extends AdminController
 			pl.id_shop = '.(int)$this->context->shop->id.' AND
 			description = "" AND description_short = ""
 		)';
-        $this->toolbar_title = $this->l('List of products without description');
+        $this->toolbar_title = $this->trans('List of products without description', array(), 'Admin.Catalog.Feature');
         return $this->renderList(true);
     }
 
@@ -322,10 +315,10 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         );
         $this->clearFilters();
         $this->_join = Shop::addSqlAssociation('product', 'a');
@@ -334,7 +327,7 @@ class AdminTrackingControllerCore extends AdminController
 			FROM `'._DB_PREFIX_.'specific_price` sp
 			WHERE a.id_product = sp.id_product
 		)';
-        $this->toolbar_title = $this->l('List of products without price');
+        $this->toolbar_title = $this->trans('List of products without price', array(), 'Admin.Catalog.Feature');
         return $this->renderList();
     }
 
@@ -352,7 +345,7 @@ class AdminTrackingControllerCore extends AdminController
 
         // Empty list is ok
         if (!is_array($this->_list)) {
-            $this->displayWarning($this->l('Bad SQL query', 'Helper').'<br />'.htmlspecialchars($this->_list_error));
+            $this->displayWarning($this->trans('Bad SQL query', array(), 'Admin.Notifications.Error').'<br />'.htmlspecialchars($this->_list_error));
             return false;
         }
 
@@ -444,7 +437,7 @@ class AdminTrackingControllerCore extends AdminController
         $this->_filter = '';
         $this->_group = '';
         $this->_where = '';
-        $this->list_title = $this->l('Product disabled');
+        $this->list_title = $this->trans('Product disabled', array(), 'Admin.Catalog.Feature');
     }
 
     public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)

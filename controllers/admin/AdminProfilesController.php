@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,41 +41,43 @@ class AdminProfilesControllerCore extends AdminController
         $this->addRowAction('delete');
         $this->addRowActionSkipList('delete', array(1));
 
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
 
         $this->fields_list = array(
             'id_profile' => array(
-                        'title' => $this->l('ID'),
+                        'title' => $this->trans('ID', array(), 'Admin.Global'),
                         'align' => 'center',
                         'class' => 'fixed-width-xs'
                         ),
-            'name' => array('title' => $this->l('Name'))
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'))
             );
-            
+
         $this->identifier = 'id_profile';
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Profile'),
+                'title' => $this->trans('Profile', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-group'
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
 
@@ -83,21 +85,19 @@ class AdminProfilesControllerCore extends AdminController
         foreach (Profile::getProfiles($this->context->language->id) as $profil) {
             $list_profile[] = array('value' => $profil['id_profile'], 'name' => $profil['name']);
         }
-
-        parent::__construct();
     }
 
     public function postProcess()
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
         /* PrestaShop demo mode*/
 
         if (isset($_GET['delete'.$this->table]) && $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_)) {
-            $this->errors[] = $this->l('For security reasons, you cannot delete the Administrator\'s profile.');
+            $this->errors[] = $this->trans('For security reasons, you cannot delete the Administrator\'s profile.', array(), 'Admin.Advparameters.Notification');
         } else {
             parent::postProcess();
         }
@@ -108,11 +108,11 @@ class AdminProfilesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_profile'] = array(
                 'href' => self::$currentIndex.'&addprofile&token='.$this->token,
-                'desc' => $this->l('Add new profile', null, null, false),
+                'desc' => $this->trans('Add new profile', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
-        
+
         parent::initPageHeaderToolbar();
     }
 }

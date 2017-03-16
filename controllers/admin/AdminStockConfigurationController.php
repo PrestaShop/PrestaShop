@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,16 +36,17 @@ class AdminStockConfigurationControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'stock_mvt_reason';
         $this->className = 'StockMvtReason';
         $this->lang = true;
         $this->multishop_context = Shop::CONTEXT_ALL;
 
+        parent::__construct();
+
         // defines fields
         $this->fields_list = array(
             'id_stock_mvt_reason' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'search' => false,
@@ -68,7 +69,7 @@ class AdminStockConfigurationControllerCore extends AdminController
                 'search' => false,
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'filter_key' => 'b!name',
                 'search' => false,
             ),
@@ -84,7 +85,7 @@ class AdminStockConfigurationControllerCore extends AdminController
         // defines options for StockMvt
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->l('Options'),
+                'title' =>    $this->trans('Options', array(), 'Admin.Global'),
                 'fields' =>    array(
                     'PS_STOCK_MVT_INC_REASON_DEFAULT' => array(
                         'title' => $this->l('Default label for increasing stock'),
@@ -119,11 +120,9 @@ class AdminStockConfigurationControllerCore extends AdminController
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save')),
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             )
         );
-
-        parent::__construct();
     }
 
     public function init()
@@ -163,7 +162,7 @@ class AdminStockConfigurationControllerCore extends AdminController
                     array(
                         'type' => 'text',
                         'lang' => true,
-                        'label' => $this->l('Name'),
+                        'label' => $this->trans('Name', array(), 'Admin.Global'),
                         'name' => 'name',
                         'required' => true
                     ),
@@ -190,7 +189,7 @@ class AdminStockConfigurationControllerCore extends AdminController
                     ),
                 ),
                 'submit' => array(
-                    'title' => $this->l('Save')
+                    'title' => $this->trans('Save', array(), 'Admin.Actions')
                 )
             );
         }
@@ -228,12 +227,12 @@ class AdminStockConfigurationControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Yes')
+                                    'label' => $this->trans('Yes', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('No')
+                                    'label' => $this->trans('No', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Is it is possible to edit the order? Keep in mind that an editable order cannot be sent to the supplier.')
@@ -248,12 +247,12 @@ class AdminStockConfigurationControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Yes')
+                                    'label' => $this->trans('Yes', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('No')
+                                    'label' => $this->trans('No', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Is it possible to generate a delivery note for the order?')
@@ -268,12 +267,12 @@ class AdminStockConfigurationControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Yes')
+                                    'label' => $this->trans('Yes', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('No')
+                                    'label' => $this->trans('No', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Indicates whether the supplies have been either partially or completely received. This will allow you to know if ordered products have to be added to the corresponding warehouse.'),
@@ -288,19 +287,19 @@ class AdminStockConfigurationControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Yes')
+                                    'label' => $this->trans('Yes', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('No')
+                                    'label' => $this->trans('No', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Indicates that you are awaiting delivery of supplies.')
                         ),
                     ),
                     'submit' => array(
-                        'title' => $this->l('Save')
+                        'title' => $this->trans('Save', array(), 'Admin.Actions')
                     )
                 );
 
@@ -334,7 +333,7 @@ class AdminStockConfigurationControllerCore extends AdminController
                                 ),
                             ),
                             'submit' => array(
-                                'title' => $this->l('Save')
+                                'title' => $this->trans('Save', array(), 'Admin.Actions')
                             )
                         );
                     }
@@ -371,7 +370,7 @@ class AdminStockConfigurationControllerCore extends AdminController
         $this->displayInformation($this->l('This interface allows you to configure your supply order status and stock movement labels.').'<br />');
 
         // Checks access
-        if (!($this->tabAccess['add'] === '1')) {
+        if (!($this->access('add'))) {
             unset($this->toolbar_btn['new']);
         }
 
@@ -427,7 +426,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 
         $this->fields_list = array(
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'color' => 'color',
                 'search' => false,
             ),
@@ -546,7 +545,7 @@ class AdminStockConfigurationControllerCore extends AdminController
             }
         }
     }
-    
+
     public function initContent()
     {
         if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
@@ -555,7 +554,7 @@ class AdminStockConfigurationControllerCore extends AdminController
         }
         parent::initContent();
     }
-    
+
     public function initProcess()
     {
         if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {

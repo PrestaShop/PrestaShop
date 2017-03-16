@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -137,10 +137,10 @@ class OrderHistoryCore extends ObjectModel
                     $links .= '<li>';
                     $links .= '<a href="'.$product['link'].'">'.Tools::htmlentitiesUTF8($product['name']).'</a>';
                     if (isset($product['deadline'])) {
-                        $links .= '&nbsp;'.Tools::htmlentitiesUTF8(Tools::displayError('expires on', false)).'&nbsp;'.$product['deadline'];
+                        $links .= '&nbsp;'.$this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
                     }
                     if (isset($product['downloadable'])) {
-                        $links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)', false), (int)$product['downloadable']));
+                        $links .= '&nbsp;'.$this->trans('downloadable %d time(s)', array((int)$product['downloadable']), 'Admin.Orderscustomers.Notification');
                     }
                     $links .= '</li>';
                 }
@@ -155,10 +155,16 @@ class OrderHistoryCore extends ObjectModel
                 );
                 // If there is at least one downloadable file
                 if (!empty($assign)) {
+                    $orderLanguage = new Language((int) $order->id_lang);
                     Mail::Send(
                         (int)$order->id_lang,
                         'download_product',
-                        Mail::l('The virtual product that you bought is available for download', $order->id_lang),
+                        Context::getContext()->getTranslator()->trans(
+                            'The virtual product that you bought is available for download',
+                            array(),
+                            'Emails.Subject',
+                            $orderLanguage->locale
+                        ),
                         $data,
                         $customer->email,
                         $customer->firstname.' '.$customer->lastname,
@@ -193,7 +199,7 @@ class OrderHistoryCore extends ObjectModel
                     $employee = null;
                 }
             }
-            
+
 
             // foreach products of the order
             foreach ($order->getProductsDetail() as $product) {
@@ -313,7 +319,7 @@ class OrderHistoryCore extends ObjectModel
 
         // changes invoice number of order ?
         if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order)) {
-            die(Tools::displayError('Invalid new order status'));
+            die($this->trans('Invalid new order status', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         // the order is valid if and only if the invoice is available and the order is not cancelled

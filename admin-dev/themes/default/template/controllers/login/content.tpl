@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 <div id="login-panel">
 	<div id="login-header">
 		<h1 class="text-center">
@@ -32,9 +32,9 @@
 		{if isset($errors)}
 			<h4>
 				{if isset($nbErrors) && $nbErrors > 1}
-					{l s='There are %d errors.' sprintf=$nbErrors}
+					{l s='There are %d errors.' sprintf=[$nbErrors]}
 				{else}
-					{l s='There is %d error.' sprintf=$nbErrors}
+					{l s='There is %d error.' sprintf=[$nbErrors]}
 				{/if}
 			</h4>
 			<ol>
@@ -131,7 +131,7 @@
 					<div class="panel-footer">
 						<button type="button" href="#" class="btn btn-default show-login-form" tabindex="7">
 							<i class="icon-caret-left"></i>
-							{l s='Cancel'}
+							{l s='Cancel' d='Admin.Actions'}
 						</button>
 						<button class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
 							<i class="icon-ok text-success"></i>
@@ -140,7 +140,7 @@
 					</div>
 				</form>
 			</div>
-			
+
 			<div class="front forgot_confirm" style="display: none">
 				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.'}<br/><br/>{l s='A link to reset your password has been sent to you.'}</h4>
 			</div>
@@ -153,12 +153,12 @@
 					<li>{l s='deleted the /install folder'}</li>
 				{/if}
 				{if isset($wrong_folder_name) && $wrong_folder_name == true}
-					<li>{l s='renamed the /admin folder (e.g. %s)' sprintf=$randomNb}</li>
+					<li>{l s='renamed the /admin folder (e.g. %s)' sprintf=[$randomNb]}</li>
 				{/if}
 			</ul>
 			<p>
 				<a href="{$adminUrl|escape:'html':'UTF-8'}">
-					{l s='Please then access this page by the new URL (e.g. %s)' sprintf=$adminUrl}
+					{l s='Please then access this page by the new URL (e.g. %s)' sprintf=[$adminUrl]}
 				</a>
 			</p>
 		</div>

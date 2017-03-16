@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,15 +44,6 @@ define('_PS_MODE_DEMO_', false);
 
 $currentDir = dirname(__FILE__);
 
-if (!defined('PHP_VERSION_ID')) {
-    $version = explode('.', PHP_VERSION);
-    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-}
-
-if (!defined('_PS_VERSION_') && (getenv('_PS_VERSION_') || getenv('REDIRECT__PS_VERSION_'))) {
-    define('_PS_VERSION_', getenv('_PS_VERSION_') ? getenv('_PS_VERSION_') : getenv('REDIRECT__PS_VERSION_'));
-}
-
 if (!defined('_PS_HOST_MODE_') && (getenv('_PS_HOST_MODE_') || getenv('REDIRECT__PS_HOST_MODE_'))) {
     define('_PS_HOST_MODE_', getenv('_PS_HOST_MODE_') ? getenv('_PS_HOST_MODE_') : getenv('REDIRECT__PS_HOST_MODE_'));
 }
@@ -76,7 +67,8 @@ if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 }
 if (!defined('_PS_CACHE_DIR_')) {
-    define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/cache/');
+    $prestashopCacheDir =  _PS_ROOT_DIR_.'/app/cache/'.(_PS_MODE_DEV_ ? 'dev': 'prod'). DIRECTORY_SEPARATOR;
+    define('_PS_CACHE_DIR_',$prestashopCacheDir);
 }
 define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');
 define('_PS_CUSTOM_CONFIG_FILE_', _PS_CONFIG_DIR_.'settings_custom.inc.php');
@@ -102,10 +94,10 @@ define('_PS_FRONT_CONTROLLER_DIR_', _PS_CORE_DIR_.'/controllers/front/');
 
 define('_PS_TOOL_DIR_', _PS_CORE_DIR_.'/tools/');
 if (!defined('_PS_GEOIP_DIR_')) {
-    define('_PS_GEOIP_DIR_', _PS_TOOL_DIR_.'geoip/');
+    define('_PS_GEOIP_DIR_', _PS_CORE_DIR_.'/app/Resources/geoip/');
 }
 if (!defined('_PS_GEOIP_CITY_FILE_')) {
-    define('_PS_GEOIP_CITY_FILE_', 'GeoLiteCity.dat');
+    define('_PS_GEOIP_CITY_FILE_', 'GeoLite2-City.mmdb');
 }
 
 define('_PS_VENDOR_DIR_', _PS_CORE_DIR_.'/vendor/');
@@ -131,8 +123,6 @@ define('_PS_LANG_IMG_DIR_', _PS_IMG_DIR_.'l/');
 define('_PS_MANU_IMG_DIR_', _PS_IMG_DIR_.'m/');
 define('_PS_ORDER_STATE_IMG_DIR_', _PS_IMG_DIR_.'os/');
 define('_PS_PROD_IMG_DIR_', _PS_IMG_DIR_.'p/');
-define('_PS_SCENE_IMG_DIR_', _PS_IMG_DIR_.'scenes/');
-define('_PS_SCENE_THUMB_IMG_DIR_', _PS_IMG_DIR_.'scenes/thumbs/');
 define('_PS_SHIP_IMG_DIR_', _PS_IMG_DIR_.'s/');
 define('_PS_STORE_IMG_DIR_', _PS_IMG_DIR_.'st/');
 define('_PS_SUPP_IMG_DIR_', _PS_IMG_DIR_.'su/');
@@ -159,9 +149,6 @@ define('PS_BOTH_TAX', 2);
 define('PS_TAX_EXC', 1);
 define('PS_TAX_INC', 0);
 
-define('PS_ORDER_PROCESS_STANDARD', 0);
-define('PS_ORDER_PROCESS_OPC', 1);
-
 define('PS_ROUND_UP', 0);
 define('PS_ROUND_DOWN', 1);
 define('PS_ROUND_HALF_UP', 2);
@@ -171,10 +158,6 @@ define('PS_ROUND_HALF_ODD', 5);
 
 /* Backward compatibility */
 define('PS_ROUND_HALF', PS_ROUND_HALF_UP);
-
-/* Registration behavior */
-define('PS_REGISTRATION_PROCESS_STANDARD', 0);
-define('PS_REGISTRATION_PROCESS_AIO', 1);
 
 /* Carrier::getCarriers() filter */
 // these defines are DEPRECATED since 1.4.5 version
@@ -214,4 +197,4 @@ if (!defined('_PS_JQUERY_VERSION_')) {
     define('_PS_JQUERY_VERSION_', '1.11.0');
 }
 
-define('VENDOR_DIR', _PS_ROOT_DIR_.'/vendor');
+define('_PS_CACHE_CA_CERT_FILE_', _PS_CACHE_DIR_.'cacert.pem');

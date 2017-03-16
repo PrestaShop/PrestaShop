@@ -1,5 +1,5 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -98,9 +98,10 @@ function process_install(step)
 			}
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function() {
-			install_error(step);
-		}
+		error: function( jqXHR, textStatus ) {
+                    var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
+                    install_error(step, errorMsg);
+                }
 	});
 }
 
@@ -151,9 +152,10 @@ function process_install_subtask(step, current_subtask)
 				install_error(step, (json) ? json.message : '');
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function() {
-			install_error(step);
-		}
+                error: function( jqXHR, textStatus ) {
+                    var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
+                    install_error(step, errorMsg);
+                }
 	});
 }
 
@@ -182,17 +184,15 @@ function install_error(step, errors)
 
 		$.each(list_errors, function(k, v) {
 			if (typeof psuser_assistance != 'undefined') {
-				psuser_assistance.setStep('install_process_error', {'error': v});
+				psuser_assistance.setStep('install_process_error', {'error': v + ' || {"version": "' + ps_version + '"}'});
 			}
 			display += '<li>' + (k + 1) + ': ' + v + '</li>';
 		});
 
 		display += '</ol>';
 		$('#error_process').append(display);
-	}
-
-	if (typeof psuser_assistance != 'undefined') {
-		psuser_assistance.setStep('install_process_error');
+	} else if (typeof psuser_assistance != 'undefined') {
+		psuser_assistance.setStep('install_process_error', {'error': 'No message || {"version": "' + ps_version + '"}'});
 	}
 
 	$('#tabs li a').each(function() {
@@ -208,8 +208,9 @@ function install_success()
 	$('#install_process_form').slideUp();
 	$('#install_process_success').slideDown();
 	$('.stepList li:last-child').addClass('ok');
-	if (typeof psuser_assistance != 'undefined')
-		psuser_assistance.setStep('install_process_success');
+	if (typeof psuser_assistance != 'undefined') {
+    psuser_assistance.setStep('install_process_success');
+  }
 
 	$('#tabs li a').each(function() {
 		 this.href=this.rel;
