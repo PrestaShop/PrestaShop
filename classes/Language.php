@@ -1023,16 +1023,13 @@ class LanguageCore extends ObjectModel
         foreach ($languages as $lang) {
             $gz = false;
             $files_listing = array();
+
+            if (Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false) !== true) {
+                break;
+            }
+            $filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
+
             foreach ($modules_list as $module_name) {
-                $filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
-
-                clearstatcache();
-                if (@filemtime($filegz) < (time() - (24 * 3600))) {
-                    if (Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false) !== true) {
-                        break;
-                    }
-                }
-
                 $gz = new Archive_Tar($filegz, true);
                 $files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
                 foreach ($files_list as $i => $file) {
