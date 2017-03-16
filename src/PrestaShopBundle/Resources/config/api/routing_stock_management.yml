@@ -1,16 +1,22 @@
-api_product_stock_list:
+api_stock_list_products:
     path: /stock
     methods: [GET]
     defaults:
-        _controller: PrestaShopBundle:Api/Stock:list
+        _controller: PrestaShopBundle:Api/Stock:listProducts
 
-api_product_stock_edit_product:
+api_stock_list_product_combinations:
+    path: /stock/{productId}
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Api/Stock:listProductCombinations
+
+api_stock_edit_product:
     path: /stock/product/{productId}
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Api/Stock:editProduct
 
-api_product_stock_edit_product_combination:
+api_stock_edit_product_combination:
     path: /stock/product/{productId}/combination/{productAttributeId}
     methods: [POST]
     defaults:
