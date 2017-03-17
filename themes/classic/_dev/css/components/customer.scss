@@ -50,7 +50,7 @@
     margin: 0;
   }
   .custom-checkbox {
-    @include display(flex);
+    display: flex;
     span {
       flex: 0 0 0.9375rem;
     }
@@ -292,9 +292,9 @@
 .page-my-account {
   #content {
     .links {
-      @include display(flex);
-      @include flex-wrap(wrap);
-      @include justify-content(flex-start);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
       a {
         text-align: center;
         display: inline-block;

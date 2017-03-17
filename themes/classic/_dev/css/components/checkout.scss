@@ -16,9 +16,9 @@ body#checkout {
     background: $gray-dark;
   }
   .custom-checkbox {
-    @include display(flex);
+    display: flex;
     span {
-      @include flex(0 0 15px);
+      flex: 0 0 15px;
       margin-top: 0.1875rem;
     }
   }
@@ -145,14 +145,14 @@ body#checkout {
       padding: 0.625rem;
     }
     .address-selector {
-      @include display(flex);
-      @include justify-content(space-between);
-      @include align-items(flex-start);
-      @include flex-wrap(wrap);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
     }
     .address-item {
       background: $gray-lighter;
-      @include flex(0 0 49%);
+      flex: 0 0 49%;
       margin-bottom: $small-space;
       &.selected {
         background: white;
@@ -406,16 +406,16 @@ body#checkout {
     padding: 0;
   }
   body#checkout section.checkout-step .address-item {
-    @include flex-grow(1);
+    flex-grow: 1;
   }
   body#checkout section.checkout-step .delivery-option-2 {
-    @include flex-direction(column);
+    flex-direction: column;
   }
   .delivery-option {
-    @include display(flex);
+    display: flex;
     margin: auto;
     .custom-radio {
-      @include flex(0 0 auto);
+      flex: 0 0 auto;
     }
   }
   .condition-label {

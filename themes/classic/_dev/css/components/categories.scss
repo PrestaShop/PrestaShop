@@ -1,9 +1,9 @@
 #products {
   color: $gray-dark;
   .products-select {
-    @include display(flex);
-    @include align-items(baseline);
-    @include justify-content(space-between);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
   }
   .up {
     margin-bottom: 1rem;
@@ -45,7 +45,7 @@
 }
 .products-selection {
   .sort-by-row {
-    @include display(flex);
+    display: flex;
     align-items: center;
   }
   .sort-by {

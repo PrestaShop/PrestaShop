@@ -24,7 +24,7 @@
     width: 95%;
   }
   .images-container {
-    @include display(flex);
+    display: flex;
     z-index: 1;
     min-height: 21.88rem;
     .product-images > li.thumb-container > .thumb {

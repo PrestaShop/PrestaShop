@@ -15,7 +15,10 @@
       min-width: 255px;
       background: $gray-light;
       color: $gray;
-      @include placeholder {
+      &::-webkit-input-placeholder,
+      &::-moz-placeholder,
+      &:-ms-input-placeholder,
+      &:-moz-placeholder {
         color: rgba($gray, 0.5);
         text-indent: 0.625rem;
       }

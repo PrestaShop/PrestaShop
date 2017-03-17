@@ -207,7 +207,7 @@
     background: white;
   }
   .layer {
-    @include display(flex);
+    display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -236,7 +236,7 @@
     border: none;
     padding: 0;
     .modal-body {
-      @include display(flex);
+      display: flex;
       margin-left: -30%;
       .product-cover-modal {
         background: white;
@@ -428,12 +428,12 @@
   margin-top: $medium-space;
   margin-left: 0.3125rem;
   > dl.data-sheet {
-    @include display(flex);
-    @include flex-wrap(wrap);
-    @include align-items(flex-start);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
     dd.value,
     dt.name {
-      @include flex(1 0 40%);
+      flex: 1 0 40%;
       font-weight: normal;
       background: $gray-light;
       padding: $small-space;
@@ -519,7 +519,10 @@ li.product-flag {
     height: 3.125rem;
     resize: none;
     padding: 0.625rem;
-    @include placeholder {
+    &::-webkit-input-placeholder,
+    &::-moz-placeholder,
+    &:-ms-input-placeholder,
+    &:-moz-placeholder {
       color: $gray;
     }
   }
@@ -561,10 +564,10 @@ li.product-flag {
 .product-pack {
   margin-top: $extra-large-space;
   .pack-product-container {
-    @include display(flex);
+    display: flex;
     justify-content: space-around;
     .pack-product-name {
-      @include flex(0 0 50%);
+      flex: 0 0 50%;
       font-size: 0.875rem;
       color: $gray;
     }
@@ -575,7 +578,7 @@ li.product-flag {
     .pack-product-name,
     .pack-product-price,
     .pack-product-quantity {
-      @include display(flex);
+      display: flex;
       align-items: center;
     }
   }
@@ -585,8 +588,8 @@ li.product-flag {
 }
 .social-sharing {
   width: 100%;
-  @include display(flex);
-  @include align-items(center);
+  display: flex;
+  align-items: center;
   margin-top: 1.5rem;
   ul {
     margin-bottom: 0;
@@ -635,7 +638,7 @@ li.product-flag {
     }
   }
   #product-modal .modal-content .modal-body {
-    @include flex-direction(column);
+    flex-direction: column;
     margin-left: 0;
     img.product-cover-modal {
       width: 100%;

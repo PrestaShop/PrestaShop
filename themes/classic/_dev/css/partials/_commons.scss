@@ -108,7 +108,7 @@ small.label, small.value {
 .form-control {
   background: $gray-light;
   color: $gray;
-  border: none;
+  border: $input-btn-border-width solid $input-border-color;
   padding: 0.5rem 1rem;
   &:focus {
     background-color: white;
@@ -191,7 +191,7 @@ small.label, small.value {
     @extend .btn-default;
     background-color: white;
     border: $input-btn-border-width solid $input-border-color;
-    height: ($input-height / 2) + rem($input-btn-border-width);
+    height: $input-height / 2 + 0.0625rem;
     &:hover {
       background-color: $gray-light;
     }
@@ -304,14 +304,14 @@ small.label, small.value {
 }
 .definition-list {
   dl {
-    @include display(flex);
-    @include flex-wrap(wrap);
+    display: flex;
+    flex-wrap: wrap;
     dt {
       font-weight: normal;
     }
     dd,
     dt {
-      @include flex(0 0 45%);
+      flex: 0 0 45%;
       background: $gray-light;
       padding: 0.625rem;
       margin: 0.125rem;

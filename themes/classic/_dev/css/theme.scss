@@ -54,9 +54,9 @@
       }
     }
     .right-nav {
-      @include display(flex);
-      @include flex-wrap(nowrap);
-      @include justify-content(flex-end);
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
     }
     .currency-selector {
       margin-top: 0.9375rem;
@@ -256,7 +256,7 @@
         }
       }
       .right-nav {
-        @include flex-direction(column);
+        flex-direction: column;
       }
       .user-info {
         text-align: left;
