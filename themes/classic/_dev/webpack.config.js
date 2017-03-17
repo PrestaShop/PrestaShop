@@ -54,6 +54,7 @@ let config = {
                 minimize: true
               }
             },
+            'postcss-loader',
             'sass-loader'
           ]
         })
