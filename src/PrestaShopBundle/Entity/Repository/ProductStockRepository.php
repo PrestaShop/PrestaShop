@@ -189,6 +189,8 @@ class ProductStockRepository
             );
         }
 
+        $rows = $this->addImageThumbnailPaths($rows);
+
         return $this->castNumericToInt($rows)[0];
     }
 
@@ -251,7 +253,20 @@ class ProductStockRepository
     private function addImageThumbnailPaths($rows)
     {
         array_walk($rows, function (&$row) {
-            $row['image_thumbnail_path'] = $this->imageManager->getThumbnailPath($row['image_id']);
+            $row['product_thumbnail'] = 'N/A';
+            $row['combination_thumbnail'] = 'N/A';
+
+            if ((int)$row['product_cover_id'] > 0) {
+                $row['product_thumbnail'] = $this->imageManager->getThumbnailPath(
+                    $row['product_cover_id']
+                );
+            }
+
+            if ((int)$row['combination_cover_id'] > 0) {
+                $row['combination_thumbnail'] = $this->imageManager->getThumbnailPath(
+                    $row['combination_cover_id']
+                );
+            }
         });
 
         return $rows;
@@ -303,7 +318,8 @@ class ProductStockRepository
                 "N/A"
             ) AS combination_name,
             p.id_supplier AS supplier_id,
-            i.id_image AS image_id,
+            COALESCE(ic.id_image, 0) AS product_cover_id,
+            COALESCE(i.id_image, 0) as combination_cover_id,
             COALESCE(s.name, "N/A") AS supplier_name,
             pl.name AS product_name,
             sa.quantity as product_available_quantity,
@@ -312,12 +328,34 @@ class ProductStockRepository
             FROM {prefix}product p
             LEFT JOIN {prefix}product_attribute pa ON (p.id_product = pa.id_product)
             LEFT JOIN {prefix}product_lang pl ON (p.id_product = pl.id_product)
-            LEFT JOIN {prefix}product_shop ps ON (p.id_product = ps.id_product)
+            LEFT JOIN {prefix}product_shop ps ON (
+                p.id_product = ps.id_product AND
+                ps.id_shop = :shop_id
+            )
             LEFT JOIN {prefix}stock_available sa ON (p.id_product = sa.id_product)
-            LEFT JOIN {prefix}image i ON (p.id_product = i.id_product)
+            LEFT JOIN {prefix}image ic ON (
+                pa.id_product = ic.id_product AND
+                ic.cover = 1
+            )
             LEFT JOIN {prefix}image_shop ims ON (
                 p.id_product = ims.id_product AND
-                i.id_image = ims.id_image
+                ic.id_image  = ims.id_image AND
+                ims.cover = 1
+            )
+            LEFT JOIN (
+                SELECT SUBSTRING_INDEX(
+                    GROUP_CONCAT(pai.id_image),
+                    ",",
+                    1
+                ) image_ids,
+                pai.id_product_attribute as combination_id
+                FROM {prefix}product_attribute_image pai
+                GROUP BY pai.id_product_attribute
+            ) images_per_combination ON (
+                pa.id_product_attribute = images_per_combination.combination_id
+            )
+            LEFT JOIN {prefix}image i ON (
+                COALESCE(FIND_IN_SET(i.id_image, images_per_combination.image_ids), 0) > 0
             )
             LEFT JOIN {prefix}supplier s ON (p.id_supplier = s.id_supplier)
             LEFT JOIN {prefix}product_attribute_combination pac ON (
@@ -347,10 +385,10 @@ class ProductStockRepository
             {left_join}
             WHERE
             ps.id_shop = :shop_id AND
-            pl.id_lang = :language_id AND
             sa.id_shop = :shop_id AND
+            ims.id_shop = :shop_id AND
+            pl.id_lang = :language_id AND
             sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0) AND
-            ims.cover = 1 AND
             p.state = :state
             {and_where}
             GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)
@@ -368,12 +406,11 @@ class ProductStockRepository
                 GROUP_CONCAT(pa.id_product_attribute),
                 \',\',
                 :max_combinations_per_product
-            ) product_attribute_ids,
-            pa.id_product
-            FROM ps_product_attribute pa
+            ) product_attribute_ids
+            FROM {prefix}product_attribute pa
             GROUP BY pa.id_product
-        ) select_ ON (
-            COALESCE(FIND_IN_SET(pa.id_product_attribute, select_.product_attribute_ids), 0) > 0
+        ) combinations_per_product ON (
+            COALESCE(FIND_IN_SET(pa.id_product_attribute, combinations_per_product.product_attribute_ids), 0) > 0
         ) ';
     }
 
@@ -384,7 +421,7 @@ class ProductStockRepository
     {
         return 'AND (
             ISNULL(pa.id_product_attribute) OR
-            NOT ISNULL(select_.product_attribute_ids)
+            NOT ISNULL(combinations_per_product.product_attribute_ids)
         ) ';
     }
 

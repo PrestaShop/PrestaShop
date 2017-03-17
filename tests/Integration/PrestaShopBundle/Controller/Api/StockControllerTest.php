@@ -213,6 +213,12 @@ class StockControllerTest extends WebTestCase
         $this->assertArrayHasKey('product_reserved_quantity', $content,
             'The response body should contain a "product_reserved_quantity" property.'
         );
+        $this->assertArrayHasKey('product_thumbnail', $content,
+            'The response body should contain an "image_thumbnail_path" property.'
+        );
+        $this->assertArrayHasKey('combination_thumbnail', $content,
+            'The response body should contain an "image_thumbnail_path" property.'
+        );
 
         $this->assertProductQuantity(
             array(
