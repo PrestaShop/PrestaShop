@@ -1,13 +1,29 @@
 <template>
-  <a href="#" v-on:click="sortFilter"><i class="material-icons">swap_vert</i></a>
+  <a href="#" v-on:click="sortFilter($event)"><i class="material-icons">swap_vert</i></a>
 </template>
 
 <script>
   export default {
+    props: ['order'],
     methods: {
       sortFilter: function (event) {
+        let apiRootUrl = data.apiRootUrl.replace(/\?.*/,'');
+        let desc = this.isDesc ? ' desc' : '';
+
         event.preventDefault();
-        this.$emit('sort');
+
+        this.isDesc = !this.isDesc;
+
+        this.$store.dispatch('sort', {
+          http: this.$http,
+          url: apiRootUrl,
+          column: `${this.order}${desc}`
+        });
+      }
+    },
+    data() {
+      return {
+        isDesc: false
       }
     }
   }

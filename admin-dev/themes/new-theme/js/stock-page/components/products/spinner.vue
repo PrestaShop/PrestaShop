@@ -8,8 +8,6 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex';
-
   export default {
     props: ['product'],
     mounted() {
@@ -51,9 +49,7 @@
       }
     },
     methods: {
-      ...mapActions([
-        'updateQtyByProductId'
-      ]),
+
       focusIn(){
         this.isActive = true;
       },

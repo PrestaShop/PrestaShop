@@ -2,17 +2,17 @@
   <table class="table">
     <thead>
       <tr>
-        <th class="thead-title">Product<Sort v-on:sort="sortProducts" /></th>
-        <th class="p-l-0">Reference<Sort v-on:sort="sortProducts" /></th>
-        <th class="p-l-0">Supplier<Sort /></th>
-        <th class="text-xs-center">Physical<Sort v-on:sort="sortProducts" /></th>
+        <th class="thead-title">Product<Sort order="product" /></th>
+        <th class="p-l-0">Reference<Sort order="reference" /></th>
+        <th class="p-l-0">Supplier<Sort order="supplier" /></th>
+        <th class="text-xs-center">Physical<Sort order="physical_quantity" /></th>
         <th class="text-xs-center">Reserved</th>
-        <th class="text-xs-center">Available<Sort v-on:sort="sortProducts" /></th>
+        <th class="text-xs-center">Available<Sort order="available_quantity" /></th>
         <th><i class="material-icons">edit</i>Edit Quantity</th>
       </tr>
     </thead>
     <tbody>
-        <ProductLine v-for="product in products" :key="product.product_id" :product="product" />
+        <ProductLine v-for="product in products" :key="product.product_key" :product="product" />
     </tbody>
   </table>
 </template>
@@ -28,12 +28,10 @@
     },
     computed: {
       products () {
-        return this.$store.state.products;
-      }
-    },
-    methods: {
-      sortProducts: function() {
-
+        return this.$store.state.products.filter((product)=> {
+          product.product_key = `${product.product_id}-${product.product_attribute_id}`;
+          return product;
+        });
       }
     }
   }
