@@ -139,7 +139,7 @@
 
   .tax-shipping-delivery-label {
     font-size: 0.8125rem;
-    color: $gray-dark;
+    color: $gray;
   }
 }
 .product-discount {
@@ -181,7 +181,7 @@
     border: none;
     border-bottom: $gray-light 2px solid;
     .nav-link {
-      color: $gray-dark;
+      color: $gray;
       border: 0 solid transparent;
       &.active {
         border: none;
@@ -519,11 +519,9 @@ li.product-flag {
     height: 3.125rem;
     resize: none;
     padding: 0.625rem;
-    &::-webkit-input-placeholder,
-    &::-moz-placeholder,
-    &:-ms-input-placeholder,
-    &:-moz-placeholder {
-      color: $gray;
+    &:focus {
+      background-color: white;
+      outline: 0.1875rem solid $brand-primary;
     }
   }
   .file-input {
@@ -623,7 +621,7 @@ li.product-flag {
 .products-selection {
   margin-bottom: $medium-space;
   .title {
-    color: $gray-dark;
+    color: $gray;
   }
 }
 #blockcart-modal .cart-content {

@@ -13,15 +13,7 @@
       border: none;
       padding: 10px;
       min-width: 255px;
-      background: $gray-light;
       color: $gray;
-      &::-webkit-input-placeholder,
-      &::-moz-placeholder,
-      &:-ms-input-placeholder,
-      &:-moz-placeholder {
-        color: rgba($gray, 0.5);
-        text-indent: 0.625rem;
-      }
     }
     button[type=submit] {
       position: absolute;
@@ -29,7 +21,7 @@
       border: none;
       bottom: 0.3125rem;
       right: 0.125rem;
-      color: $gray-dark;
+      color: $gray;
       .search:hover {
         color: $brand-primary;
       }

@@ -1,5 +1,5 @@
 #products {
-  color: $gray-dark;
+  color: $gray;
   .products-select {
     display: flex;
     align-items: baseline;
@@ -63,7 +63,7 @@
   }
 }
 .products-sort-order {
-  color: $gray-dark;
+  color: $gray;
   .select-title {
     display: inline-block;
     margin-left: 0.375rem;
@@ -92,7 +92,7 @@
   }
 }
 .facet-dropdown {
-  color: $gray-dark;
+  color: $gray;
   padding-left: 0;
   padding-right: 0;
   background: $gray-light;

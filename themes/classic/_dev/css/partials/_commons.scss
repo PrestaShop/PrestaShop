@@ -28,7 +28,7 @@ a:hover {
 }
 p {
   font-size: 0.9375rem;
-  color: $gray-dark;
+  color: $gray;
   font-weight: 400;
 }
 .dropdown-item:focus,
@@ -113,6 +113,7 @@ small.label, small.value {
   &:focus {
     background-color: white;
     outline: 0.1875rem solid $brand-primary;
+    color: $gray-darker;
   }
 }
 .input-group {
@@ -133,6 +134,34 @@ small.label, small.value {
     text-transform: uppercase;
   }
 }
+input, textarea {
+  &::-webkit-input-placeholder {
+    color: $gray;
+  }
+  &::-moz-placeholder {
+    color: $gray;
+  }
+  &:-ms-input-placeholder {
+    color: $gray;
+  }
+  &:-moz-placeholder {
+    color: $gray;
+  }
+  &:active {
+    &::-webkit-input-placeholder {
+      color: $gray-darker;
+    }
+    &::-moz-placeholder {
+      color: $gray-darker;
+    }
+    &:-ms-input-placeholder {
+      color: $gray-darker;
+    }
+    &:-moz-placeholder {
+      color: $gray-darker;
+    }
+  }
+}
 .form-control-select {
   height: 2.625rem;
   -moz-appearance: none;
@@ -146,7 +175,7 @@ small.label, small.value {
 .form-control-comment {
   font-size: 0.875rem;
   padding-top: 0.5rem;
-  color: $gray-dark;
+  color: $gray;
 }
 .form-control-submit {
   &.disabled {

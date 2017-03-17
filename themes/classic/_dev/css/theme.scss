@@ -181,12 +181,12 @@
       display: inline;
       &::after {
         content: "/";
-        color: $gray-dark;
+        color: $gray;
         margin: 0.3125rem;
       }
       &:last-child {
         content: "/";
-        color: $gray-dark;
+        color: $gray;
         margin: 0;
         &::after {
           content: "";

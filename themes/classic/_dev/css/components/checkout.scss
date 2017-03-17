@@ -13,7 +13,7 @@ body#checkout {
   }
 
   [data-action="show-password"]{
-    background: $gray-dark;
+    background: $gray;
   }
   .custom-checkbox {
     display: flex;
@@ -258,7 +258,7 @@ body#checkout {
   .cancel-address {
     margin: 0.625rem;
     display: block;
-    color: $gray-dark;
+    color: $gray;
     text-decoration: underline;
   }
   .modal-content {

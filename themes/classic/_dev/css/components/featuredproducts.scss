@@ -72,7 +72,7 @@
     box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
     transition: bottom .3s;
     .quick-view {
-      color: $gray-dark;
+      color: $gray;
       font-size: $base-font-size;
       &:hover {
         color: $brand-primary;
@@ -148,14 +148,14 @@
     font-size: $font-size-sm;
   }
   .count {
-    color: $gray-dark;
+    color: $gray;
     font-weight: 700;
     position: relative;
     bottom: 0.5rem;
   }
   .all-product-link {
     clear: both;
-    color: $gray-dark;
+    color: $gray;
     font-weight: 700;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
