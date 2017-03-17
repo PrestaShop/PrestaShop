@@ -55,15 +55,6 @@ class StockController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function listProductCombinationsAction(Request $request)
-    {
-        return $this->listProductsAction($request);
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function editProductAction(Request $request)
     {
         try {
