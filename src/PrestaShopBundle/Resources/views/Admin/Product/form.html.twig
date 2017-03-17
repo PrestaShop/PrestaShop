@@ -88,6 +88,20 @@
               <i class="material-icons">help</i>
               <span class="title">{{ 'Help'|trans({}, 'Admin.Global') }}</span>
             </a>
+
+            {% for module in drawerModules %}
+              <a class="toolbar-button btn-module btn-sidebar" href="#"
+                 title="{{ module['title']|e }}"
+                 data-toggle="sidebar"
+                 data-target="#right-sidebar"
+                 data-url="{{ module['link']|e }}"
+                 id="product_form_open_{{ module['id']|e }}"
+              >
+                <i class="material-icons">{{ module['icon']|e }}</i>
+                <span class="title">{{ module['title']|e }}</span>
+              </a>
+            {% endfor %}
+
           </div>
         </div>
         <div class="row">

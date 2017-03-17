@@ -16,6 +16,11 @@
       <title>Maintenance Page</title>
       <description>This hook displays new elements on the maintenance page</description>
     </hook>
+    <hook id="displayProductPageDrawer">
+      <name>displayProductPageDrawer</name>
+      <title>Product Page Drawer</title>
+      <description>This hook displays content in the right sidebar of the product page</description>
+    </hook>
     <hook id="actionPaymentConfirmation">
       <name>actionPaymentConfirmation</name>
       <title>Payment confirmation</title>
