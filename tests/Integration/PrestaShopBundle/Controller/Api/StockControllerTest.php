@@ -125,6 +125,9 @@ class StockControllerTest extends WebTestCase
         $this->assertResponseBodyValidJson(400);
 
 
+        $this->client->request('POST', $editProductStockRoute, array(), array(), array(), '{}');
+        $this->assertResponseBodyValidJson(400);
+
         $this->client->request('POST', $editProductStockRoute, array('delta' => 1));
         $this->assertResponseBodyValidJson(404);
     }
@@ -199,7 +202,6 @@ class StockControllerTest extends WebTestCase
         );
 
         $this->client->request('POST', $editProductStockRoute, array('delta' => 2));
-
         $content = $this->assertResponseBodyValidJson(200);
 
         $this->assertArrayHasKey('product_available_quantity', $content,
@@ -232,6 +234,9 @@ class StockControllerTest extends WebTestCase
             ),
             $content
         );
+
+        $this->client->request('POST', $editProductStockRoute, array(), array(), array(), '{"delta": 0}');
+        $this->assertResponseBodyValidJson(200);
     }
 
     /**
