@@ -8,7 +8,7 @@ api_stock_list_product_combinations:
     path: /stock/{productId}
     methods: [GET]
     defaults:
-        _controller: PrestaShopBundle:Api/Stock:listProductCombinations
+        _controller: PrestaShopBundle:Api/Stock:listProducts
 
 api_stock_edit_product:
     path: /stock/product/{productId}
