@@ -59,11 +59,10 @@ class StockController extends Controller
     {
         try {
             $this->guardAgainstMissingDeltaParameter($request);
+            $delta = (int)$request->request->get('delta');
         } catch (BadRequestHttpException $exception) {
             return $this->handleException($exception);
         }
-
-        $delta = (int)$request->request->get('delta');
 
         $productIdentity = ProductIdentity::fromArray(array(
             'product_id' => $request->attributes->get('productId'),
@@ -87,9 +86,34 @@ class StockController extends Controller
      */
     private function guardAgainstMissingDeltaParameter(Request $request)
     {
-        if (!$request->request->has('delta')) {
-            throw new BadRequestHttpException('The "delta" parameter is required');
+        $message = 'The "delta" parameter is required';
+
+        $content = $request->getContent();
+        if (strlen($content) > 0) {
+            $decodedContent = $this->guardAgainstInvalidRequestContent($content, $message);
+            $request->request->set('delta', $decodedContent['delta']);
         }
+
+        if (!$request->request->has('delta')) {
+            throw new BadRequestHttpException($message);
+        }
+    }
+
+    /**
+     * @param $content
+     * @param $message
+     * @return mixed
+     */
+    private function guardAgainstInvalidRequestContent($content, $message)
+    {
+        $decodedContent = json_decode($content, true);
+
+        $jsonLastError = json_last_error();
+        if ($jsonLastError !== JSON_ERROR_NONE || !array_key_exists('delta', $decodedContent)) {
+            throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
+        }
+
+        return $decodedContent;
     }
 
     /**
