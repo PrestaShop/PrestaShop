@@ -453,8 +453,7 @@
   > .product-variants-item {
     margin: $medium-space 0;
     select {
-      border: 1px solid $gray-light;
-      height: 2.5rem;
+      background-color: white;
       width: 3.75rem;
     }
     ul li {

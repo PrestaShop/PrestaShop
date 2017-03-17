@@ -208,11 +208,20 @@ input, textarea {
   }
 }
 .bootstrap-touchspin {
+  width: 4.25rem;
+  float: left;
+  box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15);
   input {
     &:focus {
       outline: none;
     }
-    &.form-control {
+    &.form-control,
+    &.input-group {
+      color: $gray-darker;
+      background-color: white;
+      height: $input-height;
+      padding: 0.175rem 0.5rem;
+      width: 3rem;
       border: $input-btn-border-width solid $input-border-color;
     }
   }
@@ -227,6 +236,7 @@ input, textarea {
   }
   .input-group-btn-vertical {
     color: $gray-darker;
+    width: auto;
     .bootstrap-touchspin-up {
       border-radius: 0;
     }

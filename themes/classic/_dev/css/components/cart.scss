@@ -152,22 +152,6 @@
 }
 /** CONTENT LEFT **/
 .product-line-grid-right {
-  .bootstrap-touchspin {
-    width: 4.25rem;
-    float: left;
-    box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15);
-    > .form-control,
-    > .input-group {
-      color: $gray-darker;
-      background-color: white;
-      height: $input-height;
-      padding: 0.175rem 0.5rem;
-      width: 3rem;
-    }
-    > .input-group-btn-vertical {
-      width: auto;
-    }
-  }
   .cart-line-product-actions,
   .product-price {
     color: $gray-darker;

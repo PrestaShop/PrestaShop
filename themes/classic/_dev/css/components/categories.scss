@@ -66,12 +66,12 @@
   color: $gray;
   .select-title {
     display: inline-block;
-    margin-left: 0.375rem;
     width: 100%;
     color: $gray-darker;
     background: white;
     padding: $small-space;
     cursor: pointer;
+    border: $input-btn-border-width solid $input-border-color;
   }
   .select-list {
     display: block;

@@ -28,6 +28,7 @@
       <span class="control-label">{$group.name}</span>
       {if $group.group_type == 'select'}
         <select
+          class="form-control form-control-select"
           id="group_{$id_attribute_group}"
           data-product-attribute="{$id_attribute_group}"
           name="group[{$id_attribute_group}]">
