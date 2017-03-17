@@ -7,7 +7,8 @@ Vue.use(Vuex);
 
 const state = {
   products: [],
-  hasQty: false
+  hasQty: false,
+  isReady: false
 };
 
 // mutations are operations that actually mutates the state.
@@ -19,13 +20,17 @@ const mutations = {
   addProducts(state, products) {
     state.products = products;
   },
-  updateProduct(state, product) {
-    // TODO
+  updateProduct(state, updatedProduct) {
+    let index = window._.findIndex(state.products, {
+      'product_id': updatedProduct.product_id,
+      'product_attribute_id': updatedProduct.product_attribute_id
+    });
+    state.products.splice(index, 1, updatedProduct);
   },
   updateQty(state, payload) {
     let product = window._.find(state.products, {product_id: payload.productId});
     let hasQty = false;
-    product.qty = payload.value;
+    product.delta = payload.value;
     state.products.filter((product)=> {
       if(product.qty !== 0) {
         hasQty = true;
@@ -41,10 +46,10 @@ const actions = {
   updateQtyByProductId({ commit, state }, payload) {
     let http = payload.http,
         url = payload.url,
-        quantity = payload.qty;
+        delta = payload.delta;
 
     http.post(url, {
-      quantity
+      delta
     },
     {
       emulateJSON: true
@@ -52,15 +57,13 @@ const actions = {
       commit('updateProduct', res.body);
       return window.$.growl.notice({
         title:'',
-        fixed: true,
         size: "large",
         message: "Stock successfully updated",
-        duration: 3000
+        duration: 1000
       });
     }, function(error){
         return window.$.growl.error({
           title:'',
-          fixed: true,
           size: "large",
           message: error.statusText,
           duration: 3000

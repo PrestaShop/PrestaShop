@@ -1,6 +1,6 @@
 <template>
-  <form class="qty text-xs-right" :class="classObject">
-    <input v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="value" >
+  <form class="qty text-xs-right" :class="classObject" v-on:mouseover="focusIn" v-on:mouseleave="focusOut($event)">
+    <input v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="value" placeholder="0" >
     <transition name="fade">
       <button v-if="isActive" class="check-button" v-on:click="sendQty($event)"><i class="material-icons">check</i></button>
     </transition>
@@ -29,7 +29,7 @@
     },
     computed: {
       id () {
-        return `qty-${this.product.product_id}`;
+        return `qty-${this.product.product_id}-${this.product.product_attribute_id}`;
       },
       classObject() {
         return {
@@ -40,7 +40,7 @@
     },
     data() {
       return {
-        value: 0,
+        value: null,
         isActive: false,
         isEnabled: false
       }
@@ -58,10 +58,10 @@
         this.isActive = true;
       },
       focusOut(event) {
-        if(!$(event.relatedTarget).hasClass('check-button')) {
+        if(!$(event.relatedTarget).hasClass('check-button') && !this.value) {
           this.isActive = false;
         }
-        this.isEnabled = (this.value !== 0);
+        this.isEnabled = !!this.value;
       },
       sendQty(event) {
         let apiRootUrl = data.apiRootUrl.replace(/\?.*/,'');
@@ -76,10 +76,10 @@
           this.$store.dispatch('updateQtyByProductId', {
             http: this.$http,
             url: postUrl,
-            qty: this.product.qty
+            delta: this.value
           });
-          this.isActive = false;
-          this.value = 0;
+          this.isActive = this.isEnabled = false;
+          this.value = null;
           this.$store.commit('updateQty', {
             value: this.value,
             productId: this.product.product_id
@@ -93,7 +93,9 @@
 <style lang="sass?outputStyle=expanded" scoped>
   @import "~jquery-ui/themes/base/minified/jquery.ui.spinner.min.css";
   @import "~PrestaKit/scss/custom/_variables.scss";
-
+  *{
+    outline: none;
+  }
   .qty {
       position: relative;
       width: 120px;
@@ -111,6 +113,7 @@
         border-left: 10px solid white;
         .material-icons {
           color: white;
+          vertical-align: middle;
         }
         &:hover {
           background: $primary-hover;
