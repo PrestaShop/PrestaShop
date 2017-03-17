@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<section class="featured-products clearfix m-t-3">
+<section class="featured-products clearfix mt-3">
   <h2>{l s='Customers who bought this product also bought:' d='Shop.Theme.Catalog'}</h2>
   <div class="products">
     {foreach from=$products item="product"}

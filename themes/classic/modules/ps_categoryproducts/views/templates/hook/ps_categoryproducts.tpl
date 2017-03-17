@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<section class="featured-products clearfix m-t-3">
+<section class="featured-products clearfix mt-3">
   <h2>
     {if $products|@count == 1}
       {l s='%s other product in the same category:' sprintf=[$products|@count] d='Shop.Theme.Catalog'}

@@ -130,7 +130,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-2 col-xs-2 text-xs-right">
+      <div class="col-md-2 col-xs-2 text-xsright">
         <div class="cart-line-product-actions">
           <a
               class                       = "remove-from-cart"
@@ -142,7 +142,7 @@
               data-id-customization   	  = "{$product.id_customization|escape:'javascript'}"
           >
             {if !isset($product.is_gift) || !$product.is_gift}
-            <i class="material-icons pull-xs-left">delete</i>
+            <i class="material-icons float-xs-left">delete</i>
             {/if}
           </a>
 

@@ -48,7 +48,7 @@
           {/foreach}
           <div class="title hidden-md-up" data-target="#facet_{$_expand_id}" data-toggle="collapse"{if !$_collapse} aria-expanded="true"{/if}>
             <h1 class="h6 facet-title">{$facet.label}</h1>
-            <span class="pull-xs-right">
+            <span class="float-xs-right">
               <span class="navbar-toggler collapse-icons">
                 <i class="material-icons add">&#xE313;</i>
                 <i class="material-icons remove">&#xE316;</i>
@@ -130,7 +130,7 @@
                           {l s='(no filter)' d='Shop.Theme'}
                         {/if}
                       </span>
-                      <i class="material-icons pull-xs-right">&#xE5C5;</i>
+                      <i class="material-icons float-xs-right">&#xE5C5;</i>
                     </a>
                     <div class="dropdown-menu">
                       {foreach from=$facet.filters item="filter"}

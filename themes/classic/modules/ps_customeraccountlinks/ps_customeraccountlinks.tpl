@@ -31,7 +31,7 @@
   </h3>
   <div class="title clearfix hidden-md-up" data-target="#footer_account_list" data-toggle="collapse">
     <span class="h3">{l s='Your account' d='Shop.Theme.Customeraccount'}</span>
-    <span class="pull-xs-right">
+    <span class="float-xs-right">
       <span class="navbar-toggler collapse-icons">
         <i class="material-icons add">&#xE313;</i>
         <i class="material-icons remove">&#xE316;</i>

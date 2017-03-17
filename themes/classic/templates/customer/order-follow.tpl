@@ -51,7 +51,7 @@
             <td><a href="{$return.return_url}">{$return.return_number}</a></td>
             <td>{$return.state_name}</td>
             <td>{$return.return_date}</td>
-            <td class="text-xs-center">
+            <td class="text-sm-center">
               {if $return.print_url}
                 <a href="{$return.print_url}">{l s='Print out' d='Shop.Theme.Actions'}</a>
               {else}

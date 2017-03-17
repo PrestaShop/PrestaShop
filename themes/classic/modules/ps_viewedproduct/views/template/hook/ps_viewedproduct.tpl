@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<section class="featured-products clearfix m-t-3">
+<section class="featured-products clearfix mt-3">
   <h2>{l s='Viewed products' d='Shop.Theme.Catalog'}</h2>
   <div class="products">
     {foreach from=$products item="product"}

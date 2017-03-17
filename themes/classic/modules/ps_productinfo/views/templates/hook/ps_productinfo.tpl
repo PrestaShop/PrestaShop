@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="js-productinfo m-t-1">
+<div class="js-productinfo mt-1">
   {if isset($vars_nb_people)}
     <p>
       {if $vars_nb_people['%nb_people%'] == 1}

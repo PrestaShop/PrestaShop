@@ -49,7 +49,7 @@
           <tr>
             <th scope="row">{$order.details.reference}</th>
             <td>{$order.details.order_date}</td>
-            <td class="text-xs-right">{$order.totals.total.value}</td>
+            <td class="text-xsright">{$order.totals.total.value}</td>
             <td class="hidden-md-down">{$order.details.payment}</td>
             <td>
               <span
@@ -59,14 +59,14 @@
                 {$order.history.current.ostate_name}
               </span>
             </td>
-            <td class="text-xs-center hidden-md-down">
+            <td class="text-sm-center hidden-md-down">
               {if $order.details.invoice_url}
                 <a href="{$order.details.invoice_url}"><i class="material-icons">&#xE415;</i></a>
               {else}
                 -
               {/if}
             </td>
-            <td class="text-xs-center order-actions">
+            <td class="text-sm-center order-actions">
               <a href="{$order.details.details_url}" data-link-action="view-order-details">
                 {l s='Details' d='Shop.Theme.Customeraccount'}
               </a>
@@ -96,7 +96,7 @@
                 </span>
               </div>
             </div>
-            <div class="col-xs-2 text-xs-right">
+            <div class="col-xs-2 text-xsright">
                 <div>
                   <a href="{$order.details.details_url}" data-link-action="view-order-details" title="{l s='Details' d='Shop.Theme.Customeraccount'}">
                     <i class="material-icons">&#xE8B6;</i>

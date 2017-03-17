@@ -28,15 +28,15 @@
       <div class="alert alert-warning" role="alert">
         {$cart.minimalPurchaseRequired}
       </div>
-      <div class="text-xs-center">
+      <div class="text-sm-center">
         <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
       </div>
     {elseif empty($cart.products) }
-      <div class="text-xs-center">
+      <div class="text-sm-center">
         <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
       </div>
     {else}
-      <div class="text-xs-center">
+      <div class="text-sm-center">
         <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout' d='Shop.Theme.Actions'}</a>
         {hook h='displayExpressCheckout'}
       </div>
