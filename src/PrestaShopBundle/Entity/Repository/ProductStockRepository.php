@@ -287,8 +287,21 @@ class ProductStockRepository
             ),
             'SELECT
             p.id_product AS product_id,
-            COALESCE(pa.id_product_attribute, 0) AS product_attribute_id,
-            IF (LENGTH(p.reference) = 0, "N/A", p.reference) AS product_reference,
+            COALESCE(pa.id_product_attribute, 0) AS combination_id,
+            IF (
+              COALESCE(pa.reference, 0) = 0,
+              IF (LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
+              IF (LENGTH(TRIM(pa.reference)) > 0, pa.reference, "N/A")
+            ) AS product_reference,
+            IF (
+                COALESCE(pa.id_product_attribute, 0) > 0,
+                GROUP_CONCAT(
+                  CONCAT(agl.name, " - ", al.name)
+                  ORDER BY pa.id_product_attribute
+                  SEPARATOR ", "
+                ),
+                "N/A"
+            ) AS combination_name,
             p.id_supplier AS supplier_id,
             i.id_image AS image_id,
             COALESCE(s.name, "N/A") AS supplier_name,
@@ -307,6 +320,30 @@ class ProductStockRepository
                 i.id_image = ims.id_image
             )
             LEFT JOIN {prefix}supplier s ON (p.id_supplier = s.id_supplier)
+            LEFT JOIN {prefix}product_attribute_combination pac ON (
+                pac.id_product_attribute = pa.id_product_attribute
+            )
+            LEFT JOIN {prefix}product_attribute_shop pas ON (
+                pas.id_product = pa.id_product AND
+                pas.id_product_attribute = pa.id_product_attribute AND
+                pas.id_shop = :shop_id
+            )
+            LEFT JOIN {prefix}attribute a ON (
+                a.id_attribute = pac.id_attribute
+            )
+            LEFT JOIN {prefix}attribute_lang al ON (
+                a.id_attribute = al.id_attribute
+                AND al.id_lang = :language_id
+                AND LENGTH(TRIM(al.name)) > 0
+            )
+            LEFT JOIN {prefix}attribute_group ag ON (
+                ag.id_attribute_group = a.id_attribute_group
+            )
+            LEFT JOIN {prefix}attribute_group_lang agl ON (
+                ag.id_attribute_group = agl.id_attribute_group
+                AND agl.id_lang = :language_id
+                AND LENGTH(TRIM(agl.name)) > 0
+            )
             {left_join}
             WHERE
             ps.id_shop = :shop_id AND
@@ -391,9 +428,9 @@ class ProductStockRepository
 
         $descendingOrder = false !== strpos($orderByClause, ' DESC');
 
-        $productColumns = 'product_id, product_attribute_id';
+        $productColumns = 'product_id, combination_id';
         if ($descendingOrder) {
-            $productColumns = 'product_id DESC, product_attribute_id ASC';
+            $productColumns = 'product_id DESC, combination_id ASC';
         }
 
         return strtr($orderByClause, array(
