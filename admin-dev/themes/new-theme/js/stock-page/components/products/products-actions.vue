@@ -1,6 +1,6 @@
 <template>
-  <div class="row m-b-3">
-    <div class="col-md-8 m-t-2">
+  <div class="row">
+    <div class="col-md-8">
       <input type="checkbox" class="m-r-1">
       <button type="button" class="btn btn-tertiary-outline"><i class="material-icons">edit</i>BULK EDIT</button>
     </div>

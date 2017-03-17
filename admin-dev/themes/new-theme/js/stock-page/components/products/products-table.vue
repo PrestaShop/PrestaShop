@@ -2,9 +2,9 @@
   <table class="table">
     <thead>
       <tr>
-        <th class="text-xs-center">Product<Sort v-on:sort="sortProducts" /></th>
-        <th class="text-xs-center">Reference<Sort v-on:sort="sortProducts" /></th>
-        <th>Supplier<Sort /></th>
+        <th class="thead-title">Product<Sort v-on:sort="sortProducts" /></th>
+        <th class="p-l-0">Reference<Sort v-on:sort="sortProducts" /></th>
+        <th class="p-l-0">Supplier<Sort /></th>
         <th class="text-xs-center">Physical<Sort v-on:sort="sortProducts" /></th>
         <th class="text-xs-center">Reserved</th>
         <th class="text-xs-center">Available<Sort v-on:sort="sortProducts" /></th>
@@ -27,17 +27,8 @@
       Sort
     },
     computed: {
-      products : function() {
-        let mainProducts = [];
-        let productId = null;
-        this.$store.state.products.filter(function(product) {
-          product.qty = 0;
-          if(productId !== product.product_id) {
-            productId = product.product_id;
-            mainProducts.push(product);
-          }
-        });
-        return mainProducts;
+      products () {
+        return this.$store.state.products;
       }
     },
     methods: {
@@ -61,6 +52,9 @@
         .material-icons {
           margin-left: 5px;
           vertical-align: middle;
+        }
+        &.thead-title {
+          padding-left: 100px;
         }
         &:last-child {
           .material-icons {

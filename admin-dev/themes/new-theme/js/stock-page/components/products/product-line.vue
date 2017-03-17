@@ -5,7 +5,7 @@
       <img :src="imagePath" class="thumbnail" />
       <span class="m-l-1">{{ product.product_name }}</span>
     </td>
-    <td class="text-xs-center p-r-1">
+    <td>
       {{ product.product_reference }}
     </td>
     <td class="p-r-1">
@@ -44,16 +44,16 @@
         return `${data.baseUrl}/${this.product.image_thumbnail_path}`;
       },
       hasQty() {
-        return (this.value !== 0);
+        return !!this.value;
       },
       physicalQtyUpdated () {
-        return this.physical + this.value;
+        return Number(this.physical) + Number(this.value);
       },
       availableQtyUpdated() {
-        return this.product.product_available_quantity + this.value;
+        return Number(this.product.product_available_quantity) + Number(this.value);
       },
       physical() {
-        return this.product.product_available_quantity + this.product.product_reserved_quantity;
+        return Number(this.product.product_available_quantity) + Number(this.product.product_reserved_quantity);
       }
     },
     data() {

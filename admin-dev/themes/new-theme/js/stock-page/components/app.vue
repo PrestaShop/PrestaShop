@@ -47,6 +47,7 @@
       display: none;
       z-index: 3;
       transition: all 0.2s ease;
+      height: 20px;
     }
     .ui-spinner-up::before {
       font-family: 'Material Icons';
@@ -54,14 +55,14 @@
       font-size: 20px;
       color: $gray-dark;
       position: relative;
-      top: -4px;
+      top: -3px;
     }
     .ui-spinner-down::before {
       font-family: 'Material Icons';
       content: "\E5C5";
       font-size: 20px;
       color: $gray-dark;
-      bottom: 8px;
+      bottom: 5px;
       position: relative;
     }
     span {
