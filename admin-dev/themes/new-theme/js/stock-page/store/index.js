@@ -18,6 +18,7 @@ const state = {
 // for debugging purposes.
 const mutations = {
   addProducts(state, products) {
+    state.products = [];
     state.products = products;
   },
   updateProduct(state, updatedProduct) {
@@ -43,6 +44,27 @@ const mutations = {
 // actions are functions that causes side effects and can involve
 // asynchronous operations.
 const actions = {
+  sort({commit, state}, payload) {
+    let http = payload.http,
+        url = payload.url,
+        order = payload.column;
+
+        http.get(url, {
+          params: {
+            order
+          },
+          emulateJSON: true
+        }).then((res) => {
+          commit('addProducts', res.body);
+        }, function(error) {
+            return window.$.growl.error({
+              title:'',
+              size: "large",
+              message: error.statusText,
+              duration: 3000
+            });
+        });
+  },
   updateQtyByProductId({ commit, state }, payload) {
     let http = payload.http,
         url = payload.url,
@@ -54,14 +76,14 @@ const actions = {
     {
       emulateJSON: true
     }).then((res) => {
-      commit('updateProduct', res.body);
+      commit('addProducts', res.body);
       return window.$.growl.notice({
         title:'',
         size: "large",
         message: "Stock successfully updated",
         duration: 1000
       });
-    }, function(error){
+    }, function(error) {
         return window.$.growl.error({
           title:'',
           size: "large",
