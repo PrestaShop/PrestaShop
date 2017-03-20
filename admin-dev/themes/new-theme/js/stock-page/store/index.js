@@ -9,7 +9,8 @@ Vue.use(Vuex);
 
 const state = {
   products: [],
-  hasQty: false
+  hasQty: false,
+  order: 'product'
 };
 
 // getters are functions

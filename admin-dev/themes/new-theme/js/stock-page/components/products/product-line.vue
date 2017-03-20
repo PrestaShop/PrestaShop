@@ -2,7 +2,7 @@
   <tr>
     <td>
       <input type="checkbox" class="m-r-1">
-      <img :src="imagePath" class="thumbnail" />
+      <img v-if="imagePath" :src="imagePath" class="thumbnail" />
       <span class="m-l-1">{{ product.product_name }}</span>
     </td>
     <td>
@@ -44,9 +44,7 @@
         if(this.product.combination_thumbnail !== 'N/A') {
           return `${data.baseUrl}/${this.product.combination_thumbnail}`;
         }
-        else {
-          //TODO image default URL
-        }
+        return null;
       },
       hasQty() {
         return !!this.value;

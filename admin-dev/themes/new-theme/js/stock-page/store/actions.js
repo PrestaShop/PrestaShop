@@ -34,7 +34,13 @@ export const updateQtyByProductId = ({ commit, state }, payload) => {
 };
 
 export const getStock = ({ commit, state }, payload) => {
-  Vue.http.get(payload.url).then(function(response){
+  Vue.http.get(payload.url, {
+    params: {
+      order: payload.order,
+      page_size: payload.page_size,
+      page_index: payload.page_index
+    }
+  }).then(function(response){
     if(response.status === 200) {
       commit(types.ADD_PRODUCTS, response.body);
     }
