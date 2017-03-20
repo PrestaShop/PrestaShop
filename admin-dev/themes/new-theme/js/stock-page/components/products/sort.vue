@@ -13,6 +13,7 @@
         event.preventDefault();
         this.$emit('sort');
 
+        this.$store.commit('UPDATE_ORDER', this.order);
         this.$store.dispatch('sort', {
           http: this.$http,
           url: apiRootUrl,

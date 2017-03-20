@@ -4,6 +4,9 @@ export default {
   [types.ADD_PRODUCTS] (state, products) {
     state.products = products;
   },
+  [types.UPDATE_ORDER] (state, order) {
+    state.order = order;
+  },
   [types.UPDATE_PRODUCTS] (state, updatedProduct) {
     let index = window._.findIndex(state.products, {
       'product_id': updatedProduct.product_id,
