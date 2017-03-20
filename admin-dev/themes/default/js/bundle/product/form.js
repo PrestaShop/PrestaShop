@@ -1040,7 +1040,7 @@ var form = (function() {
         send($(this).attr('data-redirect'), $(this).attr('target'));
       });
 
-      $('.js-btn-save').on('click', function () {
+      $('.js-btn-save').on('click', function (event) {
         event.preventDefault();
         $('.js-spinner').show();
         send($(this).attr('href'));
