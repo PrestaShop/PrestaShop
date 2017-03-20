@@ -49,6 +49,7 @@ class Repository
         'az-az' => 'az-Cyrl-AZ',
         'bs-ba' => 'bs-Cyrl-BA',
         'en-pt' => 'en-GB',
+        'en-ud' => 'en-US',
         'eo-uy' => 'eo',
         'fr-qc' => 'fr-CA',
         'ku-tr' => 'en-GB',
