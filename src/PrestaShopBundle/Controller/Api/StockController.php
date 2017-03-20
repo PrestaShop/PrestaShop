@@ -26,27 +26,48 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use PrestaShopBundle\Api\QueryParamsCollection;
+use PrestaShopBundle\Api\Stock\Movement;
+use PrestaShopBundle\Api\Stock\MovementsCollection;
 use PrestaShopBundle\Entity\ProductIdentity;
+use PrestaShopBundle\Entity\Repository\Stock\ProductRepository;
 use PrestaShopBundle\Exception\ProductNotFoundException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class StockController extends Controller
+class StockController
 {
+    /**
+     * @var LoggerInterface
+     */
+    public $logger;
+
+    /**
+     * @var ProductRepository
+     */
+    public $productRepository;
+
+    /**
+     * @var QueryParamsCollection
+     */
+    public $queryParams;
+
+    /**
+     * @var MovementsCollection;
+     */
+    public $movements;
+
     /**
      * @param Request $request
      * @return JsonResponse
      */
     public function listProductsAction(Request $request)
     {
-        $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
-        $queryParamsCollection = $this->get('prestashop.core.api.query_params_collection');
-
-        $queryParamsCollection = $queryParamsCollection->fromRequest($request);
-        $stockOverviewColumns = $productStockRepository->getProducts($queryParamsCollection);
+        $queryParamsCollection = $this->queryParams->fromRequest($request);
+        $stockOverviewColumns = $this->productRepository->getProducts($queryParamsCollection);
 
         return new JsonResponse($stockOverviewColumns);
     }
@@ -69,15 +90,38 @@ class StockController extends Controller
             'combination_id' => $request->attributes->get('combinationId', 0)
         ));
 
-        $productStockRepository = $this->get('prestashop.core.api.product_stock.repository');
-
         try {
-            $product = $productStockRepository->updateProductQuantity($productIdentity, $delta);
+            $movement = new Movement($productIdentity, $delta);
+            $product = $this->productRepository->updateProduct($movement);
         } catch (ProductNotFoundException $exception) {
             return $this->handleException($exception);
         }
 
         return new JsonResponse($product);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function bulkEditProductsAction(Request $request)
+    {
+        try {
+            $this->guardAgainstInvalidBulkEditionRequest($request);
+            $stockMovementsParams = json_decode($request->getContent(), true);
+        } catch (BadRequestHttpException $exception) {
+            return $this->handleException($exception);
+        }
+
+        $movementsCollection = $this->movements->fromArray($stockMovementsParams);
+
+        try {
+            $products = $this->productRepository->bulkUpdateProducts($movementsCollection);
+        } catch (ProductNotFoundException $exception) {
+            return $this->handleException($exception);
+        }
+
+        return new JsonResponse($products);
     }
 
     /**
@@ -106,11 +150,26 @@ class StockController extends Controller
      */
     private function guardAgainstInvalidRequestContent($content, $message)
     {
+        $decodedContent = $this->guardAgainstInvalidJsonBody($content);
+
+        if (!array_key_exists('delta', $decodedContent)) {
+            throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
+        }
+
+        return $decodedContent;
+    }
+
+    /**
+     * @param $content
+     * @return mixed
+     */
+    private function guardAgainstInvalidJsonBody($content)
+    {
         $decodedContent = json_decode($content, true);
 
         $jsonLastError = json_last_error();
-        if ($jsonLastError !== JSON_ERROR_NONE || !array_key_exists('delta', $decodedContent)) {
-            throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
+        if ($jsonLastError !== JSON_ERROR_NONE) {
+            throw new BadRequestHttpException('The request body should be a valid JSON content');
         }
 
         return $decodedContent;
@@ -122,8 +181,41 @@ class StockController extends Controller
      */
     private function handleException(HttpException $exception)
     {
-        $this->get('logger')->info($exception->getMessage());
+        $this->logger->info($exception->getMessage());
 
         return new JsonResponse(array('error' => $exception->getMessage()), $exception->getStatusCode());
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    private function guardAgainstInvalidBulkEditionRequest(Request $request)
+    {
+        if (strlen($request->getContent()) == 0) {
+            $message = 'The request body should contain a JSON-encoded array of product identifiers and deltas';
+            throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
+        }
+
+        $this->guardAgainstMissingParametersInBulkEditionRequest($request);
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    private function guardAgainstMissingParametersInBulkEditionRequest(Request $request)
+    {
+        $decodedContent = $this->guardAgainstInvalidJsonBody($request->getContent());
+
+        $message = 'Each item of JSON-encoded array in the request body should contain ' .
+            'a product id ("product_id"), a quantity delta ("delta"). '.
+            'The item of index #%d is invalid.';
+
+        array_walk($decodedContent, function ($item, $index) use ($message) {
+            if (!array_key_exists('product_id', $item) || !array_key_exists('delta', $item)) {
+                throw new BadRequestHttpException(sprintf($message, $index));
+            }
+        });
     }
 }

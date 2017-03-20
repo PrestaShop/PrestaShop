@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShopBundle\Entity\Repository\Stock;
 
 use Configuration;
 use Doctrine\DBAL\Driver\Connection;
@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\StockManager;
 use PrestaShopBundle\Api\QueryParamsCollection;
+use PrestaShopBundle\Api\Stock\Movement;
+use PrestaShopBundle\Api\Stock\MovementsCollection;
 use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
@@ -42,7 +44,7 @@ use Product;
 use RuntimeException;
 use Shop;
 
-class ProductStockRepository
+class ProductRepository
 {
     const MAX_COMBINATIONS_PER_PRODUCT = 50;
 
@@ -127,11 +129,21 @@ class ProductStockRepository
     }
 
     /**
-     * @param ProductIdentity $productIdentity
-     * @param $delta
+     * @param MovementsCollection $movements
+     * @return array
+     */
+    public function bulkUpdateProducts(MovementsCollection $movements)
+    {
+        return $movements->map(function (Movement $movement) {
+            return $this->updateProduct($movement);
+        });
+    }
+
+    /**
+     * @param Movement $movement
      * @return mixed
      */
-    public function updateProductQuantity(ProductIdentity $productIdentity, $delta)
+    public function updateProduct(Movement $movement)
     {
         $query = '
             UPDATE {prefix}stock_available
@@ -144,6 +156,9 @@ class ProductStockRepository
         $query = str_replace('{prefix}', $this->tablePrefix, $query);
 
         $statement = $this->connection->prepare($query);
+
+        $productIdentity = $movement->getProductIdentity();
+        $delta = $movement->getDelta();
 
         $statement->bindValue('product_id', $productIdentity->getProductId(), PDO::PARAM_INT);
         $statement->bindValue('combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
@@ -304,9 +319,9 @@ class ProductStockRepository
             p.id_product AS product_id,
             COALESCE(pa.id_product_attribute, 0) AS combination_id,
             IF (
-              COALESCE(pa.reference, 0) = 0,
-              IF (LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
-              IF (LENGTH(TRIM(pa.reference)) > 0, pa.reference, "N/A")
+                COALESCE(pa.reference, 0) = 0,
+                IF (LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
+                IF (LENGTH(TRIM(pa.reference)) > 0, pa.reference, "N/A")
             ) AS product_reference,
             IF (
                 COALESCE(pa.id_product_attribute, 0) > 0,
@@ -399,7 +414,7 @@ class ProductStockRepository
     /**
      * @return string
      */
-    public function joinCeilingCombinationsPerProduct()
+    private function joinCeilingCombinationsPerProduct()
     {
         return 'LEFT JOIN (
             SELECT SUBSTRING_INDEX(
@@ -417,7 +432,7 @@ class ProductStockRepository
     /**
      * @return string
      */
-    public function andWhereCeilingCombinationsPerProduct()
+    private function andWhereCeilingCombinationsPerProduct()
     {
         return 'AND (
             ISNULL(pa.id_product_attribute) OR
