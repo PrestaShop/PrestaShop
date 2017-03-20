@@ -72,6 +72,7 @@
     padding: $small-space;
     cursor: pointer;
     border: $input-btn-border-width solid $input-border-color;
+    @include box-shadow-light;
   }
   .select-list {
     display: block;

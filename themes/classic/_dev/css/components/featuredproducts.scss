@@ -20,16 +20,15 @@
     height: 318px;
     width: 257px;
     background: white;
-    box-shadow: 0 0 5px 3px rgba(0,0,0,0.05);
+    @include box-shadow;
     &:hover {
-      @include box-shadow;
       .highlighted-informations {
-        bottom: 5.625rem;
+        bottom: 5.5rem;
         &::after {
           opacity: 1;
         }
         &.no-variants{
-          bottom: 4.375rem;
+          bottom: 4.2rem;
         }
       }
       .product-description{
@@ -68,7 +67,6 @@
     text-align: center;
     width: 257px;
     height: 3.125rem;
-    padding-top: 0.3125rem;
     box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
     transition: bottom .3s;
     .quick-view {
@@ -113,7 +111,7 @@
       min-height: 1.875rem;
       font-size: $base-font-size;
       font-weight: 600;
-      @include box-shadow;
+      @include box-shadow-light;
       &.discount-percentage {
         z-index: 2;
         background: $brand-secondary;

@@ -455,6 +455,7 @@
     select {
       background-color: white;
       width: 3.75rem;
+      @include box-shadow-light;
     }
     ul li {
       margin-right: $small-space;
@@ -592,7 +593,7 @@ li.product-flag {
     margin-bottom: 0;
   }
   li {
-    @include box-shadow;
+    @include box-shadow-light;
     height: 2.5rem;
     width: 2.5rem;
     border-radius: 50%;
