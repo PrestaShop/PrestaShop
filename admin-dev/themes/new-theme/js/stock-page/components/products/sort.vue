@@ -4,26 +4,20 @@
 
 <script>
   export default {
-    props: ['order'],
+    props: ['order','isDesc'],
     methods: {
       sortFilter: function (event) {
         let apiRootUrl = data.apiRootUrl.replace(/\?.*/,'');
         let desc = this.isDesc ? ' desc' : '';
 
         event.preventDefault();
-
-        this.isDesc = !this.isDesc;
+        this.$emit('sort');
 
         this.$store.dispatch('sort', {
           http: this.$http,
           url: apiRootUrl,
           column: `${this.order}${desc}`
         });
-      }
-    },
-    data() {
-      return {
-        isDesc: false
       }
     }
   }

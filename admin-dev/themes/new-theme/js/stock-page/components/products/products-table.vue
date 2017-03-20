@@ -2,12 +2,12 @@
   <table class="table">
     <thead>
       <tr>
-        <th class="thead-title">Product<Sort order="product" /></th>
-        <th class="p-l-0">Reference<Sort order="reference" /></th>
-        <th class="p-l-0">Supplier<Sort order="supplier" /></th>
-        <th class="text-xs-center">Physical<Sort order="physical_quantity" /></th>
+        <th class="thead-title">Product<Sort order="product" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
+        <th class="p-l-0">Reference<Sort order="reference" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
+        <th class="p-l-0">Supplier<Sort order="supplier" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
+        <th class="text-xs-center">Physical<Sort order="physical_quantity" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
         <th class="text-xs-center">Reserved</th>
-        <th class="text-xs-center">Available<Sort order="available_quantity" /></th>
+        <th class="text-xs-center">Available<Sort order="available_quantity" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
         <th><i class="material-icons">edit</i>Edit Quantity</th>
       </tr>
     </thead>
@@ -26,12 +26,22 @@
       ProductLine,
       Sort
     },
+    methods: {
+      toggleSort() {
+        this.isSorted = !this.isSorted;
+      }
+    },
     computed: {
-      products () {
+      products() {
         return this.$store.state.products.filter((product)=> {
-          product.product_key = `${product.product_id}-${product.product_attribute_id}`;
+          product.product_key = `${product.product_id}-${product.combination_id}`;
           return product;
         });
+      }
+    },
+    data() {
+      return {
+        isSorted: true
       }
     }
   }

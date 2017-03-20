@@ -41,7 +41,7 @@
     props: ['product'],
     computed: {
       imagePath() {
-        return `${data.baseUrl}/${this.product.image_thumbnail_path}`;
+        return `${data.baseUrl}/${this.product.combination_thumbnail}`;
       },
       hasQty() {
         return !!this.value;

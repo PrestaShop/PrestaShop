@@ -52,8 +52,7 @@ const actions = {
         http.get(url, {
           params: {
             order
-          },
-          emulateJSON: true
+          }
         }).then((res) => {
           commit('addProducts', res.body);
         }, function(error) {
@@ -72,9 +71,6 @@ const actions = {
 
     http.post(url, {
       delta
-    },
-    {
-      emulateJSON: true
     }).then((res) => {
       commit('addProducts', res.body);
       return window.$.growl.notice({

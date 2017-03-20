@@ -27,7 +27,7 @@
     },
     computed: {
       id () {
-        return `qty-${this.product.product_id}-${this.product.product_attribute_id}`;
+        return `qty-${this.product.product_id}-${this.product.combination_id}`;
       },
       classObject() {
         return {
@@ -62,8 +62,8 @@
       sendQty(event) {
         let apiRootUrl = data.apiRootUrl.replace(/\?.*/,'');
         let apiEditProductsUrl = `${apiRootUrl}/product/${this.product.product_id}`
-        let apiEditCombinationsUrl = `${apiRootUrl}/product/${this.product.product_id}/combination/${this.product.product_attribute_id}`;
-        let postUrl = this.product.product_attribute_id ? apiEditCombinationsUrl : apiEditProductsUrl;
+        let apiEditCombinationsUrl = `${apiRootUrl}/product/${this.product.product_id}/combination/${this.product.combination_id}`;
+        let postUrl = this.product.combination_id ? apiEditCombinationsUrl : apiEditProductsUrl;
 
         event.preventDefault();
 
