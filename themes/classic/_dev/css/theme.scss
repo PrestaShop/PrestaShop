@@ -79,15 +79,13 @@
     .cart-preview {
       &.active {
         background: $brand-primary;
-        a {
+        a, i {
           color: white;
-        }
-        i {
-          color: rgba(255, 255, 255, 0.6);
         }
       }
       .shopping-cart {
         vertical-align: middle;
+        color: $gray;
       }
       .body {
         display: none;
