@@ -16,7 +16,7 @@
         this.$store.dispatch('sort', {
           http: this.$http,
           url: apiRootUrl,
-          column: `${this.order}${desc}`
+          order: `${this.order}${desc}`
         });
       }
     }

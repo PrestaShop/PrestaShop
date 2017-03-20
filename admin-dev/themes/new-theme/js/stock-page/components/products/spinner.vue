@@ -17,11 +17,7 @@
         min: -999999999,
         spin(event, ui) {
           self.value = ui.value;
-          self.isEnabled = (self.value !== 0);
-          self.$store.commit('updateQty', {
-            value: ui.value,
-            productId: self.product.product_id
-          });
+          self.isEnabled = !!self.value;
         }
       });
     },
@@ -45,6 +41,8 @@
     },
     watch: {
       value(val) {
+        this.product.qty = val;
+        this.$store.commit('UPDATE_PRODUCT_QTY');
         this.$emit('valueChanged', val);
       }
     },
@@ -76,10 +74,6 @@
           });
           this.isActive = this.isEnabled = false;
           this.value = null;
-          this.$store.commit('updateQty', {
-            value: this.value,
-            productId: this.product.product_id
-          });
         }
       }
     }

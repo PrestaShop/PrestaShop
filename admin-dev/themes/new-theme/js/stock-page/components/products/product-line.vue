@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>
-      <input type="checkbox" :value="product.product_id" class="m-r-1">
+      <input type="checkbox" class="m-r-1">
       <img :src="imagePath" class="thumbnail" />
       <span class="m-l-1">{{ product.product_name }}</span>
     </td>
@@ -41,7 +41,12 @@
     props: ['product'],
     computed: {
       imagePath() {
-        return `${data.baseUrl}/${this.product.combination_thumbnail}`;
+        if(this.product.combination_thumbnail !== 'N/A') {
+          return `${data.baseUrl}/${this.product.combination_thumbnail}`;
+        }
+        else {
+          //TODO image default URL
+        }
       },
       hasQty() {
         return !!this.value;
