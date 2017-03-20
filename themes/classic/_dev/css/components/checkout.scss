@@ -34,8 +34,11 @@ body#checkout {
   section.checkout-step {
     @include box-shadow;
     background-color: white;
-    border: 1px $gray-light solid;
+    border-bottom: 1px rgba(0, 0, 0, 0.25) solid;
     padding: 0.9375rem;
+    &:last-child {
+      border: 0;
+    }
     .step-title {
       text-transform: uppercase;
       cursor: pointer;

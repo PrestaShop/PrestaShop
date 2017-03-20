@@ -254,7 +254,7 @@
     }
     li[data-depth="0"] > a {
       font-weight: 600;
-      border-bottom: $gray-light 2px solid;
+      border-bottom: rgba(0, 0, 0, 0.25) 1px solid;
       width: 100%;
       display: inline-block;
       margin: 0.3125rem 0 0;

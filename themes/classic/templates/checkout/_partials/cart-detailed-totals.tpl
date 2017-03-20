@@ -49,7 +49,7 @@
     {include file='checkout/_partials/cart-voucher.tpl'}
   {/block}
 
-  <hr>
+  <hr class="separator">
 
   <div class="card-block">
     <div class="cart-summary-line cart-total">
@@ -63,6 +63,6 @@
     </div>
   </div>
 
-  <hr>
+  <hr class="separator">
 </div>
 {/block}
