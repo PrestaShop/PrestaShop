@@ -303,8 +303,14 @@ services:
         arguments:
             - PrestaShopBundle\Entity\Lang
 
-    prestashop.core.api.product_stock.repository:
-        class: PrestaShopBundle\Entity\Repository\ProductStockRepository
+    prestashop.core.api.query_params_collection:
+        class: PrestaShopBundle\Api\QueryParamsCollection
+
+    prestashop.core.api.stock.movements_collection:
+        class: PrestaShopBundle\Api\Stock\MovementsCollection
+
+    prestashop.core.api.stock.product_repository:
+        class: PrestaShopBundle\Entity\Repository\Stock\ProductRepository
         arguments:
             - "@doctrine.dbal.default_connection"
             - "@prestashop.adapter.legacy.context"
@@ -312,8 +318,13 @@ services:
             - "@prestashop.adapter.stock_manager"
             - "%database_prefix%"
 
-    prestashop.core.api.query_params_collection:
-        class: PrestaShopBundle\Api\QueryParamsCollection
+    prestashop.core.api.stock.controller:
+        class: PrestaShopBundle\Controller\Api\StockController
+        properties:
+            logger: "@logger"
+            movements: "@prestashop.core.api.stock.movements_collection"
+            productRepository: "@prestashop.core.api.stock.product_repository"
+            queryParams: "@prestashop.core.api.query_params_collection"
 
     # Managers
     prestashop.adapter.image_manager:

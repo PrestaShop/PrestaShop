@@ -102,19 +102,25 @@ class StockControllerTest extends WebTestCase
 
     public function testEditProductAction()
     {
-        $this->assertErrorResponseOnEditProductStockQuantity();
+        $this->assertErrorResponseOnEditProduct();
     }
 
     public function testEditProductCombinationAction()
     {
-        $this->assertNotFoundResponseOnEditProductCombinationStockQuantity();
-        $this->assertOkResponseOnEditProductCombinationQuantity();
+        $this->assertNotFoundResponseOnEditProductCombination();
+        $this->assertOkResponseOnEditProductCombination();
+    }
+
+    public function testBulkEditProductCombinationAction()
+    {
+        $this->assertErrorResponseOnBulkEditProducts();
+        $this->assertOkResponseOnBulkEditProducts();
     }
 
     /**
      * @return array
      */
-    private function assertErrorResponseOnEditProductStockQuantity()
+    private function assertErrorResponseOnEditProduct()
     {
         $editProductStockRoute = $this->router->generate(
             'api_stock_edit_product',
@@ -135,7 +141,7 @@ class StockControllerTest extends WebTestCase
     /**
      * @return array
      */
-    private function assertNotFoundResponseOnEditProductCombinationStockQuantity()
+    private function assertNotFoundResponseOnEditProductCombination()
     {
         $editProductStockRoute = $this->router->generate(
             'api_stock_edit_product_combination',
@@ -191,7 +197,7 @@ class StockControllerTest extends WebTestCase
         return $content;
     }
 
-    private function assertOkResponseOnEditProductCombinationQuantity()
+    private function assertOkResponseOnEditProductCombination()
     {
         $editProductStockRoute = $this->router->generate(
             'api_stock_edit_product_combination',
@@ -361,6 +367,57 @@ class StockControllerTest extends WebTestCase
         );
         $this->assertEquals($expectedQuantities['reserved_quantity'], $content['product_reserved_quantity'],
             'The response body should contain the newly updated physical quantity.'
+        );
+    }
+
+    private function assertErrorResponseOnBulkEditProducts()
+    {
+        $bulkEditProductsRoute = $this->router->generate('api_stock_bulk_edit_products');
+
+        $this->client->request('POST', $bulkEditProductsRoute);
+        $this->assertResponseBodyValidJson(400);
+
+        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"combination_id": 0}]');
+        $this->assertResponseBodyValidJson(400);
+
+        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"product_id": 1}]');
+        $this->assertResponseBodyValidJson(400);
+
+        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"delta": 0}]');
+        $this->assertResponseBodyValidJson(400);
+
+        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
+            '[{"product_id": 1, "delta": 0}]');
+        $this->assertResponseBodyValidJson(404);
+    }
+
+    private function assertOkResponseOnBulkEditProducts()
+    {
+        $bulkEditProductsRoute = $this->router->generate('api_stock_bulk_edit_products');
+
+        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
+            '[{"product_id": 1, "combination_id": 1, "delta": 1},' .
+            '{"product_id": 1, "combination_id": 1, "delta": -1}]');
+        $content = $this->assertResponseBodyValidJson(200);
+
+        $this->assertArrayHasKey(0, $content, 'The response content should have one item with key #0');
+
+        $this->assertProductQuantity(
+            array(
+                'available_quantity' => 9,
+                'physical_quantity' => 11,
+                'reserved_quantity' => 2
+            ),
+            $content[0]
+        );
+
+        $this->assertProductQuantity(
+            array(
+                'available_quantity' => 8,
+                'physical_quantity' => 10,
+                'reserved_quantity' => 2
+            ),
+            $content[1]
         );
     }
 }
