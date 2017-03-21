@@ -40,7 +40,7 @@ class QueryParamsCollection
 
     const SQL_PARAM_FIRST_RESULT = 'first_result';
 
-    const SQL_PARAM_MAX_RESULT = 'max_result';
+    const SQL_PARAM_MAX_RESULTS = 'max_result';
 
     /**
      * @var array
@@ -221,6 +221,18 @@ class QueryParamsCollection
         foreach ($sqlParams as $name => $value) {
             $statement->bindValue($name, $value, PDO::PARAM_INT);
         }
+    }
+
+    /**
+     * @param Statement $statement
+     */
+    public function bindMaxResultsParam(Statement $statement)
+    {
+        $paginationParams = $this->getSqlPaginationParams();
+        $statement->bindValue(
+            self::SQL_PARAM_MAX_RESULTS,
+            $paginationParams[self::SQL_PARAM_MAX_RESULTS]
+        );
     }
 
     /**

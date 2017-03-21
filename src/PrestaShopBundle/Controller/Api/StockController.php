@@ -31,6 +31,7 @@ use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Api\Stock\MovementsCollection;
 use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Entity\Repository\Stock\ProductRepository;
+use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -66,10 +67,16 @@ class StockController
      */
     public function listProductsAction(Request $request)
     {
-        $queryParamsCollection = $this->queryParams->fromRequest($request);
-        $stockOverviewColumns = $this->productRepository->getProducts($queryParamsCollection);
+        try {
+            $queryParamsCollection = $this->queryParams->fromRequest($request);
+        } catch (InvalidPaginationParamsException $exception) {
+            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
+        }
 
-        return new JsonResponse($stockOverviewColumns);
+        $stockOverviewColumns = $this->productRepository->getProducts($queryParamsCollection);
+        $totalPages = $this->productRepository->countProductsPages($queryParamsCollection);
+
+        return new JsonResponse($stockOverviewColumns, 200, array('Total-Pages' => $totalPages));
     }
 
     /**
