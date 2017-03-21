@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Api;
 
 use Doctrine\Common\Util\Inflector;
 use Doctrine\DBAL\Driver\Statement;
-use Symfony\Component\HttpFoundation\Request;
-use RangeException;
 use PDO;
+use PrestaShopBundle\Exception\InvalidPaginationParamsException;
+use Symfony\Component\HttpFoundation\Request;
 
 class QueryParamsCollection
 {
@@ -108,10 +108,16 @@ class QueryParamsCollection
             $queryParams['page_size'] > self::DEFAULT_PAGE_SIZE ||
             $queryParams['page_size'] < 1
         ) {
-            throw new RangeException(sprintf(
-                'The page size should be greater than 1 and fewer than %s',
-                self::DEFAULT_PAGE_SIZE
-            ));
+            throw new InvalidPaginationParamsException(
+                sprintf(
+                    'A page size should be an integer greater than 1 and fewer than %s',
+                    self::DEFAULT_PAGE_SIZE
+                )
+            );
+        }
+
+        if ($queryParams['page_index'] < 1) {
+            throw new InvalidPaginationParamsException();
         }
 
         return $queryParams;

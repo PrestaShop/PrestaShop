@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Api;
 
+use Exception;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use Prophecy\Prophet;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -49,6 +50,48 @@ class QueryParamsCollectionTest extends WebTestCase
     {
         $this->prophet = new Prophet();
         $this->queryParams = new QueryParamsCollection();
+    }
+
+    /**
+     * @dataProvider getInvalidPaginationParams
+     *
+     * @test
+     *
+     * @param $pageIndex
+     * @param $pageSize
+     */
+    public function it_should_raise_an_exception_on_invalid_pagination_params($pageIndex, $pageSize)
+    {
+        try {
+            $this->it_should_make_query_params_from_a_request(
+                'product',
+                $pageIndex,
+                $pageSize,
+                array()
+            );
+            $this->fail('Invalid pagination params should raise an exception');
+        } catch (Exception $exception) {
+            $expectedInstanceOf = '\PrestaShopBundle\Exception\InvalidPaginationParamsException';
+            $this->assertInstanceOf(
+                $expectedInstanceOf,
+                $exception,
+                sprintf('It should raise an instance of %s', $expectedInstanceOf)
+            );
+        }
+    }
+
+    public function getInvalidPaginationParams()
+    {
+        return array(
+            array(
+                $pageIndex = 0,
+                $pageSize = QueryParamsCollection::DEFAULT_PAGE_SIZE
+            ),
+            array(
+                $pageIndex = 1,
+                $pageSize = QueryParamsCollection::DEFAULT_PAGE_SIZE + 1
+            ),
+        );
     }
 
     /**
@@ -86,14 +129,14 @@ class QueryParamsCollectionTest extends WebTestCase
     }
 
     /**
+     * @dataProvider getQueryParams
+     *
      * @test
      *
      * @param $orderQuery
      * @param $pageIndex
      * @param $pageSize
      * @param $expectedSqlClauses
-     *
-     * @dataProvider getQueryParams
      */
     public function it_should_make_query_params_with_filter_from_a_request(
         $orderQuery,
