@@ -90,6 +90,8 @@
     background: $gray-lighter;
     border: none;
     border-radius: 0;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    margin: 0;
   }
 }
 .facet-dropdown {
@@ -185,6 +187,7 @@
     background: white;
     padding: 0.625rem 1.25rem;
     margin-bottom: 0;
+    @include box-shadow-light;
     li {
       display: inline;
     }

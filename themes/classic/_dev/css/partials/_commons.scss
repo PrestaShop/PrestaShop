@@ -93,7 +93,7 @@ p {
   }
   &:hover {
     box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.2);
-    border: $input-btn-border-width solid #232323;
+    border: $input-btn-border-width solid rgba(35, 35, 35, 0.2);
   }
 }
 .card {
