@@ -180,18 +180,14 @@ class ProductRepository
             COALESCE(pa.id_product_attribute, 0) = :combination_id'
         ;
         $query = $this->selectProductsStock(
+            $selectClause = null,
             $leftJoinClause = '',
             $andWhereClause
         );
 
         $statement = $this->connection->prepare($query);
-
-        $this->bindProductsSelectionValues($statement);
-        $statement->bindValue('product_id', $productIdentity->getProductId(), PDO::PARAM_INT);
-        $statement->bindValue('combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
-
+        $this->bindStockValues($statement, null, $productIdentity);
         $statement->execute();
-
         $rows = $statement->fetchAll();
 
         if (count($rows) === 0) {
@@ -222,24 +218,38 @@ class ProductRepository
         );
 
         $query = $this->selectProductsStock(
+            $selectClause = null,
             $this->joinCeilingCombinationsPerProduct(),
             $this->andWhere($queryParams),
+            $groupByClause = null,
             $this->orderBy($queryParams)
         ) . $this->paginate();
 
         $statement = $this->connection->prepare($query);
-
-        $this->bindProductsSelectionValues($statement);
-        $queryParams->bindValuesInStatement($statement);
-        $statement->bindValue('max_combinations_per_product', self::MAX_COMBINATIONS_PER_PRODUCT, PDO::PARAM_INT);
-
+        $this->bindStockValues($statement, $queryParams);
         $statement->execute();
-
         $rows = $statement->fetchAll();
-
         $rows = $this->addImageThumbnailPaths($rows);
 
         return $this->castNumericToInt($rows);
+    }
+
+    /**
+     * @param QueryParamsCollection $queryParams
+     * @return bool|string
+     */
+    public function countProductsPages(QueryParamsCollection $queryParams)
+    {
+        $query = sprintf(
+            'SELECT CEIL(FOUND_ROWS() / :%s) as total_pages',
+            QueryParamsCollection::SQL_PARAM_MAX_RESULTS
+        );
+
+        $statement = $this->connection->prepare($query);
+        $queryParams->bindMaxResultsParam($statement);
+        $statement->execute();
+
+        return (int)$statement->fetchColumn();
     }
 
     /**
@@ -288,58 +298,51 @@ class ProductRepository
     }
 
     /**
+     * @param null $selectClause
      * @param string $leftJoinClause
      * @param string $andWhereClause
+     * @param null $groupByClause
      * @param null $orderByClause
      * @return mixed
      */
     private function selectProductsStock(
+        $selectClause = null,
         $leftJoinClause = '',
         $andWhereClause = '',
+        $groupByClause = null,
         $orderByClause = null
     ) {
+        if (is_null($groupByClause)) {
+            $groupByClause = $this->groupByProductIds();
+        }
+
+        if (is_null($selectClause)) {
+            $selectClause = $this->getProductsStockColumns();
+        }
+
         if (is_null($orderByClause)) {
             $orderByClause = $this->orderByProductIds();
         }
 
         return str_replace(
             array(
+                '{select}',
                 '{left_join}',
                 '{and_where}',
+                '{group_by}',
                 '{order_by}',
                 '{prefix}',
             ),
             array(
+                $selectClause,
                 $leftJoinClause,
                 $andWhereClause,
+                $groupByClause,
                 $orderByClause,
                 $this->tablePrefix,
             ),
-            'SELECT
-            p.id_product AS product_id,
-            COALESCE(pa.id_product_attribute, 0) AS combination_id,
-            IF (
-                COALESCE(pa.reference, 0) = 0,
-                IF (LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
-                IF (LENGTH(TRIM(pa.reference)) > 0, pa.reference, "N/A")
-            ) AS product_reference,
-            IF (
-                COALESCE(pa.id_product_attribute, 0) > 0,
-                GROUP_CONCAT(
-                  CONCAT(agl.name, " - ", al.name)
-                  ORDER BY pa.id_product_attribute
-                  SEPARATOR ", "
-                ),
-                "N/A"
-            ) AS combination_name,
-            p.id_supplier AS supplier_id,
-            COALESCE(ic.id_image, 0) AS product_cover_id,
-            COALESCE(i.id_image, 0) as combination_cover_id,
-            COALESCE(s.name, "N/A") AS supplier_name,
-            pl.name AS product_name,
-            sa.quantity as product_available_quantity,
-            sa.physical_quantity as product_physical_quantity,
-            sa.reserved_quantity as product_reserved_quantity
+            'SELECT SQL_CALC_FOUND_ROWS
+            {select}
             FROM {prefix}product p
             LEFT JOIN {prefix}product_attribute pa ON (p.id_product = pa.id_product)
             LEFT JOIN {prefix}product_lang pl ON (p.id_product = pl.id_product)
@@ -406,9 +409,42 @@ class ProductRepository
             sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0) AND
             p.state = :state
             {and_where}
-            GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)
+            {group_by}
             {order_by}
         ');
+    }
+
+    /**
+     * @return string
+     */
+    private function getProductsStockColumns()
+    {
+        return '
+            p.id_product AS product_id,
+            COALESCE(pa.id_product_attribute, 0) AS combination_id,
+            IF (
+            COALESCE(pa.reference, 0) = 0,
+                IF (LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
+                IF (LENGTH(TRIM(pa.reference)) > 0, pa.reference, "N/A")
+            ) AS product_reference,
+            IF (
+                COALESCE(pa.id_product_attribute, 0) > 0,
+                GROUP_CONCAT(
+                    CONCAT(agl.name, " - ", al.name)
+                  ORDER BY pa.id_product_attribute
+                  SEPARATOR ", "
+                ),
+                "N/A"
+            ) AS combination_name,
+            p.id_supplier AS supplier_id,
+            COALESCE(ic.id_image, 0) AS product_cover_id,
+            COALESCE(i.id_image, 0) as combination_cover_id,
+            COALESCE(s.name, "N/A") AS supplier_name,
+            pl.name AS product_name,
+            sa.quantity as product_available_quantity,
+            sa.physical_quantity as product_physical_quantity,
+            sa.reserved_quantity as product_reserved_quantity
+        ';
     }
 
     /**
@@ -441,13 +477,29 @@ class ProductRepository
     }
 
     /**
-     * @param $statement
+     * @param Statement $statement
+     * @param QueryParamsCollection|null $queryParams
+     * @param ProductIdentity|null $productIdentity
      */
-    private function bindProductsSelectionValues(Statement $statement)
+    private function bindStockValues(
+        Statement $statement,
+        QueryParamsCollection $queryParams = null,
+        ProductIdentity $productIdentity = null
+    )
     {
         $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
         $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
         $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
+
+        if ($queryParams) {
+            $queryParams->bindValuesInStatement($statement);
+            $statement->bindValue('max_combinations_per_product', self::MAX_COMBINATIONS_PER_PRODUCT, PDO::PARAM_INT);
+        }
+
+        if ($productIdentity) {
+            $statement->bindValue('product_id', $productIdentity->getProductId(), PDO::PARAM_INT);
+            $statement->bindValue('combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
+        }
     }
 
     /**
@@ -456,6 +508,14 @@ class ProductRepository
     private function orderByProductIds()
     {
         return 'ORDER BY p.id_product DESC, COALESCE(pa.id_product_attribute, 0)';
+    }
+
+    /**
+     * @return string
+     */
+    private function groupByProductIds()
+    {
+        return 'GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)';
     }
 
     /**
@@ -503,7 +563,7 @@ class ProductRepository
         return sprintf(
             'LIMIT :%s,:%s',
             QueryParamsCollection::SQL_PARAM_FIRST_RESULT,
-            QueryParamsCollection::SQL_PARAM_MAX_RESULT
+            QueryParamsCollection::SQL_PARAM_MAX_RESULTS
         );
     }
 }

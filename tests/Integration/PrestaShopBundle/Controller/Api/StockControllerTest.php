@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
 
+use PrestaShopBundle\Api\QueryParamsCollection;
 use Prophecy\Prophet;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Context;
@@ -77,27 +78,99 @@ class StockControllerTest extends WebTestCase
 
     public function testListProductsAction()
     {
-        $this->assertOkResponseOnListProducts('api_stock_list_products');
+        $route = 'api_stock_list_products';
+
+        $this->assertErrorResponseOnListProducts($route);
+        $this->assertOkResponseOnListProducts(
+            $route,
+            array(),
+            $expectedTotalPages = 1
+        );
+        $this->assertOkResponseOnListProducts(
+            $route,
+            array('page_index' => 1, 'page_size' => 2),
+            $expectedTotalPages = 23
+        );
     }
 
     public function testListProductCombinationsAction()
     {
-        $this->assertOkResponseOnListProducts('api_stock_list_product_combinations', array('productId' => 1));
+        $route = 'api_stock_list_product_combinations';
+
+        $this->assertOkResponseOnListProducts(
+            $route,
+            array('productId' => 1)
+        );
+        $this->assertOkResponseOnListProducts(
+            $route,
+            array('productId' => 7, 'page_index' => 1, 'page_size' => 2),
+            $expectedTotalPages = 3
+        );
     }
 
     /**
-     * @param $route
-     * @param array $parameters
+     * @param $routeName
      */
-    private function assertOkResponseOnListProducts($route, $parameters = array())
+    private function assertErrorResponseOnListProducts($routeName)
     {
-        $route = $this->router->generate($route, $parameters);
+        $route = $this->router->generate($routeName, array());
 
+        $this->client->request('GET', $route, array('page_index' => 0));
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+    }
+
+    /**
+     * @param $routeName
+     * @param array $parameters
+     * @param $expectedTotalPages
+     */
+    private function assertOkResponseOnListProducts(
+        $routeName,
+        $parameters = array(),
+        $expectedTotalPages = null
+    )
+    {
+        $route = $this->router->generate($routeName, $parameters);
         $this->client->request('GET', $route);
+
+        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+
+        $this->assertResponseHasTotalPages($parameters, $expectedTotalPages);
+    }
+
+    /**
+     * @param $parameters
+     * @param $expectedTotalPages
+     */
+    private function assertResponseHasTotalPages($parameters, $expectedTotalPages)
+    {
+        if (is_null($expectedTotalPages)) {
+            return;
+        }
+
+        $pageSize = QueryParamsCollection::DEFAULT_PAGE_SIZE;
+        if (array_key_exists('page_size', $parameters)) {
+            $pageSize = $parameters['page_size'];
+        }
 
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+        /** @var \Symfony\Component\HttpFoundation\ResponseHeaderBag $headers */
+        $headers = $response->headers;
+        $this->assertTrue($headers->has('Total-Pages'), 'The response headers should contain the total pages.');
+        $this->assertEquals(
+            $expectedTotalPages,
+            $headers->get('Total-Pages'),
+            sprintf(
+                'There should be %d page(s) counting %d elements at most.',
+                $expectedTotalPages,
+                $pageSize
+            )
+        );
     }
 
     public function testEditProductAction()
@@ -162,9 +235,7 @@ class StockControllerTest extends WebTestCase
      */
     private function assertResponseBodyValidJson($expectedStatusCode)
     {
-        /**
-         * @var \Symfony\Component\HttpFoundation\JsonResponse $response
-         */
+        /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
         $response = $this->client->getResponse();
 
         $message = 'Unexpected status code.';
