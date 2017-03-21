@@ -47,7 +47,6 @@
       }
     },
     methods: {
-
       focusIn(){
         this.isActive = true;
       },

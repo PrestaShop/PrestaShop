@@ -3,6 +3,9 @@
     <td>
       <input type="checkbox" class="m-r-1">
       <img v-if="imagePath" :src="imagePath" class="thumbnail" />
+      <div v-else class="no-img">
+
+      </div>
       <span class="m-l-1">{{ product.product_name }}</span>
     </td>
     <td>
@@ -77,8 +80,15 @@
 
 <style lang="sass?outputStyle=expanded" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
-  .thumbnail {
+  .thumbnail, .no-img {
       border: $gray-light 1px solid;
+  }
+  .no-img {
+    background: white;
+    width: 47px;
+    height: 47px;
+    display: inline-block;
+    vertical-align: middle;
   }
   .qty-update {
     color: $brand-primary;
