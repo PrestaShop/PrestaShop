@@ -16,7 +16,7 @@
     </td>
     <td class="text-xs-center p-r-1">
       {{ physical }}
-      <span class="qty-update" v-if="hasQty">
+      <span class="qty-update" v-if="updatedQty">
         <i class="material-icons">trending_flat</i>
         {{physicalQtyUpdated}}
       </span>
@@ -26,7 +26,7 @@
     </td>
     <td class="text-xs-center">
       {{ product.product_available_quantity }}
-      <span class="qty-update" v-if="hasQty">
+      <span class="qty-update" v-if="updatedQty">
         <i class="material-icons">trending_flat</i>
         {{availableQtyUpdated}}
       </span>
@@ -49,7 +49,7 @@
         }
         return null;
       },
-      hasQty() {
+      updatedQty() {
         return !!this.value;
       },
       physicalQtyUpdated () {

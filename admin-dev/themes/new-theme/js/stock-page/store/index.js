@@ -9,6 +9,7 @@ Vue.use(Vuex);
 
 const state = {
   products: [],
+  productsToUpdate: [],
   hasQty: false,
   order: 'product'
 };
