@@ -845,8 +845,6 @@ namespace PrestaShopBundle\Install {
             if (!$isThemeEnabled) {
                 $themeErrors = $themeManager->getErrors($themeName);
                 $this->logError($themeErrors, 45);
-            } else {
-                Tools::clearCache();
             }
         }
 
