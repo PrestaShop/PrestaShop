@@ -172,42 +172,42 @@ class QueryParamsCollectionTest extends WebTestCase
             array('product', null, '1', array(
                 'ORDER BY {product} ',
                 array(
-                    'max_result' => 1,
+                    'max_results' => 1,
                     'first_result' => 0
                 )
             )),
             array('reference DESC', '3', null, array(
                 'ORDER BY {reference} DESC ',
                 array(
-                    'max_result' => 100,
+                    'max_results' => 100,
                     'first_result' => 200
                 )
             )),
             array('supplier desc', null, null, array(
                 'ORDER BY {supplier} DESC ',
                 array(
-                    'max_result' => 100,
+                    'max_results' => 100,
                     'first_result' => 0
                 )
             )),
             array('available_quantity DESC', null, null, array(
                 'ORDER BY {available_quantity} DESC ',
                 array(
-                    'max_result' => 100,
+                    'max_results' => 100,
                     'first_result' => 0
                 )
             )),
             array('available_quantity DESC', '2', '4', array(
                 'ORDER BY {available_quantity} DESC ',
                 array(
-                    'max_result' => 4,
+                    'max_results' => 4,
                     'first_result' => 4
                 )
             )),
             array('physical_quantity', '3', '3', array(
                 'ORDER BY {physical_quantity} ',
                 array(
-                    'max_result' => 3,
+                    'max_results' => 3,
                     'first_result' => 6
                 )
             )),

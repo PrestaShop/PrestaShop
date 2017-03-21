@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Entity\Repository\Stock;
+namespace PrestaShopBundle\Entity\Repository;
 
 use Configuration;
 use Doctrine\DBAL\Driver\Connection;
@@ -44,7 +44,7 @@ use Product;
 use RuntimeException;
 use Shop;
 
-class ProductRepository
+class StockRepository
 {
     const MAX_COMBINATIONS_PER_PRODUCT = 50;
 
@@ -97,7 +97,8 @@ class ProductRepository
         ImageManager $imageManager,
         StockManager $stockManager,
         $tablePrefix
-    ) {
+    )
+    {
         $this->connection = $connection;
         $this->imageManager = $imageManager;
         $this->stockManager = $stockManager;
@@ -111,7 +112,7 @@ class ProductRepository
         }
 
         $languageId = $context->employee->id_lang;
-        $this->languageId = (int) $languageId;
+        $this->languageId = (int)$languageId;
 
         if (!$context->shop instanceof Shop) {
             throw new RuntimeException('Determining the active shop requires a contextual shop instance.');
@@ -122,8 +123,8 @@ class ProductRepository
             throw new NotImplementedException('Shop context types other than "single shop" are not supported');
         }
 
-        $this->orderStates['error'] = (int) Configuration::get('PS_OS_ERROR');
-        $this->orderStates['cancellation'] = (int) Configuration::get('PS_OS_CANCELED');
+        $this->orderStates['error'] = (int)Configuration::get('PS_OS_ERROR');
+        $this->orderStates['cancellation'] = (int)Configuration::get('PS_OS_CANCELED');
 
         $this->shopId = $shop->getContextualShopId();
     }
@@ -132,10 +133,10 @@ class ProductRepository
      * @param MovementsCollection $movements
      * @return array
      */
-    public function bulkUpdateProducts(MovementsCollection $movements)
+    public function bulkUpdateStock(MovementsCollection $movements)
     {
         return $movements->map(function (Movement $movement) {
-            return $this->updateProduct($movement);
+            return $this->updateStock($movement);
         });
     }
 
@@ -143,17 +144,17 @@ class ProductRepository
      * @param Movement $movement
      * @return mixed
      */
-    public function updateProduct(Movement $movement)
+    public function updateStock(Movement $movement)
     {
         $query = '
-            UPDATE {prefix}stock_available
+            UPDATE {table_prefix}stock_available
             SET quantity = quantity + :delta,
             physical_quantity = reserved_quantity + quantity
             WHERE id_product = :product_id
             AND id_product_attribute = :combination_id
         ';
 
-        $query = str_replace('{prefix}', $this->tablePrefix, $query);
+        $query = str_replace('{table_prefix}', $this->tablePrefix, $query);
 
         $statement = $this->connection->prepare($query);
 
@@ -166,27 +167,26 @@ class ProductRepository
 
         $statement->execute();
 
-        return $this->selectProductsStockById($productIdentity);
+        return $this->selectStockBy($productIdentity);
     }
 
     /**
      * @param ProductIdentity $productIdentity
      * @return mixed
      */
-    private function selectProductsStockById(ProductIdentity $productIdentity)
+    private function selectStockBy(ProductIdentity $productIdentity)
     {
         $andWhereClause = '
-            AND p.id_product = :product_id AND
-            COALESCE(pa.id_product_attribute, 0) = :combination_id'
-        ;
-        $query = $this->selectProductsStock(
-            $selectClause = null,
+            AND p.id_product = :product_id
+            AND COALESCE(pa.id_product_attribute, 0) = :combination_id';
+        $query = $this->selectStock(
             $leftJoinClause = '',
             $andWhereClause
         );
 
         $statement = $this->connection->prepare($query);
         $this->bindStockValues($statement, null, $productIdentity);
+
         $statement->execute();
         $rows = $statement->fetchAll();
 
@@ -209,7 +209,7 @@ class ProductRepository
      * @param QueryParamsCollection $queryParams
      * @return mixed
      */
-    public function getProducts(QueryParamsCollection $queryParams)
+    public function getStock(QueryParamsCollection $queryParams)
     {
         $this->stockManager->updatePhysicalProductQuantity(
             $this->shopId,
@@ -217,18 +217,18 @@ class ProductRepository
             $this->orderStates['cancellation']
         );
 
-        $query = $this->selectProductsStock(
-            $selectClause = null,
-            $this->joinCeilingCombinationsPerProduct(),
-            $this->andWhere($queryParams),
-            $groupByClause = null,
-            $this->orderBy($queryParams)
-        ) . $this->paginate();
+        $query = $this->selectStock(
+                $this->joinLimitingCombinationsPerProduct(),
+                $this->andWhere($queryParams),
+                $this->orderBy($queryParams)
+            ) . $this->paginate();
 
         $statement = $this->connection->prepare($query);
         $this->bindStockValues($statement, $queryParams);
+
         $statement->execute();
         $rows = $statement->fetchAll();
+
         $rows = $this->addImageThumbnailPaths($rows);
 
         return $this->castNumericToInt($rows);
@@ -238,7 +238,7 @@ class ProductRepository
      * @param QueryParamsCollection $queryParams
      * @return bool|string
      */
-    public function countProductsPages(QueryParamsCollection $queryParams)
+    public function countStockPages(QueryParamsCollection $queryParams)
     {
         $query = sprintf(
             'SELECT CEIL(FOUND_ROWS() / :%s) as total_pages',
@@ -246,7 +246,8 @@ class ProductRepository
         );
 
         $statement = $this->connection->prepare($query);
-        $queryParams->bindMaxResultsParam($statement);
+        $this->bindMaxResultsValue($statement, $queryParams);
+
         $statement->execute();
 
         return (int)$statement->fetchColumn();
@@ -272,10 +273,10 @@ class ProductRepository
     }
 
     /**
-     * @param $rows
-     * @return mixed
+     * @param array $rows
+     * @return array
      */
-    private function addImageThumbnailPaths($rows)
+    private function addImageThumbnailPaths(array $rows)
     {
         array_walk($rows, function (&$row) {
             $row['product_thumbnail'] = 'N/A';
@@ -298,132 +299,39 @@ class ProductRepository
     }
 
     /**
-     * @param null $selectClause
      * @param string $leftJoinClause
      * @param string $andWhereClause
-     * @param null $groupByClause
      * @param null $orderByClause
      * @return mixed
      */
-    private function selectProductsStock(
-        $selectClause = null,
+    private function selectStock(
         $leftJoinClause = '',
         $andWhereClause = '',
-        $groupByClause = null,
         $orderByClause = null
-    ) {
-        if (is_null($groupByClause)) {
-            $groupByClause = $this->groupByProductIds();
-        }
-
-        if (is_null($selectClause)) {
-            $selectClause = $this->getProductsStockColumns();
-        }
-
+    )
+    {
         if (is_null($orderByClause)) {
             $orderByClause = $this->orderByProductIds();
         }
 
         return str_replace(
             array(
-                '{select}',
                 '{left_join}',
                 '{and_where}',
-                '{group_by}',
                 '{order_by}',
-                '{prefix}',
+                '{table_prefix}',
             ),
             array(
-                $selectClause,
                 $leftJoinClause,
                 $andWhereClause,
-                $groupByClause,
                 $orderByClause,
                 $this->tablePrefix,
             ),
             'SELECT SQL_CALC_FOUND_ROWS
-            {select}
-            FROM {prefix}product p
-            LEFT JOIN {prefix}product_attribute pa ON (p.id_product = pa.id_product)
-            LEFT JOIN {prefix}product_lang pl ON (p.id_product = pl.id_product)
-            LEFT JOIN {prefix}product_shop ps ON (
-                p.id_product = ps.id_product AND
-                ps.id_shop = :shop_id
-            )
-            LEFT JOIN {prefix}stock_available sa ON (p.id_product = sa.id_product)
-            LEFT JOIN {prefix}image ic ON (
-                pa.id_product = ic.id_product AND
-                ic.cover = 1
-            )
-            LEFT JOIN {prefix}image_shop ims ON (
-                p.id_product = ims.id_product AND
-                ic.id_image  = ims.id_image AND
-                ims.cover = 1
-            )
-            LEFT JOIN (
-                SELECT SUBSTRING_INDEX(
-                    GROUP_CONCAT(pai.id_image),
-                    ",",
-                    1
-                ) image_ids,
-                pai.id_product_attribute as combination_id
-                FROM {prefix}product_attribute_image pai
-                GROUP BY pai.id_product_attribute
-            ) images_per_combination ON (
-                pa.id_product_attribute = images_per_combination.combination_id
-            )
-            LEFT JOIN {prefix}image i ON (
-                COALESCE(FIND_IN_SET(i.id_image, images_per_combination.image_ids), 0) > 0
-            )
-            LEFT JOIN {prefix}supplier s ON (p.id_supplier = s.id_supplier)
-            LEFT JOIN {prefix}product_attribute_combination pac ON (
-                pac.id_product_attribute = pa.id_product_attribute
-            )
-            LEFT JOIN {prefix}product_attribute_shop pas ON (
-                pas.id_product = pa.id_product AND
-                pas.id_product_attribute = pa.id_product_attribute AND
-                pas.id_shop = :shop_id
-            )
-            LEFT JOIN {prefix}attribute a ON (
-                a.id_attribute = pac.id_attribute
-            )
-            LEFT JOIN {prefix}attribute_lang al ON (
-                a.id_attribute = al.id_attribute
-                AND al.id_lang = :language_id
-                AND LENGTH(TRIM(al.name)) > 0
-            )
-            LEFT JOIN {prefix}attribute_group ag ON (
-                ag.id_attribute_group = a.id_attribute_group
-            )
-            LEFT JOIN {prefix}attribute_group_lang agl ON (
-                ag.id_attribute_group = agl.id_attribute_group
-                AND agl.id_lang = :language_id
-                AND LENGTH(TRIM(agl.name)) > 0
-            )
-            {left_join}
-            WHERE
-            ps.id_shop = :shop_id AND
-            sa.id_shop = :shop_id AND
-            ims.id_shop = :shop_id AND
-            pl.id_lang = :language_id AND
-            sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0) AND
-            p.state = :state
-            {and_where}
-            {group_by}
-            {order_by}
-        ');
-    }
-
-    /**
-     * @return string
-     */
-    private function getProductsStockColumns()
-    {
-        return '
             p.id_product AS product_id,
             COALESCE(pa.id_product_attribute, 0) AS combination_id,
             IF (
-            COALESCE(pa.reference, 0) = 0,
+                COALESCE(pa.reference, 0) = 0,
                 IF (LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
                 IF (LENGTH(TRIM(pa.reference)) > 0, pa.reference, "N/A")
             ) AS product_reference,
@@ -444,13 +352,81 @@ class ProductRepository
             sa.quantity as product_available_quantity,
             sa.physical_quantity as product_physical_quantity,
             sa.reserved_quantity as product_reserved_quantity
-        ';
+            FROM {table_prefix}product p
+            LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
+            LEFT JOIN {table_prefix}product_lang pl ON (p.id_product = pl.id_product)
+            LEFT JOIN {table_prefix}product_shop ps ON (
+                p.id_product = ps.id_product AND
+                ps.id_shop = :shop_id
+            )
+            LEFT JOIN {table_prefix}stock_available sa ON (p.id_product = sa.id_product)
+            LEFT JOIN {table_prefix}image ic ON (
+                pa.id_product = ic.id_product AND
+                ic.cover = 1
+            )
+            LEFT JOIN {table_prefix}image_shop ims ON (
+                p.id_product = ims.id_product AND
+                ic.id_image  = ims.id_image AND
+                ims.cover = 1
+            )
+            LEFT JOIN (
+                SELECT SUBSTRING_INDEX(
+                    GROUP_CONCAT(pai.id_image),
+                    ",",
+                    1
+                ) image_ids,
+                pai.id_product_attribute as combination_id
+                FROM {table_prefix}product_attribute_image pai
+                GROUP BY pai.id_product_attribute
+            ) images_per_combination ON (
+                pa.id_product_attribute = images_per_combination.combination_id
+            )
+            LEFT JOIN {table_prefix}image i ON (
+                COALESCE(FIND_IN_SET(i.id_image, images_per_combination.image_ids), 0) > 0
+            )
+            LEFT JOIN {table_prefix}supplier s ON (p.id_supplier = s.id_supplier)
+            LEFT JOIN {table_prefix}product_attribute_combination pac ON (
+                pac.id_product_attribute = pa.id_product_attribute
+            )
+            LEFT JOIN {table_prefix}product_attribute_shop pas ON (
+                pas.id_product = pa.id_product AND
+                pas.id_product_attribute = pa.id_product_attribute AND
+                pas.id_shop = :shop_id
+            )
+            LEFT JOIN {table_prefix}attribute a ON (
+                a.id_attribute = pac.id_attribute
+            )
+            LEFT JOIN {table_prefix}attribute_lang al ON (
+                a.id_attribute = al.id_attribute
+                AND al.id_lang = :language_id
+                AND LENGTH(TRIM(al.name)) > 0
+            )
+            LEFT JOIN {table_prefix}attribute_group ag ON (
+                ag.id_attribute_group = a.id_attribute_group
+            )
+            LEFT JOIN {table_prefix}attribute_group_lang agl ON (
+                ag.id_attribute_group = agl.id_attribute_group
+                AND agl.id_lang = :language_id
+                AND LENGTH(TRIM(agl.name)) > 0
+            )
+            {left_join}
+            WHERE
+            ps.id_shop = :shop_id AND
+            sa.id_shop = :shop_id AND
+            ims.id_shop = :shop_id AND
+            pl.id_lang = :language_id AND
+            sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0) AND
+            p.state = :state
+            {and_where}
+            GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)
+            {order_by}
+        ');
     }
 
     /**
      * @return string
      */
-    private function joinCeilingCombinationsPerProduct()
+    private function joinLimitingCombinationsPerProduct()
     {
         return 'LEFT JOIN (
             SELECT SUBSTRING_INDEX(
@@ -458,17 +434,20 @@ class ProductRepository
                 \',\',
                 :max_combinations_per_product
             ) product_attribute_ids
-            FROM {prefix}product_attribute pa
+            FROM {table_prefix}product_attribute pa
             GROUP BY pa.id_product
         ) combinations_per_product ON (
-            COALESCE(FIND_IN_SET(pa.id_product_attribute, combinations_per_product.product_attribute_ids), 0) > 0
+            COALESCE(
+                FIND_IN_SET(pa.id_product_attribute, combinations_per_product.product_attribute_ids),
+                0
+            ) > 0
         ) ';
     }
 
     /**
      * @return string
      */
-    private function andWhereCeilingCombinationsPerProduct()
+    private function andWhereLimitingCombinationsPerProduct()
     {
         return 'AND (
             ISNULL(pa.id_product_attribute) OR
@@ -492,7 +471,7 @@ class ProductRepository
         $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
 
         if ($queryParams) {
-            $queryParams->bindValuesInStatement($statement);
+            $this->bindValuesInStatement($statement, $queryParams);
             $statement->bindValue('max_combinations_per_product', self::MAX_COMBINATIONS_PER_PRODUCT, PDO::PARAM_INT);
         }
 
@@ -511,14 +490,6 @@ class ProductRepository
     }
 
     /**
-     * @return string
-     */
-    private function groupByProductIds()
-    {
-        return 'GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)';
-    }
-
-    /**
      * @param QueryParamsCollection $queryParams
      * @return string
      */
@@ -527,7 +498,7 @@ class ProductRepository
         $filter = $queryParams->getSqlFilter();
         $filter = strtr($filter, array('{product_id}' => 'p.id_product'));
 
-        return $this->andWhereCeilingCombinationsPerProduct() . $filter;
+        return $this->andWhereLimitingCombinationsPerProduct() . $filter;
     }
 
     /**
@@ -566,4 +537,32 @@ class ProductRepository
             QueryParamsCollection::SQL_PARAM_MAX_RESULTS
         );
     }
+
+    /**
+     * @param Statement $statement
+     * @param QueryParamsCollection $queryParams
+     */
+    private function bindValuesInStatement(Statement $statement, QueryParamsCollection $queryParams)
+    {
+        $sqlParams = $queryParams->getSqlParams();
+
+        foreach ($sqlParams as $name => $value) {
+            $statement->bindValue($name, $value, PDO::PARAM_INT);
+        }
+    }
+
+    /**
+     * @param Statement $statement
+     * @param QueryParamsCollection $queryParams
+     */
+    private function bindMaxResultsValue(Statement $statement, QueryParamsCollection $queryParams)
+    {
+        $paginationParams = $queryParams->getSqlPaginationParams();
+        $statement->bindValue(
+            QueryParamsCollection::SQL_PARAM_MAX_RESULTS,
+            $paginationParams[QueryParamsCollection::SQL_PARAM_MAX_RESULTS],
+            PDO::PARAM_INT
+        );
+    }
+
 }

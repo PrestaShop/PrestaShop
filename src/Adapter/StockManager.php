@@ -68,10 +68,10 @@ class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterf
         $this->updateReservedProductQuantity($shopId, $errorState, $cancellationState);
 
         $updatePhysicalQuantityQuery = '
-            UPDATE {prefix}stock_available sa
+            UPDATE {table_prefix}stock_available sa
             SET sa.physical_quantity = sa.quantity - sa.reserved_quantity
         ';
-        $updatePhysicalQuantityQuery = str_replace('{prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
+        $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
 
         return Db::getInstance()->execute($updatePhysicalQuantityQuery);
     }
@@ -84,14 +84,14 @@ class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterf
      */
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState)
     {
-        $updatePhysicalQuantityQuery = '
-            UPDATE {prefix}stock_available sa
+        $updateReservedQuantityQuery = '
+            UPDATE {table_prefix}stock_available sa
             SET sa.reserved_quantity = (
                 SELECT SUM(od.product_quantity - od.product_quantity_refunded)
-                FROM {prefix}orders o,
-                {prefix}order_history oh,
-                {prefix}order_state os,
-                {prefix}order_detail od
+                FROM {table_prefix}orders o,
+                {table_prefix}order_history oh,
+                {table_prefix}order_state os,
+                {table_prefix}order_detail od
                 WHERE
                 o.id_order = oh.id_order AND
                 o.current_state = oh.id_order_state AND
@@ -109,21 +109,22 @@ class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterf
             )
         ';
 
-        $updatePhysicalQuantityQuery = str_replace(
+        $updateReservedQuantityQuery = str_replace(
             array(
-                '{prefix}',
+                '{table_prefix}',
                 ':shop_id',
                 ':error_state',
                 ':cancellation_state',
-            ), array(
-                _DB_PREFIX_,
-                (int) $shopId,
-                (int) $errorState,
-                (int) $cancellationState
             ),
-            $updatePhysicalQuantityQuery
+            array(
+                _DB_PREFIX_,
+                (int)$shopId,
+                (int)$errorState,
+                (int)$cancellationState
+            ),
+            $updateReservedQuantityQuery
         );
 
-        return Db::getInstance()->execute($updatePhysicalQuantityQuery);
+        return Db::getInstance()->execute($updateReservedQuantityQuery);
     }
 }
