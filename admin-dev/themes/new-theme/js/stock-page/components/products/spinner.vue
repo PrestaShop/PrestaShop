@@ -22,6 +22,9 @@
       });
     },
     computed: {
+      qty () {
+        return this.product.qty;
+      },
       id () {
         return `qty-${this.product.product_id}-${this.product.combination_id}`;
       },
@@ -42,7 +45,11 @@
     watch: {
       value(val) {
         this.product.qty = val;
-        this.$store.commit('UPDATE_PRODUCT_QTY');
+        this.$store.commit('UPDATE_PRODUCT_QTY', {
+          product_id: this.product.product_id,
+          combination_id: this.product.combination_id,
+          delta: val
+        });
         this.$emit('valueChanged', val);
       }
     },

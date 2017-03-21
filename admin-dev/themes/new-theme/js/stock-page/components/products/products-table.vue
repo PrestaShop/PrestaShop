@@ -34,6 +34,9 @@
     computed: {
       products() {
         return this.$store.state.products.filter((product)=> {
+          if(!product.qty) {
+            product.qty = 0;
+          }
           product.product_key = `${product.product_id}-${product.combination_id}`;
           return product;
         });

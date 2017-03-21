@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-4">
     <div class="movements">
-      <button type="button" class="btn update-qty pull-xs-right" :class="classObject" :disabled="disabled"><i class="material-icons">edit</i>APPLY NEW QUANTITY</button>
+      <button v-on:click="sendQty" type="button" class="btn update-qty pull-xs-right" :class="classObject" :disabled="disabled"><i class="material-icons">edit</i>APPLY NEW QUANTITY</button>
     </div>
   </div>
 </template>
@@ -16,6 +16,14 @@
         return {
           'btn-primary': !this.disabled
         }
+      }
+    },
+    methods: {
+      sendQty() {
+        let postUrl = `${data.apiRootUrl.replace(/\?.*/,'')}/products`;
+        this.$store.dispatch('updateQtyByProductsId', {
+          url: postUrl
+        });
       }
     }
   }
