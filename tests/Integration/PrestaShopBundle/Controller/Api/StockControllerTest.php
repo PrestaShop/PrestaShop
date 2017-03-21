@@ -78,16 +78,16 @@ class StockControllerTest extends WebTestCase
 
     public function testListProductsAction()
     {
-        $route = 'api_stock_list_products';
+        $routeName = 'api_stock_list_products';
 
-        $this->assertErrorResponseOnListProducts($route);
+        $this->assertErrorResponseOnListProducts($routeName);
         $this->assertOkResponseOnListProducts(
-            $route,
+            $routeName,
             array(),
             $expectedTotalPages = 1
         );
         $this->assertOkResponseOnListProducts(
-            $route,
+            $routeName,
             array('page_index' => 1, 'page_size' => 2),
             $expectedTotalPages = 23
         );
@@ -95,14 +95,15 @@ class StockControllerTest extends WebTestCase
 
     public function testListProductCombinationsAction()
     {
-        $route = 'api_stock_list_product_combinations';
+        $routeName = 'api_stock_list_product_combinations';
 
         $this->assertOkResponseOnListProducts(
-            $route,
-            array('productId' => 1)
+            $routeName,
+            array('productId' => 1),
+            $expectedTotalPages = 1
         );
         $this->assertOkResponseOnListProducts(
-            $route,
+            $routeName,
             array('productId' => 7, 'page_index' => 1, 'page_size' => 2),
             $expectedTotalPages = 3
         );

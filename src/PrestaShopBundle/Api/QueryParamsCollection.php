@@ -27,8 +27,6 @@
 namespace PrestaShopBundle\Api;
 
 use Doctrine\Common\Util\Inflector;
-use Doctrine\DBAL\Driver\Statement;
-use PDO;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -40,7 +38,7 @@ class QueryParamsCollection
 
     const SQL_PARAM_FIRST_RESULT = 'first_result';
 
-    const SQL_PARAM_MAX_RESULTS = 'max_result';
+    const SQL_PARAM_MAX_RESULTS = 'max_results';
 
     /**
      * @var array
@@ -70,9 +68,14 @@ class QueryParamsCollection
     private function parseFilterParams(array $queryParams, Request $request)
     {
         $attributes = $request->attributes->all();
-        $filterParams = array_filter($attributes, function ($attribute) {
-            return in_array($attribute, $this->getValidFilterParams());
-        }, ARRAY_FILTER_USE_KEY);
+        $filters = array_filter(array_keys($attributes), function ($filter) {
+            return in_array($filter, $this->getValidFilterParams());
+        });
+
+        $filterParams = array();
+        array_walk($filters, function ($filter) use ($attributes, &$filterParams) {
+            $filterParams[$filter] = $attributes[$filter];
+        });
 
         $queryParams['filter'] = $filterParams;
 
@@ -199,40 +202,16 @@ class QueryParamsCollection
      */
     public function getSqlFilter()
     {
-        $sqlFilter = '';
+        $filters = array();
 
         if (count($this->queryParams['filter']) > 0) {
             foreach ($this->queryParams['filter'] as $column => $value) {
                 $column = Inflector::tableize($column);
-                $sqlFilter = 'AND {' . $column . '} = :' . $column;
+                $filters[] = 'AND {' . $column . '} = :' . $column;
             }
         }
 
-        return $sqlFilter;
-    }
-
-    /**
-     * @param Statement $statement
-     */
-    public function bindValuesInStatement(Statement $statement)
-    {
-        $sqlParams = $this->getSqlParams();
-
-        foreach ($sqlParams as $name => $value) {
-            $statement->bindValue($name, $value, PDO::PARAM_INT);
-        }
-    }
-
-    /**
-     * @param Statement $statement
-     */
-    public function bindMaxResultsParam(Statement $statement)
-    {
-        $paginationParams = $this->getSqlPaginationParams();
-        $statement->bindValue(
-            self::SQL_PARAM_MAX_RESULTS,
-            $paginationParams[self::SQL_PARAM_MAX_RESULTS]
-        );
+        return implode("\n", $filters);
     }
 
     /**
@@ -249,15 +228,15 @@ class QueryParamsCollection
     /**
      * @return array
      */
-    private function getSqlPaginationParams()
+    public function getSqlPaginationParams()
     {
         $maxResult = $this->queryParams['page_size'];
         $pageIndex = $this->queryParams['page_index'];
         $firstResult = ($pageIndex - 1) * $maxResult;
 
         return array(
-            'max_result' => $maxResult,
-            'first_result' => $firstResult
+            self::SQL_PARAM_MAX_RESULTS => $maxResult,
+            self::SQL_PARAM_FIRST_RESULT => $firstResult
         );
     }
 

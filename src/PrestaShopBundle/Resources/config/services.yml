@@ -309,8 +309,8 @@ services:
     prestashop.core.api.stock.movements_collection:
         class: PrestaShopBundle\Api\Stock\MovementsCollection
 
-    prestashop.core.api.stock.product_repository:
-        class: PrestaShopBundle\Entity\Repository\Stock\ProductRepository
+    prestashop.core.api.stock.repository:
+        class: PrestaShopBundle\Entity\Repository\StockRepository
         arguments:
             - "@doctrine.dbal.default_connection"
             - "@prestashop.adapter.legacy.context"
@@ -323,7 +323,7 @@ services:
         properties:
             logger: "@logger"
             movements: "@prestashop.core.api.stock.movements_collection"
-            productRepository: "@prestashop.core.api.stock.product_repository"
+            stockRepository: "@prestashop.core.api.stock.repository"
             queryParams: "@prestashop.core.api.query_params_collection"
 
     # Managers
