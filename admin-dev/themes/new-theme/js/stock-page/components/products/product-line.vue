@@ -32,7 +32,7 @@
       </span>
     </td>
     <td>
-      <Spinner :product="product" v-on:valueChanged="onValueChanged" />
+      <Spinner :product="product" />
     </td>
   </tr>
 </template>
@@ -50,26 +50,16 @@
         return null;
       },
       updatedQty() {
-        return !!this.value;
+        return !!this.product.qty;
       },
       physicalQtyUpdated () {
-        return Number(this.physical) + Number(this.value);
+        return Number(this.physical) + Number(this.product.qty);
       },
       availableQtyUpdated() {
-        return Number(this.product.product_available_quantity) + Number(this.value);
+        return Number(this.product.product_available_quantity) + Number(this.product.qty);
       },
       physical() {
         return Number(this.product.product_available_quantity) + Number(this.product.product_reserved_quantity);
-      }
-    },
-    data() {
-      return {
-        value: 0
-      }
-    },
-    methods: {
-      onValueChanged(val) {
-        this.value = val;
       }
     },
     components: {

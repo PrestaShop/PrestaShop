@@ -1,6 +1,6 @@
 <template>
   <form class="qty text-xs-right" :class="classObject" v-on:mouseover="focusIn" v-on:mouseleave="focusOut($event)">
-    <input v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="value" placeholder="0" >
+    <input v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="qty" placeholder="0" >
     <transition name="fade">
       <button v-if="isActive" class="check-button" v-on:click="sendQty($event)"><i class="material-icons">check</i></button>
     </transition>
@@ -23,6 +23,10 @@
     },
     computed: {
       qty () {
+        if(!this.product.qty) {
+          this.isActive = this.isEnabled = false;
+          this.value = this.product.qty = null;
+        }
         return this.product.qty;
       },
       id () {
@@ -44,13 +48,11 @@
     },
     watch: {
       value(val) {
-        this.product.qty = val;
         this.$store.commit('UPDATE_PRODUCT_QTY', {
           product_id: this.product.product_id,
           combination_id: this.product.combination_id,
           delta: val
         });
-        this.$emit('valueChanged', val);
       }
     },
     methods: {
@@ -74,7 +76,6 @@
         // POST when qty !=0
         if(this.isEnabled) {
           this.$store.dispatch('updateQtyByProductId', {
-            http: this.$http,
             url: postUrl,
             delta: this.value
           });
