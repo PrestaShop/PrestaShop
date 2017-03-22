@@ -76,75 +76,98 @@ class StockControllerTest extends WebTestCase
         parent::tearDown();
     }
 
-    public function testListProductsAction()
-    {
-        $routeName = 'api_stock_list_products';
-
-        $this->assertErrorResponseOnListProducts($routeName);
-        $this->assertOkResponseOnListProducts(
-            $routeName,
-            array(),
-            $expectedTotalPages = 1
-        );
-        $this->assertOkResponseOnListProducts(
-            $routeName,
-            array('page_index' => 1, 'page_size' => 2),
-            $expectedTotalPages = 23
-        );
-        $this->assertOkResponseOnListProducts(
-            $routeName,
-            array('supplier_id' => 1, 'page_index' => 2, 'page_size' => 2),
-            $expectedTotalPages = 23
-        );
-        $this->assertOkResponseOnListProducts(
-            $routeName,
-            array('supplier_id' => array(1, 2), 'page_index' => 2, 'page_size' => 2),
-            $expectedTotalPages = 23
-        );
-        $this->assertOkResponseOnListProducts(
-            $routeName,
-            array('category_id' => 4, 'page_index' => 1, 'page_size' => 1),
-            $expectedTotalPages = 6
-        );
-        $this->assertOkResponseOnListProducts(
-            $routeName,
-            array('category_id' => array(4, 5), 'page_index' => 1, 'page_size' => 1),
-            $expectedTotalPages = 12
-        );
-    }
-
-    public function testListProductCombinationsAction()
-    {
-        $routeName = 'api_stock_list_product_combinations';
-
-        $this->assertOkResponseOnListProducts(
-            $routeName,
-            array('productId' => 1),
-            $expectedTotalPages = 1
-        );
-        $this->assertOkResponseOnListProducts(
-            $routeName,
-            array('productId' => 7, 'page_index' => 1, 'page_size' => 2),
-            $expectedTotalPages = 3
-        );
-        $this->assertOkResponseOnListProducts(
-            $routeName,
-            array('productId' => 1, 'category_id' => array(4, 5), 'page_index' => 1, 'page_size' => 1),
-            $expectedTotalPages = 6
-        );
-    }
-
     /**
-     * @param $routeName
+     * @test
      */
-    private function assertErrorResponseOnListProducts($routeName)
+    public function it_should_return_bad_request_response_on_invalid_pagination_params()
     {
-        $route = $this->router->generate($routeName, array());
+        $route = $this->router->generate('api_stock_list_products', array());
 
         $this->client->request('GET', $route, array('page_index' => 0));
         $response = $this->client->getResponse();
 
         $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+    }
+
+    /**
+     * @dataProvider getProductsStockParams
+     * @test
+     *
+     * @param $params
+     * @param $expectedTotalPages
+     */
+    public function it_should_return_ok_response_when_requesting_products_stock($params, $expectedTotalPages)
+    {
+        $this->assertOkResponseOnListProducts('api_stock_list_products', $params, $expectedTotalPages);
+    }
+
+    /**
+     * @return array
+     */
+    public function getProductsStockParams()
+    {
+        return array(
+            array(
+                array(),
+                $expectedTotalPages = 1
+            ),
+            array(
+                array('page_index' => 1, 'page_size' => 2),
+                $expectedTotalPages = 23
+            ),
+            array(
+                array('supplier_id' => 1, 'page_index' => 2, 'page_size' => 2),
+                $expectedTotalPages = 23
+            ),
+            array(
+                array('supplier_id' => array(1, 2), 'page_index' => 2, 'page_size' => 2),
+                $expectedTotalPages = 23
+            ),
+            array(
+                array('category_id' => 4, 'page_index' => 1, 'page_size' => 1),
+                $expectedTotalPages = 6
+            ),
+            array(
+                array('category_id' => array(4, 5), 'page_index' => 1, 'page_size' => 1),
+                $expectedTotalPages = 12
+            )
+        );
+    }
+
+    /**
+     * @dataProvider getProductsCombinationsParams
+     * @test
+     *
+     * @param $params
+     * @param $expectedTotalPages
+     */
+    public function it_should_return_ok_response_when_requesting_products_combinations_stock(
+        $params,
+        $expectedTotalPages
+    )
+    {
+        $this->assertOkResponseOnListProducts('api_stock_list_product_combinations', $params, $expectedTotalPages);
+    }
+
+    /**
+     * @return array
+     */
+    public function getProductsCombinationsParams()
+    {
+        return array(
+            array(
+                array('productId' => 1),
+                $expectedTotalPages = 1
+            ),
+            array(
+                array('productId' => 7, 'page_index' => 1, 'page_size' => 2),
+                $expectedTotalPages = 3
+            ),
+            array(
+                array('productId' => 1, 'category_id' => array(4, 5), 'page_index' => 1, 'page_size' => 1),
+                $expectedTotalPages = 6
+            )
+        );
     }
 
     /**
@@ -199,18 +222,27 @@ class StockControllerTest extends WebTestCase
         );
     }
 
-    public function testEditProductAction()
+    /**
+     * @test
+     */
+    public function it_should_return_error_response_when_requesting_products_stock_edition()
     {
         $this->assertErrorResponseOnEditProduct();
     }
 
-    public function testEditProductCombinationAction()
+    /**
+     * @test
+     */
+    public function it_should_return_valid_response_when_requesting_products_combinations_stock_edition()
     {
         $this->assertNotFoundResponseOnEditProductCombination();
         $this->assertOkResponseOnEditProductCombination();
     }
 
-    public function testBulkEditProductCombinationAction()
+    /**
+     * @test
+     */
+    public function it_should_return_valid_response_when_requesting_bulk_stock_edition()
     {
         $this->assertErrorResponseOnBulkEditProducts();
         $this->assertOkResponseOnBulkEditProducts();

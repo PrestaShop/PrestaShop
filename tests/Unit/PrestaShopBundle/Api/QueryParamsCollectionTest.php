@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Api;
+namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle\Api;
 
 use Exception;
+use PHPUnit_Framework_TestCase;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use Prophecy\Prophet;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * @group api
  */
-class QueryParamsCollectionTest extends WebTestCase
+class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var Prophet
@@ -98,14 +98,13 @@ class QueryParamsCollectionTest extends WebTestCase
     }
 
     /**
+     * @dataProvider getQueryParams
      * @test
      *
      * @param $order
      * @param $pageIndex
      * @param $pageSize
      * @param $expectedSqlClauses
-     *
-     * @dataProvider getQueryParams
      */
     public function it_should_make_query_params_from_a_request(
         $order,
@@ -140,7 +139,6 @@ class QueryParamsCollectionTest extends WebTestCase
 
     /**
      * @dataProvider getQueryParams
-     *
      * @test
      *
      * @param $order
@@ -232,13 +230,12 @@ class QueryParamsCollectionTest extends WebTestCase
     }
 
     /**
+     * @dataProvider getFilterParams
      * @test
      *
      * @param $params
      * @param $expectedSql
      * @param $message
-     *
-     * @dataProvider getFilterParams
      */
     public function it_should_make_query_params_with_supplier_filter_from_a_request(
         $params,
@@ -263,8 +260,8 @@ class QueryParamsCollectionTest extends WebTestCase
      */
     public function getFilterParams()
     {
-        $supplierFilterMessage = 'It should provide with a SQL clause condition on supplier column';
-        $categoryFilterMessage = 'It should provide with a SQL clause condition on category column';
+        $supplierFilterMessage = 'It should provide with a SQL condition clause on supplier';
+        $categoryFilterMessage = 'It should provide with a SQL condition clause on category';
 
         return array(
             array(
