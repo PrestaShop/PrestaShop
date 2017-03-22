@@ -80,6 +80,9 @@ class QueryParamsCollectionTest extends WebTestCase
         }
     }
 
+    /**
+     * @return array
+     */
     public function getInvalidPaginationParams()
     {
         return array(
@@ -97,7 +100,7 @@ class QueryParamsCollectionTest extends WebTestCase
     /**
      * @test
      *
-     * @param $orderQuery
+     * @param $order
      * @param $pageIndex
      * @param $pageSize
      * @param $expectedSqlClauses
@@ -105,20 +108,27 @@ class QueryParamsCollectionTest extends WebTestCase
      * @dataProvider getQueryParams
      */
     public function it_should_make_query_params_from_a_request(
-        $orderQuery,
+        $order,
         $pageIndex,
         $pageSize,
         $expectedSqlClauses
-    ) {
-        $attributesMock = $this->mockAttributes(array());
-        $requestMock = $this->mockRequest($orderQuery, $pageIndex, $pageSize, $attributesMock);
+    )
+    {
+        $requestMock = $this->mockRequest(
+            array(
+                'order' => $order,
+                'page_index' => $pageIndex,
+                'page_size' => $pageSize,
+                'attributes' => $this->mockAttributes(array())->reveal()
+            )
+        );
 
         $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
 
         $sqlParts = array(
             $this->queryParams->getSqlOrder(),
             $this->queryParams->getSqlParams(),
-            $this->queryParams->getSqlFilter(),
+            $this->queryParams->getSqlFilters(),
         );
 
         $expectedSqlClauses[2] = '';
@@ -133,26 +143,33 @@ class QueryParamsCollectionTest extends WebTestCase
      *
      * @test
      *
-     * @param $orderQuery
+     * @param $order
      * @param $pageIndex
      * @param $pageSize
      * @param $expectedSqlClauses
      */
-    public function it_should_make_query_params_with_filter_from_a_request(
-        $orderQuery,
+    public function it_should_make_query_params_with_product_filter_from_a_request(
+        $order,
         $pageIndex,
         $pageSize,
         $expectedSqlClauses
-    ) {
-        $attributesMock = $this->mockAttributes(array('productId' => 1));
-        $requestMock = $this->mockRequest($orderQuery, $pageIndex, $pageSize, $attributesMock->reveal());
+    )
+    {
+        $requestMock = $this->mockRequest(
+            array(
+                'order' => $order,
+                'page_index' => $pageIndex,
+                'page_size' => $pageSize,
+                'attributes' => $this->mockAttributes(array('productId' => 1))->reveal()
+            )
+        );
 
         $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
 
         $sqlParts = array(
             $this->queryParams->getSqlOrder(),
             $this->queryParams->getSqlParams(),
-            $this->queryParams->getSqlFilter(),
+            $this->queryParams->getSqlFilters(),
         );
 
         $expectedSqlClauses[1]['product_id'] = 1;
@@ -215,25 +232,69 @@ class QueryParamsCollectionTest extends WebTestCase
     }
 
     /**
-     * @param $orderQuery
-     * @param $pageIndex
-     * @param $pageSize
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @test
+     *
+     * @param $params
+     * @param $expectedSql
+     *
+     * @dataProvider getFilterParams
      */
-    private function mockQuery($orderQuery, $pageIndex, $pageSize)
+    public function it_should_make_query_params_with_supplier_filter_from_a_request(
+        $params,
+        $expectedSql
+    )
     {
+        $requestMock = $this->mockRequest(array_merge(
+            $params,
+            array('attributes' => $this->mockAttributes(array())->reveal())
+        ));
+        $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
+        $this->assertEquals(
+            $expectedSql,
+            $this->queryParams->getSqlFilters(),
+            'It should provide with a SQL clause condition on supplier column'
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilterParams()
+    {
+        return array(
+            array(
+                array('supplier_id' => 1),
+                'AND {supplier_id} = :supplier_id'
+            ),
+            array(
+                array('supplier_id' => array(1, 2)),
+                'AND {supplier_id} IN (:supplier_id_0,:supplier_id_1)'
+            )
+        );
+    }
+
+    /**
+     * @param array $testedParams
+     * @return \Prophecy\Prophecy\ObjectProphecy|\Symfony\Component\HttpFoundation\ParameterBag
+     */
+    private function mockQuery(array $testedParams)
+    {
+        $params = array();
+        $validQueryParams = array(
+            'order',
+            'page_index',
+            'page_size',
+            'supplier_id',
+        );
+
+        array_walk($validQueryParams, function ($name) use ($testedParams, &$params) {
+            if (array_key_exists($name, $testedParams) && !is_null($testedParams[$name])) {
+                $params[$name] = $testedParams[$name];
+            }
+        });
+
         /** @var \Symfony\Component\HttpFoundation\ParameterBag $queryMock */
         $queryMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
-
-        $params = array('order' => $orderQuery);
-
-        if (!is_null($pageIndex)) {
-            $params['page_index'] = $pageIndex;
-        }
-
-        if (!is_null($pageSize)) {
-            $params['page_size'] = $pageSize;
-        }
         $queryMock->all()->willReturn($params);
 
         /** @var \Prophecy\Prophecy\ObjectProphecy $queryMock */
@@ -246,22 +307,24 @@ class QueryParamsCollectionTest extends WebTestCase
      */
     private function mockAttributes(array $attributes)
     {
-        $queryMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
-        $queryMock->all()->willReturn($attributes);
+        $attributesMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
+        $attributesMock->all()->willReturn($attributes);
 
-        return $queryMock;
+        return $attributesMock;
     }
 
     /**
-     * @param $orderQuery
-     * @param $pageIndex
-     * @param $pageSize
-     * @param null $attributesMock
+     * @param array $params
      * @return \Prophecy\Prophecy\ObjectProphecy
      */
-    private function mockRequest($orderQuery, $pageIndex, $pageSize, $attributesMock = null)
+    private function mockRequest(array $params)
     {
-        $queryMock = $this->mockQuery($orderQuery, $pageIndex, $pageSize);
+        $attributesMock = null;
+        if (array_key_exists('attributes', $params)) {
+            $attributesMock = $params['attributes'];
+        }
+
+        $queryMock = $this->mockQuery($params);
         $requestMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\Request');
         $requestMock->query = $queryMock->reveal();
 

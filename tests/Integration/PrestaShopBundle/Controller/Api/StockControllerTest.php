@@ -91,6 +91,16 @@ class StockControllerTest extends WebTestCase
             array('page_index' => 1, 'page_size' => 2),
             $expectedTotalPages = 23
         );
+        $this->assertOkResponseOnListProducts(
+            $routeName,
+            array('supplier_id' => 1, 'page_index' => 2, 'page_size' => 2),
+            $expectedTotalPages = 23
+        );
+        $this->assertOkResponseOnListProducts(
+            $routeName,
+            array('supplier_id' => array(1, 2), 'page_index' => 2, 'page_size' => 2),
+            $expectedTotalPages = 23
+        );
     }
 
     public function testListProductCombinationsAction()

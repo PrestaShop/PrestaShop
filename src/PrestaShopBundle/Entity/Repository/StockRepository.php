@@ -495,8 +495,11 @@ class StockRepository
      */
     private function andWhere(QueryParamsCollection $queryParams)
     {
-        $filter = $queryParams->getSqlFilter();
-        $filter = strtr($filter, array('{product_id}' => 'p.id_product'));
+        $filter = $queryParams->getSqlFilters();
+        $filter = strtr($filter, array(
+            '{product_id}' => 'p.id_product',
+            '{supplier_id}' => 'p.id_supplier'
+        ));
 
         return $this->andWhereLimitingCombinationsPerProduct() . $filter;
     }
