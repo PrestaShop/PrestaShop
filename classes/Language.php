@@ -1248,6 +1248,10 @@ class LanguageCore extends ObjectModel
 
                     // Construct update field
                     foreach ($fieldsToUpdate as $toUpdate) {
+                        if ('url_rewrite' === $toUpdate && 'en-UD' === $lang->locale) {
+                            continue;
+                        }
+
                         $untranslated = $translator->getSourceString($data[$toUpdate], $classObject->getDomain());
                         $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
 
