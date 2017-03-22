@@ -236,12 +236,14 @@ class QueryParamsCollectionTest extends WebTestCase
      *
      * @param $params
      * @param $expectedSql
+     * @param $message
      *
      * @dataProvider getFilterParams
      */
     public function it_should_make_query_params_with_supplier_filter_from_a_request(
         $params,
-        $expectedSql
+        $expectedSql,
+        $message
     )
     {
         $requestMock = $this->mockRequest(array_merge(
@@ -252,7 +254,7 @@ class QueryParamsCollectionTest extends WebTestCase
         $this->assertEquals(
             $expectedSql,
             $this->queryParams->getSqlFilters(),
-            'It should provide with a SQL clause condition on supplier column'
+            $message
         );
     }
 
@@ -261,14 +263,29 @@ class QueryParamsCollectionTest extends WebTestCase
      */
     public function getFilterParams()
     {
+        $supplierFilterMessage = 'It should provide with a SQL clause condition on supplier column';
+        $categoryFilterMessage = 'It should provide with a SQL clause condition on category column';
+
         return array(
             array(
                 array('supplier_id' => 1),
-                'AND {supplier_id} = :supplier_id'
+                'AND {supplier_id} = :supplier_id',
+                $supplierFilterMessage
             ),
             array(
                 array('supplier_id' => array(1, 2)),
-                'AND {supplier_id} IN (:supplier_id_0,:supplier_id_1)'
+                'AND {supplier_id} IN (:supplier_id_0,:supplier_id_1)',
+                $supplierFilterMessage
+            ),
+            array(
+                array('category_id' => 1),
+                'AND FIND_IN_SET({category_id}, :categories_ids)',
+                $categoryFilterMessage
+            ),
+            array(
+                array('category_id' => array(1, 2)),
+                'AND FIND_IN_SET({category_id}, :categories_ids)',
+                $categoryFilterMessage
             )
         );
     }
@@ -285,6 +302,7 @@ class QueryParamsCollectionTest extends WebTestCase
             'page_index',
             'page_size',
             'supplier_id',
+            'category_id',
         );
 
         array_walk($validQueryParams, function ($name) use ($testedParams, &$params) {
