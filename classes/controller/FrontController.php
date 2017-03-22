@@ -1464,7 +1464,7 @@ class FrontControllerCore extends Controller
         );
         foreach ($p as $page_name) {
             $index = str_replace('-', '_', $page_name);
-            $pages[$index] = $this->context->link->getPageLink($page_name, true);
+            $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
         }
         $pages['register'] = $this->context->link->getPageLink('authentication', true, null, array('create_account' => '1'));
         $pages['order_login'] = $this->context->link->getPageLink('order', true, null, array('login' => '1'));
