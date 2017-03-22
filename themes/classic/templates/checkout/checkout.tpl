@@ -48,6 +48,7 @@
     {/block}
 
     <section id="wrapper">
+      {hook h="displayWrapperTop"}
       <div class="container">
 
       {block name='content'}
@@ -70,6 +71,7 @@
         </section>
       {/block}
       </div>
+      {hook h="displayWrapperBottom"}
     </section>
 
     <footer id="footer">

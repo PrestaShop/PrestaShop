@@ -41,6 +41,26 @@
       <title>Right column blocks</title>
       <description>This hook displays new elements in the right-hand column</description>
     </hook>
+    <hook id="displayWrapperTop">
+      <name>displayWrapperTop</name>
+      <title>Main wrapper section (top)</title>
+      <description>This hook displays new elements in the top of the main wrapper</description>
+    </hook>
+    <hook id="displayWrapperBottom">
+      <name>displayWrapperBottom</name>
+      <title>Main wrapper section (bottom)</title>
+      <description>This hook displays new elements in the bottom of the main wrapper</description>
+    </hook>
+    <hook id="displayContentWrapperTop">
+      <name>displayContentWrapperTop</name>
+      <title>Content wrapper section (top)</title>
+      <description>This hook displays new elements in the top of the content wrapper</description>
+    </hook>
+    <hook id="displayContentWrapperBottom">
+      <name>displayContentWrapperBottom</name>
+      <title>Content wrapper section (bottom)</title>
+      <description>This hook displays new elements in the bottom of the content wrapper</description>
+    </hook>
     <hook id="displayLeftColumn">
       <name>displayLeftColumn</name>
       <title>Left column blocks</title>
