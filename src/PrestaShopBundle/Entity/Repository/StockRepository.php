@@ -338,9 +338,8 @@ class StockRepository
             IF (
                 COALESCE(pa.id_product_attribute, 0) > 0,
                 GROUP_CONCAT(
-                    CONCAT(agl.name, " - ", al.name)
-                  ORDER BY pa.id_product_attribute
-                  SEPARATOR ", "
+                    DISTINCT CONCAT(agl.name, " - ", al.name)
+                    SEPARATOR ", "
                 ),
                 "N/A"
             ) AS combination_name,
@@ -393,6 +392,9 @@ class StockRepository
                 pas.id_product_attribute = pa.id_product_attribute AND
                 pas.id_shop = :shop_id
             )
+            LEFT JOIN {table_prefix}category_product cp ON (
+                p.id_product = cp.id_product
+            )
             LEFT JOIN {table_prefix}attribute a ON (
                 a.id_attribute = pac.id_attribute
             )
@@ -408,9 +410,6 @@ class StockRepository
                 ag.id_attribute_group = agl.id_attribute_group
                 AND agl.id_lang = :language_id
                 AND LENGTH(TRIM(agl.name)) > 0
-            )
-            LEFT JOIN {table_prefix}category_product cp ON (
-                p.id_product = cp.id_product
             )
             {left_join}
             WHERE
