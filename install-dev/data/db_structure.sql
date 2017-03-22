@@ -1505,7 +1505,7 @@ CREATE TABLE `PREFIX_product_attribute` (
   KEY `product_attribute_product` (`id_product`),
   KEY `reference` (`reference`),
   KEY `supplier_reference` (`supplier_reference`),
-  UNIQUE KEY `product_default` (`id_product`,`default_on`),
+  KEY `product_default` (`id_product`,`default_on`), 
   KEY `id_product_id_product_attribute` (`id_product_attribute` , `id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
