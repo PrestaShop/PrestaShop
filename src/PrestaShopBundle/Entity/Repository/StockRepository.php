@@ -409,6 +409,9 @@ class StockRepository
                 AND agl.id_lang = :language_id
                 AND LENGTH(TRIM(agl.name)) > 0
             )
+            LEFT JOIN {table_prefix}category_product cp ON (
+                p.id_product = cp.id_product
+            )
             {left_join}
             WHERE
             ps.id_shop = :shop_id AND
@@ -495,13 +498,14 @@ class StockRepository
      */
     private function andWhere(QueryParamsCollection $queryParams)
     {
-        $filter = $queryParams->getSqlFilters();
-        $filter = strtr($filter, array(
+        $filters = $queryParams->getSqlFilters();
+        $filters = strtr($filters, array(
             '{product_id}' => 'p.id_product',
-            '{supplier_id}' => 'p.id_supplier'
+            '{supplier_id}' => 'p.id_supplier',
+            '{category_id}' => 'cp.id_category'
         ));
 
-        return $this->andWhereLimitingCombinationsPerProduct() . $filter;
+        return $this->andWhereLimitingCombinationsPerProduct() . $filters;
     }
 
     /**
@@ -550,7 +554,11 @@ class StockRepository
         $sqlParams = $queryParams->getSqlParams();
 
         foreach ($sqlParams as $name => $value) {
-            $statement->bindValue($name, $value, PDO::PARAM_INT);
+            if (is_int($value)) {
+                $statement->bindValue($name, $value, PDO::PARAM_INT);
+            } else {
+                $statement->bindValue($name, $value, PDO::PARAM_STR);
+            }
         }
     }
 

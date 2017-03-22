@@ -101,6 +101,16 @@ class StockControllerTest extends WebTestCase
             array('supplier_id' => array(1, 2), 'page_index' => 2, 'page_size' => 2),
             $expectedTotalPages = 23
         );
+        $this->assertOkResponseOnListProducts(
+            $routeName,
+            array('category_id' => 4, 'page_index' => 1, 'page_size' => 1),
+            $expectedTotalPages = 6
+        );
+        $this->assertOkResponseOnListProducts(
+            $routeName,
+            array('category_id' => array(4, 5), 'page_index' => 1, 'page_size' => 1),
+            $expectedTotalPages = 12
+        );
     }
 
     public function testListProductCombinationsAction()
@@ -116,6 +126,11 @@ class StockControllerTest extends WebTestCase
             $routeName,
             array('productId' => 7, 'page_index' => 1, 'page_size' => 2),
             $expectedTotalPages = 3
+        );
+        $this->assertOkResponseOnListProducts(
+            $routeName,
+            array('productId' => 1, 'category_id' => array(4, 5), 'page_index' => 1, 'page_size' => 1),
+            $expectedTotalPages = 6
         );
     }
 
