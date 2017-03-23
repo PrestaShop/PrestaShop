@@ -4,21 +4,6 @@ import * as types from './mutation-types';
 
 Vue.use(VueResource);
 
-export const sort = ({ commit, state }, payload) => {
-  let url = payload.url,
-      order = payload.order;
-
-  Vue.http.get(url, {
-    params: {
-      order
-    }
-  }).then((res) => {
-    commit(types.ADD_PRODUCTS, res.body);
-  }, function(error) {
-      return showGrowl('error', error.statusText);
-  });
-};
-
 export const updateQtyByProductId = ({ commit, state }, payload) => {
   let url = payload.url,
       delta = payload.delta;
@@ -52,10 +37,11 @@ export const getStock = ({ commit, state }, payload) => {
       page_size: payload.page_size,
       page_index: payload.page_index
     }
-  }).then(function(response){
-    if(response.status === 200) {
+  }).then(function(response) {
+      commit(types.SET_PAGE_INDEX, payload.page_index);
+      commit(types.UPDATE_ORDER, payload.order);
+      commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
       commit(types.ADD_PRODUCTS, response.body);
-    }
   }, function(error){
       return showGrowl('error', error.statusText);
   });

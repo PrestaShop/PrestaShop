@@ -11,13 +11,22 @@ const state = {
   products: [],
   productsToUpdate: [],
   hasQty: false,
-  order: 'product'
+  order: 'product',
+  pageIndex: 0,
+  totalPages : 0,
+  productsPerPage : 10
 };
 
 // getters are functions
 const getters = {
   hasQty(state) {
     return state.hasQty;
+  },
+  totalPages(state) {
+    return state.totalPages;
+  },
+  pageIndex(state) {
+    return state.pageIndex;
   }
 };
 

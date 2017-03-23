@@ -57,5 +57,11 @@ export default {
     }
 
     state.productsToUpdate.push(updatedProduct);
+  },
+  [types.SET_TOTAL_PAGES] (state, totalPages) {
+    state.totalPages = Number(totalPages);
+  },
+  [types.SET_PAGE_INDEX] (state, pageIndex) {
+    state.pageIndex = pageIndex;
   }
 };
