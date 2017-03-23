@@ -1229,7 +1229,7 @@ class LinkCore
             'id_shop' => null,
             'alias' => null,
             'ssl' => null,
-            'relative_protocol' => false,
+            'relative_protocol' => true,
         );
         $params = array_merge($default, $params);
 
