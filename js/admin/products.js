@@ -1053,7 +1053,7 @@ product_tabs['Informations'] = new function(){
 					addRelatedProduct(i[1], i[0]);
 				$(this).val('');
 			});
-		 addRelatedProduct(id_product_redirected, product_name_redirected);
+		 addRelatedProduct(id_type_redirected, product_name_redirected);
 	};
 
 	this.bindTagImage = function (){

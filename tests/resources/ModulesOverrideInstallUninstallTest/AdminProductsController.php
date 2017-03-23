@@ -3614,7 +3614,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $data->assign('default_form_language', $this->default_form_language);
         $data->assign('currency', $currency);
         $this->object = $product;
-        $data->assign('product_name_redirected', Product::getProductName((int)$product->id_product_redirected, null, (int)$this->context->language->id));
+        $data->assign('product_name_redirected', Product::getProductName((int)$product->id_type_redirected, null, (int)$this->context->language->id));
 
         $product_download = new ProductDownload();
         if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id'))) {
