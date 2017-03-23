@@ -11,13 +11,13 @@
         let desc = this.isDesc ? ' desc' : '';
 
         event.preventDefault();
-        this.$emit('sort');
 
-        this.$store.commit('UPDATE_ORDER', this.order);
-        this.$store.dispatch('sort', {
-          http: this.$http,
+        this.$emit('sort');
+        this.$store.dispatch('getStock', {
           url: apiRootUrl,
-          order: `${this.order}${desc}`
+          order: `${this.order}${desc}`,
+          page_size: this.$store.state.productsPerPage,
+          page_index: this.$store.getters.pageIndex
         });
       }
     }
