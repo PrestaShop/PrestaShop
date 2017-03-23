@@ -125,9 +125,13 @@ if (empty($upgrade->hasFailure())) {
 
 if ($upgrade->getInAutoUpgrade()) {
     header('Content-Type: application/json');
-    echo json_encode(array('nextQuickInfo' => $upgrade->getNextQuickInfo(), 'nextErrors' => $upgrade->getNextErrors(),
-                            'next' => $upgrade->getNext(), 'nextDesc' => $upgrade->getNextDesc(),
-                            'warningExists' => $upgrade->hasWarning()));
+    echo json_encode(array(
+        'nextQuickInfo' => $upgrade->getNextQuickInfo(),
+        'nextErrors' => $upgrade->getNextErrors(),
+        'next' => $upgrade->getNext(),
+        'nextDesc' => $upgrade->getNextDesc(),
+        'warningExists' => $upgrade->hasWarning(),
+    ));
 } else {
     header('Content-Type: text/xml');
     echo $result;
