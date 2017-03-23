@@ -124,7 +124,7 @@ class StockControllerTest extends WebTestCase
                 $expectedTotalPages = 23
             ),
             array(
-                array('category_id' => 4, 'page_index' => 1, 'page_size' => 1),
+                array('category_id' => 5, 'page_index' => 1, 'page_size' => 1),
                 $expectedTotalPages = 6
             ),
             array(
