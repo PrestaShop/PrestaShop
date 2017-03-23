@@ -7,6 +7,7 @@ GitHub contributors:
 - Adrien
 - Adrien Astier
 - Agence CINS
+- AlberT
 - Aleksander Palyan
 - Alessandro Corbelli
 - Alex Even
@@ -127,7 +128,9 @@ GitHub contributors:
 - Eric Rouvier
 - erickturcios
 - Etienne Samson
+- evertdtc
 - Fabio Chelly
+- fatmaBouchekoua
 - fchellypresta
 - Felipe Uribe
 - fetis
@@ -135,10 +138,11 @@ GitHub contributors:
 - firstred
 - flashmaestro
 - Florian Kwakkenbos
+- Flowster
 - fram
 - Francois Gaillard
 - Francois-Marie de Jouvencel
-- François Gaillard
+- FranÃ§ois Gaillard
 - Frederic BENOIST
 - Gabriel Arama
 - Gabriel Schwardy
@@ -213,6 +217,7 @@ GitHub contributors:
 - Kevin Granger
 - Kijam Lopez
 - kiropowered
+- kompilorb
 - kpodemski
 - Krystian Podemski
 - Kevin Dunglas
@@ -249,6 +254,7 @@ GitHub contributors:
 - MaX3315
 - Maxence
 - Maxime
+- Maxime - Vaisonet
 - Maxime Biloe
 - Maxime Vasse
 - mchelh
@@ -295,6 +301,7 @@ GitHub contributors:
 - panesarsandeep
 - Patanock
 - Patrick Mettraux
+- Patrick Weinstein
 - Pavel Novitsky
 - pbirnzain
 - Pedro J. Parra
@@ -372,6 +379,7 @@ GitHub contributors:
 - Stanislav Yordanov
 - Stefano Kowalke
 - Stephan Obadia
+- Steven
 - Steven "SDF" Sulley
 - Steven Sulley
 - Studio Kiwik
@@ -417,6 +425,7 @@ GitHub contributors:
 - Wayann
 - web-plus
 - webbax
+- webmak
 - Wojciech Grzebieniowski
 - Xavier
 - Xavier Borderie
