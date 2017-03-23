@@ -23,7 +23,7 @@
 <script>
 import PageIndex from './page-index';
   const DEFAULT_PAGES_NUMBER = 3;
-  const ACTIVE_MULTI_PAGINATION_NUMBER = 3;
+  const ACTIVE_MULTI_PAGINATION_NUMBER = 5;
   export default {
     computed: {
       pagesCount() {

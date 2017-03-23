@@ -49,7 +49,7 @@
           }
           return false;
         }
-        return false;
+        return true;
       },
       classObject() {
         return {
