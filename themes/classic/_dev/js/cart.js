@@ -120,7 +120,8 @@ $(document).ready(() => {
     event.preventDefault();
 
     let $target = $(event.currentTarget);
-
+    let dataset = event.currentTarget.dataset;
+    
     let cartAction = parseCartAction($target, event.namespace);
     let requestData = {
       ajax: '1',
@@ -146,7 +147,7 @@ $(document).ready(() => {
 
       // Refresh cart preview
       prestashop.emit('updateCart', {
-        reason: $target.dataset
+        reason: dataset
       });
     }).fail((resp) => {
       prestashop.emit('handleError', {
