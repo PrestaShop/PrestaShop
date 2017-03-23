@@ -360,7 +360,7 @@ class StockRepository
             )
             LEFT JOIN {table_prefix}stock_available sa ON (p.id_product = sa.id_product)
             LEFT JOIN {table_prefix}image ic ON (
-                pa.id_product = ic.id_product AND
+                p.id_product = ic.id_product AND
                 ic.cover = 1
             )
             LEFT JOIN {table_prefix}image_shop ims ON (
