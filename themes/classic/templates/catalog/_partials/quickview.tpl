@@ -33,7 +33,7 @@
      <div class="modal-body">
       <div class="row">
         <div class="col-md-6 col-sm-6 hidden-xs-down">
-          {block name='product_cover_tumbnails'}
+          {block name='product_cover_thumbnails'}
             {include file='catalog/_partials/product-cover-thumbnails.tpl'}
           {/block}
           <div class="arrows js-arrows">
