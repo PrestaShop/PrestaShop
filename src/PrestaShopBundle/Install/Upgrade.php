@@ -902,7 +902,7 @@ namespace PrestaShopBundle\Install {
             $this->next = 'DisableModules';
             $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
             $this->nextQuickInfo[] = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start disabling modules.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Disabling modules now...', array(), 'Install');
         }
 
         public function doDisableModules()
@@ -916,9 +916,9 @@ namespace PrestaShopBundle\Install {
             $this->disableIncompatibleModules();
 
             $this->next = 'EnableModules';
-            $this->nextDesc = $this->getTranslator()->trans('Disable modules completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Disable modules completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start enabling modules..', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Enabling modules now...', array(), 'Install');
         }
 
         public function doEnableModules()
@@ -929,9 +929,9 @@ namespace PrestaShopBundle\Install {
             $this->enableNativeModules();
 
             $this->next = 'UpdateImage';
-            $this->nextDesc = $this->getTranslator()->trans('Enable modules completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Enable modules completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start upgrading images.', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Modules successfully enabled.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully enabled.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading images now...', array(), 'Install');
         }
 
         public function doUpdateImage()
@@ -948,9 +948,9 @@ namespace PrestaShopBundle\Install {
             $this->cleanupOldDirectories();
 
             $this->next = 'UpdateLangHtaccess';
-            $this->nextDesc = $this->getTranslator()->trans('Upgrade images completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrade images completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start upgrading languages.', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Images successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Images successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading languages now...', array(), 'Install');
         }
 
         public function doUpdateLangHtaccess()
@@ -962,9 +962,9 @@ namespace PrestaShopBundle\Install {
             $this->updateHtaccess();
 
             $this->next = 'UpdateTheme';
-            $this->nextDesc = $this->getTranslator()->trans('Upgrade languages completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrade languages completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start upgrading theme.', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Languages successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Languages successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading theme now...', array(), 'Install');
         }
 
         public function doUpdateTheme()
@@ -977,8 +977,8 @@ namespace PrestaShopBundle\Install {
             }
 
             $this->next = 'UpgradeComplete';
-            $this->nextDesc = $this->getTranslator()->trans('Upgrade theme completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrade theme completed.', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Theme successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Theme successfully upgraded.', array(), 'Install');
         }
 
         public function getTranslator()
