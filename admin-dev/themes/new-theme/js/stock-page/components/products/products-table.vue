@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-        <ProductLine v-for="product in products" :key="product.product_key" :product="product" />
+      <ProductLine v-for="product in products" :key="product.product_key" :product="product" />
     </tbody>
   </table>
 </template>
@@ -33,7 +33,15 @@
     },
     computed: {
       products() {
+        let productId;
         return this.$store.state.products.filter((product)=> {
+          if(productId !== product.product_id && product.combination_id !== 0) {
+            productId = product.product_id;
+            product.hasCombination = true;
+          }
+          else if(product.combination_id === 0) {
+            product.hasCombination = false;
+          }
           product.product_key = `${product.product_id}-${product.combination_id}`;
           return product;
         });
@@ -62,7 +70,7 @@
           vertical-align: middle;
         }
         &.thead-title {
-          padding-left: 100px;
+          padding-left: 97px;
         }
         &:last-child {
           .material-icons {
