@@ -338,7 +338,7 @@ class AdminThemesControllerCore extends AdminController
                     $this->confirmations[] = $this->trans(
                         'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'Regenerate thumbnails\' button.',
                         array(),
-                        'Admin.Design.Notifications'
+                        'Admin.Design.Notification'
                     );
                 }
             }
@@ -351,7 +351,7 @@ class AdminThemesControllerCore extends AdminController
                     array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
                 || _PS_MODE_DEMO_
             ) {
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'); 
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 $this->redirect_after = self::$currentIndex.'&token='.$this->token.'&error';
             } else {
                 Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
