@@ -6,7 +6,7 @@
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
         <note>Context:
-File: classes/Customer.php:1121</note>
+File: classes/Customer.php:1128</note>
       </trans-unit>
     </body>
   </file>

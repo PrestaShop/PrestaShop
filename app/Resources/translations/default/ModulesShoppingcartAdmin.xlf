@@ -18,19 +18,19 @@ File: modules/ps_shoppingcart/ps_shoppingcart.php:49</note>
         <source>Ajax: Invalid choice.</source>
         <target>Ajax: Invalid choice.</target>
         <note>Context:
-File: modules/ps_shoppingcart/ps_shoppingcart.php:124</note>
+File: modules/ps_shoppingcart/ps_shoppingcart.php:127</note>
       </trans-unit>
       <trans-unit id="614a8820aa4ac08ce2ee398a41b10778">
         <source>Ajax cart</source>
         <target>Ajax cart</target>
         <note>Context:
-File: modules/ps_shoppingcart/ps_shoppingcart.php:153</note>
+File: modules/ps_shoppingcart/ps_shoppingcart.php:156</note>
       </trans-unit>
       <trans-unit id="eefd19ecf1f6d94a308dcfc95981bbf9">
         <source>Activate Ajax mode for the cart (compatible with the default theme).</source>
         <target>Activate Ajax mode for the cart (compatible with the default theme).</target>
         <note>Context:
-File: modules/ps_shoppingcart/ps_shoppingcart.php:156</note>
+File: modules/ps_shoppingcart/ps_shoppingcart.php:159</note>
       </trans-unit>
     </body>
   </file>

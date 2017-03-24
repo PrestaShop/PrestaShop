@@ -6,13 +6,13 @@
         <source>Manage installed modules</source>
         <target>Manage installed modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:210</note>
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:249</note>
       </trans-unit>
       <trans-unit id="17e0ca27e686200d42e478e2457052aa">
         <source>Module notifications</source>
         <target>Module notifications</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:352</note>
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:408</note>
       </trans-unit>
     </body>
   </file>
@@ -28,7 +28,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.ht
         <source>Drop your module archive here or [1]select file[/1]</source>
         <target>Drop your module archive here or [1]select file[/1]</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:40</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:51</note>
       </trans-unit>
     </body>
   </file>
@@ -40,29 +40,29 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.ht
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:31</note>
       </trans-unit>
-      <trans-unit id="33e8cfd68f4d54f065ea5004863b9c57">
-        <source>Link your shop to your Addons account: it will automatically import the modules you purchased. Don't have an account yet?</source>
-        <target>Link your shop to your Addons account: it will automatically import the modules you purchased. Don't have an account yet?</target>
+      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
+        <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
+        <target>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:37</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:48</note>
       </trans-unit>
       <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
         <source>Sign up now</source>
         <target>Sign up now</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:38</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:49</note>
       </trans-unit>
       <trans-unit id="b09249132bbed9baecd987cf73200b44">
         <source>Confirm logout</source>
         <target>Confirm logout</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:72</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:84</note>
       </trans-unit>
       <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
         <source>Yes, log out</source>
         <target>Yes, log out</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:85</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:97</note>
       </trans-unit>
     </body>
   </file>
@@ -72,13 +72,13 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_co
         <source>Discover</source>
         <target>Discover</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig:38</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig:39</note>
       </trans-unit>
       <trans-unit id="90406afefae30826692e7f7480f7467c">
         <source>Toggle Dropdown</source>
         <target>Toggle Dropdown</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig:53</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig:55</note>
       </trans-unit>
     </body>
   </file>
@@ -276,25 +276,25 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_b
         <source>%nbModules% modules to configure</source>
         <target>%nbModules% modules to configure</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:53</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:52</note>
       </trans-unit>
       <trans-unit id="34c81422df0c92bb4d72f8629cc53f03">
         <source>%nbModules% modules to update</source>
         <target>%nbModules% modules to update</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:63</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:62</note>
       </trans-unit>
       <trans-unit id="1f39a37212f03c5976e447cb62975024">
         <source>Modules to configure</source>
         <target>Modules to configure</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:55</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:54</note>
       </trans-unit>
       <trans-unit id="0c81f6a8e4b7b1d0a812d7285289f17d">
         <source>Modules to update</source>
         <target>Modules to update</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:65</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:64</note>
       </trans-unit>
     </body>
   </file>
@@ -338,55 +338,55 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.tw
         <source>Enable Mobile</source>
         <target>Enable Mobile</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:62</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:63</note>
       </trans-unit>
       <trans-unit id="038bd38b5172a9ba90468070bdc4d4f3">
         <source>Disable Mobile</source>
         <target>Disable Mobile</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:63</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:64</note>
       </trans-unit>
       <trans-unit id="f1be55e10a484bdeb7e4eae576688474">
         <source>Last access</source>
         <target>Last access</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:70</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:72</note>
       </trans-unit>
       <trans-unit id="569d3b53006c4d5f2fe09b382328e725">
         <source>%nbModules% installed modules</source>
         <target>%nbModules% installed modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:79</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:81</note>
       </trans-unit>
       <trans-unit id="f388bc3eaa4b9f72756a75693a12559d">
         <source>Installed modules</source>
         <target>Installed modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:81</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:83</note>
       </trans-unit>
       <trans-unit id="cdc838df9e648679a5682d40a8821433">
         <source>%nbModules% built-in modules</source>
         <target>%nbModules% built-in modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:90</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:92</note>
       </trans-unit>
       <trans-unit id="c3e9a12b3f77d1220ac8f84f2281bf3e">
         <source>Built-in modules</source>
         <target>Built-in modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:92</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:94</note>
       </trans-unit>
       <trans-unit id="11b4a2fbc6291c7f6a4b757050332a64">
         <source>%nbModules% theme modules</source>
         <target>%nbModules% theme modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:101</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:103</note>
       </trans-unit>
       <trans-unit id="f44ba76b3113bb0f0fcbd52ab002e924">
         <source>Theme modules</source>
         <target>Theme modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:103</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:105</note>
       </trans-unit>
     </body>
   </file>

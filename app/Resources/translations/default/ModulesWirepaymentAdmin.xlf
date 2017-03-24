@@ -104,13 +104,9 @@ File: modules/ps_wirepayment/ps_wirepayment.php:330</note>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:335</note>
       </trans-unit>
-      <trans-unit id="75862d7a734d2c0129798ef6a850409a">
-        <source>Your country's legislation may require you to send the invitation 
-                            to pay by email only. Disabling the option will hide the invitation 
-                            on the confirmation page.</source>
-        <target>Your country's legislation may require you to send the invitation 
-                            to pay by email only. Disabling the option will hide the invitation 
-                            on the confirmation page.</target>
+      <trans-unit id="b8a891b1e28c2049da81774493d8779c">
+        <source>Your country's legislation may require you to send the invitation to pay by email only. Disabling the option will hide the invitation on the confirmation page.</source>
+        <target>Your country's legislation may require you to send the invitation to pay by email only. Disabling the option will hide the invitation on the confirmation page.</target>
         <note>Context:
 File: modules/ps_wirepayment/ps_wirepayment.php:338</note>
       </trans-unit>

@@ -138,12 +138,6 @@ File: install-dev/controllers/http/configure.php:264</note>
         <note>Context:
 File: install-dev/controllers/http/configure.php:85</note>
       </trans-unit>
-      <trans-unit id="989a45a4ca01ee222f4370172bf8850d">
-        <source>Invalid shop name</source>
-        <target>Invalid shop name</target>
-        <note>Context:
-File: install-dev/controllers/http/configure.php:91</note>
-      </trans-unit>
       <trans-unit id="ab141dcb233ea3357d0a86584ff65a49">
         <source>shop name</source>
         <target>shop name</target>
@@ -155,12 +149,6 @@ File: install-dev/controllers/http/configure.php:93</note>
         <target>The field %field% is limited to %limit% characters</target>
         <note>Context:
 File: install-dev/controllers/http/configure.php:106</note>
-      </trans-unit>
-      <trans-unit id="68499acecfba9d3bf0ca8711f300d3ed">
-        <source>Your firstname contains some invalid characters</source>
-        <target>Your firstname contains some invalid characters</target>
-        <note>Context:
-File: install-dev/controllers/http/configure.php:98</note>
       </trans-unit>
       <trans-unit id="342f5c77ed008542e78094607ce1f7f3">
         <source>firstname</source>
@@ -179,12 +167,6 @@ File: install-dev/controllers/http/configure.php:104</note>
         <target>lastname</target>
         <note>Context:
 File: install-dev/controllers/http/configure.php:106</note>
-      </trans-unit>
-      <trans-unit id="89605cda87edd2daeebbe3534b7beb0d">
-        <source>The password is incorrect (must be alphanumeric string with at least 8 characters)</source>
-        <target>The password is incorrect (must be alphanumeric string with at least 8 characters)</target>
-        <note>Context:
-File: install-dev/controllers/http/configure.php:112</note>
       </trans-unit>
       <trans-unit id="74d36cb95a84f88728b3d69678aba185">
         <source>The password and its confirmation are different</source>
@@ -313,6 +295,34 @@ File: install-dev/classes/controllerHttp.php:420</note>
         <target>http://docs.prestashop.com/display/PS16/Updating+PrestaShop</target>
         <note>Context:
 File: install-dev/classes/controllerHttp.php:425</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/autoupgrade/AdminSelfUpgrade.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="989a45a4ca01ee222f4370172bf8850d">
+        <source>Invalid shop name</source>
+        <target>Invalid shop name</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfUpgrade.php:4080</note>
+      </trans-unit>
+      <trans-unit id="68499acecfba9d3bf0ca8711f300d3ed">
+        <source>Your firstname contains some invalid characters</source>
+        <target>Your firstname contains some invalid characters</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfUpgrade.php:4079</note>
+      </trans-unit>
+      <trans-unit id="89605cda87edd2daeebbe3534b7beb0d">
+        <source>The password is incorrect (must be alphanumeric string with at least 8 characters)</source>
+        <target>The password is incorrect (must be alphanumeric string with at least 8 characters)</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfUpgrade.php:4058</note>
+      </trans-unit>
+      <trans-unit id="7d72600fcff52fb3a2d2f73572117311">
+        <source>Your database server does not support the utf-8 charset.</source>
+        <target>Your database server does not support the utf-8 charset.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfUpgrade.php:4081</note>
       </trans-unit>
     </body>
   </file>
@@ -1145,6 +1155,12 @@ File: install-dev/theme/views/welcome.php:56</note>
   </file>
   <file original="src/PrestaShopBundle/Install/Database.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="7433acfc71c103b95ddc7f861ecd55ee">
+        <source>At least one table with same prefix was already found, please change your prefix or drop your database</source>
+        <target>At least one table with same prefix was already found, please change your prefix or drop your database</target>
+        <note>Context:
+File: src/PrestaShopBundle/Install/Database.php:79</note>
+      </trans-unit>
       <trans-unit id="0e29192ae1f901f7c586dbe2e163324e">
         <source>Server name is not valid</source>
         <target>Server name is not valid</target>
@@ -1174,12 +1190,6 @@ File: src/PrestaShopBundle/Install/Database.php:65</note>
         <target>Cannot convert database data to utf-8</target>
         <note>Context:
 File: src/PrestaShopBundle/Install/Database.php:74</note>
-      </trans-unit>
-      <trans-unit id="7433acfc71c103b95ddc7f861ecd55ee">
-        <source>At least one table with same prefix was already found, please change your prefix or drop your database</source>
-        <target>At least one table with same prefix was already found, please change your prefix or drop your database</target>
-        <note>Context:
-File: src/PrestaShopBundle/Install/Database.php:79</note>
       </trans-unit>
       <trans-unit id="00151f099adaa8a1ad25dff0862b121b">
         <source>The values of auto_increment increment and offset must be set to 1</source>
@@ -1377,13 +1387,13 @@ File: src/PrestaShopBundle/Install/Upgrade.php:317</note>
         <source>Warning detected during upgrade.</source>
         <target>Warning detected during upgrade.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:929</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:934</note>
       </trans-unit>
       <trans-unit id="bd077be8e2cdf937e5b77300a0131f9a">
         <source>Error detected during upgrade.</source>
         <target>Error detected during upgrade.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:959</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:964</note>
       </trans-unit>
     </body>
   </file>

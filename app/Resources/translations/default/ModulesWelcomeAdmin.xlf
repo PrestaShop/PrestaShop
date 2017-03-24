@@ -38,9 +38,9 @@ File: modules/welcome/OnBoarding/Configuration.php:86</note>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:93</note>
       </trans-unit>
-      <trans-unit id="31514171f411824690bb82b8ca1346ae">
-        <source>How much do you want to sell it?</source>
-        <target>How much do you want to sell it?</target>
+      <trans-unit id="69168bfbea070ea2d4d311cef7c4c39a">
+        <source>How much do you want to sell it for?</source>
+        <target>How much do you want to sell it for?</target>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:100</note>
       </trans-unit>

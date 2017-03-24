@@ -62,7 +62,7 @@ File: controllers/front/OrderSlipController.php:47</note>
         <source>This product is not visible to your customers.</source>
         <target>This product is not visible to your customers.</target>
         <note>Context:
-File: controllers/front/ProductController.php:101</note>
+File: controllers/front/ProductController.php:109</note>
       </trans-unit>
     </body>
   </file>

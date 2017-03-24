@@ -6,7 +6,7 @@
         <source>%1$s (tax incl.)</source>
         <target>%1$s (tax incl.)</target>
         <note>Context:
-File: modules/ps_wirepayment/ps_wirepayment.php:409</note>
+File: modules/ps_wirepayment/ps_wirepayment.php:407</note>
       </trans-unit>
     </body>
   </file>
@@ -112,9 +112,9 @@ File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:43</note>
   </file>
   <file original="modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="05315ffcbe0c379bbbe8c978283ba66c">
-        <source>Please transfer the invoice amount to our bank account. You will receive our order confirmation per email containing bank details and order number.</source>
-        <target>Please transfer the invoice amount to our bank account. You will receive our order confirmation per email containing bank details and order number.</target>
+      <trans-unit id="c8ad6f14cf0f4c6de65b92737b096c37">
+        <source>Please transfer the invoice amount to our bank account. You will receive our order confirmation by email containing bank details and order number.</source>
+        <target>Please transfer the invoice amount to our bank account. You will receive our order confirmation by email containing bank details and order number.</target>
         <note>Context:
 File: modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl:28</note>
       </trans-unit>

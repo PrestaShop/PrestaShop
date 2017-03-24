@@ -236,193 +236,193 @@ File: controllers/admin/AdminFeaturesController.php:258</note>
         <source>Number of days this file can be accessed by customers. Set to zero for unlimited access.</source>
         <target>Number of days this file can be accessed by customers. Set to zero for unlimited access.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:454</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:457</note>
       </trans-unit>
       <trans-unit id="bb03c14d14caa07e21f97cbe5eab022d">
         <source>Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?</source>
         <target>Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:49</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:50</note>
       </trans-unit>
       <trans-unit id="0745d3d4082ad910137e24fd2901ca63">
         <source>Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?</source>
         <target>Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:255</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:258</note>
       </trans-unit>
       <trans-unit id="0a4595dd800cb3338d233a177f422758">
         <source>Advanced settings in [1][2]Combinations[/1]</source>
         <target>Advanced settings in [1][2]Combinations[/1]</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:271</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:274</note>
       </trans-unit>
       <trans-unit id="01cfe41b8ece41634e85248382166271">
         <source>Your reference code for this product. Allowed special characters: .-_#.</source>
         <target>Your reference code for this product. Allowed special characters: .-_#.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:282</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:285</note>
       </trans-unit>
       <trans-unit id="e2c7ed083cb894812fb5d2539f5e7ecb">
         <source>How many products should be available for sale?</source>
         <target>How many products should be available for sale?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:297</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:300</note>
       </trans-unit>
       <trans-unit id="5e8b5ad38b1c0a76d41c2ebaa74c11f5">
         <source>Advanced settings in [1][2]Quantities[/1]</source>
         <target>Advanced settings in [1][2]Quantities[/1]</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:307</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:310</note>
       </trans-unit>
       <trans-unit id="1423e14cddc8aa38062c77d9b8fe8910">
         <source>This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</source>
         <target>This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:316</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:319</note>
       </trans-unit>
       <trans-unit id="143cb6dd5281d68859217704ad9c9f60">
         <source>Advanced settings in [1][2]Pricing[/1]</source>
         <target>Advanced settings in [1][2]Pricing[/1]</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:336</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:339</note>
       </trans-unit>
       <trans-unit id="dbcf3c5f67528da5cf59dc0c042748da">
         <source>Upload a file from your computer (%maxUploadSize% max.)</source>
         <target>Upload a file from your computer (%maxUploadSize% max.)</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:413</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:416</note>
       </trans-unit>
       <trans-unit id="c312034c9f17a264365e734de442ca0a">
         <source>The full filename with its extension (e.g. Book.pdf)</source>
         <target>The full filename with its extension (e.g. Book.pdf)</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:427</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:430</note>
       </trans-unit>
       <trans-unit id="48da1c11d36bd8b34f13821e996c7f97">
         <source>Number of downloads allowed per customer. Set to 0 for unlimited downloads.</source>
         <target>Number of downloads allowed per customer. Set to 0 for unlimited downloads.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:436</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:439</note>
       </trans-unit>
       <trans-unit id="f049153f2c655d6d1ebd123f04b432cf">
         <source>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</source>
         <target>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:445</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:448</note>
       </trans-unit>
       <trans-unit id="a4a8ceb87fae812bfac552e0169bb0f9">
         <source>This is the price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</source>
         <target>This is the price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:533</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:536</note>
       </trans-unit>
       <trans-unit id="b9c6e3712398e2df7d3ebd7ccc7d5132">
         <source>Some products can be purchased by unit (per bottle, per pound, etc.),  and this is the price for one unit. For instance, if you’re selling fabrics, it would be the price per meter.</source>
         <target>Some products can be purchased by unit (per bottle, per pound, etc.),  and this is the price for one unit. For instance, if you’re selling fabrics, it would be the price per meter.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:555</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:558</note>
       </trans-unit>
       <trans-unit id="eee67d763dcf287ca5d096650341f387">
         <source>The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.</source>
         <target>The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:613</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:616</note>
       </trans-unit>
       <trans-unit id="959f5f13ee3cc4199a335d1738351596">
         <source>You can set specific prices for customers belonging to different groups, different countries, etc.</source>
         <target>You can set specific prices for customers belonging to different groups, different countries, etc.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:630</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:633</note>
       </trans-unit>
       <trans-unit id="fbade15b99b07c58fab7be777c0f4c0c">
         <source>Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.</source>
         <target>Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:671</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:674</note>
       </trans-unit>
       <trans-unit id="6fcccfb9dbed970c59c18752f6372703">
         <source>Tags are meant to help your customers find your products via the search bar.</source>
         <target>Tags are meant to help your customers find your products via the search bar.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:776</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:779</note>
       </trans-unit>
       <trans-unit id="cfd69f4f64142b71ff1ddd21b0053026">
         <source>Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.</source>
         <target>Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:782</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:785</note>
       </trans-unit>
       <trans-unit id="76f1497b5e58d9f2eeab769bf2d8a7e8">
         <source>You can manage tag aliases in the [1]Search section[/1].</source>
         <target>You can manage tag aliases in the [1]Search section[/1].</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:783</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:786</note>
       </trans-unit>
       <trans-unit id="19f31a842add8b13595ddb3a41a1ff27">
         <source>Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.</source>
         <target>Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:805</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:808</note>
       </trans-unit>
       <trans-unit id="633bf9436b67e19cd61db84ccab7fee2">
         <source>ISBN is used internationally to identify books and their various editions.</source>
         <target>ISBN is used internationally to identify books and their various editions.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:820</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:823</note>
       </trans-unit>
       <trans-unit id="39bd7eba8aa2033579b5ae60bf0c774d">
         <source>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</source>
         <target>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:840</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:843</note>
       </trans-unit>
       <trans-unit id="548f88021c5b960f7eccd9ee81871aad">
         <source>Permanently delete this product.</source>
         <target>Permanently delete this product.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1034</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1036</note>
       </trans-unit>
       <trans-unit id="94e4259ad6f05c74b84eb6cca4d60ce6">
         <source>See how your product sheet will look online: ALT+SHIFT+V</source>
         <target>See how your product sheet will look online: ALT+SHIFT+V</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1045</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1047</note>
       </trans-unit>
       <trans-unit id="ad7478afcd575d882738a42546bc041a">
         <source>Enable or disable the product on your shop: ALT+SHIFT+O</source>
         <target>Enable or disable the product on your shop: ALT+SHIFT+O</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1051</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1053</note>
       </trans-unit>
       <trans-unit id="f6f3f97a2cc75185959029650ba280df">
         <source>Enable or disable the product on your shop: ALT+SHIFT+0</source>
         <target>Enable or disable the product on your shop: ALT+SHIFT+0</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1053</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1055</note>
       </trans-unit>
       <trans-unit id="ac6f66dc450bc768229c1329aa7a48b1">
         <source>Save and duplicate this product, then go to the new product: ALT+SHIFT+D</source>
         <target>Save and duplicate this product, then go to the new product: ALT+SHIFT+D</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1072</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1074</note>
       </trans-unit>
       <trans-unit id="b110e989a1143b7f44cd5691324d4d11">
         <source>Save and go back to the catalog: ALT+SHIFT+Q</source>
         <target>Save and go back to the catalog: ALT+SHIFT+Q</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1083</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1085</note>
       </trans-unit>
       <trans-unit id="37163a2847189335a934c83e8ae32677">
         <source>Save and create a new product: ALT+SHIFT+P</source>
         <target>Save and create a new product: ALT+SHIFT+P</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1093</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1095</note>
       </trans-unit>
       <trans-unit id="82e3cb7a4be4e299701a182197dc9410">
         <source>Save the product and stay on the current page: ALT+SHIFT+S</source>
         <target>Save the product and stay on the current page: ALT+SHIFT+S</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1103</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1105</note>
       </trans-unit>
     </body>
   </file>
@@ -494,7 +494,7 @@ File: controllers/admin/AdminSuppliersController.php:259</note>
         <source>Create a new product: CTRL+P</source>
         <target>Create a new product: CTRL+P</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:150</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:159</note>
       </trans-unit>
     </body>
   </file>
@@ -582,12 +582,6 @@ File: src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php:120</note>
         <note>Context:
 File: src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php:122</note>
       </trans-unit>
-      <trans-unit id="dc993c8a49109ab7d15888100269b593">
-        <source>To which page this should redirect?</source>
-        <target>To which page this should redirect?</target>
-        <note>Context:
-File: src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php:129</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -636,9 +630,9 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_combinatio
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ecf292198d87edc71a8abc2e05fd50e8">
-        <source>Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics</source>
-        <target>Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics</target>
+      <trans-unit id="61010671991185f436b35030f599d327">
+        <source>Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics.</source>
+        <target>Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics.</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:27</note>
       </trans-unit>

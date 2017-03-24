@@ -664,7 +664,7 @@ File: classes/lang/TabLang.php:164</note>
         <source>Module selection</source>
         <target>Module selection</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:55</note>
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:77</note>
       </trans-unit>
     </body>
   </file>

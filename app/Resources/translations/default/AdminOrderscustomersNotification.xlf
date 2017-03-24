@@ -6,13 +6,13 @@
         <source>The message was successfully sent to the customer.</source>
         <target>The message was successfully sent to the customer.</target>
         <note>Context:
-File: classes/controller/AdminController.php:445</note>
+File: classes/controller/AdminController.php:457</note>
       </trans-unit>
       <trans-unit id="1923e1e610686f1182bf54f573b86921">
         <source>A partial refund was successfully created.</source>
         <target>A partial refund was successfully created.</target>
         <note>Context:
-File: classes/controller/AdminController.php:465</note>
+File: classes/controller/AdminController.php:477</note>
       </trans-unit>
     </body>
   </file>
@@ -22,7 +22,7 @@ File: classes/controller/AdminController.php:465</note>
         <source>Invalid email</source>
         <target>Invalid email</target>
         <note>Context:
-File: classes/Customer.php:497</note>
+File: classes/Customer.php:504</note>
       </trans-unit>
     </body>
   </file>
@@ -220,9 +220,9 @@ File: controllers/admin/AdminCustomerThreadsController.php:1079</note>
         <note>Context:
 File: controllers/admin/AdminCustomerThreadsController.php:1144</note>
       </trans-unit>
-      <trans-unit id="6f8d988d7fc3f73275e41d094be65a29">
-        <source>Invalid Message Content for subject: %1s</source>
-        <target>Invalid Message Content for subject: %1s</target>
+      <trans-unit id="5d1cbbd2b78574a8cfac676d8bdb9ea4">
+        <source>Invalid message content for subject: %s</source>
+        <target>Invalid message content for subject: %s</target>
         <note>Context:
 File: controllers/admin/AdminCustomerThreadsController.php:1151</note>
       </trans-unit>

@@ -128,23 +128,17 @@ File: classes/lang/OrderStateLang.php:68</note>
         <note>Context:
 File: classes/lang/OrderStateLang.php:71</note>
       </trans-unit>
-      <trans-unit id="3f8b9ac96b5d5eaf899819990ac613fe">
-        <source>Awaiting PayPal payment</source>
-        <target>Awaiting PayPal payment</target>
-        <note>Context:
-File: classes/lang/OrderStateLang.php:74</note>
-      </trans-unit>
       <trans-unit id="9517f3495b0036d25cbc455c592ea868">
         <source>Remote payment accepted</source>
         <target>Remote payment accepted</target>
         <note>Context:
-File: classes/lang/OrderStateLang.php:77</note>
+File: classes/lang/OrderStateLang.php:74</note>
       </trans-unit>
       <trans-unit id="51ebf726bac579d61910a5425e3128c5">
         <source>Awaiting Cash On Delivery validation</source>
         <target>Awaiting Cash On Delivery validation</target>
         <note>Context:
-File: classes/lang/OrderStateLang.php:80</note>
+File: classes/lang/OrderStateLang.php:77</note>
       </trans-unit>
     </body>
   </file>
