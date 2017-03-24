@@ -314,7 +314,6 @@ namespace PrestaShopBundle\Install {
             Language::loadLanguages();
 
             $this->translator = Context::getContext()->getTranslator();
-            $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
         }
 
         private function getConfValue($name)
@@ -885,6 +884,103 @@ namespace PrestaShopBundle\Install {
             }
         }
 
+        public function doUpgradeDb()
+        {
+            \Tools::clearAllCache();
+
+            $this->defineConst();
+            $this->initContext();
+            $this->checkVersion();
+
+            $sqlContentVersion = $this->getSQLFiles();
+
+            if (!$this->hasFailure()) {
+                $this->upgradeDb($sqlContentVersion);
+                $this->upgradeDoctrineSchema();
+            }
+
+            $this->next = 'DisableModules';
+            $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start disabling modules.', array(), 'Install');
+        }
+
+        public function doDisableModules()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            if ($this->disableCustomModules) {
+                $this->disableCustomModules();
+            }
+            $this->disableIncompatibleModules();
+
+            $this->next = 'EnableModules';
+            $this->nextDesc = $this->getTranslator()->trans('Disable modules completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Disable modules completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start enabling modules..', array(), 'Install');
+        }
+
+        public function doEnableModules()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            $this->enableNativeModules();
+
+            $this->next = 'UpdateImage';
+            $this->nextDesc = $this->getTranslator()->trans('Enable modules completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Enable modules completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start upgrading images.', array(), 'Install');
+        }
+
+        public function doUpdateImage()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            $this->cleanCache();
+
+            $this->updateDbImagesLegacy();
+            if ($this->updateDefaultTheme) {
+                $this->cleanDefaultThemeCache();
+            }
+            $this->cleanupOldDirectories();
+
+            $this->next = 'UpdateLangHtaccess';
+            $this->nextDesc = $this->getTranslator()->trans('Upgrade images completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrade images completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start upgrading languages.', array(), 'Install');
+        }
+
+        public function doUpdateLangHtaccess()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            $this->updateLangs();
+            $this->updateHtaccess();
+
+            $this->next = 'UpdateTheme';
+            $this->nextDesc = $this->getTranslator()->trans('Upgrade languages completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrade languages completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Now start upgrading theme.', array(), 'Install');
+        }
+
+        public function doUpdateTheme()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            if ($this->idEmployee) {
+                $this->updateTheme();
+            }
+
+            $this->next = 'UpgradeComplete';
+            $this->nextDesc = $this->getTranslator()->trans('Upgrade theme completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrade theme completed.', array(), 'Install');
+        }
+
         public function getTranslator()
         {
             return $this->translator;
@@ -893,8 +989,7 @@ namespace PrestaShopBundle\Install {
         public function logInfo($quickInfo, $id = null,
                                 $transVariables = array(), $dbInfo = false)
         {
-            $info = $this->getTranslator()->trans($quickInfo, $transVariables,
-                'Install.Upgrade.Error');
+            $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {
                     $this->nextQuickInfo[] = '<div class="upgradeDbOk">' . $info . '</div>';
@@ -920,8 +1015,7 @@ namespace PrestaShopBundle\Install {
         public function logWarning($quickInfo, $id,
                                    $transVariables = array(), $dbInfo = false)
         {
-            $info = $this->getTranslator()->trans($quickInfo, $transVariables,
-                'Install.Upgrade.Error');
+            $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {
                     $this->nextQuickInfo[] = '<div class="upgradeDbError">' . $info . '</div>';
@@ -951,8 +1045,7 @@ namespace PrestaShopBundle\Install {
         public function logError($quickInfo, $id,
                                  $transVariables = array(), $dbInfo = false)
         {
-            $info = $this->getTranslator()->trans($quickInfo, $transVariables,
-                'Install.Upgrade.Error');
+            $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {
                     $this->nextQuickInfo[] = '<div class="upgradeDbError">' . $info . '</div>';
