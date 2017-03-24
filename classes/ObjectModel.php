@@ -675,10 +675,20 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
                 // A little explanation of what we do here : we want to create multishop entry when update is called, but
                 // only if we are in a shop context (if we are in all context, we just want to update entries that alread exists)
                 $shop_exists = Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where);
+
+                $display_multishop_checkboxes = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP;
+
                 if ($shop_exists) {
-                    $result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
+                    if ($display_multishop_checkboxes) {
+                        foreach ($fields as $key => $val) {
+                            if (!array_key_exists($key, $this->update_fields)) {
+                                unset($fields[$key]);
+                            }
+                        }
+                    }
+                    $result &= Db::getInstance()->update($this->def['table'] . '_shop', $fields, $where, 0, $null_values);
                 } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
-                    $result &= Db::getInstance()->insert($this->def['table'].'_shop', $all_fields, $null_values);
+                    $result &= Db::getInstance()->insert($this->def['table'] . '_shop', $all_fields, $null_values);
                 }
             }
         }
