@@ -97,4 +97,7 @@
       font-size: 20px
     }
   }
+  .d-inline {
+    display: inline;
+  }
 </style>

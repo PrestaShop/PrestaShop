@@ -1,12 +1,15 @@
 <template>
-  <tr>
+  <tr v-if="product.hasCombination" class="has-combination">
+    <td class="product-desc" colspan="4">
+      <ProductDesc :name="product.product_name" :thumbnail="product.combination_thumbnail" />
+    </td>
+    <td colspan="3">
+    </td>
+  </tr>
+  <tr v-else>
     <td>
       <input type="checkbox" class="m-r-1">
-      <img v-if="imagePath" :src="imagePath" class="thumbnail" />
-      <div v-else class="no-img">
-
-      </div>
-      <span class="m-l-1">{{ product.product_name }}</span>
+      <ProductDesc :name="productName" :thumbnail="product.combination_thumbnail" :class="productDescClass" :isCombination="isCombination" />
     </td>
     <td>
       {{ product.product_reference }}
@@ -39,15 +42,24 @@
 
 <script>
   import Spinner from './spinner';
+  import ProductDesc from './product/product-desc';
 
   export default {
     props: ['product'],
     computed: {
-      imagePath() {
-        if(this.product.combination_thumbnail !== 'N/A') {
-          return `${data.baseUrl}/${this.product.combination_thumbnail}`;
+      isCombination() {
+        return !!this.product.combination_id
+      },
+      productDescClass() {
+        return  {
+          'is-combination': this.isCombination
         }
-        return null;
+      },
+      productName() {
+        if(this.product.combination_id !== 0) {
+          return this.product.combination_name;
+        }
+        return this.product.product_name;
       },
       updatedQty() {
         return !!this.product.qty;
@@ -63,7 +75,8 @@
       }
     },
     components: {
-      Spinner
+      Spinner,
+      ProductDesc
     }
   }
 </script>
@@ -84,6 +97,12 @@
     color: $brand-primary;
     .material-icons {
       vertical-align: middle;
+    }
+  }
+  .has-combination {
+    background: $notice;
+    .product-desc {
+      padding-left : 35px;
     }
   }
 </style>
