@@ -183,6 +183,20 @@ class AdminTranslationsControllerCore extends AdminController
      */
     public function initMain()
     {
+        if(
+            !in_array(
+                $this->authorizationLevel(),
+                array(
+                    AdminController::LEVEL_VIEW,
+                    AdminController::LEVEL_EDIT,
+                    AdminController::LEVEL_ADD,
+                    AdminController::LEVEL_DELETE,
+                )
+            )
+        ) {
+            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminDashboard'));
+        }
+
         // Block add/update a language
         $packsToInstall = array();
         $packsToUpdate = array();
@@ -231,6 +245,7 @@ class AdminTranslationsControllerCore extends AdminController
             'modules' => $modules,
             'current_theme_name' => $this->context->shop->theme_name,
             'url_create_language' => 'index.php?controller=AdminLanguages&addlang&token='.$token,
+            'level' => $this->authorizationLevel(),
         );
 
         $this->toolbar_scroll = false;

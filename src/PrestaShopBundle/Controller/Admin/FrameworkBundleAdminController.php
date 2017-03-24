@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -208,5 +209,28 @@ class FrameworkBundleAdminController extends Controller
             array(),
             'Admin.Notifications.Error'
         );
+    }
+
+    /**
+     * Checks if the attributes are granted against the current authentication token and optionally supplied object.
+     *
+     * @param mixed $controller name of the controller to valide access
+     *
+     * @return int
+     */
+    protected function authorizationLevel($controller)
+    {
+        if(
+            $this->isGranted(PageVoter::DELETE, 'ADMINTRANSLATIONS'.'_')) {
+            return PageVoter::LEVEL_DELETE;
+        } elseif($this->isGranted(PageVoter::CREATE, 'ADMINTRANSLATIONS'.'_')) {
+            return PageVoter::LEVEL_CREATE;
+        } elseif($this->isGranted(PageVoter::UPDATE, 'ADMINTRANSLATIONS'.'_')) {
+            return PageVoter::LEVEL_UPDATE;
+        } elseif($this->isGranted(PageVoter::READ, 'ADMINTRANSLATIONS'.'_')) {
+            return PageVoter::LEVEL_READ;
+        } else {
+            return 0;
+        }
     }
 }
