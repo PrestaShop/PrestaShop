@@ -53,6 +53,8 @@ namespace {
 
 namespace PrestaShopBundle\Install {
 
+    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
     use Symfony\Component\Yaml\Yaml;
     use Symfony\Component\Filesystem\Filesystem;
     use Symfony\Component\Filesystem\Exception\IOException;
@@ -439,126 +441,6 @@ namespace PrestaShopBundle\Install {
             }
         }
 
-        private function disableCustomModules()
-        {
-            $db = Db::getInstance();
-            $modulesDirOnDisk = array();
-            $modules = scandir(_PS_MODULE_DIR_);
-            foreach ($modules as $name) {
-                if (!in_array($name, array('.', '..', 'index.php', '.htaccess')) && @is_dir(_PS_MODULE_DIR_ . $name . DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_ . $name . DIRECTORY_SEPARATOR . $name . '.php')) {
-                    if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name)) {
-                        die(Tools::displayError() . ' (Module ' . $name . ')');
-                    }
-                    $modulesDirOnDisk[] = $name;
-                }
-            }
-
-            $module_list_xml = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'modules_list.xml';
-
-            if (!file_exists($module_list_xml)) {
-                $module_list_xml = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'modules_list.xml';
-                if (!file_exists($module_list_xml)) {
-                    return false;
-                }
-            }
-
-            $nativeModules = @simplexml_load_file($module_list_xml);
-            if ($nativeModules) {
-                $nativeModules = $nativeModules->modules;
-            }
-            $arrNativeModules = array();
-            if (is_array($nativeModules)) {
-                foreach ($nativeModules as $nativeModulesType) {
-                    if (in_array($nativeModulesType['type'], array('native', 'partner'))) {
-                        $arrNativeModules[] = '""';
-                        foreach ($nativeModulesType->module as $module) {
-                            $arrNativeModules[] = '"' . pSQL($module['name']) . '"';
-                        }
-                    }
-                }
-            }
-            $arrNonNative = array();
-            if ($arrNativeModules) {
-                $arrNonNative = $db->executeS('
-    		SELECT *
-    		FROM `' . _DB_PREFIX_ . 'module` m
-    		WHERE name NOT IN (' . implode(',', $arrNativeModules) . ') ');
-            }
-
-            $uninstallMe = array("undefined-modules");
-            if (is_array($arrNonNative)) {
-                foreach ($arrNonNative as $k => $aModule) {
-                    $uninstallMe[(int)$aModule['id_module']] = $aModule['name'];
-                }
-            }
-
-            if (!is_array($uninstallMe)) {
-                $uninstallMe = array($uninstallMe);
-            }
-
-            foreach ($uninstallMe as $k => $v) {
-                $uninstallMe[$k] = '"' . pSQL($v) . '"';
-            }
-
-            $return = Db::getInstance()->execute('
-				UPDATE `' . _DB_PREFIX_ . 'module` SET `active` = 0 WHERE `name` IN (' . implode(',', $uninstallMe) . ')');
-
-            if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'module_shop\'')) > 0) {
-                foreach ($uninstallMe as $k => $uninstall) {
-                    $return &= Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int)$k);
-                }
-            }
-
-            $exist = $db->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_DISABLE_OVERRIDES\'');
-            if ($exist) {
-                $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = 1 WHERE `name` LIKE \'PS_DISABLE_OVERRIDES\'');
-            } else {
-                $db->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value, date_add, date_upd) VALUES ("PS_DISABLE_OVERRIDES", 1, NOW(), NOW())');
-            }
-
-            if (class_exists('\PrestaShopAutoload') && method_exists('\PrestaShopAutoload', 'generateIndex')) {
-                \PrestaShopAutoload::getInstance()->_include_override_path = false;
-                \PrestaShopAutoload::getInstance()->generateIndex();
-            }
-
-            return $return;
-        }
-
-        private function disableIncompatibleModules()
-        {
-            $disableModules = function () {
-                $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-                $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
-                $moduleManagerRepository->clearCache();
-
-                $filter = new AddonListFilter();
-                $filter->setStatus(AddonListFilterStatus::ON_DISK|AddonListFilterStatus::INSTALLED);
-
-                $list = $moduleManagerRepository->getFilteredList($filter, true);
-                /**
-                 * @var $module \PrestaShop\PrestaShop\Adapter\Module\Module
-                 */
-                foreach ($list as $moduleName => $module) {
-                    if (in_array($moduleName, self::$incompatibleModules)) {
-                        $this->logInfo("Uninstalling module $moduleName, not supported in this prestashop version.");
-                        $module->onUninstall();
-                    } else {
-                        $moduleInfo = $moduleManagerRepository->getModule($moduleName, true);
-                        /** @var \Symfony\Component\HttpFoundation\ParameterBag $attributes */
-                        $attributes = $module->attributes;
-                        if ($attributes->get('compatibility')) {
-                            $maxVersion = $attributes->get('compatibility')->to;
-                            if (version_compare($maxVersion, _PS_INSTALL_VERSION_) == -1 && Module::isEnabled($moduleName)) {
-                                $this->logInfo("Disabling module $moduleName. Max supported version : ".$maxVersion);
-                                Module::disableAllByName($moduleName);
-                            }
-                        }
-                    }
-                }
-            };
-            $disableModules();
-        }
-
         public function upgradeDb($sqlContentVersion)
         {
             $db = $this->db;
@@ -631,6 +513,77 @@ namespace PrestaShopBundle\Install {
             Configuration::loadConfiguration();
         }
 
+        private function disableCustomModules()
+        {
+            $return = true;
+            $modules = array();
+
+            $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+            $moduleRepository = $moduleManagerBuilder->buildRepository();
+            $moduleRepository->clearCache();
+
+            $filters = new AddonListFilter();
+            $filters->setType(AddonListFilterType::MODULE)
+                ->removeStatus(AddonListFilterStatus::UNINSTALLED);
+
+            $installedProducts = $moduleRepository->getFilteredList($filters);
+            foreach ($installedProducts as $installedProduct) {
+                if (!(
+                        $installedProduct->attributes->has('origin_filter_value')
+                        && in_array(
+                            $installedProduct->attributes->get('origin_filter_value'),
+                            array(
+                                AddonListFilterOrigin::ADDONS_NATIVE,
+                                AddonListFilterOrigin::ADDONS_NATIVE_ALL,
+                            )
+                        )
+                        && 'PrestaShop' === $installedProduct->attributes->get('author')
+                    )
+                    && 'autoupgrade' !== $installedProduct->attributes->get('name')) {
+                    $modules[] = $installedProduct->database->get('id');
+                }
+            }
+
+            if (!empty($modules)) {
+                $return = $this->db->execute('UPDATE `' . _DB_PREFIX_ . 'module` SET `active` = 0 WHERE `id_module` IN (' . implode(',', $modules) . ')');
+                $return &= $this->db->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` IN (' . implode(',', $modules) . ')');
+            }
+
+            return $return;
+        }
+
+        private function disableIncompatibleModules()
+        {
+            $disableModules = function () {
+                $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+                $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
+                $moduleManagerRepository->clearCache();
+
+                $filters = new AddonListFilter();
+                $filters->setStatus(AddonListFilterStatus::ON_DISK|AddonListFilterStatus::INSTALLED);
+
+                $list = $moduleManagerRepository->getFilteredList($filters, true);
+                foreach ($list as $moduleName => $module) {
+                    if (in_array($moduleName, self::$incompatibleModules)) {
+                        $this->logInfo("Uninstalling module $moduleName, not supported in this PrestaShop version.");
+                        $module->onUninstall();
+                    } else {
+                        $moduleInfo = $moduleManagerRepository->getModule($moduleName, true);
+
+                        $attributes = $module->attributes;
+                        if ($attributes->get('compatibility')) {
+                            $maxVersion = $attributes->get('compatibility')->to;
+                            if (version_compare($maxVersion, _PS_INSTALL_VERSION_) == -1 && Module::isEnabled($moduleName)) {
+                                $this->logInfo("Disabling module $moduleName. Max supported version : ".$maxVersion);
+                                Module::disableAllByName($moduleName);
+                            }
+                        }
+                    }
+                }
+            };
+            $disableModules();
+        }
+
         private function enableNativeModules()
         {
             $enableNativeModules = function () {
@@ -638,9 +591,23 @@ namespace PrestaShopBundle\Install {
                 $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
                 $moduleManagerRepository->clearCache();
 
-                $catalog = $moduleManagerBuilder::$adminModuleDataProvider->getCatalogModules();
-                foreach ($catalog as $moduleName => $module) {
-                    if ($module->categoryName == 'Natif') {
+                // $list = $moduleManagerBuilder::$adminModuleDataProvider->getCatalogModules();
+                $filters = new AddonListFilter();
+                $filters->setStatus(AddonListFilterStatus::ON_DISK|AddonListFilterStatus::UNINSTALLED|AddonListFilterStatus::DISABLED);
+
+                $list = $moduleManagerRepository->getFilteredList($filters, true);
+                foreach ($list as $moduleName => $module) {
+                    if (
+                        $module->attributes->has('origin_filter_value')
+                        && in_array(
+                            $module->attributes->get('origin_filter_value'),
+                            array(
+                                AddonListFilterOrigin::ADDONS_NATIVE,
+                                AddonListFilterOrigin::ADDONS_NATIVE_ALL,
+                            )
+                        )
+                        && 'PrestaShop' === $module->attributes->get('author')
+                    ){
                         if (!$moduleManagerBuilder->build()->isInstalled($moduleName)) {
                             $this->logInfo("Installing native module ".$moduleName);
                             $module = $moduleManagerRepository->getModule($moduleName);
@@ -651,7 +618,6 @@ namespace PrestaShopBundle\Install {
                     }
                 }
             };
-
             $enableNativeModules();
         }
 
