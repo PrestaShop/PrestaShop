@@ -179,10 +179,7 @@ class StockRepository
         $andWhereClause = '
             AND p.id_product = :product_id
             AND COALESCE(pa.id_product_attribute, 0) = :combination_id';
-        $query = $this->selectStock(
-            $leftJoinClause = '',
-            $andWhereClause
-        );
+        $query = $this->selectStock($andWhereClause);
 
         $statement = $this->connection->prepare($query);
         $this->bindStockValues($statement, null, $productIdentity);
@@ -218,7 +215,6 @@ class StockRepository
         );
 
         $query = $this->selectStock(
-                $this->joinLimitingCombinationsPerProduct(),
                 $this->andWhere($queryParams),
                 $this->orderBy($queryParams)
             ) . $this->paginate();
@@ -260,7 +256,7 @@ class StockRepository
     private function castNumericToInt($rows)
     {
         $castIdentifiersToIntegers = function (&$columnValue, $columnName) {
-            if (false !== strpos($columnName, '_id') || false !== strpos($columnName, '_quantity')) {
+            if ($this->shouldCastToInt($columnName)) {
                 $columnValue = (int)$columnValue;
             }
         };
@@ -270,6 +266,17 @@ class StockRepository
         });
 
         return $rows;
+    }
+
+    /**
+     * @param $columnName
+     * @return bool
+     */
+    private function shouldCastToInt($columnName)
+    {
+        return false !== strpos($columnName, '_id') ||
+            false !== strpos($columnName, '_quantity') ||
+            false !== strpos($columnName, 'total_');
     }
 
     /**
@@ -299,13 +306,11 @@ class StockRepository
     }
 
     /**
-     * @param string $leftJoinClause
      * @param string $andWhereClause
      * @param null $orderByClause
      * @return mixed
      */
     private function selectStock(
-        $leftJoinClause = '',
         $andWhereClause = '',
         $orderByClause = null
     )
@@ -322,7 +327,7 @@ class StockRepository
                 '{table_prefix}',
             ),
             array(
-                $leftJoinClause,
+                $this->joinLimitingCombinationsPerProduct(),
                 $andWhereClause,
                 $orderByClause,
                 $this->tablePrefix,
@@ -330,6 +335,11 @@ class StockRepository
             'SELECT SQL_CALC_FOUND_ROWS
             p.id_product AS product_id,
             COALESCE(pa.id_product_attribute, 0) AS combination_id,
+            IF (
+              COALESCE(pa.id_product_attribute, 0) = 0,
+              "N/A",
+              total_combinations
+            ) as total_combinations,
             IF (
                 COALESCE(pa.reference, 0) = 0,
                 IF (LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
@@ -435,7 +445,8 @@ class StockRepository
                 GROUP_CONCAT(pa.id_product_attribute),
                 \',\',
                 :max_combinations_per_product
-            ) product_attribute_ids
+            ) product_attribute_ids,
+            COUNT(pa.id_product_attribute) total_combinations
             FROM {table_prefix}product_attribute pa
             GROUP BY pa.id_product
         ) combinations_per_product ON (
@@ -471,10 +482,10 @@ class StockRepository
         $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
         $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
         $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
+        $statement->bindValue('max_combinations_per_product', self::MAX_COMBINATIONS_PER_PRODUCT, PDO::PARAM_INT);
 
         if ($queryParams) {
             $this->bindValuesInStatement($statement, $queryParams);
-            $statement->bindValue('max_combinations_per_product', self::MAX_COMBINATIONS_PER_PRODUCT, PDO::PARAM_INT);
         }
 
         if ($productIdentity) {
