@@ -101,3 +101,8 @@ ALTER TABLE `PREFIX_shop` CHANGE `id_shop` `id_shop` INT(11) NOT NULL AUTO_INCRE
 ALTER TABLE `PREFIX_shop` CHANGE `id_shop_group` `id_shop_group` INT(11) NOT NULL;
 
 ALTER TABLE `PREFIX_shop_group` CHANGE `id_shop_group` `id_shop_group` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `PREFIX_tab` CHANGE `id_tab` `id_tab` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `PREFIX_tab_lang` CHANGE `id_tab` `id_tab` INT(11) NOT NULL;
+ALTER TABLE `PREFIX_tab_lang` CHANGE `id_lang` `id_lang` INT(11) NOT NULL;
