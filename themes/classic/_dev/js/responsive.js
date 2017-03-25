@@ -67,6 +67,7 @@ $(window).on('resize', function() {
 	var _toggle = (_cw >= _mw && _w < _mw) || (_cw < _mw && _w >= _mw);
 	prestashop.responsive.mobile = _cw >= _mw;
 	prestashop.responsive.current_width = _w;
+  prestashop.responsive.mobile = prestashop.responsive.current_width < prestashop.responsive.min_width;
 	if (_toggle) {
 		toggleMobileStyles();
 	}
