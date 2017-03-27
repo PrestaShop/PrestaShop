@@ -9,3 +9,7 @@ _api_stock_management:
 _api_supplier:
     resource: "api/routing_supplier.yml"
     prefix: /api
+
+_api_category:
+    resource: "api/routing_category.yml"
+    prefix: /api

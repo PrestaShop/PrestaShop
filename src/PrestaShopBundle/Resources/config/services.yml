@@ -324,6 +324,13 @@ services:
             - "@doctrine.dbal.default_connection"
             - "%database_prefix%"
 
+    prestashop.core.api.category.repository:
+        class: PrestaShopBundle\Entity\Repository\CategoryRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
     prestashop.core.api.stock.controller:
         class: PrestaShopBundle\Controller\Api\StockController
         properties:
@@ -336,6 +343,11 @@ services:
         class: PrestaShopBundle\Controller\Api\SupplierController
         properties:
             supplierRepository: "@prestashop.core.api.supplier.repository"
+
+    prestashop.core.api.category.controller:
+        class: PrestaShopBundle\Controller\Api\CategoryController
+        properties:
+            categoryRepository: "@prestashop.core.api.category.repository"
 
     # Managers
     prestashop.adapter.image_manager:
