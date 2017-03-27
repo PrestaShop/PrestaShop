@@ -550,7 +550,7 @@
   },
   "ud": {
     "name": "English (upside down)",
-    "iso_code": "en",
+    "iso_code": "ud",
     "date_format_lite": "m/d/Y",
     "date_format_full": "m/d/Y H:i:s",
     "is_rtl": "0",

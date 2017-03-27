@@ -62,6 +62,8 @@ class LanguageCore extends ObjectModel
     protected static $_cache_language_installation_by_locale = null;
     protected static $_cache_all_language_json = null;
 
+    public static $locale_crowdin_lang = 'en-UD';
+
     /**
      * @see ObjectModel::$definition
      */
@@ -575,7 +577,7 @@ class LanguageCore extends ObjectModel
 
         $languages = array();
         foreach (self::$_LANGUAGES as $language) {
-            if ($active && !$language['active'] || ($id_shop && !isset($language['shops'][(int) $id_shop]))) {
+            if ($active && !$language['active'] || ($id_shop && !isset($language['shops'][(int) $id_shop])) || self::$locale_crowdin_lang === $language['locale']) {
                 continue;
             }
 
@@ -1248,7 +1250,7 @@ class LanguageCore extends ObjectModel
 
                     // Construct update field
                     foreach ($fieldsToUpdate as $toUpdate) {
-                        if ('url_rewrite' === $toUpdate && 'en-UD' === $lang->locale) {
+                        if ('url_rewrite' === $toUpdate && self::$locale_crowdin_lang === $lang->locale) {
                             continue;
                         }
 
