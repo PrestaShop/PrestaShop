@@ -732,11 +732,15 @@ class AdminPerformanceControllerCore extends AdminController
                     if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
                         Tools::generateHtaccess();
                     } else {
+                        // [1] will be replaced by the html tag for list and [2] by the html tag for html list element
                         $this->errors[] = $this->trans(
-                            'Before being able to use this tool, you need to:
-                            <br />- Create a blank .htaccess in your root directory.
-                            <br />- Give it write permissions (CHMOD 666 on Unix system).',
-                            array(),
+                            'Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]',
+                            array(
+                                '[1]' => '<ul>',
+                                '[/1]' => '</ul>',
+                                '[2]' => '<li>',
+                                '[/2]' => '</li>',
+                            ),
                             'Admin.Advparameters.Notification'
                         );
                         Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
