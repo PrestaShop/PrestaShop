@@ -53,6 +53,8 @@ namespace {
 
 namespace PrestaShopBundle\Install {
 
+    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+    use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
     use Symfony\Component\Yaml\Yaml;
     use Symfony\Component\Filesystem\Filesystem;
     use Symfony\Component\Filesystem\Exception\IOException;
@@ -314,7 +316,6 @@ namespace PrestaShopBundle\Install {
             Language::loadLanguages();
 
             $this->translator = Context::getContext()->getTranslator();
-            $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
         }
 
         private function getConfValue($name)
@@ -440,126 +441,6 @@ namespace PrestaShopBundle\Install {
             }
         }
 
-        private function disableCustomModules()
-        {
-            $db = Db::getInstance();
-            $modulesDirOnDisk = array();
-            $modules = scandir(_PS_MODULE_DIR_);
-            foreach ($modules as $name) {
-                if (!in_array($name, array('.', '..', 'index.php', '.htaccess')) && @is_dir(_PS_MODULE_DIR_ . $name . DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_ . $name . DIRECTORY_SEPARATOR . $name . '.php')) {
-                    if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name)) {
-                        die(Tools::displayError() . ' (Module ' . $name . ')');
-                    }
-                    $modulesDirOnDisk[] = $name;
-                }
-            }
-
-            $module_list_xml = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'modules_list.xml';
-
-            if (!file_exists($module_list_xml)) {
-                $module_list_xml = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'modules_list.xml';
-                if (!file_exists($module_list_xml)) {
-                    return false;
-                }
-            }
-
-            $nativeModules = @simplexml_load_file($module_list_xml);
-            if ($nativeModules) {
-                $nativeModules = $nativeModules->modules;
-            }
-            $arrNativeModules = array();
-            if (is_array($nativeModules)) {
-                foreach ($nativeModules as $nativeModulesType) {
-                    if (in_array($nativeModulesType['type'], array('native', 'partner'))) {
-                        $arrNativeModules[] = '""';
-                        foreach ($nativeModulesType->module as $module) {
-                            $arrNativeModules[] = '"' . pSQL($module['name']) . '"';
-                        }
-                    }
-                }
-            }
-            $arrNonNative = array();
-            if ($arrNativeModules) {
-                $arrNonNative = $db->executeS('
-    		SELECT *
-    		FROM `' . _DB_PREFIX_ . 'module` m
-    		WHERE name NOT IN (' . implode(',', $arrNativeModules) . ') ');
-            }
-
-            $uninstallMe = array("undefined-modules");
-            if (is_array($arrNonNative)) {
-                foreach ($arrNonNative as $k => $aModule) {
-                    $uninstallMe[(int)$aModule['id_module']] = $aModule['name'];
-                }
-            }
-
-            if (!is_array($uninstallMe)) {
-                $uninstallMe = array($uninstallMe);
-            }
-
-            foreach ($uninstallMe as $k => $v) {
-                $uninstallMe[$k] = '"' . pSQL($v) . '"';
-            }
-
-            $return = Db::getInstance()->execute('
-				UPDATE `' . _DB_PREFIX_ . 'module` SET `active` = 0 WHERE `name` IN (' . implode(',', $uninstallMe) . ')');
-
-            if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'module_shop\'')) > 0) {
-                foreach ($uninstallMe as $k => $uninstall) {
-                    $return &= Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int)$k);
-                }
-            }
-
-            $exist = $db->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_DISABLE_OVERRIDES\'');
-            if ($exist) {
-                $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = 1 WHERE `name` LIKE \'PS_DISABLE_OVERRIDES\'');
-            } else {
-                $db->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value, date_add, date_upd) VALUES ("PS_DISABLE_OVERRIDES", 1, NOW(), NOW())');
-            }
-
-            if (class_exists('\PrestaShopAutoload') && method_exists('\PrestaShopAutoload', 'generateIndex')) {
-                \PrestaShopAutoload::getInstance()->_include_override_path = false;
-                \PrestaShopAutoload::getInstance()->generateIndex();
-            }
-
-            return $return;
-        }
-
-        private function disableIncompatibleModules()
-        {
-            $disableModules = function () {
-                $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-                $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
-                $moduleManagerRepository->clearCache();
-
-                $filter = new AddonListFilter();
-                $filter->setStatus(AddonListFilterStatus::ON_DISK|AddonListFilterStatus::INSTALLED);
-
-                $list = $moduleManagerRepository->getFilteredList($filter, true);
-                /**
-                 * @var $module \PrestaShop\PrestaShop\Adapter\Module\Module
-                 */
-                foreach ($list as $moduleName => $module) {
-                    if (in_array($moduleName, self::$incompatibleModules)) {
-                        $this->logInfo("Uninstalling module $moduleName, not supported in this prestashop version.");
-                        $module->onUninstall();
-                    } else {
-                        $moduleInfo = $moduleManagerRepository->getModule($moduleName, true);
-                        /** @var \Symfony\Component\HttpFoundation\ParameterBag $attributes */
-                        $attributes = $module->attributes;
-                        if ($attributes->get('compatibility')) {
-                            $maxVersion = $attributes->get('compatibility')->to;
-                            if (version_compare($maxVersion, _PS_INSTALL_VERSION_) == -1 && Module::isEnabled($moduleName)) {
-                                $this->logInfo("Disabling module $moduleName. Max supported version : ".$maxVersion);
-                                Module::disableAllByName($moduleName);
-                            }
-                        }
-                    }
-                }
-            };
-            $disableModules();
-        }
-
         public function upgradeDb($sqlContentVersion)
         {
             $db = $this->db;
@@ -632,28 +513,95 @@ namespace PrestaShopBundle\Install {
             Configuration::loadConfiguration();
         }
 
-        private function enableNativeModules()
+        private function disableCustomModules()
         {
-            $enableNativeModules = function () {
-                $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-                $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
-                $moduleManagerRepository->clearCache();
+            $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+            $moduleRepository = $moduleManagerBuilder->buildRepository();
+            $moduleRepository->clearCache();
 
-                $catalog = $moduleManagerBuilder::$adminModuleDataProvider->getCatalogModules();
-                foreach ($catalog as $moduleName => $module) {
-                    if ($module->categoryName == 'Natif') {
-                        if (!$moduleManagerBuilder->build()->isInstalled($moduleName)) {
-                            $this->logInfo("Installing native module ".$moduleName);
-                            $module = $moduleManagerRepository->getModule($moduleName);
-                            $module->onInstall();
-                        } else {
-                            $this->logInfo("Native module ".$moduleName." already installed");
+            $filters = new AddonListFilter();
+            $filters->setType(AddonListFilterType::MODULE)
+                ->removeStatus(AddonListFilterStatus::UNINSTALLED);
+
+            $installedProducts = $moduleRepository->getFilteredList($filters);
+            foreach ($installedProducts as $installedProduct) {
+                if (!(
+                        $installedProduct->attributes->has('origin_filter_value')
+                        && in_array(
+                            $installedProduct->attributes->get('origin_filter_value'),
+                            array(
+                                AddonListFilterOrigin::ADDONS_NATIVE,
+                                AddonListFilterOrigin::ADDONS_NATIVE_ALL,
+                            )
+                        )
+                        && 'PrestaShop' === $installedProduct->attributes->get('author')
+                    )
+                    && 'autoupgrade' !== $installedProduct->attributes->get('name')) {
+                        $moduleName = $installedProduct->attributes->get('name');
+                        $this->logInfo("Disabling custom module ".$moduleName);
+                        Module::disableAllByName($moduleName);
+                }
+            }
+
+            return true;
+        }
+
+        private function disableIncompatibleModules()
+        {
+            $fs = new Filesystem;
+
+            $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+            $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
+            $moduleManagerRepository->clearCache();
+
+            $filters = new AddonListFilter();
+            $filters->setStatus(AddonListFilterStatus::ON_DISK|AddonListFilterStatus::INSTALLED);
+
+            $list = $moduleManagerRepository->getFilteredList($filters, true);
+            foreach ($list as $moduleName => $module) {
+                if (in_array($moduleName, self::$incompatibleModules)) {
+                    $this->logInfo("Uninstalling module $moduleName, not supported in this PrestaShop version.");
+                    $module->onUninstall();
+                    $fs->remove(_PS_MODULE_DIR_.$moduleName);
+                } else {
+                    $attributes = $module->attributes;
+                    if ($attributes->get('compatibility')) {
+                        $maxVersion = $attributes->get('compatibility')->to;
+                        if (version_compare($maxVersion, _PS_INSTALL_VERSION_) == -1 && Module::isEnabled($moduleName)) {
+                            $this->logInfo("Disabling module $moduleName. Max supported version : ".$maxVersion);
+                            Module::disableAllByName($moduleName);
                         }
                     }
                 }
-            };
+            }
 
-            $enableNativeModules();
+            return true;
+        }
+
+        private function enableNativeModules()
+        {
+            $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+            $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
+            $moduleManagerRepository->clearCache();
+
+            $filters = new AddonListFilter();
+            $filters->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE|AddonListFilterOrigin::ADDONS_NATIVE_ALL);
+
+            $list = $moduleManagerRepository->getFilteredList($filters, true);
+            foreach ($list as $moduleName => $module) {
+                if ('PrestaShop' === $module->attributes->get('author')){
+                    if (!$moduleManagerBuilder->build()->isInstalled($moduleName)) {
+                        $this->logInfo("Installing native module ".$moduleName);
+                        $module = $moduleManagerRepository->getModule($moduleName);
+                        $module->onInstall();
+                        $module->onEnable();
+                    } else {
+                        $this->logInfo("Native module ".$moduleName." already installed");
+                    }
+                }
+            }
+
+            return true;
         }
 
         private function cleanCache()
@@ -859,10 +807,11 @@ namespace PrestaShopBundle\Install {
             $sqlContentVersion = $this->getSQLFiles();
 
             if (!$this->hasFailure()) {
+                $this->disableIncompatibleModules();
+
                 if ($this->disableCustomModules) {
                     $this->disableCustomModules();
                 }
-                $this->disableIncompatibleModules();
 
                 $this->upgradeDb($sqlContentVersion);
                 $this->upgradeDoctrineSchema();
@@ -885,6 +834,104 @@ namespace PrestaShopBundle\Install {
             }
         }
 
+        public function doUpgradeDb()
+        {
+            \Tools::clearAllCache();
+
+            $this->defineConst();
+            $this->initContext();
+            $this->checkVersion();
+
+            $sqlContentVersion = $this->getSQLFiles();
+
+            if (!$this->hasFailure()) {
+                $this->upgradeDb($sqlContentVersion);
+                $this->upgradeDoctrineSchema();
+            }
+
+            $this->next = 'DisableModules';
+            $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Disabling modules now...', array(), 'Install');
+        }
+
+        public function doDisableModules()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            $this->disableIncompatibleModules();
+
+            if ($this->disableCustomModules) {
+                $this->disableCustomModules();
+            }
+
+            $this->next = 'EnableModules';
+            $this->nextDesc = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Enabling modules now...', array(), 'Install');
+        }
+
+        public function doEnableModules()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            $this->enableNativeModules();
+
+            $this->next = 'UpdateImage';
+            $this->nextDesc = $this->getTranslator()->trans('Modules successfully enabled.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully enabled.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading images now...', array(), 'Install');
+        }
+
+        public function doUpdateImage()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            $this->cleanCache();
+
+            $this->updateDbImagesLegacy();
+            if ($this->updateDefaultTheme) {
+                $this->cleanDefaultThemeCache();
+            }
+            $this->cleanupOldDirectories();
+
+            $this->next = 'UpdateLangHtaccess';
+            $this->nextDesc = $this->getTranslator()->trans('Images successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Images successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading languages now...', array(), 'Install');
+        }
+
+        public function doUpdateLangHtaccess()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            $this->updateLangs();
+            $this->updateHtaccess();
+
+            $this->next = 'UpdateTheme';
+            $this->nextDesc = $this->getTranslator()->trans('Languages successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Languages successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading theme now...', array(), 'Install');
+        }
+
+        public function doUpdateTheme()
+        {
+            $this->defineConst();
+            $this->initContext();
+
+            if ($this->idEmployee) {
+                $this->updateTheme();
+            }
+
+            $this->next = 'UpgradeComplete';
+            $this->nextDesc = $this->getTranslator()->trans('Theme successfully upgraded.', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Theme successfully upgraded.', array(), 'Install');
+        }
+
         public function getTranslator()
         {
             return $this->translator;
@@ -893,8 +940,7 @@ namespace PrestaShopBundle\Install {
         public function logInfo($quickInfo, $id = null,
                                 $transVariables = array(), $dbInfo = false)
         {
-            $info = $this->getTranslator()->trans($quickInfo, $transVariables,
-                'Install.Upgrade.Error');
+            $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {
                     $this->nextQuickInfo[] = '<div class="upgradeDbOk">' . $info . '</div>';
@@ -920,8 +966,7 @@ namespace PrestaShopBundle\Install {
         public function logWarning($quickInfo, $id,
                                    $transVariables = array(), $dbInfo = false)
         {
-            $info = $this->getTranslator()->trans($quickInfo, $transVariables,
-                'Install.Upgrade.Error');
+            $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {
                     $this->nextQuickInfo[] = '<div class="upgradeDbError">' . $info . '</div>';
@@ -951,8 +996,7 @@ namespace PrestaShopBundle\Install {
         public function logError($quickInfo, $id,
                                  $transVariables = array(), $dbInfo = false)
         {
-            $info = $this->getTranslator()->trans($quickInfo, $transVariables,
-                'Install.Upgrade.Error');
+            $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {
                     $this->nextQuickInfo[] = '<div class="upgradeDbError">' . $info . '</div>';
