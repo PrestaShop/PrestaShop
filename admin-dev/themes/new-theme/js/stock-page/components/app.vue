@@ -42,7 +42,7 @@
   }
   .ui-spinner {
     .ui-spinner-button {
-      right: 52px;
+      right: 30px;
       cursor: pointer;
       display: none;
       z-index: 3;

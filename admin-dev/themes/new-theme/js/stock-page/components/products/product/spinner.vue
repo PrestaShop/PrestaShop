@@ -101,7 +101,7 @@
         opacity: 0;
         position: absolute;
         top: 4px;
-        right: 23px;
+        right: 0;
         border: none;
         height: 29px;
         width: 40px;
@@ -139,5 +139,6 @@
     height: 31px;
     width: 70px;
     border: 1px solid $gray-light;
+    margin-right: 0;
   }
 </style>

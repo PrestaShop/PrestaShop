@@ -1,15 +1,8 @@
 <template>
-  <tr v-if="product.hasCombination" class="has-combination">
-    <td class="product-desc" colspan="4">
-      <ProductDesc :name="product.product_name" :thumbnail="product.combination_thumbnail" />
-    </td>
-    <td colspan="3">
-    </td>
-  </tr>
-  <tr v-else>
+  <tr>
     <td>
       <input type="checkbox" class="m-r-1">
-      <ProductDesc :name="productName" :thumbnail="product.combination_thumbnail" :class="productDescClass" :isCombination="isCombination" />
+      <ProductDesc :name="productName" :thumbnail="product.combination_thumbnail" :class="productDescClass" />
     </td>
     <td>
       {{ product.product_reference }}
@@ -34,15 +27,14 @@
         {{availableQtyUpdated}}
       </span>
     </td>
-    <td>
-      <Spinner :product="product" />
+    <td class="p-r-3">
+      <Spinner :product="product" class="pull-xs-right" />
     </td>
   </tr>
 </template>
-
 <script>
-  import Spinner from './spinner';
-  import ProductDesc from './product/product-desc';
+ import Spinner from './spinner';
+  import ProductDesc from './product-desc';
 
   export default {
     props: ['product'],
@@ -83,26 +75,11 @@
 
 <style lang="sass?outputStyle=expanded" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
-  .thumbnail, .no-img {
-      border: $gray-light 1px solid;
-  }
-  .no-img {
-    background: white;
-    width: 47px;
-    height: 47px;
-    display: inline-block;
-    vertical-align: middle;
-  }
   .qty-update {
     color: $brand-primary;
     .material-icons {
       vertical-align: middle;
     }
   }
-  .has-combination {
-    background: $notice;
-    .product-desc {
-      padding-left : 35px;
-    }
-  }
+
 </style>

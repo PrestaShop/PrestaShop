@@ -8,7 +8,7 @@
         <th class="text-xs-center">Physical<Sort order="physical_quantity" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
         <th class="text-xs-center">Reserved</th>
         <th class="text-xs-center">Available<Sort order="available_quantity" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
-        <th><i class="material-icons">edit</i>Edit Quantity</th>
+        <th class="text-xs-right p-r-3"><i class="material-icons">edit</i>Edit Quantity</th>
       </tr>
     </thead>
     <tbody>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import ProductLine from './product-line';
+  import ProductLine from './product/product-line';
   import Sort from './sort';
 
   export default {
