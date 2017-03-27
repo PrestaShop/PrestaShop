@@ -46,6 +46,8 @@ use Shop;
 
 class StockRepository
 {
+    use NormalizeFieldTrait;
+
     const MAX_COMBINATIONS_PER_PRODUCT = 50;
 
     /**
@@ -247,36 +249,6 @@ class StockRepository
         $statement->execute();
 
         return (int)$statement->fetchColumn();
-    }
-
-    /**
-     * @param $rows
-     * @return mixed
-     */
-    private function castNumericToInt($rows)
-    {
-        $castIdentifiersToIntegers = function (&$columnValue, $columnName) {
-            if ($this->shouldCastToInt($columnName)) {
-                $columnValue = (int)$columnValue;
-            }
-        };
-
-        array_walk($rows, function (&$rowColumns) use ($castIdentifiersToIntegers) {
-            array_walk($rowColumns, $castIdentifiersToIntegers);
-        });
-
-        return $rows;
-    }
-
-    /**
-     * @param $columnName
-     * @return bool
-     */
-    private function shouldCastToInt($columnName)
-    {
-        return false !== strpos($columnName, '_id') ||
-            false !== strpos($columnName, '_quantity') ||
-            false !== strpos($columnName, 'total_');
     }
 
     /**
