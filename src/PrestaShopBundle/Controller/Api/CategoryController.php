@@ -28,20 +28,20 @@ namespace PrestaShopBundle\Controller\Api;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class SupplierController
+class CategoryController
 {
     /**
-     * @var \PrestaShopBundle\Entity\Repository\SupplierRepository
+     * @var \PrestaShopBundle\Entity\Repository\CategoryRepository
      */
-    public $supplierRepository;
+    public $categoryRepository;
 
     /**
      * @return JsonResponse
      */
-    public function listSuppliersAction()
+    public function listCategoriesAction()
     {
-        $suppliers = $this->supplierRepository->getSuppliers();
+        $categories = $this->categoryRepository->getCategories();
 
-        return new JsonResponse($suppliers, 200);
+        return new JsonResponse($categories, 200);
     }
 }

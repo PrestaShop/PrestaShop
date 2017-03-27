@@ -24,24 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Api;
+namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-
-class SupplierController
+/**
+ * @group api
+ * @group category
+ */
+class CategoryControllerTest extends ApiTestCase
 {
     /**
-     * @var \PrestaShopBundle\Entity\Repository\SupplierRepository
+     * @test
      */
-    public $supplierRepository;
-
-    /**
-     * @return JsonResponse
-     */
-    public function listSuppliersAction()
+    public function it_should_return_ok_response_when_requesting_categories()
     {
-        $suppliers = $this->supplierRepository->getSuppliers();
+        $route = $this->router->generate('api_stock_list_categories');
+        $this->client->request('GET', $route);
 
-        return new JsonResponse($suppliers, 200);
+        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
     }
 }
