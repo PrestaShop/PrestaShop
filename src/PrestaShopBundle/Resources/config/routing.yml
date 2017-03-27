@@ -5,3 +5,7 @@ _admin_routing:
 _api_stock_management:
     resource: "api/routing_stock_management.yml"
     prefix: /api
+
+_api_supplier:
+    resource: "api/routing_supplier.yml"
+    prefix: /api

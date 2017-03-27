@@ -27,53 +27,36 @@
 namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
 
 use PrestaShopBundle\Api\QueryParamsCollection;
-use Prophecy\Prophet;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Context;
-use Shop;
 
 /**
  * @group api
  */
-class StockControllerTest extends WebTestCase
+class StockControllerTest extends ApiTestCase
 {
-    /**
-     * @var \Prophecy\Prophet
-     */
-    private $prophet;
-
-    /**
-     * @var \Symfony\Component\Routing\RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var \Symfony\Component\BrowserKit\Client
-     */
-    private $client;
-
     public function setUp()
     {
         parent::setUp();
-
-        $this->prophet = new Prophet();
-        $this->client = $this->createClient();
-
-        $this->restoreQuantityEditionFixtures();
 
         $legacyContextMock = $this->mockContextAdapter();
 
         $container = self::$kernel->getContainer();
         $container->set('prestashop.adapter.legacy.context', $legacyContextMock->reveal());
 
-        $this->router = $container->get('router');
+        $this->restoreQuantityEditionFixtures();
     }
 
-    public function tearDown()
+    private function restoreQuantityEditionFixtures()
     {
-        $this->prophet->checkPredictions();
+        $updateProductQuantity = '
+            UPDATE ps_stock_available
+            SET quantity = 8,
+            physical_quantity = 10,
+            reserved_quantity = 2
+            WHERE id_product = 1 AND id_product_attribute = 1';
 
-        parent::tearDown();
+        $statement = self::$kernel->getContainer()->get('doctrine.dbal.default_connection')
+            ->prepare($updateProductQuantity);
+        $statement->execute();
     }
 
     /**
@@ -378,108 +361,6 @@ class StockControllerTest extends WebTestCase
 
         $this->client->request('POST', $editProductStockRoute, array(), array(), array(), '{"delta": 0}');
         $this->assertResponseBodyValidJson(200);
-    }
-
-    /**
-     * @return \PrestaShop\PrestaShop\Adapter\LegacyContext
-     */
-    private function mockContextAdapter()
-    {
-        /** @var \PrestaShop\PrestaShop\Adapter\LegacyContext $legacyContextMock */
-        $legacyContextMock = $this->prophet->prophesize('\PrestaShop\PrestaShop\Adapter\LegacyContext');
-
-        $contextMock = $this->mockContext();
-        $legacyContextMock->getContext()->willReturn($contextMock->reveal());
-
-        $legacyContextMock->getEmployeeLanguageIso()->willReturn(null);
-        $legacyContextMock->getEmployeeCurrency()->willReturn(null);
-        $legacyContextMock->getRootUrl()->willReturn(null);
-
-        return $legacyContextMock;
-    }
-
-    /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
-     */
-    private function mockContext()
-    {
-        $contextMock = $this->prophet->prophesize('\Context');
-
-        $employeeMock = $this->mockEmployee();
-        $contextMock->employee = $employeeMock->reveal();
-
-        $languageMock = $this->mockLanguage();
-        $contextMock->language = $languageMock->reveal();
-
-        $shopMock = $this->mockShop();
-        $contextMock->shop = $shopMock->reveal();
-
-        $controllerMock = $this->mockController();
-        $contextMock->controller = $controllerMock->reveal();
-
-        $contextMock->currency = (object)array('sign' => '$');
-
-        Context::setInstanceForTesting($contextMock->reveal());
-
-        return $contextMock;
-    }
-
-    /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
-     */
-    private function mockEmployee()
-    {
-        $employeeMock = $this->prophet->prophesize('\Employee');
-        $employeeMock->id_lang = 1;
-
-        return $employeeMock;
-    }
-
-    /**
-     * @return object
-     */
-    private function mockLanguage()
-    {
-        $languageMock = $this->prophet->prophesize('\Language');
-        $languageMock->iso_code = 'en-US';
-
-        return $languageMock;
-    }
-
-    private function mockShop()
-    {
-        /** @var \Shop $shopMock */
-        $shopMock = $this->prophet->prophesize('\Shop');
-        $shopMock->getContextualShopId()->willReturn(1);
-
-        $shopMock->getContextType()->willReturn(Shop::CONTEXT_SHOP);
-
-        return $shopMock;
-    }
-
-    /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
-     */
-    private function mockController()
-    {
-        $controller = $this->prophesize('\AdminController');
-        $controller->controller_type = 'admin';
-
-        return $controller;
-    }
-
-    private function restoreQuantityEditionFixtures()
-    {
-        $updateProductQuantity = '
-            UPDATE ps_stock_available
-            SET quantity = 8,
-            physical_quantity = 10,
-            reserved_quantity = 2
-            WHERE id_product = 1 AND id_product_attribute = 1';
-
-        $statement = self::$kernel->getContainer()->get('doctrine.dbal.default_connection')
-            ->prepare($updateProductQuantity);
-        $statement->execute();
     }
 
     /**
