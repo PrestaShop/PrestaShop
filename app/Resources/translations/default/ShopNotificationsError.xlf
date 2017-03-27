@@ -292,12 +292,6 @@ File: controllers/front/ProductController.php:225</note>
         <note>Context:
 File: controllers/front/ProductController.php:781</note>
       </trans-unit>
-      <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
-        <source>Invalid message</source>
-        <target>Invalid message</target>
-        <note>Context:
-File: controllers/front/ProductController.php:809</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Product/ProductPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -434,12 +428,6 @@ File: controllers/front/OrderController.php:58</note>
         <note>Context:
 File: controllers/front/OrderDetailController.php:58</note>
       </trans-unit>
-      <trans-unit id="3dc245110e1f3601860c20299d97c01d">
-        <source>The message cannot be blank.</source>
-        <target>The message cannot be blank.</target>
-        <note>Context:
-File: controllers/front/OrderDetailController.php:60</note>
-      </trans-unit>
       <trans-unit id="15efe0f18ecffd8e75556c5c60cb1cb6">
         <source>This message is invalid (HTML is not allowed).</source>
         <target>This message is invalid (HTML is not allowed).</target>
@@ -475,6 +463,22 @@ File: controllers/front/OrderDetailController.php:183</note>
         <target>This order cannot be returned</target>
         <note>Context:
 File: controllers/front/OrderDetailController.php:185</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/contactform/contactform.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3dc245110e1f3601860c20299d97c01d">
+        <source>The message cannot be blank.</source>
+        <target>The message cannot be blank.</target>
+        <note>Context:
+File: modules/contactform/contactform.php:170</note>
+      </trans-unit>
+      <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
+        <source>Invalid message</source>
+        <target>Invalid message</target>
+        <note>Context:
+File: modules/contactform/contactform.php:172</note>
       </trans-unit>
     </body>
   </file>
