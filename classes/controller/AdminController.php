@@ -3294,7 +3294,7 @@ class AdminControllerCore extends Controller
     {
         $languageJoinClause = '';
         if ($this->lang) {
-            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->table). '_lang` b 
+            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->table). '_lang` b
                 ON (b.`' . bqSQL($this->identifier) . '` = a.`' . bqSQL($this->identifier) . '` AND b.`id_lang` = ' . (int)$idLang;
 
             if ($idLangShop) {
@@ -3884,7 +3884,7 @@ class AdminControllerCore extends Controller
             if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && $valid_method_exists) {
                 $field_validation = $field['validation'];
                 if (!Validate::$field_validation($value)) {
-                    $this->errors[] = $this->trans('%s : Incorrect value', array($field['title']), 'Admin.Notifications.Error');
+                    $this->errors[] = $this->trans('%s: Incorrect value', array($field['title']), 'Admin.Notifications.Error');
                     return false;
                 }
             }
@@ -4660,5 +4660,45 @@ class AdminControllerCore extends Controller
         $container->compile();
 
         return $container;
+    }
+
+    /**
+     * Return the type of authorization on module page.
+     *
+     * @return int(integer)
+     */
+    public function authorizationLevel()
+    {
+        if(
+            Access::isGranted(
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE', 
+                $this->context->employee->id_profile
+            )
+        ) {
+            return AdminController::LEVEL_DELETE;
+        } elseif(
+            Access::isGranted(
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE', 
+                $this->context->employee->id_profile
+            )
+        ) {
+            return AdminController::LEVEL_ADD;
+        } elseif(
+            Access::isGranted(
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE', 
+                $this->context->employee->id_profile
+            )
+        ) {
+            return AdminController::LEVEL_EDIT;
+        } elseif(
+            Access::isGranted(
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ', 
+                $this->context->employee->id_profile
+            )
+        ) {
+            return AdminController::LEVEL_VIEW;
+        } else {
+            return 0;
+        }
     }
 }

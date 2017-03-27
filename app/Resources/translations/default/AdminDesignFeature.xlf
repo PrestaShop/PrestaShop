@@ -248,121 +248,121 @@ File: controllers/admin/AdminModulesPositionsController.php:446</note>
         <source>Theme</source>
         <target>Theme</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:157</note>
+File: controllers/admin/AdminThemesController.php:164</note>
       </trans-unit>
       <trans-unit id="36866999eeb441da24edc6fd075e1765">
         <source>Add new theme</source>
         <target>Add new theme</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:140</note>
+File: controllers/admin/AdminThemesController.php:147</note>
       </trans-unit>
       <trans-unit id="3ff63fb80ae3bd04b6550282d39f674f">
         <source>Export current theme</source>
         <target>Export current theme</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:145</note>
+File: controllers/admin/AdminThemesController.php:152</note>
       </trans-unit>
       <trans-unit id="b5c941eace89787ab475237451189eac">
         <source>Import theme</source>
         <target>Import theme</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:155</note>
+File: controllers/admin/AdminThemesController.php:162</note>
       </trans-unit>
       <trans-unit id="f5ad3d3e217e4b7ea1729eb997dfbe1e">
         <source>Your current theme</source>
         <target>Your current theme</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:390</note>
+File: controllers/admin/AdminThemesController.php:472</note>
       </trans-unit>
       <trans-unit id="410901e83305e49595778896745950a9">
         <source><![CDATA[Invoice & Email Logos]]></source>
         <target><![CDATA[Invoice & Email Logos]]></target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:394</note>
+File: controllers/admin/AdminThemesController.php:476</note>
       </trans-unit>
       <trans-unit id="90dafb1cce6579655041476ab07fab90">
         <source>Favicons</source>
         <target>Favicons</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:395</note>
+File: controllers/admin/AdminThemesController.php:477</note>
       </trans-unit>
       <trans-unit id="49824ed511fd64f33f2f8a1818ee8fe1">
         <source>Header logo</source>
         <target>Header logo</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:399</note>
+File: controllers/admin/AdminThemesController.php:481</note>
       </trans-unit>
       <trans-unit id="358b0205fd07c94c16a82d8278bc5b76">
         <source>Mail logo</source>
         <target>Mail logo</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:412</note>
+File: controllers/admin/AdminThemesController.php:494</note>
       </trans-unit>
       <trans-unit id="d84613cd39906ab9161e1ad513f8947b">
         <source>Invoice logo</source>
         <target>Invoice logo</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:421</note>
+File: controllers/admin/AdminThemesController.php:503</note>
       </trans-unit>
       <trans-unit id="49e95301d8fcdbc23f623e0f2d1ed1e6">
         <source>Favicon</source>
         <target>Favicon</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:430</note>
+File: controllers/admin/AdminThemesController.php:512</note>
       </trans-unit>
       <trans-unit id="859a82ffb385f9227c656960996025eb">
         <source>Visit the theme catalog</source>
         <target>Visit the theme catalog</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:444</note>
+File: controllers/admin/AdminThemesController.php:526</note>
       </trans-unit>
       <trans-unit id="43fd51971b1d2354c7ecf6366f44b88d">
         <source>Select a theme for the "%s" shop</source>
         <target>Select a theme for the "%s" shop</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:459</note>
+File: controllers/admin/AdminThemesController.php:541</note>
       </trans-unit>
       <trans-unit id="8d5cc12b0e7ecbe4e624baa345323035">
         <source>Theme appearance</source>
         <target>Theme appearance</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:480</note>
+File: controllers/admin/AdminThemesController.php:562</note>
       </trans-unit>
       <trans-unit id="7961c4434751797a383d52d647e044d6">
         <source>Import from your computer</source>
         <target>Import from your computer</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:509</note>
+File: controllers/admin/AdminThemesController.php:591</note>
       </trans-unit>
       <trans-unit id="6966bbbcdeb44c019201ede70e7b74b8">
         <source>Zip file</source>
         <target>Zip file</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:515</note>
+File: controllers/admin/AdminThemesController.php:597</note>
       </trans-unit>
       <trans-unit id="dec0faa6eb19bd9120d12c5a876bd1cf">
         <source>Import from the web</source>
         <target>Import from the web</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:531</note>
+File: controllers/admin/AdminThemesController.php:613</note>
       </trans-unit>
       <trans-unit id="a33388a338ee2b199d66112369279558">
         <source>Archive URL</source>
         <target>Archive URL</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:537</note>
+File: controllers/admin/AdminThemesController.php:619</note>
       </trans-unit>
       <trans-unit id="cd8d9cc19984ccf9d314eee5eebfc2cc">
         <source>Import from FTP</source>
         <target>Import from FTP</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:565</note>
+File: controllers/admin/AdminThemesController.php:647</note>
       </trans-unit>
       <trans-unit id="a5a23094873852f0c0a9e55be4f1cf1d">
         <source>Select the archive</source>
         <target>Select the archive</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:571</note>
+File: controllers/admin/AdminThemesController.php:653</note>
       </trans-unit>
     </body>
   </file>

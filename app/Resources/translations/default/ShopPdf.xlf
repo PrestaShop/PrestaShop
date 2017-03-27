@@ -22,7 +22,7 @@ File: classes/pdf/HTMLTemplateInvoice.php:74</note>
         <source>%taxrate%%space%%</source>
         <target>%taxrate%%space%%</target>
         <note>Context:
-File: classes/pdf/HTMLTemplateInvoice.php:183</note>
+File: classes/pdf/HTMLTemplateInvoice.php:185</note>
       </trans-unit>
     </body>
   </file>

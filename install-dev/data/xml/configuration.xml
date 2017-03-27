@@ -362,20 +362,17 @@
   <configuration id="PS_OS_BANKWIRE" name="PS_OS_BANKWIRE">
     <value>10</value>
   </configuration>
-  <configuration id="PS_OS_PAYPAL" name="PS_OS_PAYPAL">
-    <value>11</value>
-  </configuration>
   <configuration id="PS_OS_WS_PAYMENT" name="PS_OS_WS_PAYMENT">
-    <value>12</value>
+    <value>11</value>
   </configuration>
   <configuration id="PS_OS_OUTOFSTOCK_PAID" name="PS_OS_OUTOFSTOCK_PAID">
     <value>9</value>
   </configuration>
   <configuration id="PS_OS_OUTOFSTOCK_UNPAID" name="PS_OS_OUTOFSTOCK_UNPAID">
-    <value>13</value>
+    <value>12</value>
   </configuration>
   <configuration id="PS_OS_COD_VALIDATION" name="PS_OS_COD_VALIDATION">
-    <value>14</value>
+    <value>13</value>
   </configuration>
   <configuration id="PS_LEGACY_IMAGES" name="PS_LEGACY_IMAGES">
     <value>0</value>

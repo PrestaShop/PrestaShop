@@ -42,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 
 class ModuleController extends FrameworkBundleAdminController
 {
+    const controller_name = 'ADMINMODULESSF';
+
     /**
      * Controller responsible for displaying "Catalog" section of Module management pages.
      *
@@ -50,9 +52,15 @@ class ModuleController extends FrameworkBundleAdminController
     public function catalogAction()
     {
         if (
-            !$this->isGranted(PageVoter::READ, 'ADMINMODULESSF_')
-            && !$this->isGranted(PageVoter::UPDATE, 'ADMINMODULESSF_')
-            && !$this->isGranted(PageVoter::CREATE, 'ADMINMODULESSF_')
+            !in_array(
+                $this->authorizationLevel($this::controller_name),
+                array(
+                    PageVoter::LEVEL_READ,
+                    PageVoter::LEVEL_UPDATE,
+                    PageVoter::LEVEL_CREATE,
+                    PageVoter::LEVEL_DELETE,
+                )
+            )
         ) {
             return $this->redirect('admin_dashboard');
         }
@@ -73,7 +81,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
-                'level' => $this->authorizationLevel(),
+                'level' => $this->authorizationLevel($this::controller_name),
                 'errorMessage' => $errorMessage,
             ));
     }
@@ -150,7 +158,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'modules' => $this->getPresentedProducts($modules),
                 'requireAddonsSearch' => true,
                 'id' => 'all',
-                'level' => $this->authorizationLevel(),
+                'level' => $this->authorizationLevel($this::controller_name),
                 'errorMessage' => $errorMessage,
             )
         )->getContent();
@@ -246,14 +254,23 @@ class ModuleController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => true,
-                'level' => $this->authorizationLevel(),
+                'level' => $this->authorizationLevel($this::controller_name),
                 'errorMessage' => $errorMessage,
             ));
     }
 
     public function moduleAction(Request $request)
     {
-        if (!in_array($this->authorizationLevel(), array(PageVoter::LEVEL_CREATE, PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE))) {
+        if (
+            !in_array(
+                $this->authorizationLevel($this::controller_name),
+                array(
+                    PageVoter::LEVEL_CREATE,
+                    PageVoter::LEVEL_UPDATE,
+                    PageVoter::LEVEL_DELETE,
+                )
+            )
+        ) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -337,7 +354,7 @@ class ModuleController extends FrameworkBundleAdminController
                 $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
                 $response[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
                         'module' => $this->getPresentedProducts($moduleInstanceWithUrl)[0],
-                        'level' => $this->authorizationLevel(),
+                        'level' => $this->authorizationLevel($this::controller_name),
                     ))->getContent();
             }
 
@@ -385,6 +402,7 @@ class ModuleController extends FrameworkBundleAdminController
         };
 
         $moduleManager = $this->get('prestashop.module.manager');
+        $modules = $moduleManager->getModulesWithNotifications($modulesPresenter);
         $translator = $this->get('translator');
         $layoutTitle = $translator->trans(
             'Module notifications',
@@ -401,13 +419,13 @@ class ModuleController extends FrameworkBundleAdminController
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-            'layoutTitle' => $translator->trans('Module notifications', array(), 'Admin.Modules.Feature'),
+            'layoutTitle' => $layoutTitle,
             'help_link' => $this->generateSidebarLink('AdminModules'),
             'modules' => $modules,
             'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel(),
+            'level' => $this->authorizationLevel($this::controller_name),
             'errorMessage' => $errorMessage,
         ));
     }
@@ -531,7 +549,15 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         try {
-            if( !in_array($this->authorizationLevel(), array( PageVoter::LEVEL_CREATE, PageVoter::LEVEL_DELETE))){
+            if (
+                !in_array(
+                        $this->authorizationLevel($this::controller_name),
+                        array(
+                            PageVoter::LEVEL_CREATE,
+                            PageVoter::LEVEL_DELETE
+                        )
+                )
+            ){
                 return new JsonResponse(
                     array(
                         'status' => false,
@@ -745,29 +771,8 @@ class ModuleController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Module/Includes/modal_read_more_content.html.twig',
             array(
                 'module' => $moduleToPresent,
-                'level' => $this->authorizationLevel(),
+                'level' => $this->authorizationLevel($this::controller_name),
             )
         );
-    }
-
-    /**
-     * Return the type of authorization on module page.
-     *
-     * @return int(integer)
-     */
-    public function authorizationLevel()
-    {
-        switch (true) {
-            case ($this->isGranted(PageVoter::DELETE, 'ADMINMODULESSF_')) :
-                return PageVoter::LEVEL_DELETE;
-            case ($this->isGranted(PageVoter::CREATE, 'ADMINMODULESSF_')) :
-                return PageVoter::LEVEL_CREATE;
-            case ($this->isGranted(PageVoter::UPDATE, 'ADMINMODULESSF_')) :
-                return PageVoter::LEVEL_UPDATE;
-            case ($this->isGranted(PageVoter::READ, 'ADMINMODULESSF_')) :
-                return PageVoter::LEVEL_READ;
-            default :
-                return 0;
-        }
     }
 }

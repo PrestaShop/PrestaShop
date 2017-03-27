@@ -55,7 +55,7 @@
   </div>
   <div class="translations-results js-results">
     <h2 class="hide">{{ 'Search Results'|trans({}, 'Admin.Global') }}</h2>
-    {% include 'PrestaShopBundle:Admin/Translations/include:translations-forms.html.twig' %}
+    {% include 'PrestaShopBundle:Admin/Translations/include:translations-forms.html.twig' with { 'editable' : editable } %}
   </div>
 </div>
 
@@ -78,8 +78,10 @@
       </h1>
       <p class="missing-translations-paragraph"></p>
       <div class="navbar-container pull-right"></div>
-      <div class="forms-container">
-      </div>
+      {% if not editable %} <fieldset disabled="disabled"> {% endif %}
+        <div class="forms-container">
+        </div>
+      {% if not editable %} </fieldset> {% endif %}
     </div>
   </div>
 </div>

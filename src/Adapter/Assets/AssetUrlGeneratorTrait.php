@@ -27,6 +27,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Assets;
 
+use Tools as ToolsLegacy;
+
 trait AssetUrlGeneratorTrait
 {
     protected $fqdn;
@@ -44,7 +46,7 @@ trait AssetUrlGeneratorTrait
     protected function getFQDN()
     {
         if (is_null($this->fqdn)) {
-            if ($this->configuration->get('PS_SSL_ENABLED')) {
+            if ($this->configuration->get('PS_SSL_ENABLED') && ToolsLegacy::usingSecureMode()) {
                 $this->fqdn = $this->configuration->get('_PS_BASE_URL_SSL_');
             } else {
                 $this->fqdn = $this->configuration->get('_PS_BASE_URL_');

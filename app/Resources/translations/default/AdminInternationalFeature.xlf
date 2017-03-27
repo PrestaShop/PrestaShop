@@ -565,91 +565,91 @@ File: controllers/admin/AdminTranslationsController.php:173</note>
         <source>Back office translations</source>
         <target>Back office translations</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1318</note>
+File: controllers/admin/AdminTranslationsController.php:1333</note>
       </trans-unit>
       <trans-unit id="445518ee6de9f01f5203fa05e5b83236">
         <source>Themes translations</source>
         <target>Themes translations</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1326</note>
+File: controllers/admin/AdminTranslationsController.php:1341</note>
       </trans-unit>
       <trans-unit id="3d966df0f234e9180aac80223c2a7e85">
         <source>Installed modules translations</source>
         <target>Installed modules translations</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1334</note>
+File: controllers/admin/AdminTranslationsController.php:1349</note>
       </trans-unit>
       <trans-unit id="6df6a1378a5ddcdef978aadf494cef5d">
         <source>Email translations</source>
         <target>Email translations</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1342</note>
+File: controllers/admin/AdminTranslationsController.php:1357</note>
       </trans-unit>
       <trans-unit id="5d1eb86e15320f5677c9502df9c97dd3">
         <source>Other translations</source>
         <target>Other translations</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1350</note>
+File: controllers/admin/AdminTranslationsController.php:1365</note>
       </trans-unit>
       <trans-unit id="8ed78ce61d50323c845e812aaccf247a">
         <source>Enabled Languages</source>
         <target>Enabled Languages</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1428</note>
+File: controllers/admin/AdminTranslationsController.php:1443</note>
       </trans-unit>
       <trans-unit id="c1aaec25c6e16ac8f28fdc652f1986ec">
         <source>Main Country</source>
         <target>Main Country</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1440</note>
+File: controllers/admin/AdminTranslationsController.php:1455</note>
       </trans-unit>
       <trans-unit id="2ffdb9f581f55fb1ae293ec48b151aad">
         <source>Front office Translations</source>
         <target>Front office Translations</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1453</note>
+File: controllers/admin/AdminTranslationsController.php:1468</note>
       </trans-unit>
       <trans-unit id="6e4fd86b4ea240672daa3c2fe1118fe0">
         <source>Expand all fieldsets</source>
         <target>Expand all fieldsets</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1748</note>
+File: controllers/admin/AdminTranslationsController.php:1763</note>
       </trans-unit>
       <trans-unit id="e1686cbdbfefdc838c58469866922b6c">
         <source>Close all fieldsets</source>
         <target>Close all fieldsets</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1751</note>
+File: controllers/admin/AdminTranslationsController.php:1766</note>
       </trans-unit>
       <trans-unit id="80ab38b942fb2da88ca496f8bbe237f7">
         <source>Email subject</source>
         <target>Email subject</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2476</note>
+File: controllers/admin/AdminTranslationsController.php:2491</note>
       </trans-unit>
       <trans-unit id="673a349a39148b988e9aabf651d31a96">
         <source>View HTML version</source>
         <target>View HTML version</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2499</note>
+File: controllers/admin/AdminTranslationsController.php:2514</note>
       </trans-unit>
       <trans-unit id="b040fe53badd6b3784735f3d102df0bd">
         <source>Edit HTML version</source>
         <target>Edit HTML version</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2500</note>
+File: controllers/admin/AdminTranslationsController.php:2515</note>
       </trans-unit>
       <trans-unit id="5f986174fa9cf6c0ddd927e11b68254a">
         <source>View/Edit TXT version</source>
         <target>View/Edit TXT version</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2501</note>
+File: controllers/admin/AdminTranslationsController.php:2516</note>
       </trans-unit>
       <trans-unit id="d43522f215ed8be730a542c8e1fdcff1">
         <source>Core emails</source>
         <target>Core emails</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2778</note>
+File: controllers/admin/AdminTranslationsController.php:2793</note>
       </trans-unit>
     </body>
   </file>
@@ -699,7 +699,7 @@ File: src/PrestaShopBundle/Twig/TranslationsExtension.php:465</note>
         <source>%d expressions</source>
         <target>%d expressions</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/TranslationsController.php:129</note>
+File: src/PrestaShopBundle/Controller/Admin/TranslationsController.php:147</note>
       </trans-unit>
     </body>
   </file>

@@ -188,9 +188,9 @@ File: classes/lang/MetaLang.php:82</note>
         <note>Context:
 File: classes/lang/MetaLang.php:85</note>
       </trans-unit>
-      <trans-unit id="0553039d9d0270126b1c1eb150024896">
-        <source>Our special products</source>
-        <target>Our special products</target>
+      <trans-unit id="feb65ab262a484a24e2d6229ff42b136">
+        <source>On-sale products</source>
+        <target>On-sale products</target>
         <note>Context:
 File: classes/lang/MetaLang.php:88</note>
       </trans-unit>

@@ -62,6 +62,8 @@ class LanguageCore extends ObjectModel
     protected static $_cache_language_installation_by_locale = null;
     protected static $_cache_all_language_json = null;
 
+    public static $locale_crowdin_lang = 'en-UD';
+
     /**
      * @see ObjectModel::$definition
      */
@@ -575,7 +577,7 @@ class LanguageCore extends ObjectModel
 
         $languages = array();
         foreach (self::$_LANGUAGES as $language) {
-            if ($active && !$language['active'] || ($id_shop && !isset($language['shops'][(int) $id_shop]))) {
+            if ($active && !$language['active'] || ($id_shop && !isset($language['shops'][(int) $id_shop])) || self::$locale_crowdin_lang === $language['locale']) {
                 continue;
             }
 
@@ -1013,6 +1015,7 @@ class LanguageCore extends ObjectModel
             $zipArchive = new ZipArchive();
             $zipArchive->open(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip');
             $zipArchive->extractTo(_PS_ROOT_DIR_.'/app/Resources/translations');
+            $zipArchive->close();
         }
     }
 
@@ -1029,6 +1032,7 @@ class LanguageCore extends ObjectModel
             $zipArchive = new ZipArchive();
             $zipArchive->open($folder.'.zip');
             $zipArchive->extractTo($folder);
+            $zipArchive->close();
 
             $coreDestPath = _PS_ROOT_DIR_.'/mails/'.$lang_pack['iso_code'];
             $fileSystem->mkdir($coreDestPath, 0755);
@@ -1246,6 +1250,10 @@ class LanguageCore extends ObjectModel
 
                     // Construct update field
                     foreach ($fieldsToUpdate as $toUpdate) {
+                        if ('url_rewrite' === $toUpdate && self::$locale_crowdin_lang === $lang->locale) {
+                            continue;
+                        }
+
                         $untranslated = $translator->getSourceString($data[$toUpdate], $classObject->getDomain());
                         $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
 

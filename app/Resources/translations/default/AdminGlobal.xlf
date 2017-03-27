@@ -68,13 +68,13 @@ File: classes/helper/HelperList.php:432</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/autoupgrade/AdminSelfUpgrade.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
         <source>Name:</source>
         <target>Name:</target>
         <note>Context:
-File: controllers/admin/AdminShopUrlController.php:547</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4286</note>
       </trans-unit>
     </body>
   </file>
@@ -508,7 +508,7 @@ File: controllers/admin/AdminStatsTabController.php:123</note>
         <source>Logo</source>
         <target>Logo</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:393</note>
+File: controllers/admin/AdminThemesController.php:475</note>
       </trans-unit>
     </body>
   </file>
@@ -650,31 +650,31 @@ File: modules/statsorigin/statsorigin.php:124</note>
         <source>Online</source>
         <target>Online</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1051</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1053</note>
       </trans-unit>
       <trans-unit id="03937134cedab9078be39a77ee3a48a0">
         <source>Group</source>
         <target>Group</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:646</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:649</note>
       </trans-unit>
       <trans-unit id="6a26f548831e6a8c26bfbbd9f6ec61e0">
         <source>Help</source>
         <target>Help</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:88</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:89</note>
       </trans-unit>
       <trans-unit id="1901606ea069a83dc7beea17881ef95a">
         <source>Period</source>
         <target>Period</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:650</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:653</note>
       </trans-unit>
       <trans-unit id="8d9da4bc0e49a50e09ac9f7e56789d39">
         <source>Offline</source>
         <target>Offline</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1053</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1055</note>
       </trans-unit>
     </body>
   </file>
@@ -774,25 +774,25 @@ File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_3_la
         <source>Email address</source>
         <target>Email address</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:42</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:53</note>
       </trans-unit>
       <trans-unit id="dc647eb65e6711e155375218212b3964">
         <source>Password</source>
         <target>Password</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:46</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:57</note>
       </trans-unit>
       <trans-unit id="878530871f0db73f004f5bd6591eeb76">
         <source>Remember me</source>
         <target>Remember me</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:51</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:62</note>
       </trans-unit>
       <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
         <source>Forgot your password?</source>
         <target>Forgot your password?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:58</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:69</note>
       </trans-unit>
     </body>
   </file>
@@ -1078,25 +1078,25 @@ File: src/Adapter/Product/AdminProductWrapper.php:329</note>
         <source>To</source>
         <target>To</target>
         <note>Context:
-File: controllers/admin/AdminSpecificPriceRuleController.php:267</note>
+File: controllers/admin/AdminSpecificPriceRuleController.php:269</note>
       </trans-unit>
       <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
         <source>Tax excluded</source>
         <target>Tax excluded</target>
         <note>Context:
-File: controllers/admin/AdminSpecificPriceRuleController.php:288</note>
+File: controllers/admin/AdminSpecificPriceRuleController.php:290</note>
       </trans-unit>
       <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
         <source>Tax included</source>
         <target>Tax included</target>
         <note>Context:
-File: controllers/admin/AdminSpecificPriceRuleController.php:287</note>
+File: controllers/admin/AdminSpecificPriceRuleController.php:289</note>
       </trans-unit>
       <trans-unit id="b2f40690858b404ed10e62bdf422c704">
         <source>Amount</source>
         <target>Amount</target>
         <note>Context:
-File: controllers/admin/AdminSpecificPriceRuleController.php:275</note>
+File: controllers/admin/AdminSpecificPriceRuleController.php:277</note>
       </trans-unit>
     </body>
   </file>
@@ -1413,13 +1413,13 @@ File: admin-dev/themes/default/template/controllers/orders/form.tpl:1434</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminShippingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/autoupgrade/AdminSelfTab.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
         <note>Context:
-File: controllers/admin/AdminShippingController.php:61</note>
+File: modules/autoupgrade/AdminSelfTab.php:368</note>
       </trans-unit>
     </body>
   </file>
@@ -1489,7 +1489,23 @@ File: src/PrestaShopBundle/Controller/Admin/AttributeController.php:55</note>
         <source>30 Days</source>
         <target>30 Days</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1441</note>
+File: controllers/admin/AdminTranslationsController.php:1456</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/list_quicknav.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="382b0f5185773fa0f67a8ed8056c7759">
+        <source>N/A</source>
+        <target>N/A</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/list_quicknav.html.twig:70</note>
+      </trans-unit>
+      <trans-unit id="2251caec60313460694521b2a0fa593f">
+        <source>Quick navigation</source>
+        <target>Quick navigation</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/list_quicknav.html.twig:28</note>
       </trans-unit>
     </body>
   </file>
@@ -1675,7 +1691,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/layout.html.twig:95</note>
         <source>Bulk Actions</source>
         <target>Bulk Actions</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:57</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:58</note>
       </trans-unit>
     </body>
   </file>
@@ -1686,22 +1702,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:57</not
         <target>Bulk actions</target>
         <note>Context:
 File: admin-dev/themes/default/template/helpers/list/list_footer.tpl:32</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/list_quicknav.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2251caec60313460694521b2a0fa593f">
-        <source>Quick navigation</source>
-        <target>Quick navigation</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/list_quicknav.html.twig:28</note>
-      </trans-unit>
-      <trans-unit id="382b0f5185773fa0f67a8ed8056c7759">
-        <source>N/A</source>
-        <target>N/A</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/list_quicknav.html.twig:70</note>
       </trans-unit>
     </body>
   </file>

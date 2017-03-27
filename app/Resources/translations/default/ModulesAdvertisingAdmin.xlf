@@ -26,12 +26,6 @@ File: modules/ps_advertising/ps_advertising.php:116</note>
         <note>Context:
 File: modules/ps_advertising/ps_advertising.php:175</note>
       </trans-unit>
-      <trans-unit id="254f642527b45bc260048e30704edb39">
-        <source>Configuration</source>
-        <target>Configuration</target>
-        <note>Context:
-File: modules/ps_advertising/ps_advertising.php:234</note>
-      </trans-unit>
       <trans-unit id="a15e4232c6c1fc1e67816dd517e0e966">
         <source>Image for the advertisement</source>
         <target>Image for the advertisement</target>
@@ -62,35 +56,17 @@ File: modules/ps_advertising/ps_advertising.php:252</note>
         <note>Context:
 File: modules/ps_advertising/ps_advertising.php:254</note>
       </trans-unit>
-      <trans-unit id="f8af04a772082625b597a196834f84c2">
-        <source>Display on the left column</source>
-        <target>Display on the left column</target>
+      <trans-unit id="3de9c835a99cd5bdb004ebfa5701a624">
+        <source>Display in the left column</source>
+        <target>Display in the left column</target>
         <note>Context:
 File: modules/ps_advertising/ps_advertising.php:258</note>
       </trans-unit>
-      <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
-        <source>Enabled</source>
-        <target>Enabled</target>
-        <note>Context:
-File: modules/ps_advertising/ps_advertising.php:283</note>
-      </trans-unit>
-      <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
-        <source>Disabled</source>
-        <target>Disabled</target>
-        <note>Context:
-File: modules/ps_advertising/ps_advertising.php:288</note>
-      </trans-unit>
-      <trans-unit id="8c24a9d942a8306a691e2b9605e710f1">
-        <source>Display on the right column</source>
-        <target>Display on the right column</target>
+      <trans-unit id="c03e9c1176e79e5334c05b6e502d8d9a">
+        <source>Display in the right column</source>
+        <target>Display in the right column</target>
         <note>Context:
 File: modules/ps_advertising/ps_advertising.php:276</note>
-      </trans-unit>
-      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
-        <source>Save</source>
-        <target>Save</target>
-        <note>Context:
-File: modules/ps_advertising/ps_advertising.php:294</note>
       </trans-unit>
     </body>
   </file>

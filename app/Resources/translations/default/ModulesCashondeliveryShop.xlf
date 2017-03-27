@@ -2,9 +2,9 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_cashondelivery/ps_cashondelivery.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ae74c18eab5441aa8dbd952f6ec76a9a">
-        <source>Pay by CashonDelivery</source>
-        <target>Pay by CashonDelivery</target>
+      <trans-unit id="1cb7685045c8f8adbdcecab8d9737d05">
+        <source>Pay by Cash on Delivery</source>
+        <target>Pay by Cash on Delivery</target>
         <note>Context:
 File: modules/ps_cashondelivery/ps_cashondelivery.php:100</note>
       </trans-unit>

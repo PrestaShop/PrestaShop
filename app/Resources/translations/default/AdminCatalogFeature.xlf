@@ -764,301 +764,325 @@ File: src/PrestaShopBundle/Form/Admin/Feature/ProductFeature.php:99</note>
         <source>Cost price</source>
         <target>Cost price</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:611</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:614</note>
       </trans-unit>
       <trans-unit id="1729a56cfc89021478498fe0c89a843a">
         <source>Visibility</source>
         <target>Visibility</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:740</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:743</note>
       </trans-unit>
       <trans-unit id="290612199861c31d1036b185b4e69b75">
         <source>Summary</source>
         <target>Summary</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:199</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:202</note>
       </trans-unit>
       <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
         <source>Reference</source>
         <target>Reference</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:280</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:283</note>
       </trans-unit>
       <trans-unit id="23470f2faa48c53e6fb5fad4e3de3cdd">
         <source>Virtual product</source>
         <target>Virtual product</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1214</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1237</note>
       </trans-unit>
       <trans-unit id="189f63f277cd73395561651753563065">
         <source>Tags</source>
         <target>Tags</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:770</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:773</note>
       </trans-unit>
       <trans-unit id="d8409efcbf2c3444399daa83172dd35a">
         <source>Tax rule</source>
         <target>Tax rule</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:342</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:345</note>
       </trans-unit>
       <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
         <source>Tax excluded</source>
         <target>Tax excluded</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:320</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:323</note>
       </trans-unit>
       <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
         <source>Tax included</source>
         <target>Tax included</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:325</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:328</note>
       </trans-unit>
       <trans-unit id="e6a4d0e7d64f63379da06c91a80e9c90">
         <source>Drop images here</source>
         <target>Drop images here</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1205</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1228</note>
       </trans-unit>
       <trans-unit id="aaa5309487aacf50e6413cf7a3074618">
         <source>or select files</source>
         <target>or select files</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1206</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1229</note>
       </trans-unit>
       <trans-unit id="b36c5a58c30cc53bab5e9b3fda84755c">
         <source>Recommended size 800 x 800px for default theme.</source>
         <target>Recommended size 800 x 800px for default theme.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1207</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1230</note>
       </trans-unit>
       <trans-unit id="0d23de90e7f537b035eb79a464eb8ecf">
         <source>JPG, GIF or PNG format.</source>
         <target>JPG, GIF or PNG format.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1208</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1231</note>
       </trans-unit>
       <trans-unit id="c795dfff10a7c952f4c5438951e9ece9">
         <source>Cover</source>
         <target>Cover</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:182</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:185</note>
       </trans-unit>
       <trans-unit id="623a9a1f669b091dd76bead27c3252ed">
         <source>Quantities</source>
         <target>Quantities</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:373</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:376</note>
       </trans-unit>
       <trans-unit id="e2e79605fc9450ec17957cf0e910f5c6">
         <source>tax incl.</source>
         <target>tax incl.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1215</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1238</note>
       </trans-unit>
       <trans-unit id="887ee91702c962a70b87cbef07bbcaec">
         <source>tax excl.</source>
         <target>tax excl.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1216</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1239</note>
       </trans-unit>
       <trans-unit id="81355310011c137fdd21cf9a1394ed6a">
         <source>Product list</source>
         <target>Product list</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:77</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:78</note>
       </trans-unit>
       <trans-unit id="93d74901738e996378295fb0a59bb977">
         <source>Basic settings</source>
         <target>Basic settings</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:115</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:116</note>
       </trans-unit>
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:117</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:118</note>
       </trans-unit>
       <trans-unit id="e22ac25b066b201473de7aa700ef5d92">
         <source>Pricing</source>
         <target>Pricing</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:118</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:119</note>
       </trans-unit>
       <trans-unit id="d88946b678e4c2f251d4e292e8142291">
         <source>SEO</source>
         <target>SEO</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:119</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:120</note>
       </trans-unit>
       <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
         <source>Modules</source>
         <target>Modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:122</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:123</note>
       </trans-unit>
       <trans-unit id="e84a11dfbf24b5bdcc71adef877f3157">
         <source>View all images</source>
         <target>View all images</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:192</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:195</note>
       </trans-unit>
       <trans-unit id="889f380bf53d998cf3be4466cd0a4359">
         <source>View less</source>
         <target>View less</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:193</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:196</note>
       </trans-unit>
       <trans-unit id="98f770b0af18ca763421bac22b4b6805">
         <source>Features</source>
         <target>Features</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:214</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:217</note>
       </trans-unit>
       <trans-unit id="8408c9e822e4412516d0ac876d683b6c">
         <source>Add a feature</source>
         <target>Add a feature</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:229</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:232</note>
       </trans-unit>
       <trans-unit id="90d98afb8f4c3436765b9eb47127577d">
         <source>Simple product</source>
         <target>Simple product</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:260</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:263</note>
       </trans-unit>
       <trans-unit id="f99f15e7e2a30d8522f0a39ecf6bcc0d">
         <source>Product with combinations</source>
         <target>Product with combinations</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:266</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:269</note>
       </trans-unit>
       <trans-unit id="1fd6db3332676692077360fec4df12e4">
         <source>Retail price</source>
         <target>Retail price</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:531</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:534</note>
       </trans-unit>
       <trans-unit id="784cfc140d0ef59d7f48342f7f1636e0">
         <source>Manage tax rules</source>
         <target>Manage tax rules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:586</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:589</note>
       </trans-unit>
       <trans-unit id="ad6097fc9736641b0b94a1b5f02840f5">
         <source>Final retail price: [1][2][/2] tax incl.[/1] / [3][/3] tax excl.</source>
         <target>Final retail price: [1][2][/2] tax incl.[/1] / [3][/3] tax excl.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:598</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:601</note>
       </trans-unit>
       <trans-unit id="5b14ab8904d8a735edd6ea4cff8f7b7c">
         <source>Specific prices</source>
         <target>Specific prices</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:628</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:631</note>
       </trans-unit>
       <trans-unit id="c625329eae5c7836f78bbdfc9e1fa577">
         <source>Add a specific price</source>
         <target>Add a specific price</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:637</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:640</note>
       </trans-unit>
       <trans-unit id="ab7a485ebe75b6dd7243ad719f23c7de">
         <source>Rule</source>
         <target>Rule</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:642</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:645</note>
       </trans-unit>
       <trans-unit id="47ac923d219501859fb68fed8c8db77b">
         <source>Combination</source>
         <target>Combination</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:643</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:646</note>
       </trans-unit>
       <trans-unit id="be6dfa820509f5ce1c052c2e5e0e3dff">
         <source>Fixed price</source>
         <target>Fixed price</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:648</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:651</note>
       </trans-unit>
       <trans-unit id="21f59b54f62b5b8b4bc0f63f0f617fc1">
         <source>Impact</source>
         <target>Impact</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:649</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:652</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:651</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:654</note>
       </trans-unit>
       <trans-unit id="8e99fa97ef8d51d9215028842c7ad57c">
         <source>Priority management</source>
         <target>Priority management</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:669</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:672</note>
       </trans-unit>
       <trans-unit id="8d3444a0aa942bf7a1979b8270f5c8e5">
         <source>Priorities</source>
         <target>Priorities</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:676</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:679</note>
       </trans-unit>
       <trans-unit id="0250085516590c4fa032d89ae2511adf">
         <source>Where do you want your product to appear?</source>
         <target>Where do you want your product to appear?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:741</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:744</note>
       </trans-unit>
       <trans-unit id="b7b224084f1aea992af0ae90ad7761a1">
         <source><![CDATA[Condition & References]]></source>
         <target><![CDATA[Condition & References]]></target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:796</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:799</note>
       </trans-unit>
       <trans-unit id="55de886c2b1929108d8c8cf6d9a703cb">
         <source>Customers can personalize the product by entering some text or by providing custom image files.</source>
         <target>Customers can personalize the product by entering some text or by providing custom image files.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:851</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:854</note>
       </trans-unit>
       <trans-unit id="513987b37a2501ed83af5686ed34624e">
         <source>Add a customization field</source>
         <target>Add a customization field</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:865</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:868</note>
       </trans-unit>
       <trans-unit id="9fb17d168ec32414787e4f47ccd3812c">
         <source>Attached files</source>
         <target>Attached files</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:873</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:876</note>
       </trans-unit>
       <trans-unit id="3a97ab5db26de551af8e0e63c280d56f">
         <source>Add files that customers can download directly on the product page (instructions, manual, recipe, etc.).</source>
         <target>Add files that customers can download directly on the product page (instructions, manual, recipe, etc.).</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:874</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:877</note>
       </trans-unit>
       <trans-unit id="16be564a60317ed9d5eef83c90eaf225">
         <source>Attach a new file</source>
         <target>Attach a new file</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:888</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:891</note>
+      </trans-unit>
+      <trans-unit id="942e86be019b92367d4b1cb917a9ae9c">
+        <source>Module to configure</source>
+        <target>Module to configure</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:958</note>
+      </trans-unit>
+      <trans-unit id="fd6d6ce9526e7db581ba81ee86373e9e">
+        <source>Choose a module to configure</source>
+        <target>Choose a module to configure</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:969</note>
+      </trans-unit>
+      <trans-unit id="4a3b597e8860a1592e5e1fec28d74ef4">
+        <source>These modules are relative to the product page of your shop.</source>
+        <target>These modules are relative to the product page of your shop.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:970</note>
+      </trans-unit>
+      <trans-unit id="657c239908e72da26f995415f9b867a7">
+        <source>To manage all your modules go to the [1]Installed module page[/1]</source>
+        <target>To manage all your modules go to the [1]Installed module page[/1]</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:971</note>
       </trans-unit>
       <trans-unit id="d2adcceab126e15a1f46f5ed9980453e">
         <source>Go to catalog</source>
         <target>Go to catalog</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1136</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1138</note>
       </trans-unit>
       <trans-unit id="3fa8c89ef63fbb7056fc1d8d1b67f97a">
         <source>Add new product</source>
         <target>Add new product</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1142</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1144</note>
       </trans-unit>
     </body>
   </file>
@@ -1403,7 +1427,7 @@ File: src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php:206</note>
         <source>Attachments for this product:</source>
         <target>Attachments for this product:</target>
         <note>Context:
-File: src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php:221</note>
+File: src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php:222</note>
       </trans-unit>
     </body>
   </file>
@@ -1613,7 +1637,7 @@ File: controllers/admin/AdminShopController.php:432</note>
         <source>From quantity</source>
         <target>From quantity</target>
         <note>Context:
-File: controllers/admin/AdminSpecificPriceRuleController.php:230</note>
+File: controllers/admin/AdminSpecificPriceRuleController.php:232</note>
       </trans-unit>
       <trans-unit id="0558dcc45dad1cfe3d4e55ca16bfbb12">
         <source>Beginning</source>
@@ -1637,13 +1661,13 @@ File: controllers/admin/AdminSpecificPriceRuleController.php:143</note>
         <source>Catalog price rules</source>
         <target>Catalog price rules</target>
         <note>Context:
-File: controllers/admin/AdminSpecificPriceRuleController.php:175</note>
+File: controllers/admin/AdminSpecificPriceRuleController.php:177</note>
       </trans-unit>
       <trans-unit id="5e3c40bfa4026ab071712bf230b8f52f">
         <source>Reduction with or without taxes</source>
         <target>Reduction with or without taxes</target>
         <note>Context:
-File: controllers/admin/AdminSpecificPriceRuleController.php:282</note>
+File: controllers/admin/AdminSpecificPriceRuleController.php:284</note>
       </trans-unit>
     </body>
   </file>
@@ -1913,7 +1937,7 @@ File: src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php:121</note>
         <source>Target</source>
         <target>Target</target>
         <note>Context:
-File: src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php:133</note>
+File: src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php:132</note>
       </trans-unit>
     </body>
   </file>

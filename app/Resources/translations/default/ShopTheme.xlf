@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="themes/StarterTheme/templates/customer/_partials/my-account-links.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/customer/_partials/my-account-links.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8cf04a9734132302f96da8e113e80ce5">
         <source>Home</source>
         <target>Home</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/my-account-links.tpl:4</note>
+File: themes/starterTheme/templates/customer/_partials/my-account-links.tpl:4</note>
       </trans-unit>
     </body>
   </file>
@@ -84,37 +84,37 @@ File: controllers/front/SitemapController.php:113</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/cms/stores.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/cms/stores.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="34c869c542dee932ef8cd96d2f91cae6">
         <source>Our stores</source>
         <target>Our stores</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:4</note>
+File: themes/starterTheme/templates/cms/stores.tpl:4</note>
       </trans-unit>
       <trans-unit id="0e2fb5b02182fd28b9b96e86ed27838f">
         <source>Fax:</source>
         <target>Fax:</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:26</note>
+File: themes/starterTheme/templates/cms/stores.tpl:26</note>
       </trans-unit>
       <trans-unit id="673ae02fffb72f0fe68a66f096a01347">
         <source>Phone:</source>
         <target>Phone:</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:23</note>
+File: themes/starterTheme/templates/cms/stores.tpl:23</note>
       </trans-unit>
       <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
         <source>Email:</source>
         <target>Email:</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:29</note>
+File: themes/starterTheme/templates/cms/stores.tpl:29</note>
       </trans-unit>
       <trans-unit id="80a0c205cd57b22fca7f174253870300">
         <source>Opening hours</source>
         <target>Opening hours</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:32</note>
+File: themes/starterTheme/templates/cms/stores.tpl:32</note>
       </trans-unit>
     </body>
   </file>
@@ -128,13 +128,13 @@ File: themes/classic/modules/ps_contactinfo/nav.tpl:39</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/cms/sitemap.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/cms/sitemap.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5813ce0ec7196c492c97596718f71969">
         <source>Sitemap</source>
         <target>Sitemap</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/sitemap.tpl:4</note>
+File: themes/starterTheme/templates/cms/sitemap.tpl:4</note>
       </trans-unit>
     </body>
   </file>
@@ -318,43 +318,43 @@ File: themes/classic/modules/ps_languageselector/ps_languageselector.tpl:27</not
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7601c8e861088bd27255e18afaefab6b">
         <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
         <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
         <note>Context:
-File: themes/StarterTheme/templates/_partials/footer.tpl:16</note>
+File: themes/starterTheme/templates/_partials/footer.tpl:16</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2143f8cb66482342b35208bdc3fd949c">
         <source>Active filters</source>
         <target>Active filters</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/active_filters.tpl:2</note>
+File: themes/starterTheme/templates/catalog/_partials/active_filters.tpl:2</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/facets.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/catalog/_partials/facets.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7a1c5301da6b1ce9e4345bd501397045">
         <source>(no filter)</source>
         <target>(no filter)</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/facets.tpl:48</note>
+File: themes/starterTheme/templates/catalog/_partials/facets.tpl:48</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/sort-orders.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/catalog/_partials/sort-orders.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6f9d01a14011f05fffe48559583fc609">
         <source>Sort by:</source>
         <target>Sort by:</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/sort-orders.tpl:2</note>
+File: themes/starterTheme/templates/catalog/_partials/sort-orders.tpl:2</note>
       </trans-unit>
     </body>
   </file>
@@ -404,39 +404,39 @@ File: themes/classic/templates/cms/stores.tpl:44</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="44749712dbec183e983dcd78a7736c41">
         <source>Date</source>
         <target>Date</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:106</note>
+File: themes/starterTheme/templates/customer/order-detail.tpl:106</note>
       </trans-unit>
       <trans-unit id="ec53a8c4f07baed5d8825072c89799be">
         <source>Status</source>
         <target>Status</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:47</note>
+File: themes/starterTheme/templates/customer/order-detail.tpl:47</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/errors/maintenance.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/errors/maintenance.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="27b4383b976d6be981598d457cc7e62d">
         <source>We'll be back soon.</source>
         <target>We'll be back soon.</target>
         <note>Context:
-File: themes/StarterTheme/templates/errors/maintenance.tpl:16</note>
+File: themes/starterTheme/templates/errors/maintenance.tpl:16</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/errors/not-found.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/errors/not-found.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7e74146e0ff2e289abfc8bec1d2b2a18">
         <source>Sorry for the inconvenience.</source>
         <target>Sorry for the inconvenience.</target>
         <note>Context:
-File: themes/StarterTheme/templates/errors/not-found.tpl:3</note>
+File: themes/starterTheme/templates/errors/not-found.tpl:3</note>
       </trans-unit>
     </body>
   </file>
@@ -450,35 +450,35 @@ File: themes/classic/templates/errors/not-found.tpl:29</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/errors/restricted-country.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/errors/restricted-country.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6351030f724f6f42fd11ec9aa6ee8c76">
         <source>403 Forbidden</source>
         <target>403 Forbidden</target>
         <note>Context:
-File: themes/StarterTheme/templates/errors/restricted-country.tpl:19</note>
+File: themes/starterTheme/templates/errors/restricted-country.tpl:19</note>
       </trans-unit>
       <trans-unit id="cf8092a0be7b972d6cee3db90bfaf923">
         <source>You cannot access this store from your country. We apologize for the inconvenience.</source>
         <target>You cannot access this store from your country. We apologize for the inconvenience.</target>
         <note>Context:
-File: themes/StarterTheme/templates/errors/restricted-country.tpl:20</note>
+File: themes/starterTheme/templates/errors/restricted-country.tpl:20</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/cms/category.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/cms/category.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="38629047675346c704697fb85268192f">
         <source>List of subcategories in %category_name%:</source>
         <target>List of subcategories in %category_name%:</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/category.tpl:10</note>
+File: themes/starterTheme/templates/cms/category.tpl:10</note>
       </trans-unit>
       <trans-unit id="1d34e1ee316477a8f64a835307f5b84e">
         <source>List of pages in %category_name%:</source>
         <target>List of pages in %category_name%:</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/category.tpl:21</note>
+File: themes/starterTheme/templates/cms/category.tpl:21</note>
       </trans-unit>
     </body>
   </file>

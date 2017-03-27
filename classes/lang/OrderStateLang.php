@@ -70,9 +70,6 @@ class OrderStateLangCore extends DataLangCore
                 md5('Awaiting bank wire payment')
                     => $this->translator->trans('Awaiting bank wire payment', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 
-                md5('Awaiting PayPal payment')
-                    => $this->translator->trans('Awaiting PayPal payment', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-
                 md5('Remote payment accepted')
                     => $this->translator->trans('Remote payment accepted', array(), 'Admin.Orderscustomers.Feature', $this->locale),
 

@@ -6,13 +6,13 @@
         <source>The discount was successfully generated.</source>
         <target>The discount was successfully generated.</target>
         <note>Context:
-File: classes/controller/AdminController.php:466</note>
+File: classes/controller/AdminController.php:478</note>
       </trans-unit>
       <trans-unit id="801982917ddd7afd63f9e103ba4699bd">
         <source>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</source>
         <target>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</target>
         <note>Context:
-File: classes/controller/AdminController.php:472</note>
+File: classes/controller/AdminController.php:484</note>
       </trans-unit>
     </body>
   </file>
@@ -324,13 +324,19 @@ File: classes/FileUploader.php:116</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/helper/HelperList.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/autoupgrade/AdminSelfTab.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="55ffa325538ec4bd188604c30b29a168">
         <source>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</source>
         <target>This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".</target>
         <note>Context:
-File: classes/helper/HelperList.php:387</note>
+File: modules/autoupgrade/AdminSelfTab.php:1446</note>
+      </trans-unit>
+      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
+        <source>An error occurred while updating the status for an object.</source>
+        <target>An error occurred while updating the status for an object.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:903</note>
       </trans-unit>
     </body>
   </file>
@@ -340,13 +346,13 @@ File: classes/helper/HelperList.php:387</note>
         <source>You cannot set a negative position, the minimum for a position is 0.</source>
         <target>You cannot set a negative position, the minimum for a position is 0.</target>
         <note>Context:
-File: classes/Product.php:5508</note>
+File: classes/Product.php:5511</note>
       </trans-unit>
       <trans-unit id="b945599a5e11b76711dad5f1d7eba181">
         <source>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</source>
         <target>You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).</target>
         <note>Context:
-File: classes/Product.php:5517</note>
+File: classes/Product.php:5520</note>
       </trans-unit>
     </body>
   </file>
@@ -438,12 +444,6 @@ File: controllers/admin/AdminFeaturesController.php:434</note>
   </file>
   <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
-        <source>An error occurred while updating the status for an object.</source>
-        <target>An error occurred while updating the status for an object.</target>
-        <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:116</note>
-      </trans-unit>
       <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
         <source>(cannot load object)</source>
         <target>(cannot load object)</target>
@@ -746,55 +746,55 @@ File: src/Adapter/Attribute/AdminAttributeGeneratorControllerWrapper.php:115</no
         <source>Product(s) successfully activated.</source>
         <target>Product(s) successfully activated.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:630</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:642</note>
       </trans-unit>
       <trans-unit id="25b325c47f9b5f88d7820b079bafa02e">
         <source>Product(s) successfully deactivated.</source>
         <target>Product(s) successfully deactivated.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:640</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:652</note>
       </trans-unit>
       <trans-unit id="01996897996faf465514bdf1091b6d4d">
         <source>Product(s) successfully deleted.</source>
         <target>Product(s) successfully deleted.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:650</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:662</note>
       </trans-unit>
       <trans-unit id="290ed9aa59dd098c9e112c4f9770407d">
         <source>Product(s) successfully duplicated.</source>
         <target>Product(s) successfully duplicated.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:660</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:672</note>
       </trans-unit>
       <trans-unit id="c1746190e47d69ea7f0db7f098de7cab">
         <source>Products successfully sorted.</source>
         <target>Products successfully sorted.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:731</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:743</note>
       </trans-unit>
       <trans-unit id="7bdb2828f248bbd55bba16dcc63223d9">
         <source>Product successfully deleted.</source>
         <target>Product successfully deleted.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:793</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:805</note>
       </trans-unit>
       <trans-unit id="85d8f7e3038017826a8215396b96865b">
         <source>Product successfully duplicated.</source>
         <target>Product successfully duplicated.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:801</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:813</note>
       </trans-unit>
       <trans-unit id="98434b0cd2f3cf08418ea1f0a9c55f0a">
         <source>Product successfully activated.</source>
         <target>Product successfully activated.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:810</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:822</note>
       </trans-unit>
       <trans-unit id="fd1d6d9c7d146c9f81572224bae86951">
         <source>Product successfully deactivated.</source>
         <target>Product successfully deactivated.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:818</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:830</note>
       </trans-unit>
     </body>
   </file>
@@ -920,37 +920,37 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:521</
         <source>This will delete all the combinations. Do you wish to proceed?</source>
         <target>This will delete all the combinations. Do you wish to proceed?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1197</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1220</note>
       </trans-unit>
       <trans-unit id="ff8a012ee6cba99838a649d92ad1b34b">
         <source>This will delete the specific price. Do you wish to proceed?</source>
         <target>This will delete the specific price. Do you wish to proceed?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1211</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1234</note>
       </trans-unit>
       <trans-unit id="dfd19ad4f089996c7eabcd5935f75e98">
         <source>A pack of products can't have combinations.</source>
         <target>A pack of products can't have combinations.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1217</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1240</note>
       </trans-unit>
       <trans-unit id="5b75fdc0df647e8ac5275e31554dd0f9">
         <source>A virtual product can't have combinations.</source>
         <target>A virtual product can't have combinations.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1218</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1241</note>
       </trans-unit>
       <trans-unit id="9909f0bb3eb94634e3f8cd0164dbacac">
         <source>You are in a multistore context: any modification will impact all your shops, or each shop of the active group.</source>
         <target>You are in a multistore context: any modification will impact all your shops, or each shop of the active group.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:36</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:37</note>
       </trans-unit>
       <trans-unit id="d80ebf39e80e164a170987dcd4212136">
         <source>When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.</source>
         <target>When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:472</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:475</note>
       </trans-unit>
     </body>
   </file>

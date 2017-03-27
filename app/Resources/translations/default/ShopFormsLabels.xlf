@@ -87,13 +87,13 @@ File: classes/form/CustomerFormatter.php:186</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/customer/password-email.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
         <source>Email</source>
         <target>Email</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/password-email.tpl:22</note>
+File: themes/starterTheme/templates/customer/password-email.tpl:22</note>
       </trans-unit>
     </body>
   </file>
@@ -107,19 +107,19 @@ File: classes/form/CustomerLoginFormatter.php:58</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/password-new.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/customer/password-new.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3544848f820b9d94a3f3871a382cf138">
         <source>New password</source>
         <target>New password</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/password-new.tpl:21</note>
+File: themes/starterTheme/templates/customer/password-new.tpl:21</note>
       </trans-unit>
       <trans-unit id="f4d1ea475eaa85102e2b4e6d95da84bd">
         <source>Confirmation</source>
         <target>Confirmation</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/password-new.tpl:26</note>
+File: themes/starterTheme/templates/customer/password-new.tpl:26</note>
       </trans-unit>
     </body>
   </file>
@@ -155,31 +155,31 @@ File: themes/classic/templates/customer/password-email.tpl:53</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/_partials/order-messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/customer/_partials/order-messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
         <source>Message</source>
         <target>Message</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:8</note>
+File: themes/starterTheme/templates/customer/_partials/order-messages.tpl:8</note>
       </trans-unit>
       <trans-unit id="deb10517653c255364175796ace3553f">
         <source>Product</source>
         <target>Product</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:38</note>
+File: themes/starterTheme/templates/customer/_partials/order-messages.tpl:38</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:7</note>
+File: themes/starterTheme/templates/customer/_partials/order-messages.tpl:7</note>
       </trans-unit>
       <trans-unit id="7bc873cba11f035df692c3549366c722">
         <source>-- Choose --</source>
         <target>-- Choose --</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:40</note>
+File: themes/starterTheme/templates/customer/_partials/order-messages.tpl:40</note>
       </trans-unit>
     </body>
   </file>
@@ -193,13 +193,13 @@ File: themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emails
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/_partials/form-fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/_partials/form-fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1625e29c02062efe5dbc42c3efeeebc4">
         <source>-- please choose --</source>
         <target>-- please choose --</target>
         <note>Context:
-File: themes/StarterTheme/templates/_partials/form-fields.tpl:21</note>
+File: themes/starterTheme/templates/_partials/form-fields.tpl:21</note>
       </trans-unit>
     </body>
   </file>
@@ -231,29 +231,29 @@ File: themes/classic/templates/_partials/form-fields.tpl:186</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/guest-login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/customer/guest-login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="63c193f613dd3d9d6c16da7678efda2a">
         <source>Order Reference:</source>
         <target>Order Reference:</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/guest-login.tpl:18</note>
+File: themes/starterTheme/templates/customer/guest-login.tpl:18</note>
       </trans-unit>
       <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
         <source>Email:</source>
         <target>Email:</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/guest-login.tpl:24</note>
+File: themes/starterTheme/templates/customer/guest-login.tpl:24</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/guest-tracking.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/starterTheme/templates/customer/guest-tracking.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3b6bf3c0c07b89dc86f415117a1f0b80">
         <source>Set your password:</source>
         <target>Set your password:</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/guest-tracking.tpl:29</note>
+File: themes/starterTheme/templates/customer/guest-tracking.tpl:29</note>
       </trans-unit>
     </body>
   </file>

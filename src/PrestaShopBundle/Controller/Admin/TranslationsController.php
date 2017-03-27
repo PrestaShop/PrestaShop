@@ -30,6 +30,7 @@ use Doctrine\Common\Util\Inflector;
 use PrestashopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Provider\ModuleProvider;
 use PrestaShopBundle\Translation\View\TreeBuilder;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -41,6 +42,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class TranslationsController extends FrameworkBundleAdminController
 {
+    const controller_name = 'ADMINTRANSLATIONS';
     /**
      * List translations keys and corresponding editable values.
      *
@@ -53,7 +55,21 @@ class TranslationsController extends FrameworkBundleAdminController
     public function listAction(Request $request)
     {
         if (!$request->isMethod('POST')) {
-            return $this->redirect('/admin-dev/index.php?controller=AdminTranslations');
+            return $this->redirect('./admin-dev/index.php?controller=AdminTranslations');
+        }
+
+        if (
+            !in_array(
+                $this->authorizationLevel($this::controller_name),
+                array(
+                    PageVoter::LEVEL_READ,
+                    PageVoter::LEVEL_UPDATE,
+                    PageVoter::LEVEL_CREATE,
+                    PageVoter::LEVEL_DELETE,
+                )
+            )
+        ) {
+            return $this->redirect('admin_dashboard');
         }
 
         $lang = $request->get('lang');
@@ -62,6 +78,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $catalogue = $this->getTranslationsCatalogue($request);
         $treeBuilder = new TreeBuilder($this->langToLocale($lang), $theme);
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
+        $editable = $this->isGranted(PageVoter::UPDATE, $this::controller_name.'_');
 
         return array(
             'translationsTree' => $translationsTree,
@@ -80,7 +97,8 @@ class TranslationsController extends FrameworkBundleAdminController
                 '%d expressions',
                 array(),
                 'Admin.International.Feature'
-            )
+            ),
+            'editable' => $editable,
         );
     }
 
@@ -96,7 +114,7 @@ class TranslationsController extends FrameworkBundleAdminController
     public function moduleAction(Request $request)
     {
         if (!$request->isMethod('POST')) {
-            return $this->redirect('/admin-dev/index.php?controller=AdminTranslations');
+            return $this->redirect('./admin-dev/index.php?controller=AdminTranslations');
         }
 
         $lang = $request->get('lang');

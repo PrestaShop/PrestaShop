@@ -229,7 +229,7 @@
 					<div class="col-lg-9">
 						<div class="row">
 							<div class="col-lg-6">
-								<select id="params_import_language" name="params_import_language" class="chosen">
+								<select id="params_import_language" name="params_import_language" class="chosen" {if $level == 1} disabled="disabled" {/if}>
 								<optgroup label="{l s='Update a language'}">
 									{foreach from=$packs_to_update key=locale item=name}
 										<option value="{$locale}">{$name}</option>
@@ -250,7 +250,7 @@
 				{/if}
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitAddLanguage" class="btn btn-default pull-right">
+				<button type="submit" name="submitAddLanguage" class="btn btn-default pull-right" {if $level == 1} disabled="disabled" {/if}>
 					<i class="process-icon-cogs"></i> {l s='Add or update a language'}
 				</button>
 			</div>
@@ -271,12 +271,12 @@
 				<div class="col-lg-4">
 					<div class="form-group">
 						<div class="col-lg-12">
-							<input id="importLanguage" type="file" name="file" class="hide" />
+							<input id="importLanguage" type="file" name="file" class="hide" {if $level == 1} disabled="disabled" {/if} />
 							<div class="dummyfile input-group">
 								<span class="input-group-addon"><i class="icon-file"></i></span>
 								<input id="file-name" type="text" class="disabled" name="filename" readonly />
 								<span class="input-group-btn">
-									<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
+									<button id="file-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default" {if $level == 1} disabled="disabled" {/if}>
 										<i class="icon-folder-open"></i> {l s='Add file'}
 									</button>
 								</span>
@@ -288,7 +288,7 @@
 			<div class="form-group">
 				<label for="selectThemeForImport" class="control-label col-lg-3">{l s='Select your theme'}</label>
 				<div class="col-lg-4">
-					<select name="theme[]" id="selectThemeForImport" {if count($themes) > 1}multiple="multiple"{/if} >
+					<select name="theme[]" id="selectThemeForImport" {if $level == 1} disabled="disabled" {/if} {if count($themes) > 1}multiple="multiple"{/if} >
 						{foreach $themes as $theme}
 							<option value="{$theme->getDirectory()}" selected="selected">{$theme->getName()} &nbsp;</option>
 						{/foreach}
@@ -296,7 +296,7 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitImport" class="btn btn-default pull-right"><i class="process-icon-upload"></i> {l s='Import' d='Admin.Actions'}</button>
+				<button type="submit" name="submitImport" class="btn btn-default pull-right" {if $level == 1} disabled="disabled" {/if} ><i class="process-icon-upload"></i> {l s='Import' d='Admin.Actions'}</button>
 			</div>
 		</div>
 	</form>
@@ -313,7 +313,7 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="iso_code">{l s='Language'}</label>
 				<div class="col-lg-4">
-					<select name="iso_code" id="iso_code">
+					<select name="iso_code" id="iso_code" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $languages as $language}
 							<option value="{$language['iso_code']}">{$language['name']}</option>
 						{/foreach}
@@ -323,7 +323,7 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="export-theme">{l s='Select your theme'}</label>
 				<div class="col-lg-4">
-					<select name="theme-name" id="export-theme">
+					<select name="theme-name" id="export-theme" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $themes as $theme}
 							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}
@@ -331,7 +331,7 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitExport" class="btn btn-default pull-right"><i class="process-icon-download"></i> {l s='Export' d='Admin.Actions'}</button>
+				<button type="submit" name="submitExport" class="btn btn-default pull-right" {if $level == 1} disabled="disabled" {/if}><i class="process-icon-download"></i> {l s='Export' d='Admin.Actions'}</button>
 			</div>
 		</div>
 	</form>
@@ -349,14 +349,14 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3 required" for="fromLang"> {l s='From'}</label>
 				<div class="col-lg-4">
-					<select name="fromLang" id="fromLang">
+					<select name="fromLang" id="fromLang" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $languages as $language}
 							<option value="{$language['iso_code']}">{$language['name']}</option>
 						{/foreach}
 					</select>
 				</div>
 				<div class="col-lg-4">
-					<select name="fromTheme">
+					<select name="fromTheme" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $themes as $theme}
 							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}
@@ -366,14 +366,14 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="toLang">{l s='To'}</label>
 				<div class="col-lg-4">
-					<select name="toLang" id="toLang">
+					<select name="toLang" id="toLang" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $languages as $language}
 							<option value="{$language['iso_code']}">{$language['name']}</option>
 						{/foreach}
 					</select>
 				</div>
 				<div class="col-lg-4">
-					<select name="toTheme">
+					<select name="toTheme" {if $level == 1} disabled="disabled" {/if}>
 						{foreach $themes as $theme}
 							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}
@@ -387,7 +387,7 @@
 				</p>
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitCopyLang" class="btn btn-default pull-right"><i class="process-icon-duplicate"></i> {l s='Copy'}</button>
+				<button type="submit" name="submitCopyLang" class="btn btn-default pull-right" {if $level == 1} disabled="disabled" {/if}><i class="process-icon-duplicate"></i> {l s='Copy'}</button>
 			</div>
 		</div>
 	</form>
