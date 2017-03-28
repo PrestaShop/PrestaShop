@@ -243,12 +243,17 @@ class OrderControllerCore extends FrontController
             $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
         }
 
+        foreach ($this->checkoutProcess->getSteps() as $step) {
+            if ($step instanceof CheckoutAddressesStep) {
+                $stepTemplateParameters = $step->getTemplateParameters();
+            }
+        }
+
         $templateParams = array_merge(
             $addressForm->getTemplateVariables(),
+            $stepTemplateParameters,
             array(
                 'type' => 'delivery',
-                'use_same_address' => true,
-                'form_has_continue_button' => true,
         ));
 
         ob_end_clean();
