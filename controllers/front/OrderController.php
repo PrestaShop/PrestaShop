@@ -231,24 +231,34 @@ class OrderControllerCore extends FrontController
         $this->setTemplate('checkout/checkout');
     }
 
-    public function displayAjaxCheckoutAddressStep()
+    public function displayAjaxAddressForm()
     {
-        $cart = $this->cart_presenter->present(
-            $this->context->cart
-        );
+        $addressForm = $this->makeAddressForm();
+
+        if (Tools::getIsset('id_address')) {
+            $addressForm->loadAddressById(Tools::getValue('id_address'));
+        }
+
+        if (Tools::getIsset('id_country')) {
+            $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
+        }
+
+        $templateParams = array_merge(
+            $addressForm->getTemplateVariables(),
+            array(
+                'type' => 'delivery',
+                'use_same_address' => true,
+                'form_has_continue_button' => true,
+        ));
 
         ob_end_clean();
         header('Content-Type: application/json');
 
         $this->ajaxDie(Tools::jsonEncode(array(
-            'checkout_address_form' => $this->checkoutProcess->getStep(2)->render(Array(
-              'ajax' => true
-            )),
-            'preview' => $this->render('checkout/_partials/cart-summary', array(
-                'cart' => $cart,
-                'static_token' => Tools::getToken(false),
-            )),
-            'has_errors' => !empty($this->errors),
+            'address_form' => $this->render(
+                'checkout/_partials/address-form',
+                $templateParams
+            ),
         )));
     }
 }

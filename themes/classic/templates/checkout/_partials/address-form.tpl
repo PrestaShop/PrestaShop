@@ -8,6 +8,15 @@
   {/if}
 {/block}
 
+{block name="address_form_url"}
+    <form
+      method="POST"
+      action="{url entity='order' params=['id_address' => $id_address]}"
+      data-id-address="{$id_address}"
+      data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
+    >
+{/block}
+
 {block name='form_fields' append}
   <input type="hidden" name="saveAddress" value="{$type}">
   {if $type === "delivery"}

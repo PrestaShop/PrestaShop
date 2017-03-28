@@ -40,7 +40,8 @@ function handleCountryChange (selectors) {
 
 $(document).ready(() => {
   handleCountryChange({
-    'country': '#address .js-country',
+    'country': '.js-country',
     'address': '.js-address-form'
   });
 });
+
