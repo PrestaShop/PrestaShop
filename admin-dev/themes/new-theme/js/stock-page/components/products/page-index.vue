@@ -35,7 +35,7 @@
           if(this.index === 1 || this.index === this.current - 1) {
             return true;
           }
-          if(this.current <= this.pagesToDisplay && (this.index <= this.pagesToDisplay || this.index === this.total)){
+          if(this.current <= this.pagesToDisplay && (this.index <= this.pagesToDisplay || this.index === this.total || this.index === this.current + 1)){
             return true;
           }
           if(this.current > this.pagesToDisplay) {
