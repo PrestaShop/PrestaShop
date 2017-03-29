@@ -1,6 +1,6 @@
 <template>
   <form class="qty text-xs-right" :class="classObject" v-on:mouseover="focusIn" v-on:mouseleave="focusOut($event)">
-    <input @keyup="onKeyup" v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="qty" placeholder="0" >
+    <input @keyup="onKeyup($event.target.value)" v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="qty" placeholder="0" >
     <transition name="fade">
       <button v-if="isActive" class="check-button" v-on:click="sendQty($event)"><i class="material-icons">check</i></button>
     </transition>
@@ -48,6 +48,7 @@
     },
     watch: {
       value(val) {
+        console.log(this.product.product_id,this.product.combination_id)
         this.$store.commit('UPDATE_PRODUCT_QTY', {
           product_id: this.product.product_id,
           combination_id: this.product.combination_id,
@@ -56,8 +57,11 @@
       }
     },
     methods: {
-      onKeyup(event, val) {
-        console.log(val)
+      onKeyup(val) {
+        this.value = val;
+        if(this.value) {
+          this.isActive = this.isEnabled = true;
+        }
       },
       focusIn() {
         this.isActive = true;

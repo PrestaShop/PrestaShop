@@ -12,20 +12,18 @@
       </tr>
     </thead>
     <tbody>
-      <ProductLine v-for="product in products" :key="product.id" :product="product" />
+      <ProductLine v-for="(product, index) in products" key=${index} :product="product" />
     </tbody>
   </table>
 </template>
 
 <script>
   import ProductLine from './product/product-line';
-  import Product from './product/product';
   import Sort from './sort';
 
   export default {
     components: {
       ProductLine,
-      Product,
       Sort
     },
     methods: {
@@ -35,16 +33,7 @@
     },
     computed: {
       products() {
-       return this.$store.state.products.filter((product)=> {
-         product.hasCombination = false;
-         if(product.list.length > 1) {
-          product.product_name = product.list[0].product_name;
-          product.total_combinations = product.list[0].total_combinations;
-          product.product_thumbnail = product.list[0].product_thumbnail;
-          product.hasCombination = true;
-         }
-         return product;
-       });
+       return this.$store.state.products;
       }
     },
     data() {
@@ -68,7 +57,7 @@
         border:none;
         border-bottom: 2px solid $brand-primary;
         color: $gray-dark;
-        padding: 5px 0;
+        padding: 10px 0;
         .material-icons {
           margin-left: 5px;
           vertical-align: middle;

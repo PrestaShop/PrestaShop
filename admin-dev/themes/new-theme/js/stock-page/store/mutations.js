@@ -7,16 +7,7 @@ export default {
             product.qty = 0;
         });
 
-        let productsByIndex = window._.groupBy(products, 'product_id');
-        let productsArray = Object.keys(productsByIndex).map((key) => productsByIndex[key]);
-        let productsArrayById = [];
-
-        for (let productArray of productsArray) {
-            productsArrayById.push({
-                list: productArray
-            });
-        }
-        state.products = productsArrayById;
+        state.products = products;
     },
     [types.UPDATE_ORDER](state, order) {
         state.order = order;
