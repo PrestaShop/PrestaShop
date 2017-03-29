@@ -40,6 +40,10 @@ class QueryParamsCollection
 
     const SQL_PARAM_MAX_RESULTS = 'max_results';
 
+    const SQL_CLAUSE_WHERE = 'where';
+
+    const SQL_CLAUSE_HAVING = 'having';
+
     /**
      * @var array
      */
@@ -53,11 +57,34 @@ class QueryParamsCollection
     {
         $queryParams = $request->query->all();
 
+        $queryParams = $this->excludeUnknownParams($queryParams);
         $queryParams = $this->parsePaginationParams($queryParams);
         $queryParams = $this->parseOrderParams($queryParams);
         $this->queryParams = $this->parseFilterParams($queryParams, $request);
 
         return $this;
+    }
+
+    /**
+     * @param $queryParams
+     * @return mixed
+     */
+    private function excludeUnknownParams(array $queryParams)
+    {
+        $queryParamsNames = array_keys($queryParams);
+        array_walk($queryParamsNames, function ($name) use (&$queryParams) {
+            $validParams = array_merge(
+                $this->getValidPaginationParams(),
+                $this->getValidOrderParams(),
+                $this->getValidFilterParams()
+            );
+
+            if (!in_array($name, $validParams)) {
+                unset($queryParams[$name]);
+            }
+        });
+
+        return $queryParams;
     }
 
     /**
@@ -67,21 +94,30 @@ class QueryParamsCollection
      */
     private function parseFilterParams(array $queryParams, Request $request)
     {
-        $attributes = array_merge(
+        $allParameters = array_merge(
             $request->attributes->all(),
             $request->query->all()
         );
 
-        $filters = array_filter(array_keys($attributes), function ($filter) {
+        $filters = array_filter(array_keys($allParameters), function ($filter) {
             return in_array($filter, $this->getValidFilterParams());
         });
 
         $filterParams = array();
-        array_walk($filters, function ($filter) use ($attributes, &$filterParams) {
-            $filterParams[$filter] = $attributes[$filter];
+        array_walk($filters, function ($filter) use ($allParameters, &$filterParams) {
+            if (is_array($allParameters[$filter])) {
+                $allParameters[$filter] = array_filter($allParameters[$filter], function ($value) {
+                    return strlen(trim($value)) > 0;
+                });
+            }
+
+            $filterParams[$filter] = $allParameters[$filter];
         });
 
+
         $queryParams['filter'] = $filterParams;
+
+
 
         return $queryParams;
     }
@@ -91,7 +127,7 @@ class QueryParamsCollection
      */
     private function getValidFilterParams()
     {
-        return array('productId', 'supplier_id', 'category_id');
+        return array('productId', 'supplier_id', 'category_id', 'keywords');
     }
 
     /**
@@ -128,6 +164,17 @@ class QueryParamsCollection
         }
 
         return $queryParams;
+    }
+
+    /**
+     * @return array
+     */
+    private function getValidPaginationParams() {
+        return array(
+            'page_size',
+            'page_index',
+            'order'
+        );
     }
 
     /**
@@ -206,13 +253,50 @@ class QueryParamsCollection
      */
     public function getSqlFilters()
     {
-        $filters = array();
+        $whereFilters = array();
 
         foreach ($this->queryParams['filter'] as $column => $value) {
-            $filters = $this->appendSqlFilter($value, $column, $filters);
+            $whereFilters = $this->appendSqlFilter($value, $column, $whereFilters);
         }
 
-        return implode("\n", $filters);
+        $filters = array(
+            self::SQL_CLAUSE_WHERE => implode("\n", $whereFilters)
+        );
+
+        $filters = $this->appendSqlSearchFilter($filters);
+
+        return $filters;
+    }
+
+    private function hasSearchFilter()
+    {
+        return array_key_exists('keywords', $this->queryParams['filter']);
+    }
+
+    /**
+     * @param $filters
+     * @return mixed
+     */
+    private function appendSqlSearchFilter($filters)
+    {
+        if (!$this->hasSearchFilter()) {
+            return $filters;
+        }
+
+        $parts = array_map(function ($index) {
+            return sprintf(
+                'AND (' .
+                '{supplier_name} LIKE :keyword_%d OR '.
+                '{product_reference} LIKE :keyword_%d OR ' .
+                '{product_name} LIKE :keyword_%d OR ' .
+                '{combination_name} LIKE :keyword_%d' .
+                ')',
+                $index, $index, $index, $index);
+        }, range(0, count($this->queryParams['filter']['keywords']) - 1));
+
+        $filters[self::SQL_CLAUSE_HAVING] = implode("\n", $parts);
+
+        return $filters;
     }
 
     /**
@@ -225,10 +309,12 @@ class QueryParamsCollection
     {
         $column = Inflector::tableize($column);
 
-        if ($column === 'category_id') {
-            $filters[] = sprintf('AND FIND_IN_SET({%s}, %s)', $column, ':categories_ids');
-
+        if ($column === 'keywords') {
             return $filters;
+        }
+
+        if ($column === 'category_id') {
+            return $this->appendSqlCategoryFilter($column, $filters);
         }
 
         if (!is_array($value)) {
@@ -300,6 +386,10 @@ class QueryParamsCollection
     {
         $column = Inflector::tableize($column);
 
+        if ($column === 'keywords') {
+            return $this->appendSqlSearchFilterParam($value, $sqlParams);
+        }
+
         if ($column === 'category_id') {
             return $this->appendSqlCategoryFilterParam($value, $sqlParams);
         }
@@ -318,6 +408,18 @@ class QueryParamsCollection
     }
 
     /**
+     * @param $column
+     * @param array $filters
+     * @return array
+     */
+    private function appendSqlCategoryFilter($column, array $filters)
+    {
+        $filters[] = sprintf('AND FIND_IN_SET({%s}, %s)', $column, ':categories_ids');
+
+        return $filters;
+    }
+
+    /**
      * @param $value
      * @param $sqlParams
      * @return mixed
@@ -330,6 +432,19 @@ class QueryParamsCollection
 
         $value = array_map('intval', $value);
         $sqlParams[':categories_ids'] = implode(',', $value);
+
+        return $sqlParams;
+    }
+
+    private function appendSqlSearchFilterParam($value, $sqlParams)
+    {
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+
+        array_map(function ($index, $value) use (&$sqlParams) {
+            $sqlParams['keyword_' . $index] = strval('%' . $value . '%');
+        }, range(0, count($value) - 1), $value);
 
         return $sqlParams;
     }
