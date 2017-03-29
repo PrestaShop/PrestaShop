@@ -26,11 +26,6 @@
 
 <style lang="sass?outputStyle=expanded" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
-  .is-combination {
-    img {
-      visibility: hidden;
-    }
-  }
   .product-title {
     .has-combination & {
       font-weight: 600;
