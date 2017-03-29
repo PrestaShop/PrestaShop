@@ -259,25 +259,6 @@ class AddonsDataProvider implements AddonsInterface
         throw new Exception('Cannot execute request '.$action.' to Addons');
     }
 
-    /**
-     * @param $moduleId
-     * @return Module
-     */
-    public function getModuleById($moduleId)
-    {
-        $moduleAttributes = $this->request('module', array('id_module' => $moduleId));
-
-        $attributes = $this->moduleRepository->getModuleAttributes($moduleAttributes['name']);
-
-        foreach ($attributes->all() as $name => $value) {
-            if (!array_key_exists($name, $moduleAttributes)) {
-                $moduleAttributes[$name] = $value;
-            }
-        }
-
-        return new Module($moduleAttributes);
-    }
-
     protected function getAddonsCredentials()
     {
         $request = Request::createFromGlobals();

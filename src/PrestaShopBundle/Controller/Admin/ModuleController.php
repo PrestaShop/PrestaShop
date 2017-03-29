@@ -758,8 +758,8 @@ class ModuleController extends FrameworkBundleAdminController
 
     public function getModuleCartAction($moduleId)
     {
-        $adminModuleRepository = $this->get('prestashop.core.admin.module.repository');
-        $module = $adminModuleRepository->getModuleById($moduleId);
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $module = $moduleRepository->getModuleById($moduleId);
 
         $addOnsAdminDataProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $addOnsAdminDataProvider->generateAddonsUrls(array($module));
