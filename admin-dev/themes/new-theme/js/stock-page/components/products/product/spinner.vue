@@ -1,6 +1,6 @@
 <template>
   <form class="qty text-xs-right" :class="classObject" v-on:mouseover="focusIn" v-on:mouseleave="focusOut($event)">
-    <input v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="qty" placeholder="0" >
+    <input @keyup="onKeyup" v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="qty" placeholder="0" >
     <transition name="fade">
       <button v-if="isActive" class="check-button" v-on:click="sendQty($event)"><i class="material-icons">check</i></button>
     </transition>
@@ -56,7 +56,10 @@
       }
     },
     methods: {
-      focusIn(){
+      onKeyup(event, val) {
+        console.log(val)
+      },
+      focusIn() {
         this.isActive = true;
       },
       focusOut(event) {

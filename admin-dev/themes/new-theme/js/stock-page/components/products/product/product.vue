@@ -1,39 +1,39 @@
 <template>
   <tr>
-    <td>
+    <td width="45%">
       <input type="checkbox" class="m-r-1">
       <ProductDesc :name="productName" :thumbnail="product.combination_thumbnail" :class="productDescClass" />
     </td>
-    <td>
+    <td width="15%">
       {{ product.product_reference }}
     </td>
-    <td class="p-r-1">
+    <td width="15%">
       {{ product.supplier_name }}
     </td>
-    <td class="text-xs-center p-r-1">
+    <td width="10%" class="text-xs-center">
       {{ physical }}
       <span class="qty-update" v-if="updatedQty">
         <i class="material-icons">trending_flat</i>
         {{physicalQtyUpdated}}
       </span>
     </td>
-    <td class="text-xs-center">
+    <td width="10%" class="text-xs-center">
       {{ product.product_reserved_quantity }}
     </td>
-    <td class="text-xs-center">
+    <td width="10%" class="text-xs-center">
       {{ product.product_available_quantity }}
       <span class="qty-update" v-if="updatedQty">
         <i class="material-icons">trending_flat</i>
         {{availableQtyUpdated}}
       </span>
     </td>
-    <td class="p-r-3">
+    <td width="10%">
       <Spinner :product="product" class="pull-xs-right" />
     </td>
   </tr>
 </template>
 <script>
- import Spinner from './spinner';
+  import Spinner from './spinner';
   import ProductDesc from './product-desc';
 
   export default {
