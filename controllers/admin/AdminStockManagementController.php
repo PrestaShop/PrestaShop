@@ -807,7 +807,7 @@ class AdminStockManagementControllerCore extends AdminController
         $this->_join .= ' RIGHT JOIN `'._DB_PREFIX_.'product_lang` AS b ON (b.id_product = a.id_product)';
 
         $this->_where = 'AND a.id_product = '.(int)$id_product.' AND a.id_product_attribute = '.(int)$id_product_attribute;
-        $this->_where .= ' AND b.id_lang = '.(int)$lang_id;
+        $this->_where .= ' AND b.id_lang = '.(int)$lang_id.' AND b.id_shop = p.id_shop_default';
 
         if ($id_warehouse != -1) {
             $this->_where .= ' AND a.id_warehouse = '.(int)$id_warehouse;
