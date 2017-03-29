@@ -1,20 +1,24 @@
-<template>
-  <tr v-if="product.hasCombination">
+<template v-for="product in product.list">
+  <tr>
     <td colspan="7" class="p-y-0">
       <table width="100%">
-        <tr class="has-combination">
-          <td class="product-desc" colspan="4">
-            <ProductDesc :name="product.product_name" :thumbnail="product.combination_thumbnail" />
-          </td>
-          <td colspan="3 text-xs-right">
-            <button type="button" class="m-r-3 pull-xs-right btn btn-tertiary-outline m-l-1"><i class="material-icons m-r-1">mode_edit</i>Edit all combinations</button>
-            <strong class="pull-xs-right">{{ totalCombinations }}</strong>
-          </td>
-        </tr>
+        <thead>
+          <tr v-if="product.hasCombination" class="has-combination">
+            <td class="product-desc" colspan="3">
+              <ProductDesc :name="product.product_name" :thumbnail="product.product_thumbnail" />
+            </td>
+            <td colspan="4 text-xs-right">
+              <button type="button" class="pull-xs-right btn btn-tertiary-outline m-l-1"><i class="material-icons m-r-1">mode_edit</i>Edit all combinations</button>
+              <strong class="pull-xs-right total">{{ totalCombinations }}</strong>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <Product v-for="item in productList" :product="item" key="{index}"/>
+        </tbody>
       </table>
     </td>
   </tr>
-  <Product v-else :product="product" />
 </template>
 
 <script>
@@ -25,6 +29,9 @@
   export default {
     props: ['product'],
     computed: {
+      productList() {
+        return this.product.list;
+      },
       totalCombinations() {
         if(this.product.total_combinations > 1) {
           let combinationsPerPage = this.$store.state.combinationsPerPage;
@@ -58,6 +65,9 @@
     background: $notice;
     .product-desc {
       padding-left : 35px;
+    }
+    .total {
+      line-height: 30px;
     }
   }
 </style>
