@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Entity\Repository;
 use Configuration;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Statement;
+use Doctrine\ORM\Query;
 use Employee;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
@@ -218,6 +219,7 @@ class StockRepository
 
         $query = $this->selectStock(
                 $this->andWhere($queryParams),
+                $this->having($queryParams),
                 $this->orderBy($queryParams)
             ) . $this->paginate();
 
@@ -279,11 +281,13 @@ class StockRepository
 
     /**
      * @param string $andWhereClause
+     * @param string $having
      * @param null $orderByClause
      * @return mixed
      */
     private function selectStock(
         $andWhereClause = '',
+        $having = '',
         $orderByClause = null
     )
     {
@@ -295,12 +299,14 @@ class StockRepository
             array(
                 '{left_join}',
                 '{and_where}',
+                '{having}',
                 '{order_by}',
                 '{table_prefix}',
             ),
             array(
                 $this->joinLimitingCombinationsPerProduct(),
                 $andWhereClause,
+                $having,
                 $orderByClause,
                 $this->tablePrefix,
             ),
@@ -313,9 +319,9 @@ class StockRepository
               total_combinations
             ) as total_combinations,
             IF (
-                COALESCE(pa.reference, 0) = 0,
+                LENGTH(COALESCE(pa.reference, "")) = 0,
                 IF (LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
-                IF (LENGTH(TRIM(pa.reference)) > 0, pa.reference, "N/A")
+                CONCAT(p.reference, " ", pa.reference)
             ) AS product_reference,
             IF (
                 COALESCE(pa.id_product_attribute, 0) > 0,
@@ -335,7 +341,10 @@ class StockRepository
             sa.reserved_quantity as product_reserved_quantity
             FROM {table_prefix}product p
             LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
-            LEFT JOIN {table_prefix}product_lang pl ON (p.id_product = pl.id_product)
+            LEFT JOIN {table_prefix}product_lang pl ON (
+                p.id_product = pl.id_product AND
+                pl.id_lang = :language_id
+            )
             LEFT JOIN {table_prefix}product_shop ps ON (
                 p.id_product = ps.id_product AND
                 ps.id_shop = :shop_id
@@ -398,11 +407,11 @@ class StockRepository
             ps.id_shop = :shop_id AND
             sa.id_shop = :shop_id AND
             ims.id_shop = :shop_id AND
-            pl.id_lang = :language_id AND
             sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0) AND
             p.state = :state
             {and_where}
             GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)
+            HAVING 1 {having}
             {order_by}
         ');
     }
@@ -481,13 +490,36 @@ class StockRepository
     private function andWhere(QueryParamsCollection $queryParams)
     {
         $filters = $queryParams->getSqlFilters();
-        $filters = strtr($filters, array(
+        $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], array(
             '{product_id}' => 'p.id_product',
             '{supplier_id}' => 'p.id_supplier',
-            '{category_id}' => 'cp.id_category'
+            '{category_id}' => 'cp.id_category',
+            '{product_reference}' => 'CONCAT(COALESCE(p.reference, ""), " ", COALESCE(p.reference, ""))',
+            '{supplier_name}' => 'COALESCE(s.name, "")',
+            '{product_name}' => 'pl.name'
         ));
 
         return $this->andWhereLimitingCombinationsPerProduct() . $filters;
+    }
+
+    /**
+     * @param QueryParamsCollection $queryParams
+     * @return string
+     */
+    private function having(QueryParamsCollection $queryParams)
+    {
+        $filters = $queryParams->getSqlFilters();
+
+        if (!array_key_exists($queryParams::SQL_CLAUSE_HAVING, $filters)) {
+            return '';
+        }
+
+        return strtr($filters['having'], array(
+            '{combination_name}' => 'combination_name',
+            '{product_reference}' => 'product_reference',
+            '{supplier_name}' => 'supplier_name',
+            '{product_name}' => 'product_name'
+        ));
     }
 
     /**
@@ -534,6 +566,10 @@ class StockRepository
     private function bindValuesInStatement(Statement $statement, QueryParamsCollection $queryParams)
     {
         $sqlParams = $queryParams->getSqlParams();
+
+        if (!array_key_exists('keyword_0', $sqlParams)) {
+            $sqlParams['keyword_0'] = '';
+        }
 
         foreach ($sqlParams as $name => $value) {
             if (is_int($value)) {

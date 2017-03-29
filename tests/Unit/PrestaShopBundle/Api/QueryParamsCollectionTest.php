@@ -130,7 +130,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
             $this->queryParams->getSqlFilters(),
         );
 
-        $expectedSqlClauses[2] = '';
+        $expectedSqlClauses[2] = array(QueryParamsCollection::SQL_CLAUSE_WHERE => '');
 
         $this->assertInternalType('array', $sqlParts);
 
@@ -171,7 +171,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
         );
 
         $expectedSqlClauses[1]['product_id'] = 1;
-        $expectedSqlClauses[2] = 'AND {product_id} = :product_id';
+        $expectedSqlClauses[2] = array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {product_id} = :product_id');
 
         $this->assertInternalType('array', $sqlParts);
 
@@ -237,7 +237,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
      * @param $expectedSql
      * @param $message
      */
-    public function it_should_make_query_params_with_supplier_filter_from_a_request(
+    public function it_should_make_query_params_with_filter_from_a_request(
         $params,
         $expectedSql,
         $message
@@ -262,27 +262,81 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
     {
         $supplierFilterMessage = 'It should provide with a SQL condition clause on supplier';
         $categoryFilterMessage = 'It should provide with a SQL condition clause on category';
+        $keywordsFilterMessage =
+            'It should provide with SQL conditions clauses on product references, names and supplier names'
+        ;
 
         return array(
             array(
                 array('supplier_id' => 1),
-                'AND {supplier_id} = :supplier_id',
+                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {supplier_id} = :supplier_id'),
                 $supplierFilterMessage
             ),
             array(
                 array('supplier_id' => array(1, 2)),
-                'AND {supplier_id} IN (:supplier_id_0,:supplier_id_1)',
+                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {supplier_id} IN (:supplier_id_0,:supplier_id_1)'),
                 $supplierFilterMessage
             ),
             array(
                 array('category_id' => 1),
-                'AND FIND_IN_SET({category_id}, :categories_ids)',
+                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND FIND_IN_SET({category_id}, :categories_ids)'),
                 $categoryFilterMessage
             ),
             array(
                 array('category_id' => array(1, 2)),
-                'AND FIND_IN_SET({category_id}, :categories_ids)',
+                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND FIND_IN_SET({category_id}, :categories_ids)'),
                 $categoryFilterMessage
+            ),
+            array(
+                array('keywords' => 'Fashion'),
+                array(
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => '',
+                    QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
+                        '{supplier_name} LIKE :keyword_0 OR ' .
+                        '{product_reference} LIKE :keyword_0 OR ' .
+                        '{product_name} LIKE :keyword_0 OR ' .
+                        '{combination_name} LIKE :keyword_0' .
+                        ')'
+                ),
+                $keywordsFilterMessage
+            ),
+            array(
+                array('keywords' => 'Chiffon'),
+                array(
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => '',
+                    QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
+                        '{supplier_name} LIKE :keyword_0 OR ' .
+                        '{product_reference} LIKE :keyword_0 OR ' .
+                        '{product_name} LIKE :keyword_0 OR ' .
+                        '{combination_name} LIKE :keyword_0' .
+                        ')',
+                ),
+                $keywordsFilterMessage
+            ),
+            array(
+                array('keywords' => array('Chiffon', 'demo_7', 'Size - S')),
+                array(
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => '',
+                    QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
+                        '{supplier_name} LIKE :keyword_0 OR ' .
+                        '{product_reference} LIKE :keyword_0 OR ' .
+                        '{product_name} LIKE :keyword_0 OR ' .
+                        '{combination_name} LIKE :keyword_0' .
+                        ')' . "\n" .
+                        'AND (' .
+                        '{supplier_name} LIKE :keyword_1 OR ' .
+                        '{product_reference} LIKE :keyword_1 OR ' .
+                        '{product_name} LIKE :keyword_1 OR ' .
+                        '{combination_name} LIKE :keyword_1' .
+                        ')' . "\n" .
+                        'AND (' .
+                        '{supplier_name} LIKE :keyword_2 OR ' .
+                        '{product_reference} LIKE :keyword_2 OR ' .
+                        '{product_name} LIKE :keyword_2 OR ' .
+                        '{combination_name} LIKE :keyword_2' .
+                        ')'
+                ),
+                $keywordsFilterMessage
             )
         );
     }
@@ -300,6 +354,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
             'page_size',
             'supplier_id',
             'category_id',
+            'keywords',
         );
 
         array_walk($validQueryParams, function ($name) use ($testedParams, &$params) {
