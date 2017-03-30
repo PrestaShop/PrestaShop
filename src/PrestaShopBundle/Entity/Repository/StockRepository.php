@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Entity\Repository;
 use Configuration;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Statement;
-use Doctrine\ORM\Query;
 use Employee;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
@@ -48,8 +47,6 @@ use Shop;
 class StockRepository
 {
     use NormalizeFieldTrait;
-
-    const MAX_COMBINATIONS_PER_PRODUCT = 50;
 
     /**
      * @var Connection
@@ -422,20 +419,11 @@ class StockRepository
     private function joinLimitingCombinationsPerProduct()
     {
         return 'LEFT JOIN (
-            SELECT SUBSTRING_INDEX(
-                GROUP_CONCAT(pa.id_product_attribute),
-                \',\',
-                :max_combinations_per_product
-            ) product_attribute_ids,
+            SELECT pa.id_product product_id,
             COUNT(pa.id_product_attribute) total_combinations
             FROM {table_prefix}product_attribute pa
             GROUP BY pa.id_product
-        ) combinations_per_product ON (
-            COALESCE(
-                FIND_IN_SET(pa.id_product_attribute, combinations_per_product.product_attribute_ids),
-                0
-            ) > 0
-        ) ';
+        ) combinations_per_product ON (combinations_per_product.product_id = p.id_product) ';
     }
 
     /**
@@ -445,7 +433,7 @@ class StockRepository
     {
         return 'AND (
             ISNULL(pa.id_product_attribute) OR
-            NOT ISNULL(combinations_per_product.product_attribute_ids)
+            NOT ISNULL(combinations_per_product.total_combinations)
         ) ';
     }
 
@@ -463,7 +451,6 @@ class StockRepository
         $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
         $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
         $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
-        $statement->bindValue('max_combinations_per_product', self::MAX_COMBINATIONS_PER_PRODUCT, PDO::PARAM_INT);
 
         if ($queryParams) {
             $this->bindValuesInStatement($statement, $queryParams);
@@ -493,10 +480,7 @@ class StockRepository
         $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], array(
             '{product_id}' => 'p.id_product',
             '{supplier_id}' => 'p.id_supplier',
-            '{category_id}' => 'cp.id_category',
-            '{product_reference}' => 'CONCAT(COALESCE(p.reference, ""), " ", COALESCE(p.reference, ""))',
-            '{supplier_name}' => 'COALESCE(s.name, "")',
-            '{product_name}' => 'pl.name'
+            '{category_id}' => 'cp.id_category'
         ));
 
         return $this->andWhereLimitingCombinationsPerProduct() . $filters;
@@ -566,10 +550,6 @@ class StockRepository
     private function bindValuesInStatement(Statement $statement, QueryParamsCollection $queryParams)
     {
         $sqlParams = $queryParams->getSqlParams();
-
-        if (!array_key_exists('keyword_0', $sqlParams)) {
-            $sqlParams['keyword_0'] = '';
-        }
 
         foreach ($sqlParams as $name => $value) {
             if (is_int($value)) {

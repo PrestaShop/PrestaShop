@@ -114,10 +114,7 @@ class QueryParamsCollection
             $filterParams[$filter] = $allParameters[$filter];
         });
 
-
         $queryParams['filter'] = $filterParams;
-
-
 
         return $queryParams;
     }
