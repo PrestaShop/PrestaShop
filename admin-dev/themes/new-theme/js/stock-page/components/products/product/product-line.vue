@@ -40,9 +40,9 @@
     props: ['product'],
     computed: {
       productName() {
-        if(this.product.combination_id !== 0) {
+        /*if(this.product.combination_id !== 0) {
           return this.product.combination_name;
-        }
+        }*/
         return this.product.product_name;
       },
       updatedQty() {

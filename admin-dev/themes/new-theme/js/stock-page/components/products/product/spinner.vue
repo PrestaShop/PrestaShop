@@ -48,7 +48,6 @@
     },
     watch: {
       value(val) {
-        console.log(this.product.product_id,this.product.combination_id)
         this.$store.commit('UPDATE_PRODUCT_QTY', {
           product_id: this.product.product_id,
           combination_id: this.product.combination_id,
@@ -107,10 +106,10 @@
         outline:none;
         opacity: 0;
         position: absolute;
-        top: 4px;
+        top: 3px;
         right: 0;
         border: none;
-        height: 29px;
+        height: 30px;
         width: 40px;
         background: $brand-primary;
         z-index: 2;
@@ -143,7 +142,7 @@
   }
   .edit-qty {
     text-indent: 5px;
-    height: 31px;
+    height: 32px;
     width: 70px;
     border: 1px solid $gray-light;
     margin-right: 0;
