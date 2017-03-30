@@ -1,0 +1,27 @@
+version: '2'
+
+volumes:
+    db-data:
+
+services:
+    mysql:
+        image: mysql
+        ports:
+            - "3306"
+        volumes:
+            - db-data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: prestashop
+        restart: always
+    apache:
+        container_name: prestashop-git
+        image: prestashop/prestashop-git:7
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./:/var/www/html/
+        restart: always
+
+
