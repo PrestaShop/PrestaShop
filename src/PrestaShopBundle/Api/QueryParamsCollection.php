@@ -107,11 +107,14 @@ class QueryParamsCollection
         array_walk($filters, function ($filter) use ($allParameters, &$filterParams) {
             if (is_array($allParameters[$filter])) {
                 $allParameters[$filter] = array_filter($allParameters[$filter], function ($value) {
-                    return strlen(trim($value)) > 0;
+                    return is_int($value) || (is_string($value) && strlen(trim($value)) > 0);
                 });
             }
 
             $filterParams[$filter] = $allParameters[$filter];
+            if (is_array($filterParams[$filter]) && count($filterParams[$filter]) === 0) {
+                unset($filterParams[$filter]);
+            }
         });
 
         $queryParams['filter'] = $filterParams;
