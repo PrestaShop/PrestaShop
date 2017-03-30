@@ -1434,11 +1434,10 @@ class AdminImportControllerCore extends AdminController
         // If both failed, mysql error
         if (!$res) {
             $this->errors[] = $this->trans(
-                '%1$s (ID: %2$s) cannot be %3$s',
+                '%1$s (ID: %2$s) cannot be saved,
                 array(
                     (isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
-                    (isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID',
-                    ($validateOnly?'validated':'saved')
+                    (isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID')
                 ),
                 'Admin.Advparameters.Notification'
             );
