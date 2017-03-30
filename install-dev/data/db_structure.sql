@@ -1600,8 +1600,7 @@ CREATE TABLE `PREFIX_profile_lang` (
   `id_lang` int(10) unsigned NOT NULL,
   `id_profile` int(10) unsigned NOT NULL,
   `name` varchar(128) NOT NULL,
-  PRIMARY KEY (`id_profile`,`id_lang`),
-  UNIQUE KEY (`name`)
+  PRIMARY KEY (`id_profile`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_quick_access` (
