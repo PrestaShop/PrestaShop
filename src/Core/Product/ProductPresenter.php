@@ -492,11 +492,15 @@ class ProductPresenter
      */
     public function addReferenceToDisplay(array $product, array $presentedProduct)
     {
-        foreach ($product['attributes'] as $attribute) {
-            if (isset($attribute['reference']) && $attribute['reference'] != null) {
-                $presentedProduct['reference_to_display'] = $attribute['reference'];
-            } else {
-                $presentedProduct['reference_to_display'] = $product['reference'];
+        if ('' !== $product['reference']) {
+            $presentedProduct['reference_to_display'] = $product['reference'];
+        }
+
+        if (isset($product['attributes'])) {
+            foreach ($product['attributes'] as $attribute) {
+                if (isset($attribute['reference']) && $attribute['reference'] != null) {
+                    $presentedProduct['reference_to_display'] = $attribute['reference'];
+                }
             }
         }
 
@@ -627,13 +631,13 @@ class ProductPresenter
             $product
         );
 
+        $presentedProduct = $this->addReferenceToDisplay(
+            $product,
+            $presentedProduct
+        );
+
         // If product has attributes and it's no added to card
         if (isset($product['attributes']) && !isset($product['cart_quantity'])) {
-            $presentedProduct = $this->addReferenceToDisplay(
-                $product,
-                $presentedProduct
-            );
-
             $presentedProduct = $this->addAttributesSpecificReferences(
                 $product,
                 $presentedProduct
