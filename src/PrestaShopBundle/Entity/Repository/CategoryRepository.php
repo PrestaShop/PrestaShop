@@ -59,11 +59,6 @@ class CategoryRepository
     private $shopId;
 
     /**
-     * @var array
-     */
-    private $orderStates = array();
-
-    /**
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param $tablePrefix
