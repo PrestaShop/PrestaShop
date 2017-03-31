@@ -31,6 +31,16 @@ namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Ap
  */
 class AttributeControllerTest extends ApiTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $legacyContextMock = $this->mockContextAdapter();
+
+        $container = self::$kernel->getContainer();
+        $container->set('prestashop.adapter.legacy.context', $legacyContextMock->reveal());
+    }
+
     /**
      * @test
      */

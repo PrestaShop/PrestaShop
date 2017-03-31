@@ -90,6 +90,7 @@ class FeatureAttributeRepository
             agl.name AS name,
             GROUP_CONCAT(
               CONCAT(al.id_attribute, ":", al.name)
+              ORDER BY al.id_attribute
             ) AS "values"
             FROM {table_prefix}attribute a
             LEFT JOIN {table_prefix}attribute_lang al ON (
@@ -130,6 +131,10 @@ class FeatureAttributeRepository
             $row['values'] = explode(',', $row['values']);
 
             $row['values'] = array_map(function ($value) {
+                if (false === strpos($value, ':')) {
+                    return $value;
+                }
+
                 $parts = explode(':', $value);
 
                 return array(

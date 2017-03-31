@@ -436,19 +436,29 @@ class StockControllerTest extends ApiTestCase
      */
     public function it_should_return_valid_response_when_requesting_stock_search_results()
     {
-        $this->assertOkResponseOnSearchProducts();
-    }
 
-    private function assertOkResponseOnSearchProducts()
-    {
-        $searchProductsRoute = $this->router->generate('api_stock_list_products');
+        $listProductsRoute = $this->router->generate('api_stock_list_products');
 
         $this->client->request(
             'GET',
-            $searchProductsRoute,
-            array('keywords' =>
-                array('Chiffon', 'demo_7', 'Size - S')
-            )
+            $listProductsRoute,
+            array('keywords' => array('Chiffon', 'demo_7', 'Size - S'))
+        );
+
+        $this->assertResponseBodyValidJson(200);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_return_valid_response_when_requesting_stock_with_attributes()
+    {
+        $listProductsRoute = $this->router->generate('api_stock_list_products');
+
+        $this->client->request(
+            'GET',
+            $listProductsRoute,
+            array('attributes' => array('1:2', '3:14'))
         );
 
         $this->assertResponseBodyValidJson(200);

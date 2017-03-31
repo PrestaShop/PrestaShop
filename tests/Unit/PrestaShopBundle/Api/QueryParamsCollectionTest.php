@@ -118,7 +118,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
                 'order' => $order,
                 'page_index' => $pageIndex,
                 'page_size' => $pageSize,
-                'attributes' => $this->mockAttributes(array())->reveal()
+                '_attributes' => $this->mockAttributes(array())->reveal()
             )
         );
 
@@ -158,7 +158,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
                 'order' => $order,
                 'page_index' => $pageIndex,
                 'page_size' => $pageSize,
-                'attributes' => $this->mockAttributes(array('productId' => 1))->reveal()
+                '_attributes' => $this->mockAttributes(array('productId' => 1))->reveal()
             )
         );
 
@@ -245,7 +245,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
     {
         $requestMock = $this->mockRequest(array_merge(
             $params,
-            array('attributes' => $this->mockAttributes(array())->reveal())
+            array('_attributes' => $this->mockAttributes(array())->reveal())
         ));
         $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
         $this->assertEquals(
@@ -265,6 +265,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
         $keywordsFilterMessage =
             'It should provide with SQL conditions clauses on product references, names and supplier names'
         ;
+        $attributesFilterMessage = 'It should provide with SQL conditions clauses on product attributes';
 
         return array(
             array(
@@ -337,6 +338,23 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
                         ')'
                 ),
                 $keywordsFilterMessage
+            ),
+            array(
+                array('attributes' => '1:2'),
+                array(
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND '.
+                        'FIND_IN_SET(:attribute_0, {attributes})'
+                ),
+                $attributesFilterMessage
+            ),
+            array(
+                array('attributes' => array('1:2', '3:14')),
+                array(
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND ' .
+                        'FIND_IN_SET(:attribute_0, {attributes})' . "\n" .
+                        'AND FIND_IN_SET(:attribute_1, {attributes})'
+                ),
+                $attributesFilterMessage
             )
         );
     }
@@ -355,6 +373,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
             'supplier_id',
             'category_id',
             'keywords',
+            'attributes',
         );
 
         array_walk($validQueryParams, function ($name) use ($testedParams, &$params) {
@@ -390,8 +409,8 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
     private function mockRequest(array $params)
     {
         $attributesMock = null;
-        if (array_key_exists('attributes', $params)) {
-            $attributesMock = $params['attributes'];
+        if (array_key_exists('_attributes', $params)) {
+            $attributesMock = $params['_attributes'];
         }
 
         $queryMock = $this->mockQuery($params);
