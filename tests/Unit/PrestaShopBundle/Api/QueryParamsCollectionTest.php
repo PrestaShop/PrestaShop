@@ -266,6 +266,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
             'It should provide with SQL conditions clauses on product references, names and supplier names'
         ;
         $attributesFilterMessage = 'It should provide with SQL conditions clauses on product attributes';
+        $featuresFilterMessage = 'It should provide with SQL conditions clauses on product features';
 
         return array(
             array(
@@ -355,6 +356,23 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
                         'AND FIND_IN_SET(:attribute_1, {attributes})'
                 ),
                 $attributesFilterMessage
+            ),
+            array(
+                array('features' => '5:1'),
+                array(
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND ' .
+                        'FIND_IN_SET(:feature_0, {features})'
+                ),
+                $featuresFilterMessage
+            ),
+            array(
+                array('features' => array('5:1', '6:11')),
+                array(
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND ' .
+                        'FIND_IN_SET(:feature_0, {features})' . "\n" .
+                        'AND FIND_IN_SET(:feature_1, {features})'
+                ),
+                $featuresFilterMessage
             )
         );
     }
@@ -374,6 +392,7 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
             'category_id',
             'keywords',
             'attributes',
+            'features',
         );
 
         array_walk($validQueryParams, function ($name) use ($testedParams, &$params) {
