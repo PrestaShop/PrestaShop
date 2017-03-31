@@ -11,7 +11,6 @@ const stockApp = new Vue({
   components: { app },
   mounted() {
     this.$store.dispatch('getStock', {
-      url: window.data.apiRootUrl.replace(/\?.*/,''),
       order: this.$store.state.order,
       page_size: this.$store.state.productsPerPage,
       page_index: 1

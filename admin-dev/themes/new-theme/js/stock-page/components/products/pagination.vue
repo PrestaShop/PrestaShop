@@ -21,7 +21,8 @@
 </template>
 
 <script>
-import PageIndex from './page-index';
+  import PageIndex from './page-index';
+
   const DEFAULT_PAGES_NUMBER = 3;
   const ACTIVE_MULTI_PAGINATION_NUMBER = 5;
   export default {
@@ -52,7 +53,6 @@ import PageIndex from './page-index';
       onPageChanged(pageIndex) {
         this.currentIndex = pageIndex;
         this.$store.dispatch('getStock', {
-          url: window.data.apiRootUrl.replace(/\?.*/,''),
           order: this.$store.state.order,
           page_size: this.$store.state.productsPerPage,
           page_index: pageIndex

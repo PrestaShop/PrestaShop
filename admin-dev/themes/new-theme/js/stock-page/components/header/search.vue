@@ -2,7 +2,7 @@
   <div id="search" class="row">
     <div class="col-md-8">
       <div class="m-b-2">
-        <form @keyup.enter="onKeyEnter" class="search-form" @submit.prevent="onKeyEnter">
+        <form @keyup.enter="onSubmit" class="search-form" @submit.prevent="onSubmit">
           <label>Search products (search by name,reference,supplier)</label>
           <Tags :tags="tags" @tags-change="handleChange"  />
           <button type="button" class="btn btn-primary search-button" @click="onSubmit">
@@ -31,22 +31,21 @@
     },
     methods: {
       onSubmit() {
-        if(this.tags.length) {
-          let apiRootUrl = data.apiRootUrl.replace(/\?.*/,'');
-          this.$store.dispatch('searchByKeywords', {
-            url: apiRootUrl,
-            keywords: this.tags
-          });
-        }
-      },
-      onKeyEnter() {
         $(this.$el).find('.input').blur();
+        this.$store.dispatch('getStock', {
+          order: this.$store.state.order,
+          page_size: this.$store.state.productsPerPage,
+          page_index: this.$store.state.pageIndex,
+          keywords: this.tags
+        });
+        setTimeout(() => $(this.$el).find('.gap:last-of-type .input').focus() , 15);
       },
       handleChange(index, text) {
         if (text) {
           this.tags.splice(index, 0, text);
         } else {
           this.tags.splice(index, 1);
+          this.onSubmit();
         }
       }
     }

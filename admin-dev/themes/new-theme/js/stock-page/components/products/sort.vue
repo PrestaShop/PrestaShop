@@ -7,14 +7,12 @@
     props: ['order','isDesc'],
     methods: {
       sortFilter: function (event) {
-        let apiRootUrl = data.apiRootUrl.replace(/\?.*/,'');
         let desc = this.isDesc ? ' desc' : '';
 
         event.preventDefault();
 
         this.$emit('sort');
         this.$store.dispatch('getStock', {
-          url: apiRootUrl,
           order: `${this.order}${desc}`,
           page_size: this.$store.state.productsPerPage,
           page_index: this.$store.getters.pageIndex

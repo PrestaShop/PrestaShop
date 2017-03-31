@@ -106,7 +106,7 @@
         outline:none;
         opacity: 0;
         position: absolute;
-        top: 3px;
+        top: 3.5px;
         right: 0;
         border: none;
         height: 30px;
