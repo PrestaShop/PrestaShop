@@ -31,16 +31,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class AttributeController
 {
     /**
-     * @var \PrestaShopBundle\Entity\Repository\AttributeRepository
+     * @var \PrestaShopBundle\Entity\Repository\FeatureAttributeRepository
      */
-    public $attributeRepository;
+    public $featureAttributeRepository;
 
     /**
      * @return JsonResponse
      */
     public function listAttributesAction()
     {
-        $attributes = $this->attributeRepository->getAttributes();
+        $attributes = $this->featureAttributeRepository->getAttributes();
 
         return new JsonResponse($attributes, 200);
     }

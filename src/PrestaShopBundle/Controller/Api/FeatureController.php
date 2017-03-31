@@ -24,34 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
+namespace PrestaShopBundle\Controller\Api;
 
-/**
- * @group api
- * @group attribute
- */
-class AttributeControllerTest extends ApiTestCase
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class FeatureController
 {
-    public function setUp()
-    {
-        parent::setUp();
-
-        $legacyContextMock = $this->mockContextAdapter();
-
-        $container = self::$kernel->getContainer();
-        $container->set('prestashop.adapter.legacy.context', $legacyContextMock->reveal());
-    }
+    /**
+     * @var \PrestaShopBundle\Entity\Repository\FeatureAttributeRepository
+     */
+    public $featureAttributeRepository;
 
     /**
-     * @test
+     * @return JsonResponse
      */
-    public function it_should_return_ok_response_when_requesting_attributes()
+    public function listFeaturesAction()
     {
-        $route = $this->router->generate('api_stock_list_attributes');
-        $this->client->request('GET', $route);
+        $features = $this->featureAttributeRepository->getFeatures();
 
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+        return new JsonResponse($features, 200);
     }
 }

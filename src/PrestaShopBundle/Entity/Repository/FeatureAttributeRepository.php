@@ -31,6 +31,7 @@ use Employee;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use RuntimeException;
+use Shop;
 
 class FeatureAttributeRepository
 {
@@ -50,6 +51,11 @@ class FeatureAttributeRepository
      * @var int
      */
     private $languageId;
+
+    /**
+     * @var int
+     */
+    private $shopId;
 
     /**
      * FeatureAttributeRepository constructor.
@@ -75,6 +81,17 @@ class FeatureAttributeRepository
 
         $languageId = $context->employee->id_lang;
         $this->languageId = (int)$languageId;
+
+        if (!$context->shop instanceof Shop) {
+            throw new RuntimeException('Determining the active shop requires a contextual shop instance.');
+        }
+
+        $shop = $context->shop;
+        if ($shop->getContextType() !== $shop::CONTEXT_SHOP) {
+            throw new NotImplementedException('Shop context types other than "single shop" are not supported');
+        }
+
+        $this->shopId = $shop->getContextualShopId();
     }
 
     /**
@@ -93,6 +110,10 @@ class FeatureAttributeRepository
               ORDER BY al.id_attribute
             ) AS "values"
             FROM {table_prefix}attribute a
+            LEFT JOIN {table_prefix}attribute_shop ats ON (
+                ats.id_attribute = a.id_attribute AND
+                ats.id_shop = :shop_id
+            )
             LEFT JOIN {table_prefix}attribute_lang al ON (
                 a.id_attribute = al.id_attribute
                 AND al.id_lang = :language_id
@@ -100,6 +121,10 @@ class FeatureAttributeRepository
             )
             LEFT JOIN {table_prefix}attribute_group ag ON (
                 ag.id_attribute_group = a.id_attribute_group
+            )
+            LEFT JOIN {table_prefix}attribute_group_shop ags ON (
+                ags.id_attribute_group = a.id_attribute_group AND
+                ags.id_shop = :shop_id
             )
             LEFT JOIN {table_prefix}attribute_group_lang agl ON (
                 ag.id_attribute_group = agl.id_attribute_group
@@ -112,6 +137,56 @@ class FeatureAttributeRepository
         $statement = $this->connection->prepare($query);
 
         $statement->bindValue('language_id', $this->languageId);
+        $statement->bindValue('shop_id', $this->shopId);
+
+        $statement->execute();
+
+        $rows = $statement->fetchAll();
+        $rows = $this->explodeCollections($rows);
+
+        return $this->castNumericToInt($rows);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeatures()
+    {
+        $query = str_replace(
+            '{table_prefix}',
+            $this->tablePrefix,
+            'SELECT
+            f.id_feature AS feature_id,
+            fl.name AS name,
+            GROUP_CONCAT(
+              CONCAT(fvl.id_feature_value, ":", fvl.value)
+              ORDER BY fvl.id_feature_value
+            ) AS "values"
+            FROM {table_prefix}feature f
+            LEFT JOIN {table_prefix}feature_lang fl ON (
+                f.id_feature = fl.id_feature AND
+                fl.id_lang = :language_id
+            )
+            LEFT JOIN {table_prefix}feature_shop fs ON (
+                fs.id_shop = :shop_id AND
+                fs.id_feature = f.id_feature
+            )
+            LEFT JOIN {table_prefix}feature_value fv ON (
+                f.id_feature = fv.id_feature
+            )
+            LEFT JOIN {table_prefix}feature_value_lang fvl ON (
+                fvl.id_lang = :language_id AND
+                fvl.id_feature_value = fv.id_feature_value
+            )
+            WHERE fv.custom = 0
+            GROUP BY fv.id_feature
+            ORDER BY f.id_feature
+        ');
+
+        $statement = $this->connection->prepare($query);
+
+        $statement->bindValue('language_id', $this->languageId);
+        $statement->bindValue('shop_id', $this->shopId);
 
         $statement->execute();
 
@@ -138,8 +213,8 @@ class FeatureAttributeRepository
                 $parts = explode(':', $value);
 
                 return array(
-                  'attribute_id' => $parts[0],
-                  'name' => $parts[1],
+                    'item_id' => $parts[0],
+                    'name' => $parts[1],
                 );
             }, $row['values']);
 
