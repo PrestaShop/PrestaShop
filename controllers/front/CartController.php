@@ -286,6 +286,7 @@ class CartControllerCore extends FrontController
                 $this->context->cart->add();
                 if ($this->context->cart->id) {
                     $this->context->cookie->id_cart = (int)$this->context->cart->id;
+                    $this->context->cookie->write();		
                 }
             }
 
@@ -375,6 +376,9 @@ class CartControllerCore extends FrontController
      */
     public function displayAjax()
     {
+        // write cookie if can't on destruct
+        $this->context->cookie->write();
+	    
         if ($this->errors) {
             $this->ajaxDie(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
         }
@@ -382,8 +386,6 @@ class CartControllerCore extends FrontController
             $this->ajaxDie(Tools::jsonEncode(array('refresh' => true)));
         }
 
-        // write cookie if can't on destruct
-        $this->context->cookie->write();
 
         if (Tools::getIsset('summary')) {
             $result = array();
