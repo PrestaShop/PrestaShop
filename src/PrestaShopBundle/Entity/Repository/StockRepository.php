@@ -335,7 +335,8 @@ class StockRepository
             pl.name AS product_name,
             sa.quantity as product_available_quantity,
             sa.physical_quantity as product_physical_quantity,
-            sa.reserved_quantity as product_reserved_quantity
+            sa.reserved_quantity as product_reserved_quantity,
+            product_attributes.attributes AS product_attributes
             FROM {table_prefix}product p
             LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
             LEFT JOIN {table_prefix}product_lang pl ON (
@@ -398,6 +399,23 @@ class StockRepository
                 ag.id_attribute_group = agl.id_attribute_group
                 AND agl.id_lang = :language_id
                 AND LENGTH(TRIM(agl.name)) > 0
+            )
+            LEFT JOIN (
+                SELECT GROUP_CONCAT(
+                    CONCAT(ag.id_attribute_group, ":", a.id_attribute)
+                    ORDER BY ag.id_attribute_group, a.id_attribute
+                ) AS "attributes",
+                pac.id_product_attribute
+                FROM {table_prefix}product_attribute_combination pac
+                LEFT JOIN {table_prefix}attribute a ON (
+                    pac.id_attribute = a.id_attribute
+                )
+                LEFT JOIN {table_prefix}attribute_group ag ON (
+                    ag.id_attribute_group = a.id_attribute_group
+                )
+                GROUP BY pac.id_product_attribute
+            ) product_attributes ON (
+                product_attributes.id_product_attribute = pac.id_product_attribute
             )
             {left_join}
             WHERE
@@ -480,7 +498,8 @@ class StockRepository
         $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], array(
             '{product_id}' => 'p.id_product',
             '{supplier_id}' => 'p.id_supplier',
-            '{category_id}' => 'cp.id_category'
+            '{category_id}' => 'cp.id_category',
+            '{attributes}' => 'product_attributes.attributes',
         ));
 
         return $this->andWhereLimitingCombinationsPerProduct() . $filters;

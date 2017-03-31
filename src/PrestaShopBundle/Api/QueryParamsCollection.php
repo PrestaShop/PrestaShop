@@ -127,7 +127,7 @@ class QueryParamsCollection
      */
     private function getValidFilterParams()
     {
-        return array('productId', 'supplier_id', 'category_id', 'keywords');
+        return array('productId', 'supplier_id', 'category_id', 'keywords', 'attributes');
     }
 
     /**
@@ -309,12 +309,16 @@ class QueryParamsCollection
     {
         $column = Inflector::tableize($column);
 
+        if ($column === 'attributes') {
+            return $this->appendSqlAttributesFilter($filters, $value);
+        }
+
         if ($column === 'keywords') {
             return $filters;
         }
 
         if ($column === 'category_id') {
-            return $this->appendSqlCategoryFilter($column, $filters);
+            return $this->appendSqlCategoryFilter($filters);
         }
 
         if (!is_array($value)) {
@@ -386,6 +390,10 @@ class QueryParamsCollection
     {
         $column = Inflector::tableize($column);
 
+        if ($column === 'attributes') {
+            return $this->appendSqlAttributesFilterParam($value, $sqlParams);
+        }
+
         if ($column === 'keywords') {
             return $this->appendSqlSearchFilterParam($value, $sqlParams);
         }
@@ -412,9 +420,31 @@ class QueryParamsCollection
      * @param array $filters
      * @return array
      */
-    private function appendSqlCategoryFilter($column, array $filters)
+    private function appendSqlCategoryFilter(array $filters)
     {
-        $filters[] = sprintf('AND FIND_IN_SET({%s}, %s)', $column, ':categories_ids');
+        $filters[] = sprintf('AND FIND_IN_SET({%s}, %s)', 'category_id', ':categories_ids');
+
+        return $filters;
+    }
+
+    /**
+     * @param array $filters
+     * @param $attributes
+     * @return array
+     */
+    private function appendSqlAttributesFilter(array $filters, $attributes)
+    {
+        if (!is_array($attributes)) {
+            $attributes = array($attributes);
+        }
+
+        $attributesKeys = array_keys($attributes);
+        array_walk($attributesKeys, function ($key) use (&$filters) {
+            $filters[] = sprintf(
+                'AND FIND_IN_SET(:attribute_%d, {attributes})',
+                $key
+            );
+        });
 
         return $filters;
     }
@@ -444,6 +474,24 @@ class QueryParamsCollection
 
         array_map(function ($index, $value) use (&$sqlParams) {
             $sqlParams['keyword_' . $index] = strval('%' . $value . '%');
+        }, range(0, count($value) - 1), $value);
+
+        return $sqlParams;
+    }
+
+    /**
+     * @param array $value
+     * @param $sqlParams
+     * @return array
+     */
+    private function appendSqlAttributesFilterParam($value, $sqlParams)
+    {
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+
+        array_map(function ($index, $value) use (&$sqlParams) {
+            $sqlParams['attribute_' . $index] = strval($value);
         }, range(0, count($value) - 1), $value);
 
         return $sqlParams;
