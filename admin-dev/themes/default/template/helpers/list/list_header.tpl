@@ -26,7 +26,7 @@
 {if $ajax}
 	<script type="text/javascript">
 		$(function () {
-			$(".ajax_table_link").click(function () {
+			$(".ajax_table_link").off().click(function () {
 				var link = $(this);
 				$.post($(this).attr('href'), function (data) {
 					if (data.success == 1) {
