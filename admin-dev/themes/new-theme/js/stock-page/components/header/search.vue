@@ -55,6 +55,8 @@
   @import "~PrestaKit/scss/custom/_variables.scss";
   #search .tags-input {
     background: white;
+    padding: 0 10px;
+    min-height: 27px;
     .tag {
       background: $brand-primary;
       color: white;
@@ -66,15 +68,21 @@
         width: 15px;
       }
     }
+    .gap:first-of-type .input {
+      margin-left: -6px;
+    }
     input.input {
       font-family: Open Sans, sans-serif;
+      cursor: text;
+      padding-left: 2px;
     }
   }
   .search-form {
-    position: relative;
+    width: calc(100% - 100px);
     .search-button {
+      float: left;
       position: absolute;
-      right: 0;
+      right: 12px;
       top: 0;
       border-radius: 0;
       margin-top: 28px;

@@ -12,6 +12,7 @@
       </tr>
     </thead>
     <tbody>
+      <Alert v-if="emptyProducts" />
       <ProductLine v-for="(product, index) in products" key=${index} :product="product" />
     </tbody>
   </table>
@@ -19,12 +20,14 @@
 
 <script>
   import ProductLine from './product/product-line';
+  import Alert from './alert';
   import Sort from './sort';
 
   export default {
     components: {
       ProductLine,
-      Sort
+      Sort,
+      Alert
     },
     methods: {
       toggleSort() {
@@ -34,6 +37,9 @@
     computed: {
       products() {
        return this.$store.getters.products;
+      },
+      emptyProducts() {
+        return !this.$store.getters.products.length;
       }
     },
     data() {
