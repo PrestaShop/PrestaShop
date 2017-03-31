@@ -13,3 +13,7 @@ _api_supplier:
 _api_category:
     resource: "api/routing_category.yml"
     prefix: /api
+
+_api_attribute:
+    resource: "api/routing_attribute.yml"
+    prefix: /api

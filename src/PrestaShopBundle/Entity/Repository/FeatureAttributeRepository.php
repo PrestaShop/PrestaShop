@@ -28,12 +28,11 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Employee;
-use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use RuntimeException;
-use Shop;
 
-class CategoryRepository
+class FeatureAttributeRepository
 {
     use NormalizeFieldTrait;
 
@@ -53,11 +52,7 @@ class CategoryRepository
     private $languageId;
 
     /**
-     * @var int
-     */
-    private $shopId;
-
-    /**
+     * FeatureAttributeRepository constructor.
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param $tablePrefix
@@ -80,46 +75,72 @@ class CategoryRepository
 
         $languageId = $context->employee->id_lang;
         $this->languageId = (int)$languageId;
-
-        if (!$context->shop instanceof Shop) {
-            throw new RuntimeException('Determining the active shop requires a contextual shop instance.');
-        }
-
-        $shop = $context->shop;
-        if ($shop->getContextType() !== $shop::CONTEXT_SHOP) {
-            throw new NotImplementedException('Shop context types other than "single shop" are not supported');
-        }
-
-        $this->shopId = $shop->getContextualShopId();
     }
 
     /**
      * @return mixed
      */
-    public function getCategories()
+    public function getAttributes()
     {
         $query = str_replace(
             '{table_prefix}',
             $this->tablePrefix,
             'SELECT
-            c.id_category AS category_id,
-            cl.name
-            FROM {table_prefix}category c
-            LEFT JOIN {table_prefix}category_lang cl ON (cl.id_category = c.id_category)
-            LEFT JOIN {table_prefix}category_shop cs ON (cs.id_category = c.id_category)
-            WHERE cl.id_lang = :language_id
-            AND cs.id_shop = :shop_id
+            a.id_attribute_group AS attribute_group_id,
+            agl.name AS name,
+            GROUP_CONCAT(
+              CONCAT(al.id_attribute, ":", al.name)
+            ) AS "values"
+            FROM {table_prefix}attribute a
+            LEFT JOIN {table_prefix}attribute_lang al ON (
+                a.id_attribute = al.id_attribute
+                AND al.id_lang = :language_id
+                AND LENGTH(TRIM(al.name)) > 0
+            )
+            LEFT JOIN {table_prefix}attribute_group ag ON (
+                ag.id_attribute_group = a.id_attribute_group
+            )
+            LEFT JOIN {table_prefix}attribute_group_lang agl ON (
+                ag.id_attribute_group = agl.id_attribute_group
+                AND agl.id_lang = :language_id
+                AND LENGTH(TRIM(agl.name)) > 0
+            )
+            GROUP BY ag.id_attribute_group
         ');
 
         $statement = $this->connection->prepare($query);
 
         $statement->bindValue('language_id', $this->languageId);
-        $statement->bindValue('shop_id', $this->shopId);
 
         $statement->execute();
 
         $rows = $statement->fetchAll();
+        $rows = $this->explodeCollections($rows);
 
         return $this->castNumericToInt($rows);
+    }
+
+    /**
+     * @param $rows
+     * @return array
+     */
+    private function explodeCollections($rows)
+    {
+        return array_map(function ($row) {
+            $row['values'] = explode(',', $row['values']);
+
+            $row['values'] = array_map(function ($value) {
+                $parts = explode(':', $value);
+
+                return array(
+                  'attribute_id' => $parts[0],
+                  'name' => $parts[1],
+                );
+            }, $row['values']);
+
+            $row['values'] = $this->castNumericToInt($row['values']);
+
+            return $row;
+        }, $rows);
     }
 }
