@@ -4,6 +4,7 @@ import VueResource from 'vue-resource';
 import { showGrowl } from '../utils/growl';
 
 Vue.use(VueResource);
+
 // initial state
 const state = {
   productsToUpdate: [],
@@ -55,6 +56,7 @@ const mutations = {
 
     state.products = products;
   },
+
   [types.UPDATE_PRODUCT](state, updatedProduct) {
     let index = window._.findIndex(state.products, {
       'product_id': updatedProduct.product_id,

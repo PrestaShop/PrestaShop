@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import * as actions from './actions';
 import mutations from './mutations';
-import search from './modules/search';
 import products from './modules/products';
 
 Vue.use(Vuex);
@@ -14,7 +13,8 @@ const state = {
   pageIndex: 0,
   totalPages: 0,
   productsPerPage: 100,
-  combinationsPerPage: 50
+  combinationsPerPage: 50,
+  keywords: []
 };
 
 // getters are functions
@@ -41,7 +41,6 @@ export default new Vuex.Store({
   actions,
   mutations,
   modules: {
-    search,
     products
   }
 });
