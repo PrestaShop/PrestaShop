@@ -436,7 +436,6 @@ class StockControllerTest extends ApiTestCase
      */
     public function it_should_return_valid_response_when_requesting_stock_search_results()
     {
-
         $listProductsRoute = $this->router->generate('api_stock_list_products');
 
         $this->client->request(
@@ -459,6 +458,22 @@ class StockControllerTest extends ApiTestCase
             'GET',
             $listProductsRoute,
             array('attributes' => array('1:2', '3:14'))
+        );
+
+        $this->assertResponseBodyValidJson(200);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_return_valid_response_when_requesting_stock_with_features()
+    {
+        $listProductsRoute = $this->router->generate('api_stock_list_products');
+
+        $this->client->request(
+            'GET',
+            $listProductsRoute,
+            array('features' => array('5:1', '6:11'))
         );
 
         $this->assertResponseBodyValidJson(200);

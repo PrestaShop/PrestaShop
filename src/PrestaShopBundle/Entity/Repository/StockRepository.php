@@ -336,7 +336,8 @@ class StockRepository
             sa.quantity as product_available_quantity,
             sa.physical_quantity as product_physical_quantity,
             sa.reserved_quantity as product_reserved_quantity,
-            product_attributes.attributes AS product_attributes
+            COALESCE(product_attributes.attributes, "") AS product_attributes,
+            COALESCE(product_features.features, "") AS product_features
             FROM {table_prefix}product p
             LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
             LEFT JOIN {table_prefix}product_lang pl ON (
@@ -416,6 +417,29 @@ class StockRepository
                 GROUP BY pac.id_product_attribute
             ) product_attributes ON (
                 product_attributes.id_product_attribute = pac.id_product_attribute
+            )
+            LEFT JOIN (
+                SELECT GROUP_CONCAT(
+                  CONCAT(f.id_feature, ":", fv.id_feature_value)
+                  ORDER BY fv.id_feature_value
+                ) AS "features",
+                fp.id_product
+                FROM {table_prefix}feature_product fp
+                LEFT JOIN  {table_prefix}feature f ON (
+                    fp.id_feature = f.id_feature
+                )
+                LEFT JOIN {table_prefix}feature_shop fs ON (
+                    fs.id_shop = :shop_id AND
+                    fs.id_feature = f.id_feature
+                )
+                LEFT JOIN {table_prefix}feature_value fv ON (
+                    f.id_feature = fv.id_feature AND
+                    fp.id_feature_value = fv.id_feature_value
+                )
+                WHERE fv.custom = 0
+                GROUP BY fp.id_product
+            ) product_features ON (
+                product_features.id_product = p.id_product
             )
             {left_join}
             WHERE
@@ -500,6 +524,7 @@ class StockRepository
             '{supplier_id}' => 'p.id_supplier',
             '{category_id}' => 'cp.id_category',
             '{attributes}' => 'product_attributes.attributes',
+            '{features}' => 'product_features.features',
         ));
 
         return $this->andWhereLimitingCombinationsPerProduct() . $filters;

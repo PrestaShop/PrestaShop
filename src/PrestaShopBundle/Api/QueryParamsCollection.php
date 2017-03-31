@@ -127,7 +127,7 @@ class QueryParamsCollection
      */
     private function getValidFilterParams()
     {
-        return array('productId', 'supplier_id', 'category_id', 'keywords', 'attributes');
+        return array('productId', 'supplier_id', 'category_id', 'keywords', 'attributes', 'features');
     }
 
     /**
@@ -313,6 +313,10 @@ class QueryParamsCollection
             return $this->appendSqlAttributesFilter($filters, $value);
         }
 
+        if ($column === 'features') {
+            return $this->appendSqlFeaturesFilter($filters, $value);
+        }
+
         if ($column === 'keywords') {
             return $filters;
         }
@@ -394,6 +398,10 @@ class QueryParamsCollection
             return $this->appendSqlAttributesFilterParam($value, $sqlParams);
         }
 
+        if ($column === 'features') {
+            return $this->appendSqlFeaturesFilterParam($value, $sqlParams);
+        }
+
         if ($column === 'keywords') {
             return $this->appendSqlSearchFilterParam($value, $sqlParams);
         }
@@ -450,6 +458,28 @@ class QueryParamsCollection
     }
 
     /**
+     * @param array $filters
+     * @param $attributes
+     * @return array
+     */
+    private function appendSqlFeaturesFilter(array $filters, $attributes)
+    {
+        if (!is_array($attributes)) {
+            $attributes = array($attributes);
+        }
+
+        $attributesKeys = array_keys($attributes);
+        array_walk($attributesKeys, function ($key) use (&$filters) {
+            $filters[] = sprintf(
+                'AND FIND_IN_SET(:feature_%d, {features})',
+                $key
+            );
+        });
+
+        return $filters;
+    }
+
+    /**
      * @param $value
      * @param $sqlParams
      * @return mixed
@@ -492,6 +522,24 @@ class QueryParamsCollection
 
         array_map(function ($index, $value) use (&$sqlParams) {
             $sqlParams['attribute_' . $index] = strval($value);
+        }, range(0, count($value) - 1), $value);
+
+        return $sqlParams;
+    }
+
+    /**
+     * @param array $value
+     * @param $sqlParams
+     * @return array
+     */
+    private function appendSqlFeaturesFilterParam($value, $sqlParams)
+    {
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+
+        array_map(function ($index, $value) use (&$sqlParams) {
+            $sqlParams['feature_' . $index] = strval($value);
         }, range(0, count($value) - 1), $value);
 
         return $sqlParams;
