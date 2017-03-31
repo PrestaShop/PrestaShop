@@ -28,9 +28,9 @@ namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Ap
 
 /**
  * @group api
- * @group attribute
+ * @group feature
  */
-class AttributeControllerTest extends ApiTestCase
+class FeatureControllerTest extends ApiTestCase
 {
     public function setUp()
     {
@@ -45,9 +45,9 @@ class AttributeControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_should_return_ok_response_when_requesting_attributes()
+    public function it_should_return_ok_response_when_requesting_features()
     {
-        $route = $this->router->generate('api_stock_list_attributes');
+        $route = $this->router->generate('api_stock_list_features');
         $this->client->request('GET', $route);
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */

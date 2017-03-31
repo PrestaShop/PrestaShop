@@ -331,7 +331,7 @@ services:
             - "@prestashop.adapter.legacy.context"
             - "%database_prefix%"
 
-    prestashop.core.api.attribute.repository:
+    prestashop.core.api.feature_attribute.repository:
         class: PrestaShopBundle\Entity\Repository\FeatureAttributeRepository
         arguments:
             - "@doctrine.dbal.default_connection"
@@ -359,7 +359,12 @@ services:
     prestashop.core.api.attribute.controller:
         class: PrestaShopBundle\Controller\Api\AttributeController
         properties:
-            attributeRepository: "@prestashop.core.api.attribute.repository"
+            featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
+
+    prestashop.core.api.feature.controller:
+        class: PrestaShopBundle\Controller\Api\FeatureController
+        properties:
+            featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
 
     # Managers
     prestashop.adapter.image_manager:
