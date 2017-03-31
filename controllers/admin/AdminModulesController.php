@@ -806,7 +806,7 @@ class AdminModulesControllerCore extends AdminController
                                 $this->errors[] = $this->trans(
                                     'You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s',
                                     array(
-                                        '<strong>'.$name.'</strong>',
+                                        '<strong>'.htmlspecialchars($name).'</strong>',
                                         '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.
                                             $this->trans('Click here to log in.', array(), 'Admin.Modules.Help').
                                         '</a>'

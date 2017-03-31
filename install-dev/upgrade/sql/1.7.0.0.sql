@@ -195,7 +195,6 @@ DELETE FROM `PREFIX_configuration` WHERE `name` IN (
   'SHOP_LOGO_MOBILE_WIDTH');
 
 ALTER TABLE `PREFIX_tab` ADD `icon` varchar(32) DEFAULT '';
-ALTER TABLE `PREFIX_profile_lang` ADD UNIQUE KEY (`name`);
 
 /* PHP:migrate_tabs_17(); */;
 /* Properly migrate the rights associated with each tabs */
