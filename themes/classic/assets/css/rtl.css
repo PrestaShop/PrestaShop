@@ -86,6 +86,21 @@ body {
 /* ---------------------------------- */
 /* ----------- END HEADER ----------- */
 
+/* ---------------------------------- */
+/* ------------- Footer ------------- */
+.block-contact {
+    border-right: 2px solid #ebebeb;
+    border-left: 0;
+    padding: 0 3rem 0 0;
+}
+
+.footer-container .links ul {
+    padding: 0;
+}
+
+/* ---------------------------------- */
+/* ----------- END Footer ----------- */
+
 @media (max-width: 767px) {
 
     .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11,
@@ -106,6 +121,15 @@ body {
 
     #header .header-nav .blockcart.active {
         margin: 0 .5rem 0 0;
+    }
+
+    /* Footer */
+    .block-contact {
+        border: none;
+    }
+
+    .footer-container li {
+        margin-bottom: 0;
     }
 
 }
