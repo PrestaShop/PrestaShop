@@ -87,6 +87,41 @@ body {
 /* ----------- END HEADER ----------- */
 
 /* ---------------------------------- */
+/* ------------ carousel ------------ */
+.carousel-inner {
+    padding: 0;
+}
+
+.carousel .carousel-item .caption {
+    left: auto;
+    right: 90px;
+}
+
+.carousel-control {
+    left: auto;
+    right: 0;
+}
+
+.carousel .carousel-control .icon-prev {
+    right: 1rem;
+    transform: rotate(180deg);
+}
+
+.carousel-control.right {
+    left: 0;
+    right: auto;
+}
+
+.carousel .carousel-control .icon-next {
+    left: 0;
+    right: auto;
+    transform: rotate(180deg);
+}
+
+/* ---------------------------------- */
+/* ---------- END carousel ---------- */
+
+/* ---------------------------------- */
 /* ------------- Footer ------------- */
 .block-contact {
     border-right: 2px solid #ebebeb;
