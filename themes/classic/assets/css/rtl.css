@@ -1,0 +1,111 @@
+body {
+    text-align: right;
+    direction: rtl;
+}
+
+/* reset offset from bootstrap*/
+[class*="offset"] {
+    margin-left: 0;
+}
+
+/* reset push from bootstrap*/
+[class*='push'] {
+    left: auto;
+}
+
+/* reset pull from bootstrap*/
+[class*='pull'] {
+    right: auto;
+}
+
+.pull-xs-left, .pull-sm-left, .pull-md-left, .pull-lg-left {
+    float: right !important;
+}
+
+.pull-xs-right, .pull-sm-right, .pull-md-right, .pull-lg-right {
+    float: left !important;
+}
+
+.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11,
+.col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11,
+.col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11,
+.col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11 {
+    float: right;
+}
+
+/* ---------------------------------- */
+/* ------------- HEADER ------------- */
+/* blockcart */
+#header .header-nav .blockcart {
+    margin-left: 0;
+    margin-right: .9375rem;
+}
+
+/* user info */
+#header .header-nav .user-info {
+    margin-left: 0;
+    margin-right: 2.5rem;
+}
+
+/* currency selector */
+#header .header-nav .currency-selector {
+    margin-right: .9375rem;
+    margin-left: 0;
+}
+
+/* dropdown-menu */
+.dropdown-menu {
+    text-align: right;
+    right: 0;
+    left: auto;
+}
+
+/* search */
+.search-widget form input[type=text] {
+    padding-left: 35px;
+}
+
+.search-widget form button[type=submit] {
+    left: .125rem;
+    right: auto;
+}
+
+/* menu*/
+#header .top-menu {
+    padding: 0;
+}
+
+#header .header-top .menu > ul > li {
+    float: right;
+}
+
+.top-menu .sub-menu ul[data-depth="1"] > li {
+    float: right;
+}
+
+/* ---------------------------------- */
+/* ----------- END HEADER ----------- */
+
+@media (max-width: 767px) {
+
+    .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11,
+    .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11,
+    .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11,
+    .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11 {
+        float: none;
+    }
+
+    /* HEADER */
+    #header .header-nav #menu-icon {
+        margin: 0 1rem 0 0;
+    }
+
+    #header .header-nav .blockcart {
+        margin: 0;
+    }
+
+    #header .header-nav .blockcart.active {
+        margin: 0 .5rem 0 0;
+    }
+
+}
