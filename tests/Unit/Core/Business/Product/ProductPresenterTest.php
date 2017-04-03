@@ -40,11 +40,11 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
 
 class PriceFormatter extends BasePricePresenter
 {
-    public function convertAmount($price)
+    public function convertAmount($price, $currency = null)
     {
         return $price;
     }
-    public function format($price)
+    public function format($price, $currency = null)
     {
         return "#$price";
     }
