@@ -2,4 +2,4 @@ api_stock_list_movements:
      path: /movements
      methods: [GET]
      defaults:
-         _controller: prestashop.core.api.stock.movement.controller:listMovementsAction
+         _controller: prestashop.core.api.stockMovement.controller:listMovementsAction
