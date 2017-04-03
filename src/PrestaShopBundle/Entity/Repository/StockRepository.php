@@ -79,6 +79,11 @@ class StockRepository
     private $stockManager;
 
     /**
+     * @var ContextAdapter
+     */
+    private $contextAdapter;
+
+    /**
      * @var array
      */
     private $orderStates = array();
@@ -105,6 +110,7 @@ class StockRepository
 
         $this->tablePrefix = $tablePrefix;
 
+        $this->contextAdapter = $contextAdapter;
         $context = $contextAdapter->getContext();
 
         if (!$context->employee instanceof Employee) {
@@ -165,7 +171,16 @@ class StockRepository
         $statement->bindValue('combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
         $statement->bindValue('delta', $delta, PDO::PARAM_INT);
 
-        $statement->execute();
+        if ($statement->execute()) {
+            // @TODO: call with container
+            $stockMovement = new StockMovementRepository(
+                $this->connection,
+                $this->contextAdapter,
+                $this->imageManager,
+                $this->tablePrefix
+            );
+            $stockMovement->saveFromMovement($movement);
+        }
 
         return $this->selectStockBy($productIdentity);
     }
