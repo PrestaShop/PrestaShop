@@ -1,14 +1,27 @@
 <template>
-    <div class="d-inline">
+    <div class="flex">
+      <div>
         <img v-if="displayThumb" :src="imagePath" class="thumbnail"  />
         <div v-else class="no-img"></div>
-        <span class="m-l-1 product-title">{{ name }}</span>
+      </div>
+      <div class="m-l-1 desc">
+        <p>{{ name }}<small v-if="hasCombination"><br />{{ combination }}</small></p>
+      </div>
     </div>
 </template>
 <script>
   export default {
-    props: ['name','thumbnail'],
+    props: ['name','thumbnail','combinationName', 'hasCombination'],
     computed: {
+      combination() {
+        let arr = this.combinationName.split(',');
+        let attr = '';
+        arr.forEach((attribute)=>{
+         let value = attribute.split('-');
+         attr += attr.length ? ` - ${value[1]}` : value[1];
+        });
+        return attr;
+      },
       displayThumb() {
         if(this.imagePath) {
           return true;
@@ -40,5 +53,11 @@
     height: 47px;
     display: inline-block;
     vertical-align: middle;
+  }
+  .desc {
+    white-space: normal;
+  }
+  small {
+    color: $gray-medium;
   }
 </style>

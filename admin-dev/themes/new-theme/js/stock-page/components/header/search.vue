@@ -1,12 +1,13 @@
 <template>
-  <div id="search" class="row">
+  <div id="search" class="row m-b-2">
     <div class="col-md-8">
       <div class="m-b-2">
         <form @keyup.enter="onSubmit" class="search-form" @submit.prevent="onSubmit">
           <label>Search products (search by name,reference,supplier)</label>
-          <Tags :tags="tags" @tags-change="handleChange"  />
+          <Tags :tags="tags" @tags-change="handleChange" :klass="this.customClass" />
           <button type="button" class="btn btn-primary search-button" @click="onSubmit">
-            <i class="material-icons">search</i>Search
+            <i class="material-icons">search</i>
+            Search
           </button>
         </form>
       </div>
@@ -26,7 +27,13 @@
     },
     data() {
       return {
-        tags: []
+        tags: [],
+        customClass: {
+          container: 'tags-input search-input',
+          input: 'input',
+          gap: 'gap',
+          tag: 'tag'
+        }
       }
     },
     methods: {
@@ -53,28 +60,35 @@
 </script>
 <style lang="sass?outputStyle=expanded">
   @import "~PrestaKit/scss/custom/_variables.scss";
-  #search .tags-input {
-    background: white;
-    padding: 0 10px;
-    min-height: 27px;
-    .tag {
-      background: $brand-primary;
-      color: white;
-      padding: 2px 4px;
-      border-radius: 0;
-      font-weight: lighter;
-      .hl-click {
-        height: 100%;
-        width: 15px;
+  #search {
+    .search-input {
+      box-shadow: none;
+      border: $gray-light 1px solid;
+      background: white;
+      padding: 0 10px;
+      min-height: 29px;
+      outline: none;
+    }
+    .tags-input {
+      .tag {
+        background: $brand-primary;
+        color: white;
+        padding: 2px 4px;
+        border-radius: 0;
+        font-weight: lighter;
+        .hl-click {
+          height: 100%;
+          width: 15px;
+        }
       }
-    }
-    .gap:first-of-type .input {
-      margin-left: -6px;
-    }
-    input.input {
-      font-family: Open Sans, sans-serif;
-      cursor: text;
-      padding-left: 2px;
+      .gap:first-of-type .input {
+        margin-left: -6px;
+      }
+      input.input {
+        font-family: Open Sans, sans-serif;
+        cursor: text;
+        padding-left: 2px;
+      }
     }
   }
   .search-form {
@@ -83,7 +97,7 @@
       float: left;
       position: absolute;
       right: 12px;
-      top: 0;
+      top: 1px;
       border-radius: 0;
       margin-top: 28px;
       height:29px;
