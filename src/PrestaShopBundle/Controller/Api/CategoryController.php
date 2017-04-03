@@ -40,7 +40,7 @@ class CategoryController
      */
     public function listCategoriesAction()
     {
-        $categories = $this->categoryRepository->getCategories();
+        $categories = $this->categoryRepository->getCategories($tree = true);
 
         return new JsonResponse($categories, 200);
     }

@@ -28,7 +28,9 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Employee;
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Exception\NotImplementedException;
 use RuntimeException;
 use Shop;
@@ -58,6 +60,11 @@ class CategoryRepository
     private $shopId;
 
     /**
+     * @var LegacyContext
+     */
+    private $contextAdapter;
+
+    /**
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param $tablePrefix
@@ -72,6 +79,7 @@ class CategoryRepository
         $this->connection = $connection;
         $this->tablePrefix = $tablePrefix;
 
+        $this->contextAdapter = $contextAdapter;
         $context = $contextAdapter->getContext();
 
         if (!$context->employee instanceof Employee) {
@@ -94,16 +102,16 @@ class CategoryRepository
     }
 
     /**
+     * @param bool $tree if tree needed for categories
      * @return mixed
      */
-    public function getCategories()
+    public function getCategories($tree = false)
     {
         $query = str_replace(
             '{table_prefix}',
             $this->tablePrefix,
             'SELECT
-            c.id_category AS category_id,
-            cl.name
+            c.*, cl.name
             FROM {table_prefix}category c
             LEFT JOIN {table_prefix}category_lang cl ON (cl.id_category = c.id_category)
             LEFT JOIN {table_prefix}category_shop cs ON (cs.id_category = c.id_category)
@@ -119,7 +127,37 @@ class CategoryRepository
         $statement->execute();
 
         $rows = $statement->fetchAll();
+        $rows = $this->castNumericToInt($rows);
 
-        return $this->castNumericToInt($rows);
+        if (true === $tree && !empty($rows)) {
+            $rows = $this->buildTreeCategories($rows);
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @param $rows array categories rows
+     * @return array
+     */
+    private function buildTreeCategories($rows)
+    {
+        $idRootCategory = (new CategoryDataProvider($this->contextAdapter))->getRootCategory()->id;
+
+        $categories = array();
+        $buff = array();
+
+        foreach ($rows as $row) {
+            $current = &$buff[$row['id_category']];
+            $current = $row;
+
+            if ($row['id_category'] == $idRootCategory) {
+                $categories[$row['id_category']] = &$current;
+            } else {
+                $buff[$row['id_parent']]['children'][$row['id_category']] = &$current;
+            }
+        }
+
+        return $categories;
     }
 }
