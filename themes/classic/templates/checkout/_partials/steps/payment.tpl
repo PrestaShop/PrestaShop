@@ -145,6 +145,10 @@
   <div class="modal fade" id="modal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme'}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="js-modal-content"></div>
       </div>
     </div>
   </div>
