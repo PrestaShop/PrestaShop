@@ -318,7 +318,7 @@ services:
             - "@prestashop.adapter.stock_manager"
             - "%database_prefix%"
 
-    prestashop.core.api.stock.movement.repository:
+    prestashop.core.api.stockMovement.repository:
         class: PrestaShopBundle\Entity\Repository\StockMovementRepository
         arguments:
             - "@doctrine.dbal.default_connection"
@@ -354,11 +354,11 @@ services:
             stockRepository: "@prestashop.core.api.stock.repository"
             queryParams: "@prestashop.core.api.query_params_collection"
 
-    prestashop.core.api.stock.movement.controller:
+    prestashop.core.api.stockMovement.controller:
         class: PrestaShopBundle\Controller\Api\StockMovementController
         properties:
             logger: "@logger"
-            stockMovementRepository: "@prestashop.core.api.stock.movement.repository"
+            stockMovementRepository: "@prestashop.core.api.stockMovement.repository"
             queryParams: "@prestashop.core.api.query_params_collection"
 
     prestashop.core.api.supplier.controller:

@@ -122,6 +122,7 @@ class StockMovementRepository
     {
         $delta = $movement->getDelta();
 
+        // @TODO: good data
         $mvt_params = array(
             'id_stock' => 0,
             'id_order' => 0,
