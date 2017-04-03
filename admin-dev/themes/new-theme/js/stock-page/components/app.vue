@@ -39,6 +39,10 @@
   }
   .table tr td {
     padding: 5px 0;
+    vertical-align: top;
+    &:not(:last-child) {
+      padding-top:14px;
+    }
   }
   .ui-spinner {
     .ui-spinner-button {
@@ -99,5 +103,9 @@
   }
   .d-inline {
     display: inline;
+  }
+  .flex {
+    display: flex;
+    align-items: center;
   }
 </style>

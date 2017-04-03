@@ -1,8 +1,8 @@
 <template>
   <tr>
-    <td>
-      <input type="checkbox" class="m-r-1">
-      <ProductDesc :name="productName" :thumbnail="product.combination_thumbnail" />
+    <td class="flex p-r-1">
+      <input type="checkbox" class="m-r-1 checkbox">
+      <ProductDesc :has-combination="hasCombination" :name="productName" :thumbnail="product.combination_thumbnail" :combinationName="product.combination_name" />
     </td>
     <td>
       {{ product.product_reference }}
@@ -40,10 +40,10 @@
     props: ['product'],
     computed: {
       productName() {
-        /*if(this.product.combination_id !== 0) {
-          return this.product.combination_name;
-        }*/
         return this.product.product_name;
+      },
+      hasCombination() {
+        return !!this.product.combination_id;
       },
       updatedQty() {
         return !!this.product.qty;
@@ -72,5 +72,8 @@
     .material-icons {
       vertical-align: middle;
     }
+  }
+  .checkbox {
+    width: 5%;
   }
 </style>
