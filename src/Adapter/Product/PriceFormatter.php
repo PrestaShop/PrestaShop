@@ -31,14 +31,14 @@ use Tools;
 
 class PriceFormatter
 {
-    public function convertAmount($price)
+    public function convertAmount($price, $currency = null)
     {
-        return (float)Tools::convertPrice($price);
+        return (float)Tools::convertPrice($price, $currency);
     }
 
-    public function format($price)
+    public function format($price, $currency = null)
     {
-        return Tools::displayPrice($price);
+        return Tools::displayPrice($price, $currency);
     }
 
     public function convertAndFormat($price)

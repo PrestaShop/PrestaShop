@@ -44,6 +44,7 @@ use OrderReturn;
 use ProductDownload;
 use TaxConfiguration;
 use Tools;
+use Currency;
 
 class OrderPresenter implements PresenterInterface
 {
@@ -115,9 +116,9 @@ class OrderPresenter implements PresenterInterface
 
         foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
-            $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price']);
+            $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price'], Currency::getCurrencyInstance((int)$order->id_currency));
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
-            $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price']);
+            $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price'], Currency::getCurrencyInstance((int)$order->id_currency));
 
             if ($orderPaid && $orderProduct['is_virtual']) {
                 $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
@@ -164,7 +165,7 @@ class OrderPresenter implements PresenterInterface
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
             'amount' => $total_products,
-            'value' => $this->priceFormatter->format($total_products),
+            'value' => $this->priceFormatter->format($total_products, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
         $discount_amount = ($this->includeTaxes())
@@ -175,7 +176,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'discount',
                 'label' => $this->translator->trans('Discount', array(), 'Shop.Theme.Checkout'),
                 'amount' => $discount_amount,
-                'value' => $this->priceFormatter->format($discount_amount),
+                'value' => $this->priceFormatter->format($discount_amount, Currency::getCurrencyInstance((int)$order->id_currency)),
             );
         }
 
@@ -186,7 +187,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'shipping',
                 'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
                 'amount' => $shippingCost,
-                'value' => $shippingCost != 0 ? $this->priceFormatter->format($shippingCost) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
+                'value' => $shippingCost != 0 ? $this->priceFormatter->format($shippingCost, Currency::getCurrencyInstance((int)$order->id_currency)) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
             );
         }
 
@@ -202,7 +203,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
                 'amount' => $tax,
-                'value' => $this->priceFormatter->format($tax),
+                'value' => $this->priceFormatter->format($tax, Currency::getCurrencyInstance((int)$order->id_currency)),
             );
         }
 
@@ -214,7 +215,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'gift_wrapping',
                 'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
                 'amount' => $giftWrapping,
-                'value' => $this->priceFormatter->format($giftWrapping),
+                'value' => $this->priceFormatter->format($giftWrapping, Currency::getCurrencyInstance((int)$order->id_currency)),
             );
         }
 
@@ -225,14 +226,14 @@ class OrderPresenter implements PresenterInterface
             'type' => 'total',
             'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
             'amount' => $order->total_paid,
-            'value' => $this->priceFormatter->format($order->total_paid),
+            'value' => $this->priceFormatter->format($order->total_paid, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
         $amounts['totals']['total_paid'] = array(
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', array(), 'Shop.Theme.Checkout'),
             'amount' => $order->total_paid_real,
-            'value' => $this->priceFormatter->format($order->total_paid_real),
+            'value' => $this->priceFormatter->format($order->total_paid_real, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
         return $amounts;
