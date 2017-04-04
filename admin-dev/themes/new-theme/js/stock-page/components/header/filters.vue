@@ -10,13 +10,25 @@
         <div class="col-md-6">
           <div class="p-y-2 p-x-2">
             <h2>Filter by Supplier</h2>
-            <FilterComponent placeholder="Search a supplier" getData="getSuppliers" />
+            <FilterComponent
+              placeholder="Search a supplier"
+              :data="this.$store.state.suppliers"
+              itemID="supplier_id"
+              label="name"
+              getData="getSuppliers"
+            />
           </div>
         </div>
         <div class="col-md-6">
           <div class="p-y-2 p-x-2">
             <h2>Filter by categories</h2>
-            <FilterComponent placeholder="Search a category" getData="getSuppliers" />
+            <FilterComponent
+              placeholder="Search a category"
+              :data="this.$store.state.suppliers"
+              itemID="supplier_id"
+              label="name"
+              getData="getSuppliers"
+            />
           </div>
         </div>
         <button type="button" class="btn btn-primary pull-right m-y-2 m-x-2"><i class="material-icons m-r-1">filter_list</i>APPLY ADVANCED FILTERS</button>
@@ -26,14 +38,9 @@
 </template>
 
 <script>
-  import FilterComponent from './filter-component';
+  import FilterComponent from './filters/filter-component';
 
   export default {
-    computed: {
-      show() {
-        return true;
-      }
-    },
     components: {
       FilterComponent
     }

@@ -14,7 +14,8 @@ const state = {
   totalPages: 0,
   productsPerPage: 100,
   combinationsPerPage: 50,
-  keywords: []
+  keywords: [],
+  suppliers: []
 };
 
 // getters are functions

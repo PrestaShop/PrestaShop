@@ -1,8 +1,13 @@
 <template>
   <tr>
     <td class="flex p-r-1">
-      <input type="checkbox" class="m-r-1 checkbox">
-      <ProductDesc :has-combination="hasCombination" :name="productName" :thumbnail="product.combination_thumbnail" :combinationName="product.combination_name" />
+      <Checkbox :id="id" />
+      <ProductDesc
+      class="m-l-1"
+      :has-combination="hasCombination"
+      :name="productName"
+      :thumbnail="product.combination_thumbnail"
+      :combinationName="product.combination_name" />
     </td>
     <td>
       {{ product.product_reference }}
@@ -35,10 +40,14 @@
 <script>
   import Spinner from './spinner';
   import ProductDesc from './product-desc';
+  import Checkbox from '../../utils/checkbox';
 
   export default {
     props: ['product'],
     computed: {
+      id() {
+        return `${this.product.product_id}-${this.product.combination_id}`;
+      },
       productName() {
         return this.product.product_name;
       },
@@ -60,7 +69,8 @@
     },
     components: {
       Spinner,
-      ProductDesc
+      ProductDesc,
+      Checkbox
     }
   }
 </script>
