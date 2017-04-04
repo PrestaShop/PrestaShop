@@ -31,7 +31,7 @@ use PrestaShopBundle\Api\QueryParamsCollection;
 /**
  * @group api
  */
-class StockControllerTest extends ApiTestCase
+class StockManagementControllerTest extends ApiTestCase
 {
     public function setUp()
     {
@@ -45,6 +45,14 @@ class StockControllerTest extends ApiTestCase
         $this->restoreQuantityEditionFixtures();
     }
 
+    private function restoreMovements()
+    {
+        $deleteMovements = 'DELETE FROM ps_stock_mvt';
+        $statement = self::$kernel->getContainer()->get('doctrine.dbal.default_connection')
+            ->prepare($deleteMovements);
+        $statement->execute();
+    }
+
     private function restoreQuantityEditionFixtures()
     {
         $updateProductQuantity = '
@@ -53,7 +61,6 @@ class StockControllerTest extends ApiTestCase
             physical_quantity = 10,
             reserved_quantity = 2
             WHERE id_product = 1 AND id_product_attribute = 1';
-
         $statement = self::$kernel->getContainer()->get('doctrine.dbal.default_connection')
             ->prepare($updateProductQuantity);
         $statement->execute();
@@ -64,13 +71,19 @@ class StockControllerTest extends ApiTestCase
      */
     public function it_should_return_bad_request_response_on_invalid_pagination_params()
     {
-        $route = $this->router->generate('api_stock_list_products', array());
+        $routes = array(
+            $this->router->generate('api_stock_list_products', array()),
+            $this->router->generate('api_stock_list_movements', array())
+        );
 
-        $this->client->request('GET', $route, array('page_index' => 0));
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+        foreach ($routes as $route) {
+            $this->client->request('GET', $route, array('page_index' => 0));
+            $response = $this->client->getResponse();
+            $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+        }
     }
+
+
 
     /**
      * @dataProvider getProductsStockParams
@@ -81,7 +94,7 @@ class StockControllerTest extends ApiTestCase
      */
     public function it_should_return_ok_response_when_requesting_products_stock($params, $expectedTotalPages)
     {
-        $this->assertOkResponseOnListProducts('api_stock_list_products', $params, $expectedTotalPages);
+        $this->assertOkResponseOnList('api_stock_list_products', $params, $expectedTotalPages);
     }
 
     /**
@@ -117,6 +130,8 @@ class StockControllerTest extends ApiTestCase
         );
     }
 
+
+
     /**
      * @dataProvider getProductsCombinationsParams
      * @test
@@ -129,7 +144,7 @@ class StockControllerTest extends ApiTestCase
         $expectedTotalPages
     )
     {
-        $this->assertOkResponseOnListProducts('api_stock_list_product_combinations', $params, $expectedTotalPages);
+        $this->assertOkResponseOnList('api_stock_list_product_combinations', $params, $expectedTotalPages);
     }
 
     /**
@@ -158,7 +173,7 @@ class StockControllerTest extends ApiTestCase
      * @param array $parameters
      * @param $expectedTotalPages
      */
-    private function assertOkResponseOnListProducts(
+    private function assertOkResponseOnList(
         $routeName,
         $parameters = array(),
         $expectedTotalPages = null
@@ -311,6 +326,8 @@ class StockControllerTest extends ApiTestCase
 
     private function assertOkResponseOnEditProductCombination()
     {
+        $this->restoreMovements();
+
         $editProductStockRoute = $this->router->generate(
             'api_stock_edit_product_combination',
             array(
@@ -477,5 +494,38 @@ class StockControllerTest extends ApiTestCase
         );
 
         $this->assertResponseBodyValidJson(200);
+    }
+
+
+
+
+
+    /**
+     * @dataProvider getMovementsStockParams
+     * @test
+     *
+     * @param $params
+     * @param $expectedTotalPages
+     */
+    public function it_should_return_ok_response_when_requesting_movements_stock($params, $expectedTotalPages)
+    {
+        $this->assertOkResponseOnList('api_stock_list_movements', $params, $expectedTotalPages);
+    }
+
+    /**
+     * @return array
+     */
+    public function getMovementsStockParams()
+    {
+        return array(
+            array(
+                array(),
+                $expectedTotalPages = 1
+            ),
+            array(
+                array('page_index' => 1, 'page_size' => 5),
+                $expectedTotalPages = 2
+            )
+        );
     }
 }
