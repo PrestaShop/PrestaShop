@@ -1,12 +1,21 @@
 <template>
   <div>
-    <input type="text" class="form-control search search-input"  autocomplete="off" :placeholder="placeholder">
+    <Tags class="form-control search search-input" :tags="tags" :placeholder="placeholder" />
   </div>
 </template>
 
 <script>
+  import Tags from '../../utils/tags';
   export default {
-    props: ['placeholder']
+    props: ['placeholder'],
+    components: {
+      Tags
+    },
+    data() {
+      return {
+        tags: []
+      }
+    }
   }
 </script>
 

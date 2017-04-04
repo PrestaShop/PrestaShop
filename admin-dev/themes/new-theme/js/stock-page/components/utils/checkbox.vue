@@ -1,13 +1,26 @@
 <template>
   <div class="custom-checkbox">
-    <input type="checkbox" :id="id">
+    <input type="checkbox" :id="id" v-model="checked">
     <label :for="id"></label>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['id']
+    props: ['id','item'],
+    data() {
+      return {
+        checked: false
+      }
+    },
+    watch : {
+      checked(val) {
+        this.$emit('checked', {
+          val,
+          item: this.item
+        });
+      }
+    }
   }
 </script>
 <style lang="sass?outputStyle=expanded" scoped>
