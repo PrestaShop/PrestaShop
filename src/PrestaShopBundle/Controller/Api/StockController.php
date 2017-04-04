@@ -73,8 +73,8 @@ class StockController
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
 
-        $stock = $this->stockRepository->getStock($queryParamsCollection);
-        $totalPages = $this->stockRepository->countStockPages($queryParamsCollection);
+        $stock = $this->stockRepository->getData($queryParamsCollection);
+        $totalPages = $this->stockRepository->countPages($queryParamsCollection);
 
         return new JsonResponse($stock, 200, array('Total-Pages' => $totalPages));
     }
@@ -87,7 +87,7 @@ class StockController
     {
         try {
             $this->guardAgainstMissingDeltaParameter($request);
-            $delta = (int)$request->request->get('delta');
+            $delta = $request->request->getInt('delta');
         } catch (BadRequestHttpException $exception) {
             return $this->handleException($exception);
         }
