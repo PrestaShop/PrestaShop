@@ -59,13 +59,13 @@ class StockMovementController
     public function listMovementsAction(Request $request)
     {
         try {
-            $queryParamsCollection = $this->queryParams->fromRequest($request);
+            $queryParamsCollection = $this->queryParams->fromRequest($request, 'id_stock_mvt');
         } catch (InvalidPaginationParamsException $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
 
-        $stockMovement = $this->stockMovementRepository->getMovements($queryParamsCollection);
-        $totalPages = $this->stockMovementRepository->countMovementPages($queryParamsCollection);
+        $stockMovement = $this->stockMovementRepository->getData($queryParamsCollection);
+        $totalPages = $this->stockMovementRepository->countPages($queryParamsCollection);
 
         return new JsonResponse($stockMovement, 200, array('Total-Pages' => $totalPages));
     }
