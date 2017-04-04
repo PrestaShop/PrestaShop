@@ -16,6 +16,7 @@
               itemID="supplier_id"
               label="name"
               getData="getSuppliers"
+              @checked="onSupplierChange"
             />
           </div>
         </div>
@@ -41,6 +42,11 @@
   import FilterComponent from './filters/filter-component';
 
   export default {
+    methods: {
+      onSupplierChange(obj) {
+       // console.log(obj);
+      }
+    },
     components: {
       FilterComponent
     }

@@ -4,7 +4,7 @@
       <div class="m-b-2">
         <form @keyup.enter="onSubmit" class="search-form" @submit.prevent="onSubmit">
           <label>Search products (search by name,reference,supplier)</label>
-          <Tags :tags="tags" @tags-change="handleChange" :klass="this.customClass" />
+          <Tags :tags="tags" @tagChange="onSubmit"/>
           <button type="button" class="btn btn-primary search-button" @click="onSubmit">
             <i class="material-icons">search</i>
             Search
@@ -18,23 +18,12 @@
 
 <script>
   import Filters from './filters';
-  import Tags from 'vue-tagsinput';
+  import Tags from '../utils/tags';
 
   export default {
     components: {
       Filters,
       Tags
-    },
-    data() {
-      return {
-        tags: [],
-        customClass: {
-          container: 'tags-input search-input',
-          input: 'input',
-          gap: 'gap',
-          tag: 'tag'
-        }
-      }
     },
     methods: {
       onSubmit() {
@@ -46,14 +35,11 @@
           keywords: this.tags
         });
         setTimeout(() => $(this.$el).find('.gap:last-of-type .input').focus() , 15);
-      },
-      handleChange(index, text) {
-        if (text) {
-          this.tags.splice(index, 0, text);
-        } else {
-          this.tags.splice(index, 1);
-          this.onSubmit();
-        }
+      }
+    },
+    data() {
+      return {
+        tags:[]
       }
     }
   }
@@ -69,27 +55,6 @@
       min-height: 29px;
       outline: none;
       border-radius: 0;
-    }
-    .tags-input {
-      .tag {
-        background: $brand-primary;
-        color: white;
-        padding: 2px 4px;
-        border-radius: 0;
-        font-weight: lighter;
-        .hl-click {
-          height: 100%;
-          width: 15px;
-        }
-      }
-      .gap:first-of-type .input {
-        margin-left: -6px;
-      }
-      input.input {
-        font-family: Open Sans, sans-serif;
-        cursor: text;
-        padding-left: 2px;
-      }
     }
   }
   .search-form {

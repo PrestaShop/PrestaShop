@@ -3,7 +3,7 @@
     <SearchFilter :placeholder="placeholder" />
     <ul class="m-t-1">
       <li v-for="item in items" class="flex">
-        <Checkbox :id="item[itemID]" />
+        <Checkbox :id="item[itemID]" :item="item" @checked="onCheck" />
         <span class="m-l-1">{{item[label]}}</span>
       </li>
     </ul>
@@ -19,6 +19,14 @@
     computed: {
       items() {
         return this.data;
+      }
+    },
+    methods: {
+      onCheck(obj) {
+        this.$emit('checked', {
+          checked: obj.val,
+          item: obj.item
+        })
       }
     },
     mounted() {
