@@ -338,7 +338,7 @@
 										{foreach from=$order->getReturn() item=line}
 										<tr>
 											<td>{$line.date_add}</td>
-											<td>{$line.type}</td>
+											<td>{l s=$line.type}</td>
 											<td>{$line.state_name}</td>
 											<td class="actions">
 												<span class="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number|escape:'html':'UTF-8'}">{$line.tracking_number}</a>{elseif isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
