@@ -26,3 +26,12 @@ export const getStock = ({ commit, state }, payload) => {
     return showGrowl('error', error.statusText);
   });
 };
+
+export const getSuppliers = ({ commit }) => {
+  let url = `${window.data.baseUrl}/api/suppliers`;
+  Vue.http.get(url).then(function(response) {
+    commit(types.SET_SUPPLIERS, response.body);
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};

@@ -2,8 +2,9 @@
   <div class="filter-container">
     <SearchFilter :placeholder="placeholder" />
     <ul class="m-t-1">
-      <li v-for="n in 10">
-        <input type="checkbox" class="m-r-1 checkbox">
+      <li v-for="item in items" class="flex">
+        <Checkbox :id="item[itemID]" />
+        <span class="m-l-1">{{item[label]}}</span>
       </li>
     </ul>
   </div>
@@ -11,14 +12,21 @@
 
 <script>
   import SearchFilter from './search-filter';
+  import Checkbox from '../../utils/checkbox';
 
   export default {
-    props: ['placeholder','getData'],
+    props: ['placeholder', 'getData', 'itemID', 'label', 'data'],
+    computed: {
+      items() {
+        return this.data;
+      }
+    },
     mounted() {
       this.$store.dispatch(this.getData);
     },
     components: {
-      SearchFilter
+      SearchFilter,
+      Checkbox
     }
   }
 </script>

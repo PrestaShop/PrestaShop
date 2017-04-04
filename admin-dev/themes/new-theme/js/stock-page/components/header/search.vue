@@ -11,18 +11,18 @@
           </button>
         </form>
       </div>
-      <SearchFilter />
+      <Filters />
     </div>
   </div>
 </template>
 
 <script>
-  import SearchFilter from './search-filter';
+  import Filters from './filters';
   import Tags from 'vue-tagsinput';
 
   export default {
     components: {
-      SearchFilter,
+      Filters,
       Tags
     },
     data() {
@@ -64,10 +64,11 @@
     .search-input {
       box-shadow: none;
       border: $gray-light 1px solid;
-      background: white;
+      background-color: white;
       padding: 0 10px;
       min-height: 29px;
       outline: none;
+      border-radius: 0;
     }
     .tags-input {
       .tag {

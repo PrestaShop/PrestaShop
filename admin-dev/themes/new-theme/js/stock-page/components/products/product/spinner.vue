@@ -1,8 +1,8 @@
 <template>
-  <form class="qty text-xs-right" :class="classObject" v-on:mouseover="focusIn" v-on:mouseleave="focusOut($event)">
+  <form class="qty text-xs-right" :class="classObject" v-on:mouseover="focusIn" v-on:mouseleave="focusOut($event)" v-on:submit.prevent="sendQty($event)">
     <input @keyup="onKeyup($event.target.value)" v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="qty" placeholder="0" >
     <transition name="fade">
-      <button v-if="isActive" class="check-button" v-on:click="sendQty($event)"><i class="material-icons">check</i></button>
+      <button v-if="isActive" class="check-button"><i class="material-icons">check</i></button>
     </transition>
   </form>
 </template>
@@ -77,8 +77,6 @@
         let apiEditCombinationsUrl = `${apiRootUrl}/product/${this.product.product_id}/combination/${this.product.combination_id}`;
         let postUrl = this.product.combination_id ? apiEditCombinationsUrl : apiEditProductsUrl;
 
-        event.preventDefault();
-
         // POST when qty !=0
         if(this.isEnabled) {
           this.$store.dispatch('updateQtyByProductId', {
@@ -106,10 +104,10 @@
         outline:none;
         opacity: 0;
         position: absolute;
-        top: 3.5px;
+        top: 4px;
         right: 0;
         border: none;
-        height: 30px;
+        height: 31px;
         width: 40px;
         background: $brand-primary;
         z-index: 2;
