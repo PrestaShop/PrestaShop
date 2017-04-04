@@ -68,6 +68,7 @@
 		var new_msg = '{l s='A new message was posted on your shop.' js=1}';
 		var see_msg = '{l s='Read this message' js=1}';
 		var token = '{$token|addslashes}';
+		var token_admin_products = '{getAdminToken tab='AdminProducts'}';
 		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
