@@ -27,22 +27,22 @@
 		<thead>
 			<tr>
 				<th>
-					<span class="title_box ">{l s='Date'}</span>
+					<span class="title_box ">{l s='Date' d='Admin.Global'}</span>
 				</th>
 				<th>
 					<span class="title_box ">&nbsp;</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Carrier'}</span>
+					<span class="title_box ">{l s='Carrier' d='Admin.Shipping.Feature'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Weight'}</span>
+					<span class="title_box ">{l s='Weight' d='Admin.Global'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Shipping cost'}</span>
+					<span class="title_box ">{l s='Shipping cost' d='Admin.Shipping.Feature'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Tracking number'}</span>
+					<span class="title_box ">{l s='Tracking number' d='Admin.Shipping.Feature'}</span>
 				</th>
 				<th></th>
 			</tr>
@@ -106,7 +106,7 @@
 								<div class="col-lg-7"><input type="text" name="shipping_tracking_number" id="shipping_tracking_number" /></div>
 							</div>
 							<div class="form-group">
-								<div class="col-lg-5">{l s='Carrier'}</div>
+								<div class="col-lg-5">{l s='Carrier' d='Admin.Shipping.Feature'}</div>
 								<div class="col-lg-7">
 									<select name="shipping_carrier" id="shipping_carrier">
 										{foreach from=$carrier_list item=carrier}
