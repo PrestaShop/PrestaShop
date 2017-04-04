@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,13 +18,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
-import setUpAddress from './checkout-payment'
+import setUpAddress from './checkout-address'
 import setUpDelivery from './checkout-delivery'
 import setUpPayment from './checkout-payment'
 

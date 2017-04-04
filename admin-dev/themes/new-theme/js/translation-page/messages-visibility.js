@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,7 +57,9 @@ export default function(callback) {
     let domainPart = editTranslationForms.parents('.translation-domain').prev();
     let missingTranslationWarning = domainPart.find('.missing-translations-short-message');
     let warningPlaceholder = $('#domain .missing-translations');
+    let totalPlaceholder = $('#domain .total-expressions');
     let separator = $('#domain .separator');
+    totalPlaceholder.text(editTranslationForms.data('total-translations'));
     if (missingTranslationWarning.length > 0) {
       warningPlaceholder.text(missingTranslationWarning.text());
       separator.removeClass('hide');
@@ -65,6 +67,7 @@ export default function(callback) {
       warningPlaceholder.text('');
       separator.addClass('hide');
     }
+    separator.first().removeClass('hide');
 
     let domain = $('#domain .name');
     let title = editTranslationForms.attr('data-domain');
@@ -81,14 +84,20 @@ export default function(callback) {
   }
 
   function updateNavigationBar(translationDomain, editTranslationForms) {
-    let navigationContainer = $('.navbar-container');
+    let navigationContainer = $('.navbar-container:first');
     let navigation = translationDomain.find('nav');
+
     navigation.parent().attr('data-navigation-parent-of', editTranslationForms.attr('id'));
     navigation.attr('data-navigation-of', editTranslationForms.attr('id'));
 
     hideCurrentNavigationBar(navigationContainer);
+
     navigationContainer.append(navigation);
     $(navigationContainer.find('nav')).removeClass(hideClass);
+
+    $('.forms-container + .navbar-container').remove();
+    $('.forms-container').after(navigationContainer.clone());
+
   }
 
   function updateEditTranslationForms(formsContainer, editTranslationForms) {

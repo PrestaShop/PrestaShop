@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,6 +32,7 @@ export default class Header {
       this.initMultiStores();
       this.initNotificationsToggle();
       this.initSearch();
+      refreshNotifications();
     });
   }
 
@@ -101,8 +102,11 @@ export default class Header {
 
   initNotificationsToggle() {
     $('.notification.dropdown-toggle').on('click', () => {
-      $('.notification-center.dropdown').addClass('open');
-      this.updateEmployeeNotifications();
+      if(!$('.mobile-nav').hasClass('expanded')) {
+        $('.notification-center.dropdown').addClass('open');
+        $('.mobile-layer').addClass('expanded');
+        this.updateEmployeeNotifications();
+      }
     });
 
     $('body').on('click', function (e) {
@@ -110,10 +114,13 @@ export default class Header {
         && $('div.notification-center.dropdown').has(e.target).length === 0
         && $('.open').has(e.target).length === 0
       ) {
+
         if ($('div.notification-center.dropdown').hasClass('open')) {
+          $('.mobile-layer').removeClass('expanded');
           refreshNotifications();
         }
         $('div.notification-center.dropdown').removeClass('open');
+
       }
     });
 

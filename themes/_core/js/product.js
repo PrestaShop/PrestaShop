@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -101,6 +101,7 @@ $(document).ready(function () {
       $('.product-variants').replaceWith(resp.product_variants);
       $('.product-discounts').replaceWith(resp.product_discounts);
       $('.images-container').replaceWith(resp.product_cover_thumbnails);
+      $('.product-additional-info').replaceWith(resp.product_additional_info);
       $('#product-details').replaceWith(resp.product_details);
 
       // Replace all "add to cart" sections but the quantity input in order to keep quantity field intact i.e.

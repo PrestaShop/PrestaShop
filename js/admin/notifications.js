@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -107,7 +107,7 @@ function getPush()
 				{
           $("#orders-notifications").removeClass('empty');
 					$("#orders-notifications").children('.notification-elements').append(html);
-					$("#orders_notif_value").text(' (' + nbOrders + ')');
+					$("#orders_notif_value").text(' (' + nbOrders + ')').attr('data-nb', nbOrders);
 				} else {
           $("#orders-notifications").addClass('empty');
           $("#orders_notif_value").text('');
@@ -129,7 +129,7 @@ function getPush()
 				{
           $("#customers-notifications").removeClass('empty');
           $("#customers-notifications").children('.notification-elements').append(html);
-					$("#customers_notif_value").text(' (' + nbCustomers + ')');
+					$("#customers_notif_value").text(' (' + nbCustomers + ')').attr('data-nb', nbCustomers);
 				} else {
           $("#customers-notifications").addClass('empty');
           $("#customers_notif_value").text('');
@@ -152,7 +152,7 @@ function getPush()
 				{
           $("#messages-notifications").removeClass('empty');
           $("#messages-notifications").children('.notification-elements').append(html);
-					$("#customer_messages_notif_value").text(' (' + nbCustomerMessages + ')');
+					$("#customer_messages_notif_value").text(' (' + nbCustomerMessages + ')').attr('data-nb', nbCustomerMessages);
 				} else {
           $("#messages-notifications").addClass('empty');
           $("#customer_messages_notif_value").text('');

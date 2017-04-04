@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {l s='Log in to your account' d='Shop.Theme.CustomerAccount'}
+  {l s='Log in to your account' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='page_content'}
@@ -39,7 +39,7 @@
       {/block}
       <div class="no-account">
         <a href="{$urls.pages.register}" data-link-action="display-register-form">
-          {l s='No account? Create one here' d='Shop.Theme.CustomerAccount'}
+          {l s='No account? Create one here' d='Shop.Theme.Customeraccount'}
         </a>
       </div>
     {/block}

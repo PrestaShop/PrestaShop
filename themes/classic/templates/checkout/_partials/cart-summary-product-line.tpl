@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,20 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="media-left">
-  <a href="{$product.url}" title="{$product.name}">
-    <img class="media-object" src="{$product.cover.small.url}" alt="{$product.name}">
-  </a>
-</div>
-<div class="media-body">
-  <span class="product-name">{$product.name}</span>
-  <span class="product-quantity">x{$product.quantity}</span>
-  <span class="product-price pull-xs-right">{$product.price}</span>
-  {hook h='displayProductPriceBlock' product=$product type="unit_price"}
-</div>
+{block name='cart_summary_product_line'}
+  <div class="media-left">
+    <a href="{$product.url}" title="{$product.name}">
+      <img class="media-object" src="{$product.cover.small.url}" alt="{$product.name}">
+    </a>
+  </div>
+  <div class="media-body">
+    <span class="product-name">{$product.name}</span>
+    <span class="product-quantity">x{$product.quantity}</span>
+    <span class="product-price pull-xs-right">{$product.price}</span>
+    {hook h='displayProductPriceBlock' product=$product type="unit_price"}
+  </div>
+{/block}

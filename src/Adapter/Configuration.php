@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,19 +27,11 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use Shop;
 
 class Configuration implements ConfigurationInterface
 {
     private $shop;
-
-    public function __construct(\Shop $shop = null)
-    {
-        if (is_null($shop)) {
-            $this->shop = \Context::getContext()->shop;
-        } else {
-            $this->shop = $shop;
-        }
-    }
 
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
@@ -58,19 +50,32 @@ class Configuration implements ConfigurationInterface
 
     /**
      * Set configuration value
+     * @param $key
+     * @param $value
+     * @return $this
+     * @throws \Exception
      */
     public function set($key, $value)
     {
+        // By default, set a piece of configuration for all available shops and shop groups
+        $shopGroupId = 0;
+        $shopId = 0;
+
+        if ($this->shop instanceof Shop) {
+            $shopGroupId = $this->shop->id_shop_group;
+            $shopId = $this->shop->id;
+        }
+
         $success = \Configuration::updateValue(
             $key,
             $value,
             false,
-            $this->shop->id_shop_group,
-            $this->shop->id
+            $shopGroupId,
+            $shopId
         );
 
         if (!$success) {
-            throw new Exception("Could not update configuration");
+            throw new \Exception("Could not update configuration");
         }
 
         return $this;
@@ -92,5 +97,14 @@ class Configuration implements ConfigurationInterface
     public function combinationIsActive()
     {
         return  \CombinationCore::isFeatureActive();
+    }
+
+    /**
+     * Restrict updates of a piece of configuration to a single shop.
+     * @param Shop $shop
+     */
+    public function restrictUpdatesTo(Shop $shop)
+    {
+        $this->shop = $shop;
     }
 }

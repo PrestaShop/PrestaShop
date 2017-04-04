@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -173,7 +173,7 @@ class ProductCore extends ObjectModel
     public $redirect_type = '';
 
     /** @var bool Product statuts */
-    public $id_product_redirected = 0;
+    public $id_type_redirected = 0;
 
     /** @var bool Product available for order */
     public $available_for_order = true;
@@ -313,7 +313,7 @@ class ProductCore extends ObjectModel
             'uploadable_files' =>            array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
             'active' =>                    array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'redirect_type' =>                array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
-            'id_product_redirected' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
+            'id_type_redirected' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
             'available_for_order' =>        array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'available_date' =>            array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
             'show_condition' =>            array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
@@ -588,9 +588,16 @@ class ProductCore extends ObjectModel
         return $return;
     }
 
+    /**
+     * Init computation of price display method (i.e. price should be including tax or not) for a customer.
+     * If customer Id passed as null then this compute price display method with according of current group.
+     * Otherwise a price display method will compute with according of a customer address (i.e. country).
+     * @see Group::getPriceDisplayMethod()
+     * @param int|null $id_customer
+     */
     public static function initPricesComputation($id_customer = null)
     {
-        if ($id_customer) {
+        if ((int)$id_customer > 0) {
             $customer = new Customer((int)$id_customer);
             if (!Validate::isLoadedObject($customer)) {
                 die(Tools::displayError());
@@ -614,6 +621,12 @@ class ProductCore extends ObjectModel
         }
     }
 
+    /**
+     * Returns price display method for a customer (i.e. price should be including tax or not)
+     * @see initPricesComputation()
+     * @param int|null $id_customer
+     * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
+     */
     public static function getTaxCalculationMethod($id_customer = null)
     {
         if (self::$_taxCalculationMethod === null || $id_customer !== null) {
@@ -887,15 +900,15 @@ class ProductCore extends ObjectModel
 
     public function toggleStatus()
     {
-        //test if the product is active and if redirect_type is empty string and set default value to id_product_redirected & redirect_type
+        //test if the product is active and if redirect_type is empty string and set default value to id_type_redirected & redirect_type
         //  /!\ after parent::toggleStatus() active will be false, that why we set 404 by default :p
         if ($this->active) {
             //case where active will be false after parent::toggleStatus()
-            $this->id_product_redirected = 0;
+            $this->id_type_redirected = 0;
             $this->redirect_type = '404';
         } else {
             //case where active will be true after parent::toggleStatus()
-            $this->id_product_redirected = 0;
+            $this->id_type_redirected = 0;
             $this->redirect_type = '';
         }
         return parent::toggleStatus();
@@ -1543,7 +1556,7 @@ class ProductCore extends ObjectModel
     public function updateProductAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
         $id_images, $reference, $id_supplier = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date, $isbn = '')
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use updateAttribute() instead');
 
         $return = $this->updateAttribute(
             $id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
@@ -2005,27 +2018,34 @@ class ProductCore extends ObjectModel
     */
     public function deleteFeatures()
     {
+        $all_shops = Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL ? true : false;
+
         // List products features
         $features = Db::getInstance()->executeS('
-		SELECT p.*, f.*
-		FROM `'._DB_PREFIX_.'feature_product` as p
-		LEFT JOIN `'._DB_PREFIX_.'feature_value` as f ON (f.`id_feature_value` = p.`id_feature_value`)
-		WHERE `id_product` = '.(int)$this->id);
+            SELECT p.*, f.*
+            FROM `'._DB_PREFIX_.'feature_product` as p
+            LEFT JOIN `'._DB_PREFIX_.'feature_value` as f ON (f.`id_feature_value` = p.`id_feature_value`)
+            '.(!$all_shops ? 'LEFT JOIN `'._DB_PREFIX_.'feature_shop` fs ON (f.`id_feature` = fs.`id_feature`)' : null).'
+            WHERE `id_product` = '.(int)$this->id
+                .(!$all_shops ? ' AND fs.`id_shop` = '.(int)Context::getContext()->shop->id : '')
+        );
+
         foreach ($features as $tab) {
             // Delete product custom features
             if ($tab['custom']) {
-                Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'feature_value`
-				WHERE `id_feature_value` = '.(int)$tab['id_feature_value']);
-                Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'feature_value_lang`
-				WHERE `id_feature_value` = '.(int)$tab['id_feature_value']);
+                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature_value` = '.(int)$tab['id_feature_value']);
+                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_value_lang` WHERE `id_feature_value` = '.(int)$tab['id_feature_value']);
             }
         }
         // Delete product features
         $result = Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'feature_product`
-		WHERE `id_product` = '.(int)$this->id);
+    		DELETE `'._DB_PREFIX_.'feature_product` FROM `'._DB_PREFIX_.'feature_product`
+    		WHERE `id_product` = '.(int)$this->id.(!$all_shops ? '
+                AND `id_feature` IN (
+                    SELECT `id_feature`
+                    FROM `'._DB_PREFIX_.'feature_shop`
+                    WHERE `id_shop` = '.(int)Context::getContext()->shop->id.'
+                )' : ''));
 
         SpecificPriceRule::applyAllRules(array((int)$this->id));
         return ($result);
@@ -2097,10 +2117,13 @@ class ProductCore extends ObjectModel
     * @param bool $groupByIdAttributeGroup
     * @return array Product attributes combinations
     */
-    public function getAttributeCombinations($id_lang, $groupByIdAttributeGroup = true)
+    public function getAttributeCombinations($id_lang = null, $groupByIdAttributeGroup = true)
     {
         if (!Combination::isFeatureActive()) {
             return array();
+        }
+        if (is_null($id_lang)) {
+            $id_lang = Context::getContext()->language->id;
         }
 
         $sql = 'SELECT pa.*, product_attribute_shop.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name,
@@ -2870,27 +2893,15 @@ class ProductCore extends ObjectModel
 
         $id_currency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int) Configuration::get('PS_CURRENCY_DEFAULT');
 
-        // retrieve address informations
-        $id_country = (int)$context->country->id;
-        $id_state = 0;
-        $zipcode = 0;
-
         if (!$id_address && Validate::isLoadedObject($cur_cart)) {
             $id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
         }
 
-        if ($id_address) {
-            $address_infos = Address::getCountryAndState($id_address);
-            if ($address_infos['id_country']) {
-                $id_country = (int)$address_infos['id_country'];
-                $id_state = (int)$address_infos['id_state'];
-                $zipcode = $address_infos['postcode'];
-            }
-        } elseif (isset($context->customer->geoloc_id_country)) {
-            $id_country = (int)$context->customer->geoloc_id_country;
-            $id_state = (int)$context->customer->id_state;
-            $zipcode = $context->customer->postcode;
-        }
+        // retrieve address informations
+        $address = Address::initialize($id_address, true);
+        $id_country = (int)$address->id_country;
+        $id_state = (int)$address->id_state;
+        $zipcode = $address->postcode;
 
         if (Tax::excludeTaxeOption()) {
             $usetax = false;
@@ -3256,7 +3267,7 @@ class ProductCore extends ObjectModel
         );
     }
 
-    public function getPriceWithoutReduct($notax = false, $id_product_attribute = false, $decimals = 6)
+    public function getPriceWithoutReduct($notax = false, $id_product_attribute = null, $decimals = 6)
     {
         return Product::getPriceStatic((int)$this->id, !$notax, $id_product_attribute, $decimals, null, false, false);
     }
@@ -3644,8 +3655,13 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        foreach ($result as &$row) {
-            $row['id_product_attribute'] = Product::getDefaultAttribute((int)$row['id_product']);
+        foreach ($result as $k => &$row) {
+            if (!Product::checkAccessStatic((int)$row['id_product'], false)) {
+                unset($result[$k]);
+                continue;
+            } else {
+                $row['id_product_attribute'] = Product::getDefaultAttribute((int)$row['id_product']);
+            }
         }
 
         return $this->getProductsProperties($id_lang, $result);
@@ -4169,9 +4185,9 @@ class ProductCore extends ObjectModel
         }
 
         if (($customization_labels = Db::getInstance()->executeS('
-			SELECT `id_customization_field`, `id_lang`, `name`
+			SELECT `id_customization_field`, `id_lang`, `id_shop`, `name`
 			FROM `'._DB_PREFIX_.'customization_field_lang`
-			WHERE `id_customization_field` IN ('.implode(', ', $customization_field_ids).')'.($id_shop ? ' AND cfl.`id_shop` = '.(int)$id_shop : '').'
+			WHERE `id_customization_field` IN ('.implode(', ', $customization_field_ids).')'.($id_shop ? ' AND `id_shop` = '.(int)$id_shop : '').'
 			ORDER BY `id_customization_field`')) === false) {
             return false;
         }
@@ -4223,6 +4239,7 @@ class ProductCore extends ObjectModel
                     $data = array(
                         'id_customization_field' => (int)$customization_field_id,
                         'id_lang' => (int)$customization_label['id_lang'],
+                        'id_shop' => (int)$customization_label['id_shop'],
                         'name' => pSQL($customization_label['name']),
                     );
 
@@ -4301,7 +4318,7 @@ class ProductCore extends ObjectModel
     {
         Hook::exec('actionGetProductPropertiesBefore', [
             'id_lang'   => $id_lang,
-            'product'   => $row,
+            'product'   => &$row,
             'context'   => $context
         ]);
 
@@ -4491,7 +4508,7 @@ class ProductCore extends ObjectModel
 
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang'   => $id_lang,
-            'product'   => $row,
+            'product'   => &$row,
             'context'   => $context
         ]);
 
@@ -4601,6 +4618,11 @@ class ProductCore extends ObjectModel
             return false;
         }
 
+        // No need to query if there isn't any real cart!
+        if (!$id_cart) {
+            return false;
+        }
+
         if ($id_customization === 0) {
             // Backward compatibility: check if there are no products in cart with specific `id_customization` before returning false
             $product_customizations = (int)Db::getInstance()->getValue('
@@ -4612,10 +4634,6 @@ class ProductCore extends ObjectModel
             }
         }
 
-        // No need to query if there isn't any real cart!
-        if (!$id_cart) {
-            return false;
-        }
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
@@ -5060,7 +5078,7 @@ class ProductCore extends ObjectModel
 
     public function getNoPackPrice()
     {
-        return Pack::noPackPrice((int)$this->id);
+        return Tools::displayPrice(Pack::noPackPrice((int)$this->id));
     }
 
     public function checkAccess($id_customer)
@@ -5490,7 +5508,7 @@ class ProductCore extends ObjectModel
     public function setWsPositionInCategory($position)
     {
         if ($position < 0) {
-            WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a negative position, the minimum for a position is 0.'), 134);
+            WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot set a negative position, the minimum for a position is 0.', array(), 'Admin.Catalog.Notification'), 134);
         }
         $result = Db::getInstance()->executeS('
 			SELECT `id_product`
@@ -5499,7 +5517,7 @@ class ProductCore extends ObjectModel
 			ORDER BY `position`
 		');
         if (($position > 0) && ($position + 1 > count($result))) {
-            WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).'), 135);
+            WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).', array(), 'Admin.Catalog.Notification'), 135);
         }
 
         foreach ($result as &$value) {
@@ -5726,19 +5744,56 @@ class ProductCore extends ObjectModel
         return $result;
     }
 
-    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes)
+    /**
+     * @return bool
+     */
+    public function hasCombinations()
+    {
+        if (is_null($this->id) || 0 >= $this->id) {
+            return false;
+        }
+        $attributes = self::getAttributesInformationsByProduct($this->id);
+        return !empty($attributes);
+    }
+
+    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
     {
         if (!is_array($id_attributes)) {
             return 0;
         }
 
-        return Db::getInstance()->getValue('
+        $id_product_attribute =  Db::getInstance()->getValue('
         SELECT pac.`id_product_attribute`
         FROM `'._DB_PREFIX_.'product_attribute_combination` pac
         INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
         WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $id_attributes)).')
         GROUP BY id_product_attribute
         HAVING COUNT(id_product) = '.count($id_attributes));
+
+        if ($id_product_attribute === false && $find_best) {
+            //find the best possible combination
+            //first we order $id_attributes by the group position
+            $orderred = array();
+            $result = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'attribute` a
+            INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
+            WHERE `id_attribute` IN ('.implode(',', array_map('intval', $id_attributes)).') ORDER BY g.`position` ASC');
+
+            foreach ($result as $row) {
+                $orderred[] = $row['id_attribute'];
+            }
+
+            while ($id_product_attribute === false && count($orderred) > 0) {
+                array_pop($orderred);
+                $id_product_attribute =  Db::getInstance()->getValue('
+                SELECT pac.`id_product_attribute`
+                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
+                GROUP BY id_product_attribute
+                HAVING COUNT(id_product) = '.count($orderred));
+            }
+        }
+        return $id_product_attribute;
     }
 
     /**
@@ -6235,5 +6290,27 @@ class ProductCore extends ObjectModel
         }
 
         return $results;
+    }
+
+    /**
+     * Get object of redirect_type
+     *
+     * @return bool|string
+     */
+    public function getRedirectType() {
+
+        switch($this->redirect_type) {
+            case '301-category':
+            case '302-category':
+                return 'category';
+                break;
+
+            case '301-product':
+            case '302-product':
+                return 'product';
+                break;
+        }
+
+        return false;
     }
 }

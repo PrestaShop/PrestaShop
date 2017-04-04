@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -70,11 +70,9 @@ class CartControllerCore extends FrontController
      */
     public function initContent()
     {
-        if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show' ) {
+        if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
             Tools::redirect('index.php');
         }
-
-        parent::initContent();
 
         $presenter = new CartPresenter();
         $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
@@ -92,6 +90,7 @@ class CartControllerCore extends FrontController
             ]);
             $this->setTemplate('checkout/cart-empty');
         }
+        parent::initContent();
     }
 
     public function displayAjaxUpdate()
@@ -142,19 +141,23 @@ class CartControllerCore extends FrontController
 
     public function displayAjaxProductRefresh()
     {
-        $url = $this->context->link->getProductLink(
-            $this->id_product,
-            null,
-            null,
-            null,
-            $this->context->language->id,
-            null,
-            (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
-            false,
-            false,
-            true,
-            ['quantity_wanted' => (int)$this->qty]
-        );
+        if ($this->id_product) {
+            $url = $this->context->link->getProductLink(
+                $this->id_product,
+                null,
+                null,
+                null,
+                $this->context->language->id,
+                null,
+                (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group'), true),
+                false,
+                false,
+                true,
+                ['quantity_wanted' => (int)$this->qty]
+            );
+        } else {
+            $url = false;
+        }
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode([
@@ -190,7 +193,7 @@ class CartControllerCore extends FrontController
                                 $this->context->cart->addCartRule($cartRule->id);
                             }
                         } else {
-                            $this->errors[] = Tools::displayError('This voucher does not exists.');
+                            $this->errors[] = $this->trans('This voucher does not exist.', array(), 'Shop.Notifications.Error');
                         }
                     }
                 } elseif (($id_cart_rule = (int)Tools::getValue('deleteDiscount')) && Validate::isUnsignedId($id_cart_rule)) {
@@ -230,16 +233,23 @@ class CartControllerCore extends FrontController
             }
         }
 
-        if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery)) {
-            $data = array(
-                'id_cart' => (int)$this->context->cart->id,
-                'id_product' => (int)$this->id_product,
-                'id_product_attribute' => (int)$this->id_product_attribute,
-                'customization_id' => (int)$this->customization_id,
-                'id_address_delivery' => (int)$this->id_address_delivery
-            );
+        $data = array(
+            'id_cart' => (int)$this->context->cart->id,
+            'id_product' => (int)$this->id_product,
+            'id_product_attribute' => (int)$this->id_product_attribute,
+            'customization_id' => (int)$this->customization_id,
+            'id_address_delivery' => (int)$this->id_address_delivery
+        );
 
-            Hook::exec('actionDeleteProductInCartAfter', $data);
+        Hook::exec('actionObjectProductInCartDeleteBefore', $data, null, true);
+
+        if ($this->context->cart->deleteProduct(
+                $this->id_product,
+                $this->id_product_attribute,
+                $this->customization_id,
+                $this->id_address_delivery
+            )) {
+            Hook::exec('actionObjectProductInCartDeleteAfter', $data);
 
             if (!Cart::getNbProducts((int)$this->context->cart->id)) {
                 $this->context->cart->setDeliveryOption(null);
@@ -249,7 +259,7 @@ class CartControllerCore extends FrontController
             }
         }
 
-        $removed = CartRule::autoRemoveFromCart();
+        CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
     }
 
@@ -354,7 +364,8 @@ class CartControllerCore extends FrontController
      * @param $productInCart
      * @return bool
      */
-    function productInCartMatchesCriteria($productInCart) {
+    public function productInCartMatchesCriteria($productInCart)
+    {
         return (
             !isset($this->id_product_attribute) ||
             (

@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -41,7 +41,7 @@
           {block name='delivery_options'}
             <div class="delivery-options">
               {foreach from=$delivery_options item=carrier key=carrier_id}
-                  <div class="delivery-option">
+                  <div class="row delivery-option">
                     <div class="col-sm-1">
                       <span class="custom-radio pull-xs-left">
                         <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if}>
@@ -70,20 +70,21 @@
                         </div>
                       </div>
                     </label>
-                    <div class="col-md-12 carrier-extra-content"{if $delivery_option != $carrier_id} style="display:none;"{/if}>
-                        {$carrier.extraContent nofilter}
-                    </div>
-                    <div class="clearfix"></div>
                   </div>
+                  <div class="row carrier-extra-content"{if $delivery_option != $carrier_id} style="display:none;"{/if}>
+                    {$carrier.extraContent nofilter}
+                  </div>
+                  <div class="clearfix"></div>
               {/foreach}
             </div>
           {/block}
           <div class="order-options">
             {if $recyclablePackAllowed}
-              <label>
+              <span class="custom-checkbox">
                 <input type="checkbox" name="recyclable" value="1" {if $recyclable} checked {/if}>
-                <span>{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</span>
-              </label>
+                <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                <label>{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</label>
+              </span>
             {/if}
             {if $gift.allowed}
               <span class="custom-checkbox">

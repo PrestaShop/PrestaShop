@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -213,8 +213,9 @@ class ProductOptions extends CommonAbstractType
             'multiple'  => true,
             'choices'  => $this->attachmentList,
             'choices_as_values' => true,
-            'choice_label' => function ($value, $key, $index) {
-                return $this->fullAttachmentList[$index - 1]['name'];
+            'choice_label' => function ($choice, $key, $value) {
+                $attachmentKey = array_search($key, array_column($this->fullAttachmentList, 'file'));
+                return $this->fullAttachmentList[$attachmentKey]['name'];
             },
             'required' => false,
             'attr' => ['data' => $this->fullAttachmentList],

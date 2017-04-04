@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,22 +18,28 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="checkout cart-detailed-actions card-block">
-  {if $cart.minimalPurchaseRequired}
-    <div class="alert alert-warning" role="alert">
-      {$cart.minimalPurchaseRequired}
-    </div>
-    <div class="text-xs-center">
-      <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
-    </div>
-  {else}
-    <div class="text-xs-center">
-      <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout' d='Shop.Theme.Actions'}</a>
-      {hook h='displayExpressCheckout'}
-    </div>
-  {/if}
-</div>
+{block name='cart_detailed_actions'}
+  <div class="checkout cart-detailed-actions card-block">
+    {if $cart.minimalPurchaseRequired}
+      <div class="alert alert-warning" role="alert">
+        {$cart.minimalPurchaseRequired}
+      </div>
+      <div class="text-xs-center">
+        <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
+      </div>
+    {elseif empty($cart.products) }
+      <div class="text-xs-center">
+        <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
+      </div>
+    {else}
+      <div class="text-xs-center">
+        <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout' d='Shop.Theme.Actions'}</a>
+        {hook h='displayExpressCheckout'}
+      </div>
+    {/if}
+  </div>
+{/block}

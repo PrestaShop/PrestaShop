@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ThemeValidator
@@ -36,12 +37,14 @@ class ThemeValidator
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
+    private $appConfiguration;
 
     private $errors = array();
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, ConfigurationInterface $configuration)
     {
         $this->translator = $translator;
+        $this->appConfiguration = $configuration;
     }
 
     public function getErrors($themeName)
@@ -96,7 +99,7 @@ class ThemeValidator
     private function hasRequiredFiles(Theme $theme)
     {
         $themeName = $theme->getName();
-        $parentDir = realpath($theme->getDirectory().'/../'.$theme->get('parent')).'/';
+        $parentDir = realpath($this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme->get('parent')).'/';
         $parentFile = false;
 
         foreach ($this->getRequiredFiles() as $file) {

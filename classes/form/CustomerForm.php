@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -76,6 +76,9 @@ class CustomerFormCore extends AbstractForm
         return $this->fillWith($params);
     }
 
+    /**
+     * @return \Customer
+     */
     public function getCustomer()
     {
         $customer = new Customer($this->getValue('id_customer'));
@@ -97,7 +100,8 @@ class CustomerFormCore extends AbstractForm
     {
         $emailField = $this->getField('email');
         $id_customer = Customer::customerExists($emailField->getValue(), true, true);
-        if ($id_customer && $id_customer != $this->getCustomer()->id) {
+        $customer = $this->getCustomer();
+        if ($id_customer && $id_customer != $customer->id) {
             $emailField->addError(sprintf(
                 $this->translator->trans(
                     'The email "%s" is already used, please choose another one or sign in', array(), 'Shop.Notifications.Error'
@@ -118,9 +122,60 @@ class CustomerFormCore extends AbstractForm
             }
         }
 
+        $this->validateFieldsLengths();
         $this->validateByModules();
 
         return parent::validate();
+    }
+
+    protected function validateFieldsLengths()
+    {
+        $this->validateFieldLength('email', 128, $this->getEmailMaxLengthViolationMessage());
+        $this->validateFieldLength('firstname', 255, $this->getFirstNameMaxLengthViolationMessage());
+        $this->validateFieldLength('lastname', 255, $this->getLastNameMaxLengthViolationMessage());
+    }
+
+    /**
+     * @param $fieldName
+     * @param $maximumLength
+     * @param $violationMessage
+     */
+    protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
+    {
+        $emailField = $this->getField($fieldName);
+        if (strlen($emailField->getValue()) > $maximumLength) {
+            $emailField->addError($violationMessage);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getEmailMaxLengthViolationMessage()
+    {
+        return $this->translator->trans(
+            'The %1$s field is too long (%2$d chars max).',
+            array('email', 128),
+            'Shop.Notifications.Error'
+        );
+    }
+
+    protected function getFirstNameMaxLengthViolationMessage()
+    {
+        return $this->translator->trans(
+            'The %1$s field is too long (%2$d chars max).',
+            array('first name', 255),
+            'Shop.Notifications.Error'
+        );
+    }
+
+    protected function getLastNameMaxLengthViolationMessage()
+    {
+        return $this->translator->trans(
+            'The %1$s field is too long (%2$d chars max).',
+            array('last name', 255),
+            'Shop.Notifications.Error'
+        );
     }
 
     public function submit()

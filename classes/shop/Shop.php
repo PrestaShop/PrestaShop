@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,16 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * @since 1.5.0
@@ -121,8 +118,6 @@ class ShopCore extends ObjectModel
     const SHARE_ORDER = 'share_order';
     const SHARE_STOCK = 'share_stock';
 
-    private $configurator = null;
-
     /**
      * On shop instance, get its URL data
      *
@@ -133,8 +128,6 @@ class ShopCore extends ObjectModel
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
-
-        $this->configurator = new Configurator($this);
 
         if ($this->id) {
             $this->setUrl();
@@ -383,7 +376,11 @@ class ShopCore extends ObjectModel
         }
 
         $http_host = Tools::getHttpHost();
-        $all_media = Configuration::getMultiShopValues('PS_MEDIA_SERVER_1');
+        $all_media = array_merge(
+            Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
+            Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
+            Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+        );
 
         if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array($http_host, $all_media)) {
             // If in admin, we can access to the shop without right URL

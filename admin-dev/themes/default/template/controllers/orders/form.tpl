@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -475,6 +475,7 @@
 
 	function searchCustomers()
 	{
+    var customer_search = $('#customer').val();
 		$.ajax({
 			type:"POST",
 			url : "{$link->getAdminLink('AdminCustomers')}",
@@ -484,32 +485,38 @@
 				ajax: "1",
 				tab: "AdminCustomers",
 				action: "searchCustomers",
-				customer_search: $('#customer').val()},
-			success : function(res)
-			{
-				if(res.found)
-				{
-					var html = '';
-					$.each(res.customers, function() {
-						html += '<div class="customerCard col-lg-4">';
-						html += '<div class="panel">';
-						html += '<div class="panel-heading">'+this.firstname+' '+this.lastname;
-						html += '<span class="pull-right">#'+this.id_customer+'</span></div>';
-						html += '<span>'+this.email+'</span><br/>';
-						html += '<span class="text-muted">'+((this.birthday != '0000-00-00') ? this.birthday : '')+'</span><br/>';
-						html += '<div class="panel-footer">';
-						html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
-						html += '<button type="button" data-customer="'+this.id_customer+'" class="setup-customer btn btn-default pull-right"><i class="icon-arrow-right"></i> {l s='Choose'}</button>';
-						html += '</div>';
-						html += '</div>';
-						html += '</div>';
-					});
-				}
-				else
-					html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
-				$('#customers').html(html);
-				resetBind();
-			}
+				customer_search: customer_search
+			},
+			success : function(res) {
+        if (res.found) {
+          var html = '';
+          $.each(res.customers, function () {
+            html += '<div class="customerCard col-lg-4">';
+            html += '<div class="panel">';
+            html += '<div class="panel-heading">' + this.firstname + ' ' + this.lastname;
+            html += '<span class="pull-right">#' + this.id_customer + '</span></div>';
+            html += '<span>' + this.email + '</span><br/>';
+            html += '<span class="text-muted">' + ((this.birthday != '0000-00-00') ? this.birthday : '') + '</span><br/>';
+            html += '<div class="panel-footer">';
+            html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer=' + this.id_customer + '&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
+            html += '<button type="button" data-customer="' + this.id_customer + '" class="setup-customer btn btn-default pull-right"><i class="icon-arrow-right"></i> {l s='Choose'}</button>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+          });
+        }
+        else {
+          html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
+        }
+
+        $('#customers').html(html);
+        var search_items = customer_search.split(' ');
+        $.each(search_items, function (index, value) {
+          $('#customers').highlight(value);
+        });
+
+        resetBind();
+      }
 		});
 	}
 

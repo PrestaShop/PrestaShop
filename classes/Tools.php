@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShopBundle\Service\Cache\Refresh;
 use Symfony\Component\HttpFoundation\Request;
 
 use Composer\CaBundle\CaBundle;
@@ -243,7 +244,12 @@ class ToolsCore
      */
     public static function getHttpHost($http = false, $entities = false, $ignore_port = false)
     {
-        $host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
+        $httpHost = '';
+        if (array_key_exists('HTTP_HOST', $_SERVER)) {
+            $httpHost = $_SERVER['HTTP_HOST'];
+        }
+
+        $host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $httpHost);
         if ($ignore_port && $pos = strpos($host, ':')) {
             $host = substr($host, 0, $pos);
         }
@@ -747,6 +753,10 @@ class ToolsCore
             $currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
+        if ($currency_to === null) {
+            $currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        }
+
         if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
             $amount *= $currency_to->conversion_rate;
         } else {
@@ -950,23 +960,10 @@ class ToolsCore
     */
     public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
     {
-        global $_ERRORS;
-
-        if (is_null($context)) {
-            $context = Context::getContext();
+        if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
+            return ('<pre>'.Tools::htmlentitiesUTF8(stripslashes($string)).'<br/>'.print_r(debug_backtrace(), true).'</pre>');
         }
-
-        @include_once(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/errors.php');
-
-        if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $string == 'Fatal error') {
-            return ('<pre>'.print_r(debug_backtrace(), true).'</pre>');
-        }
-        if (!is_array($_ERRORS)) {
-            return $htmlentities ? Tools::htmlentitiesUTF8($string) : $string;
-        }
-        $key = md5(str_replace('\'', '\\\'', $string));
-        $str = (isset($_ERRORS) && is_array($_ERRORS) && array_key_exists($key, $_ERRORS)) ? $_ERRORS[$key] : $string;
-        return $htmlentities ? Tools::htmlentitiesUTF8(stripslashes($str)) : $str;
+        return Context::getContext()->getTranslator()->trans('Fatal error', array(), 'Admin.Notifications.Error');
     }
 
     /**
@@ -1935,7 +1932,7 @@ class ToolsCore
         $url,
         $use_include_path = false,
         $stream_context = null,
-        $curl_timeout = 5,
+        $curl_timeout = 60,
         $fallback = false
     ) {
         $is_local_file = !preg_match('/^https?:\/\//', $url);
@@ -1963,7 +1960,7 @@ class ToolsCore
                 )
             );
         }
-        
+
         if ($is_local_file) {
             $content = @file_get_contents($url, $use_include_path, $stream_context);
         } else {
@@ -1992,7 +1989,7 @@ class ToolsCore
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename(url), "w");
+        $localFile = fopen(basename($url), "w");
         if (!$localFile) {
             return false;
         }
@@ -2094,7 +2091,7 @@ class ToolsCore
 
     public static function replaceByAbsoluteURL($matches)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::replaceByAbsoluteURL($matches) instead');
         return Media::replaceByAbsoluteURL($matches);
     }
 
@@ -2102,11 +2099,15 @@ class ToolsCore
 
     public static function getMediaServer($filename)
     {
-        if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_')) {
+        if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_')) {
             if (_MEDIA_SERVER_1_ == '') {
                 self::$_cache_nb_media_servers = 0;
-            } else {
+            } elseif (_MEDIA_SERVER_2_ == '') {
                 self::$_cache_nb_media_servers = 1;
+            } elseif (_MEDIA_SERVER_3_ == '') {
+                self::$_cache_nb_media_servers = 2;
+            } else {
+                self::$_cache_nb_media_servers = 3;
             }
         }
 
@@ -2216,8 +2217,15 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
-        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')) {
-            $medias = array(Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'));
+        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
+            && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
+            && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+        ) {
+            $medias = array(
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+            );
         }
 
         $media_domains = '';
@@ -2347,7 +2355,7 @@ class ToolsCore
         fwrite($write_fd, "AddType application/font-woff2 .woff2\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
     <FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
-        Header add Access-Control-Allow-Origin \"*\"
+        Header set Access-Control-Allow-Origin \"*\"
     </FilesMatch>
 </IfModule>\n\n");
 
@@ -2407,6 +2415,152 @@ FileETag none
         }
 
         return true;
+    }
+
+    public static function generateRobotsFile($executeHook = false)
+    {
+        $robots_file = _PS_ROOT_DIR_.'/robots.txt';
+
+        if (!$write_fd = @fopen($robots_file, 'w')) {
+            return false;
+        }
+
+        $robots_content = self::getRobotsContent();
+
+        if (true === $executeHook) {
+            Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
+                'rb_data' => &$robots_content
+            ));
+        }
+
+        // PS Comments
+        fwrite($write_fd, "# robots.txt automatically generated by PrestaShop e-commerce open-source solution\n");
+        fwrite($write_fd, "# http://www.prestashop.com - http://www.prestashop.com/forums\n");
+        fwrite($write_fd, "# This file is to prevent the crawling and indexing of certain parts\n");
+        fwrite($write_fd, "# of your site by web crawlers and spiders run by sites like Yahoo!\n");
+        fwrite($write_fd, "# and Google. By telling these \"robots\" where not to go on your site,\n");
+        fwrite($write_fd, "# you save bandwidth and server resources.\n");
+        fwrite($write_fd, "# For more information about the robots.txt standard, see:\n");
+        fwrite($write_fd, "# http://www.robotstxt.org/robotstxt.html\n");
+
+        // User-Agent
+        fwrite($write_fd, "User-agent: *\n");
+
+        // Allow Directives
+        if (count($robots_content['Allow'])) {
+            fwrite($write_fd, "# Allow Directives\n");
+            foreach ($robots_content['Allow'] as $allow) {
+                fwrite($write_fd, 'Allow: '.$allow."\n");
+            }
+        }
+
+        // Private pages
+        if (count($robots_content['GB'])) {
+            fwrite($write_fd, "# Private pages\n");
+            foreach ($robots_content['GB'] as $gb) {
+                fwrite($write_fd, 'Disallow: /*'.$gb."\n");
+            }
+        }
+
+        // Directories
+        if (count($robots_content['Directories'])) {
+            fwrite($write_fd, "# Directories\n");
+            foreach ($robots_content['Directories'] as $dir) {
+                fwrite($write_fd, 'Disallow: */'.$dir."\n");
+            }
+        }
+
+        // Files
+        if (count($robots_content['Files'])) {
+            $language_ids = Language::getIDs();
+            fwrite($write_fd, "# Files\n");
+            foreach ($robots_content['Files'] as $iso_code => $files) {
+                foreach ($files as $file) {
+                    if (!empty($language_ids) && count($language_ids) > 1) {
+                        fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
+                    } else {
+                        fwrite($write_fd, 'Disallow: /'.$file."\n");
+                    }
+                }
+            }
+        }
+
+        if (is_null(Context::getContext())) {
+            $sitemap_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'index_sitemap.xml';
+        } else {
+            $sitemap_file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.Context::getContext()->shop->id.'_index_sitemap.xml';
+        }
+
+        // Sitemap
+        if (file_exists($sitemap_file) && filesize($sitemap_file)) {
+            fwrite($write_fd, "# Sitemap\n");
+            $sitemap_filename = basename($sitemap_file);
+            fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME']
+                .__PS_BASE_URI__.$sitemap_filename."\n");
+        }
+
+        if (true === $executeHook) {
+            Hook::exec('actionAdminMetaAfterWriteRobotsFile', array(
+                'rb_data' => $robots_content,
+                'write_fd' => &$write_fd
+            ));
+        }
+
+        fclose($write_fd);
+
+        return true;
+    }
+
+    public static function getRobotsContent()
+    {
+        $tab = array();
+
+        // Special allow directives
+        $tab['Allow'] = array(
+            '*/modules/*.css',
+            '*/modules/*.js',
+            '*/modules/*.png',
+            '*/modules/*.jpg',
+        );
+
+        // Directories
+        $tab['Directories'] = array('cache/', 'classes/', 'config/', 'controllers/',
+            'css/', 'download/', 'js/', 'localization/', 'log/', 'mails/', 'modules/', 'override/',
+            'pdf/', 'src/', 'tools/', 'translations/', 'upload/', 'vendor/', 'web/', 'webservice/');
+
+        // Files
+        $disallow_controllers = array(
+            'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
+            'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order',
+            'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
+            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics','attachment', 'guest-tracking'
+        );
+
+        // Rewrite files
+        $tab['Files'] = array();
+        if (Configuration::get('PS_REWRITING_SETTINGS')) {
+            $sql = 'SELECT DISTINCT ml.url_rewrite, l.iso_code
+					FROM '._DB_PREFIX_.'meta m
+					INNER JOIN '._DB_PREFIX_.'meta_lang ml ON ml.id_meta = m.id_meta
+					INNER JOIN '._DB_PREFIX_.'lang l ON l.id_lang = ml.id_lang
+					WHERE l.active = 1 AND m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
+            if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
+                foreach ($results as $row) {
+                    $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
+                }
+            }
+        }
+
+        $tab['GB'] = array(
+            '?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
+            '&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
+        );
+
+        foreach ($disallow_controllers as $controller) {
+            $tab['GB'][] = 'controller='.$controller;
+        }
+
+        return $tab;
     }
 
     public static function generateIndex()
@@ -2826,7 +2980,11 @@ exit;
             return $smarty->clearAllCache();
         }
 
-        return $smarty->clearCache($tpl, $cache_id, $compile_id);
+        $ret = $smarty->clearCache($tpl, $cache_id, $compile_id);
+
+        Hook::exec('actionClearCache');
+
+        return $ret;
     }
 
     /**
@@ -2842,7 +3000,11 @@ exit;
             return;
         }
 
-        return $smarty->clearCompiledTemplate();
+        $ret = $smarty->clearCompiledTemplate();
+
+        Hook::exec('actionClearCompileCache');
+
+        return $ret;
     }
 
     /**
@@ -2856,15 +3018,30 @@ exit;
     }
 
     /**
+     * Clear Symfony cache
+     */
+    public static function clearSf2Cache($env = null)
+    {
+        if (!$env) {
+            $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+        }
+
+        $sf2Refresh = new Refresh($env);
+        $sf2Refresh->addCacheClear();
+        $ret = $sf2Refresh->execute();
+
+        Hook::exec('actionClearSf2Cache');
+
+        return $ret;
+    }
+
+    /**
      * Clear both Smarty and Symfony cache
      */
     public static function clearAllCache()
     {
         Tools::clearSmartyCache();
-
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-        $sf2Refresh->addCacheClear(_PS_MODE_DEV_ ? 'dev' : 'prod');
-        $sf2Refresh->execute();
+        Tools::clearSf2Cache();
     }
 
     public static function clearColorListCache($id_product = false)
@@ -3480,6 +3657,7 @@ exit;
                 $config = HTMLPurifier_Config::createDefault();
 
                 $config->set('Attr.EnableID', true);
+                $config->set('Attr.AllowedRel', array('nofollow'));
                 $config->set('HTML.Trusted', true);
                 $config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
                 $config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_parent', '_top'));

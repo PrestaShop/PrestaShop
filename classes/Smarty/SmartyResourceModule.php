@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,9 +31,10 @@
  */
 class SmartyResourceModuleCore extends Smarty_Resource_Custom
 {
-    public function __construct(array $paths)
+    public function __construct(array $paths, $isAdmin = false)
     {
         $this->paths = $paths;
+        $this->isAdmin = $isAdmin;
     }
 
     /**
@@ -45,6 +46,12 @@ class SmartyResourceModuleCore extends Smarty_Resource_Custom
      */
     protected function fetch($name, &$source, &$mtime)
     {
+        if ($this->isAdmin) {
+            $source = '';
+            $mtime = time();
+            return;
+        }
+
         foreach ($this->paths as $path) {
             if (Tools::file_exists_cache($file = $path.$name)) {
                 if (_PS_MODE_DEV_) {

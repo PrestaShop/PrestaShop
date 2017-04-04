@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,9 +27,8 @@ namespace PrestaShop\PrestaShop\Tests\Core\Addon;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Phake;
-use Shop;
 use Symfony\Component\Filesystem\Filesystem;
+use Phake;
 
 class ThemeRepositoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,9 +41,12 @@ class ThemeRepositoryTest extends \PHPUnit_Framework_TestCase
         $shop->id = 1;
         $shop->name = 'Demo shop';
 
+        $configuration = new Configuration();
+        $configuration->restrictUpdatesTo($shop);
+
         /* @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository */
         $this->repository = new ThemeRepository(
-            new Configuration($shop),
+            $configuration,
             new Filesystem(),
             $shop
         );
@@ -66,7 +68,7 @@ class ThemeRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstanceByNameNotFound()
     {
-        $this->setExpectedException('PrestaShopException', '[ThemeRepository] Theme configuration file not found for theme `not_found`.');
+        $this->setExpectedException('PrestaShopException');
         $this->repository->getInstanceByName('not_found');
     }
 

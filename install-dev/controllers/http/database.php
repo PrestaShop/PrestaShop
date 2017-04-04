@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -145,6 +145,9 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             }
 
             $this->database_server = $parameters['parameters']['database_host'];
+            if (!empty($parameters['parameters']['database_port'])) {
+                $this->database_server .= ':'.$parameters['parameters']['database_port'];
+            }
             $this->database_name = $parameters['parameters']['database_name'];
             $this->database_login = $parameters['parameters']['database_user'];
             $this->database_password = $parameters['parameters']['database_password'];

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -152,17 +152,29 @@ class GroupCore extends ObjectModel
         return self::$cache_reduction['group'][$id_group];
     }
 
+    /**
+     * Returns price display method for a group (i.e. price should be including tax or not)
+     * @param int $id_group
+     * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
+     */
     public static function getPriceDisplayMethod($id_group)
     {
         if (!isset(Group::$group_price_display_method[$id_group])) {
-            self::$group_price_display_method[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `price_display_method`
-			FROM `'._DB_PREFIX_.'group`
-			WHERE `id_group` = '.(int)$id_group);
+            self::$group_price_display_method[$id_group] = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+                SELECT `price_display_method`
+                FROM `'._DB_PREFIX_.'group`
+                WHERE `id_group` = '.(int)$id_group
+            );
         }
+
         return self::$group_price_display_method[$id_group];
     }
 
+    /**
+     * Returns default price display method, i.e. for the 'Customers' group
+     * @see getPriceDisplayMethod()
+     * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
+     */
     public static function getDefaultPriceDisplayMethod()
     {
         return Group::getPriceDisplayMethod((int)Configuration::get('PS_CUSTOMER_GROUP'));

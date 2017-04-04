@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -37,7 +37,7 @@
 			</div>
 		</div>
 
-		<script type="text/javascript"> 
+		<script type="text/javascript">
 			var ajaxQueries = new Array();
 			function run_sync()
 			{
@@ -54,7 +54,7 @@
 					url: "index.php",
 					data: {
 						ajax: "1",
-						token: "{$token|escape:'html':'UTF-8'}", 
+						token: "{$token|escape:'html':'UTF-8'}",
 						syncImapMail: "1",
 						ajax:"1",
 						action:"syncImap",
@@ -78,7 +78,7 @@
 							$('#ajax_conf').html('<ul>'+jsonError+'</ul>');
 							$('#ajax_conf').fadeIn();
 						}
-							
+
 						$('#ajax_loader').html('');
 					},
 					error: function(XMLHttpRequest, textStatus, errorThrown)
@@ -87,7 +87,7 @@
 					}
 				});
 				ajaxQueries.push(ajaxQuery);
-				
+
 			};
 		</script>
 {/if}

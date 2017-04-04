@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Translation\Factory;
 
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use PrestaShopBundle\Translation\Provider\UseDefaultCatalogueInterface;
+use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
@@ -77,68 +78,12 @@ class TranslationsFactory implements TranslationsFactoryInterface
     {
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
-                $provider->setLocale($locale);
-
-                $catalogue = $provider->getXliffCatalogue();
-                $catalogue = $this->addDefaultTranslations($provider, $catalogue);
-
-                $translations = $catalogue->all();
-                $databaseCatalogue = $provider->getDatabaseCatalogue($theme)->all();
-
-                foreach ($translations as $domain => $messages) {
-                    $databaseDomain = str_replace('.'.$locale, '', $domain);
-
-                    $missingTranslations = 0;
-
-                    foreach ($messages as $translationKey => $translationValue) {
-                        $keyExists =
-                            array_key_exists($databaseDomain, $databaseCatalogue) &&
-                            array_key_exists($translationKey, $databaseCatalogue[$databaseDomain])
-                        ;
-
-                        $fallbackOnDefaultValue = $translationKey != $translationValue ||
-                            $locale === str_replace('_', '-', self::DEFAULT_LOCALE);
-                        ;
-                        $translations[$domain][$translationKey] = array(
-                            'xlf' =>  $fallbackOnDefaultValue ? $translations[$domain][$translationKey] : '',
-                            'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
-                        );
-
-                        if (
-                            empty($translations[$domain][$translationKey]['xlf']) &&
-                            empty($translations[$domain][$translationKey]['db'])
-                        ) {
-                            $missingTranslations++;
-                        }
-                    }
-
-                    $translations[$domain]['__metadata'] = array('missing_translations' => $missingTranslations);
-                }
-
-                ksort($translations);
-
-                return $translations;
+                $treeBuilder = new TreeBuilder($locale, $theme);
+                return $treeBuilder->makeTranslationArray($provider);
             }
         }
 
         throw new ProviderNotFoundException($domainIdentifier);
-    }
-
-    /**
-     * @param AbstractProvider $provider
-     * @param MessageCatalogueInterface $catalogue
-     * @return MessageCatalogueInterface
-     */
-    private function addDefaultTranslations(AbstractProvider $provider, MessageCatalogueInterface $catalogue)
-    {
-        if (!$provider instanceof UseDefaultCatalogueInterface) {
-            return $catalogue;
-        }
-
-        $catalogueWithDefault = $provider->getDefaultCatalogue();
-        $catalogueWithDefault->addCatalogue($catalogue);
-
-        return $catalogueWithDefault;
     }
 
     /**

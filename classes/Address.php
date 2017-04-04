@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -138,8 +138,6 @@ class AddressCore extends ObjectModel
         ),
     );
 
-    protected $_includeContainer = false;
-
     /** @var array Web service parameters */
     protected $webserviceParameters = array(
         'objectsNodeName' => 'addresses',
@@ -236,7 +234,7 @@ class AddressCore extends ObjectModel
 
         return $out;
     }
-    
+
     /**
      * Get Zone ID for a given address
      *
@@ -445,10 +443,21 @@ class AddressCore extends ObjectModel
                 $address->id_country = (int)$context->customer->geoloc_id_country;
                 $address->id_state   = (int)$context->customer->id_state;
                 $address->postcode   = $context->customer->postcode;
+            } elseif ((int)$context->country->id && ((int)$context->country->id != Configuration::get('PS_SHOP_COUNTRY_ID'))) {
+                $address             = new Address();
+                $address->id_country = (int)$context->country->id;
+                $address->id_state   = 0;
+                $address->postcode   = 0;
+            } elseif ((int)Configuration::get('PS_SHOP_COUNTRY_ID')) {
+                // set the default address
+                $address             = new Address();
+                $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID');
+                $address->id_state   = Configuration::get('PS_SHOP_STATE_ID');
+                $address->postcode   = Configuration::get('PS_SHOP_CODE');
             } else {
                 // set the default address
                 $address             = new Address();
-                $address->id_country = (int)$context->country->id;
+                $address->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
                 $address->id_state   = 0;
                 $address->postcode   = 0;
             }

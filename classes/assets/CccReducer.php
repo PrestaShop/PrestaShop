@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,7 +51,7 @@ class CccReducerCore
         $files = array();
         foreach ($cssFileList['external'] as $key => &$css) {
             if ('all' === $css['media'] && 'local' === $css['server']) {
-                $files[] = $css['path'];
+                $files[] = $this->getPathFromUri($css['path']);
                 unset($cssFileList['external'][$key]);
             }
         }
@@ -82,7 +82,7 @@ class CccReducerCore
             foreach ($list['external'] as $key => $js) {
                 // We only CCC the file without 'refer' or 'async'
                 if ('' === $js['attribute'] && 'local' === $js['server']) {
-                    $files[] = $js['path'];
+                    $files[] = $this->getPathFromUri($js['path']);
                     unset($list['external'][$key]);
                 }
             }

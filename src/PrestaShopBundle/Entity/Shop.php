@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,15 +33,15 @@ use Doctrine\ORM\Mapping as ORM;
  * Shop
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\ShopRepository")
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ShopRepository")
  */
 class Shop
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="id_shop", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;

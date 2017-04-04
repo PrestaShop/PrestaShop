@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,10 +59,10 @@ class AdminOutstandingControllerCore extends AdminController
 
         $this->fields_list = array(
             'number' => array(
-                'title' => $this->l('Invoice')
+                'title' => $this->trans('Invoice', array(), 'Admin.Global')
             ),
             'date_add' => array(
-                'title' => $this->l('Date'),
+                'title' => $this->trans('Date', array(), 'Admin.Global'),
                 'type' => 'date',
                 'align' => 'right',
                 'filter_key' => 'a!date_add'
@@ -77,7 +77,7 @@ class AdminOutstandingControllerCore extends AdminController
                 'align' => 'center'
             ),
             'risk' => array(
-                'title' => $this->l('Risk'),
+                'title' => $this->trans('Risk', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'orderby' => false,
                 'type' => 'select',
@@ -87,21 +87,21 @@ class AdminOutstandingControllerCore extends AdminController
                 'filter_type' => 'int'
             ),
             'outstanding_allow_amount' => array(
-                'title' => $this->l('Outstanding Allowance'),
+                'title' => $this->trans('Outstanding Allowance', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'prefix' => '<b>',
                 'suffix' => '</b>',
                 'type' => 'price'
             ),
             'outstanding' => array(
-                'title' => $this->l('Current Outstanding'),
+                'title' => $this->trans('Current Outstanding', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'callback' => 'printOutstandingCalculation',
                 'orderby' => false,
                 'search' => false
             ),
             'id_invoice' => array(
-                'title' => $this->l('Invoice'),
+                'title' => $this->trans('Invoice', array(), 'Admin.Global'),
                 'align' => 'center',
                 'callback' => 'printPDFIcons',
                 'orderby' => false,

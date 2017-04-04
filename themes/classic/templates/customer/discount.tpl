@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file='customer/page.tpl'}
 
 {block name='page_title'}
-  {l s='Your vouchers' d='Shop.Theme.CustomerAccount'}
+  {l s='Your vouchers' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='page_content'}

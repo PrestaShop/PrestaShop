@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -278,6 +278,7 @@ class XmlLoader
             }
         }
 
+
         // Load all row for current entity and prepare data to be populated
         foreach ($xml->entities->$entity as $node) {
             $data = array();
@@ -348,6 +349,15 @@ class XmlLoader
         return file_exists($this->lang_path.$iso.'/data/') ? $iso : 'en';
     }
 
+    protected function getFallBackToDefaultEntityLanguage($iso, $entity)
+    {
+        if ($this->getFallBackToDefaultLanguage($iso) === 'en') {
+            return 'en';
+        }
+
+        return file_exists($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml') ? $iso : 'en';
+    }
+
     /**
      * Special case for "tag" entity
      */
@@ -397,7 +407,7 @@ class XmlLoader
 
             $path = $this->data_path.$entity.'.xml';
             if ($iso) {
-                $path = $this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml';
+                $path = $this->lang_path.$this->getFallBackToDefaultEntityLanguage($iso, $entity).'/data/'.$entity.'.xml';
             }
 
             if (!file_exists($path)) {
@@ -1028,7 +1038,7 @@ class XmlLoader
 
                 $xml_node = new SimplexmlElement('<entity_'.$entity.' />');
                 $this->createXmlEntityNodes($entity, $nodes, $xml_node);
-                $xml_node->asXML($this->lang_path.$this->getFallBackToDefaultLanguage($iso).'/data/'.$entity.'.xml');
+                $xml_node->asXML($this->lang_path.$this->getFallBackToDefaultEntityLanguage($iso, $entity).'/data/'.$entity.'.xml');
             }
         }
 

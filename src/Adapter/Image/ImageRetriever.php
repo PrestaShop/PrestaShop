@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -114,6 +114,11 @@ class ImageRetriever
                 rtrim($root, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
             ));
+        } else if (get_class($object) === 'Store') {
+            $type = 'stores';
+            $getImageURL = 'getStoreImageLink';
+            $root = _PS_STORE_IMG_DIR_;
+            $imageFolderPath = rtrim($root, DIRECTORY_SEPARATOR);
         } else {
             $type = 'categories';
             $getImageURL = 'getCatImageLink';
@@ -148,7 +153,7 @@ class ImageRetriever
             }
 
             $url = $this->link->$getImageURL(
-                $object->link_rewrite,
+                isset($object->link_rewrite) ? $object->link_rewrite : $object->name,
                 $id_image,
                 $image_type['name']
             );
@@ -175,7 +180,7 @@ class ImageRetriever
             'small'  => $small,
             'medium' => $medium,
             'large'  => $large,
-            'legend' => $object->meta_title,
+            'legend' => isset($object->meta_title) ? $object->meta_title : $object->name,
         );
     }
 

@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,16 +18,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="notification-center dropdown">
-  <div class="notification dropdown-toggle">
+<div id="notif" class="notification-center dropdown">
+  <div class="notification js-notification dropdown-toggle">
     <i class="material-icons">notifications_none</i>
-    <span id="notifications-total" class="count">0</span>
+    <span id="notifications-total" class="count hide">0</span>
   </div>
-  <div class="dropdown-menu dropdown-menu-right">
+  <div class="dropdown-menu dropdown-menu-right js-notifs_dropdown">
     <div class="notifications">
       <ul class="nav nav-tabs" role="tablist">
         {$active = "active"}
@@ -133,7 +133,7 @@
 {if $show_new_customers}
   <script type="text/html" id="customer-notification-template">
     <a class="notif" href='customer_url'>
-      #_id_customer_ - <strong>_customer_name_</strong>_company_ - {l s="register"} <strong>_date_add_</strong>
+      #_id_customer_ - <strong>_customer_name_</strong>_company_ - {l s="registered"} <strong>_date_add_</strong>
     </a>
   </script>
 {/if}

@@ -10,15 +10,15 @@ services:
         class: Symfony\Component\Finder\Finder
         shared: false
 
-    guzzle.cache.provider:
+    doctrine.cache.provider:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:
-            - "%kernel.cache_dir%/guzzle"
+            - "%kernel.cache_dir%/doctrine"
 
     guzzle.cache:
         class: Csa\Bundle\GuzzleBundle\GuzzleHttp\Cache\DoctrineAdapter
         arguments:
-            - "@guzzle.cache.provider"
+            - "@doctrine.cache.provider"
             - "%prestashop.addons.api_client.ttl%"
         shared: false
 
@@ -87,7 +87,6 @@ services:
     # Legacy context service, transitional
     prestashop.adapter.legacy.configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration
-        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().shop"]
 
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
@@ -112,7 +111,7 @@ services:
             - "@security.csrf.token_manager"
             - "@router"
             - "@=service('prestashop.user_provider').getUsername()"
-            - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+            - "@prestashop.adapter.legacy.context"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
@@ -208,12 +207,6 @@ services:
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
 
-    prestashop.twig.extension.hook:
-        class: PrestaShopBundle\Twig\HookExtension
-        arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module"]
-        tags:
-            - { name: twig.extension }
-
     prestashop.twig.extension.stringloader:
         class: Twig_Extension_StringLoader
         tags:
@@ -243,6 +236,7 @@ services:
        class: PrestaShopBundle\Twig\AdminExtension
        arguments:
             - "@request_stack"
+            - "@service_container"
        tags:
             - { name: twig.extension }
 
@@ -253,6 +247,7 @@ services:
             - "@prestashop.core.admin.data_provider.addons_interface"
             - "@prestashop.adapter.admin.data_provider.module"
 
+
     # Repositories
     prestashop.core.admin.module.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
@@ -262,6 +257,8 @@ services:
             - "@prestashop.core.module.updater"
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
+            - "@doctrine.cache.provider"
 
     prestashop.core.addon.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
@@ -278,6 +275,12 @@ services:
           - "@finder"
           - "@prestashop.core.admin.lang.repository"
           - "@prestashop.translation.theme.exporter"
+
+    prestashop.core.admin.tab.repository:
+        class: PrestaShopBundle\Entity\Repository\TabRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\Tab
 
     prestashop.core.admin.translation.repository:
         class: PrestaShopBundle\Entity\Repository\TranslationRepository
@@ -305,6 +308,7 @@ services:
             - "@prestashop.core.admin.module.repository"
             - "@prestashop.module.zip.manager"
             - "@translator"
+            - "@event_dispatcher"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
 
     prestashop.module.zip.manager:
@@ -314,6 +318,15 @@ services:
             - "@finder"
             - "@translator"
 
+    prestashop.twig.extension.hook:
+        class: PrestaShopBundle\Twig\HookExtension
+        arguments:
+            - "@prestashop.hook.dispatcher"
+            - "@prestashop.adapter.data_provider.module"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.core.admin.module.repository'):null"
+        tags:
+            - { name: twig.extension }
+
 # Addons API Client
     prestashop.addons.client_api:
         class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
@@ -321,6 +334,6 @@ services:
             - "@csa_guzzle.client.addons_api"
             - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
             - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+            - "@prestashop.adapter.tools"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
-

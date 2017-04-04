@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1053,7 +1053,7 @@ product_tabs['Informations'] = new function(){
 					addRelatedProduct(i[1], i[0]);
 				$(this).val('');
 			});
-		 addRelatedProduct(id_product_redirected, product_name_redirected);
+		 addRelatedProduct(id_type_redirected, product_name_redirected);
 	};
 
 	this.bindTagImage = function (){

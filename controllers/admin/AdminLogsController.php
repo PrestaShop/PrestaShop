@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,36 +46,36 @@ class AdminLogsControllerCore extends AdminController
                 'class' => 'fixed-width-xs'
             ),
             'employee' => array(
-                'title' => $this->l('Employee'),
+                'title' => $this->trans('Employee', array(), 'Admin.Global'),
                 'havingFilter' => true,
                 'callback' => 'displayEmployee',
                 'callback_object' => $this
             ),
             'severity' => array(
-                'title' => $this->l('Severity (1-4)'),
+                'title' => $this->trans('Severity (1-4)', array(), 'Admin.Advparameters.Feature'),
                 'align' => 'text-center',
                 'class' => 'fixed-width-xs'
             ),
             'message' => array(
-                'title' => $this->l('Message')
+                'title' => $this->trans('Message', array(), 'Admin.Global')
             ),
             'object_type' => array(
-                'title' => $this->l('Object type'),
+                'title' => $this->trans('Object type', array(), 'Admin.Advparameters.Feature'),
                 'class' => 'fixed-width-sm'
             ),
             'object_id' => array(
-                'title' => $this->l('Object ID'),
+                'title' => $this->trans('Object ID', array(), 'Admin.Advparameters.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'error_code' => array(
-                'title' => $this->l('Error code'),
+                'title' => $this->trans('Error code', array(), 'Admin.Advparameters.Feature'),
                 'align' => 'center',
                 'prefix' => '0x',
                 'class' => 'fixed-width-xs'
             ),
             'date_add' => array(
-                'title' => $this->l('Date'),
+                'title' => $this->trans('Date', array(), 'Admin.Global'),
                 'align' => 'right',
                 'type' => 'datetime'
             )
@@ -83,12 +83,17 @@ class AdminLogsControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->l('Logs by email'),
+                'title' =>    $this->trans('Logs by email', array(), 'Admin.Advparameters.Feature'),
                 'icon' => 'icon-envelope',
                 'fields' =>    array(
                     'PS_LOGS_BY_EMAIL' => array(
-                        'title' => $this->l('Minimum severity level'),
-                        'hint' => Tools::safeOutput($this->l('Enter "5" if you do not want to receive any emails.').'<br />'.$this->l('Emails will be sent to the shop owner.'), true),
+                        'title' => $this->trans('Minimum severity level', array(), 'Admin.Advparameters.Feature'),
+                        'hint' => Tools::safeOutput(
+                            $this->trans('Enter "5" if you do not want to receive any emails.', array(), 'Admin.Advparameters.Help').
+                            '<br>'.
+                            $this->trans('Emails will be sent to the shop owner.', array(), 'Admin.Advparameters.Help'),
+                            true
+                        ),
                         'cast' => 'intval',
                         'type' => 'text',
                     ),
@@ -114,8 +119,8 @@ class AdminLogsControllerCore extends AdminController
         parent::initToolbar();
         $this->toolbar_btn['delete'] = array(
             'short' => 'Erase',
-            'desc' => $this->l('Erase all'),
-            'js' => 'if (confirm(\''.$this->l('Are you sure?').'\')) document.location = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminLogs')).'&amp;token='.$this->token.'&amp;deletelog=1\';'
+            'desc' => $this->trans('Erase all', array(), 'Admin.Advparameters.Feature'),
+            'js' => 'if (confirm(\''.$this->trans('Are you sure?', array(), 'Admin.Notifications.Warning').'\')) document.location = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminLogs')).'&amp;token='.$this->token.'&amp;deletelog=1\';'
         );
         unset($this->toolbar_btn['new']);
     }

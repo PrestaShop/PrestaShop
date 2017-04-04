@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,9 +33,9 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
@@ -75,15 +75,35 @@ class ModuleManager implements AddonManagerInterface
      */
     private $translator;
 
+    /**
+     * @var Employee Legacy employee class
+     */
     private $employee;
 
-    public function __construct(AdminModuleDataProvider $adminModulesProvider,
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
+     * @param AdminModuleDataProvider $adminModulesProvider
+     * @param ModuleDataProvider $modulesProvider
+     * @param ModuleDataUpdater $modulesUpdater
+     * @param ModuleRepository $moduleRepository
+     * @param ModuleZipManager $moduleZipManager
+     * @param TranslatorInterface $translator
+     * @param Employee|null $employee
+     */
+    public function __construct(
+        AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
         ModuleRepository $moduleRepository,
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
-        Employee $employee = null)
+        EventDispatcherInterface $dispatcher,
+        Employee $employee = null
+        )
     {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->moduleProvider = $modulesProvider;
@@ -92,6 +112,94 @@ class ModuleManager implements AddonManagerInterface
         $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
         $this->employee = $employee;
+        $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * @param callable $modulesPresenter
+     * @return object
+     */
+    public function getModulesWithNotifications(callable $modulesPresenter)
+    {
+        $modules = $this->groupModulesByInstallationProgress();
+
+        $modulesProvider = $this->adminModuleProvider;
+        foreach ($modules as $moduleLabel => $modulesPart) {
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart, str_replace("to_", "", $moduleLabel));
+            $modules->{$moduleLabel} = $modulesPresenter($modulesPart);
+        }
+
+        return $modules;
+    }
+
+    public function countModulesWithNotifications()
+    {
+        $modules = (array) $this->groupModulesByInstallationProgress();
+
+        return array_reduce($modules, function ($carry, $item) {
+            return $carry + count($item);
+        }, 0);
+    }
+
+    /**
+     * @return object
+     */
+    protected function groupModulesByInstallationProgress()
+    {
+        $installedProducts = $this->moduleRepository->getInstalledModules();
+
+        $modules = (object) array(
+            'to_configure' => array(),
+            'to_update' => array(),
+        );
+
+        /**
+         * @var \PrestaShop\PrestaShop\Adapter\Module\Module $installedProduct
+         */
+        foreach ($installedProducts as $installedProduct) {
+            if ($this->shouldRecommendConfigurationForModule($installedProduct)) {
+                $modules->to_configure[] = (object)$installedProduct;
+            }
+
+            if ($installedProduct->canBeUpgraded()) {
+                $modules->to_update[] = (object)$installedProduct;
+            }
+        }
+
+        return $modules;
+    }
+
+    /**
+     * @param $installedProduct
+     * @return bool
+     */
+    protected function shouldRecommendConfigurationForModule($installedProduct)
+    {
+        $warnings = $this->getModuleInstallationWarnings($installedProduct);
+
+        return !empty($warnings);
+    }
+
+    /**
+     * @param $installedProduct
+     * @return array
+     */
+    protected function getModuleInstallationWarnings($installedProduct)
+    {
+        $warnings = array();
+        $moduleName = $installedProduct->attributes->get('name');
+
+        if ($this->moduleProvider->isModuleMainClassValid($moduleName)) {
+            $moduleMainClassFilepath = _PS_MODULE_DIR_ . $moduleName . '/' . $moduleName . '.php';
+            if (file_exists($moduleMainClassFilepath)) {
+                require_once $moduleMainClassFilepath;
+            }
+
+            $module = ServiceLocator::get($moduleName);
+            $warnings = $module->warning;
+        }
+
+        return $warnings;
     }
 
     /**
@@ -127,16 +235,18 @@ class ModuleManager implements AddonManagerInterface
             return $this->upgrade($name, 'latest', $source);
         }
 
-        if (! $this->moduleProvider->isOnDisk($name)) {
-            if (!empty($source)) {
-                $this->moduleZipManager->storeInModulesFolder($source);
-            } else {
-                $this->moduleUpdater->setModuleOnDiskFromAddons($name);
-            }
+        if (!empty($source)) {
+            $this->moduleZipManager->storeInModulesFolder($source);
+        }
+        else if (! $this->moduleProvider->isOnDisk($name)) {
+            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
         $module = $this->moduleRepository->getModule($name);
-        return $module->onInstall();
+        $result = $module->onInstall();
+
+        $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+        return $result;
     }
 
     /**
@@ -173,6 +283,8 @@ class ModuleManager implements AddonManagerInterface
             $result &= $this->removeModuleFromDisk($name);
         }
 
+        $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
+
         return $result;
     }
 
@@ -204,8 +316,6 @@ class ModuleManager implements AddonManagerInterface
                 'Admin.Modules.Notification'));
         }
 
-        $result = true;
-
         // Get new module
         // 1- From source
         if ($source != null) {
@@ -213,15 +323,16 @@ class ModuleManager implements AddonManagerInterface
         }
         // 2- From Addons
         else {
-            $result &= $this->moduleUpdater->setModuleOnDiskFromAddons($name);
+            // This step is not mandatory (in case of local module),
+            // we do not check the result
+            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
-        if ($result) {
-            // Load and execute upgrade files
-            $result &= $this->moduleUpdater->upgrade($name);
-        }
+        // Load and execute upgrade files
+        $result = $this->moduleUpdater->upgrade($name);
+        $this->dispatch(ModuleManagementEvent::UPGRADE, $this->moduleRepository->getModule($name));
 
-        return (bool) $result;
+        return $result;
     }
 
     /**
@@ -244,7 +355,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         try {
-            return $module->onDisable();
+            $result = $module->onDisable();
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -256,7 +367,9 @@ class ModuleManager implements AddonManagerInterface
                 0, $e);
         }
 
-        return true;
+        $this->dispatch(ModuleManagementEvent::DISABLE, $module);
+
+        return $result;
     }
 
     /**
@@ -278,7 +391,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         try {
-            return $module->onEnable();
+            $result = $module->onEnable();
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -287,8 +400,9 @@ class ModuleManager implements AddonManagerInterface
                         '%error_details%' => $e->getMessage()),
                     'Admin.Modules.Notification'), 0, $e);
         }
+        $this->dispatch(ModuleManagementEvent::ENABLE, $module);
 
-        return true;
+        return $result;
     }
 
     /**
@@ -383,7 +497,6 @@ class ModuleManager implements AddonManagerInterface
             } else {
                 $status = ($module->onUninstall() && $module->onInstall());
             }
-            return $status;
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -394,6 +507,9 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'),
                 0, $e);
         }
+
+        $this->dispatch(ModuleManagementEvent::RESET, $module);
+        return $status;
     }
 
     /**
@@ -449,7 +565,17 @@ class ModuleManager implements AddonManagerInterface
                 array(),
                 'Admin.Modules.Notification');
         }
-        
+
         return $message;
+    }
+
+    /**
+     * This function is a refacto of the event dispatching
+     * @param strig $event
+     * @param \PrestaShop\PrestaShop\Core\Addon\Module\Module $module
+     */
+    private function dispatch($event, $module)
+    {
+        $this->dispatcher->dispatch($event, new ModuleManagementEvent($module));
     }
 }

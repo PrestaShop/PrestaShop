@@ -49,6 +49,7 @@ monolog:
 
 # Twig Configuration
 twig:
+    autoescape:       "name"
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form_themes:

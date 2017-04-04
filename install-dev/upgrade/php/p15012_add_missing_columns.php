@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,13 +53,13 @@ function p15012_add_missing_columns()
 		CHANGE `id_product_attribute` `id_product_attribute` int(10) unsigned DEFAULT NULL AFTER `id_shop`';
     $q_list['cart_product']['id_product_attribute']['add'] = 'ALTER TABLE `'._DB_PREFIX_.'cart_product`
 		ADD `id_product_attribute` int(10) unsigned DEFAULT NULL AFTER `id_shop`';
-    
+
     $q_list['cart_rule_product_rule']['quantity']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'cart_rule_product_rule`
 		DROP COLUMN `quantity`';
 
     $q_list['connections']['id_shop_group']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'connections`
 		CHANGE id_shop_group `id_shop_group` int(11) unsigned NOT NULL DEFAULT "1" AFTER id_connections';
-    
+
     $q_list['country']['display_tax_label']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'country`
 		CHANGE display_tax_label `display_tax_label` tinyint(1) NOT NULL AFTER zip_code_format';
 
@@ -81,7 +81,7 @@ function p15012_add_missing_columns()
 		CHANGE `reduction_amount_tax_incl` reduction_amount_tax_incl DEC(20,6) NOT NULL DEFAULT "0.000000"';
     $q_list['order_detail']['reduction_amount_tax_excl']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
 		CHANGE `reduction_amount_tax_excl` reduction_amount_tax_excl DEC(20,6) NOT NULL DEFAULT "0.000000"';
-    
+
     $q_list['order_detail']['ecotax_tax_rate']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
 		CHANGE `ecotax_tax_rate` ecotax_tax_rate DEC(5,3) NOT NULL DEFAULT "0.000"';
 
@@ -173,7 +173,7 @@ function p15012_add_missing_columns()
                 } else {
                     $do = 'add';
                 }
-    
+
                 if (!empty($q[$do])) {
                     if (!$db->execute($q[$do])) {
                         $errors[] = '<subquery><query>'.$q[$do].'</query><error>'.$db->getMsgError().'</error></subquery>';

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -160,6 +160,12 @@ abstract class ModuleCore
     protected static $_batch_mode = false;
     protected static $_defered_clearCache = array();
     protected static $_defered_func_call = array();
+
+    /**
+     * @var array Array of arrays representing tabs added by this module.
+     * @see PrestaShop\PrestaShop\Adapter\Module\Tab\RegisterTabs($module)
+     */
+    protected $tabs = array();
 
     /** @var bool If true, allow push */
     public $allow_push;
@@ -312,13 +318,13 @@ abstract class ModuleCore
         Hook::exec('actionModuleInstallBefore', array('object' => $this));
         // Check module name validation
         if (!Validate::isModuleName($this->name)) {
-            $this->_errors[] = Tools::displayError('Unable to install the module (Module name is not valid).');
+            $this->_errors[] = Context::getContext()->getTranslator()->trans('Unable to install the module (Module name is not valid).', array(), 'Admin.Modules.Notification');
             return false;
         }
 
         // Check PS version compliancy
         if (!$this->checkCompliancy()) {
-            $this->_errors[] = Tools::displayError('The version of your module is not compliant with your PrestaShop version.');
+            $this->_errors[] = Context::getContext()->getTranslator()->trans('The version of your module is not compliant with your PrestaShop version.', array(), 'Admin.Modules.Notification');
             return false;
         }
 
@@ -326,7 +332,7 @@ abstract class ModuleCore
         if (count($this->dependencies) > 0) {
             foreach ($this->dependencies as $dependency) {
                 if (!Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE LOWER(`name`) = \''.pSQL(Tools::strtolower($dependency)).'\'')) {
-                    $error = Tools::displayError('Before installing this module, you have to install this/these module(s) first:').'<br />';
+                    $error = Context::getContext()->getTranslator()->trans('Before installing this module, you have to install this/these module(s) first:', array(), 'Admin.Modules.Notification').'<br />';
                     foreach ($this->dependencies as $d) {
                         $error .= '- '.$d.'<br />';
                     }
@@ -339,19 +345,22 @@ abstract class ModuleCore
         // Check if module is installed
         $result = (new ModuleDataProvider(new LegacyLogger(), $this->getTranslator()))->isInstalled($this->name);
         if ($result) {
-            $this->_errors[] = Tools::displayError('This module has already been installed.');
+            $this->_errors[] = Context::getContext()->getTranslator()->trans('This module has already been installed.', array(), 'Admin.Modules.Notification');
             return false;
         }
 
         if (!$this->installControllers()) {
-            $this->_errors[] = Tools::displayError('Could not install module controllers.');
+            $this->_errors[] = Context::getContext()->getTranslator()->trans('Could not install module controllers.', array(), 'Admin.Modules.Notification');
+            $this->uninstallOverrides();
             return false;
         }
 
         // Install module and retrieve the installation id
         $result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
         if (!$result) {
-            $this->_errors[] = Tools::displayError('Technical error: PrestaShop could not install this module.');
+            $this->_errors[] = Context::getContext()->getTranslator()->trans('Technical error: PrestaShop could not install this module.', array(), 'Admin.Modules.Notification');
+            $this->uninstallTabs();
+            $this->uninstallOverrides();
             return false;
         }
         $this->id = Db::getInstance()->Insert_ID();
@@ -375,7 +384,7 @@ abstract class ModuleCore
                     FROM '._DB_PREFIX_.'access a
                     LEFT JOIN `'._DB_PREFIX_.'authorization_role` r
                     ON r.id_authorization_role = a.id_authorization_role
-                    WHERE r.slug = "ROLE_MOD_TAB_ADMINMODULES_'.$action.'"
+                    WHERE r.slug = "ROLE_MOD_TAB_ADMINMODULESSF_'.$action.'"
             )');
         }
 
@@ -419,20 +428,20 @@ abstract class ModuleCore
         // Store information if a module has been upgraded (memory optimization)
         if ($upgrade_detail['available_upgrade']) {
             if ($upgrade_detail['success']) {
-                $this->_confirmations[] = sprintf(Tools::displayError('Current version: %s'), $this->version);
-                $this->_confirmations[] = sprintf(Tools::displayError('%d file upgrade applied'), $upgrade_detail['number_upgraded']);
+                $this->_confirmations[] = Context::getContext()->getTranslator()->trans('Current version: %s', array($this->version), 'Admin.Modules.Notification');
+                $this->_confirmations[] = Context::getContext()->getTranslator()->trans('%d file upgrade applied', array($upgrade_detail['number_upgraded']), 'Admin.Modules.Notification');
             } else {
                 if (!$upgrade_detail['number_upgraded']) {
-                    $this->_errors[] = Tools::displayError('No upgrade has been applied');
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('No upgrade has been applied', array(), 'Admin.Modules.Notification');
                 } else {
-                    $this->_errors[] = sprintf(Tools::displayError('Upgraded from: %s to %s'), $upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']);
-                    $this->_errors[] = sprintf(Tools::displayError('%d upgrade left'), $upgrade_detail['number_upgrade_left']);
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Upgraded from: %s to %s', array($upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']), 'Admin.Modules.Notification');
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('%d upgrade left', array($upgrade_detail['number_upgrade_left']), 'Admin.Modules.Notification');
                 }
 
                 if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate']) {
-                    $this->_errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded this time: please refresh this page to update it.'), $this->name);
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Module %s cannot be upgraded this time: please refresh this page to update it.', array($this->name), 'Admin.Modules.Notification');
                 } else {
-                    $this->_errors[] = Tools::displayError('To prevent any problem, this module has been turned off');
+                    $this->_errors[] = Context::getContext()->getTranslator()->trans('To prevent any problem, this module has been turned off', array(), 'Admin.Modules.Notification');
                 }
             }
         }
@@ -634,7 +643,7 @@ abstract class ModuleCore
     {
         // Check module installation id validation
         if (!Validate::isUnsignedId($this->id)) {
-            $this->_errors[] = Tools::displayError('The module is not installed.');
+            $this->_errors[] = Context::getContext()->getTranslator()->trans('The module is not installed.', array(), 'Admin.Modules.Notification');
             return false;
         }
 
@@ -745,7 +754,7 @@ abstract class ModuleCore
             try {
                 $this->installOverrides();
             } catch (Exception $e) {
-                $this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
+                $this->_errors[] = Context::getContext()->getTranslator()->trans('Unable to install override: %s', array($e->getMessage()), 'Admin.Modules.Notification');
                 $this->uninstallOverrides();
                 return false;
             }
@@ -986,7 +995,6 @@ abstract class ModuleCore
         return $result;
     }
 
-
     /**
      * This function is used to determine the module name
      * of an AdminTab which belongs to a module, in order to keep translation
@@ -1037,7 +1045,7 @@ abstract class ModuleCore
     {
         if (!Validate::isModuleName($module_name)) {
             if (_PS_MODE_DEV_) {
-                die(Tools::displayError(Tools::safeOutput($module_name).' is not a valid module name.'));
+                die(Context::getContext()->getTranslator()->trans('%1$s is not a valid module name.', array(Tools::safeOutput($module_name)), 'Admin.Modules.Notification'));
             }
             return false;
         }
@@ -1191,7 +1199,7 @@ abstract class ModuleCore
         foreach ($modules_dir as $module) {
             $module_errors = array();
             if (Module::useTooMuchMemory()) {
-                $module_errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration');
+                $module_errors[] = Context::getContext()->getTranslator()->trans('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration', array(), 'Admin.Modules.Notification');
                 break;
             }
 
@@ -1214,11 +1222,15 @@ abstract class ModuleCore
                 libxml_use_internal_errors(true);
                 $xml_module = @simplexml_load_file($config_file);
                 if (!$xml_module) {
-                    $module_errors[] = Tools::displayError(sprintf('%1s could not be loaded.', $config_file));
+                    $module_errors[] = Context::getContext()->getTranslator()->trans(
+                        '%s could not be loaded.',
+                        array($config_file),
+                        'Admin.Modules.Notification'
+                    );
                     break;
                 }
                 foreach (libxml_get_errors() as $error) {
-                    $module_errors[] = '['.$module.'] '.Tools::displayError('Error found in config file:').' '.htmlentities($error->message);
+                    $module_errors[] = '['.$module.'] '.Context::getContext()->getTranslator()->trans('Error found in config file:', array(), 'Admin.Modules.Notification').' '.htmlentities($error->message);
                 }
                 libxml_clear_errors();
 
@@ -1272,7 +1284,7 @@ abstract class ModuleCore
                         $parser->parse($file);
                         require_once($file_path);
                     } catch (PhpParser\Error $e) {
-                        $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
+                        $errors[] = Context::getContext()->getTranslator()->trans('%1$s (parse error in %2$s)', array($module, substr($file_path, strlen(_PS_ROOT_DIR_))), 'Admin.Modules.Notification');
                     }
 
                     preg_match('/\n[\s\t]*?namespace\s.*?;/', $file, $ns);
@@ -1339,7 +1351,7 @@ abstract class ModuleCore
                     } catch (Exception $e) {
                     }
                 } else {
-                    $module_errors[] = sprintf(Tools::displayError('%1$s (class missing in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
+                    $module_errors[] = Context::getContext()->getTranslator()->trans('%1$s (class missing in %2$s)', array($module, substr($file_path, strlen(_PS_ROOT_DIR_))), 'Admin.Modules.Notification');
                 }
             }
             $errors = array_merge($errors, $module_errors);
@@ -1373,7 +1385,7 @@ abstract class ModuleCore
         foreach ($files_list as $f) {
             if (file_exists($f['file']) && ($f['loggedOnAddons'] == 0 || $logged_on_addons)) {
                 if (Module::useTooMuchMemory()) {
-                    $errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration');
+                    $errors[] = Context::getContext()->getTranslator()->trans('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration', array(), 'Admin.Modules.Notification');
                     break;
                 }
 
@@ -1463,6 +1475,9 @@ abstract class ModuleCore
         }
 
         foreach ($module_list as $key => &$module) {
+            if (!isset($module->tab)) {
+                $module->tab = 'others';
+            }
             if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist)) {
                 unset($module_list[$key]);
             } elseif (isset($modules_installed[$module->name])) {
@@ -1480,7 +1495,7 @@ abstract class ModuleCore
         usort($module_list, create_function('$a,$b', 'return strnatcasecmp($a->displayName, $b->displayName);'));
         if ($errors) {
             if (!isset(Context::getContext()->controller) && !Context::getContext()->controller->controller_name) {
-                echo '<div class="alert error"><h3>'.Tools::displayError('The following module(s) could not be loaded').':</h3><ol>';
+                echo '<div class="alert error"><h3>'.Context::getContext()->getTranslator()->trans('The following module(s) could not be loaded', array(), 'Admin.Modules.Notification').':</h3><ol>';
                 foreach ($errors as $error) {
                     echo '<li>'.$error.'</li>';
                 }
@@ -1647,8 +1662,9 @@ abstract class ModuleCore
             }
         }
 
-        if ($modules_list_content === null) {
-            $modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST);
+        $modulesListCacheFilepath = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
+        if ($modules_list_content === null && is_readable($modulesListCacheFilepath)) {
+            $modules_list_content = Tools::file_get_contents($modulesListCacheFilepath);
         }
 
         if ($default_country_modules_list_content === null) {
@@ -1766,7 +1782,7 @@ abstract class ModuleCore
         if ($success) {
             return true;
         } else {
-            Tools::displayError('Trusted and Untrusted XML have not been generated properly');
+            Context::getContext()->getTranslator()->trans('Trusted and Untrusted XML have not been generated properly', array(), 'Admin.Modules.Notification');
         }
     }
 
@@ -2108,11 +2124,11 @@ abstract class ModuleCore
     public function isEnabledForShopContext()
     {
         return (bool)Db::getInstance()->getValue(
-            'SELECT COUNT(*) n
+            'SELECT id_module
             FROM `'._DB_PREFIX_.'module_shop`
             WHERE id_module='.(int)$this->id.' AND id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')
             GROUP BY id_module
-            HAVING n='.(int)count(Shop::getContextListShopID())
+            HAVING COUNT(*)='.(int)count(Shop::getContextListShopID())
         );
     }
 
@@ -2202,7 +2218,7 @@ abstract class ModuleCore
     public function display($file, $template, $cache_id = null, $compile_id = null)
     {
         if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null) {
-            return Tools::displayError('No template found for module').' '.basename($file, '.php').(_PS_MODE_DEV_ ? ' ('.$template.')' : '');
+            return Context::getContext()->getTranslator()->trans('No template found for module', array(), 'Admin.Modules.Notification').' '.basename($file, '.php').(_PS_MODE_DEV_ ? ' ('.$template.')' : '');
         } else {
             $this->smarty->assign(array(
                 'module_dir' =>    __PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
@@ -2648,6 +2664,16 @@ abstract class ModuleCore
     }
 
     /**
+     * Getter for $tabs attribute
+     *
+     * @return array
+     */
+    public function getTabs()
+    {
+        return $this->tabs;
+    }
+
+    /**
      * add a warning message to display at the top of the admin page
      *
      * @param string $msg
@@ -2766,7 +2792,7 @@ abstract class ModuleCore
             $override_path = _PS_ROOT_DIR_.'/'.$file;
 
             if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path))) {
-                throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
+                throw new Exception(Context::getContext()->getTranslator()->trans('file (%s) not writable', array($override_path), 'Admin.Notifications.Error'));
             }
 
             // Get a uniq id for the class, because you can override a class (or remove the override) twice in the same session and we need to avoid redeclaration
@@ -2790,37 +2816,37 @@ abstract class ModuleCore
                 if ($override_class->hasMethod($method->getName())) {
                     $method_override = $override_class->getMethod($method->getName());
                     if (preg_match('/module: (.*)/ism', $override_file[$method_override->getStartLine() - 5], $name) && preg_match('/date: (.*)/ism', $override_file[$method_override->getStartLine() - 4], $date) && preg_match('/version: ([0-9.]+)/ism', $override_file[$method_override->getStartLine() - 3], $version)) {
-                        throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.'), $method->getName(), $classname, $name[1], $version[1], $date[1]));
+                        throw new Exception(Context::getContext()->getTranslator()->trans('The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.', array($method->getName(), $classname, $name[1], $version[1], $date[1]), 'Admin.Modules.Notification'));
                     }
-                    throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden.'), $method->getName(), $classname));
+                    throw new Exception(Context::getContext()->getTranslator()->trans('The method %1$s in the class %2$s is already overridden.', array($method->getName(), $classname), 'Admin.Modules.Notification'));
                 }
 
                 $module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1", $module_file);
                 if ($module_file === null) {
-                    throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
+                    throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override method %1$s in class %2$s.', array($method->getName(), $classname), 'Admin.Modules.Notification'));
                 }
             }
 
             // Check if none of the properties already exists in the override class
             foreach ($module_class->getProperties() as $property) {
                 if ($override_class->hasProperty($property->getName())) {
-                    throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
+                    throw new Exception(Context::getContext()->getTranslator()->trans('The property %1$s in the class %2$s is already defined.', array($property->getName(), $classname), 'Admin.Modules.Notification'));
                 }
 
                 $module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1$2$3", $module_file);
                 if ($module_file === null) {
-                    throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
+                    throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override property %1$s in class %2$s.', array($property->getName(), $classname), 'Admin.Modules.Notification'));
                 }
             }
 
             foreach ($module_class->getConstants() as $constant => $value) {
                 if ($override_class->hasConstant($constant)) {
-                    throw new Exception(sprintf(Tools::displayError('The constant %1$s in the class %2$s is already defined.'), $constant, $classname));
+                    throw new Exception(Context::getContext()->getTranslator()->trans('The constant %1$s in the class %2$s is already defined.', array($constant, $classname), 'Admin.Modules.Notification'));
                 }
 
                 $module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1$2", $module_file);
                 if ($module_file === null) {
-                    throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
+                    throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override constant %1$s in class %2$s.', array($constant, $classname), 'Admin.Modules.Notification'));
                 }
             }
 
@@ -2843,7 +2869,7 @@ abstract class ModuleCore
             }
 
             if (!is_writable($dir_name)) {
-                throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), $dir_name));
+                throw new Exception(Context::getContext()->getTranslator()->trans('directory (%s) not writable', array($dir_name), 'Admin.Notifications.Error'));
             }
             $module_file = file($override_src);
             $module_file = array_diff($module_file, array("\n"));
@@ -2859,7 +2885,7 @@ abstract class ModuleCore
                 foreach ($module_class->getMethods() as $method) {
                     $module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1", $module_file);
                     if ($module_file === null) {
-                        throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
+                        throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override method %1$s in class %2$s.', array($method->getName(), $classname), 'Admin.Modules.Notification'));
                     }
                 }
 
@@ -2867,7 +2893,7 @@ abstract class ModuleCore
                 foreach ($module_class->getProperties() as $property) {
                     $module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1$2$3", $module_file);
                     if ($module_file === null) {
-                        throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
+                        throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override property %1$s in class %2$s.', array($property->getName(), $classname), 'Admin.Modules.Notification'));
                     }
                 }
 
@@ -2875,7 +2901,7 @@ abstract class ModuleCore
                 foreach ($module_class->getConstants() as $constant => $value) {
                     $module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1$2", $module_file);
                     if ($module_file === null) {
-                        throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
+                        throw new Exception(Context::getContext()->getTranslator()->trans('Failed to override constant %1$s in class %2$s.', array($constant, $classname), 'Admin.Modules.Notification'));
                     }
                 }
             }

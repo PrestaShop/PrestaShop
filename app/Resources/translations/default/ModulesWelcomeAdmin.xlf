@@ -38,9 +38,9 @@ File: modules/welcome/OnBoarding/Configuration.php:86</note>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:93</note>
       </trans-unit>
-      <trans-unit id="31514171f411824690bb82b8ca1346ae">
-        <source>How much do you want to sell it?</source>
-        <target>How much do you want to sell it?</target>
+      <trans-unit id="69168bfbea070ea2d4d311cef7c4c39a">
+        <source>How much do you want to sell it for?</source>
+        <target>How much do you want to sell it for?</target>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:100</note>
       </trans-unit>
@@ -262,19 +262,19 @@ File: modules/welcome/views/contents/end.tpl:44</note>
         <source>Training</source>
         <target>Training</target>
         <note>Context:
-File: modules/welcome/views/contents/end.tpl:50</note>
+File: modules/welcome/views/contents/end.tpl:52</note>
       </trans-unit>
       <trans-unit id="a1b4f53bc793c237fbfa1370cc7119e5">
         <source>Video tutorial</source>
         <target>Video tutorial</target>
         <note>Context:
-File: modules/welcome/views/contents/end.tpl:56</note>
+File: modules/welcome/views/contents/end.tpl:58</note>
       </trans-unit>
       <trans-unit id="51cdccf36c2b30017317d5fb74e0f766">
         <source>I'm ready</source>
         <target>I'm ready</target>
         <note>Context:
-File: modules/welcome/views/contents/end.tpl:63</note>
+File: modules/welcome/views/contents/end.tpl:65</note>
       </trans-unit>
     </body>
   </file>
@@ -308,19 +308,19 @@ File: modules/welcome/views/contents/welcome.tpl:32</note>
         <source>Let's get started!</source>
         <target>Let's get started!</target>
         <note>Context:
-File: modules/welcome/views/contents/welcome.tpl:33</note>
+File: modules/welcome/views/contents/welcome.tpl:35</note>
       </trans-unit>
       <trans-unit id="61057a0c84605444201929bdd72014f0">
         <source>Later</source>
         <target>Later</target>
         <note>Context:
-File: modules/welcome/views/contents/welcome.tpl:36</note>
+File: modules/welcome/views/contents/welcome.tpl:38</note>
       </trans-unit>
       <trans-unit id="a6122a65eaa676f700ae68d393054a37">
         <source>Start</source>
         <target>Start</target>
         <note>Context:
-File: modules/welcome/views/contents/welcome.tpl:37</note>
+File: modules/welcome/views/contents/welcome.tpl:39</note>
       </trans-unit>
     </body>
   </file>

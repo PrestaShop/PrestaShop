@@ -1,5 +1,5 @@
 {#**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 <div class="row">
+    {{ form_widget(form.id_customization_field) }}
   <div class="col-md-3">
     <fieldset class="form-group">
       <label class="form-control-label">{{ form.label.vars.label }}</label>
@@ -48,7 +49,7 @@
       <div>
         <label class="form-control-label">&nbsp;</label>
       </div>
-      <div>
+      <div class="required-custom-field">
         {{ form_widget(form.require, {'switch': 'tiny'}) }}
       </div>
     </fieldset>

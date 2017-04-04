@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use \Defuse\Crypto\Key;
+
 class CookieCore
 {
     /** @var array Contain cookie content in a key => value format */
@@ -76,7 +79,12 @@ class CookieCore
         $this->_allow_writing = true;
         $this->_salt = $this->_standalone ? str_pad('', 8, md5('ps'.__FILE__)) : _COOKIE_IV_;
 
-        $this->cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
+        if ($this->_standalone) {
+            $asciiSafeString = \Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString(Key::KEY_CURRENT_VERSION, str_pad($name, Key::KEY_BYTE_SIZE, __FILE__));
+            $this->cipherTool = new PhpEncryption($asciiSafeString);
+        } else {
+            $this->cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
+        }
 
         $this->_secure = (bool) $secure;
 
@@ -202,7 +210,7 @@ class CookieCore
      */
     public function isLogged($withGuest = false)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Customer::isLogged() instead');
         if (!$withGuest && $this->is_guest == 1) {
             return false;
         }
@@ -224,7 +232,7 @@ class CookieCore
      */
     public function isLoggedBack()
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Employee::isLoggedBack() instead');
         /* Employee is valid only if it can be load and if cookie password is the same as database one */
         return $this->id_employee
             && Validate::isUnsignedId($this->id_employee)

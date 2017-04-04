@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Model\Product;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Adapter\Tools;
@@ -147,7 +146,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'text_fields',
             'active',
             'redirect_type',
-            'id_product_redirected',
+            'id_type_redirected',
             'visibility',
             'available_for_order',
             'show_price',
@@ -202,13 +201,15 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         // Product redirection
         $form_data['redirect_type'] = (string)$form_data['redirect_type'];
         if ($form_data['redirect_type'] != '404') {
-            if (isset($form_data['id_product_redirected']) && !empty($form_data['id_product_redirected']['data'])) {
-                $form_data['id_product_redirected'] = $form_data['id_product_redirected']['data'][0];
+            if (isset($form_data['id_type_redirected']) && !empty($form_data['id_type_redirected']['data'])) {
+                $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
             } else {
-                $form_data['id_product_redirected'] = 0;
+                $form_data['id_type_redirected'] = 0;
+                $form_data['redirect_type'] = '404';
             }
         } else {
-            $form_data['id_product_redirected'] = 0;
+            $form_data['id_type_redirected'] = 0;
+            $form_data['redirect_type'] = '404';
         }
 
         //map inputPackItems
@@ -472,8 +473,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'meta_title' => $this->product->meta_title,
                 'meta_description' => $this->product->meta_description,
                 'redirect_type' => $this->product->redirect_type,
-                'id_product_redirected' => [
-                    'data' => [$this->product->id_product_redirected]
+                'id_type_redirected' => [
+                    'data' => [$this->product->id_type_redirected]
                 ],
             ],
             'step6' => [
@@ -589,6 +590,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         foreach ($customizationFields as $customizationField) {
             $baseObject = [
+                'id_customization_field' => $customizationField[$this->locales[0]['id_lang']]['id_customization_field'],
                 'label' => [],
                 'type' => $customizationField[$this->locales[0]['id_lang']]['type'],
                 'require' => $customizationField[$this->locales[0]['id_lang']]['required'] == 1 ? true : false,

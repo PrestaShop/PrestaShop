@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -167,7 +167,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&updateproduct&key_tab=Combinations&conf=4');
             } else {
-                $this->errors[] = $this->trans('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.');
+                $this->errors[] = $this->trans('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.', array(), 'Admin.Catalog.Notification');
             }
         }
     }

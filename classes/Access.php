@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -138,7 +138,7 @@ class AccessCore extends ObjectModel
 
         $result = Db::getInstance()->getRow('
             SELECT `id_tab`
-            FROM `'._DB_PREFIX_.'tab` t
+            FROM `'._DB_PREFIX_.'tab`
             WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
         ');
 
@@ -148,7 +148,6 @@ class AccessCore extends ObjectModel
     /**
      * Find slug by Tab ID
      *
-     *
      * @param int $idTab Tab ID
      *
      * @return string Full module slug
@@ -157,10 +156,26 @@ class AccessCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
             SELECT `class_name`
-            FROM `'._DB_PREFIX_.'tab` t
+            FROM `'._DB_PREFIX_.'tab`
             WHERE `id_tab` = "'.(int) $idTab.'"
         ');
         return self::sluggifyTab($result);
+    }
+
+    /**
+     * Find slug by Parent Tab ID
+     *
+     * @param int $idParentTab Tab ID
+     *
+     * @return string Full module slug
+     */
+    public static function findSlugByIdParentTab($idParentTab)
+    {
+        return Db::getInstance()->executeS('
+            SELECT `class_name`
+            FROM `'._DB_PREFIX_.'tab`
+            WHERE `id_parent` = "'.(int) $idParentTab.'"
+        ');
     }
 
     /**
@@ -174,7 +189,7 @@ class AccessCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
             SELECT `name`
-            FROM `'._DB_PREFIX_.'module` t
+            FROM `'._DB_PREFIX_.'module`
             WHERE `id_module` = "'.(int) $idModule.'"
         ');
         return self::sluggifyModule($result);
@@ -304,15 +319,16 @@ class AccessCore extends ObjectModel
     /**
      * Update legacy access
      *
-     * @param int    $idProfile Profile ID
-     * @param int    $idTab     Tab ID
-     * @param string $lgcAuth   Legacy authorization
-     * @param int    $enabled   Whether access should be granted
+     * @param int    $idProfile     Profile ID
+     * @param int    $idTab         Tab ID
+     * @param string $lgcAuth       Legacy authorization
+     * @param int    $enabled       Whether access should be granted
+     * @param int    $addFromParent Child from parents
      *
      * @return string Whether legacy access has been successfully updated ("ok", "error")
      * @throws Exception
      */
-    public function updateLgcAccess($idProfile, $idTab, $lgcAuth, $enabled)
+    public function updateLgcAccess($idProfile, $idTab, $lgcAuth, $enabled, $addFromParent = 0)
     {
         $idProfile = (int) $idProfile;
         $idTab = (int) $idTab;
@@ -328,6 +344,16 @@ class AccessCore extends ObjectModel
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
             $slugLike = Db::getInstance()->escape($slug.$auth);
             $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
+        }
+
+        if ($addFromParent == 1) {
+           foreach (self::findSlugByIdParentTab($idTab) as $child) {
+               $child = self::sluggifyTab($child);
+               foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
+                    $slugLike = Db::getInstance()->escape($child.$auth);
+                    $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
+               }
+           }
         }
 
         $roles = Db::getInstance()->executeS('

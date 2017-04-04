@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -593,7 +593,7 @@ class WebserviceRequestCore
         if (isset($this->objOutput)) {
             $this->objOutput->setStatus($status);
         }
-        $this->errors[] = $display_errors ? array($code, $label) : 'Internal error. To see this error please display the PHP errors.';
+        $this->errors[] = array($code, $label);
     }
 
     /**

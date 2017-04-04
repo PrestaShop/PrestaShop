@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_crossselling/ps_crossselling.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="46532f43e161343763ff815e5208f7e9">
+        <source>Cross-selling</source>
+        <target>Cross-selling</target>
+        <note>Context:
+File: modules/ps_crossselling/ps_crossselling.php:56</note>
+      </trans-unit>
+      <trans-unit id="9463b2d77f93d1c041013731d9525dfa">
+        <source>Adds a "Customers who bought this product also bought... section to every product page.</source>
+        <target>Adds a "Customers who bought this product also bought... section to every product page.</target>
+        <note>Context:
+File: modules/ps_crossselling/ps_crossselling.php:57</note>
+      </trans-unit>
+      <trans-unit id="605d8c1863252399adedffd35be5de9f">
+        <source>You must fill in the "Number of displayed products" field.</source>
+        <target>You must fill in the "Number of displayed products" field.</target>
+        <note>Context:
+File: modules/ps_crossselling/ps_crossselling.php:90</note>
+      </trans-unit>
+      <trans-unit id="73293a024e644165e9bf48f270af63a0">
+        <source>Invalid number.</source>
+        <target>Invalid number.</target>
+        <note>Context:
+File: modules/ps_crossselling/ps_crossselling.php:92</note>
+      </trans-unit>
+      <trans-unit id="b6bf131edd323320bac67303a3f4de8a">
+        <source>Display price on products</source>
+        <target>Display price on products</target>
+        <note>Context:
+File: modules/ps_crossselling/ps_crossselling.php:129</note>
+      </trans-unit>
+      <trans-unit id="70f9a895dc3273d34a7f6d14642708ec">
+        <source>Show the price on the products in the block.</source>
+        <target>Show the price on the products in the block.</target>
+        <note>Context:
+File: modules/ps_crossselling/ps_crossselling.php:131</note>
+      </trans-unit>
+      <trans-unit id="19a799a6afd0aaf89bc7a4f7588bbf2c">
+        <source>Number of displayed products</source>
+        <target>Number of displayed products</target>
+        <note>Context:
+File: modules/ps_crossselling/ps_crossselling.php:147</note>
+      </trans-unit>
+      <trans-unit id="02128de6a3b085c72662973cd3448df2">
+        <source>Set the number of products displayed in this block.</source>
+        <target>Set the number of products displayed in this block.</target>
+        <note>Context:
+File: modules/ps_crossselling/ps_crossselling.php:150</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

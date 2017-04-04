@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -237,7 +237,8 @@ class AdminDashboardControllerCore extends AdminController
         // 	'Save' => $this->trans('Save', array(), 'Admin.Global')
         // );
 
-        if ($this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
+        $testStatsDateUpdate = $this->context->cookie->__get('stats_date_update');
+        if (!empty($testStatsDateUpdate) && $this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
             switch ($this->context->employee->preselect_date_range) {
                 case 'day':
                     $date_from = date('Y-m-d');
@@ -391,18 +392,18 @@ class AdminDashboardControllerCore extends AdminController
                     array(
                         '{link}' => '<a href="index.php?controller=AdminShopUrl&id_shop_url='.(int)$shop->id.'&updateshop_url&token='.Tools::getAdminTokenLite('AdminShopUrl').'">',
                         '{/link}' => '</a>',
-                        ),
+                    ),
                     'Admin.Dashboard.Notification'
-                    );
+                );
             } else {
                 $warning .= $this->trans('This is different from the domain name set in the "SEO & URLs" tab.', array(), 'Admin.Dashboard.Notification').'
 				'.$this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     array(
                         '{link}' => '<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#meta_fieldset_shop_url">',
-                        '{/link}' => '</a>',
+                        '{/link}' => '</a>'
+                    ),
                     'Admin.Dashboard.Notification'
-                    )
                 );
             }
         }

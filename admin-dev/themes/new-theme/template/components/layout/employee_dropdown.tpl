@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -29,16 +29,16 @@
     </div>
   {/if}
   <div class="dropdown-menu dropdown-menu-right p-a-1 m-r-2">
-    <div class="text-xs-center">
+    <div class="text-xs-center employee_avatar">
       <img class="avatar img-circle" src="{$employee->getImage()}" /><br>
-      {$employee->firstname} {$employee->lastname}
+      <span>{$employee->firstname} {$employee->lastname}</span>
     </div>
     <hr>
-    <a class="employee-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" target="_blank">
+    <a class="employee-link profile-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" target="_blank">
       <i class="material-icons">settings_applications</i> {l s='Your profile'}
     </a>
     <a class="employee-link m-t-1" id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout">
-      <i class="material-icons">power_settings_new</i> {l s='Log out'}
+      <i class="material-icons">power_settings_new</i> {l s='Sign out'}
     </a>
   </div>
 </div>

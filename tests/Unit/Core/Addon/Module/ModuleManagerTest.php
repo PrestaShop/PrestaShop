@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 
 class ModuleManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,6 +40,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
     private $moduleRepositoryS;
     private $moduleZipManagerS;
     private $translatorS;
+    private $dispatcherS;
     private $employeeS;
 
     public function setUp()
@@ -52,6 +54,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             $this->moduleRepositoryS,
             $this->moduleZipManagerS,
             $this->translatorS,
+            $this->dispatcherS,
             $this->employeeS
         );
     }
@@ -146,6 +149,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->mockModuleRepository();
         $this->mockModuleZipManager();
         $this->mockTranslator();
+        $this->mockDispatcher();
         $this->mockEmployee();
     }
 
@@ -238,6 +242,12 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->moduleUpdaterS
             ->method('upgrade')
             ->willReturn(true);
+        $this->moduleUpdaterS
+            ->method('installTabs')
+            ->willReturn(true);
+        $this->moduleUpdaterS
+            ->method('uninstallTabs')
+            ->willReturn(true);
     }
 
     private function mockModuleRepository()
@@ -300,6 +310,11 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             ->method('trans')
             ->will($this->returnArgument(0));
     }
+    
+    private function mockDispatcher()
+    {
+        $this->dispatcherS = new NullDispatcher();
+    }
 
     private function mockEmployee()
     {
@@ -321,6 +336,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->moduleUpdaterS = null;
         $this->moduleZipManagerS = null;
         $this->translatorS = null;
+        $this->dispatcherS = null;
         $this->employeeS = null;
     }
 }

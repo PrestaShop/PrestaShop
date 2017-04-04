@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -406,7 +406,7 @@
 										<div class="radio {if isset($input.class)}{$input.class}{/if}">
 											{strip}
 											<label>
-											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"{if $fields_value[$input.name] == $value.value} checked="checked"{/if}{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}/>
+											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"{if $fields_value[$input.name] == $value.value} checked="checked"{/if}{if (isset($input.disabled) && $input.disabled) or (isset($value.disabled) && $value.disabled)} disabled="disabled"{/if}/>
 												{$value.label}
 											</label>
 											{/strip}
@@ -416,7 +416,7 @@
 								{elseif $input.type == 'switch'}
 									<span class="switch prestashop-switch fixed-width-lg">
 										{foreach $input.values as $value}
-										<input type="radio" name="{$input.name}"{if $value.value == 1} id="{$input.name}_on"{else} id="{$input.name}_off"{/if} value="{$value.value}"{if $fields_value[$input.name] == $value.value} checked="checked"{/if}{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}/>
+										<input type="radio" name="{$input.name}"{if $value.value == 1} id="{$input.name}_on"{else} id="{$input.name}_off"{/if} value="{$value.value}"{if $fields_value[$input.name] == $value.value} checked="checked"{/if}{if (isset($input.disabled) && $input.disabled) or (isset($value.disabled) && $value.disabled)} disabled="disabled"{/if}/>
 										{strip}
 										<label {if $value.value == 1} for="{$input.name}_on"{else} for="{$input.name}_off"{/if}>
 											{if $value.value == 1}
@@ -894,6 +894,11 @@
 			});
 		{/block}
 	});
+</script>
+{/if}
+{if isset($color) && $color}
+<script type="text/javascript">
+	$.fn.mColorPicker.defaults.imageFolder = baseDir + 'img/admin/';
 </script>
 {/if}
 {if $firstCall}

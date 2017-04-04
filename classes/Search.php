@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -758,11 +758,11 @@ class SearchCore
     protected static function saveIndex(&$queryArray3)
     {
         if (is_array($queryArray3) && !empty($queryArray3)) {
-            Db::getInstance()->execute(
-                'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
+            $query = 'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
 				VALUES '.implode(',', $queryArray3).'
-				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)', false
-        );
+				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)';
+
+            Db::getInstance()->execute($query, false);
         }
         $queryArray3 = array();
     }

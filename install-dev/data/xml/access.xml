@@ -85,10 +85,6 @@
     <access id="access_1_90" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINCUSTOMERTHREADS_READ"/>
     <access id="access_1_91" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINCUSTOMERTHREADS_UPDATE"/>
     <access id="access_1_93" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINCUSTOMERTHREADS_DELETE"/>
-    <access id="access_1_94" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINCUSTOMERTHREADS_CREATE"/>
-    <access id="access_1_95" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINCUSTOMERTHREADS_READ"/>
-    <access id="access_1_96" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINCUSTOMERTHREADS_UPDATE"/>
-    <access id="access_1_97" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINCUSTOMERTHREADS_DELETE"/>
     <access id="access_1_98" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINDELIVERYSLIP_CREATE"/>
     <access id="access_1_99" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINDELIVERYSLIP_READ"/>
     <access id="access_1_100" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINDELIVERYSLIP_UPDATE"/>

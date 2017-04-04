@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -276,13 +276,13 @@ abstract class ModuleGraphCore extends Module
     {
         $context = Context::getContext();
         if (!($render = Configuration::get('PS_STATS_RENDER'))) {
-            return Tools::displayError('No graph engine selected');
+            return Context::getContext()->getTranslator()->trans('No graph engine selected', array(), 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
         if (!file_exists(_PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php')) {
-            return Tools::displayError('Graph engine selected is unavailable.');
+            return Context::getContext()->getTranslator()->trans('Graph engine selected is unavailable.', array(), 'Admin.Modules.Notification');
         }
 
         $id_employee = (int)$context->employee->id;

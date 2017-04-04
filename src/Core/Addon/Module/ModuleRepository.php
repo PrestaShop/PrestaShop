@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
+use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Psr\Log\LoggerInterface;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
@@ -91,14 +92,23 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @var array
      */
-    private $cache;
+    private $cache = array();
+
+    /**
+     * Optionnal Doctrine cache provider
+     *
+     * @var \Doctrine\Common\Cache\CacheProvider
+     */
+    private $cacheProvider;
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
         LoggerInterface $logger,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        $languageISO,
+        CacheProvider $cacheProvider = null
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->logger = $logger;
@@ -106,18 +116,28 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->moduleUpdater = $modulesUpdater;
         $this->translator = $translator;
         $this->finder = new Finder();
-        $this->cacheFilePath = _PS_CACHE_DIR_.'local_modules.json';
-        $this->cache = $this->readCacheFile();
+
+        // Cache related variables
+        $this->cacheFilePath = $languageISO.'_local_modules';
+        $this->cacheProvider = $cacheProvider;
+
+        if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
+            $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
+        }
     }
 
     public function __destruct()
     {
-        $this->generateCacheFile($this->cache);
+        if ($this->cacheProvider) {
+            $this->cacheProvider->save($this->cacheFilePath, $this->cache);
+        }
     }
 
     public function clearCache()
     {
-        @unlink($this->cacheFilePath);
+        if ($this->cacheProvider) {
+            $this->cacheProvider->delete($this->cacheFilePath);
+        }
         $this->cache = array();
     }
 
@@ -540,5 +560,17 @@ class ModuleRepository implements ModuleRepositoryInterface
         $data = json_decode(file_get_contents($this->cacheFilePath), true);
 
         return ($data == null) ? array() : $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInstalledModules()
+    {
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setStatus(AddonListFilterStatus::INSTALLED);
+
+        return $this->getFilteredList($filters);
     }
 }

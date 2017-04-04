@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -139,21 +139,22 @@ class ThemeManager implements AddonManagerInterface
     /**
      * Actions to perform when switching from another theme to this one.
      * Example:
-     * 	- update configuration
-     * 	- enable/disable modules.
+     *    - update configuration
+     *    - enable/disable modules.
      *
      * @param string $name The theme name to enable
      *
+     * @param bool $force bypass user privilege checks
      * @return bool True for success
      */
-    public function enable($name)
+    public function enable($name, $force = false)
     {
-        if (!$this->employee->can('edit', 'AdminThemes')) {
+        if (!$force && !$this->employee->can('edit', 'AdminThemes')) {
             return false;
         }
 
         /* if file exits, remove it and use YAML configuration file instead */
-        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
+        @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         $theme = $this->themeRepository->getInstanceByName($name);
         if (!$this->themeValidator->isValid($theme)) {
@@ -188,6 +189,8 @@ class ThemeManager implements AddonManagerInterface
      */
     public function disable($name)
     {
+        @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
+
         return true;
     }
 
@@ -357,14 +360,11 @@ class ThemeManager implements AddonManagerInterface
 
     public function saveTheme($theme)
     {
-        $jsonConfigFolder = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$theme->getName();
+        $jsonConfigFolder = $this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$theme->getName();
         if (!$this->filesystem->exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
             mkdir($jsonConfigFolder, 0777, true);
         }
 
-        file_put_contents(
-            $jsonConfigFolder.'/shop'.$this->shop->id.'.json',
-            json_encode($theme->get(null))
-        );
+        file_put_contents($jsonConfigFolder.'/shop'.$this->shop->id.'.json', json_encode($theme->get(null)));
     }
 }

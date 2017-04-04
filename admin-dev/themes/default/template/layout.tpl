@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -30,6 +30,14 @@
 			{$conf}
 		</div>
 	</div>
+{/if}
+{if isset($error)}
+  <div class="bootstrap">
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {$error}
+    </div>
+  </div>
 {/if}
 {if count($errors) && current($errors) != '' && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)}
 
@@ -76,7 +84,7 @@
 		<div class="alert alert-warning">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{if count($warnings) > 1}
-				<h4>{l s='There are %d warnings:' sprintf=count($warnings)}</h4>
+				<h4>{l s='There are %d warnings:' sprintf=[$warnings|count]}</h4>
 			{/if}
 			<ul class="list-unstyled">
 				{foreach $warnings as $warning}

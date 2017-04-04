@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,16 +18,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-{block name='order-items-table-head'}
 <div id="order-items" class="col-md-8">
-  <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
-{/block}
+
+  {block name='order_items_table_head'}
+    <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
+  {/block}
+
   <div class="order-confirmation-table">
-    <table class="table">
+
+    {block name='order_confirmation_table'}
       {foreach from=$products item=product}
         <div class="order-line row">
           <div class="col-sm-2 col-xs-3">
@@ -89,26 +92,30 @@
           </div>
         </div>
       {/foreach}
-    <hr />
-    <table>
-      {foreach $subtotals as $subtotal}
-        {if $subtotal.type !== 'tax'}
-          <tr>
-            <td>{$subtotal.label}</td>
-            <td>{$subtotal.value}</td>
+
+      <hr>
+
+      <table>
+        {foreach $subtotals as $subtotal}
+          {if $subtotal.type !== 'tax'}
+            <tr>
+              <td>{$subtotal.label}</td>
+              <td>{$subtotal.value}</td>
+            </tr>
+          {/if}
+        {/foreach}
+        {if $subtotals.tax.label !== null}
+          <tr class="sub">
+            <td>{$subtotals.tax.label}</td>
+            <td>{$subtotals.tax.value}</td>
           </tr>
         {/if}
-      {/foreach}
-      {if $subtotals.tax.label !== null}
-        <tr class="sub">
-          <td>{$subtotals.tax.label}</td>
-          <td>{$subtotals.tax.value}</td>
+        <tr class="font-weight-bold">
+          <td><span class="text-uppercase">{$totals.total.label}</span> {$labels.tax_short}</td>
+          <td>{$totals.total.value}</td>
         </tr>
-      {/if}
-      <tr class="font-weight-bold">
-        <td><span class="text-uppercase">{$totals.total.label}</span> {$labels.tax_short}</td>
-        <td>{$totals.total.value}</td>
-      </tr>
-    </table>
+      </table>
+    {/block}
+
   </div>
 </div>

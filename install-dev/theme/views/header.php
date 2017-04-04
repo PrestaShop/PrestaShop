@@ -37,7 +37,7 @@
 		<li class="lnk_forum"><a href="<?php echo $this->getForumLink() ?>" target="_blank"><?php echo $this->translator->trans('Forum', array(), 'Install'); ?></a></li>
 		<li class="lnk_forum"><a href="<?php echo $this->getSupportLink() ?>" target="_blank"><?php echo $this->translator->trans('Support', array(), 'Install'); ?></a></li>
 		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink() ?>" target="_blank"><?php echo $this->translator->trans('Documentation', array(), 'Install'); ?></a></li>
-		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank"><?php echo $this->translator->trans('Blog') ?></a></li>
+		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank"><?php echo $this->translator->trans('Blog', array(), 'Install') ?></a></li>
 		<!--
 		<?php if ($this->getPhone()): ?>
 			<li id="phone_block" class="last">
@@ -73,7 +73,7 @@
 	<?php if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3)): ?>
 		<iframe scrolling="no" style="height:210px;width:200px;border:none;margin-top:20px" id="iframe_help"
 			src="https://api.prestashop.com/iframe/install.php?step=<?php echo $this->step ?>&lang=<?php echo $this->language->getLanguageIso() ?><?php if (isset($this->session->shop_country)) echo '&country='.$this->session->shop_country; ?>">
-			<p><?php echo $this->translator->trans('Contact us!') ?><br /><?php echo $this->getPhone() ?></p>
+			<p><?php echo $this->translator->trans('Contact us!', array(), 'Install') ?><br /><?php echo $this->getPhone() ?></p>
 		</iframe>
 	<?php endif; ?>
 </div>

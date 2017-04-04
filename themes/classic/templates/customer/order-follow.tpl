@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,30 +18,30 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file='customer/page.tpl'}
 
 {block name='page_title'}
-  {l s='Merchandise returns' d='Shop.Theme.CustomerAccount'}
+  {l s='Merchandise returns' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='page_content'}
 
   {if $ordersReturn && count($ordersReturn)}
 
-    <h6>{l s='Here is a list of pending merchandise returns' d='Shop.Theme.CustomerAccount'}</h6>
+    <h6>{l s='Here is a list of pending merchandise returns' d='Shop.Theme.Customeraccount'}</h6>
 
     <table class="table table-striped table-bordered hidden-sm-down">
       <thead class="thead-default">
         <tr>
-          <th>{l s='Order' d='Shop.Theme.CustomerAccount'}</th>
-          <th>{l s='Return' d='Shop.Theme.CustomerAccount'}</th>
-          <th>{l s='Package status' d='Shop.Theme.CustomerAccount'}</th>
-          <th>{l s='Date issued' d='Shop.Theme.CustomerAccount'}</th>
-          <th>{l s='Returns form' d='Shop.Theme.CustomerAccount'}</th>
+          <th>{l s='Order' d='Shop.Theme.Customeraccount'}</th>
+          <th>{l s='Return' d='Shop.Theme.Customeraccount'}</th>
+          <th>{l s='Package status' d='Shop.Theme.Customeraccount'}</th>
+          <th>{l s='Date issued' d='Shop.Theme.Customeraccount'}</th>
+          <th>{l s='Returns form' d='Shop.Theme.Customeraccount'}</th>
         </tr>
       </thead>
       <tbody>
@@ -67,24 +67,24 @@
         <div class="order-return">
           <ul>
             <li>
-              <strong>{l s='Order' d='Shop.Theme.CustomerAccount'}</strong>
+              <strong>{l s='Order' d='Shop.Theme.Customeraccount'}</strong>
               <a href="{$return.details_url}">{$return.reference}</a>
             </li>
             <li>
-              <strong>{l s='Return' d='Shop.Theme.CustomerAccount'}</strong>
+              <strong>{l s='Return' d='Shop.Theme.Customeraccount'}</strong>
               <a href="{$return.return_url}">{$return.return_number}</a>
             </li>
             <li>
-              <strong>{l s='Package status' d='Shop.Theme.CustomerAccount'}</strong>
+              <strong>{l s='Package status' d='Shop.Theme.Customeraccount'}</strong>
               {$return.state_name}
             </li>
             <li>
-              <strong>{l s='Date issued' d='Shop.Theme.CustomerAccount'}</strong>
+              <strong>{l s='Date issued' d='Shop.Theme.Customeraccount'}</strong>
               {$return.return_date}
             </li>
             {if $return.print_url}
               <li>
-                <strong>{l s='Returns form' d='Shop.Theme.CustomerAccount'}</strong>
+                <strong>{l s='Returns form' d='Shop.Theme.Customeraccount'}</strong>
                 <a href="{$return.print_url}">{l s='Print out' d='Shop.Theme.Actions'}</a>
               </li>
             {/if}

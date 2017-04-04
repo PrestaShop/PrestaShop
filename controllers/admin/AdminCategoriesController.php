@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -158,7 +158,12 @@ class AdminCategoriesControllerCore extends AdminController
         }
         // shop restriction : if category is not available for current shop, we redirect to the list from default category
         if (Validate::isLoadedObject($this->_category) && !$this->_category->isAssociatedToShop() && Shop::getContext() == Shop::CONTEXT_SHOP) {
-            $this->redirect_after = self::$currentIndex.'&id_category='.(int)$this->context->shop->getCategory().'&token='.$this->token;
+            if ($this->_category->id === $this->context->shop->getCategory()) {
+                $this->redirect_after = $this->context->link->getAdminLink('AdminDashboard').'&error=1';
+            } else {
+                $this->redirect_after = self::$currentIndex . '&id_category=' . (int)$this->context->shop->getCategory() . '&token=' . $this->token;
+            }
+
             $this->redirect();
         }
     }
@@ -569,7 +574,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'display_image' => true,
                     'image' => $thumb_url ? $thumb_url : false,
                     'size' => $thumb_size,
-                    'format' => isset($format['small']) ? $format['small'] : $format['category']
+                    'format' => isset($format['small']) ? $format['small'] : $format['category'],
+                    'hint' => $this->trans('Displays a small image in the parent category\'s page, if the theme allows it.', array(), 'Admin.Catalog.Help'),
                 ),
                 array(
                     'type' => 'file',
@@ -580,6 +586,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'max_files' => 3,
                     'files' => $menu_thumbnails,
                     'url' => Context::getContext()->link->getAdminLink('AdminCategories').'&ajax=1&id_category='.$this->id.'&action=uploadThumbnailImages',
+                    'hint' => $this->trans('The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.', array(), 'Admin.Catalog.Help'),
                 ),
                 array(
                     'type' => 'text',
@@ -811,7 +818,7 @@ class AdminCategoriesControllerCore extends AdminController
                 $this->disable_products = true;
             }
         } elseif ($this->delete_mode != 'delete') {
-            $this->errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
+            $this->errors[] = $this->trans('Unknown delete mode: %s', array($this->deleted), 'Admin.Catalog.Notification');
         }
     }
 
@@ -1047,7 +1054,7 @@ class AdminCategoriesControllerCore extends AdminController
                 $errors = array();
                 // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
                 if (isset($file['save_path']) && !ImageManager::checkImageMemoryLimit($file['save_path'])) {
-                    $errors[] = Tools::displayError('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ');
+                    $errors[] = $this->trans('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ', array(), 'Admin.Notifications.Error');
                 }
                 // Copy new image
                 if (!isset($file['save_path']) || (empty($errors) && !ImageManager::resize($file['save_path'], _PS_CAT_IMG_DIR_

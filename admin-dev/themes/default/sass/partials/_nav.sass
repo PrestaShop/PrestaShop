@@ -13,6 +13,7 @@ $min-height: 950px
 	ul.menu
 		.categorytab
 			padding-top:    15px
+			margin-bottom:  5px
 			position:       relative
 			height:         39px
 			line-height:    24px
@@ -39,15 +40,14 @@ $min-height: 950px
 				display: none
 				padding: 0px
 				background-color: #363A41
+				&.list-group
+					margin-bottom: 0
 				li
 					list-style: none !important
 					a
 						color: $sidebar-menu-color
 						display: block
 						padding: 4px 8px
-						@media (min-height: $min-height)
-							padding: 8px 8px
-							min-height: 34px
 						background-color: $main-color
 						&:hover
 							color: $sidebar-menu-hover-color
@@ -58,7 +58,7 @@ $min-height: 950px
 				text-overflow: ellipsis
 				overflow: hidden
 				span
-					padding-left: 20px
+					padding-left: 15px
 			> a.title
 				display: block
 				position: relative
@@ -122,11 +122,11 @@ $min-height: 950px
 					ul.submenu
 						body:not(.page-sidebar-closed) &
 							display: block
-							margin-left: 35px
 							@include border-left(1px solid $sidebar-menu-bg-hover-color)
 							a
 								color: $sidebar-menu-color
-								padding: 8px 8px
+								padding: 5px 8px
+								padding-left: 38px
 								&:hover
 									color: $sidebar-menu-hover-color
 									background-color: $sidebar-menu-bg-hover-color
@@ -339,6 +339,39 @@ $min-height: 950px
 	.menu-collapse
 		display: none
 
+#header_infos .mobile-notifs
+	background-color: rgba(0,0,0,.8)
+	.notifications
+		background-color: white
+		height: 100%
+		margin-left: 40px
+	.nav-link::before
+		font-family: 'Material Icons'
+		display: block
+		font-size: 30px
+	#orders-tab::before
+		content: "\E8CB"
+	#customers-tab::before
+		content: "\E7FE"
+	#messages-tab::before
+		content: "\E0BE"
+	span[data-nb]
+		font-size: 0
+		&::before
+			position: absolute
+			display: inline-block
+			line-height: .875rem
+			height: .875rem
+			vertical-align: middle
+			position: absolute
+			top: 20px
+			right: 40px
+			color: #fff
+			background: #fb0
+			font-size: .5625rem
+			padding: 0 .25rem
+			border-radius: .625rem
+			content: attr(data-nb)
 #nav-mobile
 	position: fixed
 	top: 0
@@ -349,24 +382,103 @@ $min-height: 950px
 	&.expanded
 		width: 100%
 		height: 100%
-		top: 35px
+		background: rgba(0,0,0,.7)
+		top: 60px
 		.menu-collapse
-			top: -35px
+			top: -60px
 			position: absolute
 			z-index: 1200
 			@include left(0)
-	ul.menu
-		position: absolute
+	#header_employee_box, .admin-link
 		display: none
-		width: 100%
-		height: 100%
-		background-color: rgba(black,0.8)
+	#header_shop
+		float: none
+		.shop-list-title
+			width: 100%
+			text-transform: uppercase
+			font-size: 16px
+			text-align: center
+			font-weight: normal
+			.icon-caret-down
+				display: none
+			> a::after
+				font-family: 'Material Icons'
+				content: "\E313"
+				font-size: 20px
+				margin-left: 10px
+				vertical-align: bottom
+		#shop-list-collapse
+			background-color: white
+			list-style-type: none
+			text-align: left
+			padding-left: 0
+			margin-top: 10px
+			li
+				border-bottom: #BBCDD2 1px solid
+				height: 30px
+				padding-left: 30px
+				line-height: 50px
+				height: 50px
+				&.group
+					padding-left: 50px
+					a
+						color: #363A41
+						font-weight: bold
+						text-transform: none
+				&.shop
+					padding-left: 70px
+					text-transform: none
+					&.disabled a
+						color: #BBCDD2
+					a
+						color: #363A41
+					.link-shop
+						position: absolute
+						right: 20px
+						.material-icons
+							color: #6C868E
+							font-size: 20px
+	#header_shopname
+		.bootstrap &
+			float: none
+	#header_logout
+		border-bottom: 0
+		color: #bbcdd2
+	.onboarding-navbar.displayed
+		display: none
+	.icon-signout::before
+		font-family: 'Material Icons'
+		content: "\E8AC"
+		color: #bbcdd2
+		font-size: 25px
+	.shopname
+		text-align: center
+		margin: 15px 0
+		font-weight: bold
+	.username a
+		color: white
+	.employee_avatar
+		width: 60px
+		height: 60px
+	ul.menu
+		position: fixed
+		display: none
+		width: 90%
+		overflow: scroll
+		top: 60px
+		bottom: 0
+		background-color: #363A41
 		padding: 0
 		border-top: 1px black solid
 		list-style: none
-		@include margin(0, 0, 100px, 0)
+		margin-bottom: 0
 		@include transition(all 0.35s ease-out)
 		@include animate(fadeInLeft, 0.3s)
+		.img-thumbnail
+			padding: 0
+			border: 0
+		.username
+			font-size: 16px
 		> li.searchtab
 			padding: 15px
 			position: relative
@@ -380,21 +492,27 @@ $min-height: 950px
 				position: absolute
 				top: 5px
 				@include right(5px)
-		> li
+		> li.maintab
 			background: $main-color
 			position: relative
-			> a
+			.submenu
+				a
+					background-color: #282b30
+					padding-left: 40px
+				&.list-group
+					margin-bottom: 0
+			&#tab-SELL, &#tab-IMPROVE, &#tab-CONFIGURE
+				display: none
+			a
 				display: block
-				height: $menu-item-size
-				line-height: $menu-item-size
+				height: 50px
 				position: relative
-				border-bottom: 1px solid darken($main-color,10%)
-				font-size: 12px
+				border-bottom: 1px solid #6c868e
+				font-size: 16px
 				color: mix($main-color, contrast-color($main-color, white, #333), 30%)
 				background-color: $main-color
-				text-transform: uppercase
 				text-decoration: none
-				@include padding(0, 0, 0, 10px)
+				@include padding(15px, 0, 0, 15px)
 				@include transition-property(background-color)
 				@include transition-duration(0.4s)
 				@include transition-timing-function(ease-out)
@@ -413,12 +531,11 @@ $min-height: 950px
 				display: inline-block
 				height: $menu-item-size
 				width: $menu-item-size
-				font-size: 20px
+				font-size: 30px
 				line-height: $menu-item-size
 				color: white
 				text-align: center
-	ul.submenu
-		display: none
+				margin-top: -5px
 	#nav-mobile-submenu
 		a:not(#nav-mobile-submenu-back)
 			font-size: 1.2em
@@ -430,12 +547,11 @@ $min-height: 950px
 	ul.menu.menu-close
 		@include animate(fadeOutLeft, 0.2s)
 	.menu-collapse
-		color: white
-		background-color: black
+		color: #6C868E
 		width: 35px
 		height: 35px
 		text-align: center
-		line-height: 1.3em
+		line-height: 2.3em
 
 .menu-collapse
 	cursor: pointer
@@ -448,6 +564,8 @@ $min-height: 950px
 	color: #BEBEBE
 
 .mobile-nav
+	#header_infos
+		@include box-shadow(rgba(black,0.7) 0 0 10px)
 	#content
 		h2.page-title
 			@include padding-left(10px!important)
@@ -455,6 +573,9 @@ $min-height: 950px
 			@include left(10px!important)
 		ul.page-breadcrumb
 			@include left(10px!important)
+	.no-notification
+		top: 220px
+		left: 20px
 
 .page-topbar:not(.mobile-nav)
 	#main

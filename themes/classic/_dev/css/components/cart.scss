@@ -17,7 +17,7 @@
   }
   .value {
     color: $gray-darker;
-    @include pull-right;
+    float: right;
   }
   &.cart-summary-subtotals {
     .label,
@@ -154,7 +154,7 @@
 .product-line-grid-right {
   .bootstrap-touchspin {
     width: rem(68px);
-    @include pull-left;
+    float: left;
     box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15);
     > .form-control,
     > .input-group {

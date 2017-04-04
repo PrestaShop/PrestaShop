@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -35,7 +35,7 @@
 <div class="panel">
 	<div class="category-filter panel-heading">
 		<a href="#" id="collapse_all" class="btn btn-link"><i class="icon-collapse-alt icon-large"></i> {$categories.trads['Collapse All']}</a>
-	 	<a href="#" id="expand_all" class="btn btn-link"><i class="icon-expand-alt icon-large"></i> {$categories.trads['Expand All']}</a> 
+		<a href="#" id="expand_all" class="btn btn-link"><i class="icon-expand-alt icon-large"></i> {$categories.trads['Expand All']}</a>
 		{if !$categories.use_radio}
 		<a href="#" id="check_all" class="btn btn-link"><i class="icon-check-sign"></i> {$categories.trads['Check All']}</a>
 		<a href="#" id="uncheck_all" class="btn btn-link"><i class="icon-check-empty"></i> {$categories.trads['Uncheck All']}</a>

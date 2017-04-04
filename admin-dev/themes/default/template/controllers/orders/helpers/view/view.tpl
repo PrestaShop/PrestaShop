@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -596,7 +596,7 @@
 									</form>
 								{else}
 									<div class="alert alert-warning">
-										{l s='A registered customer account has already claimed this email address' d='Admin.OrdersCustomers.Notification'}
+										{l s='A registered customer account has already claimed this email address' d='Admin.Orderscustomers.Notification'}
 									</div>
 								{/if}
 							{else}
@@ -993,7 +993,7 @@
                     '[1]' => '<strong>',
                     '[/1]' => '</strong>'
                   ]
-                  d='Admin.OrdersCustomers.Notification'
+                  d='Admin.Orderscustomers.Notification'
                 }
 								{if !Configuration::get('PS_ORDER_RETURN')}
 									<br/><strong>{l s='Merchandise returns are disabled'}</strong>
@@ -1059,11 +1059,13 @@
 											{assign var=order_discount_price value=$order->total_discounts_tax_excl}
 											{assign var=order_wrapping_price value=$order->total_wrapping_tax_excl}
 											{assign var=order_shipping_price value=$order->total_shipping_tax_excl}
+                      {assign var=shipping_refundable value=$shipping_refundable_tax_excl}
 										{else}
 											{assign var=order_product_price value=$order->total_products_wt}
 											{assign var=order_discount_price value=$order->total_discounts_tax_incl}
 											{assign var=order_wrapping_price value=$order->total_wrapping_tax_incl}
 											{assign var=order_shipping_price value=$order->total_shipping_tax_incl}
+                      {assign var=shipping_refundable value=$shipping_refundable_tax_incl}
 										{/if}
 										<tr id="total_products">
 											<td class="text-right">{l s='Products:'}</td>
@@ -1098,7 +1100,7 @@
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
-												<p class="help-block"><i class="icon-warning-sign"></i> {l s='(%s)' sprintf=[$smarty.capture.TaxMethod]}</p>
+                        <p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($shipping_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]}</p>
 											</td>
 										</tr>
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}

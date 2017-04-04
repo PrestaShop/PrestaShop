@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -165,13 +165,15 @@ class HelperCore
         $use_search = false,
         $disabled_categories = array()
     ) {
+        $translator = Context::getContext()->getTranslator();
+
         $translations = array(
-            'selected' => $this->l('Selected'),
-            'Collapse All' => $this->l('Collapse All'),
-            'Expand All' => $this->l('Expand All'),
-            'Check All' => $this->l('Check All'),
-            'Uncheck All'  => $this->l('Uncheck All'),
-            'search' => $this->l('Find a category')
+            'selected' => $translator->trans('Selected', array(), 'Admin.Global'),
+            'Collapse All' => $translator->trans('Collapse All', array(), 'Admin.Actions'),
+            'Expand All' => $translator->trans('Expand All', array(), 'Admin.Actions'),
+            'Check All' => $translator->trans('Check All', array(), 'Admin.Actions'),
+            'Uncheck All'  => $translator->trans('Uncheck All', array(), 'Admin.Actions'),
+            'search' => $translator->trans('Find a category', array(), 'Admin.Actions'),
         );
 
         if (Tools::isSubmit('id_shop')) {
@@ -369,7 +371,7 @@ class HelperCore
      */
     public static function renderShopList()
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use HelperShop->getRenderedShopList instead');
 
         if (!Shop::isFeatureActive() || Shop::getTotalShops(false, null) < 2) {
             return null;

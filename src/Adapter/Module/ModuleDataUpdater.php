@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,9 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 
 class ModuleDataUpdater
 {
@@ -44,7 +47,7 @@ class ModuleDataUpdater
         // Note : Data caching should be handled by the addons data provider
         // Check if the module can be downloaded from addons
         foreach ($this->adminModuleDataProvider->getCatalogModules(['name' => $name]) as $catalog_module) {
-            if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'partner', 'customer'])) {
+            if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'must-have', 'customer'])) {
                 return $this->addonsDataProvider->downloadModule($catalog_module->id);
             }
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Doctrine\Common\Util\Inflector;
 
 class TranslationsExtension extends \Twig_Extension
 {
@@ -87,6 +88,7 @@ class TranslationsExtension extends \Twig_Extension
     {
         $output = '';
         $viewProperties = $this->getSharedEditFormViewProperties();
+        $viewProperties['is_search_results'] = true;
         $this->theme = $themeName;
 
         foreach ($translationsTree as $topLevelDomain => $tree) {
@@ -144,10 +146,6 @@ class TranslationsExtension extends \Twig_Extension
 
         foreach ($translationsTree as $topLevelDomain => $tree) {
             $output .= $this->concatenateSubtreeHeader($topLevelDomain, $tree);
-
-            if ($lastTranslationDomain !== $topLevelDomain) {
-                $output .= '<hr />';
-            }
         }
 
         return $output;
@@ -240,6 +238,13 @@ class TranslationsExtension extends \Twig_Extension
             $properties['translation']
         );
 
+        $isSearchResults = false;
+
+        if (array_key_exists('is_search_results', $properties)) {
+            $isSearchResults = $properties['is_search_results'];
+        }
+
+        $breadcrumbParts = explode('_', Inflector::tableize($domain));
         return $this->container->get('templating')->render(
             'PrestaShopBundle:Admin:Translations/include/form-edit-message.html.twig',
             array(
@@ -256,6 +261,8 @@ class TranslationsExtension extends \Twig_Extension
                 'translation_key' => $properties['translation_key'],
                 'hash' => $this->getTranslationHash($domain, $properties['translation_key']),
                 'theme' => $this->theme,
+                'breadcrumb_parts' => $breadcrumbParts,
+                'is_search_results' => $isSearchResults,
             )
         );
     }
@@ -332,16 +339,16 @@ class TranslationsExtension extends \Twig_Extension
             $id = $this->parseDomain($subtree);
         }
 
-        $output = $this->tagSubject($subject, $level, $id);
-        if ($level === 3) {
-            $output = $this->replaceWarningPlaceholder($output, $subtree);
-        }
-        if ($level === 2) {
+        $output = $this->tagSubject($subject, $hasMessagesSubtree, $id);
+
+        if (!$hasMessagesSubtree) {
             $output = str_replace(
                 '{{ missing translations warning }}',
                 $this->translator->trans('%d missing', array(), 'Admin.International.Feature'),
                 $output
             );
+        } else {
+            $output = $this->replaceWarningPlaceholder($output, $subtree);
         }
 
         if ($hasMessagesSubtree) {
@@ -401,6 +408,15 @@ class TranslationsExtension extends \Twig_Extension
             unset($subtree['__domain']);
         }
 
+        $totalTranslationsAttribute = '';
+        if (array_key_exists('__messages', $subtree)) {
+            $totalTranslations = count(array_values($subtree['__messages'])[0]);
+            $totalTranslationsAttribute = ' data-total-translations="' . $this->translator->trans('%nb_translations% expressions',
+                    array('%nb_translations%' => $totalTranslations),
+                    'Admin.International.Feature'
+                ) . '"';
+        }
+
         $missingTranslationsAttribute = '';
         if (array_key_exists('__metadata', $subtree)) {
             $missingTranslations = $subtree['__metadata']['missing_translations'];
@@ -414,6 +430,7 @@ class TranslationsExtension extends \Twig_Extension
                 'id' => $id,
                 'domain' => $domainAttribute,
                 'parent' => $parentAttribute,
+                'total_translations' => $totalTranslationsAttribute,
                 'missing_translations' => $missingTranslationsAttribute,
                 'title' => $output,
             )
@@ -510,41 +527,33 @@ class TranslationsExtension extends \Twig_Extension
 
     /**
      * @param $subject
-     * @param $level
+     * @param $isLastChild
      * @param null $id
      *
      * @return string
      */
-    protected function tagSubject($subject, $level, $id = null)
+    protected function tagSubject($subject, $isLastChild, $id = null)
     {
-        $openingTag = '<h2 class="domain-part"><i class="material-icons delegate-toggle-messages">&#xE315;</i>'.
-            '<span class="delegate-toggle-messages{{ missing translations class }}">';
-        $closingTag = '</span>{{ missing translations warning }}</h2>';
-
-        if (2 === $level) {
+        if ($isLastChild) {
+            $openingTag = '<h2 class="domain-part">' .
+                '<span class="delegate-toggle-messages{{ missing translations class }}">';
+            $closingTag = '</span>{{ missing translations warning }}</h2>';
+        } else {
             $openingTag = '<h2 class="domain-first-part"><i class="material-icons">&#xE315;</i><span>';
-            $closingTag = '</span></h2>'.
+            $closingTag = '</span>'.
                 '<div class="domain-actions">' .
-                    '<i class="material-icons visibility-on">&#xE8F4;</i>'.
-                    '<i class="material-icons visibility-off hide">&#xE8F5;</i>'.
-                    '<span class="btn-show-messages">' .
-                        $this->translator->trans('Show messages', array(), 'Admin.International.Feature') .
-                    '</span>'.
-                    '<span class="btn-hide-messages hide">' .
-                        $this->translator->trans('Hide messages', array(), 'Admin.International.Feature') .
-                    '</span>'.
-                    '<span class="missing-translations pull-right hide">'.
-                    '{{ missing translations warning }}'.
-                    '</span>'.
-                '</div>'
-            ;
+                '<span class="missing-translations pull-right hide">'.
+                '{{ missing translations warning }}'.
+                '</span>'.
+                '</div>'.
+                '</h2>';
         }
 
         if ($id) {
             $openingTag = '<span id="_'.$id.'">';
             $closingTag = '</span>';
 
-            if (2 === $level) {
+            if (!$isLastChild) {
                 $openingTag = '<h2>'.$openingTag;
                 $closingTag = $closingTag.'</h2>';
             }

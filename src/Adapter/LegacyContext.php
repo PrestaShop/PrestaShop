@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\Process\Exception\LogicException;
@@ -42,7 +43,7 @@ class LegacyContext
      *
      * @throws LogicException If legacy context is not set properly
      *
-     * @return \Context The Legacy context, for Adapter use only.
+     * @return \ContextCore The Legacy context, for Adapter use only.
      */
     public function getContext()
     {
@@ -138,7 +139,16 @@ class LegacyContext
      */
     public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar, $helpLink = '')
     {
-        $originCtrl = new \AdminLegacyLayoutControllerCore($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader, $headerTabContent, $enableSidebar, $helpLink);
+        $originCtrl = new \AdminLegacyLayoutControllerCore(
+            $controllerName,
+            $title,
+            $headerToolbarBtn,
+            $displayType,
+            $showContentHeader,
+            $headerTabContent,
+            $enableSidebar,
+            $helpLink
+        );
         $originCtrl->run();
 
         return $originCtrl->outPutHtml;

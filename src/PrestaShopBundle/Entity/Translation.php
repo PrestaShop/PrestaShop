@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(
  *     indexes={@ORM\Index(name="key", columns={"domain"})},
- *     uniqueConstraints={@ORM\UniqueConstraint(name="theme", columns={"key", "theme", "id_lang", "domain"})}
  * )
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TranslationRepository")
  */
@@ -43,25 +42,11 @@ class Translation
     /**
      * @var int
      *
-     * @ORM\Column(name="id_translation", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="id_translation", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="`key`", type="string")
-     */
-    private $key;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="translation", type="text")
-     */
-    private $translation;
 
     /**
      * @var Lang
@@ -74,14 +59,28 @@ class Translation
     /**
      * @var string
      *
-     * @ORM\Column(name="domain", type="string")
+     * @ORM\Column(name="`key`", type="text", length=65500)
+     */
+    private $key;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="translation", type="text", length=65500)
+     */
+    private $translation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="domain", type="string", length=80)
      */
     private $domain;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="theme", type="string", nullable=true)
+     * @ORM\Column(name="theme", type="string", length=32, nullable=true)
      */
     private $theme = null;
 

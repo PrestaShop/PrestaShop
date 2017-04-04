@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,7 +31,7 @@ $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
 require_once dirname(__FILE__).'/init.php';
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
 require_once _PS_INSTALL_PATH_.'classes/datas.php';
-ini_set('memory_limit', '128M');
+ini_set('memory_limit', '256M');
 try {
     require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
     InstallControllerConsole::execute($argc, $argv);

@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -31,12 +31,12 @@
 <script>
 $(document).ready(function() {
 	$('#id_supply_order_state option').each(function () {
-		
+
 		if ($(this).attr('disabled') == false)
 			$(this).attr('selected', true);
-		
+
 		return ($(this).attr('disabled') == true);
-		
+
 	});
 });
 </script>
@@ -46,7 +46,7 @@ $(document).ready(function() {
 <div class="form-horizontal">
 	<input type="hidden" name="id_supply_order" id="id_supply_order" value="{$supply_order->id}">
 	<div class="form-group">
-		<label class="control-label col-lg-3">{l s='Status of the order:'}</label>						
+		<label class="control-label col-lg-3">{l s='Status of the order:'}</label>
 		<div class="col-lg-9">
 			<select name="id_supply_order_state" id="id_supply_order_state">
 			{foreach $supply_order_states as $state}
@@ -62,7 +62,7 @@ $(document).ready(function() {
 {/if}
 {/block}
 
-{block name="other_fieldsets"}							
+{block name="other_fieldsets"}
 {if isset($supply_order_state) && $supply_order_state->editable == false && isset($supply_order)}
 <div class="panel">
 	<h3><i class="icon-download-alt"></i> {l s='Print the supply order form'}</h3>

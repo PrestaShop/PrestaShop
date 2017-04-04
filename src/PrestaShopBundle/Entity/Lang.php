@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 
 namespace PrestaShopBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,8 +39,8 @@ class Lang
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_lang", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="id_lang", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -54,7 +55,7 @@ class Lang
     /**
      * @var integer
      *
-     * @ORM\Column(name="active", type="integer")
+     * @ORM\Column(name="active", type="boolean")
      */
     private $active;
 
@@ -327,7 +328,7 @@ class Lang
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      *
-     * @return Attribute
+     * @return Lang
      */
     public function addShop(\PrestaShopBundle\Entity\Shop $shop)
     {

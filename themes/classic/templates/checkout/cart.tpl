@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -50,9 +50,9 @@
         {/block}
 
         <!-- shipping informations -->
-        <div>
+        {block name='hook_shopping_cart_footer'}
           {hook h='displayShoppingCartFooter'}
-        </div>
+        {/block}
       </div>
 
       <!-- Right Block: cart subtotal & cart total -->
@@ -61,7 +61,9 @@
         {block name='cart_summary'}
           <div class="card cart-summary">
 
-            {hook h='displayShoppingCart'}
+            {block name='hook_shopping_cart'}
+              {hook h='displayShoppingCart'}
+            {/block}
 
             {block name='cart_totals'}
               {include file='checkout/_partials/cart-detailed-totals.tpl' cart=$cart}
@@ -74,7 +76,7 @@
           </div>
         {/block}
 
-        {block name='display_reassurance'}
+        {block name='hook_reassurance'}
           {hook h='displayReassurance'}
         {/block}
 

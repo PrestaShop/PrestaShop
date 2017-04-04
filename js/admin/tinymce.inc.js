@@ -30,6 +30,13 @@ function changeToMaterial() {
 }
 
 function tinySetup(config) {
+  if (typeof tinyMCE === 'undefined') {
+    setTimeout(function() {
+      tinySetup(config);
+    }, 100);
+    return;
+  }
+
   if (!config) {
     config = {};
   }
@@ -42,7 +49,7 @@ function tinySetup(config) {
     selector: ".rte",
     plugins: "align colorpicker link image filemanager table media placeholder advlist code table autoresize",
     browser_spellcheck: true,
-    toolbar1: "code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media",
+    toolbar1: "code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect",
     toolbar2: "",
     external_filemanager_path: baseAdminDir + "filemanager/",
     filemanager_title: "File manager",
@@ -57,7 +64,10 @@ function tinySetup(config) {
     extended_valid_elements: "em[class|name|id],@[role|data-*|aria-*]",
     valid_children: "+*[*]",
     valid_elements: "*[*]",
-    init_instance_callback: "changeToMaterial"
+    init_instance_callback: "changeToMaterial",
+    rel_list:[
+      { title: 'nofollow', value: 'nofollow' }
+    ]
   };
 
   $.each(default_config, function (index, el) {

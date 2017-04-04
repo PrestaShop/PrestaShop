@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,7 +67,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             foreach ($this->list[$position] as $type => $null) {
                 foreach ($this->list[$position][$type] as $id => $item) {
                     if ($idToRemove === $id) {
-                        unset($this->list[$position][$type]);
+                        unset($this->list[$position][$type][$id]);
                     }
                 }
             }
@@ -76,10 +76,6 @@ class JavascriptManagerCore extends AbstractAssetManager
 
     protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server)
     {
-        if ('remote' !== $server && filesize($fullPath) === 0) {
-            return;
-        }
-
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $position = $this->getSanitizedPosition($position);
         $attribute = $this->getSanitizedAttribute($attribute);

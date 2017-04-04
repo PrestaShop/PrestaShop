@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,13 +18,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="product-add-to-cart">
   {if !$configuration.is_catalog}
     <span class="control-label">{l s='Quantity' d='Shop.Theme.Catalog'}</span>
+
     {block name='product_quantity'}
       <div class="product-quantity">
         <div class="qty">
@@ -35,13 +36,22 @@
             value="{$product.quantity_wanted}"
             class="input-group"
             min="{$product.minimal_quantity}"
-          />
+          >
         </div>
+
         <div class="add">
-          <button class="btn btn-primary add-to-cart" data-button-action="add-to-cart" type="submit" {if !$product.add_to_cart_url || $product.quantity_wanted>$product.quantity}disabled{/if}>
+          <button
+            class="btn btn-primary add-to-cart"
+            data-button-action="add-to-cart"
+            type="submit"
+            {if !$product.add_to_cart_url}
+              disabled
+            {/if}
+          >
             <i class="material-icons shopping-cart">&#xE547;</i>
             {l s='Add to cart' d='Shop.Theme.Actions'}
           </button>
+
           {block name='product_availability'}
             <span id="product-availability">
               {if $product.show_availability && $product.availability_message}
@@ -56,6 +66,7 @@
               {/if}
             </span>
           {/block}
+
         </div>
       </div>
       <div class="clearfix"></div>

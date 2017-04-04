@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2017 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -29,15 +29,17 @@
     <ul class="carousel-inner" role="listbox">
       {foreach from=$homeslider.slides item=slide name='homeslider'}
         <li class="carousel-item {if $smarty.foreach.homeslider.first}active{/if}">
-          <figure>
-            <img src="{$slide.image_url}" alt="{$slide.legend|escape}">
-            {if $slide.title || $slide.description}
-              <figcaption class="caption">
-                <h2 class="display-1 text-uppercase">{$slide.title}</h2>
-                <div class="caption-description">{$slide.description nofilter}</div>
-              </figcaption>
-            {/if}
-          </figure>
+          <a href="{$slide.url}">
+            <figure>
+              <img src="{$slide.image_url}" alt="{$slide.legend|escape}">
+              {if $slide.title || $slide.description}
+                <figcaption class="caption">
+                  <h2 class="display-1 text-uppercase">{$slide.title}</h2>
+                  <div class="caption-description">{$slide.description nofilter}</div>
+                </figcaption>
+              {/if}
+            </figure>
+          </a>
         </li>
       {/foreach}
     </ul>
@@ -46,13 +48,13 @@
         <span class="icon-prev hidden-xs" aria-hidden="true">
           <i class="material-icons">&#xE5CB;</i>
         </span>
-        <span class="sr-only">Previous</span>
+        <span class="sr-only">{l s='Previous' d='Shop.Theme'}</span>
       </a>
       <a class="right carousel-control" href="#carousel" role="button" data-slide="next">
         <span class="icon-next" aria-hidden="true">
           <i class="material-icons">&#xE5CC;</i>
         </span>
-        <span class="sr-only">Next</span>
+        <span class="sr-only">{l s='Next' d='Shop.Theme'}</span>
       </a>
     </div>
   </div>

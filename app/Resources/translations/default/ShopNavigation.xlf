@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/MetaLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c62420fe56ba1bd9be3bad2d6203a28e">
+        <source>404 error</source>
+        <target>404 error</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:40</note>
+      </trans-unit>
+      <trans-unit id="bd7929bc6bed5d8ec99db715a980ba04">
+        <source>Best sales</source>
+        <target>Best sales</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:41</note>
+      </trans-unit>
+      <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
+        <source>Contact us</source>
+        <target>Contact us</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:42</note>
+      </trans-unit>
+      <trans-unit id="2377be3c2ad9b435ba277a73f0f1ca76">
+        <source>Manufacturers</source>
+        <target>Manufacturers</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:43</note>
+      </trans-unit>
+      <trans-unit id="9ff0635f5737513b1a6f559ac2bff745">
+        <source>New products</source>
+        <target>New products</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:44</note>
+      </trans-unit>
+      <trans-unit id="0fb655f37529ad006eb0d503e23e10f1">
+        <source>Forgot your password</source>
+        <target>Forgot your password</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:45</note>
+      </trans-unit>
+      <trans-unit id="6de5d0b17afc50642850ff9486934f87">
+        <source>Prices drop</source>
+        <target>Prices drop</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:46</note>
+      </trans-unit>
+      <trans-unit id="5813ce0ec7196c492c97596718f71969">
+        <source>Sitemap</source>
+        <target>Sitemap</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:47</note>
+      </trans-unit>
+      <trans-unit id="1814d65a76028fdfbadab64a5a8076df">
+        <source>Suppliers</source>
+        <target>Suppliers</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:48</note>
+      </trans-unit>
+      <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
+        <source>Address</source>
+        <target>Address</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:49</note>
+      </trans-unit>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:50</note>
+      </trans-unit>
+      <trans-unit id="99dea78007133396a7b8ed70578ac6ae">
+        <source>Login</source>
+        <target>Login</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:51</note>
+      </trans-unit>
+      <trans-unit id="a85eba4c6c699122b2bb1387ea4813ad">
+        <source>Cart</source>
+        <target>Cart</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:52</note>
+      </trans-unit>
+      <trans-unit id="104d9898c04874d0fbac36e125fa1369">
+        <source>Discount</source>
+        <target>Discount</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:53</note>
+      </trans-unit>
+      <trans-unit id="782c8b38bce4f2f6975ca7f33ac8189b">
+        <source>Order history</source>
+        <target>Order history</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:54</note>
+      </trans-unit>
+      <trans-unit id="c9c5c65fb4af9cf90eb99b3b84424189">
+        <source>Identity</source>
+        <target>Identity</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:55</note>
+      </trans-unit>
+      <trans-unit id="d95cf4ab2cbf1dfb63f066b50558b07d">
+        <source>My account</source>
+        <target>My account</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:56</note>
+      </trans-unit>
+      <trans-unit id="16c7f223c517b6d24958c2b82312945f">
+        <source>Order follow</source>
+        <target>Order follow</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:57</note>
+      </trans-unit>
+      <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
+        <source>Credit slip</source>
+        <target>Credit slip</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:58</note>
+      </trans-unit>
+      <trans-unit id="a240fa27925a635b08dc28c9e4f9216d">
+        <source>Order</source>
+        <target>Order</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:59</note>
+      </trans-unit>
+      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
+        <source>Search</source>
+        <target>Search</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:60</note>
+      </trans-unit>
+      <trans-unit id="821b8ee6937cec96c30fdafbfe836d68">
+        <source>Stores</source>
+        <target>Stores</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:61</note>
+      </trans-unit>
+      <trans-unit id="4fb8550e52b59f7f93d60c1d1b56e93e">
+        <source>Guest tracking</source>
+        <target>Guest tracking</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:62</note>
+      </trans-unit>
+      <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
+        <source>Order confirmation</source>
+        <target>Order confirmation</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:63</note>
+      </trans-unit>
+      <trans-unit id="da3768d3291e2d42512cde89f2b66a11">
+        <source>This page cannot be found</source>
+        <target>This page cannot be found</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:67</note>
+      </trans-unit>
+      <trans-unit id="d7f59475fb24e5e654d4c8e409a2de7b">
+        <source>Our best sales</source>
+        <target>Our best sales</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:70</note>
+      </trans-unit>
+      <trans-unit id="77d117320b02d137e4d3aa7b4300d2f5">
+        <source>Use our form to contact us</source>
+        <target>Use our form to contact us</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:73</note>
+      </trans-unit>
+      <trans-unit id="94aafa0c1ac39af1afaa0e798b2bad73">
+        <source>Shop powered by PrestaShop</source>
+        <target>Shop powered by PrestaShop</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:76</note>
+      </trans-unit>
+      <trans-unit id="2db6e05274a36fb0a305ce287b58b16a">
+        <source>Manufacturers list</source>
+        <target>Manufacturers list</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:79</note>
+      </trans-unit>
+      <trans-unit id="f048e5676a4e7e45acea76628b628cf8">
+        <source>Our new products</source>
+        <target>Our new products</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:82</note>
+      </trans-unit>
+      <trans-unit id="a068c4959ec37c3f511011e10808b4ce">
+        <source>Enter the e-mail address you use to sign in to receive an e-mail with a new password</source>
+        <target>Enter the e-mail address you use to sign in to receive an e-mail with a new password</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:85</note>
+      </trans-unit>
+      <trans-unit id="feb65ab262a484a24e2d6229ff42b136">
+        <source>On-sale products</source>
+        <target>On-sale products</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:88</note>
+      </trans-unit>
+      <trans-unit id="86791147a83e82f4bf90927c84fa3f6f">
+        <source>Lost ? Find what your are looking for</source>
+        <target>Lost ? Find what your are looking for</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:91</note>
+      </trans-unit>
+      <trans-unit id="95e22c32ee49f6549a9cabb539d82090">
+        <source>Suppliers list</source>
+        <target>Suppliers list</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:94</note>
+      </trans-unit>
+      <trans-unit id="346802d009904a107e153c8a16068002">
+        <source>page-not-found</source>
+        <target>page-not-found</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:97</note>
+      </trans-unit>
+      <trans-unit id="2c9ff64fb8c71aa15080de697586fe68">
+        <source>best-sales</source>
+        <target>best-sales</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:98</note>
+      </trans-unit>
+      <trans-unit id="03f2197d47a602c679c5f667e3482855">
+        <source>contact-us</source>
+        <target>contact-us</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:99</note>
+      </trans-unit>
+      <trans-unit id="077326568c4bb9ed153c12c171827a54">
+        <source>manufacturers</source>
+        <target>manufacturers</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:100</note>
+      </trans-unit>
+      <trans-unit id="169c4f8c3dcee7feff031dd2a73a44fb">
+        <source>new-products</source>
+        <target>new-products</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:101</note>
+      </trans-unit>
+      <trans-unit id="bfaf38cf11aa56ab195a4a229b19715a">
+        <source>password-recovery</source>
+        <target>password-recovery</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:102</note>
+      </trans-unit>
+      <trans-unit id="98add0e701132ba329cfc17db2c3024e">
+        <source>prices-drop</source>
+        <target>prices-drop</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:103</note>
+      </trans-unit>
+      <trans-unit id="e1da49db34b0bdfdddaba2ad6552f848">
+        <source>sitemap</source>
+        <target>sitemap</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:104</note>
+      </trans-unit>
+      <trans-unit id="99b0e8da24e29e4ccb5d7d76e677c2ac">
+        <source>supplier</source>
+        <target>supplier</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:105</note>
+      </trans-unit>
+      <trans-unit id="884d9804999fc47a3c2694e49ad2536a">
+        <source>address</source>
+        <target>address</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:106</note>
+      </trans-unit>
+      <trans-unit id="963e3a2fe559e393bad631f3dc686f69">
+        <source>addresses</source>
+        <target>addresses</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:107</note>
+      </trans-unit>
+      <trans-unit id="d56b699830e77ba53855679cb1d252da">
+        <source>login</source>
+        <target>login</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:108</note>
+      </trans-unit>
+      <trans-unit id="54013ba69c196820e56801f1ef5aad54">
+        <source>cart</source>
+        <target>cart</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:109</note>
+      </trans-unit>
+      <trans-unit id="e2dc6c48c56de466f6d13781796abf3d">
+        <source>discount</source>
+        <target>discount</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:110</note>
+      </trans-unit>
+      <trans-unit id="0ed9f3fa4d887426b8040c82fdc2fe62">
+        <source>order-history</source>
+        <target>order-history</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:111</note>
+      </trans-unit>
+      <trans-unit id="ff483d1ff591898a9942916050d2ca3f">
+        <source>identity</source>
+        <target>identity</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:112</note>
+      </trans-unit>
+      <trans-unit id="38e865b05a4079b487a78b4b857de77b">
+        <source>my-account</source>
+        <target>my-account</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:113</note>
+      </trans-unit>
+      <trans-unit id="00ca581609c5c22965f915a4680e097a">
+        <source>order-follow</source>
+        <target>order-follow</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:114</note>
+      </trans-unit>
+      <trans-unit id="8f77f9a08cd6c9a27dd9142cecee5b6e">
+        <source>credit-slip</source>
+        <target>credit-slip</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:115</note>
+      </trans-unit>
+      <trans-unit id="70a17ffa722a3985b86d30b034ad06d7">
+        <source>order</source>
+        <target>order</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:116</note>
+      </trans-unit>
+      <trans-unit id="06a943c59f33a34bb5924aaf72cd2995">
+        <source>search</source>
+        <target>search</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:117</note>
+      </trans-unit>
+      <trans-unit id="61af09f34bc001f3b6d9139687a723fd">
+        <source>stores</source>
+        <target>stores</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:118</note>
+      </trans-unit>
+      <trans-unit id="a18a3ca75ab720242ec38d2e77373a92">
+        <source>guest-tracking</source>
+        <target>guest-tracking</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:119</note>
+      </trans-unit>
+      <trans-unit id="215d444395453d02d844b99143f00ad4">
+        <source>order-confirmation</source>
+        <target>order-confirmation</target>
+        <note>Context:
+File: classes/lang/MetaLang.php:120</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

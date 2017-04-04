@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -153,8 +153,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
         foreach ($this->_list as $k => $list) {
-            $currency = $this->cldr->getCurrency($this->_list[$k]['currency_iso_code']);
-            $this->_list[$k]['currency_name'] = ucfirst($currency['name']);
+            if (!is_null($this->_list[$k]['currency_iso_code'])) {
+                $currency = $this->cldr->getCurrency($this->_list[$k]['currency_iso_code']);
+                $this->_list[$k]['currency_name'] = ucfirst($currency['name']);
+            }
 
             if ($list['reduction_type'] == 'amount') {
                 $this->_list[$k]['reduction_type'] = $this->list_reduction_type['amount'];

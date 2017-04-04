@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -108,7 +108,7 @@ $(document).ready(function(){
 		   });
 
 	});
-	
+
 	$('#import_stop_button').unbind('click').click(function(){
 		if (importContinueRequest) {
 			$('#importProgress').modal('hide');
@@ -123,7 +123,7 @@ $(document).ready(function(){
 			$('#import_close_button').hide();
 		}
 	});
-	
+
 	$('#import_continue_button').unbind('click').click(function(){
 		$('#import_continue_button').hide();
 		importContinueRequest = false;
@@ -171,7 +171,7 @@ function validateImportation(mandatory)
 			}
 			return false
 		}
-	
+
 	importNow(0, 5, -1, true, {}, 0); // starts with 5 elements to import, but the limit will be adapted for next calls automatically.
 	return false; // We return false to avoid form to be posted on the old Controller::postProcess() action
 }
@@ -182,7 +182,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
 
 	var data = $('form#import_form').serializeArray();
 	data.push({'name': 'crossStepsVars', 'value': JSON.stringify(crossStepsVariables)});
-	
+
     var startingTime = new Date().getTime();
     $.ajax({
        type: 'POST',
@@ -195,7 +195,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
     	   if (jsonData.totalCount) {
     		   total = jsonData.totalCount;
     	   }
-    	   
+
     	   if (jsonData.informations && jsonData.informations.length > 0) {
     		   updateValidationInfo('<li>'+jsonData.informations.join('</li><li>')+'</li>');
     	   }
@@ -212,7 +212,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
     			   updateProgressionError('<li>'+jsonData.errors.join('</li><li>')+'</li>', false);
     		   return; // If errors, stops process
     	   }
-    	   
+
     	   // Here, no errors returned
     	   if (!jsonData.isFinished == true) {
 	    	   // compute time taken by previous call to adapt amount of elements by call.
@@ -229,17 +229,17 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
 	    	   } else {
 	    		   updateProgression(jsonData.doneCount, total, jsonData.doneCount+newLimit, false, moreStep, jsonData.moreStepLabel);
 	    	   }
-	    	   
+
 	    	   if (importCancelRequest == true) {
 	    		   $('#importProgress').modal('hide');
 	    		   importCancelRequest = false;
 	    		   window.location.href = window.location.href.split('#')[0]; // reload same URL but do not POST again (so in GET without param)
 	    		   return; // stops execution
 	    	   }
-	    	   
+
 	    	   // process next group of elements
 	    	   importNow(newOffset, newLimit, total, validateOnly, jsonData.crossStepsVariables, moreStep);
-	    	   
+
 	    	   // checks if we could go over post_max_size setting. Warns when reach 90% of the actual setting
 	    	   if (jsonData.nextPostSize >= jsonData.postSizeLimit * 0.9) {
 	    		   var progressionDone = jsonData.doneCount * 100 / total;
@@ -247,7 +247,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
 	    		   $('#import_details_post_limit_value').html(increase+" MB");
 	    		   $('#import_details_post_limit').show();
 	    	   }
-	    	   
+
 	       } else {
 	    	   if (validateOnly) {
 	    		   // update validation bar and process real import
@@ -268,7 +268,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
 	    		   } else {
 	    			   updateProgression(total, total, total, true, moreStep, jsonData.moreStepLabel);
 	    		   }
-	    		   
+
 	    	   }
 	       }
        },
@@ -292,7 +292,7 @@ function updateProgressionInit() {
 	$('#importProgress').on('hidden.bs.modal', function () {
 		window.location.href = window.location.href.split('#')[0]; // reload same URL but do not POST again (so in GET without param)
 	})
-	
+
 	$('#import_details_progressing').show();
 	$('#import_details_finished').hide();
 	$('#import_details_error').hide();
@@ -301,7 +301,7 @@ function updateProgressionInit() {
 	$('#import_details_post_limit').hide();
 	$('#import_details_error ul').html('');
 	$('#import_details_warning ul, #import_details_info ul').html('');
-	
+
 	$('#import_validation_details').html($('#import_validation_details').attr('default-value'));
 	$('#validate_progressbar_done').width('0%');
 	$('#validate_progressbar_done').parent().addClass('active progress-striped');
@@ -310,7 +310,7 @@ function updateProgressionInit() {
 	$('#validate_progressbar_next').width('0%');
 	$('#validate_progressbar_next').removeClass('progress-bar-danger');
 	$('#validate_progressbar_next').addClass('progress-bar-info');
-	
+
 	$('#import_progress_div').hide();
 	$('#import_progression_details').html($('#import_progression_details').attr('default-value'));
 	$('#import_progressbar_done').width('0%');
@@ -319,7 +319,7 @@ function updateProgressionInit() {
 	$('#import_progressbar_next').width('0%');
 	$('#import_progressbar_next').removeClass('progress-bar-danger');
 	$('#import_progressbar_next').addClass('progress-bar-success');
-	
+
 	$('#import_stop_button').show();
 	$('#import_close_button').hide();
 	$('#import_continue_button').hide();
@@ -328,18 +328,18 @@ function updateProgressionInit() {
 function updateValidation(currentPosition, total, nextPosition) {
 	if (currentPosition > total) currentPosition = total;
 	if (nextPosition > total) nextPosition = total;
-	
+
 	var progressionDone = currentPosition * 100 / total;
 	var progressionNext = nextPosition * 100 / total;
-	
+
 	if (total > 0) {
 		$('#import_validate_div').show();
 		$('#import_validation_details').html(currentPosition + '/' + total);
 		$('#validate_progressbar_done').width(progressionDone+'%');
 		$('#validate_progression_done').html(parseInt(progressionDone));
-		$('#validate_progressbar_next').width((progressionNext-progressionDone)+'%');	
+		$('#validate_progressbar_next').width((progressionNext-progressionDone)+'%');
 	}
-	
+
 	if (currentPosition == total && total == nextPosition) {
 		$('#validate_progressbar_done').parent().removeClass('active progress-striped');
 	}
@@ -348,10 +348,10 @@ function updateValidation(currentPosition, total, nextPosition) {
 function updateProgression(currentPosition, total, nextPosition, finish, moreStep, moreStepLabel) {
 	if (currentPosition > total) currentPosition = total;
 	if (nextPosition > total) nextPosition = total;
-	
+
 	var progressionDone = currentPosition * 100 / total;
 	var progressionNext = nextPosition * 100 / total;
-	
+
 	if (total > 0) {
 		$('#import_progress_div').show();
 		$('#import_progression_details').html(currentPosition + '/' + total);
@@ -366,7 +366,7 @@ function updateProgression(currentPosition, total, nextPosition, finish, moreSte
 			if (moreStepLabel) $('#import_progressbar_done2 span').html(moreStepLabel);
 		}
 	}
-	
+
 	if (finish) {
 		$('#import_progressbar_done').parent().removeClass('active progress-striped');
 		$('#import_details_post_limit').hide();
@@ -387,10 +387,10 @@ function updateValidationError(message, forWarnings) {
 	} else {
 		$('#import_details_error ul').append(message);
 		$('#import_details_error').show();
-		
+
 		$('#validate_progressbar_next').addClass('progress-bar-danger');
 		$('#validate_progressbar_next').removeClass('progress-bar-info');
-		
+
 		$('#import_stop_button').hide();
 		$('#import_close_button').show();
 	}
@@ -412,10 +412,10 @@ function updateProgressionError(message, forWarnings) {
 	} else {
 		$('#import_details_error ul').append(message);
 		$('#import_details_error').show();
-		
+
 		$('#import_progressbar_next').addClass('progress-bar-danger');
 		$('#import_progressbar_next').removeClass('progress-bar-success');
-		
+
 		$('#import_stop_button').hide();
 		$('#import_close_button').show();
 	}

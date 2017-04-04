@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\CoreException;
 
 class AdminLoginControllerCore extends AdminController
@@ -36,7 +35,6 @@ class AdminLoginControllerCore extends AdminController
         $this->errors = array();
         $this->display_header = false;
         $this->display_footer = false;
-        $this->meta_title = $this->l('Administration panel');
         $this->layout = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme
             .DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'login'
             .DIRECTORY_SEPARATOR.'layout.tpl';
@@ -55,8 +53,8 @@ class AdminLoginControllerCore extends AdminController
         $this->addJS(_PS_JS_DIR_.'vendor/spin.js');
         $this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
         Media::addJsDef(array('img_dir' => _PS_IMG_));
-        Media::addJsDefL('one_error', $this->l('There is one error.', null, true, false));
-        Media::addJsDefL('more_errors', $this->l('There are several errors.', null, true, false));
+        Media::addJsDefL('one_error', $this->trans('There is one error.', array(), 'Admin.Notifications.Error'));
+        Media::addJsDefL('more_errors', $this->trans('There are several errors.', array(), 'Admin.Notifications.Error'));
 
         Hook::exec('actionAdminLoginControllerSetMedia');
 
@@ -74,15 +72,13 @@ class AdminLoginControllerCore extends AdminController
             $clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'), explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
             // If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
             if ($clientIsMaintenanceOrLocal) {
-                $warningSslMessage = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', array(), 'Admin.Notifications.Error');
+                $warningSslMessage = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', array(), 'Admin.Login.Notification');
             } else {
                 $url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
-                $warningSslMessage = sprintf(
-                    Translate::ppTags(
-                        Tools::displayError('SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]', false),
-                        array('<a href="%s">')
-                    ),
-                    $url
+                $warningSslMessage = $this->trans(
+                    'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]',
+                    array('[1]' => '<a href="' . $url .'">', '[/1]' => '</a>'),
+                    'Admin.Login.Notification'
                 );
             }
             $this->context->smarty->assign('warningSslMessage', $warningSslMessage);
@@ -204,13 +200,13 @@ class AdminLoginControllerCore extends AdminController
             $is_employee_loaded = $this->context->employee->getByEmail($email, $passwd);
             $employee_associated_shop = $this->context->employee->getAssociatedShops();
             if (!$is_employee_loaded) {
-                $this->errors[] = $this->trans('The Employee does not exist, or the password provided is incorrect.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('The employee does not exist, or the password provided is incorrect.', array(), 'Admin.Login.Notification');
                 $this->context->employee->logout();
             } elseif (empty($employee_associated_shop) && !$this->context->employee->isSuperAdmin()) {
-                $this->errors[] = $this->trans('This employee does not manage the shop anymore (Either the shop has been deleted or permissions have been revoked).', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).', array(), 'Admin.Login.Notification');
                 $this->context->employee->logout();
             } else {
-                PrestaShopLogger::addLog(sprintf($this->l('Back Office connection from %s', 'AdminTab', false, false), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
+                PrestaShopLogger::addLog(sprintf($this->trans('Back office connection from %s', array(), 'Admin.Advparameters.Feature'), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
 
                 $this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
                 // Update cookie
@@ -258,10 +254,10 @@ class AdminLoginControllerCore extends AdminController
         } else {
             $employee = new Employee();
             if (!$employee->getByEmail($email) || !$employee) {
-                $this->errors[] = $this->trans('This account does not exist.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('This account does not exist.', array(), 'Admin.Login.Notification');
             } elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0) {
                 $this->errors[] = sprintf(
-                    $this->trans('You can reset your password every %d minute(s) only. Please try again later.', array(), 'Admin.Notifications.Error'),
+                    $this->trans('You can reset your password every %d minute(s) only. Please try again later.', array(), 'Admin.Login.Notification'),
                     Configuration::get('PS_PASSWD_TIME_BACK')
                 );
             }
@@ -302,12 +298,12 @@ class AdminLoginControllerCore extends AdminController
                 Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
                 die(Tools::jsonEncode(array(
                     'hasErrors' => false,
-                    'confirm' => $this->l('Please, check your mailbox. A link to reset your password has been sent to you.', 'AdminTab', false, false)
+                    'confirm' => $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', array(), 'Admin.Login.Notification')
                 )));
             } else {
                 die(Tools::jsonEncode(array(
                     'hasErrors' => true,
-                    'errors' => array($this->trans('An error occurred while attempting to reset your password.', array(), 'Admin.Notifications.Error'))
+                    'errors' => array($this->trans('An error occurred while attempting to reset your password.', array(), 'Admin.Login.Notification'))
                 )));
             }
         } elseif (Tools::isSubmit('ajax')) {
@@ -351,10 +347,7 @@ class AdminLoginControllerCore extends AdminController
         }
 
         if (!count($this->errors)) {
-            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-            $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-
-            $employee->passwd = $crypto->hash($reset_password, _COOKIE_KEY_);
+            $employee->passwd = $this->get('hashing')->hash($reset_password, _COOKIE_KEY_);
             $employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
             $params = array(
@@ -391,7 +384,7 @@ class AdminLoginControllerCore extends AdminController
                     $employee->update();
                     die(Tools::jsonEncode(array(
                         'hasErrors' => false,
-                        'confirm' => $this->l('The password has been changed successfully.', 'AdminTab', false, false)
+                        'confirm' => $this->trans('The password has been changed successfully.', array(), 'Admin.Login.Notification')
                     )));
                 }
             } else {

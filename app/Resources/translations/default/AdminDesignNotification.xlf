@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c402321a8e5818b776007e8a2d00474a">
+        <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
+        <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
+        <note>Context:
+File: classes/controller/FrontController.php:324</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCmsCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="29dae1d163226f90bb206b333bbffe1d">
@@ -76,6 +86,12 @@ File: controllers/admin/AdminImagesController.php:539</note>
         <note>Context:
 File: controllers/admin/AdminImagesController.php:552</note>
       </trans-unit>
+      <trans-unit id="8b772dad7cc4ed15eaf0c433f861e55c">
+        <source>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</source>
+        <target>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:672</note>
+      </trans-unit>
       <trans-unit id="d4f225ec09e4b0eba6558753f4bd8edd">
         <source>Only part of the images have been regenerated. The server timed out before finishing.</source>
         <target>Only part of the images have been regenerated. The server timed out before finishing.</target>
@@ -87,6 +103,12 @@ File: controllers/admin/AdminImagesController.php:675</note>
         <target>Server timed out. The watermark may not have been applied to all images.</target>
         <note>Context:
 File: controllers/admin/AdminImagesController.php:679</note>
+      </trans-unit>
+      <trans-unit id="606495559093a136ed6f2c9daee2645f">
+        <source>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</source>
+        <target>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:684</note>
       </trans-unit>
       <trans-unit id="4004c7590c68a8cbbe499736c56bc33c">
         <source>Error: Your server configuration is not compatible with the new image system. No images were moved.</source>
@@ -120,25 +142,31 @@ File: controllers/admin/AdminImagesController.php:737</note>
         <source>The uploaded file is too large.</source>
         <target>The uploaded file is too large.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:314</note>
+File: controllers/admin/AdminThemesController.php:401</note>
+      </trans-unit>
+      <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
+        <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
+        <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:339</note>
       </trans-unit>
       <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
         <source>Invalid file format.</source>
         <target>Invalid file format.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:330</note>
+File: controllers/admin/AdminThemesController.php:436</note>
       </trans-unit>
       <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
         <source>Failed to move uploaded file.</source>
         <target>Failed to move uploaded file.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:342</note>
+File: controllers/admin/AdminThemesController.php:449</note>
       </trans-unit>
       <trans-unit id="3cb5c48f468125102a98fe83a277029d">
         <source>Warning: if no email logo is available, the main logo will be used instead.</source>
         <target>Warning: if no email logo is available, the main logo will be used instead.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:388</note>
+File: controllers/admin/AdminThemesController.php:495</note>
       </trans-unit>
     </body>
   </file>
@@ -148,7 +176,7 @@ File: controllers/admin/AdminThemesController.php:388</note>
         <source>This theme is not valid for PrestaShop 1.7</source>
         <target>This theme is not valid for PrestaShop 1.7</target>
         <note>Context:
-File: src/Core/Addon/Theme/ThemeManager.php:310</note>
+File: src/Core/Addon/Theme/ThemeManager.php:313</note>
       </trans-unit>
     </body>
   </file>
@@ -158,13 +186,23 @@ File: src/Core/Addon/Theme/ThemeManager.php:310</note>
         <source>An error occurred. The information "%s" is missing.</source>
         <target>An error occurred. The information "%s" is missing.</target>
         <note>Context:
-File: src/Core/Addon/Theme/ThemeValidator.php:69</note>
+File: src/Core/Addon/Theme/ThemeValidator.php:72</note>
       </trans-unit>
       <trans-unit id="7d88c564a7f74d56564402cd5e054b13">
         <source>An error occurred. The template "%s" is missing.</source>
         <target>An error occurred. The template "%s" is missing.</target>
         <note>Context:
-File: src/Core/Addon/Theme/ThemeValidator.php:113</note>
+File: src/Core/Addon/Theme/ThemeValidator.php:116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f003149576f4755d74550952febe14bb">
+        <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
+        <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
+        <note>Context:
+File: src/Core/Shop/LogoUploader.php:172</note>
       </trans-unit>
     </body>
   </file>
@@ -174,7 +212,7 @@ File: src/Core/Addon/Theme/ThemeValidator.php:113</note>
         <source>Your theme has been correctly exported: %path%</source>
         <target>Your theme has been correctly exported: %path%</target>
         <note>Context:
-File: src/PrestaShopBundle/Command/ExportThemeCommand.php:58</note>
+File: src/PrestaShopBundle/Command/ExportThemeCommand.php:59</note>
       </trans-unit>
     </body>
   </file>

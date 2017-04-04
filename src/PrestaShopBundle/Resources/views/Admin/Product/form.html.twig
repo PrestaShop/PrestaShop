@@ -1,5 +1,5 @@
 {#**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -120,7 +120,7 @@
           <li id="tab_step5" class="nav-item"><a href="#step5" role="tab" data-toggle="tab" class="nav-link">{{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
           <li id="tab_step6" class="nav-item"><a href="#step6" role="tab" data-toggle="tab" class="nav-link">{{ 'Options'|trans({}, 'Admin.Global') }}</a></li>
           {% if hookcount('displayAdminProductsExtra') > 0 %}
-            <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">&laquo;{{ 'Modules options'|trans({}, 'Admin.Catalog.Feature') }}&raquo;</a></li>
+            <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ 'Modules'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
           {% endif %}
         </ul>
         <div class="arrow js-arrow right-arrow visible pull-right">
@@ -282,7 +282,7 @@
                             <h2>
                               {{ "Reference"|trans({}, 'Admin.Catalog.Feature') }}
                               <span class="help-box" data-toggle="popover"
-                                data-content="{{ "Your internal reference code for this product. Allowed special characters: .-_#\."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                                data-content="{{ "Your reference code for this product. Allowed special characters: .-_#\."|trans({}, 'Admin.Catalog.Help') }}" ></span>
                             </h2>
                             {{ form_errors(form.step6.reference) }}
                             <div class="row">
@@ -935,23 +935,76 @@
                     <div class="col-md-12">
                       {% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
 
-                      <div class="row module-selection">
-                        <div class="col-sm-12 col-md-8">
+                      <div class="row module-selection" style="display: none;">
+                        <div class="col-md-12 col-lg-7">
+                          {% for module in hooks %}
+                            <div class="module-render-container module-{{ module.attributes.name }}">
+                              <div>
+                                <img class="top-logo" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}">
+                                <h2 class="text-ellipsis module-name-grid">
+                                  {{ module.attributes.displayName }}
+                                </h2>
+                                <div class="text-ellipsis xsmall module-version">
+                                  {{ module.attributes.version }} by {{ module.attributes.author }}
+                                </div>
+                              </div>
+                              <div class="small no-padding">
+                                {{ module.attributes.description }}
+                              </div>
+                            </div>
+                          {% endfor %}
+                        </div>
+                        <div class="col-md-12 col-lg-5">
+                          <h2>{{ 'Module to configure'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                           <select class="modules-list-select" data-toggle="select2">
                             {% for module in hooks %}
-                              <option value="module-{{ loop.index }}">{{ module.name }}</option>
+                              <option value="module-{{ module.attributes.name }}">{{ module.attributes.displayName }}</option>
                             {% endfor %}
                           </select>
+                        </div>
+                      </div>
+
+                      <div class="module-render-container all-modules">
+                        <p>
+                          <h2>{{ 'Choose a module to configure'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+                          {{ 'These modules are relative to the product page of your shop.'|trans({}, 'Admin.Catalog.Feature') }}<br />
+                          {{ 'To manage all your modules go to the [1]Installed module page[/1]'|trans({}, 'Admin.Catalog.Feature')|replace({'[1]': '<a href="' ~ path("admin_module_manage") ~ '">', '[/1]': '</a>'})|raw }}
+                        </p>
+                        <div class="row">
+                          {% for module in hooks %}
+                            <div class="col-md-12 col-lg-6 col-xl-4">
+                              <div class="module-item-wrapper-grid">
+                                <div class="module-item-heading-grid">
+                                  <img class="module-logo-thumb-grid" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}">
+                                  <h3 class="text-ellipsis module-name-grid">
+                                    {{ module.attributes.displayName }}
+                                  </h3>
+                                  <div class="text-ellipsis xsmall module-version-author-grid">
+                                    {{ module.attributes.version }} by {{ module.attributes.author }}
+                                  </div>
+                                </div>
+                                <div class="module-quick-description-grid small no-padding">
+                                  {{ module.attributes.description }}
+                                </div>
+                                <div class="module-container">
+                                  <div class="module-quick-action-grid clearfix">
+                                    <button class="modules-list-button btn btn-primary-outline pull-xs-right" data-target="module-{{ module.id }}">
+                                      {{ 'Configure'|trans({}, 'Admin.Actions') }}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
                         </div>
                       </div>
 
                       {% for module in hooks %}
                         <div
                           id="module_{{ module.id }}"
-                          class="module-render-container module-{{ loop.index }}"
-                          {% if loop.index != 1 %}style="display: none;"{% endif %}
+                          class="module-render-container module-{{ module.attributes.name }}"
+                          style="display: none;"
                         >
-                          <h2 class="name">{{ module.name }}</h2>
                           <div>
                             {{ module.content|raw }}
                           </div>
@@ -991,15 +1044,15 @@
           class="btn btn-tertiary btn-submit preview"
           data-toggle="tooltip"
           id="product_form_preview_btn"
-          title="{{ 'See how your product sheet will look online: CTRL+V'|trans({}, 'Admin.Catalog.Help') }}"
+          title="{{ 'See how your product sheet will look online: ALT+SHIFT+V'|trans({}, 'Admin.Catalog.Help') }}"
          >
           {{ 'Preview'|trans({}, 'Admin.Actions')}}
         </a>
         {% if editable %}
         <h2 class="for-switch online-title" {% if not form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
-            title="{{ 'Enable or disable the product on your shop: CTRL+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Online'|trans({}, 'Admin.Global') }}</h2>
+            title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Online'|trans({}, 'Admin.Global') }}</h2>
         <h2 class="for-switch offline-title" {% if form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
-            title="{{ 'Enable or disable the product on your shop: CTRL+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
+            title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+0'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
         <input
           id="form_step1_active"
           data-toggle="switch"
@@ -1018,7 +1071,7 @@
             id="product_form_save_duplicate_btn"
             data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
             data-toggle="tooltip"
-            title="{{ 'Save and duplicate this product, then go to the new product: CTRL+D'|trans({}, 'Admin.Catalog.Help') }}"
+            title="{{ 'Save and duplicate this product, then go to the new product: ALT+SHIFT+D'|trans({}, 'Admin.Catalog.Help') }}"
             >
             {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
           </button>
@@ -1029,7 +1082,7 @@
           id="product_form_save_go_to_catalog_btn"
           data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
           data-toggle="tooltip"
-          title="{{ 'Save and go back to the catalog: CTRL+Q'|trans({}, 'Admin.Catalog.Help') }}"
+          title="{{ 'Save and go back to the catalog: ALT+SHIFT+Q'|trans({}, 'Admin.Catalog.Help') }}"
           >
           {{ 'Go to catalog'|trans({}, 'Admin.Catalog.Feature')|raw }}
         </button>
@@ -1039,7 +1092,7 @@
           id="product_form_save_new_btn"
           data-redirect="{{ path('admin_product_new') }}"
           data-toggle="tooltip"
-          title="{{ 'Save and create a new product: CTRL+P'|trans({}, 'Admin.Catalog.Help') }}"
+          title="{{ 'Save and create a new product: ALT+SHIFT+P'|trans({}, 'Admin.Catalog.Help') }}"
           >
           {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
         </button>
@@ -1049,7 +1102,7 @@
           class="btn btn-primary save uppercase"
           value="{{ 'Save'|trans({}, 'Admin.Actions') }}"
           data-toggle="tooltip"
-          title="{{ 'Save the product and stay on the current page: CTRL+S'|trans({}, 'Admin.Catalog.Help') }}"
+          title="{{ 'Save the product and stay on the current page: ALT+SHIFT+S'|trans({}, 'Admin.Catalog.Help') }}"
           />
 
           <div class="btn-group hide dropdown pull-right">

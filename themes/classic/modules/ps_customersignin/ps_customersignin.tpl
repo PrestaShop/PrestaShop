@@ -12,7 +12,7 @@
       <a
         class="account"
         href="{$my_account_url}"
-        title="{l s='View my customer account' d='Shop.Theme.CustomerAccount'}"
+        title="{l s='View my customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >
         <i class="material-icons hidden-md-up logged">&#xE7FF;</i>
@@ -21,7 +21,7 @@
     {else}
       <a
         href="{$my_account_url}"
-        title="{l s='Log in to your customer account' d='Shop.Theme.CustomerAccount'}"
+        title="{l s='Log in to your customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >
         <i class="material-icons">&#xE7FF;</i>

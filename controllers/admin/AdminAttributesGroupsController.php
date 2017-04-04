@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -113,7 +113,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
             ));
 
             if (!Validate::isLoadedObject($obj = new AttributeGroup((int)$id))) {
-                $this->errors[] = $this->trans('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Catalog.Notification').
+                    ' <b>'.$this->table.'</b> '.
+                    $this->trans('(cannot load object)', array(), 'Admin.Catalog.Notification');
                 return;
             }
 
@@ -401,9 +403,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
             foreach (Language::getLanguages(false) as $language) {
                 if ($object->isAttribute((int)Tools::getValue('id_attribute_group'),
                     Tools::getValue('name_'.$language['id_lang']), $language['id_lang'])) {
-                    $this->errors['name_'.$language['id_lang']] =
-                        sprintf($this->trans('The attribute value "%1$s" already exist for %2$s language'),
-                        Tools::getValue('name_'.$language['id_lang']), $language['name']);
+                    $this->errors['name_'.$language['id_lang']] = $this->trans('The attribute value "%1$s" already exist for %2$s language',
+                        array(
+                            Tools::getValue('name_'.$language['id_lang']),
+                            $language['name'],
+                        ),
+                        'Admin.Catalog.Notification');
                 }
             }
 
@@ -717,7 +722,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
             if (true !== $this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } elseif (!$object = new Attribute((int)Tools::getValue($this->identifier))) {
-                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').
+                    ' <b>'.$this->table.'</b> '.
+                    $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
             }
 
             if (Tools::getValue('position') !== false && Tools::getValue('id_attribute')) {

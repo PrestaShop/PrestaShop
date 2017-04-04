@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -78,8 +78,24 @@ class CategoryControllerCore extends ProductListingFrontController
             return;
         }
 
+        $categoryVar = $this->getTemplateVarCategory();
+
+        $filteredCategory= Hook::exec(
+            'filterCategoryContent',
+            array('object' => $categoryVar),
+            $id_module = null,
+            $array_return = false,
+            $check_exceptions = true,
+            $use_push = false,
+            $id_shop = null,
+            $chain = true
+        );
+        if (!empty($filteredCategory['object'])) {
+            $categoryVar = $filteredCategory['object'];
+        }
+
         $this->context->smarty->assign(array(
-            'category' => $this->getTemplateVarCategory(),
+            'category' => $categoryVar,
             'subcategories' => $this->getTemplateVarSubCategories(),
         ));
 

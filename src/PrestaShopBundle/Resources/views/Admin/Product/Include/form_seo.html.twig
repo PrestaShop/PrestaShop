@@ -1,5 +1,5 @@
 {#**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -81,7 +81,7 @@
             {{ 'To enable it, go to [1]SEO and URLs[/1]'|trans({}, 'Admin.Catalog.Notification')|replace({'[1]': '<a href="' ~ getAdminLink("AdminMeta") ~ '#meta_fieldset_general">', '[/1]': '</a>'})|raw }}
           {% else %}
             <strong>{{ 'Friendly URLs are currently enabled.'|trans({}, 'Admin.Catalog.Notification') }}</strong>
-            {{ 'To enable it, go to [1]SEO and URLs[/1]'|trans({}, 'Admin.Catalog.Notification')|replace({'[1]': '<a href="' ~ getAdminLink("AdminMeta") ~ '#meta_fieldset_general">', '[/1]': '</a>'})|raw }}
+            {{ 'To disable it, go to [1]SEO and URLs[/1]'|trans({}, 'Admin.Catalog.Notification')|replace({'[1]': '<a href="' ~ getAdminLink("AdminMeta") ~ '#meta_fieldset_general">', '[/1]': '</a>'})|raw }}
           {% endif %}
         </p>
         <p class="alert-text">
@@ -98,7 +98,7 @@
   <h2>
     {{ 'Redirection page'|trans({}, 'Admin.Catalog.Feature') }}
     <span class="help-box" data-toggle="popover"
-      data-content="{{ "When your product is disabled, choose to which page you’d like to redirect the customers visiting its page."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+      data-content="{{ "When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name."|trans({}, 'Admin.Catalog.Help') }}" ></span>
   </h2>
 
   <div class="row">
@@ -113,9 +113,9 @@
 
     <div class="col-md-5" id="id-product-redirected">
       <fieldset class="form-group">
-        <label class="form-control-label">{{ form.id_product_redirected.vars.label }}</label>
-        {{ form_errors(form.id_product_redirected) }}
-        {{ form_widget(form.id_product_redirected) }}
+        <label class="form-control-label">{{ form.id_type_redirected.vars.label }}</label>
+        {{ form_errors(form.id_type_redirected) }}
+        {{ form_widget(form.id_type_redirected) }}
       </fieldset>
 
     </div>
@@ -126,8 +126,8 @@
         <i class="material-icons">help</i>
         <p class="alert-text">
           {{ 'No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.'|trans({}, 'Admin.Catalog.Help') }}<br>
-          {{ 'Permanent redirection (301) = Permanently display another product instead.'|trans({}, 'Admin.Catalog.Help') }}<br>
-          {{ 'Temporary redirection (302) = Temporarily display another product instead.'|trans({}, 'Admin.Catalog.Help') }}
+          {{ 'Permanent redirection (301) = Permanently display another product or category instead.'|trans({}, 'Admin.Catalog.Help') }}<br>
+          {{ 'Temporary redirection (302) = Temporarily display another product or category instead.'|trans({}, 'Admin.Catalog.Help') }}
         </p>
       </div>
     </div>

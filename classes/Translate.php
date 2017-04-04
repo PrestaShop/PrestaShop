@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -285,7 +285,11 @@ class TranslateCore
         $iso = Context::getContext()->language->iso_code;
 
         if (!Validate::isLangIsoCode($iso)) {
-            Tools::displayError(sprintf('Invalid iso lang (%s)', Tools::safeOutput($iso)));
+            Context::getContext()->getTranslator()->trans(
+                'Invalid language ISO code (%s)',
+                array(Tools::safeOutput($iso)),
+                'Admin.International.Notification'
+            );
         }
 
         if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
@@ -366,9 +370,11 @@ class TranslateCore
 
     /**
      * Helper function to make calls to postProcessTranslation more readable.
+     * @deprecated 1.7.1.0
      */
     public static function ppTags($string, $tags)
     {
+        Tools::displayAsDeprecated();
         return Translate::postProcessTranslation($string, array('tags' => $tags));
     }
 }

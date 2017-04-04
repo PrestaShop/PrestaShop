@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,8 +18,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="text-xs-center"><i class="material-icons">&#xE90C;</i> 2016 - <strong>CLASSIC</strong> - {l s='Ecommerce software by' d='Shop.Theme'} <strong>PrestaShop<sup>TM</sup></strong></div>
+{block name='footer'}
+<div class="text-xs-center">
+  <i class="material-icons">&#xE90C;</i> 2016 - <strong>CLASSIC</strong> - {l s='Ecommerce software by' d='Shop.Theme'}
+  <strong>PrestaShop<sup>TM</sup></strong>
+</div>
+{/block}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\EventListener;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -50,13 +51,19 @@ class TokenizedUrlsListener
         CsrfTokenManager $tokenManager,
         RouterInterface $router,
         $username,
-        Employee $employee
+        LegacyContext $legacyContext
     )
     {
         $this->tokenManager = $tokenManager;
         $this->router = $router;
         $this->username = $username;
-        $this->employeeId = $employee->id;
+        $context = $legacyContext->getContext();
+
+        if (!is_null($context)) {
+            if ($context->employee instanceof Employee) {
+                $this->employeeId = $context->employee->id;
+            }
+        }
     }
 
     public function onKernelRequest(GetResponseEvent $event)

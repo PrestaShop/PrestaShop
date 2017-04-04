@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -287,8 +287,13 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($fields_required as $field) {
             if (($value = $this->{$field}) == false && (string)$value != '0') {
                 if (!$this->id || $field != 'passwd') {
-                    $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities)
-                                .'</b> '.Tools::displayError('is required.');
+                    $errors[] = $this->trans(
+                        '%s is required.',
+                        array(
+                            '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b>'
+                        ),
+                        'Shop.Notifications.Error'
+                    );
                 }
             }
         }
@@ -296,10 +301,10 @@ class SupplyOrderDetailCore extends ObjectModel
         /* Checks maximum fields sizes */
         foreach ($this->fieldsSize as $field => $max_length) {
             if ($value = $this->{$field} && Tools::strlen($value) > $max_length) {
-                $errors[] = sprintf(
-                    Tools::displayError('%1$s is too long. Maximum length: %2$d'),
-                    SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities),
-                    $max_length
+                $errors[] = $this->trans(
+                    'The %1$s field is too long (%2$d chars max).',
+                    array(SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities), $max_length),
+                    'Shop.Notifications.Error'
                 );
             }
         }
@@ -308,7 +313,7 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($this->fieldsValidate as $field => $function) {
             if ($value = $this->{$field}) {
                 if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {
-                    $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
+                    $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
                 } elseif ($field == 'passwd') {
                     if ($value = Tools::getValue($field)) {
                         $this->{$field} = Tools::hash($value);
@@ -320,15 +325,15 @@ class SupplyOrderDetailCore extends ObjectModel
         }
 
         if ($this->quantity_expected <= 0) {
-            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         if ($this->tax_rate < 0 || $this->tax_rate > 100) {
-            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         if ($this->discount_rate < 0 || $this->discount_rate > 100) {
-            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         return $errors;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,9 +30,18 @@ class AuthControllerCore extends FrontController
     public $php_self = 'authentication';
     public $auth = false;
 
+    public function checkAccess()
+    {
+        if ($this->context->customer->isLogged() && !$this->ajax) {
+            $this->redirect_after = ($this->authRedirection) ? urlencode($this->authRedirection) : 'my-account';
+            $this->redirect();
+        }
+
+        return parent::checkAccess();
+    }
+
     public function initContent()
     {
-        parent::initContent();
         $should_redirect = false;
 
         if (Tools::isSubmit('submitCreate') || Tools::isSubmit('create_account')) {
@@ -43,7 +52,14 @@ class AuthControllerCore extends FrontController
             ;
 
             if (Tools::isSubmit('submitCreate')) {
-                if ($register_form->submit()) {
+                $hookResult = array_reduce(
+                    Hook::exec('actionSubmitAccountBefore', array(), null, true),
+                    function ($carry, $item) {
+                        return $carry && $item;
+                    },
+                    true
+                );
+                if ($hookResult && $register_form->submit()) {
                     $should_redirect = true;
                 }
             }
@@ -69,6 +85,8 @@ class AuthControllerCore extends FrontController
             ]);
             $this->setTemplate('customer/authentication');
         }
+
+        parent::initContent();
 
         if ($should_redirect && !$this->ajax) {
             $back = urldecode(Tools::getValue('back'));

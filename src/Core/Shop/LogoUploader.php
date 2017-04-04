@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,6 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Shop;
 
 use Configuration;
+use Context;
 use ImageManager;
 use PrestaShopException;
 use Shop;
@@ -166,7 +167,16 @@ class LogoUploader
             if ($error = ImageManager::validateIconUpload($files[$name])) {
                 throw new PrestaShopException($error);
             } elseif (!copy($_FILES[$name]['tmp_name'], $destination)) {
-                throw new PrestaShopException(sprintf(Tools::displayError('An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".'), $files[$name]['tmp_name'], $destination));
+                throw new PrestaShopException(
+                    Context::getContext()->getTranslator()->trans(
+                        'An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".',
+                        array(
+                            $files[$name]['tmp_name'],
+                            $destination
+                        ),
+                        'Admin.Design.Notification'
+                    )
+                );
             }
         }
 

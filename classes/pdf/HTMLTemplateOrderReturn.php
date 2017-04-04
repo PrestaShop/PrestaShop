@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -75,7 +75,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
             'invoice_address' => $formatted_invoice_address,
             'shop_address' => AddressFormat::generateAddress($this->shop->getAddress(), array(), '<br />', ' ')
         ));
-        
+
         $tpls = array(
             'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
             'addresses_tab' => $this->smarty->fetch($this->getTemplate('order-return.addresses-tab')),
@@ -84,7 +84,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
             'conditions_tab' => $this->smarty->fetch($this->getTemplate('order-return.conditions-tab')),
         );
         $this->smarty->assign($tpls);
-        
+
         return $this->smarty->fetch($this->getTemplate('order-return'));
     }
 
@@ -95,7 +95,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return sprintf('%06d', $this->order_return->id).'.pdf';
+        return Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_return->id).'.pdf';
     }
 
     /**
@@ -107,7 +107,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
     {
         return 'invoices.pdf';
     }
-    
+
     /**
      * Returns the template's HTML header
      *
@@ -116,9 +116,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array(
-            'header' => HTMLTemplateOrderReturn::l('Order return'),
-        ));
+        $this->smarty->assign(array('header' => Context::getContext()->getTranslator()->trans('Order return', array(), 'Shop.Pdf')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }

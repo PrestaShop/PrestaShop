@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -81,6 +81,9 @@ abstract class ControllerCore
     /** @var PrestaShopBundle\Translation\Translator */
     protected $translator;
 
+    /** @var ContainerBuilder legacy container */
+    protected $container;
+
 
     /**
      * Check if the controller is available for the current user/visitor
@@ -108,6 +111,7 @@ abstract class ControllerCore
         if (!defined('_PS_BASE_URL_SSL_')) {
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
+        $this->container = $this->buildContainer();
     }
 
     /**
@@ -200,7 +204,7 @@ abstract class ControllerCore
             if ($this->viewAccess()) {
                 $this->initContent();
             } else {
-                $this->errors[] = Tools::displayError('Access denied.');
+                $this->errors[] = $this->trans('Access denied.', array(), 'Admin.Notifications.Error');
             }
 
             if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className))) {
@@ -626,7 +630,6 @@ abstract class ControllerCore
         }
 
         /* @deprecated deprecated since 1.6.1.1 */
-        // Hook::exec('actionBeforeAjaxDie', array('controller' => $controller, 'method' => $method, 'value' => $value));
         Hook::exec('actionAjaxDieBefore', array('controller' => $controller, 'method' => $method, 'value' => $value));
 
         /**
@@ -637,5 +640,20 @@ abstract class ControllerCore
         Hook::exec('actionAjaxDie'.$controller.$method.'Before', array('value' => $value));
 
         die($value);
+    }
+
+    /**
+     * Construct the container of dependencies
+     */
+    protected function buildContainer(){}
+
+    public function get($serviceId)
+    {
+        return $this->container->get($serviceId);
+    }
+
+    public function getParameter($parameterId)
+    {
+        return $this->container->getParameter($parameterId);
     }
 }

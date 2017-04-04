@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,6 +40,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /** @var Category */
     protected $category;
 
+    protected $redirectionExtraExcludedKeys = ['id_product_attribute', 'rewrite'];
+
     /**
      * @var array
      */
@@ -50,8 +52,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function canonicalRedirection($canonical_url = '')
     {
-        $id_product_attribute = Tools::getValue('id_product_attribute');
         if (Validate::isLoadedObject($this->product)) {
+            if (!$this->product->hasCombinations()) {
+                unset($_GET['id_product_attribute']);
+            } else if (!Tools::getValue('id_product_attribute') || Tools::getValue('rewrite') !== $this->product->link_rewrite) {
+                $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
+            }
+
+            $id_product_attribute = $this->getIdProductAttribute();
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -101,22 +109,35 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
                     );
                 } else {
-                    if (!$this->product->id_product_redirected || $this->product->id_product_redirected == $this->product->id) {
+                    if (!$this->product->id_type_redirected ||
+                        (in_array($this->product->redirect_type, array('301-product', '302-product')) && $this->product->id_type_redirected == $this->product->id)
+                    ) {
                         $this->product->redirect_type = '404';
                     }
 
                     switch ($this->product->redirect_type) {
-                        case '301':
+                        case '301-product':
                             header('HTTP/1.1 301 Moved Permanently');
-                            header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+                            header('Location: '.$this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
                         break;
-                        case '302':
+                        case '302-product':
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
-                            header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+                            header('Location: '.$this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
                         break;
+                        case '301-category':
+                            header('HTTP/1.1 301 Moved Permanently');
+                            header('Location: '.$this->context->link->getCategoryLink($this->product->id_type_redirected));
+                            exit;
+                            break;
+                        case '302-category':
+                            header('HTTP/1.1 302 Moved Temporarily');
+                            header('Cache-Control: no-cache');
+                            header('Location: '.$this->context->link->getCategoryLink($this->product->id_type_redirected));
+                            exit;
+                            break;
                         case '404':
                         default:
                             header('HTTP/1.1 404 Not Found');
@@ -172,8 +193,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function initContent()
     {
-        parent::initContent();
-
         if (!$this->errors) {
             if (Pack::isPack((int) $this->product->id) && !Pack::isInStock((int) $this->product->id)) {
                 $this->product->quantity = 0;
@@ -292,6 +311,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
 
             $product_for_template = $this->getTemplateVarProduct();
+
+            $filteredProduct = Hook::exec(
+                'filterProductContent',
+                array('object' => $product_for_template),
+                $id_module = null,
+                $array_return = false,
+                $check_exceptions = true,
+                $use_push = false,
+                $id_shop = null,
+                $chain = true
+            );
+            if (!empty($filteredProduct['object'])) {
+                $product_for_template = $filteredProduct['object'];
+            }
+
             $productManufacturer = new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id);
 
             $manufacturerImageUrl = $this->context->link->getManufacturerImageLink($productManufacturer->id);
@@ -299,7 +333,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             if ($manufacturerImageUrl === $undefinedImage) {
                 $manufacturerImageUrl = null;
             }
-            
+
             $productBrandUrl = $this->context->link->getManufacturerLink($productManufacturer->id);
 
             $this->context->smarty->assign(array(
@@ -318,6 +352,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // Assign attribute groups to the template
             $this->assignAttributesGroups($product_for_template);
         }
+
+        parent::initContent();
     }
 
     public function displayAjaxQuickview()
@@ -352,6 +388,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_variants' => $this->render('catalog/_partials/product-variants'),
             'product_discounts' => $this->render('catalog/_partials/product-discounts'),
             'product_add_to_cart' => $this->render('catalog/_partials/product-add-to-cart'),
+            'product_additional_info' => $this->render('catalog/_partials/product-additional-info'),
             'product_images_modal' => $this->render('catalog/_partials/product-images-modal'),
             'product_url' => $this->context->link->getProductLink(
                 $product['id_product'],
@@ -563,6 +600,49 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             }
                         }
                     }
+                }
+            }
+
+            // wash attributes list depending on available attributes depending on selected preceding attributes
+            $current_selected_attributes = array();
+            $count = 0;
+            foreach ($groups as &$group) {
+                $count++;
+                if ($count > 1) {
+                    //find attributes of current group, having a possible combination with current selected
+                    $id_attributes = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` pac2 
+                        WHERE `id_product_attribute` IN (
+                            SELECT pac.`id_product_attribute`
+                                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+                                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                                WHERE id_product = '.$this->product->id.' AND id_attribute IN ('.implode(',', array_map('intval', $current_selected_attributes)).')
+                                GROUP BY id_product_attribute
+                                HAVING COUNT(id_product) = '.count($current_selected_attributes).'
+                        ) AND id_attribute NOT IN ('.implode(',', array_map('intval', $current_selected_attributes)).')');
+                    foreach ($id_attributes as $k => $row) {
+                        $id_attributes[$k] = (int)$row['id_attribute'];
+                    }
+                    foreach ($group['attributes'] as $key => $attribute) {
+                        if (!in_array((int)$key, $id_attributes)) {
+                            unset($group['attributes'][$key]);
+                            unset($group['attributes_quantity'][$key]);
+                        }
+                    }
+                }
+                //find selected attribute or first of group
+                $index = 0;
+                $current_selected_attribute = 0;
+                foreach ($group['attributes'] as $key => $attribute) {
+                    if ($index === 0) {
+                        $current_selected_attribute = $key;
+                    }
+                    if ($attribute['selected']) {
+                        $current_selected_attribute = $key;
+                        break;
+                    }
+                }
+                if ($current_selected_attribute > 0) {
+                    $current_selected_attributes[] = $current_selected_attribute;
                 }
             }
 
@@ -815,6 +895,28 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $this->category;
     }
 
+    private function getIdProductAttribute()
+    {
+        $requestedIdProductAttribute = (int)Tools::getValue('id_product_attribute');
+
+        if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
+            $productAttributes = array_filter(
+                $this->product->getAttributeCombinations(),
+                function ($elem) {
+                    return $elem['quantity'] > 0;
+                });
+            $productAttribute = array_filter(
+                $productAttributes,
+                function ($elem) use ($requestedIdProductAttribute) {
+                    return $elem['id_product_attribute'] == $requestedIdProductAttribute;
+                });
+            if (empty($productAttribute) && !empty($productAttributes)) {
+                return (int)array_shift($productAttributes)['id_product_attribute'];
+            }
+        }
+        return $requestedIdProductAttribute;
+    }
+
     public function getTemplateVarProduct()
     {
         $productSettings = $this->getProductPresentationSettings();
@@ -825,7 +927,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['new'] = (int) $this->product->new;
-        $product['id_product_attribute'] = (int) Tools::getValue('id_product_attribute');
+        $product['id_product_attribute'] = $this->getIdProductAttribute();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();

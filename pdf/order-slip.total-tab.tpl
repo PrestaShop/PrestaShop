@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -27,9 +27,9 @@
 	{if $order_slip->shipping_cost_amount > 0}
 		<tr>
 			{if $tax_excluded_display}
-				<td class="grey" width="70%">{l s='Shipping (Tax Excl.)' d='Shop.PDF' pdf='true'}</td>
+				<td class="grey" width="70%">{l s='Shipping (Tax Excl.)' d='Shop.Pdf' pdf='true'}</td>
 			{else}
-				<td class="grey" width="70%">{l s='Shipping (Tax Incl.)' d='Shop.PDF' pdf='true'}</td>
+				<td class="grey" width="70%">{l s='Shipping (Tax Incl.)' d='Shop.Pdf' pdf='true'}</td>
 			{/if}
 			<td class="white" width="30%">
 				- {displayPrice currency=$order->id_currency price=$order_slip->shipping_cost_amount}
@@ -42,7 +42,7 @@
 			{if $tax_excluded_display}
 				<tr>
 					<td class="grey" width="70%">
-						{l s='Product Total (Tax Excl.)' d='Shop.PDF' pdf='true'}
+						{l s='Product Total (Tax Excl.)' d='Shop.Pdf' pdf='true'}
 					</td>
 					<td class="white" width="30%">
 						- {displayPrice currency=$order->id_currency price=$order->total_products}
@@ -51,7 +51,7 @@
 			{else}
 				<tr>
 					<td class="grey" width="70%">
-						{l s='Product Total (Tax Incl.)' d='Shop.PDF' pdf='true'}
+						{l s='Product Total (Tax Incl.)' d='Shop.Pdf' pdf='true'}
 					</td>
 					<td class="white" width="30%">
 						- {displayPrice currency=$order->id_currency price=$order->total_products_wt}
@@ -61,7 +61,7 @@
 		{else}
 			<tr>
 				<td class="grey" width="70%">
-					{l s='Product Total' d='Shop.PDF' pdf='true'}
+					{l s='Product Total' d='Shop.Pdf' pdf='true'}
 				</td>
 				<td class="white" width="30%">
 					- {displayPrice currency=$order->id_currency price=$order->total_products}
@@ -69,21 +69,21 @@
 			</tr>
 		{/if}
 	{/if}
-	
+
 	{if ($order->total_paid_tax_incl - $order->total_paid_tax_excl) > 0}
 		<tr>
 			<td class="grey" width="70%">
-				{l s='Total Tax' d='Shop.PDF' pdf='true'}
+				{l s='Total Tax' d='Shop.Pdf' pdf='true'}
 			</td>
 			<td class="white" width="30%">
 				- {displayPrice currency=$order->id_currency price=($order->total_paid_tax_incl - $order->total_paid_tax_excl)}
 			</td>
 		</tr>
 	{/if}
-	
+
 	<tr class="bold">
 		<td class="grey" width="70%">
-			{if $tax_excluded_display}{l s='Total (Tax Excl.)' pdf='true'}{else}{l s='Total (Tax Incl.)' d='Shop.PDF' pdf='true'}{/if}
+			{if $tax_excluded_display}{l s='Total (Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='Total (Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}
 		</td>
 		<td class="white" width="30%">
 			{if $total_cart_rule}

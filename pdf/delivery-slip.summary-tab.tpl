@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,16 +18,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <table id="summary-tab" width="100%">
 	<tr>
-		<th class="header small" valign="middle">{l s='Order Reference' d='Shop.PDF' pdf='true'}</th>
-		<th class="header small" valign="middle">{l s='Order Date' d='Shop.PDF' pdf='true'}</th>
+		<th class="header small" valign="middle">{l s='Order Reference' d='Shop.Pdf' pdf='true'}</th>
+		<th class="header small" valign="middle">{l s='Order Date' d='Shop.Pdf' pdf='true'}</th>
 		{if isset($carrier)}
-			<th class="header small" valign="middle">{l s='Carrier' d='Shop.PDF' pdf='true'}</th>
+			<th class="header small" valign="middle">{l s='Carrier' d='Shop.Pdf' pdf='true'}</th>
 		{/if}
 	</tr>
 	<tr>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -306,7 +306,8 @@ class MediaCore
             $return[] = Media::getJSPath(Context::getContext()->shop->getBaseURL(true, false)._PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
         }
 
-        //added query migrate for compatibility with new version of jquery will be removed in ps 1.6
+        // added jQuery migrate for compatibility with new version of jQuery
+        // will be removed when using latest version of jQuery
         $return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.min.js');
 
         return $return;

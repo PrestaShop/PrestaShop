@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -78,10 +78,12 @@ class CategoriesProvider
                     }
                 }
 
-                $categories['categories']->subMenu[$categoryName] = $this->createMenuObject($categoryName,
-                    $categoryName,
-                    $moduleIds
-                );
+                if (count($moduleIds)) {
+                    $categories['categories']->subMenu[$categoryName] = $this->createMenuObject($categoryName,
+                        $categoryName,
+                        $moduleIds
+                    );
+                }
             }
 
             usort($categories['categories']->subMenu, function ($a, $b) {
@@ -104,16 +106,13 @@ class CategoriesProvider
     public function getParentCategory($categoryName)
     {
         foreach ($this->getCategories() as $parentCategory) {
-            if ($parentCategory->name === $categoryName) {
-                return $categoryName;
-            }
-
             foreach ($parentCategory->categories as $childCategory) {
                 if ($childCategory->name === $categoryName) {
                     return $parentCategory->name;
                 }
             }
         }
+        return $categoryName;
     }
 
     /**

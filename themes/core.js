@@ -65,23 +65,23 @@
 	
 	__webpack_require__(5);
 	
-	__webpack_require__(8);
-	
 	__webpack_require__(9);
 	
 	__webpack_require__(10);
 	
 	__webpack_require__(11);
 	
+	__webpack_require__(12);
+	
 	var _prestashop = __webpack_require__(4);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(12);
+	var _events = __webpack_require__(13);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _common = __webpack_require__(13);
+	var _common = __webpack_require__(14);
 	
 	// "inherit" EventEmitter
 	window.$ = _jquery2['default'];
@@ -1679,7 +1679,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * 2007-2016 PrestaShop
+	 * 2007-2017 PrestaShop
 	 *
 	 * NOTICE OF LICENSE
 	 *
@@ -1698,7 +1698,7 @@
 	 * needs please refer to http://www.prestashop.com for more information.
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2016 PrestaShop SA
+	 * @copyright 2007-2017 PrestaShop SA
 	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
@@ -1730,8 +1730,10 @@
 	
 	    var updatePrices = function updatePrices(pricesInCart, $cartOverview, $newCart) {
 	      _jquery2['default'].each(pricesInCart, function (index, priceInCart) {
-	        var productUrl = (0, _jquery2['default'])((0, _jquery2['default'])(priceInCart).parents('.product-line-grid')[0]).find('a.label').attr('href');
-	        var productAnchorSelector = '.label[href="' + productUrl + '"]';
+	        var productLabel = (0, _jquery2['default'])((0, _jquery2['default'])(priceInCart).parents('.product-line-grid')[0]).find('a.label');
+	        var productUrl = productLabel.attr('href');
+	        var customizationId = productLabel.data('id_customization');
+	        var productAnchorSelector = '.label[href="' + productUrl + '"][data-id_customization="' + customizationId + '"]';
 	        var newProductAnchor = $newCart.find(productAnchorSelector);
 	        var $cartItem = (0, _jquery2['default'])($cartOverview.find(productAnchorSelector).parents('.cart-item')[0]);
 	
@@ -1917,7 +1919,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * 2007-2016 PrestaShop
+	 * 2007-2017 PrestaShop
 	 *
 	 * NOTICE OF LICENSE
 	 *
@@ -1936,7 +1938,7 @@
 	 * needs please refer to http://www.prestashop.com for more information.
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2016 PrestaShop SA
+	 * @copyright 2007-2017 PrestaShop SA
 	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
@@ -1952,20 +1954,22 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _checkoutPayment = __webpack_require__(6);
+	var _checkoutAddress = __webpack_require__(6);
 	
-	var _checkoutPayment2 = _interopRequireDefault(_checkoutPayment);
+	var _checkoutAddress2 = _interopRequireDefault(_checkoutAddress);
 	
 	var _checkoutDelivery = __webpack_require__(7);
 	
 	var _checkoutDelivery2 = _interopRequireDefault(_checkoutDelivery);
 	
-	var _checkoutPayment3 = _interopRequireDefault(_checkoutPayment);
+	var _checkoutPayment = __webpack_require__(8);
+	
+	var _checkoutPayment2 = _interopRequireDefault(_checkoutPayment);
 	
 	function setUpCheckout() {
-	  (0, _checkoutPayment2['default'])();
+	  (0, _checkoutAddress2['default'])();
 	  (0, _checkoutDelivery2['default'])();
-	  (0, _checkoutPayment3['default'])();
+	  (0, _checkoutPayment2['default'])();
 	
 	  handleCheckoutStepChange();
 	}
@@ -2004,7 +2008,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * 2007-2016 PrestaShop
+	 * 2007-2017 PrestaShop
 	 *
 	 * NOTICE OF LICENSE
 	 *
@@ -2023,7 +2027,137 @@
 	 * needs please refer to http://www.prestashop.com for more information.
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2016 PrestaShop SA
+	 * @copyright 2007-2017 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(2);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _prestashop = __webpack_require__(4);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	exports['default'] = function () {
+	  (0, _jquery2['default'])('.js-edit-addresses').on('click', function (event) {
+	    event.stopPropagation();
+	    (0, _jquery2['default'])('#checkout-addresses-step').trigger('click');
+	    _prestashop2['default'].emit('editAddress');
+	  });
+	};
+	
+	module.exports = exports['default'];
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * 2007-2017 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2017 PrestaShop SA
+	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(2);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _prestashop = __webpack_require__(4);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	exports['default'] = function () {
+	  var $body = (0, _jquery2['default'])('body');
+	  var deliveryFormSelector = '#js-delivery';
+	  var summarySelector = '#js-checkout-summary';
+	  var deliveryStepSelector = '#checkout-delivery-step';
+	  var editDeliveryButtonSelector = '.js-edit-delivery';
+	
+	  var updateDeliveryForm = function updateDeliveryForm(event) {
+	    var $deliveryMethodForm = (0, _jquery2['default'])(deliveryFormSelector);
+	    var requestData = $deliveryMethodForm.serialize();
+	    var $inputChecked = (0, _jquery2['default'])(event.currentTarget);
+	    var $newDeliveryOption = $inputChecked.parents("div.delivery-option");
+	
+	    _jquery2['default'].post($deliveryMethodForm.data('url-update'), requestData).then(function (resp) {
+	      (0, _jquery2['default'])(summarySelector).replaceWith(resp.preview);
+	      _prestashop2['default'].emit('updatedDeliveryForm', { dataForm: $deliveryMethodForm.serializeArray(), deliveryOption: $newDeliveryOption });
+	    }).fail(function (resp) {
+	      _prestashop2['default'].trigger('handleError', { eventType: 'updateDeliveryOptions', resp: resp });
+	    });
+	  };
+	
+	  $body.on('change', deliveryFormSelector + ' input', updateDeliveryForm);
+	
+	  $body.on('click', editDeliveryButtonSelector, function (event) {
+	    event.stopPropagation();
+	    (0, _jquery2['default'])(deliveryStepSelector).trigger('click');
+	    _prestashop2['default'].emit('editDelivery');
+	  });
+	};
+	
+	module.exports = exports['default'];
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * 2007-2017 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * http://opensource.org/licenses/osl-3.0.php
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2017 PrestaShop SA
 	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
@@ -2160,11 +2294,11 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * 2007-2016 PrestaShop
+	 * 2007-2017 PrestaShop
 	 *
 	 * NOTICE OF LICENSE
 	 *
@@ -2183,83 +2317,7 @@
 	 * needs please refer to http://www.prestashop.com for more information.
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2016 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-	 * International Registered Trademark & Property of PrestaShop SA
-	 */
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _jquery = __webpack_require__(2);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	var _prestashop = __webpack_require__(4);
-	
-	var _prestashop2 = _interopRequireDefault(_prestashop);
-	
-	exports['default'] = function () {
-	  var $body = (0, _jquery2['default'])('body');
-	  var deliveryFormSelector = '#js-delivery';
-	  var summarySelector = '#js-checkout-summary';
-	  var deliveryStepSelector = '#checkout-delivery-step';
-	  var editDeliveryButtonSelector = '.js-edit-delivery';
-	
-	  var updateDeliveryForm = function updateDeliveryForm(event) {
-	    var $deliveryMethodForm = (0, _jquery2['default'])(deliveryFormSelector);
-	    var requestData = $deliveryMethodForm.serialize();
-	    var $inputChecked = (0, _jquery2['default'])(event.currentTarget);
-	    var $newDeliveryOption = $inputChecked.parents("div.delivery-option");
-	
-	    _jquery2['default'].post($deliveryMethodForm.data('url-update'), requestData).then(function (resp) {
-	      (0, _jquery2['default'])(summarySelector).replaceWith(resp.preview);
-	      _prestashop2['default'].emit('updatedDeliveryForm', { dataForm: $deliveryMethodForm.serializeArray(), deliveryOption: $newDeliveryOption });
-	    }).fail(function (resp) {
-	      _prestashop2['default'].trigger('handleError', { eventType: 'updateDeliveryOptions', resp: resp });
-	    });
-	  };
-	
-	  $body.on('change', deliveryFormSelector + ' input', updateDeliveryForm);
-	
-	  $body.on('click', editDeliveryButtonSelector, function (event) {
-	    event.stopPropagation();
-	    (0, _jquery2['default'])(deliveryStepSelector).trigger('click');
-	    _prestashop2['default'].emit('editDelivery');
-	  });
-	};
-	
-	module.exports = exports['default'];
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * 2007-2016 PrestaShop
-	 *
-	 * NOTICE OF LICENSE
-	 *
-	 * This source file is subject to the Open Software License (OSL 3.0)
-	 * that is bundled with this package in the file LICENSE.txt.
-	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
-	 * If you did not receive a copy of the license and are unable to
-	 * obtain it through the world-wide-web, please send an email
-	 * to license@prestashop.com so we can send you a copy immediately.
-	 *
-	 * DISCLAIMER
-	 *
-	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-	 * versions in the future. If you wish to customize PrestaShop for your
-	 * needs please refer to http://www.prestashop.com for more information.
-	 *
-	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2016 PrestaShop SA
+	 * @copyright 2007-2017 PrestaShop SA
 	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
@@ -2309,11 +2367,11 @@
 	});
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * 2007-2016 PrestaShop
+	 * 2007-2017 PrestaShop
 	 *
 	 * NOTICE OF LICENSE
 	 *
@@ -2332,7 +2390,7 @@
 	 * needs please refer to http://www.prestashop.com for more information.
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2016 PrestaShop SA
+	 * @copyright 2007-2017 PrestaShop SA
 	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
@@ -2358,11 +2416,11 @@
 	});
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * 2007-2016 PrestaShop
+	 * 2007-2017 PrestaShop
 	 *
 	 * NOTICE OF LICENSE
 	 *
@@ -2381,7 +2439,7 @@
 	 * needs please refer to http://www.prestashop.com for more information.
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2016 PrestaShop SA
+	 * @copyright 2007-2017 PrestaShop SA
 	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
@@ -2469,6 +2527,7 @@
 	      (0, _jquery2['default'])('.product-variants').replaceWith(resp.product_variants);
 	      (0, _jquery2['default'])('.product-discounts').replaceWith(resp.product_discounts);
 	      (0, _jquery2['default'])('.images-container').replaceWith(resp.product_cover_thumbnails);
+	      (0, _jquery2['default'])('.product-additional-info').replaceWith(resp.product_additional_info);
 	      (0, _jquery2['default'])('#product-details').replaceWith(resp.product_details);
 	
 	      // Replace all "add to cart" sections but the quantity input in order to keep quantity field intact i.e.
@@ -2501,7 +2560,7 @@
 	});
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2561,7 +2620,7 @@
 	});
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -2833,11 +2892,11 @@
 	}
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * 2007-2016 PrestaShop
+	 * 2007-2017 PrestaShop
 	 *
 	 * NOTICE OF LICENSE
 	 *
@@ -2856,7 +2915,7 @@
 	 * needs please refer to http://www.prestashop.com for more information.
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2016 PrestaShop SA
+	 * @copyright 2007-2017 PrestaShop SA
 	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */

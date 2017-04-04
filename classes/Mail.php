@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -80,7 +80,10 @@ class MailCore extends ObjectModel
      * @param bool   $mode_smtp      SMTP mode (deprecated)
      * @param string $templatePath   Template path
      * @param bool   $die            Die after error
-     * @param string $bcc            Bcc recipient
+     * @param int    $idShop         Shop ID
+     * @param string $bcc            Bcc recipient address. You can use an array of array to send to multiple recipients
+     * @param string $replyTo        Reply-To recipient address
+     * @param string $replyToName    Reply-To recipient name
      *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
@@ -99,10 +102,44 @@ class MailCore extends ObjectModel
         $die = false,
         $idShop = null,
         $bcc = null,
-        $replyTo = null)
+        $replyTo = null,
+        $replyToName = null)
     {
         if (!$idShop) {
             $idShop = Context::getContext()->shop->id;
+        }
+
+        $skip = array_reduce(Hook::exec(
+           'actionEmailSendBefore',
+            array(
+                'idLang' => &$idLang,
+                'template' => &$template,
+                'subject' => &$subject,
+                'templateVars' => &$templateVars,
+                'to' => &$to,
+                'toName' => &$toName,
+                'from' => &$from,
+                'fromName' => &$fromName,
+                'fileAttachment' => &$fileAttachment,
+                'mode_smtp' => &$mode_smtp,
+                'templatePath' => &$templatePath,
+                'die' => &$die,
+                'idShop' => &$idShop,
+                'bcc' => &$bcc,
+                'replyTo' => &$replyTo
+            ),
+            null,
+            true
+        ), function ($carry, $item) {
+            return $carry && $item;
+        }, true);
+
+        if (!$skip) {
+	        return true;
+        }
+
+        if (is_numeric($idShop) && $idShop) {
+            $shop = new Shop((int) $idShop);
         }
 
         $configuration = Configuration::getMultiple(
@@ -136,18 +173,6 @@ class MailCore extends ObjectModel
             )
         );
 
-        $themePath = _PS_THEME_DIR_;
-
-        // Get the path of theme by id_shop if exist
-        if (is_numeric($idShop) && $idShop) {
-            $shop = new Shop((int) $idShop);
-            $themeName = $shop->theme->getName();
-
-            if (_THEME_NAME_ != $themeName) {
-                $themePath = _PS_ROOT_DIR_.'/themes/'.$themeName.'/';
-            }
-        }
-
         if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']) || Tools::strtolower($configuration['PS_MAIL_SMTP_ENCRYPTION']) === 'off') {
             $configuration['PS_MAIL_SMTP_ENCRYPTION'] = false;
         }
@@ -175,14 +200,14 @@ class MailCore extends ObjectModel
 
         // It would be difficult to send an e-mail if the e-mail is not valid, so this time we can die if there is a problem
         if (!is_array($to) && !Validate::isEmail($to)) {
-            Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
+            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: parameter "to" is corrupted', array(), 'Admin.Advparameters.Notification'), $die);
 
             return false;
         }
 
         // if bcc is not null, make sure it's a vaild e-mail
         if (!is_null($bcc) && !is_array($bcc) && !Validate::isEmail($bcc)) {
-            Tools::dieOrLog(Tools::displayError('Error: parameter "bcc" is corrupted'), $die);
+            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: parameter "bcc" is corrupted', array(), 'Admin.Advparameters.Notification'), $die);
             $bcc = null;
         }
 
@@ -196,13 +221,13 @@ class MailCore extends ObjectModel
         }
 
         if (!Validate::isTplName($template)) {
-            Tools::dieOrLog(Tools::displayError('Error: invalid e-mail template'), $die);
+            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail template', array(), 'Admin.Advparameters.Notification'), $die);
 
             return false;
         }
 
         if (!Validate::isMailSubject($subject)) {
-            Tools::dieOrLog(Tools::displayError('Error: invalid e-mail subject'), $die);
+            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail subject', array(), 'Admin.Advparameters.Notification'), $die);
 
             return false;
         }
@@ -213,17 +238,19 @@ class MailCore extends ObjectModel
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
                 if (!Validate::isEmail($addr)) {
-                    Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
+                    Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail address', array(), 'Admin.Advparameters.Notification'), $die);
 
                     return false;
                 }
 
-                if (is_array($toName) && $toName && is_array($toName) && Validate::isGenericName($toName[$key])) {
-                    $toName = $toName[$key];
+                if (is_array($toName) && isset($toName[$key])) {
+                    $addrName = $toName[$key];
+                } else {
+                    $addrName = $toName;
                 }
 
-                $toName = (($toName == null || $toName == $addr) ? '' : self::mimeEncode($toName));
-                $message->addTo($addr, $toName);
+                $addrName = (($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ? '' : self::mimeEncode($addrName));
+                $message->addTo($addr, $addrName);
             }
             $toPlugin = $to[0];
         } else {
@@ -232,7 +259,17 @@ class MailCore extends ObjectModel
             $toName = (($toName == null || $toName == $to) ? '' : self::mimeEncode($toName));
             $message->addTo($to, $toName);
         }
-        if (isset($bcc)) {
+
+        if (isset($bcc) && is_array($bcc)) {
+            foreach ($bcc as $addr) {
+                $addr = trim($addr);
+                if (!Validate::isEmail($addr)) {
+                    Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail address', array(), 'Admin.Advparameters.Notification'), $die);
+                    return false;
+                }
+                $message->addBcc($addr);
+            }
+        } elseif (isset($bcc)) {
             $message->addBcc($bcc);
         }
 
@@ -240,7 +277,7 @@ class MailCore extends ObjectModel
             /* Connect with the appropriate configuration */
             if ($configuration['PS_MAIL_METHOD'] == 2) {
                 if (empty($configuration['PS_MAIL_SERVER']) || empty($configuration['PS_MAIL_SMTP_PORT'])) {
-                    Tools::dieOrLog(Tools::displayError('Error: invalid SMTP server or SMTP port'), $die);
+                    Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid SMTP server or SMTP port', array(), 'Admin.Advparameters.Notification'), $die);
 
                     return false;
                 }
@@ -278,20 +315,12 @@ class MailCore extends ObjectModel
             }
             foreach ($isoArray as $isoCode) {
                 $isoTemplate = $isoCode.'/'.$template;
-                $overrideMail = false;
-
-                if ($moduleName !== false && (file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.txt') ||
-                        file_exists($themePath.'modules/'.$moduleName.'/mails/'.$isoTemplate.'.html'))) {
-                    $templatePath = $themePath.'modules/'.$moduleName.'/mails/';
-                } elseif (file_exists($themePath.'mails/'.$isoTemplate.'.txt') || file_exists($themePath.'mails/'.$isoTemplate.'.html')) {
-                    $templatePath = $themePath.'mails/';
-                    $overrideMail  = true;
-                }
+                $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
 
                 if (!file_exists($templatePath.$isoTemplate.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)) {
-                    PrestaShopLogger::addLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$isoTemplate.'.txt');
+                    PrestaShopLogger::addLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($templatePath.$isoTemplate.'.txt'), 'Admin.Advparameters.Notification'));
                 } elseif (!file_exists($templatePath.$isoTemplate.'.html') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML)) {
-                    PrestaShopLogger::addLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$isoTemplate.'.html');
+                    PrestaShopLogger::addLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($templatePath.$isoTemplate.'.html'), 'Admin.Advparameters.Notification'));
                 } else {
                     $templatePathExists = true;
                     break;
@@ -299,7 +328,7 @@ class MailCore extends ObjectModel
             }
 
             if (empty($templatePathExists)) {
-                Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template, $die);
+                Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($template), 'Admin.Advparameters.Notification'), $die);
 
                 return false;
             }
@@ -345,7 +374,7 @@ class MailCore extends ObjectModel
             }
 
             if (isset($replyTo) && $replyTo) {
-                $message->setReplyTo($replyTo);
+                $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
 
             $templateVars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $templateVars);
@@ -370,11 +399,17 @@ class MailCore extends ObjectModel
                 Context::getContext()->link = new Link();
             }
 
+            if (!is_null(Context::getContext()->cart) && !is_null(Context::getContext()->cart->id_lang)) {
+                $templateLangId = Context::getContext()->cart->id_lang;
+            } else {
+                $templateLangId = Context::getContext()->language->id;
+            }
+
             $templateVars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME', null, null, $idShop));
-            $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink('index', true, Context::getContext()->language->id, null, false, $idShop);
-            $templateVars['{my_account_url}'] = Context::getContext()->link->getPageLink('my-account', true, Context::getContext()->language->id, null, false, $idShop);
-            $templateVars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', true, Context::getContext()->language->id, null, false, $idShop);
-            $templateVars['{history_url}'] = Context::getContext()->link->getPageLink('history', true, Context::getContext()->language->id, null, false, $idShop);
+            $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink('index', true, $templateLangId, null, false, $idShop);
+            $templateVars['{my_account_url}'] = Context::getContext()->link->getPageLink('my-account', true, $templateLangId, null, false, $idShop);
+            $templateVars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', true, $templateLangId, null, false, $idShop);
+            $templateVars['{history_url}'] = Context::getContext()->link->getPageLink('history', true, $templateLangId, null, false, $idShop);
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
             $extraTemplateVars = array();
@@ -446,6 +481,30 @@ class MailCore extends ObjectModel
 
             return false;
         }
+    }
+
+    protected static function getTemplateBasePath($isoTemplate, $moduleName, $theme)
+    {
+        $basePathList = [
+            _PS_ROOT_DIR_.'/themes/'.$theme->getName().'/',
+            _PS_ROOT_DIR_.'/themes/'.$theme->get('parent').'/',
+            _PS_ROOT_DIR_,
+        ];
+
+        if ($moduleName !== false) {
+            $templateRelativePath = '/modules/'.$moduleName.'/mails/';
+        } else {
+            $templateRelativePath = '/mails/';
+        }
+
+        foreach ($basePathList as $base) {
+            $templatePath = $base.$templateRelativePath;
+            if (file_exists($templatePath.$isoTemplate.'.txt') || file_exists($templatePath.$isoTemplate.'.html')) {
+                return $templatePath;
+            }
+        }
+
+        return '';
     }
 
     /**

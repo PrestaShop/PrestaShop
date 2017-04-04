@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/gridhtml/gridhtml.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cf6b972204ee563b4e5691b293e931b6">
+        <source>Simple HTML table display</source>
+        <target>Simple HTML table display</target>
+        <note>Context:
+File: modules/gridhtml/gridhtml.php:49</note>
+      </trans-unit>
+      <trans-unit id="05ce5a49b49dd6245f71e384c4b43564">
+        <source>Allows the statistics system to display data in a grid.</source>
+        <target>Allows the statistics system to display data in a grid.</target>
+        <note>Context:
+File: modules/gridhtml/gridhtml.php:50</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

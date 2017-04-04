@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -148,7 +148,7 @@ class TaxRulesGroupCore extends ObjectModel
     */
     public static function getTaxRulesGroupsForOptions()
     {
-        $tax_rules[] = array('id_tax_rules_group' => 0, 'name' => Tools::displayError('No tax'));
+        $tax_rules[] = array('id_tax_rules_group' => 0, 'name' => Context::getContext()->getTranslator()->trans('No tax', array(), 'Admin.International.Notification'));
         return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroups());
     }
 

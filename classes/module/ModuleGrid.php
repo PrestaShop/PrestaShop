@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -97,13 +97,13 @@ abstract class ModuleGridCore extends Module
     public function engine($params)
     {
         if (!($render = Configuration::get('PS_STATS_GRID_RENDER'))) {
-            return Tools::displayError('No grid engine selected');
+            return Context::getContext()->getTranslator()->trans('No grid engine selected', array(), 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
         if (!file_exists(_PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php')) {
-            return Tools::displayError('Grid engine selected is unavailable.');
+            return Context::getContext()->getTranslator()->trans('Grid engine selected is unavailable.', array(), 'Admin.Modules.Notification');
         }
 
         $grider = 'grider.php?render='.$render.'&module='.Tools::safeOutput(Tools::getValue('module'));

@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -48,7 +48,7 @@
 
         {else}
 
-          <li class="category-title {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
+          <li class="category-title hidden-sm-down {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
               <span class="title">{$level1Name}</span>
           </li>
 
@@ -64,10 +64,17 @@
 
                 <li class="link-levelone {if $level2.current}-active{/if}" data-submenu="{$level2.id_tab}">
                   <a href="{$level2Href}" class="link">
-                    <i class="material-icons">{$level2.icon}</i> <span>{$level2Name}</span>
+                    <i class="material-icons">{$level2.icon}</i>
+                    <span>
+                    {$level2Name}
+                    {if $level2.sub_tabs|@count}
+                      <i class="material-icons pull-right hidden-md-up">keyboard_arrow_down</i>
+                    {/if}
+                    </span>
+
                   </a>
                     {if $level2.sub_tabs|@count}
-                      <ul class="submenu">
+                      <ul id="collapse-{$level2.id_tab}" class="submenu panel-collapse">
                         {foreach $level2.sub_tabs as $level3}
                           {if $level3.active}
 
@@ -97,10 +104,9 @@
     {/foreach}
   </ul>
 
-  <span class="menu-collapse">
+  <span class="menu-collapse hidden-md-down">
     <i class="material-icons">&#xE8EE;</i>
   </span>
 
   {hook h='displayAdminNavBarBeforeEnd'}
-
 </nav>

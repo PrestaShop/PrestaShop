@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,7 +51,8 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
         // header informations
         $this->date = Tools::displayDate($supply_order->date_add);
-        $this->title = HTMLTemplateSupplyOrderForm::l('Supply order form');
+
+        $this->title = Context::getContext()->getTranslator()->trans('Supply order form', array(), 'Shop.Pdf');
 
         $this->shop = new Shop((int)$this->order->id_shop);
     }
@@ -78,7 +79,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
             'tax_order_summary' => $tax_order_summary,
             'currency' => $currency,
         ));
-        
+
         $tpls = array(
             'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
             'addresses_tab' => $this->smarty->fetch($this->getTemplate('supply-order.addresses-tab')),
@@ -122,7 +123,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return self::l('SupplyOrderForm').sprintf('_%s', $this->supply_order->reference).'.pdf';
+        return 'supply-order-form-'.sprintf('%06d', $this->supply_order->reference).'.pdf';
     }
 
     /**
@@ -192,8 +193,8 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     {
         $this->address = $this->address_warehouse;
         $free_text = array();
-        $free_text[] = HTMLTemplateSupplyOrderForm::l('TE: Tax excluded');
-        $free_text[] = HTMLTemplateSupplyOrderForm::l('TI: Tax included');
+        $free_text[] = Context::getContext()->getTranslator()->trans('TE: Tax excluded', array(), 'Shop.Pdf');
+        $free_text[] = Context::getContext()->getTranslator()->trans('TI: Tax included', array(), 'Shop.Pdf');
 
         $this->smarty->assign(array(
             'shop_address' => $this->getShopAddress(),

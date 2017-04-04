@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -216,6 +216,7 @@ class HookCore extends ObjectModel
      *
      * @since 1.5.0
      * @return array
+     * @deprecated 1.7.1.0
      */
     public static function getHookAliasList()
     {
@@ -235,11 +236,111 @@ class HookCore extends ObjectModel
     }
 
     /**
+     * Get the list of hook aliases
+     *
+     * @since 1.7.1.0
+     * @return array
+     */
+    private static function getHookAliasesList()
+    {
+        $cacheId = 'hook_aliases';
+        if (!Cache::isStored($cacheId)) {
+            $hookAliasList = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_alias`');
+            $hookAliases = array();
+            if ($hookAliasList) {
+                foreach ($hookAliasList as $ha) {
+                    if (!isset($hookAliases[$ha['name']])) {
+                        $hookAliases[$ha['name']] = array();
+                    }
+                    $hookAliases[$ha['name']][] = $ha['alias'];
+                }
+            }
+            Cache::store($cacheId, $hookAliases);
+            return $hookAliases;
+        }
+        return Cache::retrieve($cacheId);
+    }
+
+    /**
+     * Return backward compatibility hook names
+     *
+     * @since 1.7.1.0
+     * @param $hookName
+     * @return array
+     */
+    private static function getHookAliasesFor($hookName)
+    {
+        $cacheId = 'hook_aliases_' . $hookName;
+        if (!Cache::isStored($cacheId)) {
+            $aliasesList = Hook::getHookAliasesList();
+
+            if (isset($aliasesList[$hookName])) {
+                Cache::store($cacheId, $aliasesList[$hookName]);
+                return $aliasesList[$hookName];
+            }
+
+            $retroName = array_keys(array_filter($aliasesList, function ($elem) use ($hookName) {
+               return in_array($hookName, $elem) ;
+            }));
+
+            if (empty($retroName)) {
+                Cache::store($cacheId, array());
+                return array();
+            }
+
+            Cache::store($cacheId, $retroName);
+            return $retroName;
+        }
+        return Cache::retrieve($cacheId);
+    }
+
+    /**
+     * Check if a hook or one of its old names is callable on a module
+     *
+     * @since 1.7.1.0
+     * @param $module
+     * @param $hookName
+     * @return bool
+     */
+    private static function isHookCallableOn($module, $hookName)
+    {
+        $aliases = Hook::getHookAliasesFor($hookName);
+        $aliases[] = $hookName;
+
+        return array_reduce($aliases, function ($prev, $curr) use ($module) {
+            return $prev || is_callable(array($module, 'hook' . $curr));
+        }, false);
+    }
+
+    /**
+     * Call a hook (or one of its old name) on a module
+     *
+     * @since 1.7.1.0
+     * @param $module
+     * @param $hookName
+     * @param $hookArgs
+     * @return string
+     */
+    private static function callHookOn($module, $hookName, $hookArgs)
+    {
+        if (is_callable(array($module, 'hook' . $hookName))) {
+            return Hook::coreCallHook($module, 'hook' . $hookName, $hookArgs);
+        }
+        foreach (Hook::getHookAliasesFor($hookName) as $hook) {
+            if (is_callable(array($module, 'hook' . $hook))) {
+                return Hook::coreCallHook($module, 'hook' . $hook, $hookArgs);
+            }
+        }
+        return '';
+    }
+
+    /**
      * Return backward compatibility hook name
      *
      * @since 1.5.0
      * @param string $hook_name Hook name
      * @return int Hook ID
+     * @deprecated 1.7.1.0
      */
     public static function getRetroHookName($hook_name)
     {
@@ -585,16 +686,30 @@ class HookCore extends ObjectModel
      * @param bool $check_exceptions Check permission exceptions
      * @param bool $use_push Force change to be refreshed on Dashboard widgets
      * @param int $id_shop If specified, hook will be execute the shop with this ID
+     * @param bool $chain If specified, hook will chain the return of hook module
      *
      * @throws PrestaShopException
      *
      * @return string/array modules output
      */
-    public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true,
-                                $use_push = false, $id_shop = null)
+    public static function exec(
+        $hook_name,
+        $hook_args = array(),
+        $id_module = null,
+        $array_return = false,
+        $check_exceptions = true,
+        $use_push = false,
+        $id_shop = null,
+        $chain = false
+    )
     {
         if (defined('PS_INSTALLATION_IN_PROGRESS')) {
             return;
+        }
+
+        // $chain & $array_return are incompatible so if chained is set to true, we disable the array_return option
+        if (true === $chain) {
+            $array_return = false;
         }
 
         static $disable_non_native_modules = null;
@@ -610,7 +725,11 @@ class HookCore extends ObjectModel
         // If no modules associated to hook_name or recompatible hook name, we stop the function
 
         if (!$module_list = Hook::getHookModuleExecList($hook_name)) {
-            return '';
+            if ($array_return) {
+                return array();
+            } else {
+                return '';
+            }
         }
 
         // Check if hook exists
@@ -636,8 +755,6 @@ class HookCore extends ObjectModel
             $hook_args['cart'] = $context->cart;
         }
 
-        $retro_hook_name = Hook::getRetroHookName($hook_name);
-
         // Look on modules list
         $altern = 0;
         if ($array_return) {
@@ -662,7 +779,7 @@ class HookCore extends ObjectModel
             }
         }
 
-        foreach ($module_list as $array) {
+        foreach ($module_list as $key => $array) {
             // Check errors
             if ($id_module && $id_module != $array['id_module']) {
                 continue;
@@ -707,39 +824,46 @@ class HookCore extends ObjectModel
             if ($use_push && !$moduleInstance->allow_push) {
                 continue;
             }
-            // Check which / if method is callable
-            $hook_callable = is_callable(array($moduleInstance, 'hook'.$hook_name));
-            $hook_retro_callable = is_callable(array($moduleInstance, 'hook'.$retro_hook_name));
 
-            if ($hook_callable || $hook_retro_callable) {
+            if (Hook::isHookCallableOn($moduleInstance, $hook_name)) {
                 $hook_args['altern'] = ++$altern;
 
                 if ($use_push && isset($moduleInstance->push_filename) && file_exists($moduleInstance->push_filename)) {
                     Tools::waitUntilFileIsModified($moduleInstance->push_filename, $moduleInstance->push_time_limit);
                 }
 
-                // Call hook method
-                if ($hook_callable) {
-                    $display = Hook::coreCallHook($moduleInstance, 'hook'.$hook_name, $hook_args);
-                } elseif ($hook_retro_callable) {
-                    $display = Hook::coreCallHook($moduleInstance, 'hook'.$retro_hook_name, $hook_args);
-                } else {
-                    continue;
+                if (0 !== $key && true === $chain) {
+                    $hook_args = $output;
                 }
+
+                $display = Hook::callHookOn($moduleInstance, $hook_name, $hook_args);
 
                 if ($array_return) {
                     $output[$moduleInstance->name] = $display;
                 } else {
-                    $output .= $display;
+                    if (true === $chain) {
+                        $output = $display;
+                    } else {
+                        $output .= $display;
+                    }
                 }
             } elseif (Hook::isDisplayHookName($hook_name)) {
                 if ($moduleInstance instanceof WidgetInterface) {
+
+                    if (0 !== $key && true === $chain) {
+                        $hook_args = $output;
+                    }
+
                     $display = Hook::coreRenderWidget($moduleInstance, $hook_name, $hook_args);
 
                     if ($array_return) {
                         $output[$moduleInstance->name] = $display;
                     } else {
-                        $output .= $display;
+                        if (true === $chain) {
+                            $output = $display;
+                        } else {
+                            $output .= $display;
+                        }
                     }
                 }
             }
@@ -748,6 +872,15 @@ class HookCore extends ObjectModel
         if ($different_shop) {
             $context->shop = $old_shop;
             $context->shop->setContext($old_context, $shop->id);
+        }
+
+        if (true === $chain) {
+            if (isset($output['cookie'])) {
+                unset($output['cookie']);
+            }
+            if (isset($output['cart'])) {
+                unset($output['cart']);
+            }
         }
 
         return $output;

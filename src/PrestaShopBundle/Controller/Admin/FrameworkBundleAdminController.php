@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -208,5 +209,28 @@ class FrameworkBundleAdminController extends Controller
             array(),
             'Admin.Notifications.Error'
         );
+    }
+
+    /**
+     * Checks if the attributes are granted against the current authentication token and optionally supplied object.
+     *
+     * @param mixed $controller name of the controller to valide access
+     *
+     * @return int
+     */
+    protected function authorizationLevel($controller)
+    {
+        if (
+            $this->isGranted(PageVoter::DELETE, $controller.'_')) {
+            return PageVoter::LEVEL_DELETE;
+        } elseif ($this->isGranted(PageVoter::CREATE, $controller.'_')) {
+            return PageVoter::LEVEL_CREATE;
+        } elseif ($this->isGranted(PageVoter::UPDATE, $controller.'_')) {
+            return PageVoter::LEVEL_UPDATE;
+        } elseif ($this->isGranted(PageVoter::READ, $controller.'_')) {
+            return PageVoter::LEVEL_READ;
+        } else {
+            return 0;
+        }
     }
 }

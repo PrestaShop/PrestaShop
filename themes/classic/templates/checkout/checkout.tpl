@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -33,7 +33,9 @@
 
   <body id="{$page.page_name}" class="{$page.body_classes|classnames}">
 
-    {hook h='displayAfterBodyOpeningTag'}
+    {block name='hook_after_body_opening_tag'}
+      {hook h='displayAfterBodyOpeningTag'}
+    {/block}
 
     <header id="header">
       {block name='header'}
@@ -52,11 +54,15 @@
         <section id="content">
           <div class="row">
             <div class="col-md-8">
-              {render file='checkout/checkout-process.tpl' ui=$checkout_process}
+              {block name='cart_summary'}
+                {render file='checkout/checkout-process.tpl' ui=$checkout_process}
+              {/block}
             </div>
             <div class="col-md-4">
 
-              {include file='checkout/_partials/cart-summary.tpl' cart = $cart}
+              {block name='cart_summary'}
+                {include file='checkout/_partials/cart-summary.tpl' cart = $cart}
+              {/block}
 
               {hook h='displayReassurance'}
             </div>
@@ -76,7 +82,9 @@
       {include file="_partials/javascript.tpl" javascript=$javascript.bottom}
     {/block}
 
-    {hook h='displayBeforeBodyClosingTag'}
+    {block name='hook_before_body_closing_tag'}
+      {hook h='displayBeforeBodyClosingTag'}
+    {/block}
 
   </body>
 

@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,29 +18,37 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="container">
   <div class="row">
-    {hook h='displayFooterBefore'}
+    {block name='hook_footer_before'}
+      {hook h='displayFooterBefore'}
+    {/block}
   </div>
 </div>
 <div class="footer-container">
   <div class="container">
     <div class="row">
-      {hook h='displayFooter'}
+      {block name='hook_footer'}
+        {hook h='displayFooter'}
+      {/block}
     </div>
     <div class="row">
-      {hook h='displayFooterAfter'}
+      {block name='hook_footer_after'}
+        {hook h='displayFooterAfter'}
+      {/block}
     </div>
     <div class="row">
       <div class="col-md-12">
         <p>
-          <a class="_blank" href="http://www.prestashop.com" target="_blank">
-            {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme'}
-          </a>
+          {block name='copyright_link'}
+            <a class="_blank" href="http://www.prestashop.com" target="_blank">
+              {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme'}
+            </a>
+          {/block}
         </p>
       </div>
     </div>

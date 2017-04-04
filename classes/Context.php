@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
@@ -85,7 +86,7 @@ class ContextCore
     public $mode;
 
     /** @var Translator */
-    protected $translator;
+    protected $translator = null;
 
     /**
      * Mobile device of the customer
@@ -342,32 +343,52 @@ class ContextCore
      */
     public function getTranslator()
     {
-        if (null === $this->translator) {
-            $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_, false);
-            $this->translator->addLoader('xlf', new XliffFileLoader());
+        if (null !== $this->translator) {
+            return $this->translator;
+        }
+        
+        $cacheDir = _PS_CACHE_DIR_.'translations';
+        $this->translator = new Translator($this->language->locale, null, $cacheDir, false);
 
-            $sqlTranslationLoader = new SqlTranslationLoader();
-            if (!is_null($this->shop)) {
-                $sqlTranslationLoader->setTheme($this->shop->theme);
-            }
+        // In case we have at least 1 translated message, we return the current translator.
+        // If some translations are missing, clear cache
+        if (count($this->translator->getCatalogue($this->language->locale)->all())) {
+            return $this->translator;
+        }
 
-            $this->translator->addLoader('db', $sqlTranslationLoader);
+        // However, in some case, even empty catalog were stored in the cache and then used as-is.
+        // For this one, we drop the cache and try to regenerate it.
+        $cache_file = Finder::create()
+            ->files()
+            ->in($cacheDir)
+            ->depth('==0')
+            ->name('*.'.$this->language->locale.'.*');
+        (new Filesystem())->remove($cache_file);
 
-            $finder = Finder::create()
-                ->files()
-                ->filter(function (\SplFileInfo $file) {
-                    return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
-                })
-                ->in($this->getTranslationResourcesDirectories())
-            ;
+        $adminContext = defined('_PS_ADMIN_DIR_');
+        $this->translator->addLoader('xlf', new XliffFileLoader());
 
-            foreach ($finder as $file) {
-                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+        $sqlTranslationLoader = new SqlTranslationLoader();
+        if (!is_null($this->shop)) {
+            $sqlTranslationLoader->setTheme($this->shop->theme);
+        }
 
-                $this->translator->addResource($format, $file, $locale, $domain);
-                if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
-                    $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
-                }
+        $this->translator->addLoader('db', $sqlTranslationLoader);
+        $notName = $adminContext ? '^Shop*' : '^Admin*';
+
+        $finder = Finder::create()
+            ->files()
+            ->name('*.'.$this->language->locale.'.xlf')
+            ->notName($notName)
+            ->in($this->getTranslationResourcesDirectories())
+        ;
+
+        foreach ($finder as $file) {
+            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+
+            $this->translator->addResource($format, $file, $locale, $domain);
+            if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
+                $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
             }
         }
 

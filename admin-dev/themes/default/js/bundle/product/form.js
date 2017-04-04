@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -272,7 +272,7 @@ var formCategory = (function() {
   var elem = $('#form_step1_new_category');
 
   /** Send category form and it to nested categories */
-  function send() {
+  function send(form) {
     $.ajax({
       type: 'POST',
       url: elem.attr('data-action'),
@@ -319,6 +319,9 @@ var formCategory = (function() {
           'breadcrumb': ''
         };
         productCategoriesTags.createTag(tag);
+
+        //hide the form
+        form.hideBlock();
       },
       error: function(response) {
         $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
@@ -343,10 +346,7 @@ var formCategory = (function() {
       var that = this;
       /** remove all categories from selector, except pre defined */
       $('#add-categories button.save').click(function(){
-        send();
-        if($('#form_step1_new_category_name').val().length > 2){
-          that.hideBlock();
-        }
+        send(that);
       });
       $('#add-categories button[type="reset"]').click(function(){
         that.hideBlock();
@@ -573,6 +573,17 @@ var specificPrices = (function() {
   var productPriceField = $('#form_step2_specific_price_sp_price');
   var discountTypeField = $('#form_step2_specific_price_sp_reduction_type');
   var discountTaxField = $('#form_step2_specific_price_sp_reduction_tax');
+  var initSpecificPriceForm = new Object();
+
+  /** Get all specific prices */
+  function getInitSpecificPriceForm() {
+    $('#specific_price_form').find('select,input').each(function() {
+        initSpecificPriceForm[$(this).attr('id')] = $(this).val();
+    });
+    $('#specific_price_form').find('input:checkbox').each(function() {
+        initSpecificPriceForm[$(this).attr('id')] = $(this).prop('checked');
+    });
+  }
 
   /** Get all specific prices */
   function getAll() {
@@ -653,6 +664,7 @@ var specificPrices = (function() {
           },
           success: function(response) {
             getAll();
+            resetForm();
             showSuccessMessage(response);
           },
           error: function(response) {
@@ -690,14 +702,22 @@ var specificPrices = (function() {
    * Reset all subform inputs values
    */
   function resetForm() {
-    $('#specific_price_form input').val('');
+    $('#specific_price_form').find('input').each(function() {
+        $(this).val(initSpecificPriceForm[$(this).attr('id')]);
+    });
+    $('#specific_price_form').find('select').each(function() {
+        $(this).val(initSpecificPriceForm[$(this).attr('id')]).change();
+    });
+    $('#specific_price_form').find('input:checkbox').each(function() {
+        $(this).prop("checked", true);
+    });
   }
 
   return {
     'init': function() {
       this.getAll();
 
-      $('#specific-price .add').click(function () {
+      $('#specific-price .add').click(function() {
         $(this).hide();
       });
 
@@ -708,17 +728,16 @@ var specificPrices = (function() {
         productPriceField.prop('disabled', true);
       });
 
-      $('#specific_price_form .js-save').click(function () {
+      $('#specific_price_form .js-save').click(function() {
         add($(this));
-        resetForm();
       });
 
-      $(document).on('click', '#js-specific-price-list .js-delete', function (e) {
+      $(document).on('click', '#js-specific-price-list .js-delete', function(e) {
         e.preventDefault();
         remove($(this));
       });
 
-      $('#form_step2_specific_price_sp_reduction_type').change(function () {
+      $('#form_step2_specific_price_sp_reduction_type').change(function() {
         if ($(this).val() === 'percentage') {
           $('#form_step2_specific_price_sp_reduction_tax').hide();
         } else {
@@ -745,6 +764,8 @@ var specificPrices = (function() {
         }
       });
 
+      this.getInitSpecificPriceForm();
+
     },
     'getAll': function() {
       getAll();
@@ -752,6 +773,9 @@ var specificPrices = (function() {
     'refreshCombinationsList': function() {
       refreshCombinationsList();
     },
+    'getInitSpecificPriceForm' : function() {
+      getInitSpecificPriceForm();
+    }
   };
 })();
 
@@ -841,8 +865,14 @@ var form = (function() {
         $('*.has-danger').removeClass('has-danger');
         $('#form-nav li.has-error').removeClass('has-error');
       },
-      success: function() {
+      success: function(response) {
         showSuccessMessage(translate_javascripts['Form update success']);
+        //update the customization ids
+        if (typeof response.customization_fields_ids != "undefined") {
+          $.each(response.customization_fields_ids, function (k, v) {
+              $("#form_step6_custom_fields_" + k + "_id_customization_field").val(v);
+          });
+        }
 
         $('.js-spinner').hide();
 
@@ -900,6 +930,22 @@ var form = (function() {
           $('#form-nav li a[href="#' + tabIndex.split('_')[0] + '"]').parent().addClass('has-error');
         });
 
+        if ($('div[class*="translation-label-"].has-danger').length > 0) {
+          var regexLabel = 'translation-label-';
+
+          var translationLabelClass = $.grep($('div[class*="translation-label-"].has-danger').first().attr('class').split(" "), function(v, i){
+            return v.indexOf(regexLabel) === 0;
+          }).join();
+
+          if (translationLabelClass) {
+            var selectValue = translationLabelClass.replace(regexLabel, '');
+
+            if ($('#form_switch_language option[value="' + selectValue + '"]').length > 0) {
+              $('#form_switch_language').val(selectValue).change();
+            }
+          }
+        }
+
         /** scroll to 1st error */
         if ($('.has-danger').first().offset()) {
           $('html, body').animate({
@@ -941,38 +987,38 @@ var form = (function() {
       });
 
       /** create keyboard event for save */
-      jwerty.key('ctrl+S', function(e) {
+      jwerty.key('alt+shift+S', function(e) {
         e.preventDefault();
         send();
       });
 
       /** create keyboard event for save & duplicate */
-      jwerty.key('ctrl+D', function(e) {
+      jwerty.key('alt+shift+D', function(e) {
         e.preventDefault();
         send($('.product-footer .duplicate').attr('data-redirect'));
       });
 
       /** create keyboard event for save & new */
-      jwerty.key('ctrl+P', function(e) {
+      jwerty.key('alt+shift+P', function(e) {
         e.preventDefault();
         send($('.product-footer .new-product').attr('data-redirect'));
       });
 
       /** create keyboard event for save & go catalog */
-      jwerty.key('ctrl+Q', function(e) {
+      jwerty.key('alt+shift+Q', function(e) {
         e.preventDefault();
         send($('.product-footer .go-catalog').attr('data-redirect'));
       });
 
       /** create keyboard event for save & go preview */
-      jwerty.key('ctrl+V', function(e) {
+      jwerty.key('alt+shift+V', function(e) {
           e.preventDefault();
           var productFooter = $('.product-footer .preview');
           send(productFooter.attr('data-redirect'), productFooter.attr('target'));
       });
 
       /** create keyboard event for save & active or desactive product*/
-      jwerty.key('ctrl+O', function(e) {
+      jwerty.key('alt+shift+O', function(e) {
         e.preventDefault();
         var step1CheckBox = $('#form_step1_active');
         step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
@@ -994,7 +1040,7 @@ var form = (function() {
         send($(this).attr('data-redirect'), $(this).attr('target'));
       });
 
-      $('.js-btn-save').on('click', function () {
+      $('.js-btn-save').on('click', function (event) {
         event.preventDefault();
         $('.js-spinner').show();
         send($(this).attr('href'));
@@ -1566,6 +1612,11 @@ var imagesProduct = (function() {
     },
     'checkDropzoneMode': function() {
       checkDropzoneMode();
+    },
+    'getOlderImageId': function() {
+      return Math.min.apply(Math,$('.dz-preview').map(function(){
+        return $(this).data('id');
+      }));
     }
   };
 })();
@@ -1647,9 +1698,14 @@ var formImagesProduct = (function() {
             url: dropZoneElem.find('.dz-preview[data-id="' + id + '"]').attr('url-delete'),
             complete: function() {
               formZoneElem.find('.close').click();
+              var wasCover = !!dropZoneElem.find('.dz-preview[data-id="' + id + '"] .iscover').length;
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
               $('.images .product-combination-image [value=' + id + ']').parent().remove();
               imagesProduct.checkDropzoneMode();
+              if (true === wasCover) {
+                // The controller will choose the oldest image as the new cover.
+                imagesProduct.updateDisplayCover(imagesProduct.getOlderImageId());
+              }
             }
           });
         }
@@ -1908,31 +1964,51 @@ var priceCalculation = (function() {
  */
 var seo = (function() {
   var redirectTypeElem = $('#form_step5_redirect_type');
+  var productRedirect = $('#id-product-redirected');
 
   /** Hide or show the input product selector */
   function hideShowRedirectToProduct() {
-    if (redirectTypeElem.val() === '404') {
+    if ('404' === redirectTypeElem.val()) {
       $('#id-product-redirected').hide();
     } else {
+      updateRemoteUrl();
       $('#id-product-redirected').show();
     }
   }
-    /** Update friendly URL */
-    var updateFriendlyUrl = function(elem) {
-        /** Attr name equals "form[step1][name][1]".
-         * We need in this string the second integer */
-        var id_lang = elem.attr('name').match(/\d+/g)[1];
-        $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
-    };
 
+  function updateRemoteUrl() {
+    switch(redirectTypeElem.val()) {
+      case '301-category':
+      case '302-category':
+        productRedirect.find('label').html(redirectTypeElem.attr('data-labelcategory'));
+        productRedirect.find('input').attr('placeholder', redirectTypeElem.attr('data-placeholdercategory'));
+        break;
+      default:
+        productRedirect.find('label').html(redirectTypeElem.attr('data-labelproduct'));
+        productRedirect.find('input').attr('placeholder', redirectTypeElem.attr('data-placeholderproduct'));
+    }
+
+    productRedirect.find('.autocomplete-search').attr('data-remoteurl', redirectTypeElem.find('option:selected').data('remoteurl'));
+    productRedirect.find('.autocomplete-search').trigger('buildTypeahead');
+  }
+
+  /** Update friendly URL */
+  var updateFriendlyUrl = function(elem) {
+      /** Attr name equals "form[step1][name][1]".
+       * We need in this string the second integer */
+      var id_lang = elem.attr('name').match(/\d+/g)[1];
+      $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
+  };
 
   return {
     'init': function() {
 
       hideShowRedirectToProduct();
+      updateRemoteUrl();
 
       /** On redirect type select change */
       redirectTypeElem.change(function() {
+        productRedirect.find('#form_step5_id_type_redirected-data').html('');
         hideShowRedirectToProduct();
       });
 
@@ -1967,7 +2043,9 @@ var seo = (function() {
 var tags = (function() {
   return {
     'init': function() {
-      $('#form_step6_tags .tokenfield').tokenfield();
+      $('#form_step6_tags .tokenfield').tokenfield({
+        minWidth: '768px'
+      });
     }
   };
 })();
@@ -1975,8 +2053,8 @@ var tags = (function() {
 var recommendedModules = (function() {
   return {
     'init': function() {
-      this.moduleActionMenuLinkSelectors = 'a.module_action_menu_install, a.module_action_menu_enable, ' +
-        'a.module_action_menu_uninstall, a.module_action_menu_disable, a.module_action_menu_reset, a.module_action_menu_update';
+      this.moduleActionMenuLinkSelectors = 'button.module_action_menu_install, button.module_action_menu_enable, ' +
+        'button.module_action_menu_uninstall, button.module_action_menu_disable, button.module_action_menu_reset, button.module_action_menu_update';
       $(this.moduleActionMenuLinkSelectors).on('module_card_action_event', this.saveProduct);
     },
     'saveProduct': function(event, action) {

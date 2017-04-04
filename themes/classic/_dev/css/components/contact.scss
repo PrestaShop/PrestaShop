@@ -1,6 +1,7 @@
 .contact-rich {
   color: $gray-dark;
   margin-bottom: rem(32px);
+  word-wrap: break-word;
   h4 {
     text-transform: uppercase;
     color: $gray-darker;
@@ -28,7 +29,6 @@
   }
 }
 .contact-form {
-  @include box-shadow;
   background: white;
   padding: rem(16px);
   color: $gray-dark;

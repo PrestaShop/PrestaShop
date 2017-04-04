@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -185,7 +185,7 @@ function editProductRefreshTotal(element)
 		});
 
 		var total = makeTotalProductCaculation(qty, price);
-		
+
 		var totalProductCustom = element.find('td.total_product');
 		totalProductCustom.html(total); // temporary value, not formatted
 		formatCurrencyCldr(total, function(v) {
@@ -196,7 +196,7 @@ function editProductRefreshTotal(element)
 	else
 	{
 		var total = makeTotalProductCaculation(quantity, price);
-		
+
 		var totalProduct = element.find('td.total_product');
 		totalProduct.html(total); // temporary value, not formatted
 		formatCurrencyCldr(total, function(v) {
@@ -257,7 +257,7 @@ function updateAmounts(order)
 			$('#total_products td.amount').fadeIn('slow');
 		});
 	});
-	
+
 	$('#total_discounts td.amount').fadeOut('slow', function() {
 		formatCurrencyCldr(parseFloat(order.total_discounts_tax_incl), function(value) {
 			$('#total_discounts td.amount').html(value);
@@ -722,7 +722,7 @@ function init()
 			var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 			query = 'ajax=1&token='+token+'&action=editProductOnOrder&id_order='+id_order+'&';
 			if (element_list.length)
-				query += element_list.parent().parent().find('input:visible, select:visible, .edit_product_id_order_detail').serialize();
+				query += element_list.find('input:visible, select:visible, .edit_product_id_order_detail').serialize();
 			else
 				query += element.parent().parent().find('input:visible, select:visible, .edit_product_id_order_detail').serialize();
 

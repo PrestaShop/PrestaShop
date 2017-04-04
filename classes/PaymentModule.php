@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,7 +49,7 @@ abstract class PaymentModuleCore extends Module
                 return false;
             }
         } else {
-            Tools::displayError('No currency mode for payment module');
+            return $this->trans('No currency mode for payment module', array(), 'Admin.Payment.Notification');
         }
 
         // Insert countries availability
@@ -281,7 +281,7 @@ abstract class PaymentModuleCore extends Module
                             Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name='.urlencode($rule->code));
                         } else {
                             $rule_name = isset($rule->name[(int)$this->context->cart->id_lang]) ? $rule->name[(int)$this->context->cart->id_lang] : $rule->code;
-                            $error = sprintf(Tools::displayError('CartRule ID %1s (%2s) used in this cart is not valid and has been withdrawn from cart'), (int)$rule->id, $rule_name);
+                            $error = $this->trans('The cart rule named "%2s" (ID %1s) used in this cart is not valid and has been withdrawn from cart', array((int)$rule->id, $rule_name), 'Admin.Payment.Notification');
                             PrestaShopLogger::addLog($error, 3, '0000002', 'Cart', (int)$this->context->cart->id);
                         }
                     }
@@ -454,7 +454,7 @@ abstract class PaymentModuleCore extends Module
                 $order = $order_list[$key];
                 if (isset($order->id)) {
                     if (!$secure_key) {
-                        $message .= '<br />'.Tools::displayError('Warning: the secure key is empty, check your payment account before validation');
+                        $message .= '<br />'.$this->trans('Warning: the secure key is empty, check your payment account before validation', array(), 'Admin.Payment.Notification');
                     }
                     // Optional message to attach to this order
                     if (isset($message) & !empty($message)) {
@@ -517,7 +517,7 @@ abstract class PaymentModuleCore extends Module
                                 }
 
                                 if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                                    $customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
+                                    $customization_text .= $this->trans('%d image(s)', array(count($customization['datas'][Product::CUSTOMIZE_FILE])), 'Admin.Payment.Notification').'<br />';
                                 }
 
                                 $customization_quantity = (int)$customization['quantity'];
@@ -692,7 +692,7 @@ abstract class PaymentModuleCore extends Module
                         $customer_message->private = 1;
 
                         if (!$customer_message->add()) {
-                            $this->errors[] = Tools::displayError('An error occurred while saving message');
+                            $this->errors[] = $this->trans('An error occurred while saving message', array(), 'Admin.Payment.Notification');
                         }
                     }
 
@@ -784,8 +784,8 @@ abstract class PaymentModuleCore extends Module
                         '{invoice_other}' => $invoice->other,
                         '{order_name}' => $order->getUniqReference(),
                         '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
-                        '{carrier}' => ($virtual_product || !isset($carrier->name)) ? Tools::displayError('No carrier') : $carrier->name,
-                        '{payment}' => Tools::substr($order->payment, 0, 32),
+                        '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', array(), 'Admin.Payment.Notification') : $carrier->name,
+                        '{payment}' => Tools::substr($order->payment, 0, 255),
                         '{products}' => $product_list_html,
                         '{products_txt}' => $product_list_txt,
                         '{discounts}' => $cart_rules_list_html,
@@ -854,7 +854,7 @@ abstract class PaymentModuleCore extends Module
 
                     $order->updateOrderDetailTax();
                 } else {
-                    $error = Tools::displayError('Order creation failed');
+                    $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
                     die($error);
                 }
@@ -871,7 +871,7 @@ abstract class PaymentModuleCore extends Module
 
             return true;
         } else {
-            $error = Tools::displayError('Cart cannot be loaded or an order has already been placed using this cart');
+            $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', array(), 'Admin.Payment.Notification');
             PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
             die($error);
         }
@@ -885,7 +885,7 @@ abstract class PaymentModuleCore extends Module
      */
     public function formatProductAndVoucherForEmail($content)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use $content instead');
         return $content;
     }
 

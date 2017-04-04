@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -112,7 +112,7 @@ class PrestaShopBackupCore
         $backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError('"Backup" directory does not exist.'));
+            die(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification'));
         }
 
         // Check the realpath so we can validate the backup file is under the backup directory
@@ -140,7 +140,7 @@ class PrestaShopBackupCore
         $backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError('"Backup" directory does not exist.'));
+            die(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification'));
         }
 
         return @filemtime($backupdir.DIRECTORY_SEPARATOR.$filename);
@@ -163,8 +163,8 @@ class PrestaShopBackupCore
     public function delete()
     {
         if (!$this->id || !unlink($this->id)) {
-            $this->error = Tools::displayError('Error deleting').' '.($this->id ? '"'.$this->id.'"' :
-                Tools::displayError('Invalid ID'));
+            $this->error = Context::getContext()->getTranslator()->trans('Error deleting', array(), 'Admin.Advparameters.Notification').' '.($this->id ? '"'.$this->id.'"' :
+                Context::getContext()->getTranslator()->trans('Invalid ID', array(), 'Admin.Advparameters.Notification'));
 
             return false;
         }
@@ -222,7 +222,7 @@ class PrestaShopBackupCore
         }
 
         if ($fp === false) {
-            echo Tools::displayError('Unable to create backup file').' "'.addslashes($backupfile).'"';
+            echo Context::getContext()->getTranslator()->trans('Unable to create backup file', array(), 'Admin.Advparameters.Notification').' "'.addslashes($backupfile).'"';
 
             return false;
         }
@@ -251,7 +251,7 @@ class PrestaShopBackupCore
             if (count($schema) != 1 || !isset($schema[0]['Table']) || !isset($schema[0]['Create Table'])) {
                 fclose($fp);
                 $this->delete();
-                echo Tools::displayError('An error occurred while backing up. Unable to obtain the schema of').' "'.$table;
+                echo Context::getContext()->getTranslator()->trans('An error occurred while backing up. Unable to obtain the schema of %s', array($table), 'Admin.Advparameters.Notification');
 
                 return false;
             }
@@ -314,7 +314,7 @@ class PrestaShopBackupCore
         fclose($fp);
         if ($found == 0) {
             $this->delete();
-            echo Tools::displayError('No valid tables were found to backup.');
+            echo Context::getContext()->getTranslator()->trans('No valid tables were found to backup.', array(), 'Admin.Advparameters.Notification');
 
             return false;
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -252,7 +252,7 @@ class AdminThemesControllerCore extends AdminController
             );
         } elseif (Tools::isSubmit('submitAddconfiguration')) {
             try {
-                if(
+                if (
                     !in_array(
                         $this->authorizationLevel(),
                         array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -283,7 +283,7 @@ class AdminThemesControllerCore extends AdminController
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
         } elseif (Tools::getValue('action') == 'submitConfigureLayouts') {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -295,7 +295,7 @@ class AdminThemesControllerCore extends AdminController
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
         } elseif (Tools::getValue('action') == 'enableTheme') {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -314,7 +314,7 @@ class AdminThemesControllerCore extends AdminController
                 }
             }
         } elseif (Tools::getValue('action') == 'deleteTheme') {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_DELETE))
@@ -326,7 +326,7 @@ class AdminThemesControllerCore extends AdminController
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
         } elseif (Tools::getValue('action') == 'resetToDefaults') {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -334,18 +334,24 @@ class AdminThemesControllerCore extends AdminController
             ) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } else {
-                $this->theme_manager->reset(Tools::getValue('theme_name'));
+                if ($this->theme_manager->reset(Tools::getValue('theme_name'))) {
+                    $this->confirmations[] = $this->trans(
+                        'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'Regenerate thumbnails\' button.',
+                        array(),
+                        'Admin.Design.Notification'
+                    );
+                }
             }
         }
 
         if (Tools::isSubmit('submitOptionsconfiguration')) {
-            if(
+            if (
                 !in_array(
                     $this->authorizationLevel(),
                     array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
                 || _PS_MODE_DEMO_
             ) {
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'); 
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 $this->redirect_after = self::$currentIndex.'&token='.$this->token.'&error';
             } else {
                 Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
@@ -377,7 +383,7 @@ class AdminThemesControllerCore extends AdminController
 
     public function processUploadFile($dest)
     {
-        if(
+        if (
             !in_array(
                 $this->authorizationLevel(),
                 array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -711,7 +717,7 @@ class AdminThemesControllerCore extends AdminController
 
     public function processSubmitConfigureLayouts()
     {
-        if(
+        if (
             !in_array(
                 $this->authorizationLevel(),
                 array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
@@ -723,27 +729,6 @@ class AdminThemesControllerCore extends AdminController
             $this->context->shop->theme->setPageLayouts(Tools::getValue('layouts'));
             $this->theme_manager->saveTheme($this->context->shop->theme);
             Tools::clearCache();
-        }
-    }
-
-    /**
-     * Return the type of authorization on thèmes action.
-     *
-     * @return int(integer)
-     */
-    public function authorizationLevel()
-    {
-        switch (true) {
-            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_DELETE', $this->context->employee->id_profile)) :
-                return AdminController::LEVEL_DELETE;
-            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_CREATE', $this->context->employee->id_profile)) :
-                return AdminController::LEVEL_ADD;
-            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_UPDATE', $this->context->employee->id_profile)) :
-                return AdminController::LEVEL_EDIT;
-            case (Access::isGranted('ROLE_MOD_TAB_' . strtoupper('ADMINTHEMES') . '_READ', $this->context->employee->id_profile)) :
-                return AdminController::LEVEL_VIEW;
-            default :
-                return 0;
         }
     }
 }

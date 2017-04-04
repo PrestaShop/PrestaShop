@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -62,9 +62,15 @@ class StylesheetManagerCore extends AbstractAssetManager
         }
     }
 
-    public function unregisterById($id)
+    public function unregisterById($idToRemove)
     {
-        unset($this->list[$id]);
+        foreach ($this->list as $type => $null) {
+            foreach ($this->list[$type] as $id => $item) {
+                if ($idToRemove === $id) {
+                    unset($this->list[$type][$id]);
+                }
+            }
+        }
     }
 
     public function getList()
@@ -77,10 +83,6 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     protected function add($id, $fullPath, $media, $priority, $inline, $server)
     {
-        if ('remote' !== $server && filesize($fullPath) === 0) {
-            return;
-        }
-
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $media = $this->getSanitizedMedia($media);
 

@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +18,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <table class="product" width="100%" cellpadding="4" cellspacing="0">
-	
+
 	<thead>
 		<tr>
-			<th class="product header small" width="60%">{l s='Items to be returned' d='Shop.PDF' pdf='true'}</th>
-			<th class="product header small" width="20%">{l s='Reference' d='Shop.PDF' pdf='true'}</th>
-			<th class="product header small" width="20%">{l s='Qty' d='Shop.PDF' pdf='true'}</th>
+			<th class="product header small" width="60%">{l s='Items to be returned' d='Shop.Pdf' pdf='true'}</th>
+			<th class="product header small" width="20%">{l s='Reference' d='Shop.Pdf' pdf='true'}</th>
+			<th class="product header small" width="20%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
 		</tr>
 	</thead>
 

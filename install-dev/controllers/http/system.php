@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -97,8 +97,10 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'system' => $this->translator->trans('Cannot create new files and folders', array(), 'Install'),
                         'curl' => $this->translator->trans('cURL extension is not enabled', array(), 'Install'),
                         'gd' => $this->translator->trans('GD library is not installed', array(), 'Install'),
+                        'json' => $this->translator->trans('JSON extension is not loaded', array(), 'Install'),
                         'openssl' => $this->translator->trans('PHP OpenSSL extension is not loaded', array(), 'Install'),
                         'pdo_mysql' => $this->translator->trans('PDO MySQL extension is not loaded', array(), 'Install'),
+                        'simplexml' => $this->translator->trans('SimpleXML extension is not loaded', array(), 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
                     )

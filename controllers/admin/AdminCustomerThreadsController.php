@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -479,7 +479,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         self::$currentIndex.'&id_customer_thread='.(int)$id_customer_thread.'&viewcustomer_thread&token='.Tools::getValue('token')
                     );
                 } else {
-                    $this->errors[] = $this->trans('An error occurred. Your message was not sent. Please contact your system administrator.', array(), 'Admin.OrdersCustomers.Notification');
+                    $this->errors[] = $this->trans('An error occurred. Your message was not sent. Please contact your system administrator.', array(), 'Admin.Orderscustomers.Notification');
                 }
             }
         }
@@ -691,7 +691,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 foreach ($orders as $key => $order) {
                     if ($order['valid']) {
                         $orders_ok[] = $order;
-                        $total_ok += $order['total_paid_real'];
+                        $total_ok += $order['total_paid_real']/$order['conversion_rate'];
                     }
                     $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
                     $orders[$key]['total_paid_real'] = Tools::displayPrice($order['total_paid_real'], new Currency((int)$order['id_currency']));
@@ -1076,7 +1076,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         if (!isset($overview->from)
                             || (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
-                            $message_errors[] = $this->trans('Cannot create message in a new thread.', array(), 'Admin.OrdersCustomers.Notification');
+                            $message_errors[] = $this->trans('Cannot create message in a new thread.', array(), 'Admin.Orderscustomers.Notification');
                             continue;
                         }
 
@@ -1141,20 +1141,20 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
                         if (!$message || strlen($message)==0) {
-                            $message_errors[] = $this->trans('The message body is empty, cannot import it.', array(), 'Admin.OrdersCustomers.Notification');
+                            $message_errors[] = $this->trans('The message body is empty, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
                             $fetch_succeed = false;
                             continue;
                         }
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
                         if (empty($message) || !Validate::isCleanHtml($message)) {
-                            $str_errors.= Tools::displayError(sprintf('Invalid Message Content for subject: %1s', $subject));
+                            $str_errors.= $this->trans('Invalid message content for subject: %s', array($subject), 'Admin.Orderscustomers.Notification');
                         } else {
                             try {
                                 $cm->message = $message;
                                 $cm->add();
                             } catch (PrestaShopException $pse) {
-                                $message_errors[] = $this->trans('The message content is not valid, cannot import it.', array(), 'Admin.OrdersCustomers.Notification');
+                                $message_errors[] = $this->trans('The message content is not valid, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
                                 $fetch_succeed = false;
                                 continue;
                             }

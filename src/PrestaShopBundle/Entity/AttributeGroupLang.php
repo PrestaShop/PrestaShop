@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AttributeGroupLang
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\AttributeGroupLangRepository")
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeGroupLangRepository")
  */
 class AttributeGroupLang
 {
@@ -46,8 +46,9 @@ class AttributeGroupLang
 
     /**
      * @ORM\Id
+     * @ORM\Column(name="id_lang", type="integer")
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Lang")
-     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE" )
+     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE")
      */
     private $lang;
 
@@ -73,7 +74,7 @@ class AttributeGroupLang
      */
     public function getId()
     {
-        return $this->id;
+        return $this->attributeGroup;
     }
 
 

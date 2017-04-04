@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,8 +55,16 @@ class PasswordControllerCore extends FrontController
         } else {
             $customer = new Customer();
             $customer->getByEmail($email);
+            if (is_null($customer->email)) {
+                $customer->email = Tools::getValue('email');
+            }
+
             if (!Validate::isLoadedObject($customer)) {
-                $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', array('%email%', $customer->email), 'Shop.Notifications.Success');
+                $this->success[] = $this->trans(
+                    'If this email address has been registered in our shop, you will receive a link to reset your password at %email%.',
+                    array('%email%' => $customer->email),
+                    'Shop.Notifications.Success'
+                );
                 $this->setTemplate('customer/password-infos');
             } elseif (!$customer->active) {
                 $this->errors[] = $this->trans('You cannot regenerate the password for this account.', array(), 'Shop.Notifications.Error');
@@ -70,7 +78,6 @@ class PasswordControllerCore extends FrontController
 
                 $mailParams = array(
                     '{email}' => $customer->email,
-
                     '{lastname}' => $customer->lastname,
                     '{firstname}' => $customer->firstname,
                     '{url}' => $this->context->link->getPageLink('password', true, null, 'token='.$customer->secure_key.'&id_customer='.(int) $customer->id.'&reset_token='.$customer->reset_password_token),
@@ -90,7 +97,7 @@ class PasswordControllerCore extends FrontController
                         $customer->firstname.' '.$customer->lastname
                     )
                 ) {
-                    $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', array('%email%', $customer->email), 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', array('%email%' => $customer->email), 'Shop.Notifications.Success');
                     $this->setTemplate('customer/password-infos');
                 } else {
                     $this->errors[] = $this->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');
@@ -140,14 +147,7 @@ class PasswordControllerCore extends FrontController
                     if ($customer->getValidResetPasswordToken() !== Tools::getValue('reset_token')) {
                         $this->errors[] = $this->trans('The password change request expired. You should ask for a new one.', array(), 'Shop.Notifications.Error');
                     } else {
-                        try {
-                            $crypto = new Hashing();
-                        } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
-                            $this->errors[] = $this->trans('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.', array(), 'Shop.Notifications.Error');
-                            return false;
-                        }
-
-                        $customer->passwd = $crypto->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
+                        $customer->passwd = $this->get('hashing')->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
                         $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 
                         if ($customer->update()) {
@@ -193,5 +193,57 @@ class PasswordControllerCore extends FrontController
         } else {
             $this->errors[] = $this->trans('We cannot regenerate your password with the data you\'ve submitted', array(), 'Shop.Notifications.Error');
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function display()
+    {
+        $this->context->smarty->assign(
+            array(
+                'layout' => $this->getLayout(),
+                'stylesheets' => $this->getStylesheets(),
+                'javascript' => $this->getJavascript(),
+                'js_custom_vars' => Media::getJsDef(),
+                'errors' => $this->getErrors(),
+                'successes' => $this->getSuccesses(),
+            )
+        );
+
+        $this->smartyOutputContent($this->template);
+
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getErrors()
+    {
+        $notifications = $this->prepareNotifications();
+
+        $errors = array();
+        if (array_key_exists('error', $notifications)) {
+            $errors = $notifications['error'];
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSuccesses()
+    {
+        $notifications = $this->prepareNotifications();
+
+        $successes = array();
+
+        if (array_key_exists('success', $notifications)) {
+            $successes = $notifications['success'];
+        }
+
+        return $successes;
     }
 }

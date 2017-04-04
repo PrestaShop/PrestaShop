@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,7 +40,7 @@ function upgrade_cms_15()
     // /!\ : _cms_shop and _cms are wrong tables name (fixed in 1.5.0.12.sql : upgrade_cms_15_rename() )
     $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'_cms_shop` (id_shop, id_cms)
 	 	(SELECT 1, id_cms FROM '._DB_PREFIX_.'_cms)');
-    
+
     // cms_block table is blockcms module dependant. Don't update table that does not exists
     // /!\ : _module is the wrong table name (fixed in 1.5.0.12.sql : upgrade_cms_15_rename() )
     $id_module_cms = Db::getInstance()->getValue('SELECT id_module from `'._DB_PREFIX_.'_module

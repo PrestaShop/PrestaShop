@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -122,19 +122,29 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * Parameters can be set manually into twig template or sent from controller
      * For details : check Resources/views/Admin/Layout.html.twig
      *
-     * @param string $controllerName    The legacy controller name
-     * @param string $title             The page title to override default one
-     * @param array  $headerToolbarBtn  The header toolbar to override
-     * @param string $displayType       The legacy display type variable
-     * @param bool   $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value
-     * @param bool   $enableSidebar     Allow to use right sidebar to display docs for instance
-     * @param string $helpLink          If specified, will be used instead of legacy one
+     * @param string        $controllerName    The legacy controller name
+     * @param string        $title             The page title to override default one
+     * @param array         $headerToolbarBtn  The header toolbar to override
+     * @param string        $displayType       The legacy display type variable
+     * @param bool          $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value
+     * @param array|string  $headerTabContent  Tabs labels
+     * @param bool          $enableSidebar     Allow to use right sidebar to display docs for instance
+     * @param string        $helpLink          If specified, will be used instead of legacy one
      *
      * @throws Exception if legacy layout has no $content var replacement
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
+    public function getLegacyLayout(
+        $controllerName = '',
+        $title = '',
+        $headerToolbarBtn = array(),
+        $displayType = '',
+        $showContentHeader = true,
+        $headerTabContent = '',
+        $enableSidebar = false,
+        $helpLink = ''
+    )
     {
         if ($this->environment == 'test') {
             return <<<EOF
@@ -155,7 +165,16 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
 EOF;
         }
 
-        $layout = $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader, $headerTabContent, $enableSidebar, $helpLink);
+        $layout = $this->context->getLegacyLayout(
+            $controllerName,
+            $title,
+            $headerToolbarBtn,
+            $displayType,
+            $showContentHeader,
+            $headerTabContent,
+            $enableSidebar,
+            $helpLink
+        );
 
         //test if legacy template from "content.tpl" has '{$content}'
         if (false === strpos($layout, '{$content}')) {

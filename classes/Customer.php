@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -293,7 +293,14 @@ class CustomerCore extends ObjectModel
             }
         }
 
-        return parent::update(true);
+        try {
+            return parent::update(true);
+        } catch (\PrestaShopException $exception) {
+            $message = $exception->getMessage();
+            error_log($message);
+
+            return false;
+        }
     }
 
     /**
@@ -426,7 +433,7 @@ class CustomerCore extends ObjectModel
                 $this->{$key} = $value;
             }
         }
-        
+
         if ($shouldCheckPassword && !$crypto->isFirstHash($plaintextPassword, $passwordHash)) {
             $this->passwd = $crypto->hash($plaintextPassword);
             $this->update();
@@ -494,7 +501,7 @@ class CustomerCore extends ObjectModel
     {
         if (!Validate::isEmail($email)) {
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-                die(Tools::displayError('Invalid email'));
+                die(Context::getContext()->getTranslator()->trans('Invalid email', array(), 'Admin.Orderscustomers.Notification'));
             }
 
             return false;
@@ -761,16 +768,27 @@ class CustomerCore extends ObjectModel
      */
     public static function searchByName($query, $limit = null)
     {
-        $sqlBase = 'SELECT *
-                FROM `'._DB_PREFIX_.'customer`';
-        $sql = '('.$sqlBase.' WHERE `email` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sqlBase.' WHERE `id_customer` = '.(int) $query.' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sqlBase.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sqlBase.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-
+        $sql = 'SELECT *
+                FROM `'._DB_PREFIX_.'customer`
+                WHERE 1';
+        $search_items = explode(' ', $query);
+        $research_fields = array('id_customer', 'firstname', 'lastname', 'email');
         if (Configuration::get('PS_B2B_ENABLE')) {
-            $sql .= ' UNION ('.$sqlBase.' WHERE `company` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+            $research_fields[] = 'company';
         }
+
+        $items = array();
+        foreach ($research_fields as $field) {
+            foreach ($search_items as $item) {
+                $items[$item][] = $field.' LIKE \'%'.pSQL($item).'%\' ';
+            }
+        }
+
+        foreach ($items as $likes) {
+            $sql .= ' AND ('.implode(' OR ', $likes).') ';
+        }
+
+        $sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
 
         if ($limit) {
             $sql .= ' LIMIT 0, '.(int) $limit;

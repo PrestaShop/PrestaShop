@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -35,7 +35,7 @@
       <article id="store-{$store.id}" class="store-item card">
         <div class="store-item-container clearfix">
           <div class="col-md-3 store-picture hidden-sm-down">
-            <img src="{$store.image}" alt="">
+            <img src="{$store.image.bySize.stores_default.url}" alt="{$store.image.legend}" title="{$store.image.legend}">
           </div>
           <div class="col-md-5 col-sm-7 col-xs-12 store-description">
             <h3 class="h3 card-title">{$store.name}</h3>

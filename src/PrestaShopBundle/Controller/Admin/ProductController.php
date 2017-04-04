@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,6 +33,7 @@ use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShopBundle\Service\Hook\HookFinder;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
@@ -79,7 +80,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $sortOrder To order product list
      * @return array Template vars
      */
-    public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
+    public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'desc')
     {
         if (
             !$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
@@ -425,7 +426,9 @@ class ProductController extends FrameworkBundleAdminController
             ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
             ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
             ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
-            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo')
+            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo', array(
+                'mapping_type' => $product->getRedirectType(),
+            ))
             ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
 
         // Prepare combination form (fake but just to validate the form)
@@ -511,12 +514,15 @@ class ProductController extends FrameworkBundleAdminController
                     // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
-                    $adminProductWrapper->processProductCustomization($product, $_POST['custom_fields']);
+                    $customization_fields_ids = $adminProductWrapper->processProductCustomization($product, $_POST['custom_fields']);
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
 
                     $adminProductController->processWarehouses();
 
-                    $response->setData(['product' => $product]);
+                    $response->setData([
+                        'product' => $product,
+                        'customization_fields_ids' => $customization_fields_ids
+                    ]);
                 }
 
                 if ($request->isXmlHttpRequest()) {
@@ -558,6 +564,11 @@ class ProductController extends FrameworkBundleAdminController
             ->getRepository('PrestaShopBundle:Attribute')
             ->findByLangAndShop(1, 1);
 
+        $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
+            ->setParams(array('product' => $product))
+            ->addExpectedInstanceClasses('PrestaShop\PrestaShop\Core\Product\ProductAdminDrawer')
+            ->present();
+
         return array(
             'form' => $form->createView(),
             'formCombinations' => $formBulkCombinations->createView(),
@@ -581,6 +592,7 @@ class ProductController extends FrameworkBundleAdminController
             'max_upload_size' => \Tools::formatBytes(UploadedFile::getMaxFilesize()),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
             'editable' => $this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_'),
+            'drawerModules' => $drawerModules,
         );
     }
 
@@ -864,7 +876,7 @@ class ProductController extends FrameworkBundleAdminController
         // export CSV
         $csvTools->exportData(
             $dataCallback,
-            ['id_product' => 'ID',
+            ['id_product' => 'Product ID',
                 'image_link' => 'Image',
                 'name' => 'Name',
                 'reference' => 'Reference',

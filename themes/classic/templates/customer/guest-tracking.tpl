@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file='customer/order-detail.tpl'}
 
 {block name='page_title'}
-  {l s='Guest Tracking' d='Shop.Theme.CustomerAccount'}
+  {l s='Guest Tracking' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='order_detail'}
@@ -39,11 +39,11 @@
   {block name='guest_to_customer'}
     <form action="{$urls.pages.guest_tracking}" method="post">
       <header>
-        <h1 class="h3">{l s='Transform your guest account into a customer account and enjoy:' d='Shop.Theme.CustomerAccount'}</h1>
+        <h1 class="h3">{l s='Transform your guest account into a customer account and enjoy:' d='Shop.Theme.Customeraccount'}</h1>
         <ul>
-          <li> -{l s='Personalized and secure access' d='Shop.Theme.CustomerAccount'}</li>
-          <li> -{l s='Fast and easy checkout' d='Shop.Theme.CustomerAccount'}</li>
-          <li> -{l s='Easier merchandise return' d='Shop.Theme.CustomerAccount'}</li>
+          <li> -{l s='Personalized and secure access' d='Shop.Theme.Customeraccount'}</li>
+          <li> -{l s='Fast and easy checkout' d='Shop.Theme.Customeraccount'}</li>
+          <li> -{l s='Easier merchandise return' d='Shop.Theme.Customeraccount'}</li>
         </ul>
       </header>
 

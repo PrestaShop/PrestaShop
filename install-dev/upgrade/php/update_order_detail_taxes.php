@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,7 +46,7 @@ function update_order_detail_taxes()
 			FROM `'._DB_PREFIX_.'tax` t
 			LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (tl.id_tax = t.id_tax)
 			WHERE tl.`name` = \''.pSQL($alternative_tax_name).'\' ');
-            
+
         if ($id_tax || $id_tax_alt) {
             $create_tax = !(bool)Db::getInstance()->getValue('SELECT count(*)
 				FROM `'._DB_PREFIX_.'tax`

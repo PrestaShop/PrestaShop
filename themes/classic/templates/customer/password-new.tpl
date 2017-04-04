@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,46 +18,57 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {l s='Reset your password' d='Shop.Theme.CustomerAccount'}
+  {l s='Reset your password' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='page_content'}
     <form action="{$urls.pages.password}" method="post">
 
-      <section class="form-fields">
+      <section class="form-fields renew-password">
 
-        <label>
-          <span>{l s='Email address: %email%' d='Shop.Theme.CustomerAccount' sprintf=['%email%' => $customer_email|stripslashes]}</span>
-        </label>
+        <div class="email">
+          {l
+            s='Email address: %email%'
+            d='Shop.Theme.Customeraccount'
+            sprintf=['%email%' => $customer_email|stripslashes]}
+        </div>
 
-        <label>
-          <span>{l s='New password' d='Shop.Forms.Labels'}</span>
-          <input type="password" data-validate="isPasswd" name="passwd" value="">
-        </label>
+        <div class="container-fluid">
+          <div class="row form-group">
+            <label class="form-control-label col-md-3 offset-md-2">{l s='New password' d='Shop.Forms.Labels'}</label>
+            <div class="col-md-4">
+              <input class="form-control" type="password" data-validate="isPasswd" name="passwd" value="">
+            </div>
+          </div>
 
-        <label>
-          <span>{l s='Confirmation' d='Shop.Forms.Labels'}</span>
-          <input type="password" data-validate="isPasswd" name="confirmation" value="">
-        </label>
+          <div class="row form-group">
+            <label class="form-control-label col-md-3 offset-md-2">{l s='Confirmation' d='Shop.Forms.Labels'}</label>
+            <div class="col-md-4">
+              <input class="form-control" type="password" data-validate="isPasswd" name="confirmation" value="">
+            </div>
+          </div>
+
+          <input type="hidden" name="token" id="token" value="{$customer_token}">
+          <input type="hidden" name="id_customer" id="id_customer" value="{$id_customer}">
+          <input type="hidden" name="reset_token" id="reset_token" value="{$reset_token}">
+
+          <div class="row form-group">
+            <div class="offset-md-5">
+              <button class="btn btn-primary" type="submit" name="submit">
+                {l s='Change Password' d='Shop.Theme.Actions'}
+              </button>
+            </div>
+          </div>
+        </div>
 
       </section>
-
-      <footer class="form-footer">
-        <input type="hidden" name="token" id="token" value="{$customer_token}">
-        <input type="hidden" name="id_customer" id="id_customer" value="{$id_customer}">
-        <input type="hidden" name="reset_token" id="reset_token" value="{$reset_token}">
-        <button type="submit" name="submit">
-          {l s='Change Password' d='Shop.Theme.Actions'}
-        </button>
-      </footer>
-
     </form>
 {/block}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -68,11 +68,11 @@ class MetaCore extends ObjectModel
     {
         $selectedPages = array();
         if (!$files = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'front'.DIRECTORY_SEPARATOR, 'php', '', true)) {
-            die(Tools::displayError('Cannot scan root directory'));
+            die(Context::getContext()->getTranslator()->trans('Cannot scan root directory', array(), 'Admin.Notifications.Error'));
         }
 
         if (!$overrideFiles = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR, 'php', '', true)) {
-            die(Tools::displayError('Cannot scan "override" directory'));
+            die(Context::getContext()->getTranslator()->trans('Cannot scan "override" directory', array(), 'Admin.Notifications.Error'));
         }
 
         $files = array_values(array_unique(array_merge($files, $overrideFiles)));
@@ -100,7 +100,7 @@ class MetaCore extends ObjectModel
                 } elseif (preg_match('/^[a-z0-9_.-]*\.php$/i', $file)) {
                     $selectedPages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
                 } elseif (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file)) {
-                    $selectedPages[strtolower(sprintf(Tools::displayError('%2$s (in %1$s)'), dirname($file), str_replace('Controller.php', '', basename($file))))] = strtolower(str_replace('Controller.php', '', basename($file)));
+                    $selectedPages[strtolower(Context::getContext()->getTranslator()->trans('File %2$s (in directory %1$s)', array(dirname($file), str_replace('Controller.php', '', basename($file))), 'Admin.Notifications.Error'))] = strtolower(str_replace('Controller.php', '', basename($file)));
                 }
             }
         }
@@ -306,7 +306,6 @@ class MetaCore extends ObjectModel
                 return Meta::getCmsCategoryMetas($idCmsCategory, $idLang, $pageName);
             }
         }
-
         return Meta::getHomeMetas($idLang, $pageName);
     }
 
@@ -520,14 +519,14 @@ class MetaCore extends ObjectModel
      */
     public static function getCmsCategoryMetas($idCmsCategory, $idLang, $pageName)
     {
-        $sql = 'SELECT `meta_title`, `meta_description`, `meta_keywords`
+        $sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
 				FROM `'._DB_PREFIX_.'cms_category_lang`
 				WHERE id_lang = '.(int) $idLang.'
 					AND id_cms_category = '.(int) $idCmsCategory.
-                    ((int) Context::getContext()->shop->id ?
-                        ' AND id_shop = '.(int)Context::getContext()->shop->id : '');
+            ((int) Context::getContext()->shop->id ?
+            ' AND id_shop = '.(int)Context::getContext()->shop->id : '');
         if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
-            $row['meta_title'] = $row['meta_title'];
+            $row['meta_title'] = empty($row['meta_title']) ? $row['name'] : $row['meta_title'];
             return Meta::completeMetaTags($row, $row['meta_title']);
         }
 
@@ -545,12 +544,6 @@ class MetaCore extends ObjectModel
 
         if (empty($metaTags['meta_title'])) {
             $metaTags['meta_title'] = $defaultValue;
-        }
-        if (empty($metaTags['meta_description'])) {
-            $metaTags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', $context->language->id) ? Configuration::get('PS_META_DESCRIPTION', $context->language->id) : '';
-        }
-        if (empty($metaTags['meta_keywords'])) {
-            $metaTags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', $context->language->id) ? Configuration::get('PS_META_KEYWORDS', $context->language->id) : '';
         }
 
         return $metaTags;

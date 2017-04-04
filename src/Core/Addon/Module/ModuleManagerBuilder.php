@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,19 +19,23 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
+use Doctrine\Common\Cache\FilesystemCache;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
+use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
@@ -52,6 +56,7 @@ class ModuleManagerBuilder
      */
     public static $modulesRepository = null;
     public static $adminModuleDataProvider = null;
+    public static $lecacyContext;
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
     public static $moduleDataUpdater = null;
@@ -60,6 +65,7 @@ class ModuleManagerBuilder
     public static $addonsDataProvider = null;
     public static $categoriesProvider = null;
     public static $instance = null;
+    public static $cacheProvider = null;
 
     /**
      * @return null|ModuleManagerBuilder
@@ -92,6 +98,7 @@ class ModuleManagerBuilder
                 $this->buildRepository(),
                 self::$moduleZipManager,
                 self::$translator,
+                new NullDispatcher(),
                 Context::getContext()->employee
             );
         }
@@ -116,7 +123,9 @@ class ModuleManagerBuilder
                     self::$moduleDataProvider,
                     self::$moduleDataUpdater,
                     self::$legacyLogger,
-                    self::$translator
+                    self::$translator,
+                    Context::getContext()->language->iso_code,
+                    self::$cacheProvider
                 );
             }
         }
@@ -150,9 +159,10 @@ class ModuleManagerBuilder
             new Client($clientConfig),
             $this->getLanguageIso(),
             $this->getCountryIso(),
-            _PS_VERSION_)
-        ;
+            new Tools()
+        );
 
+        $marketPlaceClient->setSslVerification(_PS_CACHE_CA_CERT_FILE_);
         if (file_exists($this->getConfigDir().'/parameters.php')) {
             $parameters = require($this->getConfigDir().'/parameters.php');
             if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {
@@ -160,7 +170,9 @@ class ModuleManagerBuilder
             }
         }
 
-        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient);
+        self::$translator = Context::getContext()->getTranslator();
+        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
+        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
         $kernelDir = dirname(__FILE__) . '/../../../../app';
         self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
@@ -168,21 +180,30 @@ class ModuleManagerBuilder
             self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';
         }
 
+        self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir.'/doctrine');
+
         self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
+        self::$lecacyContext = new LegacyContext();
 
         if (is_null(self::$adminModuleDataProvider)) {
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 $this->getLanguageIso(),
                 $this->getSymfonyRouter(),
                 self::$addonsDataProvider,
-                self::$categoriesProvider
+                self::$categoriesProvider,
+                self::$cacheProvider
             );
 
             self::$translator = Context::getContext()->getTranslator();
             self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
             self::$legacyLogger = new LegacyLogger();
+            self::$moduleDataUpdater = new ModuleDataUpdater(
+                self::$addonsDataProvider,
+                self::$adminModuleDataProvider,
+                self::$lecacyContext,
+                self::$legacyLogger,
+                self::$translator);
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
-            self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
         }
     }
 

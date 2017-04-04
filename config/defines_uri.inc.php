@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,10 +27,14 @@
 /* Theme URLs */
 define('_PS_DEFAULT_THEME_NAME_', 'classic');
 define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/');
+define('_PS_THEME_URI_', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/');
+
 if (defined('_PARENT_THEME_NAME_') && _PARENT_THEME_NAME_) {
     define('_PS_PARENT_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._PARENT_THEME_NAME_.'/');
+    define('_PS_PARENT_THEME_URI_', __PS_BASE_URI__.'themes/'._PARENT_THEME_NAME_.'/');
 } else {
     define('_PS_PARENT_THEME_DIR_', '');
+    define('_PS_PARENT_THEME_URI_', '');
 }
 define('_THEMES_DIR_', __PS_BASE_URI__.'themes/');
 define('_THEME_DIR_', _THEMES_DIR_._THEME_NAME_.'/');

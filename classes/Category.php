@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -145,8 +145,8 @@ class CategoryCore extends ObjectModel
     public function __construct($idCategory = null, $idLang = null, $idShop = null)
     {
         parent::__construct($idCategory, $idLang, $idShop);
-        $this->id_image = ($this->id && file_exists(_PS_CAT_IMG_DIR_.(int) $this->id.'.jpg')) ? (int) $this->id : false;
         $this->image_dir = _PS_CAT_IMG_DIR_;
+        $this->id_image = ($this->id && file_exists($this->image_dir.(int) $this->id.'.jpg')) ? (int) $this->id : false;
     }
 
     /**
@@ -632,8 +632,16 @@ class CategoryCore extends ObjectModel
             $groups = (array) $groups;
         }
 
-        $cacheId = 'Category::getAllCategoriesName_'.md5((int) $idRootCategory.(int) $idLang.(int) $active.(int) $useShopRestriction
-            .(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
+        $cacheId = 'Category::getAllCategoriesName_'.md5(
+            (int) $idRootCategory.
+            (int) $idLang.
+            (int) $active.
+            (int) $useShopRestriction.
+            (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '').
+            (isset($sqlFilter) ? $sqlFilter : '').
+            (isset($orderBy) ? $orderBy : '').
+            (isset($limit) ? $limit : '')
+        );
 
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS('
@@ -698,8 +706,16 @@ class CategoryCore extends ObjectModel
             $groups = (array) $groups;
         }
 
-        $cacheId = 'Category::getNestedCategories_'.md5((int) $idRootCategory.(int) $idLang.(int) $active.(int) $useShopRestriction
-            .(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
+        $cacheId = 'Category::getNestedCategories_'.md5(
+                (int) $idRootCategory.
+                (int) $idLang.
+                (int) $active.
+                (int) $useShopRestriction.
+                (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '').
+                (isset($sqlFilter) ? $sqlFilter : '').
+                (isset($orderBy) ? $orderBy : '').
+                (isset($limit) ? $limit : '')
+            );
 
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS('
@@ -807,7 +823,7 @@ class CategoryCore extends ObjectModel
 		ORDER BY `level_depth` ASC, category_shop.`position` ASC');
 
         foreach ($result as &$row) {
-            $row['id_image'] = Tools::file_exists_cache(_PS_CAT_IMG_DIR_.$row['id_category'].'.jpg') ? (int) $row['id_category'] : Language::getIsoById($idLang).'-default';
+            $row['id_image'] = Tools::file_exists_cache($this->image_dir.$row['id_category'].'.jpg') ? (int) $row['id_category'] : Language::getIsoById($idLang).'-default';
             $row['legend'] = 'no picture';
         }
 

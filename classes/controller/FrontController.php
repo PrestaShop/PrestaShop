@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,16 +19,18 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
-use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
 
 class FrontControllerCore extends Controller
 {
@@ -117,11 +119,8 @@ class FrontControllerCore extends Controller
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
 
-    /** @var bool If false, does not build left page column content and hides it. */
-    public $display_column_left = true;
-
-    /** @var bool If false, does not build right page column content and hides it. */
-    public $display_column_right = true;
+    /** @var string[] Adds excluded $_GET keys for redirection */
+    protected $redirectionExtraExcludedKeys = array();
 
     /**
      * True if controller has already been initialized.
@@ -200,11 +199,11 @@ class FrontControllerCore extends Controller
         $this->cart_presenter = new CartPresenter();
         $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
         $this->stylesheetManager = new StylesheetManager(
-            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            array(_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__),
             new ConfigurationAdapter()
         );
         $this->javascriptManager = new JavascriptManager(
-            array(_PS_THEME_DIR_, _PS_PARENT_THEME_DIR_, _PS_ROOT_DIR_),
+            array(_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__),
             new ConfigurationAdapter()
         );
         $this->cccReducer = new CccReducer(
@@ -320,7 +319,12 @@ class FrontControllerCore extends Controller
 
         /* Theme is missing */
         if (!is_dir(_PS_THEME_DIR_)) {
-            throw new PrestaShopException((sprintf(Tools::displayError('Current theme unavailable "%s". Please check your theme directory name and permissions.'), basename(rtrim(_PS_THEME_DIR_, '/\\')))));
+            throw new PrestaShopException(
+                $this->trans(
+                    'Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.',
+                    array(basename(rtrim(_PS_THEME_DIR_, '/\\'))),
+                    'Admin.Design.Notification'
+                ));
         }
 
         if (Configuration::get('PS_GEOLOCATION_ENABLED')) {
@@ -493,6 +497,7 @@ class FrontControllerCore extends Controller
     protected function assignGeneralPurposeVariables()
     {
         $templateVars = array(
+            'cart' => $this->cart_presenter->present($this->context->cart),
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectPresenter->present($this->context->language),
@@ -655,6 +660,7 @@ class FrontControllerCore extends Controller
             $html = $this->context->smarty->fetch($content, null, $this->getLayout());
         }
 
+        Hook::exec('actionOutputHTMLBefore',  array('html' => &$html));
         echo trim($html);
     }
 
@@ -693,13 +699,15 @@ class FrontControllerCore extends Controller
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
+                $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
                 $this->context->smarty->assign(array(
                     'shop' => $this->getTemplateVarShop(),
                     'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
                     'maintenance_text' => Configuration::get('PS_MAINTENANCE_TEXT', (int) $this->context->language->id),
+                    'stylesheets' => $this->getStylesheets(),
                 ));
-
                 $this->smartyOutputContent('errors/maintenance.tpl');
+
                 exit;
             }
         }
@@ -711,10 +719,14 @@ class FrontControllerCore extends Controller
     protected function displayRestrictedCountryPage()
     {
         header('HTTP/1.1 403 Forbidden');
+
+        $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
         $this->context->smarty->assign(array(
             'shop' => $this->getTemplateVarShop(),
+            'stylesheets' => $this->getStylesheets(),
         ));
         $this->smartyOutputContent('errors/restricted-country.tpl');
+
         exit;
     }
 
@@ -762,6 +774,7 @@ class FrontControllerCore extends Controller
                 }
             }
             $excluded_key = array('isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms');
+            $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
             foreach ($_GET as $key => $value) {
                 if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
                     $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
@@ -808,13 +821,13 @@ class FrontControllerCore extends Controller
                         $record = null;
                     }
 
-                    if (is_object($record)) {
+                    if (is_object($record) && Validate::isLanguageIsoCode($record->country->isoCode) && (int)Country::getByIso(strtoupper($record->country->isoCode)) != 0) {
                         if (!in_array(strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
                                 $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
                                 $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                                $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), $record->country->name);
+                                $this->warning[] = $this->trans('You cannot place a new order from your country (%s).', array($record->country->name), 'Shop.Notifications.Warning');
                             }
                         } else {
                             $hasBeenSet = !isset($this->context->cookie->iso_code_country);
@@ -841,7 +854,15 @@ class FrontControllerCore extends Controller
                     $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                    $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), (isset($record->country->name) && $record->country->name) ? $record->country->name : $this->l('Undefined'));
+                    $countryName = $this->trans('Undefined', array(), 'Shop.Theme');
+                    if (isset($record->country->name) && $record->country->name) {
+                        $countryName = $record->country->name;
+                    }
+                    $this->warning[] = $this->trans(
+                        'You cannot place a new order from your country (%s).',
+                        array($countryName),
+                        'Shop.Notifications.Warning'
+                    );
                 }
             }
         }
@@ -856,7 +877,7 @@ class FrontControllerCore extends Controller
      */
     public function setMedia()
     {
-        $this->registerStylesheet('theme-main', '/assets/css/theme.css', ['media' => 'all', 'priority' => 0]);
+        $this->registerStylesheet('theme-main', '/assets/css/theme.css', ['media' => 'all', 'priority' => 50]);
         $this->registerStylesheet('theme-custom', '/assets/css/custom.css', ['media' => 'all', 'priority' => 1000]);
 
         if ($this->context->language->is_rtl) {
@@ -1160,6 +1181,20 @@ class FrontControllerCore extends Controller
         $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 90]);
     }
 
+    /**
+     * Add Library not included with classic theme
+     */
+    public function requireAssets(array $libraries)
+    {
+        foreach ($libraries as $library) {
+            if ($assets = PrestashopAssetsLibraries::getAssetsLibraries($library)) {
+                foreach ($assets as $asset) {
+                    $this->$asset['type']($library, $asset['path'], $asset['params']);
+                }
+            }
+        }
+    }
+
 
     /**
      * Adds jQuery plugin(s) to queued JS file list
@@ -1233,7 +1268,7 @@ class FrontControllerCore extends Controller
     public function setTemplate($template, $params = array(), $locale = null)
     {
         parent::setTemplate(
-            $this->getTemplateFile($template, $params, $locale = null)
+            $this->getTemplateFile($template, $params, $locale)
         );
     }
 
@@ -1368,21 +1403,14 @@ class FrontControllerCore extends Controller
         Tools::enableCache();
         foreach ($products as &$product) {
             $tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
-            if (isset($colors[$product['id_product']])) {
-                $tpl->assign(array(
-                    'id_product' => $product['id_product'],
-                    'colors_list' => $colors[$product['id_product']],
-                    'link' => Context::getContext()->link,
-                    'img_col_dir' => _THEME_COL_DIR_,
-                    'col_img_dir' => _PS_COL_IMG_DIR_,
-                ));
-            }
-
-            if (!in_array($product['id_product'], $products_need_cache) || isset($colors[$product['id_product']])) {
-                $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
-            } else {
-                $product['color_list'] = '';
-            }
+            $tpl->assign(array(
+                'id_product' => $product['id_product'],
+                'colors_list' => isset($colors[$product['id_product']]) ? $colors[$product['id_product']] : null,
+                'link' => Context::getContext()->link,
+                'img_col_dir' => _THEME_COL_DIR_,
+                'col_img_dir' => _PS_COL_IMG_DIR_,
+            ));
+            $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
         }
         Tools::restoreCacheSettings();
     }
@@ -1444,7 +1472,7 @@ class FrontControllerCore extends Controller
         );
         foreach ($p as $page_name) {
             $index = str_replace('-', '_', $page_name);
-            $pages[$index] = $this->context->link->getPageLink($page_name, true);
+            $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
         }
         $pages['register'] = $this->context->link->getPageLink('authentication', true, null, array('create_account' => '1'));
         $pages['order_login'] = $this->context->link->getPageLink('order', true, null, array('login' => '1'));
@@ -1555,7 +1583,7 @@ class FrontControllerCore extends Controller
                 'address2' => $address->address2,
                 'postcode' => $address->postcode,
                 'city' => $address->city,
-                'state' => (new State($address->id_state))->name[$this->context->language->id],
+                'state' => (new State($address->id_state))->name,
                 'country' => (new Country($address->id_country))->name[$this->context->language->id],
             ),
             'phone' => Configuration::get('PS_SHOP_PHONE'),
@@ -1646,7 +1674,7 @@ class FrontControllerCore extends Controller
     protected function addMyAccountToBreadcrumb()
     {
         return array(
-            'title' => $this->getTranslator()->trans('Your account', array(), 'Shop.Theme.CustomerAccount'),
+            'title' => $this->getTranslator()->trans('Your account', array(), 'Shop.Theme.Customeraccount'),
             'url' => $this->context->link->getPageLink('my-account', true),
         );
     }
@@ -1791,7 +1819,7 @@ class FrontControllerCore extends Controller
             $this->makeCustomerFormatter(),
             new CustomerPersister(
                 $this->context,
-                new Hashing(),
+                $this->get('hashing'),
                 $this->getTranslator(),
                 $this->guestAllowed
             ),
@@ -1894,5 +1922,16 @@ class FrontControllerCore extends Controller
         } else {
             return $matches[0];
         }
+    }
+
+    protected function buildContainer()
+    {
+        $container = new ContainerBuilder();
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
+        $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
+        $loader->load(_PS_CONFIG_DIR_.'services/front/services_'. $env .'.yml');
+        $container->compile();
+
+        return $container;
     }
 }

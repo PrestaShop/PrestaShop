@@ -988,7 +988,8 @@ CREATE TABLE `PREFIX_module` (
 CREATE TABLE `PREFIX_authorization_role` (
   `id_authorization_role` int(10) unsigned NOT NULL auto_increment,
   `slug` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id_authorization_role`)
+  PRIMARY KEY (`id_authorization_role`),
+  UNIQUE KEY (`slug`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_access` (
@@ -1417,8 +1418,8 @@ CREATE TABLE `PREFIX_product` (
   `uploadable_files` tinyint(4) NOT NULL DEFAULT '0',
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `redirect_type` ENUM('', '404', '301', '302') NOT NULL DEFAULT '',
-  `id_product_redirected` int(10) unsigned NOT NULL DEFAULT '0',
+  `redirect_type` ENUM('','404','301-product','302-product','301-category','302-category') NOT NULL DEFAULT '',
+  `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
   `show_condition` tinyint(1) NOT NULL DEFAULT '0',
@@ -1462,8 +1463,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `uploadable_files` tinyint(4) NOT NULL DEFAULT '0',
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `redirect_type` ENUM('', '404', '301', '302') NOT NULL DEFAULT '',
-  `id_product_redirected` int(10) unsigned NOT NULL DEFAULT '0',
+  `redirect_type` ENUM('','404','301-product','302-product','301-category','302-category') NOT NULL DEFAULT '',
+  `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
   `show_condition` tinyint(1) NOT NULL DEFAULT '1',
@@ -1768,27 +1769,6 @@ CREATE TABLE `PREFIX_supplier_lang` (
   `meta_keywords` varchar(255) DEFAULT NULL,
   `meta_description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_supplier`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_tab` (
-  `id_tab` int(10) unsigned NOT NULL auto_increment,
-  `id_parent` int(11) NOT NULL,
-  `class_name` varchar(64) NOT NULL,
-  `module` varchar(64) NULL,
-  `position` int(10) unsigned NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `hide_host_mode` tinyint(1) NOT NULL DEFAULT '0',
-  `icon` varchar(32) DEFAULT '',
-  PRIMARY KEY (`id_tab`),
-  KEY `class_name` (`class_name`),
-  KEY `id_parent` (`id_parent`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_tab_lang` (
-  `id_tab` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`id_tab`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_tag` (

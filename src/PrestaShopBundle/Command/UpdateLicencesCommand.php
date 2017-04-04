@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
- 
+
 
 namespace PrestaShopBundle\Command;
 
@@ -59,7 +59,7 @@ class UpdateLicencesCommand extends Command
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */";
-    
+
     protected function configure()
     {
         $this
@@ -70,14 +70,14 @@ class UpdateLicencesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->text = str_replace('{currentYear}', date('Y'), $this->text);
-        
+
         $this->findAndCheckExtension($output, 'php');
         $this->findAndCheckExtension($output, 'js');
         $this->findAndCheckExtension($output, 'css');
         $this->findAndCheckExtension($output, 'tpl');
         $this->findAndCheckExtension($output, 'html.twig');
     }
-    
+
     private function findAndCheckExtension(OutputInterface $output, $ext)
     {
         $finder = new Finder();
@@ -89,7 +89,7 @@ class UpdateLicencesCommand extends Command
                 'modules', 'tests/resources/ModulesOverrideInstallUninstallTest', 'tools/htmlpurifier', 'vendor'))
             ->ignoreDotFiles(false);
         $parser = (new \PhpParser\ParserFactory)->create(\PhpParser\ParserFactory::PREFER_PHP7);
-        
+
         $output->writeln('Updating license in '. strtoupper($ext).' files ...');
         $progress = new ProgressBar($output, count($finder));
         $progress->start();
@@ -121,11 +121,11 @@ class UpdateLicencesCommand extends Command
             }
             $progress->advance();
         }
-        
+
         $progress->finish();
         $output->writeln('');
     }
-    
+
     private function addLicenceToFile($file, $startDelimiter = '\/', $endDelimiter = '\/')
     {
         $content = $file->getContents();
@@ -139,7 +139,7 @@ class UpdateLicencesCommand extends Command
         if ($endDelimiter != '\/') {
             $text = rtrim($text, '/').$endDelimiter;
         }
-        
+
         // Try to find an existing license
         preg_match($regex, $content, $matches);
 
@@ -154,17 +154,17 @@ class UpdateLicencesCommand extends Command
             // Not found - Add it at the beginning of the file
             $content = $text."\n".$content;
         }
-        
+
         file_put_contents($file->getRelativePathname(), $content);
     }
-    
+
     private function addLicenceToNode($node, $file)
     {
         if (!$node->hasAttribute('comments')) {
             $needle = "<?php";
             $replace = "<?php\n".$this->text."\n";
             $haystack = $file->getContents();
-            
+
             $pos = strpos($haystack, $needle);
             // Important, if the <?php is in the middle of the file, continue
             if ($pos === 0) {
@@ -174,7 +174,7 @@ class UpdateLicencesCommand extends Command
 
             return;
         }
-        
+
         $comments = $node->getAttribute('comments');
         foreach ($comments as $comment) {
             if ($comment instanceof \PhpParser\Comment
@@ -183,12 +183,12 @@ class UpdateLicencesCommand extends Command
             }
         }
     }
-    
+
     private function addLicenceToSmartyTemplate($file)
     {
         $this->addLicenceToFile($file, '{', '}');
     }
-    
+
     private function addLicenceToTwigTemplate($file)
     {
         if (strrpos($file->getRelativePathName(), 'html.twig') !== false) {

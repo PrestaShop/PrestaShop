@@ -1,5 +1,5 @@
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,7 +45,7 @@ export default function () {
   }
 
   function updateMissingTranslationsWarning(domainActions) {
-    let subdomain = domainActions.next();
+    let subdomain = domainActions.parent().next('.subdomains');
     let missingTranslations = subdomain.find('[data-missing-translations]');
     let totalMissingTranslations = 0;
 
@@ -67,7 +67,8 @@ export default function () {
   let allDomainsMissingTranslations = 0;
 
   $('.domain-first-part').each((index, domainToggler) => {
-    let domainActions = $(domainToggler).next();
+    let domainActions = $(domainToggler).find('.domain-actions');
+
     allDomainsMissingTranslations = allDomainsMissingTranslations + updateMissingTranslationsWarning(domainActions);
 
     $(domainToggler).click((event) => {

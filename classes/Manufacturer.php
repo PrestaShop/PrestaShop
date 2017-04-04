@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -198,11 +198,11 @@ class ManufacturerCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'manufacturer` m'
         .Shop::addSqlAssociation('manufacturer', 'm').
         'INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.`id_manufacturer` = ml.`id_manufacturer` AND ml.`id_lang` = '.(int) $idLang.')'.
-		'WHERE 1 '.
-		($active ? 'AND m.`active` = 1 ' : '').
-		($withProduct ? 'AND m.`id_manufacturer` IN (SELECT `id_manufacturer` FROM `'._DB_PREFIX_.'product`) ' : '').
+        'WHERE 1 '.
+        ($active ? 'AND m.`active` = 1 ' : '').
+        ($withProduct ? 'AND m.`id_manufacturer` IN (SELECT `id_manufacturer` FROM `'._DB_PREFIX_.'product`) ' : '').
         ($group_by ? ' GROUP BY m.`id_manufacturer`' : '').
-		'ORDER BY m.`name` ASC
+        'ORDER BY m.`name` ASC
 		'.($p ? ' LIMIT '.(((int) $p - 1) * (int) $n).','.(int) $n : ''));
         if ($manufacturers === false) {
             return false;

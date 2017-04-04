@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -92,13 +92,13 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Admin.Actions'}"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">{l s='Edit shipping details' d='Admin.OrdersCustomers.Feature'}</h4>
+						<h4 class="modal-title">{l s='Edit shipping details' d='Admin.Orderscustomers.Feature'}</h4>
 					</div>
 					<div class="modal-body">
 						<div class="container-fluid">
 							{if !$recalculate_shipping_cost}
 							<div class="alert alert-info">
-							{l s='Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings' d='Admin.OrdersCustomers.Notification'}
+							{l s='Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings' d='Admin.Orderscustomers.Notification'}
 							</div>
 							{/if}
 							<div class="form-group">

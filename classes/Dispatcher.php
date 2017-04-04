@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -112,7 +112,7 @@ class DispatcherCore
             'keywords' => array(
                 'id' =>            array('regexp' => '[0-9]+', 'param' => 'id_product'),
                 'id_product_attribute' => array('regexp' => '[0-9]+', 'param' => 'id_product_attribute'),
-                'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*', 'param' => 'rewrite'),
                 'ean13' =>        array('regexp' => '[0-9\pL]*'),
                 'category' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'categories' =>        array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
@@ -261,6 +261,9 @@ class DispatcherCore
         if (!$this->controller) {
             $this->controller = $this->useDefaultController();
         }
+        // Execute hook dispatcher before
+        Hook::exec('actionDispatcherBefore', array ('controller_type' => $this->front_controller));
+
         // Dispatch with right front controller
         switch ($this->front_controller) {
             // Dispatch front office controller
@@ -364,6 +367,11 @@ class DispatcherCore
 
             // Running controller
             $controller->run();
+
+            // Execute hook dispatcher after
+            if (isset($params_hook_action_dispatcher)) {
+                Hook::exec('actionDispatcherAfter', $params_hook_action_dispatcher);
+            }
         } catch (PrestaShopException $e) {
             $e->displayMessage();
         }

@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -33,7 +33,7 @@
     <div class="col-md-12">
       <h4 class="h4">
       {l s='Addresses' d='Shop.Theme.Checkout'}
-        <span class="step-edit step-to-addresses js-edit-addresses"><i class="material-icons edit">mode_edit</i> edit</span>
+        <span class="step-edit step-to-addresses js-edit-addresses"><i class="material-icons edit">mode_edit</i> {l s='edit' d='Shop.Theme.Actions'}</span>
       </h4>
     </div>
   </div>
@@ -60,7 +60,7 @@
     <div class="col-md-12">
       <h4 class="h4">
       {l s='Shipping Method' d='Shop.Theme.Checkout'}
-        <span class="step-edit step-to-delivery js-edit-delivery"><i class="material-icons edit">mode_edit</i> edit</span>
+        <span class="step-edit step-to-delivery js-edit-delivery"><i class="material-icons edit">mode_edit</i> {l s='edit' d='Shop.Theme.Actions'}</span>
       </h4>
 
       <div class="col-md-12 summary-selected-carrier">

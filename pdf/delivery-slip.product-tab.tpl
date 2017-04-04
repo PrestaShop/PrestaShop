@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +18,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <table class="product" width="100%" cellpadding="4" cellspacing="0">
-	
+
 	<thead>
 		<tr>
-			<th class="product header small" width="25%">{l s='Reference' d='Shop.PDF' pdf='true'}</th>
-			<th class="product header small" width="65%">{l s='Product' d='Shop.PDF' pdf='true'}</th>
-			<th class="product header small" width="10%">{l s='Qty' d='Shop.PDF' pdf='true'}</th>
+			<th class="product header small" width="25%">{l s='Reference' d='Shop.Pdf' pdf='true'}</th>
+			<th class="product header small" width="65%">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
+			<th class="product header small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
 		</tr>
 	</thead>
 
@@ -38,7 +38,7 @@
 			{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
 			<tr class="product {$bgcolor_class}">
 
-				<td class="product center">
+				<td class="product left">
 					{if empty($order_detail.product_reference)}
 						---
 					{else}
@@ -67,9 +67,9 @@
 				<td class="product center">
 					{$order_detail.product_quantity}
 				</td>
-				
+
 			</tr>
-			
+
 			{foreach $order_detail.customizedDatas as $customizationPerAddress}
 				{foreach $customizationPerAddress as $customizationId => $customization}
 					<tr class="customization_data {$bgcolor_class}">
@@ -81,7 +81,7 @@
 									{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 										<tr>
 											<td style="width: 30%;">
-												{$customization_infos.name|string_format:{l s='%s:' d='Shop.PDF' pdf='true'}}
+												{$customization_infos.name|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}
 											</td>
 											<td>{$customization_infos.value}</td>
 										</tr>
@@ -92,7 +92,7 @@
 							{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
 								<table style="width: 100%;">
 									<tr>
-										<td style="width: 30%;">{l s='image(s):' d='Shop.PDF' pdf='true'}</td>
+										<td style="width: 30%;">{l s='image(s):' d='Shop.Pdf' pdf='true'}</td>
 										<td>{count($customization.datas[Product::CUSTOMIZE_FILE])}</td>
 									</tr>
 								</table>
@@ -106,9 +106,9 @@
 					</tr>
 				{/foreach}
 			{/foreach}
-			
-			
-			
+
+
+
 		{/foreach}
 		<!-- END PRODUCTS -->
 	</tbody>

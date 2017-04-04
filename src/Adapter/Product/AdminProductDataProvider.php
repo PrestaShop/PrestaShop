@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -217,7 +217,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sav' => array(
                 'table' => 'stock_available',
                 'join' => 'LEFT JOIN',
-                'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 AND sav.id_shop = '.$idShop,
+                'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0'.
+                \StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
             ),
             'sa' => array(
                 'table' => 'product_shop',
@@ -353,24 +354,15 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     public function countAllProducts()
     {
         $idShop = \ContextCore::getContext()->shop->id;
-        $sqlSelect = array(
-            'id_product' => array('table' => 'p', 'field' => 'id_product'),
-        );
-        $sqlTable = array(
-            'p' => 'product',
-            'sa' => array(
-                'table' => 'product_shop',
-                'join' => 'JOIN',
-                'on' => 'p.`id_product` = sa.`id_product` AND sa.id_shop = '.$idShop,
-            ),
-        );
 
-        $sql = $this->compileSqlQuery($sqlSelect, $sqlTable);
-        \Db::getInstance()->executeS($sql, true, false);
-        $total = \Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
-        $total = $total[0]['FOUND_ROWS()'];
+        $query = new \DbQuery();
+        $query->select('COUNT(ps.id_product)');
+        $query->from('product_shop', 'ps');
+        $query->where('ps.id_shop = '.(int)$idShop);
 
-        return $total;
+        $total = \Db::getInstance()->getValue($query);
+
+        return (int) $total;
     }
 
     /**

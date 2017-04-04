@@ -318,9 +318,9 @@ File: controllers/admin/AdminTaxRulesGroupController.php:315</note>
         <note>Context:
 File: controllers/admin/AdminTaxRulesGroupController.php:316</note>
       </trans-unit>
-      <trans-unit id="db14bea4612d22c7a0210584c41ab1d1">
-        <source>- One after another: Apply taxes one after another (e.g.: 0 + 10% = 0 + 5% = 5.5)</source>
-        <target>- One after another: Apply taxes one after another (e.g.: 0 + 10% = 0 + 5% = 5.5)</target>
+      <trans-unit id="dabf677c95d59c749ea5d6d6d22012c4">
+        <source><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></source>
+        <target><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></target>
         <note>Context:
 File: controllers/admin/AdminTaxRulesGroupController.php:317</note>
       </trans-unit>
@@ -360,7 +360,7 @@ File: controllers/admin/AdminZonesController.php:124</note>
         <source>Search a word or expression, e.g.: "Order confirmation"</source>
         <target>Search a word or expression, e.g.: "Order confirmation"</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Translations/list.html.twig:16</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Translations/list.html.twig:42</note>
       </trans-unit>
     </body>
   </file>

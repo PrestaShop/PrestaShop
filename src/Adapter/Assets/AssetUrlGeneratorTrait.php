@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,12 +20,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Assets;
+
+use Tools as ToolsLegacy;
 
 trait AssetUrlGeneratorTrait
 {
@@ -33,19 +35,18 @@ trait AssetUrlGeneratorTrait
 
     protected function getUriFromPath($fullPath)
     {
-        $uri = str_replace(
-            $this->configuration->get('_PS_ROOT_DIR_'),
-            rtrim($this->configuration->get('__PS_BASE_URI__'), '/'),
-            $fullPath
-        );
+        return str_replace($this->configuration->get('_PS_ROOT_DIR_'), rtrim($this->configuration->get('__PS_BASE_URI__'), '/'), $fullPath);
+    }
 
-        return str_replace(DIRECTORY_SEPARATOR, '/', $uri);
+    protected function getPathFromUri($fullUri)
+    {
+        return $this->configuration->get('_PS_ROOT_DIR_').str_replace(rtrim($this->configuration->get('__PS_BASE_URI__'), '/'), '', $fullUri);
     }
 
     protected function getFQDN()
     {
         if (is_null($this->fqdn)) {
-            if ($this->configuration->get('PS_SSL_ENABLED')) {
+            if ($this->configuration->get('PS_SSL_ENABLED') && ToolsLegacy::usingSecureMode()) {
                 $this->fqdn = $this->configuration->get('_PS_BASE_URL_SSL_');
             } else {
                 $this->fqdn = $this->configuration->get('_PS_BASE_URL_');

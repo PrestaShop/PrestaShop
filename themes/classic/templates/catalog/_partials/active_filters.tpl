@@ -1,5 +1,5 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,16 +18,25 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <section id="js-active-search-filters" class="{if $activeFilters|count}active_filters{else}hide{/if}">
-  <h1 class="h6 active-filter-title">{l s='Active filters' d='Shop.Theme'}</h1>
+  {block name='active_filters_title'}
+    <h1 class="h6 active-filter-title">{l s='Active filters' d='Shop.Theme'}</h1>
+  {/block}
+
   {if $activeFilters|count}
     <ul>
       {foreach from=$activeFilters item="filter"}
-        <li class="filter-block">{l s='%1$s: ' d='Shop.Theme.Catalog' sprintf=[$filter.facetLabel]} {$filter.label} <a class="js-search-link" href="{$filter.nextEncodedFacetsURL}"><i class="material-icons close">&#xE5CD;</i></a></li>
+        {block name='active_filters_item'}
+          <li class="filter-block">
+            {l s='%1$s: ' d='Shop.Theme.Catalog' sprintf=[$filter.facetLabel]}
+            {$filter.label}
+            <a class="js-search-link" href="{$filter.nextEncodedFacetsURL}"><i class="material-icons close">&#xE5CD;</i></a>
+          </li>
+        {/block}
       {/foreach}
     </ul>
   {/if}

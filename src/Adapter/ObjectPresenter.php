@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
+use Hook;
 
 class ObjectPresenter implements PresenterInterface
 {
@@ -54,6 +55,39 @@ class ObjectPresenter implements PresenterInterface
             }
         }
 
+        $this->filterHtmlContent($object::$definition['table'], $presentedObject, $object->getHtmlFields());
+
         return $presentedObject;
+    }
+
+    /**
+     * Execute filterHtml hook for html Content for objectPresenter
+     *
+     * @param $type
+     * @param $presentedObject
+     * @param $htmlFields
+     */
+    private function filterHtmlContent($type, &$presentedObject, $htmlFields)
+    {
+        if (!empty($htmlFields) && is_array($htmlFields)) {
+            $filteredHtml = Hook::exec(
+                'filterHtmlContent',
+                array(
+                    'type' => $type,
+                    'htmlFields' => $htmlFields,
+                    'object' => $presentedObject,
+                ),
+                $id_module = null,
+                $array_return = false,
+                $check_exceptions = true,
+                $use_push = false,
+                $id_shop = null,
+                $chain = true
+            );
+
+            if (!empty($filteredHtml['object'])) {
+                $presentedObject = $filteredHtml['object'];
+            }
+        }
     }
 }

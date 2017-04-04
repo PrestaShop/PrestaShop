@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -762,7 +762,10 @@ class LinkCore
         }
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
-        if ($watermarkLogged && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
+        if (!empty($type) && $watermarkLogged &&
+            ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) &&
+            isset(Context::getContext()->customer->id)
+        ) {
             $type .= '-'.$watermarkHash;
         }
 
@@ -807,7 +810,7 @@ class LinkCore
             $uriPath = _THEME_SUP_DIR_.$idSupplier.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
         } elseif (!empty($type) && file_exists(_PS_SUPP_IMG_DIR_.$idSupplier.'.jpg')) { // !empty($type) because if is empty, is already tested
             $uriPath = _THEME_SUP_DIR_.$idSupplier.'.jpg';
-        } elseif (file_exists(_PS_SUPP_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+        } elseif (file_exists(_PS_SUPP_IMG_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
             $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
         } else {
             $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.'.jpg';
@@ -832,10 +835,35 @@ class LinkCore
             $uriPath = _THEME_MANU_DIR_.$idManufacturer.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
         } elseif (!empty($type) && file_exists(_PS_MANU_IMG_DIR_.$idManufacturer.'.jpg')) { // !empty($type) because if is empty, is already tested
             $uriPath = _THEME_MANU_DIR_.$idManufacturer.'.jpg';
-        } elseif (file_exists(_PS_MANU_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+        } elseif (file_exists(_PS_MANU_IMG_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
             $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
         } else {
             $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.'.jpg';
+        }
+
+        return $this->protocol_content.Tools::getMediaServer($uriPath).$uriPath;
+    }
+
+    /**
+     * Returns a link to a store image for display
+     *
+     * @param $idStore
+     * @param null $type    image type (small_default, medium_default, large_default, etc.)
+     *
+     * @return string
+     */
+    public function getStoreImageLink($name, $idStore, $type = null)
+    {
+        $idStore = (int)$idStore;
+
+        if (file_exists(_PS_STORE_IMG_DIR_.$idStore.(empty($type) ? '.jpg' : '-'.$type.'.jpg'))) {
+            $uriPath = _THEME_STORE_DIR_.$idStore.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
+        } elseif (!empty($type) && file_exists(_PS_STORE_IMG_DIR_.$idStore.'.jpg')) { // !empty($type) because if is empty, is already tested
+            $uriPath = _THEME_STORE_DIR_.$idStore.'.jpg';
+        } elseif (file_exists(_PS_STORE_IMG_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : $type.'.jpg'))) {
+            $uriPath = _THEME_STORE_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : $type.'.jpg');
+        } else {
+            $uriPath = _THEME_STORE_DIR_.Context::getContext()->language->iso_code.'.jpg';
         }
 
         return $this->protocol_content.Tools::getMediaServer($uriPath).$uriPath;
@@ -1149,11 +1177,15 @@ class LinkCore
 
         $patterns = array(
             '#'.Context::getContext()->link->getBaseLink().'#',
-            '#'.__PS_BASE_URI__.'#',
             '#'.basename(_PS_ADMIN_DIR_).'#',
             '/index.php/',
             '/_?token=[a-zA-Z0-9\_]+/'
         );
+
+        // If __PS_BASE_URI__ = '/', it destroys urls when is 'product/new' or 'modules/manage' (vhost for example)
+        if ('/' !== __PS_BASE_URI__) {
+            $patterns[] = '#'.__PS_BASE_URI__.'#';
+        }
 
         $url = preg_replace($patterns, '', $url);
         $url = trim($url, "?&/");
@@ -1197,7 +1229,7 @@ class LinkCore
             'id_shop' => null,
             'alias' => null,
             'ssl' => null,
-            'relative_protocol' => false,
+            'relative_protocol' => true,
         );
         $params = array_merge($default, $params);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,6 +39,32 @@ class CategoryDataProvider
     public function __construct(LegacyContext $context)
     {
         $this->languageId = $context->getLanguage()->id;
+    }
+
+    /**
+     * Get a category
+     *
+     * @param null $idCategory
+     * @param null $idLang
+     * @param null $idShop
+     *
+     * @throws \LogicException If the category id is not set
+     *
+     * @return \CategoryCore
+     */
+    public function getCategory($idCategory = null, $idLang = null, $idShop = null)
+    {
+        if (!$idCategory) {
+            throw new \LogicException('You need to provide a category id', 5002);
+        }
+
+        $category = new \CategoryCore($idCategory, $idLang, $idShop);
+
+        if ($category) {
+            $category->image = \ContextCore::getContext()->link->getCatImageLink($category->name, $category->id);
+        }
+
+        return $category;
     }
 
     /**
@@ -156,5 +182,52 @@ class CategoryDataProvider
         }
 
         return substr($breadCrumb, strlen($delimiter));
+    }
+
+    /**
+     * Get Categories formatted like ajax_product_file.php using CategoryCore::getNestedCategories
+     *
+     * @param $query
+     * @param $limit
+     * @param bool $nameAsBreadCrumb
+     * @return array
+     */
+    public function getAjaxCategories($query, $limit, $nameAsBreadCrumb = false)
+    {
+        if (empty($query)) {
+            $query = '';
+        } else {
+            $query = "AND cl.name LIKE '%".pSQL($query)."%'";
+        }
+
+        if (is_integer($limit)) {
+            $limit = 'LIMIT ' . $limit;
+        } else {
+            $limit = '';
+        }
+
+        $searchCategories = \CategoryCore::getAllCategoriesName(
+            $root_category = null,
+            $id_lang = \ContextCore::getContext()->language->id,
+            $active = true,
+            $groups = null,
+            $use_shop_restriction = true,
+            $sql_filter = $query,
+            $sql_sort = '',
+            $limit
+        );
+
+        $results = [];
+        foreach ($searchCategories as $category) {
+            $breadCrumb = $this->getBreadCrumb($category['id_category']);
+            $results[] = [
+                'id' => $category['id_category'],
+                'name' => ($nameAsBreadCrumb ? $breadCrumb : $category['name']),
+                'breadcrumb' => $breadCrumb,
+                'image' => \ContextCore::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
+            ];
+        }
+
+        return $results;
     }
 }

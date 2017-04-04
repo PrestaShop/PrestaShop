@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,12 +36,19 @@ class ApiClient
         'format' => 'json',
     );
 
+    /**
+     * @var \PrestaShop\PrestaShop\Adapter\Tools
+     */
+    private $toolsAdapter;
+
     public function __construct(
         Client $addonsApiClient,
         $isoLang,
-        $isoCode
+        $isoCode,
+        $toolsAdapter
     ) {
         $this->addonsApiClient = $addonsApiClient;
+        $this->toolsAdapter = $toolsAdapter;
 
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
@@ -51,7 +58,7 @@ class ApiClient
 
     public function setSslVerification($verifySsl)
     {
-        Tools::refreshCACertFile();
+        $this->toolsAdapter->refreshCaCertFile();
         $this->addonsApiClient->setDefaultOption('verify', $verifySsl);
     }
 

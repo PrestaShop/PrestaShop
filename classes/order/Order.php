@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -754,26 +754,26 @@ class OrderCore extends ObjectModel
         if (count($products) < 1) {
             return false;
         }
+
         $virtual = true;
+
         foreach ($products as $product) {
-            $pd = ProductDownload::getIdFromIdProduct((int)$product['product_id']);
-            if ($pd && Validate::isUnsignedInt($pd) && $product['download_hash'] && $product['display_filename'] != '') {
-                if ($strict === false) {
-                    return true;
-                }
-            } else {
-                $virtual &= false;
+            if ($strict === false && (bool)$product['is_virtual']) {
+                return true;
             }
+
+            $virtual &= (bool)$product['is_virtual'];
         }
+
         return $virtual;
     }
 
     /**
-     * @deprecated 1.5.0.1
+     * @deprecated 1.5.0.1 use Order::getCartRules() instead
      */
     public function getDiscounts($details = false)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Order::getCartRules() instead');
         return Order::getCartRules();
     }
 
@@ -1080,20 +1080,47 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Get an order by its cart id
+     * Get an order id by its cart id
      *
      * @param int $id_cart Cart id
-     * @return array Order details
+     * @return int Order id
+     *
+     * @deprecated since 1.7.1.0 Use getIdByCartId() instead
      */
     public static function getOrderByCartId($id_cart)
     {
-        $sql = 'SELECT `id_order`
-                FROM `'._DB_PREFIX_.'orders`
-                WHERE `id_cart` = '.(int)$id_cart
-                    .Shop::addSqlRestriction();
-        $result = Db::getInstance()->getRow($sql);
+        return self::getIdByCartId($id_cart);
+    }
 
-        return isset($result['id_order']) ? $result['id_order'] : false;
+    /**
+     * Get an order object by its cart id
+     *
+     * @param int $id_cart Cart id
+     * @return OrderCore
+     */
+    public static function getByCartId($id_cart)
+    {
+        $id_order = (int) self::getIdByCartId((int) $id_cart);
+
+        return ($id_order > 0) ? new self($id_order) : null;
+    }
+
+    /**
+     * Get the order id by its cart id
+     *
+     * @param int $id_cart Cart id
+     * @return int $id_order
+     */
+    public static function getIdByCartId($id_cart)
+    {
+        $sql = 'SELECT `id_order` 
+            FROM `'._DB_PREFIX_.'orders`
+            WHERE `id_cart` = '.(int) $id_cart.
+            Shop::addSqlRestriction();
+
+        $result = Db::getInstance()->getValue($sql);
+
+        return !empty($result) ? (int) $result : false;
     }
 
     /**
@@ -1106,7 +1133,7 @@ class OrderCore extends ObjectModel
      */
     public function addDiscount($id_cart_rule, $name, $value)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Order::addCartRule($id_cart_rule, $name, array(\'tax_incl\' => $value, \'tax_excl\' => \'0.00\')) instead');
         return Order::addCartRule($id_cart_rule, $name, array('tax_incl' => $value, 'tax_excl' => '0.00'));
     }
 
@@ -2145,6 +2172,7 @@ class OrderCore extends ObjectModel
     {
         $collection = new PrestaShopCollection('order');
         $collection->where('reference', '=', $this->reference);
+        $collection->where('id_cart', '=', $this->id_cart);
         $collection->where('id_order', '<>', $this->id);
         return $collection;
     }

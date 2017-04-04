@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -456,32 +456,57 @@ class AdminProductWrapper
      */
     public function processProductCustomization($product, $data)
     {
-        //remove customization field langs
-        foreach ($product->getCustomizationFieldIds() as $customizationFiled) {
-            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE `id_customization_field` = '.(int)$customizationFiled['id_customization_field']);
+        $customization_ids = array();
+        if ($data) {
+            foreach ($data as $customization) {
+                $customization_ids[] = (int)$customization['id_customization_field'];
+            }
         }
 
-        //remove customization for the product
-        \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE `id_product` = '.(int)$product->id);
+        $shopList = \ShopCore::getContextListShopID();
+
+        //remove customization field langs for current context shops
+        foreach ($product->getCustomizationFieldIds() as $customizationFiled) {
+            //if the customization_field is still in use, only delete the current context shops langs,
+            //else delete all the langs
+            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE 
+			`id_customization_field` = '.(int)$customizationFiled['id_customization_field'].
+            (in_array((int)$customizationFiled['id_customization_field'], $customization_ids) ? ' AND `id_shop` IN ('.implode(',', $shopList).')' : ''));
+        }
+
+        //remove unused customization for the product
+        if (!empty($customization_ids)) {
+            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE 
+            `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
+        }
 
         //create new customizations
         $countFieldText = 0;
         $countFieldFile = 0;
         $productCustomizableValue = 0;
         $hasRequiredField = false;
-        $shopList = \ShopCore::getContextListShopID();
+
+        $new_customization_fields_ids = array();
 
         if ($data) {
-            foreach ($data as $customization) {
+            foreach ($data as $key => $customization) {
                 if ($customization['require']) {
                     $hasRequiredField = true;
                 }
 
                 //create label
-                \Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
-                    VALUES ('.(int)$product->id.', '.(int)$customization['type'].', '.($customization['require'] ? 1 : 0).')');
+                if (isset($customization['id_customization_field'])) {
+                    $id_customization_field = (int)$customization['id_customization_field'];
+                    \Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization_field`
+					SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int)$customization['type'] . '
+					WHERE `id_customization_field` = '.$id_customization_field);
+                } else {
+                		\Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
+                    	VALUES ('.(int)$product->id.', '.(int)$customization['type'].', '.($customization['require'] ? 1 : 0).')');
+               		$id_customization_field = (int)\Db::getInstance()->Insert_ID();
+                }
 
-                $id_customization_field = (int)\Db::getInstance()->Insert_ID();
+                $new_customization_fields_ids[$key] = $id_customization_field;
 
                 // Create multilingual label name
                 $langValues = '';
@@ -514,6 +539,8 @@ class AdminProductWrapper
         ), 'a.id_product = '.(int)$product->id);
 
         \ConfigurationCore::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', '1');
+
+        return $new_customization_fields_ids;
     }
 
     /**

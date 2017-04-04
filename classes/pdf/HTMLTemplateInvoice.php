@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -71,7 +71,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array('header' => HTMLTemplateInvoice::l('Invoice')));
+        $this->smarty->assign(array('header' => Context::getContext()->getTranslator()->trans('Invoice', array(), 'Shop.Pdf')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
@@ -169,7 +169,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 $order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
             } elseif ($order_detail['reduction_percent'] > 0) {
                 $has_discount = true;
-                $order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - $order_detail['reduction_percent']);
+                if ($order_detail['reduction_percent'] == 100)
+                    $order_detail['unit_price_tax_excl_before_specific_price'] = 0;
+                else
+                    $order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - $order_detail['reduction_percent']);
             }
 
             // Set tax_code
@@ -177,7 +180,15 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $tax_temp = array();
             foreach ($taxes as $tax) {
                 $obj = new Tax($tax['id_tax']);
-                $tax_temp[] = sprintf($this->l('%1$s%2$s%%'), ($obj->rate + 0), '&nbsp;');
+                $translator = Context::getContext()->getTranslator();
+                $tax_temp[] = $translator->trans(
+                    '%taxrate%%space%%',
+                    array(
+                        '%taxrate%' => ($obj->rate + 0),
+                        '%space%' => '&nbsp;'
+                    ),
+                    'Shop.Pdf'
+                );
             }
 
             $order_detail['order_detail_tax'] = $taxes;
