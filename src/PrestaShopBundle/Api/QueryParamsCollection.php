@@ -51,15 +51,16 @@ class QueryParamsCollection
 
     /**
      * @param Request $request
+     * @param string $defaultOrder order by default for sql
      * @return $this
      */
-    public function fromRequest(Request $request)
+    public function fromRequest(Request $request, $defaultOrder = null)
     {
         $queryParams = $request->query->all();
 
         $queryParams = $this->excludeUnknownParams($queryParams);
         $queryParams = $this->parsePaginationParams($queryParams);
-        $queryParams = $this->parseOrderParams($queryParams);
+        $queryParams = $this->parseOrderParams($queryParams, $defaultOrder);
         $this->queryParams = $this->parseFilterParams($queryParams, $request);
 
         return $this;
@@ -179,12 +180,17 @@ class QueryParamsCollection
 
     /**
      * @param array $queryParams
+     * @param string $defaultOrder order by default for sql
      * @return array|mixed
      */
-    private function parseOrderParams(array $queryParams)
+    private function parseOrderParams(array $queryParams, $defaultOrder = null)
     {
         if (!array_key_exists('order', $queryParams)) {
-            $queryParams = $this->setDefaultOrderParam($queryParams);
+            if (!empty($defaultOrder)) {
+                $queryParams['order'] = $defaultOrder;
+            } else {
+                $queryParams = $this->setDefaultOrderParam($queryParams);
+            }
         }
 
         $queryParams['order'] = strtolower($queryParams['order']);
@@ -208,6 +214,7 @@ class QueryParamsCollection
             'supplier',
             'available_quantity',
             'physical_quantity',
+            'id_stock_mvt',
         );
     }
 
@@ -228,6 +235,7 @@ class QueryParamsCollection
      */
     private function removeDirection($subject)
     {
+        $subject = str_replace(' asc', '', $subject);
         return str_replace(' desc', '', $subject);
     }
 
@@ -424,7 +432,6 @@ class QueryParamsCollection
     }
 
     /**
-     * @param $column
      * @param array $filters
      * @return array
      */

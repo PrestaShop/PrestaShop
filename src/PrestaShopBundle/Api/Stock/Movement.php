@@ -40,6 +40,22 @@ class Movement
      */
     private $delta;
 
+    /**
+     * @var int
+     */
+    private $idStock = 0;
+
+    /**
+     * @var int
+     */
+    private $idOrder = 0;
+
+    /**
+     * @var int
+     */
+    private $idSupplyOrder = 0;
+
+
     public function __construct(ProductIdentity $productIdentity, $delta)
     {
         $this->productIdentity = $productIdentity;
@@ -61,4 +77,57 @@ class Movement
     {
         return $this->delta;
     }
+
+    /**
+     * Set idStock
+     * @param $idStock
+     */
+    public function setIdStock($idStock)
+    {
+        $this->idStock = (int)$idStock;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdStock()
+    {
+        return $this->idStock;
+    }
+
+    /**
+     * Set idOrder
+     * @param $idOrder
+     */
+    public function setIdOrder($idOrder)
+    {
+        $this->idOrder = (int)$idOrder;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdOrder()
+    {
+        return $this->idOrder;
+    }
+
+    /**
+     * Set idSupplyOrder
+     * @param $idSupplyOrder
+     */
+    public function setIdSupplyOrder($idSupplyOrder)
+    {
+        $this->idSupplyOrder = (int)$idSupplyOrder;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdSupplyOrder()
+    {
+        return $this->idSupplyOrder;
+    }
+
+
 }

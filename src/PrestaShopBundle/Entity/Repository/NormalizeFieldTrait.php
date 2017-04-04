@@ -32,7 +32,7 @@ trait NormalizeFieldTrait
      * @param $rows
      * @return mixed
      */
-    private function castNumericToInt($rows)
+    protected function castNumericToInt($rows)
     {
         $castIdentifiersToIntegers = function (&$columnValue, $columnName) {
             if ($this->shouldCastToInt($columnName)) {
