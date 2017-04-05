@@ -230,7 +230,7 @@
         id="product_catalog_list"
         method="post"
         action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
-        orderingurl="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': 'name', 'sortOrder': 'desc'}) }}"
+        orderingurl="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': 'name', 'sortOrder': 'asc'}) }}"
         newproducturl="{{ path('admin_product_new') }}"
       >
         <div class="row">
