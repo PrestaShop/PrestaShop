@@ -960,7 +960,17 @@ class LanguageCore extends ObjectModel
                 $files_list = $other_files;
             }
 
-            if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../')) {
+            // don't know why, but it's needed & doesn't work otherwise
+            $translations_extract = array(
+                'translations/'.(string)$iso.'/admin.php',
+                'translations/'.(string)$iso.'/errors.php',
+                'translations/'.(string)$iso.'/fields.php',
+                'translations/'.(string)$iso.'/pdf.php',
+                'translations/'.(string)$iso.'/tabs.php',
+            );
+
+            if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../') ||
+                !$gz->extractList($translations_extract, _PS_TRANSLATIONS_DIR_.'../')) {
                 $errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), (string)$iso);
             }
 
@@ -1013,16 +1023,13 @@ class LanguageCore extends ObjectModel
         foreach ($languages as $lang) {
             $gz = false;
             $files_listing = array();
+
+            if (Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false) !== true) {
+                break;
+            }
+            $filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
+
             foreach ($modules_list as $module_name) {
-                $filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
-
-                clearstatcache();
-                if (@filemtime($filegz) < (time() - (24 * 3600))) {
-                    if (Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false) !== true) {
-                        break;
-                    }
-                }
-
                 $gz = new Archive_Tar($filegz, true);
                 $files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
                 foreach ($files_list as $i => $file) {
