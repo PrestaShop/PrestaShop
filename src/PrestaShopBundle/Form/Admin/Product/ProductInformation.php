@@ -204,6 +204,10 @@ class ProductInformation extends CommonAbstractType
             'choices' => $this->manufacturers,
             'choices_as_values' => true,
             'required' => false,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'label' => $this->translator->trans('Brand', [], 'Admin.Catalog.Feature')
         ))
 

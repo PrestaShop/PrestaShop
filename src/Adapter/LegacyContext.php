@@ -137,7 +137,17 @@ class LegacyContext
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar, $helpLink = '')
+    public function getLegacyLayout(
+        $controllerName = '',
+        $title = '',
+        $headerToolbarBtn = array(),
+        $displayType = '',
+        $showContentHeader = true,
+        $headerTabContent = '',
+        $enableSidebar,
+        $helpLink = '',
+        $isoLocale = ''
+    )
     {
         $originCtrl = new \AdminLegacyLayoutControllerCore(
             $controllerName,
@@ -147,8 +157,10 @@ class LegacyContext
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $isoLocale
         );
+
         $originCtrl->run();
 
         return $originCtrl->outPutHtml;

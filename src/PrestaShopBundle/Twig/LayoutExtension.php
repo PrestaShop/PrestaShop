@@ -143,7 +143,8 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $showContentHeader = true,
         $headerTabContent = '',
         $enableSidebar = false,
-        $helpLink = ''
+        $helpLink = '',
+        $isoLocale = ''
     )
     {
         if ($this->environment == 'test') {
@@ -173,7 +174,8 @@ EOF;
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $isoLocale
         );
 
         //test if legacy template from "content.tpl" has '{$content}'
@@ -222,7 +224,7 @@ EOF;
      */
     public function getYoutubeLink($watchUrl)
     {
-        $embedUrl = str_replace('watch?v=', 'embed/', $watchUrl);
+        $embedUrl = str_replace(array('watch?v=', 'youtu.be/'), array('embed/', 'youtube.com/embed/'), $watchUrl);
 
         return '<iframe width="560" height="315" src="'.$embedUrl.
             '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';

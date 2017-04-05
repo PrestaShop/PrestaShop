@@ -120,6 +120,10 @@ class ProductPrice extends CommonAbstractType
                     'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
                 ];
             },
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'label' => $this->translator->trans('Tax rule', [], 'Admin.Catalog.Feature'),
         ))
         ->add('on_sale', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(

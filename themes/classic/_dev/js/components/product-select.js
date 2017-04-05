@@ -33,7 +33,7 @@ export default class ProductSelect {
     let $thumbnails = $('.js-modal-product-images');
     let $onsale =  $('.on-sale');
 
-    $('.js-modal-thumb').on('click', (event) => {
+    $('body').on('click','.js-modal-thumb', (event) => {
       if($('.js-modal-thumb').hasClass('selected')){
         $('.js-modal-thumb').removeClass('selected');
       }

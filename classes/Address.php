@@ -120,7 +120,7 @@ class AddressCore extends ObjectModel
             'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
             'alias' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'company' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+            'company' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255),
             'lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'vat_number' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),

@@ -115,7 +115,7 @@ $(document).ready(function() {
 
 function productOrderTable(orderBy, orderWay) {
 	var form = $('form#product_catalog_list');
-	var url = form.attr('orderingurl').replace(/name/, orderBy).replace(/desc/, orderWay);
+	var url = form.attr('orderingurl').replace(/name/, orderBy).replace(/asc/, orderWay);
 	window.location.href = url;
 }
 

@@ -133,6 +133,10 @@ class CustomerAddressFormCore extends AbstractForm
             $address->{$formField->getName()} = $formField->getValue();
         }
 
+        if (!isset($this->formFields['id_state'])) {
+            $address->id_state = 0;
+        }
+
         if (empty($address->alias)) {
             $address->alias = $this->translator->trans('My Address', [], 'Shop.Theme.Checkout');
         }

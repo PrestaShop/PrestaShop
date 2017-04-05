@@ -1759,17 +1759,37 @@ class FrontControllerCore extends Controller
 
     protected function render($template, array $params = array())
     {
+        $templateContent = '';
         $scope = $this->context->smarty->createData(
             $this->context->smarty
         );
 
         $scope->assign($params);
-        $tpl = $this->context->smarty->createTemplate(
-            $this->getTemplateFile($template),
-            $scope
-        );
 
-        return $tpl->fetch();
+        try {
+            $tpl = $this->context->smarty->createTemplate(
+                $this->getTemplateFile($template),
+                $scope
+            );
+
+            $templateContent = $tpl->fetch();
+        } catch (PrestaShopException $e) {
+            PrestaShopLogger::addLog($e->getMessage());
+
+            if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
+                $this->warning[] = $e->getMessage();
+                $scope->assign(array('notifications' => $this->prepareNotifications()));
+
+                $tpl = $this->context->smarty->createTemplate(
+                    $this->getTemplateFile('_partials/notifications'),
+                    $scope
+                );
+
+                $templateContent = $tpl->fetch();
+            }
+        }
+
+        return $templateContent;
     }
 
     protected function getTranslator()
@@ -1865,28 +1885,6 @@ class FrontControllerCore extends Controller
         $form->setAction($this->getCurrentURL());
 
         return $form;
-    }
-
-    public function displayAjaxAddressForm()
-    {
-        $addressForm = $this->makeAddressForm();
-
-        if (Tools::getIsset('id_address')) {
-            $addressForm->loadAddressById(Tools::getValue('id_address'));
-        }
-
-        if (Tools::getIsset('id_country')) {
-            $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
-        }
-
-        ob_end_clean();
-        header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
-            'address_form' => $this->render(
-                'customer/_partials/address-form',
-                $addressForm->getTemplateVariables()
-            ),
-        )));
     }
 
     private function initDebugguer()

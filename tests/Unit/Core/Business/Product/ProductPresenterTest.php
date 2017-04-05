@@ -40,11 +40,11 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
 
 class PriceFormatter extends BasePricePresenter
 {
-    public function convertAmount($price)
+    public function convertAmount($price, $currency = null)
     {
         return $price;
     }
-    public function format($price)
+    public function format($price, $currency = null)
     {
         return "#$price";
     }
@@ -70,6 +70,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['id_product'] = 1;
         $this->product['id_product_attribute'] = 0;
         $this->product['link_rewrite'] = 'hérisson';
+        $this->product['reference'] = 'ref-herisson';
         $this->product['price'] = null;
         $this->product['price_without_reduction'] = null;
         $this->product['price_tax_exc'] = null;

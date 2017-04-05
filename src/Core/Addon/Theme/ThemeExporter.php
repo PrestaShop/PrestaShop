@@ -64,7 +64,7 @@ class ThemeExporter
         $this->copyModuleDependencies((array) $theme->get('dependencies.modules'), $cacheDir);
         $this->copyTranslations($theme, $cacheDir);
 
-        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_').'/'.$theme->getName().'.zip';
+        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_'). DIRECTORY_SEPARATOR .$theme->getName().'.zip';
         $this->createZip($cacheDir, $finalFile);
 
         $this->fileSystem->remove($cacheDir);

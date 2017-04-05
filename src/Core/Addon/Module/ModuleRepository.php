@@ -460,21 +460,22 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
+     * Send request to get module details on the marketplace, then merge the data received in Module instance
      * @param $moduleId
      * @return Module
      */
     public function getModuleById($moduleId)
     {
         $moduleAttributes = $this->adminModuleProvider->getModuleAttributesById($moduleId);
-        $attributes = $this->getModuleAttributes($moduleAttributes['name']);
+        $module = $this->getModule($moduleAttributes['name']);
 
-        foreach ($attributes->all() as $name => $value) {
-            if (!array_key_exists($name, $moduleAttributes)) {
-                $moduleAttributes[$name] = $value;
+        foreach ($moduleAttributes as $name => $value) {
+            if (!$module->attributes->has($name)) {
+                $module->attributes->set($name, $value);
             }
         }
 
-        return new Module($moduleAttributes);
+        return $module;
     }
 
     /**
@@ -524,45 +525,9 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         return $modules;
     }
-    /*
-     * PROTECTED FUNCTIONS
-     */
 
     /**
-     * In order to avoid class parsing, we generate a cache file which will keep mandatory data of modules.
-     *
-     * @param string $name The technical module name to find
-     *
-     * @return array Module data stored in file
-     */
-    private function generateCacheFile($data)
-    {
-        if (!$data) {
-            return;
-        }
-        $encoded_data = json_encode($data);
-        file_put_contents($this->cacheFilePath, $encoded_data);
-
-        return $data;
-    }
-
-    /**
-     * We load the file which contains cached data.
-     *
-     * @return array Module data loaded in file
-     */
-    private function readCacheFile()
-    {
-        // JSON file not found ? Generate it
-        if (!file_exists($this->cacheFilePath)) {
-            return array();
-        }
-        $data = json_decode(file_get_contents($this->cacheFilePath), true);
-
-        return ($data == null) ? array() : $data;
-    }
-
-    /**
+     * Function loading all installed modules on the shop. Can be used as example for AddonListFilter use.
      * @return array
      */
     public function getInstalledModules()

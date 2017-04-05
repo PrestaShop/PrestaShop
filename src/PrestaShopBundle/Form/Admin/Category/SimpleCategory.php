@@ -88,6 +88,10 @@ class SimpleCategory extends CommonAbstractType
             'choices' => $this->categories,
             'choices_as_values' => true,
             'required' => true,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature')
         ));
     }
