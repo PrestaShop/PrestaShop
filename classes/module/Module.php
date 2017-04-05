@@ -256,6 +256,14 @@ abstract class ModuleCore
             $this->ps_versions_compliancy['min'] .= '.0.0';
         }
 
+        if (strlen($this->ps_versions_compliancy['min']) == 5) {
+            $this->ps_versions_compliancy['min'] .= '.0';
+        }
+
+        if (strlen($this->ps_versions_compliancy['max']) == 5) {
+            $this->ps_versions_compliancy['max'] .= '.0';
+        }
+
         if (strlen($this->ps_versions_compliancy['max']) == 3) {
             $this->ps_versions_compliancy['max'] .= '.999.999';
         }
