@@ -137,14 +137,22 @@ class ThemeExporter
     }
 
     /**
+     * @param mixed $exportDir
+     */
+    public function setExportDir($exportDir)
+    {
+        $this->exportDir = str_replace('/export', DIRECTORY_SEPARATOR . 'export', $exportDir);
+    }
+
+    /**
      * @param $filePath
      * @return bool
      * @throws \Exception
      */
     protected function ensureFileBelongsToExportDirectory($filePath)
     {
-        $validFileLocation = substr(realpath($filePath), 0, strlen($this->exportDir)) === $this->exportDir;
-
+        $validFileLocation = substr(realpath($filePath), 0, strlen(realpath($this->exportDir))) === realpath($this->exportDir);
+        
         if (!$validFileLocation) {
             throw new \Exception('Invalid file location. This file should belong to the export directory');
         }
@@ -174,7 +182,7 @@ class ThemeExporter
             ->setOutputPath($tmpFolderPath)
             ->extract($theme, $locale, $rootDir);
 
-        Flattenizer::flatten($tmpFolderPath . '/' . $locale, $folderPath . '/' . $locale, $locale);
+        Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
 
         return $this->themeProvider->getCatalogueFromPaths($folderPath, $locale, '*');
     }
@@ -187,20 +195,20 @@ class ThemeExporter
     {
         $finder = Finder::create();
 
-        foreach ($finder->in($archiveParentDirectory . '/' . $locale)->files() as $file) {
-            $parentDirectoryParts = explode('/', dirname($file));
+        foreach ($finder->in($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
+            $parentDirectoryParts = explode(DIRECTORY_SEPARATOR, dirname($file));
             $destinationFilenameParts = array(
                 $archiveParentDirectory,
                 $parentDirectoryParts[count($parentDirectoryParts) - 1] . '.' . $locale . '.xlf'
             );
-            $destinationFilename = implode('/', $destinationFilenameParts);
+            $destinationFilename = implode(DIRECTORY_SEPARATOR, $destinationFilenameParts);
             if ($this->filesystem->exists($destinationFilename)) {
                 $this->filesystem->remove($destinationFilename);
             }
             $this->filesystem->rename($file->getPathname(), $destinationFilename);
         }
 
-        $this->filesystem->remove($archiveParentDirectory . '/' . $locale);
+        $this->filesystem->remove($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale);
     }
 
     public function cleanArtifacts($themeName)
@@ -215,7 +223,7 @@ class ThemeExporter
      */
     protected function getTemporaryExtractionFolder($themeName)
     {
-        return $this->cacheDir . '/' . $themeName . '-tmp';
+        return $this->cacheDir . DIRECTORY_SEPARATOR . $themeName . '-tmp';
     }
 
     /**
@@ -224,7 +232,7 @@ class ThemeExporter
      */
     protected function getFlattenizationFolder($themeName)
     {
-        return $this->cacheDir . '/' . $themeName;
+        return $this->cacheDir . DIRECTORY_SEPARATOR . $themeName;
     }
 
     /**
@@ -233,7 +241,7 @@ class ThemeExporter
      */
     protected function getExportDir($themeName)
     {
-        return $this->exportDir . '/' . $themeName;
+        return $this->exportDir . DIRECTORY_SEPARATOR . $themeName;
     }
 
     /**

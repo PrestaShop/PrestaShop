@@ -84,7 +84,7 @@ services:
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
-        
+
     # MODULE TAB MANAGEMENT
     prestashop.adapter.module.tab.register:
         class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister
@@ -96,7 +96,7 @@ services:
             - "@finder"
             - "@filesystem"
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
-            
+
     prestashop.adapter.module.tab.unregister:
         class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabUnregister
         arguments:
@@ -104,7 +104,7 @@ services:
             - "@prestashop.core.admin.lang.repository"
             - "@logger"
             - "@translator"
-        
+
     prestashop.adapter.module.tab.eventsubscriber:
         class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabManagementSubscriber
         arguments:
@@ -235,4 +235,5 @@ services:
             - "@filesystem"
         properties:
             cacheDir: "%kernel.cache_dir%"
-            exportDir: "%kernel.cache_dir%/export"
+        calls:
+            - [ setExportDir, ["%kernel.cache_dir%/export"]]
