@@ -1887,28 +1887,6 @@ class FrontControllerCore extends Controller
         return $form;
     }
 
-    public function displayAjaxAddressForm()
-    {
-        $addressForm = $this->makeAddressForm();
-
-        if (Tools::getIsset('id_address')) {
-            $addressForm->loadAddressById(Tools::getValue('id_address'));
-        }
-
-        if (Tools::getIsset('id_country')) {
-            $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
-        }
-
-        ob_end_clean();
-        header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
-            'address_form' => $this->render(
-                'customer/_partials/address-form',
-                $addressForm->getTemplateVariables()
-            ),
-        )));
-    }
-
     private function initDebugguer()
     {
         if (true === _PS_MODE_DEV_) {
