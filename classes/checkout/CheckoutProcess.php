@@ -73,6 +73,11 @@ class CheckoutProcessCore implements RenderableInterface
         return $this;
     }
 
+    public function getStep($position)
+    {
+        return isset($this->steps[$position - 1]) ? $this->steps[$position - 1] : false;
+    }
+
     public function getSteps()
     {
         return $this->steps;

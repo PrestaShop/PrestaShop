@@ -26,9 +26,24 @@ import $ from 'jquery'
 import prestashop from 'prestashop'
 
 export default function () {
-  $('.js-edit-addresses').on('click', (event) => {
+  $('body').on('change', '.js-edit-addresses', (event) => {
     event.stopPropagation();
     $('#checkout-addresses-step').trigger('click');
     prestashop.emit('editAddress');
+  });
+
+  $('body').on('change', '.js-checkout-address-form .js-country', () => {
+    var requestData = $('.js-checkout-address-form form').serialize();
+    var getFormViewUrl = $('.js-checkout-address-form form').data('refresh-url');
+
+    $.post(getFormViewUrl, requestData).then(function (resp) {
+      $('#checkout-addresses-step .content').html(resp.checkout_address_form);
+
+      $('#js-checkout-summary').replaceWith(resp.preview);
+
+      prestashop.emit('updatedCheckoutAddressForm', {resp: resp});
+    }).fail((resp) => {
+      prestashop.emit('handleError', {eventType: 'updateAddressForm', resp: resp});
+    });
   });
 }

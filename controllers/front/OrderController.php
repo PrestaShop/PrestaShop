@@ -230,4 +230,25 @@ class OrderControllerCore extends FrontController
         parent::initContent();
         $this->setTemplate('checkout/checkout');
     }
+
+    public function displayAjaxCheckoutAddressStep()
+    {
+        $cart = $this->cart_presenter->present(
+            $this->context->cart
+        );
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+
+        $this->ajaxDie(Tools::jsonEncode(array(
+            'checkout_address_form' => $this->checkoutProcess->getStep(2)->render(Array(
+              'ajax' => true
+            )),
+            'preview' => $this->render('checkout/_partials/cart-summary', array(
+                'cart' => $cart,
+                'static_token' => Tools::getToken(false),
+            )),
+            'has_errors' => !empty($this->errors),
+        )));
+    }
 }
