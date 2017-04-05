@@ -769,6 +769,7 @@ class AdminModulesControllerCore extends AdminController
                         $files_list = array(
                             array('type' => 'addonsNative', 'file' => Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
                             array('type' => 'addonsBought', 'file' => Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
+                            array('type' => 'addonsMustHave', 'file' => Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 'loggedOnAddons' => 1),
                         );
 
                         foreach ($files_list as $f) {
@@ -950,7 +951,7 @@ class AdminModulesControllerCore extends AdminController
                             if (isset($this->_modules_ad[$module->name])) {
                                 $ad_modules = $this->getModulesByInstallation($this->_modules_ad[$module->name]);
 
-                                foreach ($ad_modules['not_installed'] as $key => &$module) {
+                                foreach ($ad_modules['not_installed'] as &$module) {
                                     if (isset($module->addons_buy_url)) {
                                         $module->addons_buy_url = str_replace('utm_source=v1trunk_api', 'utm_source=back-office', $module->addons_buy_url)
                                             .'&utm_medium=related-modules&utm_campaign=back-office-'.strtoupper($this->context->language->iso_code)
@@ -1026,7 +1027,7 @@ class AdminModulesControllerCore extends AdminController
 
             $module_upgraded = implode('|', $module_upgraded);
 
-            if ($key == 'updateAll') {
+            if (Tools::getValue('updateAll')) {
                 Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&allUpdated=1');
             } elseif (isset($module_upgraded) && $module_upgraded != '') {
                 Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1&module_name='.$module_upgraded);
