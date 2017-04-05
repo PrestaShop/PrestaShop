@@ -37,7 +37,7 @@ function setUpCheckout() {
       // TODO: Handle request if no pretty URL
       url += `?content_only=1`;
       $.get(url, (content) => {
-        $('#modal').find('.modal-content').html($(content).find('.page-cms').contents());
+        $('#modal').find('.js-modal-content').html($(content).find('.page-cms').contents());
       }).fail((resp) => {
         prestashop.emit('handleError', {eventType: 'clickTerms', resp: resp});
       });
