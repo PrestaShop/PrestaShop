@@ -1239,6 +1239,19 @@ class LinkCore
             case 'language':
                 $link = $context->link->getLanguageLink($params['id']);
                 break;
+            case 'product':
+                $link = $context->link->getProductLink(
+                    $params['id'],
+                    $params['alias'],
+                    (isset($params['category']) ? $params['category'] : null),
+                    (isset($params['ean13']) ? $params['ean13'] : null),
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    (isset($params['ipa']) ? (int)$params['ipa'] : 0),
+                    false,
+                    $params['relative_protocol']
+                );
+                break;
             case 'category':
                 $params = array_merge(array('selected_filters' => null), $params);
                 $link = $context->link->getCategoryLink(
