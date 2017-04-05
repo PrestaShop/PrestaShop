@@ -129,6 +129,7 @@ class TranslationsController extends FrameworkBundleAdminController
 
         $treeBuilder = new TreeBuilder($this->langToLocale($lang), $theme);
         $catalogue = $treeBuilder->makeTranslationArray($moduleProvider);
+        $editable = $this->isGranted(PageVoter::UPDATE, $this::controller_name.'_');
 
         return array(
             'translationsTree' => $treeBuilder->makeTranslationsTree($catalogue),
@@ -147,7 +148,8 @@ class TranslationsController extends FrameworkBundleAdminController
                 '%d expressions',
                 array(),
                 'Admin.International.Feature'
-            )
+            ),
+            'editable' => $editable,
         );
     }
 
