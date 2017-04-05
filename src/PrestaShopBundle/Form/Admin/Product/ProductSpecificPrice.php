@@ -97,6 +97,10 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' => false,
             'label' => false,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'placeholder' => $this->translator->trans('All currencies', array(), 'Admin.Global'),
         ))
         ->add('sp_id_country', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
@@ -104,6 +108,10 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' => false,
             'label' => false,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'placeholder' => $this->translator->trans('All countries', array(), 'Admin.Global'),
         ))
         ->add('sp_id_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
@@ -111,6 +119,10 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' => false,
             'label' => false,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'placeholder' => $this->translator->trans('All groups', array(), 'Admin.Global'),
         ))
         ->add('sp_id_customer', 'PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType', array(

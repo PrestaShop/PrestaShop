@@ -78,6 +78,7 @@ class ProductFeature extends CommonAbstractType
             'attr' => array(
                 'data-action' => $this->router->generate('admin_feature_get_feature_values', array('idFeature' => 1)),
                 'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
                 'class' => 'feature-selector',
             ),
             'placeholder' => $this->translator->trans('Choose a feature', array(), 'Admin.Catalog.Feature'),
@@ -86,7 +87,10 @@ class ProductFeature extends CommonAbstractType
             'label' => $this->translator->trans('Pre-defined value', array(), 'Admin.Catalog.Feature'),
             'required' =>  false,
             'choices_as_values' => true,
-            'attr' => array('class' => 'feature-value-selector'),
+            'attr' => array(
+                'class' => 'feature-value-selector',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'placeholder' => $this->translator->trans('Choose a value', array(), 'Admin.Catalog.Feature'),
             'disabled' => true,
         ))
