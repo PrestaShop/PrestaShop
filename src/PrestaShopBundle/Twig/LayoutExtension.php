@@ -224,7 +224,7 @@ EOF;
      */
     public function getYoutubeLink($watchUrl)
     {
-        $embedUrl = str_replace('watch?v=', 'embed/', $watchUrl);
+        $embedUrl = str_replace(array('watch?v=', 'youtu.be/'), array('embed/', 'youtube.com/embed/'), $watchUrl);
 
         return '<iframe width="560" height="315" src="'.$embedUrl.
             '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';
