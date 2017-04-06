@@ -38,10 +38,16 @@ use PrestaShopBundle\Exception\NotImplementedException;
 use Product;
 use RuntimeException;
 use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class StockManagementRepository
 {
     use NormalizeFieldTrait;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * @var Connection
@@ -80,6 +86,7 @@ abstract class StockManagementRepository
 
 
     /**
+     * @param ContainerInterface $container
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
@@ -87,12 +94,14 @@ abstract class StockManagementRepository
      * @throws NotImplementedException
      */
     public function __construct(
+        ContainerInterface $container,
         Connection $connection,
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
         $tablePrefix
     )
     {
+        $this->container = $container;
         $this->connection = $connection;
         $this->contextAdapter = $contextAdapter;
         $this->imageManager = $imageManager;
