@@ -405,7 +405,7 @@ $(document).ready(function () {
 						<div class="col-lg-4">
 							<div class="input-group">
 								<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-								<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:$priceDisplayPrecisionFormat}" />
+								<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:$priceDisplayPrecisionFormat}" onchange="noComma('sp_price');" />
 							</div>
 							<p class="checkbox">
 								<label for="leave_bprice">{l s='Leave base price:'}</label>
@@ -420,7 +420,7 @@ $(document).ready(function () {
 				<div class="col-lg-4">
 					<div class="row">
 						<div class="col-lg-3">
-							<input type="text" name="sp_reduction" id="sp_reduction" value="0.00"/>
+							<input type="text" name="sp_reduction" id="sp_reduction" value="0.00" onchange="noComma('sp_reduction');"/>
 						</div>
 						<div class="col-lg-6">
 							<select name="sp_reduction_type" id="sp_reduction_type">
