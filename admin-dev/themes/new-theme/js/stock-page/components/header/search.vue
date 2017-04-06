@@ -2,7 +2,7 @@
   <div id="search" class="row m-b-2">
     <div class="col-md-8">
       <div class="m-b-2">
-        <form @keyup.enter="onSubmit" class="search-form" @submit.prevent="onSubmit">
+        <form class="search-form" @submit.prevent="onSubmit" @keyup.enter="onSubmit">
           <label>Search products (search by name,reference,supplier)</label>
           <Tags :tags="tags" @tagChange="onSubmit"/>
           <button type="button" class="btn btn-primary search-button" @click="onSubmit">
