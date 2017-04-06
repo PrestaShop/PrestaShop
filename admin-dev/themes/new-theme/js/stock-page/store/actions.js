@@ -7,15 +7,13 @@ Vue.use(VueResource);
 
 export const getStock = ({ commit, state }, payload) => {
   let url = window.data.apiRootUrl.replace(/\?.*/, '');
-  if (payload.keywords) {
-    state.keywords = payload.keywords;
-  }
   Vue.http.get(url, {
     params: {
       order: payload.order,
       page_size: payload.page_size,
       page_index: payload.page_index,
-      keywords: state.keywords
+      keywords: payload.keywords ? payload.keywords : [],
+      supplier_id: payload.suppliers ? payload.suppliers : []
     }
   }).then(function(response) {
     commit(types.SET_PAGE_INDEX, payload.page_index);

@@ -12,11 +12,11 @@
             <h2>Filter by Supplier</h2>
             <FilterComponent
               placeholder="Search a supplier"
-              :data="this.$store.state.suppliers"
+              :list="this.$store.state.suppliers"
               itemID="supplier_id"
               label="name"
               getData="getSuppliers"
-              @checked="onSupplierChange"
+              @active="onFilterActive"
             />
           </div>
         </div>
@@ -25,14 +25,17 @@
             <h2>Filter by categories</h2>
             <FilterComponent
               placeholder="Search a category"
-              :data="this.$store.state.suppliers"
+              :list="this.$store.state.suppliers"
               itemID="supplier_id"
               label="name"
               getData="getSuppliers"
             />
           </div>
         </div>
-        <button type="button" class="btn btn-primary pull-right m-y-2 m-x-2"><i class="material-icons m-r-1">filter_list</i>APPLY ADVANCED FILTERS</button>
+        <button type="button" class="btn btn-primary pull-right m-y-2 m-x-2" :disabled="disabled" @click="onClick">
+          <i class="material-icons m-r-1">filter_list</i>
+          APPLY ADVANCED FILTERS
+        </button>
       </div>
     </div>
   </div>
@@ -42,13 +45,36 @@
   import FilterComponent from './filters/filter-component';
 
   export default {
+    computed : {
+      disabled() {
+        return this.disabled;
+      }
+    },
     methods: {
-      onSupplierChange(obj) {
-       // console.log(obj);
+      onClick() {
+        this.supplierFilter();
+      },
+      onFilterActive(val, list) {
+        this.suppliers = list;
+        this.disabled= !val;
+        if(!list) {
+          this.supplierFilter();
+        }
+      },
+      supplierFilter() {
+        this.$store.dispatch('getStock', {
+          suppliers : this.suppliers
+        });
       }
     },
     components: {
       FilterComponent
+    },
+    data() {
+      return {
+        disabled: true,
+        suppliers: []
+      }
     }
   }
 </script>

@@ -16,7 +16,7 @@
     watch : {
       checked(val) {
         this.$emit('checked', {
-          val,
+          checked: val,
           item: this.item
         });
       }

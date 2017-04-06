@@ -1,13 +1,35 @@
 <template>
   <div>
-    <Tags class="form-control search search-input" :tags="tags" :placeholder="placeholder" />
+    <form @submit.prevent="onSubmit" @keyup="onKeyUp" @keyup.enter="onSubmit">
+      <Tags ref="tags" class="form-control search search-input" :tags="tags" :placeholder="placeholder" @tagChange="onTagChanged"  />
+    </form>
   </div>
 </template>
 
 <script>
   import Tags from '../../utils/tags';
   export default {
-    props: ['placeholder'],
+    props: ['placeholder', 'match', 'label', 'itemID'],
+    methods: {
+      onTagChanged(tags, index, tag, splice) {
+        if(splice) {
+          this.tags.splice(index, 1);
+        }
+        this.$emit('tagChanged', tag);
+      },
+      onKeyUp() {
+        let children = this.$refs.tags.$refs.tags.$children;
+        let text = children[children.length - 1].text;
+        this.$emit('typing', text);
+      },
+      onSubmit(event) {
+        if(this.match) {
+          $(this.$el).find('.input').blur();
+          this.$emit('submit', this.match[this.label]);
+        }
+        setTimeout(() => $(this.$el).find('.gap:last-of-type .input').focus() , 15);
+      }
+    },
     components: {
       Tags
     },
@@ -18,10 +40,3 @@
     }
   }
 </script>
-
-<style lang="sass?outputStyle=expanded" scoped>
-  ::placeholder {
-    font-size: 12px;
-    font-style: italic;
-  }
-</style>
