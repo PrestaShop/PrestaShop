@@ -112,7 +112,7 @@ class AdminStockManagementControllerCore extends AdminController
             $this->addRowAction('addstock');
             $this->addRowAction('prepareRemovestock');
 
-            if (count(Warehouse::getWarehouses()) > 1) {
+            if (count(Warehouse::getWarehouses(true)) > 1) {
                 $this->addRowAction('prepareTransferstock');
             }
 
@@ -155,7 +155,7 @@ class AdminStockManagementControllerCore extends AdminController
             $this->addRowAction('addstock');
             $this->addRowAction('prepareRemovestock');
 
-            if (count(Warehouse::getWarehouses()) > 1) {
+            if (count(Warehouse::getWarehouses(true)) > 1) {
                 $this->addRowAction('prepareTransferstock');
             }
 
@@ -270,7 +270,7 @@ class AdminStockManagementControllerCore extends AdminController
         $id_product_attribute = (int)Tools::getValue('id_product_attribute');
 
         // gets warehouses
-        $warehouses_add = Warehouse::getWarehouses();
+        $warehouses_add = Warehouse::getWarehouses(true);
         $warehouses_remove = Warehouse::getWarehousesByProductId($id_product, $id_product_attribute);
 
         // displays warning if no warehouses
@@ -787,7 +787,7 @@ class AdminStockManagementControllerCore extends AdminController
         // sets actions5
         $this->addRowAction('removestock');
 
-        if (count(Warehouse::getWarehouses()) > 1) {
+        if (count(Warehouse::getWarehouses(true)) > 1) {
             $this->addRowAction('transferstock');
         }
 
