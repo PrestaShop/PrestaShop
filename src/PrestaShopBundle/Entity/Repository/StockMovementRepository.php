@@ -43,10 +43,12 @@ use PrestaShopBundle\Exception\ProductNotFoundException;
 use Product;
 use RuntimeException;
 use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StockMovementRepository extends StockManagementRepository
 {
     /**
+     * @param ContainerInterface $container
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
@@ -54,6 +56,7 @@ class StockMovementRepository extends StockManagementRepository
      * @throws NotImplementedException
      */
     public function __construct(
+        ContainerInterface $container,
         Connection $connection,
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
@@ -61,6 +64,7 @@ class StockMovementRepository extends StockManagementRepository
     )
     {
         parent::__construct(
+            $container,
             $connection,
             $contextAdapter,
             $imageManager,
@@ -80,8 +84,6 @@ class StockMovementRepository extends StockManagementRepository
 
         if (!empty($idStock)) {
             $delta = $movement->getDelta();
-
-            // @TODO: good data
             $mvt_params = array(
                 'id_stock' => $idStock,
                 'id_order' => $movement->getIdOrder(),

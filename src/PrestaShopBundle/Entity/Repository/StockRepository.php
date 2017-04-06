@@ -42,6 +42,7 @@ use PrestaShopBundle\Exception\ProductNotFoundException;
 use Product;
 use RuntimeException;
 use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StockRepository extends StockManagementRepository
 {
@@ -56,6 +57,7 @@ class StockRepository extends StockManagementRepository
     private $orderStates = array();
 
     /**
+     * @param ContainerInterface $container
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
@@ -64,6 +66,7 @@ class StockRepository extends StockManagementRepository
      * @throws NotImplementedException
      */
     public function __construct(
+        ContainerInterface $container,
         Connection $connection,
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
@@ -72,6 +75,7 @@ class StockRepository extends StockManagementRepository
     )
     {
         parent::__construct(
+            $container,
             $connection,
             $contextAdapter,
             $imageManager,
@@ -124,14 +128,7 @@ class StockRepository extends StockManagementRepository
             $idStock = $this->getStockBy($productIdentity);
             if (!empty($idStock)) {
                 $movement->setIdStock((int)$idStock);
-
-                // @TODO: call with container
-                $stockMovement = new StockMovementRepository(
-                    $this->connection,
-                    $this->contextAdapter,
-                    $this->imageManager,
-                    $this->tablePrefix
-                );
+                $stockMovement = $this->container->get('prestashop.core.api.stockMovement.repository');
                 $stockMovement->saveFromMovement($movement);
             }
         }

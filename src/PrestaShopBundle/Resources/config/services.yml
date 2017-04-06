@@ -257,7 +257,6 @@ services:
             - "@prestashop.core.admin.data_provider.addons_interface"
             - "@prestashop.adapter.admin.data_provider.module"
 
-
     # Repositories
     prestashop.core.admin.module.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
@@ -312,6 +311,7 @@ services:
     prestashop.core.api.stock.repository:
         class: PrestaShopBundle\Entity\Repository\StockRepository
         arguments:
+            - "@service_container"
             - "@doctrine.dbal.default_connection"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.image_manager"
@@ -321,6 +321,7 @@ services:
     prestashop.core.api.stockMovement.repository:
         class: PrestaShopBundle\Entity\Repository\StockMovementRepository
         arguments:
+            - "@service_container"
             - "@doctrine.dbal.default_connection"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.image_manager"
