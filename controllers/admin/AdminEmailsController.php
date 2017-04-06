@@ -330,9 +330,8 @@ class AdminEmailsControllerCore extends AdminController
         if ($this->tabAccess['view'] === '1') {
             $smtpChecked = (trim(Tools::getValue('mailMethod')) == 'smtp');
             $smtpServer = Tools::getValue('smtpSrv');
-            $content = urldecode(Tools::getValue('testMsg'));
-            $content = html_entity_decode($content);
-            $subject = urldecode(Tools::getValue('testSubject'));
+            $content = html_entity_decode(urldecode(Tools::getValue('testMsg')));
+            $subject = html_entity_decode(urldecode(Tools::getValue('testSubject')));
             $type = 'text/html';
             $to = Tools::getValue('testEmail');
             $from = Configuration::get('PS_SHOP_EMAIL');
@@ -348,7 +347,7 @@ class AdminEmailsControllerCore extends AdminController
             $smtpPort = Tools::getValue('smtpPort');
             $smtpEncryption = Tools::getValue('smtpEnc');
 
-            $result = Mail::sendMailTest(Tools::htmlentitiesUTF8($smtpChecked), Tools::htmlentitiesUTF8($smtpServer), Tools::htmlentitiesUTF8($content), Tools::htmlentitiesUTF8($subject), Tools::htmlentitiesUTF8($type), Tools::htmlentitiesUTF8($to), Tools::htmlentitiesUTF8($from), Tools::htmlentitiesUTF8($smtpLogin), $smtpPassword, Tools::htmlentitiesUTF8($smtpPort), Tools::htmlentitiesUTF8($smtpEncryption));
+            $result = Mail::sendMailTest(Tools::htmlentitiesUTF8($smtpChecked), Tools::htmlentitiesUTF8($smtpServer), $content, $subject, Tools::htmlentitiesUTF8($type), Tools::htmlentitiesUTF8($to), Tools::htmlentitiesUTF8($from), Tools::htmlentitiesUTF8($smtpLogin), $smtpPassword, Tools::htmlentitiesUTF8($smtpPort), Tools::htmlentitiesUTF8($smtpEncryption));
             die($result === true ? 'ok' : $result);
         }
     }
