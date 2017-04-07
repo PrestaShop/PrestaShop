@@ -351,7 +351,7 @@ class ProductControllerCore extends FrontController
 
         $address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $this->context->smarty->assign(array(
-            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, (float)$tax, $ecotax_tax_amount),
+            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, null, (float)$tax, $ecotax_tax_amount),
             'ecotax_tax_inc' => $ecotax_tax_amount,
             'ecotax_tax_exc' => Tools::ps_round($this->product->ecotax, 2),
             'ecotaxTax_rate' => $ecotax_rate,
@@ -711,7 +711,7 @@ class ProductControllerCore extends FrontController
         $this->context->smarty->assign('customizationFormTarget', $customization_form_target);
     }
 
-    protected function formatQuantityDiscounts($specific_prices, $tax_rate, $ecotax_amount)
+    protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
         foreach ($specific_prices as $key => &$row) {
             $row['quantity'] = &$row['from_quantity'];
