@@ -11,8 +11,19 @@
       @tagChanged="onTagChanged"
       />
     <ul class="m-t-1">
-      <li v-for="item in items" class="flex" v-show="item.visible">
-        <Checkbox :ref="item[label]" :id="item[itemID]" :item="item" @checked="onCheck"/>
+      <li v-for="(item, index) in items" class="flex" v-show="item.visible">
+        <div v-if="item.children" class="chevron" @click="openTree">
+          <i class="material-icons" v-if="isClosed">chevron_right</i>
+          <i class="material-icons" v-else>keyboard_arrow_down</i>
+          <ul>
+            <li v-for="child in item.children">
+              <Checkbox :ref="child[label]" :id="child[itemID]+index" :item="child" @checked="onCheck"/>
+              <span class="m-l-1">{{child[label]}}</span>
+            </li>
+          </ul>
+          <Checkbox :ref="item[label]" :id="itemID+index" :item="item" @checked="onCheck"/>
+        </div>
+        <Checkbox :ref="item[label]" :id="itemID+index" :item="item" @checked="onCheck"/>
         <span class="m-l-1">{{item[label]}}</span>
       </li>
     </ul>
@@ -22,12 +33,14 @@
 <script>
   import SearchFilter from './search-filter';
   import Checkbox from '../../utils/checkbox';
+  import _ from 'lodash';
 
   export default {
     props: ['placeholder', 'getData', 'itemID', 'label', 'list'],
     computed: {
       items() {
         let matchList = [];
+        console.log(this.list)
         this.list.filter((data)=> {
           let label = data[this.label].toLowerCase();
           data.visible = false;
@@ -71,7 +84,7 @@
         this.currentVal = val.toLowerCase();
       },
       onSubmit(label) {
-       let item = window._.find(this.$refs[label]);
+       let item = _.find(this.$refs[label]);
        item.$data.checked = true;
        this.currentVal = '';
       },
@@ -83,19 +96,24 @@
       },
       filterList(tags) {
         let idList = []
+
         this.list.map((data)=> {
           if(tags.indexOf(data[this.label]) !== -1) {
             idList.push(data[this.itemID]);
           }
         });
         return idList;
+      },
+      openTree() {
+        this.isClosed = ! this.isClosed;
       }
     },
     data() {
       return {
         currentVal: '',
         match: null,
-        splice: true
+        splice: true,
+        isClosed: false
       }
     },
     mounted() {
@@ -117,5 +135,12 @@
   ul {
     list-style: none;
     padding-left: 0;
+  }
+  .chevron {
+    cursor: pointer;
+    .material-icons {
+      vertical-align: middle;
+      font-size:20px;
+    }
   }
 </style>

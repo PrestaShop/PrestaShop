@@ -3,11 +3,12 @@
     <td class="flex p-r-1">
       <Checkbox :id="id" />
       <ProductDesc
-      class="m-l-1"
-      :has-combination="hasCombination"
-      :name="productName"
-      :thumbnail="product.combination_thumbnail"
-      :combinationName="product.combination_name" />
+        class="m-l-1"
+        :has-combination="hasCombination"
+        :name="productName"
+        :thumbnail="product.combination_thumbnail"
+        :combinationName="product.combination_name"
+      />
     </td>
     <td>
       {{ product.product_reference }}

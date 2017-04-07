@@ -104,10 +104,10 @@
         outline:none;
         opacity: 0;
         position: absolute;
-        top: 4px;
+        top: 3px;
         right: 0;
         border: none;
-        height: 31px;
+        height: 30px;
         width: 40px;
         background: $brand-primary;
         z-index: 2;

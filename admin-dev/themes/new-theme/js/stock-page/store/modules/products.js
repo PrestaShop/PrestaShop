@@ -2,6 +2,7 @@ import * as types from '../mutation-types';
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import { showGrowl } from '../utils/growl';
+import _ from 'lodash';
 
 Vue.use(VueResource);
 
@@ -50,7 +51,7 @@ const actions = {
 const mutations = {
   [types.ADD_PRODUCTS](state, products) {
 
-    window._.forEach(products, (product) => {
+    _.forEach(products, (product) => {
       product.qty = 0;
     });
 
@@ -58,7 +59,7 @@ const mutations = {
   },
 
   [types.UPDATE_PRODUCT](state, updatedProduct) {
-    let index = window._.findIndex(state.products, {
+    let index = _.findIndex(state.products, {
       'product_id': updatedProduct.product_id,
       'combination_id': updatedProduct.combination_id
     });
@@ -68,8 +69,8 @@ const mutations = {
 
   [types.UPDATE_PRODUCTS](state, updatedProducts) {
     state.productsToUpdate = [];
-    window._.forEach(updatedProducts, (product) => {
-      let index = window._.findIndex(state.products, {
+    _.forEach(updatedProducts, (product) => {
+      let index = _.findIndex(state.products, {
         'product_id': product.product_id,
         'combination_id': product.combination_id
       });
@@ -82,17 +83,17 @@ const mutations = {
   [types.UPDATE_PRODUCT_QTY](state, updatedProduct) {
     let hasQty = false;
 
-    let index = window._.findIndex(state.productsToUpdate, {
+    let index = _.findIndex(state.productsToUpdate, {
       'product_id': updatedProduct.product_id,
       'combination_id': updatedProduct.combination_id
     });
 
-    let productToUpdate = window._.find(state.products, {
+    let productToUpdate = _.find(state.products, {
       'product_id': updatedProduct.product_id,
       'combination_id': updatedProduct.combination_id
     });
 
-    window._.forEach(state.products, (product) => {
+    _.forEach(state.products, (product) => {
       productToUpdate.qty = updatedProduct.delta;
       if (product.qty) {
         hasQty = true;

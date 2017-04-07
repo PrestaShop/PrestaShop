@@ -1,5 +1,5 @@
 <template>
-  <table class="table">
+  <PSTable class="table-striped">
     <thead>
       <tr>
         <th width="40%" class="thead-title">Product<Sort order="product" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
@@ -15,19 +15,21 @@
       <Alert v-if="emptyProducts" />
       <ProductLine v-for="(product, index) in products" key=${index} :product="product" />
     </tbody>
-  </table>
+  </PSTable>
 </template>
 
 <script>
   import ProductLine from './product/product-line';
   import Alert from './alert';
   import Sort from './sort';
+  import PSTable from '../utils/ps-table';
 
   export default {
     components: {
       ProductLine,
       Sort,
-      Alert
+      Alert,
+      PSTable
     },
     methods: {
       toggleSort() {

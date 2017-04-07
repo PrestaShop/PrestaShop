@@ -33,3 +33,16 @@ export const getSuppliers = ({ commit }) => {
     return showGrowl('error', error.statusText);
   });
 };
+
+export const getCategories = ({ commit }) => {
+  let url = `${window.data.baseUrl}/api/categories`;
+  let categories = [];
+  Vue.http.get(url).then(function(response) {
+    for(let category in response.body) {
+      categories.push(response.body[category]);
+    }
+    commit(types.SET_CATEGORIES, categories);
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};
