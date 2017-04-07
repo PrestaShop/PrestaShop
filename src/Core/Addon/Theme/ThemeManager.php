@@ -325,8 +325,8 @@ class ThemeManager implements AddonManagerInterface
                 $destination = $module_root_dir.basename($dir->getFileName());
                 if (!$this->filesystem->exists($destination)) {
                     $this->filesystem->mkdir($destination);
-                    $this->filesystem->mirror($dir->getPathName(), $destination);
                 }
+                $this->filesystem->mirror($dir->getPathName(), $destination);
             }
             $this->filesystem->remove($modules_parent_dir);
         }
