@@ -90,7 +90,7 @@ class Tab
     /**
      * @var string
      *
-     * @ORM\Column(name="icon", type="string", length=32)
+     * @ORM\Column(name="icon", type="string", length=32, nullable=true)
      */
     private $icon;
 
