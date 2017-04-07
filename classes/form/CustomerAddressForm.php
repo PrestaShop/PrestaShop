@@ -65,7 +65,21 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function loadAddressById($id_address)
     {
+        $context = Context::getContext();
+
         $this->address = new Address($id_address, $this->language->id);
+
+        if ($this->address->id === null) {
+            return Tools::redirect('index.php?controller=404');
+        }
+
+        if (!$context->customer->isLogged()) {
+            return Tools::redirect('/index.php?controller=authentication');
+        }
+
+        if ($this->address->id_customer != $context->customer->id) {
+            return Tools::redirect('index.php?controller=404');
+        }
 
         $params = get_object_vars($this->address);
         $params['id_address'] = $this->address->id;
