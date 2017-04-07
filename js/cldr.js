@@ -144,7 +144,7 @@ function cldrForNumber(callback) {
  */
 function cldrForCurrencies(callback) {
 	var catalogs = ['main/en/numbers', 'main/en/currencies', 'supplemental/likelySubtags',
-	                'supplemental/currencyData', 'supplemental/plurals'];
+	                'supplemental/currencyData', 'supplemental/plurals', 'supplemental/numberingSystems'];
 	return cldrLazyLoadCatalogs(catalogs, callback);
 }
 
