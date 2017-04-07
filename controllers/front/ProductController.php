@@ -335,6 +335,8 @@ class ProductControllerCore extends FrontController
         $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
         foreach ($quantity_discounts as &$quantity_discount) {
             if ($quantity_discount['id_product_attribute']) {
+                $quantity_discount['base_price'] = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $quantity_discount['id_product_attribute']);
+
                 $combination = new Combination((int)$quantity_discount['id_product_attribute']);
                 $attributes = $combination->getAttributesName((int)$this->context->language->id);
                 foreach ($attributes as $attribute) {
@@ -347,10 +349,9 @@ class ProductControllerCore extends FrontController
             }
         }
 
-        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
         $address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $this->context->smarty->assign(array(
-            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $ecotax_tax_amount),
+            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, null, (float)$tax, $ecotax_tax_amount),
             'ecotax_tax_inc' => $ecotax_tax_amount,
             'ecotax_tax_exc' => Tools::ps_round($this->product->ecotax, 2),
             'ecotaxTax_rate' => $ecotax_rate,
@@ -726,7 +727,7 @@ class ProductControllerCore extends FrontController
                     $cur_price *= 1 - $row['reduction'];
                 }
 
-                $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
+                $row['real_value'] = $row['base_price'] > 0 ? $row['base_price'] - $cur_price : $cur_price;
             } else {
                 if ($row['reduction_type'] == 'amount') {
 					if (Product::$_taxCalculationMethod == PS_TAX_INC) {

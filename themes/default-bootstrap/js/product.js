@@ -907,8 +907,8 @@ function displayDiscounts(combination)
 {
 	// Tables & rows selection
 	var quantityDiscountTable = $('#quantityDiscount');
-	var combinationsSpecificQuantityDiscount = $('#quantityDiscount_'+combination, quantityDiscountTable);
-	var allQuantityDiscount = $('#quantityDiscount_0', quantityDiscountTable);
+	var combinationsSpecificQuantityDiscount = $('.quantityDiscount_'+combination, quantityDiscountTable);
+	var allQuantityDiscount = $('.quantityDiscount_0', quantityDiscountTable);
 
 	// If there is some combinations specific quantity discount, show them, else, if there are some
 	// products quantity discount: show them. In case of result, show the category.
@@ -918,7 +918,7 @@ function displayDiscounts(combination)
 		quantityDiscountTable.show();
 	} else if(allQuantityDiscount.length != 0) {
 		allQuantityDiscount.show();
-		$('tbody tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
+		$('tbody tr', quantityDiscountTable).not('.quantityDiscount_0').hide();
 		quantityDiscountTable.show();
 	} else {
 		quantityDiscountTable.hide();
