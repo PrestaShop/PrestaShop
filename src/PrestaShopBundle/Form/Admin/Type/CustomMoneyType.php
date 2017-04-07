@@ -27,11 +27,24 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\DataTransformerInterface;
 
-class CustomMoneyType extends AbstractTypeExtension
+class CustomMoneyType extends AbstractTypeExtension implements DataTransformerInterface
 {
     const PRESTASHOP_DECIMALS = 6;
 
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addModelTransformer($this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getExtendedType()
     {
         return 'Symfony\Component\Form\Extension\Core\Type\MoneyType';
@@ -52,5 +65,43 @@ class CustomMoneyType extends AbstractTypeExtension
         ));
 
         $resolver->setAllowedTypes('scale', 'int');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($data)
+    {
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reverseTransform($data)
+    {
+        return empty($data) ? '' : $data;
+    }
+
+    /**
+     * Partial correction for "Price Tax Calculation" on Product view (only on arab).
+     * When your local is in ar-SA, we use the Eastearn Arabic number (٠١٢٣٤٥٧٨٩).
+     * This number is translate in a string data and not retransform after in Weastern Arabic number.
+     * In this tempory fix, we forced to use the Westearn Arab number like in 1.6.
+     * When we use this, the tax calculation is correct.
+     */
+    public function __construct() {
+        if ('ar' === substr(\Locale::getDefault(), 0, 2)) {
+            \Locale::setDefault('ar-TN');
+        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function __destruct() {
+        if ('ar' ===  substr(\Locale::getDefault(), 0, 2)) {
+            \Locale::setDefault('ar-SA');
+        }
     }
 }
