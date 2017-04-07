@@ -189,6 +189,11 @@ class ThemeManager implements AddonManagerInterface
      */
     public function disable($name)
     {
+        $theme = $this->themeRepository->getInstanceByName($name);
+        $theme->getModulesToDisable();
+
+        $this->doDisableModules($theme->getModulesToDisable());
+
         @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         return true;
