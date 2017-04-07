@@ -25,10 +25,10 @@
             <h2>Filter by categories</h2>
             <FilterComponent
               placeholder="Search a category"
-              :list="this.$store.state.suppliers"
-              itemID="supplier_id"
+              :list="this.$store.state.categories"
+              itemID="id_category"
               label="name"
-              getData="getSuppliers"
+              getData="getCategories"
             />
           </div>
         </div>

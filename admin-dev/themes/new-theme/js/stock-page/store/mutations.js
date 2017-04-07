@@ -12,5 +12,8 @@ export default {
   },
   [types.SET_SUPPLIERS](state, suppliers) {
     state.suppliers = suppliers;
+  },
+  [types.SET_CATEGORIES](state, categories) {
+    state.categories = categories;
   }
 };

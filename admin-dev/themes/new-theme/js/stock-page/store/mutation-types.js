@@ -6,3 +6,4 @@ export const UPDATE_ORDER = 'UPDATE_ORDER';
 export const SET_TOTAL_PAGES = 'SET_TOTAL_PAGES';
 export const SET_PAGE_INDEX = 'SET_PAGE_INDEX';
 export const SET_SUPPLIERS = 'SET_SUPPLIERS';
+export const SET_CATEGORIES = 'SET_CATEGORIES';
