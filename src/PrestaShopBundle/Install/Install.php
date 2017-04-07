@@ -273,12 +273,12 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-        $sf2Refresh->addDoctrineSchemaUpdate();
-        $output = $sf2Refresh->execute();
+        $schemaUpgrade = new \PrestaShopBundle\Service\Database\Upgrade();
+        $schemaUpgrade->addDoctrineSchemaUpdate();
+        $output = $schemaUpgrade->execute();
 
-        if (0 !== $output['doctrine:schema:update']['exitCode']) {
-            $this->setError(explode("\n", $output['doctrine:schema:update']['output']));
+        if (0 !== $output['prestashop:schema:update-without-foreign']['exitCode']) {
+            $this->setError(explode("\n", $output['prestashop:schema:update-without-foreign']['output']));
             return false;
         }
 

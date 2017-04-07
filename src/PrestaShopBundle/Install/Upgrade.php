@@ -423,18 +423,12 @@ namespace PrestaShopBundle\Install {
 
         private function upgradeDoctrineSchema()
         {
-            $i = 0;
-            do {
-                $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-                $sf2Refresh->addDoctrineSchemaUpdate();
-                $output = $sf2Refresh->execute();
-                $i++;
-                // Doctrine could need several tries before being able to properly upgrade the schema...
-            } while((0 !== $output['doctrine:schema:update']['exitCode']) && $i < 10);
-
-            if (0 !== $output['doctrine:schema:update']['exitCode']) {
-                $msgErrors = explode("\n", $output['doctrine:schema:update']['output']);
-                $this->logError('Error upgrading Doctrine schema', 43);
+            $schemaUpgrade = new \PrestaShopBundle\Service\Database\Upgrade();
+            $schemaUpgrade->addDoctrineSchemaUpdate();
+            $output = $schemaUpgrade->execute();
+            if (0 !== $output['prestashop:schema:update-without-foreign']['exitCode']) {
+                $msgErrors = explode("\n", $output['prestashop:schema:update-without-foreign']['output']);
+                $this->logError('Error upgrading doctrine schema', 43);
                 foreach($msgErrors as $msgError) {
                     $this->logError('Doctrine SQL Error : '.$msgError, 43);
                 }
