@@ -397,7 +397,10 @@ class CartPresenter implements PresenterInterface
         $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds) {
             return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
-
+        Hook::exec('overrideCartSubtotals', array(
+            'subtotals' => &$subtotals,
+            'cart' => $cart
+        ));
         return array(
             'products' => $products,
             'totals' => $totals,
