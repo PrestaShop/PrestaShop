@@ -218,7 +218,12 @@ class OrderPresenter implements PresenterInterface
                 'value' => $this->priceFormatter->format($giftWrapping, Currency::getCurrencyInstance((int)$order->id_currency)),
             );
         }
-
+        
+        \Hook::exec('overrideOrderSubtotals', array(
+            'subtotals' => &$subtotals,
+            'id_order' => $order->id
+        ));
+        
         $amounts['subtotals'] = $subtotals;
 
         $amounts['totals'] = array();
