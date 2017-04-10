@@ -72,9 +72,21 @@ class PaymentOptionsFinderCore extends HookFinder
         return $paymentOptions;
     }
 
-    public function present() //getPaymentOptionsForTemplate()
+    public function findFree()
+    {
+        $freeOption = new PaymentOption();
+        $freeOption->setModuleName('free_order')
+            ->setCallToActionText(Context::getContext()->getTranslator()->trans('Free order', array(), 'Admin.Orderscustomers.Feature'))
+            ->setAction(Context::getContext()->link->getPageLink('order-confirmation', null, null, 'free_order=1'));
+
+        return array('free_order' => array($freeOption));
+    }
+
+    public function present($free = false) //getPaymentOptionsForTemplate()
     {
         $id = 0;
+
+        $find = $free ? $this->findFree() : $this->find();
 
         return array_map(function (array $options) use (&$id) {
             return array_map(function (PaymentOption $option) use (&$id) {
@@ -92,6 +104,6 @@ class PaymentOptionsFinderCore extends HookFinder
 
                 return $formattedOption;
             }, $options);
-        }, $this->find());
+        }, $find);
     }
 }
