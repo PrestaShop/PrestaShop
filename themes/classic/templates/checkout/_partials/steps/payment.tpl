@@ -4,7 +4,7 @@
 
   {hook h='displayPaymentTop'}
 
-  <div class="payment-options">
+  <div class="payment-options {if $is_free}hidden-xs-up{/if}">
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
         <div>
@@ -18,7 +18,7 @@
                 name="payment-option"
                 type="radio"
                 required
-                {if $selected_payment_option == $option.id} checked {/if}
+                {if $selected_payment_option == $option.id || $is_free} checked {/if}
               >
               <span></span>
             </span>
@@ -115,8 +115,12 @@
 
   <div id="payment-confirmation">
     <div class="ps-shown-by-js">
-      <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-primary center-block">
-        {l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}
+      <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-primary center-block {if $is_free}payment_free{/if}">
+        {if $is_free}
+          {l s='No payment needed for this order' d='Shop.Theme.Checkout'}
+        {else}
+          {l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}
+        {/if}
       </button>
       {if $show_final_summary}
         <article class="alert alert-danger m-t-2 js-alert-payment-conditions" role="alert" data-alert="danger">
@@ -135,7 +139,13 @@
     </div>
     <div class="ps-hidden-by-js">
       {if $selected_payment_option and $all_conditions_approved}
-        <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}</label>
+        <label for="pay-with-{$selected_payment_option}">
+          {if $is_free}
+            {l s='No payment needed for this order' d='Shop.Theme.Checkout'}
+          {else}
+            {l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}
+          {/if}
+        </label>
       {/if}
     </div>
   </div>
