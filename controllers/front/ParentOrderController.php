@@ -479,8 +479,6 @@ class ParentOrderControllerCore extends FrontController
 
     protected function _assignCarrier()
     {
-        $address = new Address($this->context->cart->id_address_delivery);
-        $id_zone = Address::getZoneById($address->id);
         $carriers = $this->context->cart->simulateCarriersOutput(null, true);
         $checked = $this->context->cart->simulateCarrierSelectedOutput(false);
         $delivery_option_list = $this->context->cart->getDeliveryOptionList();

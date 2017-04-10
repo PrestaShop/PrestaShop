@@ -24,6 +24,34 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.1.12 - (2017-03-14)
+####################################
+
+	Fixed bugs:
+	CO: Deflate .svg files
+	CO: Webservices now show PS validation errors
+	CO: Update Israel VAT to 17%
+	CO: Fix bag with Cart::getPackageSthippingCost cache id
+	CO: Fix send to multiple addresses with different names
+	CO: Add missing option to bcc multiple addresses in Mail::send()
+	CO: Use shop email as sender for template order_customer_comment
+	CO: Fix 7.1 compatibility
+	CO: Update Doc import files
+
+	BO: Modification permission on Theme Page and option
+	BO: Modification permission on Theme Page and option
+	BO: Fix error when creating a zero value in the attribute size
+	BO: Fix bug while filtering Credit Slip
+	BO: Fix doubled quantity when ordering a customizable product
+	BO: Callback on HelperList should have highest priority
+	BO: Avoid overwriting $token in global Smarty context.
+
+	FO: Product reference is now available in blockbestsellers module
+	FO: Fix ecotax rounded twice
+	FO: Bugfix JS with advancedEuCompliance
+	FO: Fix product without combination hashchange
+
+####################################
 #   v1.6.1.11 - (2017-01-16)
 ####################################
 

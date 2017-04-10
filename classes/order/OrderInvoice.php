@@ -137,14 +137,17 @@ class OrderInvoiceCore extends ObjectModel
 
     public function getProductsDetail()
     {
+        $id_lang = Context::getContext()->language->id;
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
+		SELECT *, pl.`name` as product_name
 		FROM `'._DB_PREFIX_.'order_detail` od
 		LEFT JOIN `'._DB_PREFIX_.'product` p
 		ON p.id_product = od.product_id
 		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = '.$id_lang.' AND pl.id_shop = od.id_shop)
 		WHERE od.`id_order` = '.(int)$this->id_order.'
-		'.($this->id && $this->number ? ' AND od.`id_order_invoice` = '.(int)$this->id : '').' ORDER BY od.`product_name`');
+		'.($this->id && $this->number ? ' AND od.`id_order_invoice` = '.(int)$this->id : '').' ORDER BY pl.`name`');
     }
 
     public static function getInvoiceByNumber($id_invoice)
@@ -716,7 +719,7 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice'
+            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice AND oip1.id_order = oip2.id_order'  
         );
         $query->where('oip1.id_order_invoice = '.$this->id);
 
@@ -752,7 +755,7 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice'
+            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice AND oip1.id_order = oip2.id_order'
         );
         $query->leftJoin(
             'order_invoice',

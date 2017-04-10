@@ -1,4 +1,4 @@
-ID;Active (0/1);Titles ID (Mr = 1, Ms = 2, else 0);Email *;Password *;Birthday (yyyy-mm-dd);Last Name *;First Name *;Newsletter (0/1);Opt-in (0/1);Groups (x,y,z...);Default group ID
+Customer ID;Active (0/1);Titles ID (Mr = 1, Ms = 2, else 0);Email *;Password *;Birthday (yyyy-mm-dd);Last Name *;First Name *;Newsletter (0/1);Opt-in (0/1);Groups (x,y,z...);Default group ID
 1;1;1;Peter.Pan@prestashop.com;123456789;1987-04-02;Pan;Peter;1;0;Customer;3
 2;1;2;Wendy.Moira.Darling@prestashop.com;123456789;1989-11-12;Darling;Wendy Moira;1;0;Customer;3
 3;1;2;Tiger.Lily@prestashop.com;123456789;1982-02-28;Lily;Tiger;1;0;Customer;3

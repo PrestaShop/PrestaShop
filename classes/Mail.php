@@ -71,8 +71,8 @@ class MailCore extends ObjectModel
      * @param string $template Template: the name of template not be a var but a string !
      * @param string $subject Subject of the email
      * @param string $template_vars Template variables for the email
-     * @param string $to To email
-     * @param string $to_name To name
+     * @param string|array $to To email
+     * @param string|array $to_name To name
      * @param string $from From email
      * @param string $from_name To email
      * @param array $file_attachment Array with three parameters (content, mime and name). You can use an array of array to attach multiple files
@@ -80,7 +80,7 @@ class MailCore extends ObjectModel
      * @param string $template_path Template path
      * @param bool $die Die after error
      * @param int $id_shop Shop ID
-     * @param string $bcc Bcc recipient (email address)
+     * @param string|array $bcc Bcc recipient(s) (email address)
      * @param string $reply_to Email address for setting the Reply-To header
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
@@ -187,12 +187,14 @@ class MailCore extends ObjectModel
                     return false;
                 }
 
-                if (is_array($to_name) && $to_name && is_array($to_name) && Validate::isGenericName($to_name[$key])) {
-                    $to_name = $to_name[$key];
+                if (is_array($to_name) && isset($to_name[$key])) {
+                    $addrName = $to_name[$key];
+                } else {
+                    $addrName = $to_name;
                 }
-
-                $to_name = (($to_name == null || $to_name == $addr) ? '' : self::mimeEncode($to_name));
-                $message->addTo($addr, $to_name);
+                
+                $addrName = (($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ? '' : self::mimeEncode($addrName));
+                $message->addTo($addr, $addrName);
             }
             $to_plugin = $to[0];
         } else {
@@ -201,7 +203,17 @@ class MailCore extends ObjectModel
             $to_name = (($to_name == null || $to_name == $to) ? '' : self::mimeEncode($to_name));
             $message->addTo($to, $to_name);
         }
-        if (isset($bcc)) {
+
+        if (isset($bcc) && is_array($bcc)) {
+            foreach ($bcc as $addr) {
+                $addr = trim($addr);
+                if (!Validate::isEmail($addr)) {
+                    Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
+                    return false;
+                }
+                $message->addBcc($addr);
+            }
+        } elseif (isset($bcc)) {
             $message->addBcc($bcc);
         }
 
