@@ -26,7 +26,6 @@
 
 
 use Symfony\Component\Translation\TranslatorInterface;
-use \PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 
 class CheckoutPaymentStepCore extends AbstractCheckoutStep
 {
