@@ -8,6 +8,7 @@
 
 <script>
   import Tags from '../../utils/tags';
+
   export default {
     props: ['placeholder', 'match', 'label', 'itemID'],
     methods: {

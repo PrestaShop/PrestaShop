@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 import * as types from './mutation-types';
 import { showGrowl } from './utils/growl';
+import _ from 'lodash';
 
 Vue.use(VueResource);
 

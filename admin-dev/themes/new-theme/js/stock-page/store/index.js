@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import * as actions from './actions';
 import mutations from './mutations';
 import products from './modules/products';
+import _ from 'lodash';
 
 Vue.use(Vuex);
 
@@ -31,6 +32,17 @@ const getters = {
   },
   products(state) {
     return state.products.products;
+  },
+  categories(state) {
+    function convert(categories) {
+      categories.forEach((category)=>{
+        category.children = _.values(category.children);
+        convert(category.children);
+      });
+      return categories;
+    }
+
+    return convert(state.categories);
   }
 };
 
