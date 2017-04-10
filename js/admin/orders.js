@@ -392,8 +392,14 @@ function init()
 			{
 				// Reset combinations list
 				$('select#add_product_product_attribute_id').html('');
-				var defaultAttribute = 0;
-				$.each(current_product.combinations, function() {
+                var defaultAttribute = 0;
+                var sorted_combinations = $.map(current_product.combinations, function(value, index) {
+                    return [value];
+                }).sort(function(a, b) {
+                    var at = a.attributes, bt = b.attributes;
+                    return alphanumCase(at, bt);
+                });
+                $.each(sorted_combinations, function() {
 					$('select#add_product_product_attribute_id').append('<option value="'+this.id_product_attribute+'"'+(this.default_on == 1 ? ' selected="selected"' : '')+'>'+this.attributes+'</option>');
 					if (this.default_on == 1)
 					{
