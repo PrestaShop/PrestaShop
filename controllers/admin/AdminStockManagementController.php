@@ -176,7 +176,7 @@ class AdminStockManagementControllerCore extends AdminController
             $this->_where = 'AND a.id_product = '.$product_id;
             $this->_group = 'GROUP BY a.id_product_attribute';
 
-            $this->fields_list ['name'] =
+            $this->fields_list['name'] =
                 array(
                     'title' => $this->l('Name'),
                     'orderby' => false,
@@ -883,7 +883,7 @@ class AdminStockManagementControllerCore extends AdminController
             $redirect = self::$currentIndex.'&token='.$token;
         }
 
-        if(Tools::isSubmit('submitFilter') && Tools::getIsset('detailsproduct')){
+        if (Tools::isSubmit('submitFilter') && Tools::getIsset('detailsproduct')) {
             $id_product = (int)Tools::getValue('id_product', 0);
             $token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
             $redirect = self::$currentIndex.'&id_product='.$id_product.'&detailsproduct&token='.$token;
@@ -1369,7 +1369,7 @@ class AdminStockManagementControllerCore extends AdminController
             self::$cache_lang['RemoveStock'] = $this->l('Remove stock');
         }
 
-        if(Tools::getIsset('detailsproduct')) {
+        if (Tools::getIsset('detailsproduct')) {
             self::$currentIndex = str_replace('&detailsproduct', '', self::$currentIndex);
         }
 
