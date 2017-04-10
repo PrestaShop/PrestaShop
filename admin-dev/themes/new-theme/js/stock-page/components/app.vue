@@ -107,5 +107,8 @@
   .flex {
     display: flex;
     align-items: center;
+    &.column {
+      flex-direction: column;
+    }
   }
 </style>

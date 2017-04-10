@@ -15,8 +15,3 @@ const stockApp = new Vue({
     });
   }
 });
-
-//TO REMOVE AFTER DEV
-window.addEventListener('message', ()=>{
-  console.clear();
-});

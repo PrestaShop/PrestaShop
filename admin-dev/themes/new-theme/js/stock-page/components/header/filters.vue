@@ -25,7 +25,7 @@
             <h2>Filter by categories</h2>
             <FilterComponent
               placeholder="Search a category"
-              :list="this.$store.state.categories"
+              :list="this.$store.getters.categories"
               itemID="id_category"
               label="name"
               getData="getCategories"
