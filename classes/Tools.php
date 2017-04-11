@@ -2575,9 +2575,6 @@ FileETag none
 
     public static function generateIndex()
     {
-        if (defined('_DB_PREFIX_') && Configuration::get('PS_DISABLE_OVERRIDES')) {
-            PrestaShopAutoload::getInstance()->_include_override_path = false;
-        }
         PrestaShopAutoload::getInstance()->generateIndex();
     }
 

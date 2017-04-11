@@ -135,6 +135,12 @@ class PrestaShopAutoload
      */
     public function generateIndex()
     {
+        if (defined('_DB_PREFIX_') && Configuration::get('PS_DISABLE_OVERRIDES')) {
+            $this->_include_override_path = false;
+        } else {
+            $this->_include_override_path = true;
+        }
+
         $classes = array_merge(
             $this->getClassesFromDir('classes/'),
             $this->getClassesFromDir('controllers/'),
