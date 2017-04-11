@@ -1308,6 +1308,9 @@ class FrontControllerCore extends Controller
     public function getLayout()
     {
         $entity = $this->php_self;
+        if (empty($entity) && $this->controller_type === 'modulefront' && !empty($this->page_name)) {
+            $entity = $this->page_name;
+        }
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
 
