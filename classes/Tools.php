@@ -961,8 +961,11 @@ class ToolsCore
     public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
     {
         if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-            return ('<pre>'.Tools::htmlentitiesUTF8(stripslashes($string)).'<br/>'.print_r(debug_backtrace(), true).'</pre>');
+            throw new PrestaShopException($string);
+        } else if ('Fatal error' !== $string) {
+            return $string;
         }
+
         return Context::getContext()->getTranslator()->trans('Fatal error', array(), 'Admin.Notifications.Error');
     }
 
