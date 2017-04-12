@@ -55,7 +55,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (Validate::isLoadedObject($this->product)) {
             if (!$this->product->hasCombinations()) {
                 unset($_GET['id_product_attribute']);
-            } else if (!Tools::getValue('id_product_attribute') || Tools::getValue('rewrite') !== $this->product->link_rewrite) {
+            } else if (Tools::getValue('id_product_attribute')) {
+                $combination = new Combination(Tools::getValue('id_product_attribute'));
+                if (!Validate::isLoadedObject($combination) || !$combination->id_product == $this->product->id) {
+                    $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
+                }
+            } else {
                 $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
             }
 
