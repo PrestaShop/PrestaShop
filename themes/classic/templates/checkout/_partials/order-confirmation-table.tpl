@@ -22,11 +22,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div id="order-items" class="col-md-8">
-
-  {block name='order_items_table_head'}
-    <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
-  {/block}
+{block name='order_items_table_head'}
+  <div id="order-items" class="col-md-8">
+  <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
+{/block}
 
   <div class="order-confirmation-table">
 
