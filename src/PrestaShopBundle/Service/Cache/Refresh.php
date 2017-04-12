@@ -30,37 +30,12 @@ use PrestaShopBundle\Service\Command\AbstractCommand;
 class Refresh extends AbstractCommand
 {
     /**
-     * Add cache:clear to the execution.
-     */
-    public function addCacheClear()
-    {
-        $this->commands[] = array(
-            'command' => 'doctrine:cache:clear-metadata',
-            '--flush' => true,
-        );
-
-        $this->commands[] = array(
-            'command' => 'doctrine:cache:clear-query',
-            '--flush' => true,
-        );
-
-        $this->commands[] = array(
-            'command' => 'doctrine:cache:clear-result',
-            '--flush' => true,
-        );
-
-        $this->commands[] = array(
-            'command' => 'cache:clear',
-            '--no-warmup' => true,
-        );
-    }
-
-    /**
      * Add doctrine:schema:update to the execution.
      */
     public function addDoctrineSchemaUpdate()
     {
         $this->addCacheClear();
+
         $this->commands[] = array(
             'command' => 'doctrine:schema:update',
             '--force' => true,
