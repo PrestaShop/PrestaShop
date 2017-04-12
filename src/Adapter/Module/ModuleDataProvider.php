@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Tools;
 
 class ModuleDataProvider
 {
@@ -74,7 +75,7 @@ class ModuleDataProvider
             $result['active_on_mobile'] = (bool)($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
             $lastAccessDate = '0000-00-00 00:00:00';
 
-            if (!is_null($this->entityManager)) {
+            if (!Tools::isPHPCLI() && !is_null($this->entityManager)) {
                 $moduleID = (int)$result['id'];
                 $legacyContext = new LegacyContext();
                 $legacyContext = $legacyContext->getContext();

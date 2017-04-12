@@ -30,9 +30,8 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
-use Symfony\Component\Config\ConfigCacheFactory;
-use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -55,13 +54,14 @@ class AdminModuleDataProvider implements ModuleInterface
     protected $catalog_modules_names;
 
     public function __construct(
-        $languageISO,
+        TranslatorInterface $translator,
         Router $router = null,
         AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider,
         CacheProvider $cacheProvider = null
     ) {
-        $this->languageISO = $languageISO;
+        list($this->languageISO) = explode('-', $translator->getLocale());
+
         $this->router = $router;
         $this->addonsDataProvider = $addonsDataProvider;
         $this->categoriesProvider = $categoriesProvider;

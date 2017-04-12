@@ -107,7 +107,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         ModuleDataUpdater $modulesUpdater,
         LoggerInterface $logger,
         TranslatorInterface $translator,
-        $languageISO,
         CacheProvider $cacheProvider = null
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
@@ -117,8 +116,10 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->translator = $translator;
         $this->finder = new Finder();
 
+        list($isoLang) = explode('-', $translator->getLocale());
+
         // Cache related variables
-        $this->cacheFilePath = $languageISO.'_local_modules';
+        $this->cacheFilePath = $isoLang.'_local_modules';
         $this->cacheProvider = $cacheProvider;
 
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {

@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
@@ -214,14 +213,12 @@ class ModuleManager implements AddonManagerInterface
     public function install($source)
     {
         // in CLI mode, there is no employee set up
-        if (!Tools::isPHPCLI()) {
-            if (!$this->employee->can('edit', 'AdminModulessf')) {
-                throw new Exception(
-                    $this->translator->trans(
-                        'You are not allowed to install modules.',
-                        array(),
-                        'Admin.Modules.Notification'));
-            }
+        if (!Tools::isPHPCLI() && !$this->employee->can('edit', 'AdminModulessf')) {
+            throw new Exception(
+                $this->translator->trans(
+                    'You are not allowed to install modules.',
+                    array(),
+                    'Admin.Modules.Notification'));
         }
 
         if (is_file($source)) {
@@ -261,8 +258,8 @@ class ModuleManager implements AddonManagerInterface
         // Check permissions:
         // * Employee can delete
         // * Employee can delete this specific module
-        if (!$this->employee->can('delete', 'AdminModulessf')
-            || !$this->moduleProvider->can('uninstall', $name)) {
+        if (!Tools::isPHPCLI() && (!$this->employee->can('delete', 'AdminModulessf')
+            || !$this->moduleProvider->can('uninstall', $name))) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to uninstall this module.',
@@ -299,8 +296,8 @@ class ModuleManager implements AddonManagerInterface
     */
     public function upgrade($name, $version = 'latest', $source = null)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
+            || !$this->moduleProvider->can('configure', $name))) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to upgrade this module.',
@@ -344,8 +341,8 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disable($name)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
+            || !$this->moduleProvider->can('configure', $name))) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to disable this module.',
@@ -380,8 +377,8 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enable($name)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
+            || !$this->moduleProvider->can('configure', $name))) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to enable this module.',
@@ -415,8 +412,8 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disable_mobile($name)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
+            || !$this->moduleProvider->can('configure', $name))) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to disable this module on mobile.',
@@ -449,8 +446,8 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enable_mobile($name)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
+            || !$this->moduleProvider->can('configure', $name))) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to enable this module on mobile.',
@@ -480,9 +477,9 @@ class ModuleManager implements AddonManagerInterface
      */
     public function reset($name, $keep_data = false)
     {
-        if (!$this->employee->can('add', 'AdminModulessf')
+        if (!Tools::isPHPCLI() && (!$this->employee->can('add', 'AdminModulessf')
             || !$this->employee->can('delete', 'AdminModulessf')
-            || !$this->moduleProvider->can('uninstall', $name)) {
+            || !$this->moduleProvider->can('uninstall', $name))) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to reset this module.',

@@ -124,7 +124,6 @@ class ModuleManagerBuilder
                     self::$moduleDataUpdater,
                     self::$legacyLogger,
                     self::$translator,
-                    Context::getContext()->language->iso_code,
                     self::$cacheProvider
                 );
             }
@@ -155,10 +154,11 @@ class ModuleManagerBuilder
 
         $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
 
+        self::$translator = Context::getContext()->getTranslator();
+
         $marketPlaceClient = new ApiClient(
             new Client($clientConfig),
-            $this->getLanguageIso(),
-            $this->getCountryIso(),
+            self::$translator->getLocale(),
             new Tools()
         );
 
@@ -169,8 +169,7 @@ class ModuleManagerBuilder
                 $marketPlaceClient->setSslVerification($parameters['parameters']['addons.api_client.verify_ssl']);
             }
         }
-
-        self::$translator = Context::getContext()->getTranslator();
+        
         self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
@@ -187,7 +186,7 @@ class ModuleManagerBuilder
 
         if (is_null(self::$adminModuleDataProvider)) {
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
-                $this->getLanguageIso(),
+                self::$translator,
                 $this->getSymfonyRouter(),
                 self::$addonsDataProvider,
                 self::$categoriesProvider,
@@ -226,24 +225,5 @@ class ModuleManagerBuilder
     protected function getConfigDir()
     {
         return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config';
-    }
-
-    /**
-     * Returns language iso from context.
-     */
-    private function getLanguageIso()
-    {
-        $context = Context::getContext();
-        $langId = $context->employee instanceof \Employee ? $context->employee->id_lang : $context->language->id;
-
-        return \LanguageCore::getIsoById($langId);
-    }
-
-    /**
-     * Returns country iso from context.
-     */
-    private function getCountryIso()
-    {
-        return \CountryCore::getIsoById(\Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 }
