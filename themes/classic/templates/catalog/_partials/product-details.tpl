@@ -30,6 +30,7 @@
       <div class="product-quantities">
         <label class="label">{l s='In stock' d='Shop.Theme.Catalog'}</label>
         <span data-stock="{$product.quantity}">{$product.quantity} {$product.quantity_label}</span>
+        <input type="hidden" id="allow_oosp" value="{$product.allow_oosp}">
       </div>
     {/if}
   {/block}

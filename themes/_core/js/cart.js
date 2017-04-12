@@ -150,7 +150,7 @@ $(document).ready(() => {
     'click',
     '[data-button-action="add-to-cart"]',
     (event) => {
-    if($('#quantity_wanted').val() > $('[data-stock]').data('stock')) {
+    if($('#quantity_wanted').val() > $('[data-stock]').data('stock') && $('.allow_oosp') == 0) {
       event.preventDefault();
       $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
     } else {

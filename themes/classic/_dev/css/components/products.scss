@@ -77,7 +77,7 @@
     margin-bottom: rem(8px);
   }
   .qty {
-    width: 80px;
+    margin-right: rem(6px);
   }
   #quantity_wanted {
     color: $gray-darker;
@@ -87,9 +87,8 @@
     width: rem(48px);
   }
   .input-group-btn-vertical {
-    float: left;
-  }
-  .input-group-btn-vertical {
+    width: auto;
+
     .btn {
       padding: rem(8px) rem(11px);
       i {
