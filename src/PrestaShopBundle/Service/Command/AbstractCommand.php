@@ -86,4 +86,30 @@ abstract class AbstractCommand
 
         return $commandOutput;
     }
+
+    /**
+     * Add cache:clear to the execution.
+     */
+    public function addCacheClear()
+    {
+        $this->commands[] = array(
+            'command' => 'doctrine:cache:clear-metadata',
+            '--flush' => true,
+        );
+
+        $this->commands[] = array(
+            'command' => 'doctrine:cache:clear-query',
+            '--flush' => true,
+        );
+
+        $this->commands[] = array(
+            'command' => 'doctrine:cache:clear-result',
+            '--flush' => true,
+        );
+
+        $this->commands[] = array(
+            'command' => 'cache:clear',
+            '--no-warmup' => true,
+        );
+    }
 }
