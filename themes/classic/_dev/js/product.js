@@ -104,7 +104,7 @@ $(document).ready(function () {
       max: 1000000
     });
 
-    quantityInput.on('change', function (event) {
+    quantityInput.on('keyup change', function (event) {
       let $productRefresh = $('.product-refresh');
       $(event.currentTarget).trigger('touchspin.stopspin');
       $productRefresh.trigger('click', {eventType: 'updatedProductQuantity'});
