@@ -734,7 +734,8 @@
 								{elseif $input.type == 'shop'}
 									{$input.html}
 								{elseif $input.type == 'categories'}
-									{$categories_tree}
+									{*$categories_tree*}
+									{$input.categories_tree}
 								{elseif $input.type == 'file'}
 									{$input.file}
 								{elseif $input.type == 'categories_select'}
