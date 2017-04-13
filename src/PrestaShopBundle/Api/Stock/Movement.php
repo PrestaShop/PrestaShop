@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Api\Stock;
 
 use PrestaShopBundle\Entity\ProductIdentity;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 class Movement
 {
@@ -54,6 +55,11 @@ class Movement
      * @var int
      */
     private $idSupplyOrder = 0;
+
+    /**
+     * @var int
+     */
+    private $idStockMvtReason = 0;
 
 
     public function __construct(ProductIdentity $productIdentity, $delta)
@@ -129,5 +135,25 @@ class Movement
         return $this->idSupplyOrder;
     }
 
+    /**
+     * Set idStockMvtReason
+     * @param $idStockMvtReason
+     */
+    public function setIdStockMvtReason($idStockMvtReason)
+    {
+        $this->idStockMvtReason = (int)$idStockMvtReason;
+    }
 
+    /**
+     * @return int
+     */
+    public function getIdStockMvtReason()
+    {
+        if (0 === $this->idStockMvtReason) {
+            $configuration = new Configuration;
+            $this->setIdStockMvtReason($this->delta >= 1 ? $configuration->get('PS_STOCK_MVT_INC_REASON_DEFAULT') : $configuration->get('PS_STOCK_MVT_DEC_REASON_DEFAULT'));
+        }
+
+        return $this->idStockMvtReason;
+    }
 }
