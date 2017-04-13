@@ -102,21 +102,21 @@ class ModuleRepositoryTest extends UnitTestCase
             ->getmock()
         ;
 
-        $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
-            array('getCatalogModulesNames'),
-            array('en', $this->sfRouter, $this->addonsDataProviderS, $this->categoriesProviderS)
-        );
-
-        $this->adminModuleDataProviderStub
-            ->method('getCatalogModulesNames')
-            ->willReturn(array());
-
         $this->translatorStub = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
             ->getMock();
         $this->translatorStub
             ->method('trans')
             ->will($this->returnArgument(0));
+
+        $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
+            array('getCatalogModulesNames'),
+            array($this->translatorStub, $this->sfRouter, $this->addonsDataProviderS, $this->categoriesProviderS)
+        );
+
+        $this->adminModuleDataProviderStub
+            ->method('getCatalogModulesNames')
+            ->willReturn(array());
 
         $this->moduleRepositoryStub = $this->getMock(
             'PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository',
@@ -127,15 +127,14 @@ class ModuleRepositoryTest extends UnitTestCase
                 new ModuleDataUpdater(
                     $this->addonsDataProviderS,
                     new AdminModuleDataProvider(
-                        'en',
+                        $this->translatorStub,
                         $this->sfRouter,
                         $this->addonsDataProviderS,
                         $this->categoriesProviderS
                     )
                 ),
                 new FakeLogger(),
-                $this->translatorStub,
-                'en'
+                $this->translatorStub
             )
         );
 
