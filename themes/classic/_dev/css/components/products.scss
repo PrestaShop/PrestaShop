@@ -75,15 +75,14 @@
   }
 }
 .product-quantity {
-  .qty {
+  display: flex;
+  .qty, .add {
     float: left;
-    width: 80px;
+    display: inline-flex;
     margin-bottom: 0.5rem;
   }
-  .add {
-    float: left;
-    margin-left: 1rem;
-    margin-bottom: 0.5rem;
+  .qty {
+    margin-right: 0.4rem;
   }
   #quantity_wanted {
     color: $gray-darker;
@@ -93,9 +92,7 @@
     width: 3rem;
   }
   .input-group-btn-vertical {
-    float: left;
-  }
-  .input-group-btn-vertical {
+    width: auto;
     .btn {
       padding: 0.5rem 0.6875rem;
       i {
