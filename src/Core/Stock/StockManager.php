@@ -158,6 +158,7 @@ class StockManager
             }
         }
 
+        // Prepare movement and save it
         if (true === $add_movement) {
             $productIdentity = ProductIdentity::fromArray(array(
                 'product_id' => (int) $product->id,

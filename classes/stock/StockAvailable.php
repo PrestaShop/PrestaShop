@@ -457,8 +457,10 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product_attribute Optional
      * @param int $delta_quantity The delta quantity to update
      * @param int $id_shop Optional
+     * @param boolean $add_movement Optional
+     * @param array $params Optional
      */
-    public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
+    public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
     {
         if (!Validate::isUnsignedId($id_product)) {
             return false;
@@ -469,7 +471,7 @@ class StockAvailableCore extends ObjectModel
         }
 
         $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
-        $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null);
+        $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop, $add_movement, $params);
         return true;
     }
 
