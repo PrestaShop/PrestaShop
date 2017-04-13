@@ -28,20 +28,17 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Configuration;
 use Doctrine\DBAL\Driver\Connection;
-use Doctrine\DBAL\Driver\Statement;
-use PDO;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Core\Stock\StockManager as StockManagerCore;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Api\Stock\MovementsCollection;
 use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
-use Product;
-use RuntimeException;
-use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StockRepository extends StockManagementRepository
@@ -105,56 +102,19 @@ class StockRepository extends StockManagementRepository
      */
     public function updateStock(Movement $movement)
     {
-        $query = '
-            UPDATE {table_prefix}stock_available
-            SET quantity = quantity + :delta,
-            physical_quantity = reserved_quantity + quantity
-            WHERE id_product = :product_id
-            AND id_product_attribute = :combination_id
-        ';
-
-        $query = str_replace('{table_prefix}', $this->tablePrefix, $query);
-
-        $statement = $this->connection->prepare($query);
-
         $productIdentity = $movement->getProductIdentity();
         $delta = $movement->getDelta();
+        $product = (new ProductDataProvider())->getProduct($productIdentity->getProductId());
 
-        $statement->bindValue('product_id', $productIdentity->getProductId(), PDO::PARAM_INT);
-        $statement->bindValue('combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
-        $statement->bindValue('delta', $delta, PDO::PARAM_INT);
-
-        if ($statement->execute()) {
-            $idStock = $this->getStockBy($productIdentity);
-            if (!empty($idStock)) {
-                $movement->setIdStock((int)$idStock);
-                $stockMovement = $this->container->get('prestashop.core.api.stockMovement.repository');
-                $stockMovement->saveFromMovement($movement);
-            }
-        }
+        (new StockManagerCore())->updateQuantity(
+            $product,
+            $productIdentity->getCombinationId(),
+            $delta,
+            $id_shop = null,
+            $add_movement = true
+        );
 
         return $this->selectStockBy($productIdentity);
-    }
-
-    private function getStockBy(ProductIdentity $productIdentity)
-    {
-        $query = '
-                SELECT id_stock_available
-                FROM {table_prefix}stock_available
-                WHERE id_product = :product_id
-                AND id_product_attribute = :combination_id
-            ';
-
-        $query = str_replace('{table_prefix}', $this->tablePrefix, $query);
-
-        $statement = $this->connection->prepare($query);
-
-        $statement->bindValue('product_id', $productIdentity->getProductId(), PDO::PARAM_INT);
-        $statement->bindValue('combination_id', $productIdentity->getCombinationId(), PDO::PARAM_INT);
-
-        $statement->execute();
-
-        return $statement->fetchColumn();
     }
 
     /**

@@ -26,23 +26,11 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Configuration;
 use Doctrine\DBAL\Driver\Connection;
-use Doctrine\DBAL\Driver\Statement;
-use Employee;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
-use PrestaShop\PrestaShop\Adapter\StockManager;
-use PrestaShopBundle\Api\QueryParamsCollection;
-use PrestaShopBundle\Api\Stock\Movement;
-use PrestaShopBundle\Api\Stock\MovementsCollection;
-use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Exception\NotImplementedException;
-use PrestaShopBundle\Exception\ProductNotFoundException;
-use Product;
-use RuntimeException;
-use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StockMovementRepository extends StockManagementRepository
@@ -70,66 +58,6 @@ class StockMovementRepository extends StockManagementRepository
             $imageManager,
             $tablePrefix
         );
-    }
-
-    /**
-     * Register a Movement
-     *
-     * @param Movement $movement
-     * @return bool
-     */
-    public function saveFromMovement(Movement $movement)
-    {
-        $idStock = $movement->getIdStock();
-
-        if (!empty($idStock)) {
-            $delta = $movement->getDelta();
-            $mvt_params = array(
-                'id_stock' => $idStock,
-                'id_order' => $movement->getIdOrder(),
-                'id_supply_order' => $movement->getIdSupplyOrder(),
-
-                'id_stock_mvt_reason' => $delta >= 1 ? 1 : 2,
-                'physical_quantity' => abs($delta),
-                'sign' => $delta >= 1 ? 1 : -1,
-
-                'id_employee' => (int)$this->context->employee->id,
-                'employee_firstname' => $this->context->employee->firstname,
-                'employee_lastname' => $this->context->employee->lastname,
-                'date_add' => date('Y-m-d H:i:s'),
-
-                'price_te' => 0,
-                'last_wa' => 0,
-                'current_wa' => 0,
-                'referer' => null,
-            );
-
-            $query = 'INSERT INTO {table_prefix}stock_mvt SET ';
-
-            foreach ($mvt_params as $k => $value) {
-                if (null !== $value) {
-                    $query .= '`' . $k . '`' . ' = :' . $k . ' ,';
-                } else {
-                    unset($mvt_params[$k]);
-                }
-            }
-
-            $query = rtrim(str_replace('{table_prefix}', $this->tablePrefix, $query), ',');
-
-            $statement = $this->connection->prepare($query);
-
-            foreach ($mvt_params as $k => $value) {
-                if (is_int($value)) {
-                    $statement->bindValue($k, $value, PDO::PARAM_INT);
-                } else {
-                    $statement->bindValue($k, $value, PDO::PARAM_STR);
-                }
-            }
-
-            return $statement->execute();
-        }
-
-        return false;
     }
 
     /**

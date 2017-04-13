@@ -24,6 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Stock;
+use PrestaShopBundle\Api\Stock\Movement;
+use PrestaShopBundle\Entity\ProductIdentity;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
+use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 
 /**
  * Class StockManager Refactored features about product stocks.
@@ -42,12 +47,16 @@ class StockManager
      */
     public function updatePackQuantity($product, $stock_available, $delta_quantity, $id_shop = null)
     {
-        $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        $serviceLocator = new ServiceLocator();
+
+        $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
         if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && $configuration->get('PS_PACK_STOCK_TYPE') > 0)) {
-            $packItemsManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
+
+            $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
+            $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+            $cacheManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
+
             $products_pack = $packItemsManager->getPackItems($product);
-            $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-            $cacheManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
             foreach ($products_pack as $product_pack) {
                 $productStockAvailable = $stockManager->getStockAvailableByProduct($product_pack, $product_pack->id_pack_product_attribute, $id_shop);
                 $productStockAvailable->quantity = $productStockAvailable->quantity + ($delta_quantity * $product_pack->pack_quantity);
@@ -76,10 +85,13 @@ class StockManager
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
     {
-        $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
-        $packItemsManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
-        $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-        $cacheManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
+        $serviceLocator = new ServiceLocator();
+
+        $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
+        $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+        $cacheManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
+
         $packs = $packItemsManager->getPacksContainingItem($product, $id_product_attribute);
         foreach ($packs as $pack) {
             // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
@@ -113,14 +125,18 @@ class StockManager
      * @param integer $id_product_attribute The declinaison to update (null if not)
      * @param integer $delta_quantity The quantity change (positive or negative)
      * @param integer|null $id_shop Optional
+     * @param boolean $add_movement Optional
+     * @param array $params Optional
      */
-    public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null)
+    public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
     {
-        $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+        $serviceLocator = new ServiceLocator();
+        $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+        $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
+        $cacheManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
+        $hookManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\HookManager');
+
         $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
-        $packItemsManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
-        $cacheManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
-        $hookManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\HookManager');
 
         // Update quantity of the pack products
         if ($packItemsManager->isPack($product)) {
@@ -142,6 +158,26 @@ class StockManager
             }
         }
 
+        if (true === $add_movement) {
+            $productIdentity = ProductIdentity::fromArray(array(
+                'product_id' => (int) $product->id,
+                'combination_id' => (int) $id_product_attribute
+            ));
+
+            $movement = new Movement($productIdentity, $delta_quantity);
+            $movement->setIdStock($stockAvailable->id);
+
+            if (!empty($params['id_order'])) {
+                $movement->setIdOrder((int) $params['id_order']);
+            }
+
+            if (!empty($params['id_stock_mvt_reason'])) {
+                $movement->setIdStockMvtReason((int) $params['id_stock_mvt_reason']);
+            }
+
+            $this->registerMovement($movement);
+        }
+
         $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
 
         $hookManager->exec('actionUpdateQuantity',
@@ -151,5 +187,43 @@ class StockManager
                 'quantity' => $stockAvailable->quantity
             )
         );
+    }
+
+    private function registerMovement(Movement $movement)
+    {
+        $delta = $movement->getDelta();
+
+        $employee_params = array();
+        $employee = (new ContextAdapter)->getContext()->employee;
+        if (!empty($employee)) {
+            $employee_params = array(
+                'id_employee' => (int) $employee->id,
+                'employee_firstname' => $employee->firstname,
+                'employee_lastname' => $employee->lastname,
+            );
+        }
+
+        $mvt_params = array_merge(
+            array(
+                'id_stock' => $movement->getIdStock(),
+                'id_order' => $movement->getIdOrder(),
+                'id_supply_order' => $movement->getIdSupplyOrder(),
+                'id_stock_mvt_reason' => $movement->getIdStockMvtReason(),
+                'physical_quantity' => abs($delta),
+                'sign' => $delta >= 1 ? 1 : -1,
+                'date_add' => date('Y-m-d H:i:s'),
+                'price_te' => 0,
+                'last_wa' => 0,
+                'current_wa' => 0,
+                'referer' => null,
+                'id_employee' => 0,
+                'employee_firstname' => null,
+                'employee_lastname' => null,
+            ), $employee_params);
+
+        $stock_mvt = (new StockManagerAdapter)->newStockMvt();
+        $stock_mvt->hydrate($mvt_params);
+
+        return $stock_mvt->add();
     }
 }
