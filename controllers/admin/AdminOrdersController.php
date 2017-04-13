@@ -2916,11 +2916,16 @@ class AdminOrdersControllerCore extends AdminController
             StockAvailable::synchronize($id_product);
         } elseif ($order_detail->id_warehouse == 0) {
             StockAvailable::updateQuantity(
-                    $order_detail->product_id,
-                    $order_detail->product_attribute_id,
-                    $quantity_to_reinject,
-                    $order_detail->id_shop
-                );
+                $order_detail->product_id,
+                $order_detail->product_attribute_id,
+                $quantity_to_reinject,
+                $order_detail->id_shop,
+                true,
+                array(
+                    'id_order' => $order_detail->id_order,
+                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON')
+                )
+            );
 
             if ($delete) {
                 $order_detail->delete();
