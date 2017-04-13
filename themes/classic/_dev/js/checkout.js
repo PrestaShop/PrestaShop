@@ -60,6 +60,6 @@ $(document).ready(() => {
     // Hide all carrier extra content ...
     $(".carrier-extra-content").hide();
     // and show the one related to the selected carrier
-    params.deliveryOption.find(".carrier-extra-content").slideDown();
+    params.deliveryOption.next(".carrier-extra-content").slideDown();
   });
 });
