@@ -54,6 +54,7 @@ trait NormalizeFieldTrait
     private function shouldCastToInt($columnName)
     {
         return false !== strpos($columnName, '_id') ||
+        false !== strpos($columnName, 'id_') ||
         false !== strpos($columnName, '_quantity') ||
         false !== strpos($columnName, 'total_');
     }
