@@ -129,4 +129,9 @@ class StockManager implements StockInterface
 
         return Db::getInstance()->execute($updateReservedQuantityQuery);
     }
+
+    public function newStockMvt()
+    {
+        return new \StockMvt();
+    }
 }
