@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Stock;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -160,23 +161,7 @@ class StockManager
 
         // Prepare movement and save it
         if (true === $add_movement) {
-            $productIdentity = ProductIdentity::fromArray(array(
-                'product_id' => (int) $product->id,
-                'combination_id' => (int) $id_product_attribute
-            ));
-
-            $movement = new Movement($productIdentity, $delta_quantity);
-            $movement->setIdStock($stockAvailable->id);
-
-            if (!empty($params['id_order'])) {
-                $movement->setIdOrder((int) $params['id_order']);
-            }
-
-            if (!empty($params['id_stock_mvt_reason'])) {
-                $movement->setIdStockMvtReason((int) $params['id_stock_mvt_reason']);
-            }
-
-            $this->registerMovement($movement);
+            $this->saveMovement($product->id, $id_product_attribute, $delta_quantity, $params);
         }
 
         $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
@@ -190,6 +175,63 @@ class StockManager
         );
     }
 
+    /**
+     * Public method to save a Movement
+     *
+     * @param $productId
+     * @param $productAttributeId
+     * @param $deltaQuantity
+     * @param array $params
+     * @return bool
+     */
+    public function saveMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
+    {
+        $movement = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
+
+        return $this->registerMovement($movement);
+    }
+
+    /**
+     * Prepare a Movement for registration
+     *
+     * @param $productId
+     * @param $productAttributeId
+     * @param $deltaQuantity
+     * @param array $params
+     *
+     * @return Movement
+     */
+    private function prepareMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
+    {
+        $productIdentity = ProductIdentity::fromArray(array(
+            'product_id' => (int) $productId,
+            'combination_id' => (int) $productAttributeId
+        ));
+
+        $movement = new Movement($productIdentity, $deltaQuantity);
+
+        $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+        $stockAvailable = $stockManager->getStockAvailableByProduct((new ProductDataProvider)->getProduct($productId), $productAttributeId);
+
+        $movement->setIdStock((int) $stockAvailable->id);
+
+        if (!empty($params['id_order'])) {
+            $movement->setIdOrder((int) $params['id_order']);
+        }
+
+        if (!empty($params['id_stock_mvt_reason'])) {
+            $movement->setIdStockMvtReason((int) $params['id_stock_mvt_reason']);
+        }
+
+        return $movement;
+    }
+
+    /**
+     * Register a movement
+     *
+     * @param Movement $movement
+     * @return bool
+     */
     private function registerMovement(Movement $movement)
     {
         $delta = $movement->getDelta();

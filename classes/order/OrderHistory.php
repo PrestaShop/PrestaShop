@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Stock\StockManager;
+use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
+
 class OrderHistoryCore extends ObjectModel
 {
     /** @var int Order id */
@@ -310,6 +313,25 @@ class OrderHistoryCore extends ObjectModel
                                 true
                             );
                         }
+                    }
+                }
+
+                // Save movement if :
+                // not Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+                // new_os->shipped != old_os->shipped
+                if (Validate::isLoadedObject($old_os) && Validate::isLoadedObject($new_os) && $new_os->shipped != $old_os->shipped && !Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                    $product_quantity = (int) ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']);
+
+                    if ($product_quantity > 0) {
+                        (new StockManager)->saveMovement(
+                            (int)$product['product_id'],
+                            (int)$product['product_attribute_id'],
+                            (int)$product_quantity * ($new_os->shipped == 1 ? -1 : 1),
+                            array(
+                                'id_order' => $order->id,
+                                'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON')
+                            )
+                        );
                     }
                 }
             }
