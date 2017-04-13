@@ -43,7 +43,6 @@ class AdminModuleDataProviderTest extends UnitTestCase
     {
         parent::setup();
 
-        $this->languageISOCode = 'en';
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
 
@@ -55,6 +54,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->setupSfKernel();
         $this->sfRouter = $this->sfKernel->getContainer()->get('router');
         $this->translator = $this->sfKernel->getContainer()->get('translator');
+        list($this->languageISOCode) = explode('-', $this->translator->getLocale());
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()

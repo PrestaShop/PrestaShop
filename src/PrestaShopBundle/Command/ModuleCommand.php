@@ -42,7 +42,7 @@ class ModuleCommand extends ContainerAwareCommand
         'enable_mobile',
         'disable_mobile',
         'reset',
-        'update',
+        'upgrade',
     );
 
     protected function configure()

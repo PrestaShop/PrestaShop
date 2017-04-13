@@ -267,10 +267,7 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'));
         }
 
-        // Is module installed ?
-        if (! $this->moduleProvider->isInstalled($name)) {
-            return false;
-        }
+        $this->checkIsInstalled($name);
 
         // Get module instance and uninstall it
         $module = $this->moduleRepository->getModule($name);
@@ -305,13 +302,7 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'));
         }
 
-        if (! $this->moduleProvider->isInstalled($name)) {
-            throw new Exception(
-                $this->translator->trans(
-                    'The module %module% must be installed first',
-                    array('%module%' => $name),
-                'Admin.Modules.Notification'));
-        }
+        $this->checkIsInstalled($name);
 
         // Get new module
         // 1- From source
@@ -350,6 +341,8 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'));
         }
 
+        $this->checkIsInstalled($name);
+
         $module = $this->moduleRepository->getModule($name);
         try {
             $result = $module->onDisable();
@@ -386,6 +379,8 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'));
         }
 
+        $this->checkIsInstalled($name);
+
         $module = $this->moduleRepository->getModule($name);
         try {
             $result = $module->onEnable();
@@ -421,6 +416,8 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'));
         }
 
+        $this->checkIsInstalled($name);
+
         $module = $this->moduleRepository->getModule($name);
         try {
             return $module->onMobileDisable();
@@ -455,6 +452,8 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'));
         }
 
+        $this->checkIsInstalled($name);
+
         $module = $this->moduleRepository->getModule($name);
         try {
             return $module->onMobileEnable();
@@ -486,6 +485,8 @@ class ModuleManager implements AddonManagerInterface
                     array(),
                     'Admin.Modules.Notification'));
         }
+
+        $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
         try {
@@ -574,5 +575,16 @@ class ModuleManager implements AddonManagerInterface
     private function dispatch($event, $module)
     {
         $this->dispatcher->dispatch($event, new ModuleManagementEvent($module));
+    }
+
+    private function checkIsInstalled($name)
+    {
+        if (!$this->moduleProvider->isInstalled($name)) {
+            throw new Exception(
+                $this->translator->trans(
+                    'The module %module% must be installed first',
+                    array('%module%' => $name),
+                'Admin.Modules.Notification'));
+        }
     }
 }
