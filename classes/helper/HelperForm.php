@@ -134,8 +134,9 @@ class HelperFormCore extends Helper
                                     $tree->setData($params['tree']['set_data']);
                                 }
 
-                                $this->context->smarty->assign('categories_tree', $tree->render());
-                                $categories = false;
+                                //$this->context->smarty->assign('categories_tree', $tree->render());
+                                //$categories = false;
+				$params['categories_tree'] = $tree->render();
                             }
                         break;
 
