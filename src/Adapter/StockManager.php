@@ -127,4 +127,9 @@ class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterf
 
         return Db::getInstance()->execute($updateReservedQuantityQuery);
     }
+
+    public function newStockMvt()
+    {
+        return new \StockMvt();
+    }
 }
