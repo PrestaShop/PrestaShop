@@ -66,19 +66,7 @@ class AddressControllerCore extends FrontController
                 $this->should_redirect = true;
             }
         } elseif (($id_address = (int)Tools::getValue('id_address'))) {
-            $addressForm = $this->address_form->loadAddressById($id_address);
-
-            if ($addressForm->getAddress()->id === null) {
-                return Tools::redirect('index.php?controller=404');
-            }
-
-            if (!$this->context->customer->isLogged()) {
-                return $this->redirectWithNotifications('/index.php?controller=authentication');
-            }
-
-            if ($addressForm->getAddress()->id_customer != $this->context->customer->id) {
-                return Tools::redirect('index.php?controller=404');
-            }
+            $this->address_form->loadAddressById($id_address);
 
             if (Tools::getValue('delete')) {
                 $ok = $this->makeAddressPersister()->delete(

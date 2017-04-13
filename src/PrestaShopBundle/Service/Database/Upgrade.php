@@ -23,22 +23,25 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Service\Cache;
+namespace PrestaShopBundle\Service\Database;
 
+use PrestaShopBundle\Command\UpdateSchemaCommand;
 use PrestaShopBundle\Service\Command\AbstractCommand;
 
-class Refresh extends AbstractCommand
+class Upgrade extends AbstractCommand
 {
     /**
-     * Add doctrine:schema:update to the execution.
+     * Run the custom schemaUpgrade command
      */
     public function addDoctrineSchemaUpdate()
     {
+        $command = new UpdateSchemaCommand();
+        $this->application->add($command);
+
         $this->addCacheClear();
 
         $this->commands[] = array(
-            'command' => 'doctrine:schema:update',
-            '--force' => true,
+            'command' => 'prestashop:schema:update-without-foreign'
         );
     }
 }

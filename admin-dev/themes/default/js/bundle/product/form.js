@@ -66,7 +66,7 @@ $(document).ready(function() {
 
   /** Attach date picker */
   $('.datepicker').datetimepicker({
-    locale: iso_user,
+    locale: full_language_code,
     format: 'YYYY-MM-DD'
   });
 

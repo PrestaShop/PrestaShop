@@ -33,19 +33,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
     private $headerTabContent = '';
     private $enableSidebar = false;
     private $helpLink;
-    private $isoLocale = '';
 
-    public function __construct(
-        $controllerName = '',
-        $title = '',
-        $headerToolbarBtn = array(),
-        $displayType = '',
-        $showContentHeader = true,
-        $headerTabContent = '',
-        $enableSidebar = false,
-        $helpLink = '',
-        $isoLocale = ''
-    )
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
         parent::__construct($controllerName, 'new-theme');
 
@@ -59,7 +48,6 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->headerTabContent = $headerTabContent;
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
-        $this->isoLocale = $isoLocale;
     }
 
     public function setMedia()
@@ -101,16 +89,11 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'page_header_toolbar_title' => $this->page_header_toolbar_title,
             'title' => $this->title ? $this->title : $this->page_header_toolbar_title,
             'toolbar_btn' => $this->page_header_toolbar_btn,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         );
 
         if (!empty($this->helpLink)) {
             $vars['help_link'] = $this->helpLink;
-        }
-        if (!empty($this->isoLocale)) {
-            $vars['iso'] = $this->isoLocale;
-            $vars['iso_user'] = $this->isoLocale;
-            $vars['lang_iso'] = $this->isoLocale;
         }
 
         $this->context->smarty->assign($vars);
