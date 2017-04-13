@@ -111,7 +111,7 @@ class CategoryRepository
             '{table_prefix}',
             $this->tablePrefix,
             'SELECT
-            c.*, cl.name
+            c.id_category, c.id_parent, c.active, c.position, cl.name
             FROM {table_prefix}category c
             LEFT JOIN {table_prefix}category_lang cl ON (cl.id_category = c.id_category)
             LEFT JOIN {table_prefix}category_shop cs ON (cs.id_category = c.id_category)
