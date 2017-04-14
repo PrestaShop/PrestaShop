@@ -57,6 +57,15 @@
     },
     methods: {
       onKeyup(val) {
+        let validChars = /^[-]?\d*$/g;
+        let invalidChars = /[^-0-9]/g;
+        let invalidChars2 = /[^0-9]/g;
+
+        if(!validChars.test(val)) {
+          let firstLetter = val.charAt(0).replace(invalidChars,'');
+          let lastChars = val.substring(1,val.length).replace(invalidChars2,'');
+          return  $(`#${this.id}`).val(firstLetter.concat(lastChars));
+        }
         this.value = val;
         if(this.value) {
           this.isActive = this.isEnabled = true;
@@ -78,7 +87,8 @@
         let postUrl = this.product.combination_id ? apiEditCombinationsUrl : apiEditProductsUrl;
 
         // POST when qty !=0
-        if(this.isEnabled) {
+
+        if(this.isEnabled && !isNaN(this.product.qty)) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
             delta: this.value
