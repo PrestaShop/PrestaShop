@@ -40,7 +40,7 @@
       > .ps-dropdown-menu {
         left: 1.063rem;
         .dropdown-item {
-          @include justify-content(flex-start);
+          justify-content: flex-start;
           margin: 0;
           padding-top: 0.625rem;
           padding-bottom: 0.625rem;
@@ -137,7 +137,7 @@
       display: flex;
       a {
         padding-left: 3.75rem;
-        @include justify-content(space-between);
+        justify-content: space-between;
       }
       a.disabled {
         cursor: not-allowed;
@@ -189,7 +189,7 @@
   }
   .dropdown-item {
     margin: 0;
-    @include justify-content(flex-start);
+    justify-content: flex-start;
   }
 }
 .employee-dropdown {

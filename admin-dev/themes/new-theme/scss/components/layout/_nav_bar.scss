@@ -15,7 +15,7 @@
   &.mobile-nav {
     margin-left: -100%;
     width: 90%;
-    @include transition(all .5s ease-in);
+    transition: all .5s ease-in;
     &.expanded {
       visibility: visible;
       margin-left: 0;
@@ -236,7 +236,7 @@
   }
 
   .menu-collapse {
-    @include transform(rotate(90deg));
+    transform: rotate(90deg);
   }
 
   .category-title > .title,
@@ -297,7 +297,7 @@
 
 .mobile-layer {
   @include media-breakpoint-down(sm) {
-    @include transition(all 0.2s ease-in-out);
+    transition: all 0.2s ease-in-out;
     opacity: 0;
     visibility: hidden;
     position: fixed;

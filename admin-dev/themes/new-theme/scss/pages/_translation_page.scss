@@ -127,7 +127,7 @@ $color-active: #25B9D7;
       font-weight: 400;
 
       &.expanded {
-        @include transform(rotate(90deg));
+        transform: rotate(90deg);
       }
     }
 

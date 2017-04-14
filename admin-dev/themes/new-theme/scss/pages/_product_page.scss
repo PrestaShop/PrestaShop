@@ -76,8 +76,8 @@
     }
     .form_step1_type_product,
     .form_switch_language {
-      @include display(flex);
-      @include align-items(center);
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -288,7 +288,7 @@
             left: 0;
             right: 0;
             margin: auto;
-            @include filter(none);
+            filter: none;
           }
           &:hover {
             cursor: pointer;
@@ -487,7 +487,10 @@
       font-weight: 600;
     }
     > .ui-autocomplete-input {
-      @include placeholder {
+      &::-webkit-input-placeholder,
+      &::-moz-placeholder,
+      &:-ms-input-placeholder,
+      &:-moz-placeholder {
         font-size: 0.75rem;
       }
     }
