@@ -59,7 +59,7 @@ class StockMovementController
     public function listMovementsAction(Request $request)
     {
         try {
-            $queryParamsCollection = $this->queryParams->fromRequest($request, 'id_stock_mvt');
+            $queryParamsCollection = $this->queryParams->fromRequest($request, 'id_stock_mvt DESC');
         } catch (InvalidPaginationParamsException $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
