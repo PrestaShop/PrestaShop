@@ -23,7 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
-// import Bloodhound from 'typeahead.js';
 
 export default function () {
   $(document).ready(function () {
