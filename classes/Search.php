@@ -324,7 +324,7 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
 				LEFT JOIN `'._DB_PREFIX_.'category` c ON (cp.`id_category` = c.`id_category`)
 				WHERE c.`active` = 1 AND  product_shop.`active` = 1 AND p.`id_product` '.$product_pool.'
-				ORDER BY '.$alias.$order_by.' '.$order_way.' 
+				'.($order_by ? 'ORDER BY  '.$alias.$order_by : '').($order_way ? ' '.$order_way : '').'
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
         $result = $db->executeS($sql, true, false);
 
