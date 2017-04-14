@@ -69,7 +69,7 @@ class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterf
 
         $updatePhysicalQuantityQuery = '
             UPDATE {table_prefix}stock_available sa
-            SET sa.physical_quantity = sa.quantity - sa.reserved_quantity
+            SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
         ';
         $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
 
