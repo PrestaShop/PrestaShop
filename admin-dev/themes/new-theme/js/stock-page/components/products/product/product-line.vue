@@ -56,6 +56,9 @@
         return !!this.product.combination_id;
       },
       updatedQty() {
+         if(isNaN(this.product.qty)) {
+          return false;
+        }
         return !!this.product.qty;
       },
       physicalQtyUpdated () {
