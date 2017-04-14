@@ -11,19 +11,26 @@
       @tagChanged="onTagChanged"
       />
     <ul class="m-t-1">
-      <li v-for="(item, index) in items" v-show="item.visible">
-        <PSTree v-if="item.children" class="flex" :model="item">
-          <FilterLine
-            v-for="(model, index) in item.children"
-            :key="index"
-            :ref="item[label]"
-            :label="item[label]"
-            :id="itemID+index"
-            :model="item"
-            @checked="onCheck"
-          />
-        </PSTree>
-        <FilterLine :ref="item[label]" v-else :label="item[label]"  :id="itemID+index" :item="item" @checked="onCheck"/>
+      <PSTree
+        v-if="hasChildren"
+        ref="tree"
+        className="flex"
+        :model="list[0]"
+        :id="itemID"
+      >
+      </PSTree>
+      <li
+        v-else
+        v-for="(item, index) in items"
+        v-show="item.visible"
+      >
+        <FilterLine
+          :ref="item[label]"
+          :label="item[label]"
+          :id="itemID+index"
+          :item="item"
+          @checked="onCheck"
+        />
       </li>
     </ul>
   </div>
@@ -49,8 +56,12 @@
             data.visible = true;
             matchList.push(data);
           }
+          if(data.children) {
+            this.hasChildren = true;
+          }
           return data;
         });
+
         if(matchList.length === 1) {
           this.match = matchList[0];
         }
@@ -58,6 +69,9 @@
           this.match = null;
         }
         return this.list;
+      },
+      categoriesId() {
+        return this.$store.state.categoriesId;
       }
     },
     methods: {
@@ -107,7 +121,8 @@
       return {
         currentVal: '',
         match: null,
-        splice: true
+        splice: true,
+        hasChildren: false
       }
     },
     mounted() {
