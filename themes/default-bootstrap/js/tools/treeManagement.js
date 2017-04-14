@@ -53,6 +53,7 @@ $(document).ready(function(){
 		$('ul.tree.dhtml').addClass('dynamized');
 
 		$('ul.tree.dhtml').removeClass('dhtml');
+		$('ul.tree.dynamized').removeClass('tree');
 	}
 });
 
