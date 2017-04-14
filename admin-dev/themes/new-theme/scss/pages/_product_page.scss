@@ -51,6 +51,10 @@
   }
   .tab-content {
     padding: 0;
+
+    .bordered {
+      margin-top: -1px;
+    }
   }
 
   // Components
