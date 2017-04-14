@@ -227,4 +227,25 @@ class CustomerThreadCore extends ObjectModel
             ' ORDER BY ct.date_upd ASC
 		');
     }
+
+    public static function getCustomerMessagesOrder($id_customer, $id_order)
+    {
+        $sql = 
+            'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
+                e.`firstname` AS efirstname, e.`lastname` AS elastname
+			FROM '._DB_PREFIX_.'customer_thread ct
+			LEFT JOIN '._DB_PREFIX_.'customer_message cm
+				ON ct.id_customer_thread = cm.id_customer_thread
+            LEFT JOIN `'._DB_PREFIX_.'customer` c 
+                ON ct.`id_customer` = c.`id_customer`
+            LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e 
+                ON e.`id_employee` = cm.`id_employee`
+			WHERE ct.id_customer = '.(int)$id_customer.
+                ' AND ct.`id_order` = '.(int)$id_order.'
+            GROUP BY cm.id_customer_message
+		 	ORDER BY cm.date_add DESC
+            LIMIT 2';
+         
+        return Db::getInstance()->executeS($sql);
+    }
 }
