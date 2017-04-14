@@ -853,6 +853,13 @@ abstract class PaymentModuleCore extends Module
                     }
 
                     $order->updateOrderDetailTax();
+
+                    // sync all stock
+                    (new \PrestaShop\PrestaShop\Adapter\StockManager())->updatePhysicalProductQuantity(
+                        $order->id_shop,
+                        (int)Configuration::get('PS_OS_ERROR'),
+                        (int)Configuration::get('PS_OS_CANCELED')
+                    );
                 } else {
                     $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
