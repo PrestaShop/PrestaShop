@@ -41,7 +41,7 @@
     content: '';
     display: block;
     position: fixed;
-    top: $size-header-height - rem(1px);
+    top: $size-header-height - 0.0625rem;
     left: $size-navbar-width;
     right: 0;
     box-shadow: $gray-dark 0 0 10px;
@@ -63,16 +63,16 @@
     background: $white;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
-    padding: rem(20px) 0;
+    padding: 1.25rem 0;
     .select2 {
-      margin-top: rem(8px);
+      margin-top: 0.5rem;
     }
     .edit {
       background-size: 4%;
     }
     .help-box {
-      margin-left: rem(10px);
-      margin-top: rem(10px);
+      margin-left: 0.625rem;
+      margin-top: 0.625rem;
     }
     .form_step1_type_product,
     .form_switch_language {
@@ -83,7 +83,7 @@
 
   .big-input {
     .form-control {
-      font-size: rem(24px);
+      font-size: 1.5rem;
     }
   }
   .bulk-action {
@@ -92,15 +92,15 @@
 
   #bulk-combinations-container {
     border: solid 1px $gray-light;
-    margin: rem(-17px) rem(15px) rem(15px);
-    padding: rem(15px);
+    margin: -1.063rem 0.9375rem 0.9375rem;
+    padding: 0.9375rem;
     width: 97%;
-    font-size: rem(12px);
+    font-size: 0.75rem;
     font-weight: 600;
   }
 
   #delete-combinations {
-    max-width: rem(210px);
+    max-width: 13.13rem;
   }
 
   .product-footer {
@@ -117,26 +117,26 @@
     right: 0;
     .for-switch {
       display: inline-block;
-      margin-left: rem(20px);
-      margin-right: rem(4px);
-      font-size: rem(14px);
+      margin-left: 1.25rem;
+      margin-right: 0.25rem;
+      font-size: 0.875rem;
     }
     .duplicate,
     .go-catalog,
     .new-product {
-      margin-right: rem(10px);
-      margin-top: rem(10px);
+      margin-right: 0.625rem;
+      margin-top: 0.625rem;
     }
     .preview,
     .save {
-      padding: rem(10px) $btn-padding-x-lg;
+      padding: 0.625rem $btn-padding-x-lg;
     }
     .save {
-      margin-top: rem(8px);
+      margin-top: 0.5rem;
     }
     .delete {
       > .material-icons {
-        font-size: rem(25px);
+        font-size: 1.563rem;
         opacity: 0.8;
       }
     }
@@ -144,7 +144,7 @@
 
   .help-box {
     cursor: pointer;
-    min-width: rem(16px);
+    min-width: 1rem;
   }
 
   .form-contenttab {
@@ -156,7 +156,7 @@
 
   .form-group {
     .title {
-      margin-bottom: rem(20px);
+      margin-bottom: 1.25rem;
     }
   }
 
@@ -192,8 +192,8 @@
     display: inline-block;
     border: 1px solid $gray-light;
     outline: solid 4px $white;
-    margin: 0 rem(10px) 0 0;
-    border-radius: rem(3px);
+    margin: 0 0.625rem 0 0;
+    border-radius: 0.1875rem;
   }
 
   .product-combination-image.img-highlight {
@@ -207,19 +207,19 @@
     .combination-label {
       color: $gray-medium;
       &.vcenter {
-        line-height: rem(90px);
+        line-height: 5.625rem;
       }
     }
     .title {
-      font-size: rem(15px);
+      font-size: 0.9375rem;
       clear: both;
-      margin-bottom: rem(10px);
+      margin-bottom: 0.625rem;
     }
     .next,
     .prev {
       cursor: pointer;
       display: inline-block;
-      margin-bottom: rem(10px);
+      margin-bottom: 0.625rem;
     }
   }
 
@@ -416,13 +416,13 @@
       width: 100%;
       border: 1px solid $gray-medium;
       background: $white;
-      padding: rem(5px) 0;
-      max-height: rem(312px);
+      padding: 0.3125rem 0;
+      max-height: 19.5rem;
       overflow: auto;
     }
     .tt-suggestion {
       cursor: pointer;
-      padding: rem(5px) rem(10px);
+      padding: 0.3125rem 0.625rem;
       color: $gray-light;
       &:hover {
         background-color: $primary-hover;
@@ -433,7 +433,7 @@
 
   .pack-product {
     position: relative;
-    border: rem(1px) solid $gray-light;
+    border: 0.0625rem solid $gray-light;
     border-radius: $border-radius;
     > .cover {
       width: 100%;
@@ -442,8 +442,8 @@
       opacity: 0;
       visibility: hidden;
       position: absolute;
-      top: rem(1px);
-      right: rem(1px);
+      top: 0.0625rem;
+      right: 0.0625rem;
     }
     &:hover {
       border: 2px $brand-primary solid;
@@ -453,13 +453,13 @@
       }
     }
     h4,.ref {
-      padding: rem(10px);
+      padding: 0.625rem;
     }
     h4 {
       color: black;
       font-weight: normal;
       margin: 0;
-      line-height: rem(20px);
+      line-height: 1.25rem;
     }
     .ref {
       color: $gray-medium;
@@ -474,7 +474,7 @@
   }
 
   #add-categories {
-    margin-top: rem(40px);
+    margin-top: 2.5rem;
   }
 
   #categories-tree {
@@ -483,32 +483,32 @@
 
   .ui-widget {
     > .form-control-label {
-      font-size: rem(10px);
+      font-size: 0.625rem;
       font-weight: 600;
     }
     > .ui-autocomplete-input {
       @include placeholder {
-        font-size: rem(12px);
+        font-size: 0.75rem;
       }
     }
     > .pstaggerTagsWrapper {
       border: none;
       padding: 0;
       > .pstaggerTag {
-        font-size: rem(12px);
+        font-size: 0.75rem;
         font-weight: 400;
-        padding-top: rem(2px);
-        margin-bottom: rem(5px);
+        padding-top: 0.125rem;
+        margin-bottom: 0.3125rem;
         > .pstaggerClosingCross {
           font-size: 0;
           &::after {
-            font-size: rem(16px);
+            font-size: 1rem;
             font-family: 'Material Icons';
             content: "\E5CD";
             text-decoration: none;
             vertical-align: middle;
             position: relative;
-            bottom: rem(4px);
+            bottom: 0.25rem;
           }
         }
       }
@@ -516,12 +516,12 @@
   }
 
   .categories-tree {
-    padding: rem(10px);
+    padding: 0.625rem;
     border: $gray-light 1px solid;
-    border-radius: rem(3px);
+    border-radius: 0.1875rem;
     .categories-tree-actions {
       text-transform: uppercase;
-      font-size: rem(10px);
+      font-size: 0.625rem;
       font-weight: 600;
       clear: both;
       [data-action="expand"],
@@ -529,13 +529,13 @@
         cursor: pointer;
       }
       > hr {
-        margin-top: rem(10px);
+        margin-top: 0.625rem;
       }
       .form-control-label {
-        padding-top: rem(5px);
+        padding-top: 0.3125rem;
       }
       .material-icons {
-        font-size: rem(20px);
+        font-size: 1.25rem;
         vertical-align: bottom;
       }
     }
@@ -573,7 +573,7 @@
   .seo-table .delete {
     color: $gray-medium;
     .material-icons {
-      font-size: rem(20px);
+      font-size: 1.25rem;
     }
   }
 
@@ -587,7 +587,7 @@
 
   #form_step5_meta_description_1 {
     resize: none;
-    height: rem(140px);
+    height: 8.75rem;
   }
 
   #product-attachment-file {
@@ -660,7 +660,7 @@
         border-radius: 0;
       }
       .animated-background {
-        height: rem(50px);
+        height: 3.125rem;
       }
       .img {
         width: 8%;
@@ -671,7 +671,7 @@
       }
       .attribute-finalprice {
         width: 10%;
-        font-size: rem(13px);
+        font-size: 0.8125rem;
       }
       .attribute-actions {
         text-align: right;
@@ -689,7 +689,7 @@
 
   .form-control-static {
     display: inline-block;
-    margin-top: rem(25px);
+    margin-top: 1.563rem;
   }
 
   /* Last tab modules selection */
@@ -746,9 +746,9 @@
 
 .ui-autocomplete {
   @media screen and (max-width: 1450px) {
-    max-width: rem(197px);
+    max-width: 12.31rem;
   }
-  max-width: rem(290px);
+  max-width: 18.13rem;
   position: absolute;
   z-index: 1000;
   cursor: default;
@@ -784,16 +784,16 @@
 
 #attributes-list {
   .attribute-group {
-    border: rem(1px) solid $gray-light;
+    border: 0.0625rem solid $gray-light;
     border-bottom-width: 0;
     &:last-child {
-      border-bottom-width: rem(1px);
+      border-bottom-width: 0.0625rem;
     }
     .attribute-group-name {
       display: block;
       font-weight: $font-weight-semibold;
       color: $gray-dark;
-      padding: rem(7px);
+      padding: 0.4375rem;
       &:hover {
         text-decoration: none;
       }
@@ -809,7 +809,7 @@
     .attributes {
       border-top: 2px solid $gray-light;
       padding: em(7px);
-      height: rem(162px);
+      height: 10.13rem;
       overflow-x: hidden;
       .two-columns {
         columns: 2;
@@ -825,10 +825,10 @@
             .pretty-checkbox {
               content: "";
               float: left;
-              height: rem(16px);
-              width: rem(16px);
-              margin-right: rem(7px);
-              border: rem(1px) solid $gray-light;
+              height: 1rem;
+              width: 1rem;
+              margin-right: 0.4375rem;
+              border: 0.0625rem solid $gray-light;
             }
           }
           &:checked {
@@ -837,11 +837,11 @@
               color: $gray-medium;
               .pretty-checkbox {
                 border-color: $gray-medium;
-                border-width: rem(2px);
+                border-width: 0.125rem;
                 &.not-color:before {
                   content: "\E5CA";
                   font-family: "Material Icons";
-                  line-height: rem(12px);
+                  line-height: 0.75rem;
                 }
               }
             }
@@ -861,7 +861,7 @@
     }
   }
   th{
-    padding: rem(20px) rem(10px);
+    padding: 1.25rem 0.625rem;
   }
   td {
     vertical-align: middle;
@@ -892,14 +892,14 @@
     color: $gray-medium;
     cursor: pointer;
     .material-icons{
-      font-size: rem(20px);
+      font-size: 1.25rem;
     }
   }
   .pagination {
     list-style: none;
   }
   .select2-selection{
-      font-size: rem(14px);
+      font-size: 0.875rem;
       text-transform: none;
   }
 }
@@ -916,9 +916,9 @@
       }
       .big-input {
         width: 100%;
-        margin-bottom: rem(15px);
+        margin-bottom: 0.9375rem;
         input[type="text"] {
-          height: rem(50px);
+          height: 3.125rem;
         }
       }
       .form_step1_type_product {
@@ -939,10 +939,10 @@
         display: inline-block;
       }
       .arrow {
-        padding: rem(15px) rem(5px);
+        padding: 0.9375rem 0.3125rem;
         background: white;
         position: relative;
-        height: rem(48px);
+        height: 3rem;
         z-index: 2;
         visibility: hidden;
         background: $brand-primary;
@@ -953,12 +953,12 @@
         }
       }
       .right-arrow {
-        margin-top: rem(-50px);
+        margin-top: 3.125rem;
       }
     }
     .nav-tabs {
-      height: rem(50px);
-      width: rem(2000px);
+      height: 3.125rem;
+      width: 125rem;
       position: relative;
       .nav-link.active:not(.description-tab) {
         border-top: transparent;
@@ -972,11 +972,11 @@
       width: 70%;
     }
     .ui-helper-hidden-accessible {
-      margin-bottom: rem(15px);
+      margin-bottom: 0.9375rem;
       display: inline-block;
     }
     .combination-form {
-      padding: 0 rem(20px);
+      padding: 0 1.25rem;
     }
     #form-nav[style*="display:none"] {
       ~ .arrow {
@@ -1024,13 +1024,13 @@
         background: $brand-primary;
       }
       .spinner{
-        margin-top: rem(-5px);
+        margin-top: -0.3125rem;
       }
       .dropdown {
         display: block;
-        margin-top: rem(10px);
+        margin-top: 0.625rem;
         .dropdown-menu {
-          top: rem(-120px);
+          top: -7.5rem;
         }
       }
     }

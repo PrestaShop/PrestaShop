@@ -38,13 +38,13 @@ body {
 // To put into the PrestaKit
 $color-icons: #6c868e;
 .breadcrumb {
-  padding: rem(5px);
+  padding: 0.3125rem;
   background: none;
   border-radius: 0;
-  font-size: rem(12px);
+  font-size: 0.75rem;
   > li + li::before {
-    padding-right: rem(0px);
-    padding-left: rem(3px);
+    padding-right: 0;
+    padding-left: 0.1875rem;
   }
   > li > a {
     color: #363A41; // TODO: Place the text color
@@ -54,12 +54,12 @@ $color-icons: #6c868e;
   color: $color-icons;
   text-align: center;
   display: inline-block;
-  margin: 0 rem(5px);
+  margin: 0 0.3125rem;
   > .material-icons {
-    font-size: rem(24px);
+    font-size: 1.5rem;
   }
   > .title {
-    font-size: rem(12px);
+    font-size: 0.75rem;
     color: $color-icons;
     display: block;
   }
