@@ -321,8 +321,10 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
 					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				WHERE p.`id_product` '.$product_pool.'
-				'.($order_by ? 'ORDER BY  '.$alias.$order_by : '').($order_way ? ' '.$order_way : '').'
+				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+				LEFT JOIN `'._DB_PREFIX_.'category` c ON (cp.`id_category` = c.`id_category`)
+				WHERE c.`active` = 1 AND  product_shop.`active` = 1 AND p.`id_product` '.$product_pool.'
+				ORDER BY '.$alias.$order_by.' '.$order_way.' 
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
         $result = $db->executeS($sql, true, false);
 
