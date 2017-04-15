@@ -210,6 +210,12 @@ class AdminSearchConfControllerCore extends AdminController
                         'type' => 'text',
                         'cast' => 'intval'
                     ),
+                    'PS_SEARCH_WEIGHT_CNAMES2' => array(
+                        'title' => $this->l('Secondary categories weight'),
+                        'validation' => 'isUnsignedInt',
+                        'type' => 'text',
+                        'cast' => 'intval'
+                    ),
                     'PS_SEARCH_WEIGHT_MNAME' => array(
                         'title' => $this->l('Manufacturer weight'),
                         'validation' => 'isUnsignedInt',
