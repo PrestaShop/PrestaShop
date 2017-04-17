@@ -871,7 +871,7 @@ class CustomerCore extends ObjectModel
         }
         $cart = array_shift($carts);
         $cart = new Cart((int)$cart['id_cart']);
-        return ($cart->nbProducts() === 0 ? (int)$cart->id : false);
+        return ($cart->nbProducts() === 0 ? false : (int)$cart->id);
     }
 
     public function getOutstanding()
