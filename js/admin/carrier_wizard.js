@@ -190,7 +190,7 @@ function displaySummary()
 		tmp = tmp.replace('@s1', summary_translation_free);
 	else
 		tmp = tmp.replace('@s1', summary_translation_paid);
-	$('#summary_meta_informations').html(tmp);
+	$('#summary_meta_informations').text(tmp);
 
 	// Tax and calculation mode for the shipping cost
 	tmp = summary_translation_shipping_cost.replace('@s2', '<strong>' + $('#id_tax_rules_group option:selected').text() + '</strong>');
