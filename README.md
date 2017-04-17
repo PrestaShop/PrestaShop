@@ -1,5 +1,6 @@
 About PrestaShop
 --------
+author: Trung
 
 [![Build Status](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.org/PrestaShop/PrestaShop)
 
