@@ -92,10 +92,12 @@ function searchLocations()
 	var address = document.getElementById('addressInput').value;
 	var geocoder = new google.maps.Geocoder();
 	geocoder.geocode({address: address}, function(results, status) {
-		if (status === google.maps.GeocoderStatus.OK)
-			searchLocationsNear(results[0].geometry.location);
-		else
-		{
+		if (results.length && status === google.maps.GeocoderStatus.OK) {
+			for (var i = 0; i < results.length; i++) {
+				if (searchLocationsNear(results[i].geometry.location) )
+					return;
+			}
+		} else {
 			if (!!$.prototype.fancybox && isCleanHtml(address))
 			    $.fancybox.open([
 			        {
@@ -110,6 +112,7 @@ function searchLocations()
 			else
 			    alert(address + ' ' + translation_6);
 		}
+
 		$('#stores_loader').hide();
 	});
 }
@@ -144,15 +147,17 @@ function clearLocations(n)
 
 function searchLocationsNear(center)
 {
+	$('#stores-table').find('tbody tr').remove();
 	var radius = document.getElementById('radiusSelect').value;
 	var searchUrl = baseUri+'?controller=stores&ajax=1&latitude=' + center.lat() + '&longitude=' + center.lng() + '&radius=' + radius;
 	downloadUrl(searchUrl, function(data) {
 		var xml = parseXml(data.trim());
 		var markerNodes = xml.documentElement.getElementsByTagName('marker');
 		var bounds = new google.maps.LatLngBounds();
-
-		clearLocations(markerNodes.length);
-		$('table#stores-table').find('tbody tr').remove();
+		// clean up current selections
+		if (markerNodes.length) {
+			clearLocations(markerNodes.length);
+		}
 		for (var i = 0; i < markerNodes.length; i++)
 		{
 			var name = markerNodes[i].getAttribute('name');
@@ -183,6 +188,8 @@ function searchLocationsNear(center)
 				if (map.getZoom() > 13) map.setZoom(13);
 				google.maps.event.removeListener(listener);
 			});
+
+			return true;
 		}
 		locationSelect.style.visibility = 'visible';
 		$(locationSelect).parent().parent().addClass('active').show();
@@ -191,6 +198,8 @@ function searchLocationsNear(center)
 			google.maps.event.trigger(markers[markerNum], 'click');
 		};
 	});
+
+	return false;
 }
 
 function createMarker(latlng, name, address, other, id_store, has_store_picture)
