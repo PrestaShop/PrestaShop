@@ -1652,7 +1652,9 @@ abstract class ModuleCore
         static $untrusted_modules_list_content = null;
 
         $context = Context::getContext();
-
+        
+        $module_name = Tools::strtolower($module_name);
+        
         // If the xml file exist, isn't empty, isn't too old
         // and if the theme hadn't change
         // we use the file, otherwise we regenerate it
