@@ -1915,32 +1915,38 @@ abstract class ModuleCore
                     break;
                 }
             }
-            if (!isset($k) || !isset($res[$k]) || !isset($res[$k + 1])) {
+            if (!isset($k)) {
                 return false;
             }
 
             $from = $res[$k];
-            $to = $res[$k + 1];
-
-            if (isset($position) && !empty($position)) {
-                $to['position'] = (int)$position;
+            if (!$way) {
+		    $to = (int)$from['position'] - 1;
             }
-
-            $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
-                SET `position`= position '.($way ? '-1' : '+1').'
-                WHERE position between '.(int)(min(array($from['position'], $to['position']))).' AND '.max(array($from['position'], $to['position'])).'
-                AND `id_hook` = '.(int)$from['id_hook'].' AND `id_shop` = '.$shop_id;
-            if (!Db::getInstance()->execute($sql)) {
-                return false;
-            }
-
-            $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
-                SET `position`='.(int)$to['position'].'
-                WHERE `'.pSQL($this->identifier).'` = '.(int)$from[$this->identifier].'
-                AND `id_hook` = '.(int)$to['id_hook'].' AND `id_shop` = '.$shop_id;
-            if (!Db::getInstance()->execute($sql)) {
-                return false;
-            }
+	     else {
+		    $to = (int)$from['position'] + 1;
+	     }	
+	     if (!empty($position)) {
+		    $to = (int)$position;
+	     }
+             $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
+		    SET `position`= position '.($way ? '-1' : '+1').'
+		    WHERE position between '.(int)(min(array($from['position'], $to))).' 
+		    AND '.max(array($from['position'], $to)).'
+		    AND `id_module` != '.(int)$from['id_module'].'
+		    AND `id_hook` = '.(int)$from['id_hook'].' 
+		    AND `id_shop` = '.$shop_id;
+	      if (!Db::getInstance()->execute($sql)) {
+		    return false;
+	      }
+             $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
+		    SET `position`='.(int)$to.'
+		    WHERE `id_module` = '.(int)$from['id_module'].'
+		    AND `id_hook` = '.(int)$from['id_hook'].' 
+		    AND `id_shop` = '.$shop_id;
+             if (!Db::getInstance()->execute($sql)) {
+                    return false;
+             }
         }
         return true;
     }
