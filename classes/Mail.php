@@ -198,6 +198,12 @@ class MailCore extends ObjectModel
             $fromName = null;
         }
 
+		// If $to is a string list of e-mail addresses separated by ';' => conversion to array()
+		$is_to_string_list = strpos($to, ';');
+		if (false !== $is_to_string_list) {
+			$to = explode(';', $to);
+		}
+
         // It would be difficult to send an e-mail if the e-mail is not valid, so this time we can die if there is a problem
         if (!is_array($to) && !Validate::isEmail($to)) {
             Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: parameter "to" is corrupted', array(), 'Admin.Advparameters.Notification'), $die);
