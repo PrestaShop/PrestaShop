@@ -76,7 +76,6 @@ class ManufacturerControllerCore extends FrontController
         parent::initContent();
 
         if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
-            $this->productSort();
             $this->assignOne();
             $this->setTemplate(_PS_THEME_DIR_.'manufacturer.tpl');
         } else {
@@ -90,12 +89,37 @@ class ManufacturerControllerCore extends FrontController
      */
     protected function assignOne()
     {
-        $this->manufacturer->description = Tools::nl2br(trim($this->manufacturer->description));
-        $nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, null, null, null, $this->orderBy, $this->orderWay, true);
-        $this->pagination((int)$nbProducts);
+        $hook_executed = false;
+        $nbProducts = 0;
+        $products = array();
 
-        $products = $this->manufacturer->getProducts($this->manufacturer->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
+        Hook::exec('actionProductListOverride', array(
+            'nbProducts'   => &$nbProducts,
+            'catProducts'  => &$products,
+            'hookExecuted' => &$hook_executed,
+        ));
+
+        // The hook was not executed, standard working
+        if (!$hook_executed) {
+            $this->productSort(); // productSort must be called in first
+
+            $this->manufacturer->description = Tools::nl2br(trim($this->manufacturer->description));
+            $nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, null, null, null, $this->orderBy, $this->orderWay, true);
+            $this->pagination((int)$nbProducts);
+
+            $products = $this->manufacturer->getProducts($this->manufacturer->id, $this->context->cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
+        } else {
+            // Hook executed, use the override
+            // Pagination must be call after "getProducts"
+            $this->pagination($nbProducts);
+        }
+
         $this->addColorsToProductList($products);
+
+        Hook::exec('actionProductListModifier', array(
+            'nb_products'  => &$nbProducts,
+            'cat_products' => &$products,
+        ));
 
         $this->context->smarty->assign(array(
             'nb_products' => $nbProducts,

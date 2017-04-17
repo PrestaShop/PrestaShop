@@ -77,7 +77,6 @@ class SupplierControllerCore extends FrontController
         parent::initContent();
 
         if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
-            $this->productSort(); // productSort must be called before assignOne
             $this->assignOne();
             $this->setTemplate(_PS_THEME_DIR_.'supplier.tpl');
         } else {
@@ -92,12 +91,37 @@ class SupplierControllerCore extends FrontController
     protected function assignOne()
     {
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
-            $this->supplier->description = Tools::nl2br(trim($this->supplier->description));
-            $nbProducts = $this->supplier->getProducts($this->supplier->id, null, null, null, $this->orderBy, $this->orderWay, true);
-            $this->pagination((int)$nbProducts);
+            $hook_executed = false;
+            $nbProducts = 0;
+            $products = array();
 
-            $products = $this->supplier->getProducts($this->supplier->id, $this->context->cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
+            Hook::exec('actionProductListOverride', array(
+                'nbProducts'   => &$nbProducts,
+                'catProducts'  => &$products,
+                'hookExecuted' => &$hook_executed,
+            ));
+
+            // The hook was not executed, standard working
+            if (!$hook_executed) {
+                $this->productSort(); // productSort must be called in first
+
+                $this->supplier->description = Tools::nl2br(trim($this->supplier->description));
+                $nbProducts = $this->supplier->getProducts($this->supplier->id, null, null, null, $this->orderBy, $this->orderWay, true);
+                $this->pagination((int)$nbProducts);
+
+                $products = $this->supplier->getProducts($this->supplier->id, $this->context->cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
+            } else {
+                // Hook executed, use the override
+                // Pagination must be call after "getProducts"
+                $this->pagination($nbProducts);
+            }
+
             $this->addColorsToProductList($products);
+
+            Hook::exec('actionProductListModifier', array(
+                'nb_products'  => &$nbProducts,
+                'cat_products' => &$products,
+            ));
 
             $this->context->smarty->assign(
                 array(
@@ -143,7 +167,7 @@ class SupplierControllerCore extends FrontController
             Tools::redirect('index.php?controller=404');
         }
     }
-    
+
     /**
     * Get instance of current supplier
     */

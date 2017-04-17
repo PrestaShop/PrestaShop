@@ -42,25 +42,48 @@ class NewProductsControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->productSort();
-
         // Override default configuration values: cause the new products page must display latest products first.
         if (!Tools::getIsset('orderway') || !Tools::getIsset('orderby')) {
             $this->orderBy = 'date_add';
             $this->orderWay = 'DESC';
         }
 
-        $nb_products = (int)Product::getNewProducts(
-            $this->context->language->id,
-            (isset($this->p) ? (int)$this->p - 1 : null),
-            (isset($this->n) ? (int)$this->n : null),
-            true
-        );
+        $hook_executed = false;
+        $nb_products = 0;
+        $products = array();
 
-        $this->pagination($nb_products);
+        Hook::exec('actionProductListOverride', array(
+            'nbProducts'   => &$nb_products,
+            'catProducts'  => &$products,
+            'hookExecuted' => &$hook_executed,
+        ));
 
-        $products = Product::getNewProducts($this->context->language->id, (int)$this->p - 1, (int)$this->n, false, $this->orderBy, $this->orderWay);
+        // The hook was not executed, standard working
+        if (!$hook_executed) {
+            $this->productSort();
+
+            $nb_products = (int)Product::getNewProducts(
+                $this->context->language->id,
+                (isset($this->p) ? (int)$this->p - 1 : null),
+                (isset($this->n) ? (int)$this->n : null),
+                true
+            );
+
+            $this->pagination($nb_products);
+
+            $products = Product::getNewProducts($this->context->language->id, (int)$this->p - 1, (int)$this->n, false, $this->orderBy, $this->orderWay);
+        } else {
+            // Hook executed, use the override
+            // Pagination must be call after "getProducts"
+            $this->pagination($nbProducts);
+        }
+
         $this->addColorsToProductList($products);
+
+        Hook::exec('actionProductListModifier', array(
+            'nb_products'  => &$nbProducts,
+            'cat_products' => &$products,
+        ));
 
         $this->context->smarty->assign(array(
             'products' => $products,

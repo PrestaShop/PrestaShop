@@ -42,12 +42,35 @@ class PricesDropControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->productSort();
-        $nbProducts = Product::getPricesDrop($this->context->language->id, null, null, true);
-        $this->pagination($nbProducts);
+        $hook_executed = false;
+        $nbProducts = 0;
+        $products = array();
 
-        $products = Product::getPricesDrop($this->context->language->id, (int)$this->p - 1, (int)$this->n, false, $this->orderBy, $this->orderWay);
+        Hook::exec('actionProductListOverride', array(
+            'nbProducts'   => &$nbProducts,
+            'catProducts'  => &$products,
+            'hookExecuted' => &$hook_executed,
+        ));
+
+        // The hook was not executed, standard working
+        if (!$hook_executed) {
+            $this->productSort();
+            $nbProducts = Product::getPricesDrop($this->context->language->id, null, null, true);
+            $this->pagination($nbProducts);
+
+            $products = Product::getPricesDrop($this->context->language->id, (int)$this->p - 1, (int)$this->n, false, $this->orderBy, $this->orderWay);
+        } else {
+            // Hook executed, use the override
+            // Pagination must be call after "getProducts"
+            $this->pagination($nbProducts);
+        }
+
         $this->addColorsToProductList($products);
+
+        Hook::exec('actionProductListModifier', array(
+            'nb_products'  => &$nbProducts,
+            'cat_products' => &$products,
+        ));
 
         $this->context->smarty->assign(array(
             'products' => $products,
