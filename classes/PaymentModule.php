@@ -722,14 +722,14 @@ abstract class PaymentModuleCore extends Module
                     // Set the order status
                     $new_history = new OrderHistory();
                     $new_history->id_order = (int)$order->id;
-                    $new_history->changeIdOrderState((int)$id_order_state, $order, true);
+                    $new_history->changeIdOrderState((int)$id_order_state, $order->id, true);
                     $new_history->addWithemail(true, $extra_vars);
 
                     // Switch to back order if needed
                     if (Configuration::get('PS_STOCK_MANAGEMENT') && ($order_detail->getStockState() || $order_detail->product_quantity_in_stock <= 0)) {
                         $history = new OrderHistory();
                         $history->id_order = (int)$order->id;
-                        $history->changeIdOrderState(Configuration::get($order->valid ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
+                        $history->changeIdOrderState(Configuration::get($order->valid ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order->id, true);
                         $history->addWithemail();
                     }
 
