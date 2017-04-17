@@ -97,8 +97,9 @@ class Datas
         ),
         'database_prefix' => array(
             'name' => 'prefix',
-            'default' => 'ps_',
+            'default' => '',
             'validate' => 'isGenericName',
+            'help' => 'Set a prefix for your database'
         ),
         'database_engine' => array(
             'name' => 'engine',
