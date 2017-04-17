@@ -268,6 +268,23 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label for="hashedPasswords" class="control-label col-lg-4">
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you enable this option, Prestashop won\'t (re)hash the imported passwords.'}">
+							{l s='Imported passwords are already hashed'}
+						</span>
+					</label>
+					<div class="col-lg-8">
+						<label class="switch-light prestashop-switch fixed-width-lg">
+							<input  id="hashedPasswords" name="hashedPasswords" type="checkbox"/>
+							<span>
+								<span>{l s='Yes'}</span>
+								<span>{l s='No'}</span>
+							</span>
+							<a class="slide-button btn"></a>
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
 					<label for="forceIDs" class="control-label col-lg-4">
 						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you enable this option, your imported items\' ID number will be used as-is. If you do not enable this option, the imported ID number will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'}">
 							{l s='Force all ID numbers'}
@@ -463,7 +480,7 @@
 			$('#csv_file_uploader').toggle();
 		})
 		//show selected csv if exists
-		var selected = '{$csv_selected|@addcslashes:'\''}';
+		var selected = "{$csv_selected|@addcslashes:'\''}";
 		if(selected){
 			$('#csv_file_selected').show();
 			$('#csv_file_uploader').hide();
@@ -527,6 +544,11 @@
 			}
 			else {
 				$("#forceIDs").closest('.form-group').hide();
+			}
+			if ($("#entity > option:selected").val() == 3) {
+				$('#hashedPasswords').closest('form-group').show();
+			} else {
+				$('#hashedPasswords').closest('form-group').hide();
 			}
 
 			$("#entitie").html($("#entity > option:selected").text().toLowerCase());
