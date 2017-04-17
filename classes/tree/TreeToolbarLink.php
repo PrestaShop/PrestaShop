@@ -24,8 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class TreeToolbarLinkCore extends TreeToolbarButtonCore implements
-    ITreeToolbarButtonCore
+class TreeToolbarLinkCore extends TreeToolbarButtonCore implements ITreeToolbarButtonCore
 {
     private $_action;
     private $_icon_class;
