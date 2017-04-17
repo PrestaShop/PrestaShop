@@ -3186,7 +3186,7 @@ class AdminControllerCore extends Controller
             if ($this->explicitSelect) {
                 foreach ($this->fields_list as $key => $array_value) {
                     // Add it only if it is not already in $this->_select
-                    if (isset($this->_select) && preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select)) {
+                    if (isset($this->_select) && (preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select)  || preg_match('/as[\s]`?'.preg_quote($key, '/').'`?\s*$/', $this->_select))) {
                         continue;
                     }
 
@@ -3194,7 +3194,7 @@ class AdminControllerCore extends Controller
                         $this->_listsql .= str_replace('!', '.`', $array_value['filter_key']).'` AS `'.$key.'`, ';
                     } elseif ($key == 'id_'.$this->table) {
                         $this->_listsql .= 'a.`'.bqSQL($key).'`, ';
-                    } elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select)) {
+                    } elseif ($key != 'image') {
                         $this->_listsql .= '`'.bqSQL($key).'`, ';
                     }
                 }
