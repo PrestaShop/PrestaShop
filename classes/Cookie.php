@@ -93,37 +93,58 @@ class CookieCore
         $this->_allow_writing = false;
     }
 
-    protected function getDomain($shared_urls = null)
+    public function getDomain($shared_urls = null, $url = null)
     {
-        $r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
+        if (!isset($url)) {
+            $url = Tools::getHttpHost(false, false);
+        }
 
-        if (!preg_match($r, Tools::getHttpHost(false, false), $out) || !isset($out[4])) {
+        if (!strstr($url, '.')) {
             return false;
         }
 
         if (preg_match('/^(((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]{1}[0-9]|[1-9]).)'.
             '{1}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]).)'.
-            '{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $out[4])) {
+            '{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $url)) {
             return false;
         }
-        if (!strstr(Tools::getHttpHost(false, false), '.')) {
+
+        require_once(_PS_TOOL_DIR_.'php-domain-class/Domain.class.php');
+
+        $reg_domain_obj = new Domain($url);
+        if (is_object($reg_domain_obj)) {
+            $reg_domain = rtrim($reg_domain_obj->get_reg_domain(), '.');
+        } else {
+            return false;
+        }
+
+        if (!isset($reg_domain)) {
             return false;
         }
 
         $domain = false;
-        if ($shared_urls !== null) {
+        if ($shared_urls !== null && is_array($shared_urls)) {
             foreach ($shared_urls as $shared_url) {
-                if ($shared_url != $out[4]) {
+                $res = new Domain($shared_url);
+                if (is_object($res)) {
+                    $res = rtrim($res->get_reg_domain(), '.');
+                } else {
                     continue;
                 }
-                if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,4})?\..{2,3})$/Ui', $shared_url, $res)) {
-                    $domain = '.'.$res[1];
-                    break;
+                if (!isset($res) || $res != $reg_domain) {
+                    continue;
                 }
+                $domain = '.'.$res;
+                break;
             }
         }
+
         if (!$domain) {
-            $domain = $out[4];
+            if (is_object($reg_domain_obj)) {
+                $domain = rtrim($reg_domain_obj->__toString(), '.');
+            } else {
+                return false;
+            }
         }
         return $domain;
     }
