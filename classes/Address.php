@@ -432,7 +432,7 @@ class AddressCore extends ObjectModel
 
         if (!Cache::isStored($cache_id)) {
             // if an id_address has been specified retrieve the address
-            if ($id_address) {
+            if ($id_address && self::addressExists($id_address)) {
                 $address = new Address((int)$id_address);
 
                 if (!Validate::isLoadedObject($address)) {
