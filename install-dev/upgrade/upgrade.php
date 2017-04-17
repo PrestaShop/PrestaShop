@@ -216,9 +216,7 @@ require_once(_PS_INSTALL_PATH_.'upgrade/classes/AddConfToFile.php');
 $oldLevel = error_reporting(E_ALL);
 $mysqlEngine = (defined('_MYSQL_ENGINE_') ? _MYSQL_ENGINE_ : 'MyISAM');
 
-if (defined('_PS_CACHING_SYSTEM_') and _PS_CACHING_SYSTEM_ == 'CacheFS') {
-    $cache_engine = 'CacheFs';
-} elseif (defined('_PS_CACHING_SYSTEM_') and _PS_CACHING_SYSTEM_ != 'CacheMemcache' and _PS_CACHING_SYSTEM_ != 'CacheMemcached') {
+if (defined('_PS_CACHING_SYSTEM_') and _PS_CACHING_SYSTEM_ != 'MCached') {
     $cache_engine = _PS_CACHING_SYSTEM_;
 } else {
     $cache_engine = 'CacheMemcache';
