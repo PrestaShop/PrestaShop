@@ -1417,6 +1417,7 @@ abstract class ModuleCore
                         if ($flag_found == 0) {
                             $item = new stdClass();
                             $item->id = 0;
+                            $item->price = 0;
                             $item->warning = '';
                             $item->type = strip_tags((string)$f['type']);
                             $item->name = strip_tags((string)$modaddons->name);
