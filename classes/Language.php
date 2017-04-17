@@ -294,7 +294,10 @@ class LanguageCore extends ObjectModel
             'log_alert.html', 'log_alert.txt',
             'newsletter.html', 'newsletter.txt',
             'order_canceled.html', 'order_canceled.txt',
+            'order_changed.html', 'order_changed.txt',
             'order_conf.html', 'order_conf.txt',
+            'order_conf_cart_rules.html', 'order_conf_cart_rules.txt',
+            'order_conf_product_list.html', 'order_conf_product_list.txt',
             'order_customer_comment.html', 'order_customer_comment.txt',
             'order_merchant_comment.html', 'order_merchant_comment.txt',
             'order_return_state.html', 'order_return_state.txt',
@@ -309,8 +312,7 @@ class LanguageCore extends ObjectModel
             'shipped.html', 'shipped.txt',
             'test.html', 'test.txt',
             'voucher.html', 'voucher.txt',
-            'voucher_new.html', 'voucher_new.txt',
-            'order_changed.html', 'order_changed.txt'
+            'voucher_new.html', 'voucher_new.txt'
         );
 
         $number = -1;
