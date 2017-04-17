@@ -513,17 +513,28 @@ class CustomerCore extends ObjectModel
      */
     public static function searchByName($query, $limit = null)
     {
-        $sql_base = 'SELECT *
-				FROM `'._DB_PREFIX_.'customer`';
-        $sql = '('.$sql_base.' WHERE `email` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sql_base.' WHERE `id_customer` = '.(int)$query.' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sql_base.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sql_base.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+        $search_items = explode(' ', $query);
 
+        $sql = 'SELECT *
+				FROM `'._DB_PREFIX_.'customer`
+    			WHERE 1';
+
+        $research_fields = array('id_customer', 'firstname', 'lastname', 'email');
+        $items = array();
+        foreach ($research_fields as $field) {
+            foreach ($search_items as $item) {
+                $items[$item][] = $field.' LIKE \'%'.pSQL($item).'%\' ';
+            }
+        }
+
+        foreach ($items as $likes) {
+            $sql .= ' AND ('.implode(' OR ', pSQL($likes)).') ';
+        }
+        
+        $sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
         if ($limit) {
             $sql .= ' LIMIT 0, '.(int)$limit;
         }
-
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
