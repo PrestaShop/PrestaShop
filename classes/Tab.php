@@ -92,7 +92,6 @@ class TabCore extends ObjectModel
 
         // Set good position for new tab
         $this->position = Tab::getNewLastPosition($this->id_parent);
-        $this->module = Tools::strtolower($this->module);
 
         // Add tab
         if (parent::add($autoDate, $nullValues)) {
