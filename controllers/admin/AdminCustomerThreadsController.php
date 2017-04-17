@@ -255,6 +255,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				ON c.`id_customer` = a.`id_customer`
 			LEFT JOIN `'._DB_PREFIX_.'customer_message` cm
 				ON cm.`id_customer_thread` = a.`id_customer_thread`
+			LEFT JOIN `'._DB_PREFIX_.'customer_thread` ct
+				ON ct.`id_customer_thread` = a.`id_customer_thread`
 			LEFT JOIN `'._DB_PREFIX_.'lang` l
 				ON l.`id_lang` = a.`id_lang`
 			LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl
@@ -263,7 +265,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if ($id_order = Tools::getValue('id_order')) {
             $this->_where .= ' AND id_order = '.(int)$id_order;
         }
-
+        $this->_where .= ' AND ct.id_customer <> 0';
         $this->_group = 'GROUP BY cm.id_customer_thread';
         $this->_orderBy = 'id_customer_thread';
         $this->_orderWay = 'DESC';
@@ -273,11 +275,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $categories = Contact::getCategoriesContacts();
 
         $params = array(
-            $this->l('Total threads') => $all = CustomerThread::getTotalCustomerThreads(),
-            $this->l('Threads pending') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
-            $this->l('Total number of customer messages') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
-            $this->l('Total number of employee messages') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
-            $this->l('Unread threads') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
+            $this->l('Total threads') => $all = CustomerThread::getTotalCustomerThreads('id_customer <> 0'),
+            $this->l('Threads pending') => $pending = CustomerThread::getTotalCustomerThreads('id_customer <> 0 && status LIKE "%pending%"'),
+            $this->l('Total number of customer messages') => CustomerMessage::getTotalCustomerMessages('id_customer <> 0 && id_employee = 0'),
+            $this->l('Total number of employee messages') => CustomerMessage::getTotalCustomerMessages('id_customer <> 0 && id_employee != 0'),
+            $this->l('Unread threads') => $unread = CustomerThread::getTotalCustomerThreads('id_customer <> 0 && status = "open"'),
             $this->l('Closed threads') => $all - ($unread + $pending)
         );
 
