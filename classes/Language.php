@@ -417,7 +417,8 @@ class LanguageCore extends ObjectModel
                         $primary_key_exists = true;
                     }
                 }
-                $fields = rtrim($fields, ', ');
+                $fields = rtrim($fields, '`, ');
+		$fields .= '`';
 
                 if (!$primary_key_exists) {
                     continue;
