@@ -394,6 +394,9 @@ class ShopCore extends ObjectModel
                 }
             }
         } else {
+            if($id_shop!='all'){
+                $id_shop=(int)Configuration::get('PS_SHOP_DEFAULT');
+            }
             $shop = new Shop($id_shop);
             if (!Validate::isLoadedObject($shop) || !$shop->active) {
                 // No shop found ... too bad, let's redirect to default shop
