@@ -531,6 +531,7 @@ class ToolsCore
 
         $iso = Language::getIsoById((int)$cookie->id_lang);
         @include_once(_PS_THEME_DIR_.'lang/'.$iso.'.php');
+        @include_once(Configuration::get('PS_TRANSLATIONS_OVERRIDE'));
 
         return $iso;
     }
