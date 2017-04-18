@@ -188,7 +188,11 @@ class StockManager
     {
         $movement = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
 
-        return $this->registerMovement($movement);
+        if ($movement) {
+            return $this->registerMovement($movement);
+        }
+
+        return false;
     }
 
     /**
@@ -198,8 +202,7 @@ class StockManager
      * @param $productAttributeId
      * @param $deltaQuantity
      * @param array $params
-     *
-     * @return Movement
+     * @return bool|Movement
      */
     private function prepareMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
     {
@@ -209,21 +212,28 @@ class StockManager
         ));
 
         $movement = new Movement($productIdentity, $deltaQuantity);
+        $product = (new ProductDataProvider)->getProduct($productId);
 
-        $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-        $stockAvailable = $stockManager->getStockAvailableByProduct((new ProductDataProvider)->getProduct($productId), $productAttributeId);
+        if ($product->id) {
+            $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+            $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId);
 
-        $movement->setIdStock((int) $stockAvailable->id);
+            if ($stockAvailable->id) {
+                $movement->setIdStock((int)$stockAvailable->id);
 
-        if (!empty($params['id_order'])) {
-            $movement->setIdOrder((int) $params['id_order']);
+                if (!empty($params['id_order'])) {
+                    $movement->setIdOrder((int)$params['id_order']);
+                }
+
+                if (!empty($params['id_stock_mvt_reason'])) {
+                    $movement->setIdStockMvtReason((int)$params['id_stock_mvt_reason']);
+                }
+
+                return $movement;
+            }
         }
 
-        if (!empty($params['id_stock_mvt_reason'])) {
-            $movement->setIdStockMvtReason((int) $params['id_stock_mvt_reason']);
-        }
-
-        return $movement;
+        return false;
     }
 
     /**
