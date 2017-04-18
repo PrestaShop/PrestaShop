@@ -81,7 +81,7 @@ class StockRepository extends StockManagementRepository
 
         $this->stockManager = $stockManager;
 
-        $configuration = new Configuration;
+        $configuration = new Configuration();
         $this->orderStates['error'] = (int)$configuration->get('PS_OS_ERROR');
         $this->orderStates['cancellation'] = (int)$configuration->get('PS_OS_CANCELED');
     }
@@ -107,7 +107,7 @@ class StockRepository extends StockManagementRepository
         $delta = $movement->getDelta();
         $product = (new ProductDataProvider())->getProduct($productIdentity->getProductId());
 
-        $configurationAdapter = new Configuration;
+        $configurationAdapter = new Configuration();
         (new StockManagerCore())->updateQuantity(
             $product,
             $productIdentity->getCombinationId(),
