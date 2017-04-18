@@ -1,6 +1,6 @@
 <template>
   <div :class="className">
-    <Checkbox :ref="computedId" :id="computedId" :item="item" @checked="onCheck"/>
+    <Checkbox :ref="label" :id="computedId" :item="item" @checked="onCheck"/>
     <span class="tree-label">{{label}}</span>
   </div>
 </template>
@@ -13,7 +13,8 @@
     props:['id','item','label','className'],
     computed:{
       computedId() {
-        return this.label + this.id;
+        let id = this.label + this.id;
+        return id.replace(/\s/g,'');
       }
     },
     methods: {
@@ -38,5 +39,6 @@
 <style lang="sass" scoped>
   .tree-label {
     margin-left: 5px;
+    font-size: 12px;
   }
 </style>

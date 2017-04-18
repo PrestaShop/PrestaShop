@@ -99,40 +99,19 @@
     "loader-utils": "^1.0.3",
     "lodash": "^4.17.4",
     "magnific-popup": "^1.0.1",
-<<<<<<< 851dbc9cd1a1a681aebc024d6140750d939e211d
-    "node-sass": "^4.5.0",
-||||||| merged common ancestors
-    "node-sass": "^3.13.1",
-=======
     "mobile-detect": "^1.3.5",
-    "node-sass": "^3.13.1",
->>>>>>> BO: Add tags on search bar
+    "node-sass": "^4.5.0",
     "path": "^0.12.7",
-<<<<<<< 217163b239bb9495822c3132e7ec710338a3ddfb
     "postcss-cssnext": "^2.10.0",
     "postcss-loader": "^1.3.3",
     "sass-loader": "^6.0.3",
-||||||| merged common ancestors
-    "postcss-loader": "^0.8.0",
-    "sass-loader": "^3.1.2",
-=======
-    "postcss-cssnext": "^2.10.0",
-    "postcss-loader": "^0.8.0",
-    "sass-loader": "^3.1.2",
->>>>>>> BO: Add postcss in webpack config
     "sprintf-js": "^1.0.3",
     "style-loader": "^0.14.0",
     "tether": "^1.3.2",
     "typeahead.js": "^0.11.1",
     "vue": "^2.1.10",
     "vue-loader": "^11.1.3",
-<<<<<<< 851dbc9cd1a1a681aebc024d6140750d939e211d
-||||||| merged common ancestors
     "vue-resource": "^1.2.1",
-=======
-    "vue-resource": "^1.2.1",
-    "vue-tagsinput": "^2.0.1",
->>>>>>> BO: Add tags on search bar
     "vue-template-compiler": "^2.1.10",
     "vuex": "^2.1.2",
     "webpack": "^2.1.1",

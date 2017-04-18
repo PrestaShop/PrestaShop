@@ -1,5 +1,6 @@
 <template>
   <div class="filter-container">
+<<<<<<< 44769b26d4e1a09d32b42ed2c6ce2b3deaecab80
     <SearchFilter
       ref="search"
       :placeholder="placeholder"
@@ -9,6 +10,27 @@
       @submit="onSubmit"
       @tagChanged="onTagChanged"
       />
+||||||| merged common ancestors
+    <SearchFilter
+      ref="search"
+      :placeholder="placeholder"
+      :match="match"
+      :label="label"
+      @typing="onTyping"
+      @submit="onSubmit"
+      @tagChanged="onTagChanged"
+      />
+=======
+    <PSTags
+      v-if="!hasChildren"
+      ref="tags"
+      class="form-control search search-input"
+      :tags="tags"
+      :placeholder="hasPlaceholder?placeholder:''"
+      @tagChange="onTagChanged"
+      @typing="onTyping"
+    />
+>>>>>>> BO: Improve tags component
     <ul class="m-t-1">
       <PSTree
         v-if="hasChildren"
@@ -37,17 +59,25 @@
 </template>
 
 <script>
-  import SearchFilter from './search-filter';
+  import PSTags from '../../utils/ps-tags';
   import PSTreeItem from '../../utils/ps-tree-item';
   import PSTree from '../../utils/ps-tree';
-  import Checkbox from '../../utils/checkbox';
   import { EventBus } from '../../utils/event-bus';
   import _ from 'lodash';
 
   export default {
     props: ['placeholder', 'getData', 'itemID', 'label', 'list'],
     computed: {
+<<<<<<< 44769b26d4e1a09d32b42ed2c6ce2b3deaecab80
       items() {
+||||||| merged common ancestors
+      items() {
+=======
+      hasPlaceholder() {
+        return !this.tags.length;
+      },
+      items() {
+>>>>>>> BO: Improve tags component
         let matchList = [];
         this.list.filter((data)=> {
           let label = data[this.label].toLowerCase();
@@ -69,28 +99,23 @@
           this.match = null;
         }
         return this.list;
-      },
-      categoriesId() {
-        return this.$store.state.categoriesId;
       }
     },
     methods: {
       onCheck(obj) {
-        let tags = this.$refs.search.$data.tags;
         let itemLabel = obj.item[this.label];
-        this.match = obj.item;
         if(obj.checked) {
-          tags.push(itemLabel);
+          this.tags.push(itemLabel);
         }
         else {
-          let index = tags.indexOf(itemLabel);
+          let index = this.tags.indexOf(itemLabel);
           if(this.splice) {
-            tags.splice(index, 1);
+            this.tags.splice(index, 1);
           }
            this.splice = true;
         }
-        if(tags.length) {
-          this.$emit('active', true, this.filterList(tags));
+        if(this.tags.length) {
+          this.$emit('active', true, this.filterList(this.tags));
         }
         else {
           this.$emit('active', false);
@@ -99,13 +124,16 @@
       onTyping(val) {
         this.currentVal = val.toLowerCase();
       },
-      onSubmit(tag) {
-       EventBus.$emit('toggleCheckbox', tag);
-       this.currentVal = '';
-      },
       onTagChanged(tag) {
-        EventBus.$emit('toggleCheckbox', tag[this.label] + tag[this.itemID]);
+        if(this.tags.indexOf(this.currentVal) !== -1){
+           this.tags.pop();
+        }
         this.splice = false;
+        if(this.match) {
+          tag = this.match[this.label];
+        }
+        EventBus.$emit('toggleCheckbox', tag);
+        this.currentVal = '';
       },
       filterList(tags) {
         let idList = []
@@ -118,10 +146,16 @@
         return idList;
       }
     },
+    watch: {
+      tags(items) {
+
+      }
+    },
     data() {
       return {
         currentVal: '',
         match: null,
+        tags: [],
         splice: true,
         hasChildren: false
       }
@@ -130,8 +164,7 @@
       this.$store.dispatch(this.getData);
     },
     components: {
-      SearchFilter,
-      Checkbox,
+      PSTags,
       PSTree,
       PSTreeItem
     }
