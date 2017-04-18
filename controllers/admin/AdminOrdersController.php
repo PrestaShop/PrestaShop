@@ -2923,7 +2923,7 @@ class AdminOrdersControllerCore extends AdminController
                 true,
                 array(
                     'id_order' => $order_detail->id_order,
-                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON')
+                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON')
                 )
             );
 

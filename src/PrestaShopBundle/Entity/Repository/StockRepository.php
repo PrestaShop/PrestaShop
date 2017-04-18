@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Configuration;
 use Doctrine\DBAL\Driver\Connection;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
@@ -40,6 +39,7 @@ use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 class StockRepository extends StockManagementRepository
 {
@@ -81,8 +81,9 @@ class StockRepository extends StockManagementRepository
 
         $this->stockManager = $stockManager;
 
-        $this->orderStates['error'] = (int)Configuration::get('PS_OS_ERROR');
-        $this->orderStates['cancellation'] = (int)Configuration::get('PS_OS_CANCELED');
+        $configuration = new Configuration;
+        $this->orderStates['error'] = (int)$configuration->get('PS_OS_ERROR');
+        $this->orderStates['cancellation'] = (int)$configuration->get('PS_OS_CANCELED');
     }
 
     /**
@@ -106,12 +107,16 @@ class StockRepository extends StockManagementRepository
         $delta = $movement->getDelta();
         $product = (new ProductDataProvider())->getProduct($productIdentity->getProductId());
 
+        $configurationAdapter = new Configuration;
         (new StockManagerCore())->updateQuantity(
             $product,
             $productIdentity->getCombinationId(),
             $delta,
             $id_shop = null,
-            $add_movement = true
+            $add_movement = true,
+            array(
+                'id_stock_mvt_reason' => ($delta >= 1 ? $configurationAdapter->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configurationAdapter->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
+            )
         );
 
         return $this->selectStockBy($productIdentity);
