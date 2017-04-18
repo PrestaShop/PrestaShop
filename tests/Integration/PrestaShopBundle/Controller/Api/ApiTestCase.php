@@ -98,6 +98,9 @@ abstract class ApiTestCase extends WebTestCase
         $languageMock = $this->mockLanguage();
         $contextMock->language = $languageMock->reveal();
 
+        $linkMock = $this->mockLink();
+        $contextMock->link = $linkMock->reveal();
+
         $shopMock = $this->mockShop();
         $contextMock->shop = $shopMock->reveal();
 
@@ -131,6 +134,16 @@ abstract class ApiTestCase extends WebTestCase
         $languageMock->iso_code = 'en-US';
 
         return $languageMock;
+    }
+
+    /**
+     * @return object
+     */
+    private function mockLink()
+    {
+        $linkMock = $this->prophet->prophesize('\Link');
+
+        return $linkMock;
     }
 
     private function mockShop()
