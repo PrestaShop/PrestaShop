@@ -1048,6 +1048,14 @@
 				address_delivery_detail = this.formated_address;
 				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses')}&id_address="+this.id_address+"&updateaddress&realedit=1&liteDisplaying=1&submitFormAjax=1#";
 			}
+			
+			if(address_invoice_detail == '') {
+				address_invoice_detail = this.formated_address;
+			}
+
+			if(address_delivery_detail == '') {
+				address_delivery_detail = this.formated_address;
+			}
 
 			addresses_delivery_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_delivery ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
 			addresses_invoice_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_invoice ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
