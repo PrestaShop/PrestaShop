@@ -61,7 +61,7 @@
 			wait: 750,
 			callback: function(){ searchProducts(); }
 		});
-		$('#payment_module_name').change(function() {
+		$('#payment_module_name').live(function() {
 			var id_order_state = defaults_order_state[this.value];
 			if (typeof(id_order_state) == 'undefined')
 				id_order_state = defaults_order_state['other'];
@@ -388,9 +388,21 @@
 				},
 			success : function(res)
 			{
-				id_cart = res.cart.id;
-				$('#id_cart').val(id_cart);
-				displaySummary(res);
+				if (res.hasError)
+				{
+					var errors = '';
+					for (error in res.errors)
+						//IE6 bug fix
+						if (error != 'indexOf')
+							errors += $('<div />').html(res.errors[error]).text() + "\n";
+					jAlert(errors);
+				}
+				else
+				{
+					id_cart = res.cart.id;
+					$('#id_cart').val(id_cart);
+					displaySummary(res);
+				}
 			}
 		});
 	}
