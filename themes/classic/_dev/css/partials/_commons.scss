@@ -213,8 +213,9 @@ input, textarea {
   }
 }
 .bootstrap-touchspin {
-  width: 4.25rem;
+  width: auto;
   float: left;
+  display: inline-block;
   @include box-shadow-light;
   input {
     &:focus {
@@ -228,6 +229,7 @@ input, textarea {
       padding: 0.175rem 0.5rem;
       width: 3rem;
       border: $input-btn-border-width solid $input-border-color;
+      float: left;
     }
   }
   .btn-touchspin {
@@ -242,6 +244,7 @@ input, textarea {
   .input-group-btn-vertical {
     color: $gray-darker;
     width: auto;
+    float: left;
     .bootstrap-touchspin-up {
       border-radius: 0;
     }
