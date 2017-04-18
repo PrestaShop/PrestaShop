@@ -5,7 +5,6 @@
       :placeholder="placeholder"
       :match="match"
       :label="label"
-      :itemID="itemID"
       @typing="onTyping"
       @submit="onSubmit"
       @tagChanged="onTagChanged"
@@ -17,6 +16,7 @@
         className="flex"
         :model="list[0]"
         :id="itemID"
+        @checked="onCheck"
       >
       </PSTree>
       <li
@@ -24,11 +24,11 @@
         v-for="(item, index) in items"
         v-show="item.visible"
       >
-        <FilterLine
-          :ref="item[label]"
+        <PSTreeItem
           :label="item[label]"
-          :id="itemID+index"
+          :id="item[itemID]"
           :item="item"
+          className="flex"
           @checked="onCheck"
         />
       </li>
@@ -38,7 +38,7 @@
 
 <script>
   import SearchFilter from './search-filter';
-  import FilterLine from './filter-line';
+  import PSTreeItem from '../../utils/ps-tree-item';
   import PSTree from '../../utils/ps-tree';
   import Checkbox from '../../utils/checkbox';
   import { EventBus } from '../../utils/event-bus';
@@ -78,6 +78,7 @@
       onCheck(obj) {
         let tags = this.$refs.search.$data.tags;
         let itemLabel = obj.item[this.label];
+        this.match = obj.item;
         if(obj.checked) {
           tags.push(itemLabel);
         }
@@ -99,11 +100,11 @@
         this.currentVal = val.toLowerCase();
       },
       onSubmit(tag) {
-       EventBus.$emit('tagChanged', tag);
+       EventBus.$emit('toggleCheckbox', tag);
        this.currentVal = '';
       },
       onTagChanged(tag) {
-        EventBus.$emit('tagChanged', tag);
+        EventBus.$emit('toggleCheckbox', tag[this.label] + tag[this.itemID]);
         this.splice = false;
       },
       filterList(tags) {
@@ -132,7 +133,7 @@
       SearchFilter,
       Checkbox,
       PSTree,
-      FilterLine
+      PSTreeItem
     }
   }
 </script>

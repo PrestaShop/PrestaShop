@@ -1,7 +1,13 @@
 <template>
   <div>
     <form @submit.prevent="onSubmit" @keyup="onKeyUp" @keyup.enter="onSubmit">
-      <Tags ref="tags" class="form-control search search-input" :tags="tags" :placeholder="placeholder" @tagChange="onTagChanged"  />
+      <Tags
+        ref="tags"
+        class="form-control search search-input"
+        :tags="tags"
+        :placeholder="placeholder"
+        @tagChange="onTagChanged"
+      />
     </form>
   </div>
 </template>
@@ -10,13 +16,13 @@
   import Tags from '../../utils/tags';
 
   export default {
-    props: ['placeholder', 'match', 'label', 'itemID'],
+    props: ['placeholder', 'match', 'label'],
     methods: {
       onTagChanged(tags, index, tag, splice) {
         if(splice) {
           this.tags.splice(index, 1);
         }
-        this.$emit('tagChanged', tag);
+        this.$emit('tagChanged', this.match);
       },
       onKeyUp() {
         let children = this.$refs.tags.$refs.tags.$children;

@@ -1,5 +1,13 @@
 <template>
-    <Tags ref="tags" :class="{ 'has-tags' : hasTags }" id="tags" :placeholder="placeholder" :tags="tags" @tags-change="handleChange" :klass="this.customClass" />
+    <Tags
+    id="tags"
+    :class="{ 'has-tags' : hasTags }"
+    ref="tags"
+    :placeholder="placeholder"
+    :klass="this.customClass"
+    :tags="tags"
+    @tags-change="handleChange"
+  />
 </template>
 
 <script>
