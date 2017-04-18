@@ -329,7 +329,7 @@ class OrderHistoryCore extends ObjectModel
                             (int)$product_quantity * ($new_os->shipped == 1 ? -1 : 1),
                             array(
                                 'id_order' => $order->id,
-                                'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON')
+                                'id_stock_mvt_reason' => ($new_os->shipped == 1 ? Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON') : Configuration::get('PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON'))
                             )
                         );
                     }
