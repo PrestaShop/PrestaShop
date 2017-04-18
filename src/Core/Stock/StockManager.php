@@ -186,10 +186,12 @@ class StockManager
      */
     public function saveMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
     {
-        $movement = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
+        if ($deltaQuantity != 0) {
+            $movement = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
 
-        if ($movement) {
-            return $this->registerMovement($movement);
+            if ($movement) {
+                return $this->registerMovement($movement);
+            }
         }
 
         return false;

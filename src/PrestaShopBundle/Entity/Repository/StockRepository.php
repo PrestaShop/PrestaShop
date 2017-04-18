@@ -104,14 +104,13 @@ class StockRepository extends StockManagementRepository
     public function updateStock(Movement $movement)
     {
         $productIdentity = $movement->getProductIdentity();
+        $delta = $movement->getDelta();
 
-        if ($productIdentity->getProductId()) {
+        if ($productIdentity->getProductId() && $delta !== 0) {
             $product = (new ProductDataProvider())->getProduct($productIdentity->getProductId());
 
             if ($product->id) {
                 $configurationAdapter = new Configuration();
-
-                $delta = $movement->getDelta();
 
                 (new StockManagerCore())->updateQuantity(
                     $product,

@@ -43,16 +43,18 @@ class MovementsCollection
         array_walk($stockMovementsParams, function ($item) use (&$movements) {
             $combinationId = 0;
 
-            if (array_key_exists('combination_id', $item)) {
-                $combinationId = $item['combination_id'];
+            if ($item['delta'] != 0) {
+                if (array_key_exists('combination_id', $item)) {
+                    $combinationId = $item['combination_id'];
+                }
+
+                $productIdentity = ProductIdentity::fromArray(array(
+                    'product_id' => $item['product_id'],
+                    'combination_id' => $combinationId
+                ));
+
+                $movements[] = new Movement($productIdentity, $item['delta']);
             }
-
-            $productIdentity = ProductIdentity::fromArray(array(
-                'product_id' => $item['product_id'],
-                'combination_id' => $combinationId
-            ));
-
-            $movements[] = new Movement($productIdentity, $item['delta']);
         });
 
         $this->movements = $movements;
