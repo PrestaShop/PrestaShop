@@ -27,6 +27,7 @@ var ajaxQueries = new Array();
 var ajaxLoaderOn = 0;
 var sliderList = new Array();
 var slidersInit = false;
+var lockLocationChecking = false;
 
 $(document).ready(function()
 {
