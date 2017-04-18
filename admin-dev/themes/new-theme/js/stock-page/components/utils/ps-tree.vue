@@ -1,11 +1,18 @@
 <template>
   <li class="tree">
     <div :class="className">
-      <div v-if="chevron" @click="toggle">
+      <div :class="chevron" @click="toggle">
         <i class="material-icons" v-if="open" >keyboard_arrow_down</i>
         <i class="material-icons" v-else>chevron_right</i>
       </div>
-      <slot />
+      <PSTreeItem
+        ref="item"
+        :class="className"
+        :item="model"
+        :id="model.id"
+        :label="model.name"
+        @checked="onCheck"
+      />
     </div>
     <ul v-show="open" v-if="isFolder">
       <PSTree
@@ -13,10 +20,8 @@
         :className="className"
         :model="model"
         :key="index"
-        :chevron="!!model.children"
         @checked="onCheck"
       >
-        <PSTreeItem :class="className" :item="model" :id="Date.now()" :label="model.name" @checked="onCheck" />
       </PSTree>
     </ul>
   </li>
@@ -34,7 +39,12 @@
     },
     computed: {
       isFolder: function () {
-        return !!this.model.children;
+        return this.model.children && this.model.children.length;
+      },
+      chevron() {
+        if(!this.isFolder) {
+          return 'hidden';
+        }
       }
     },
     methods: {
@@ -43,7 +53,7 @@
           this.open = !this.open;
         }
       },
-      onCheck(event,obj) {
+      onCheck(obj) {
        this.$emit('checked', obj);
       }
     },
@@ -52,14 +62,13 @@
     },
     data() {
       return {
-        open: false,
-        chevron: true
+        open: false
       }
     }
   }
 </script>
 
-<style lang="sass?outputStyle=expanded" scoped>
+<style lang="sass" scoped>
   .tree {
     font-size: 12px;
     .material-icons {
@@ -69,6 +78,7 @@
     }
   }
   ul {
+    margin-top: 5px;
     padding-left: 15px;
     list-style-type: none;
     cursor:pointer;
@@ -76,5 +86,8 @@
     li {
       margin-bottom: 5px;
     }
+  }
+  .hidden {
+    visibility: hidden;
   }
 </style>

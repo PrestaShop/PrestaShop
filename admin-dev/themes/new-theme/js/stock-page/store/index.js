@@ -37,6 +37,7 @@ const getters = {
     function convert(categories) {
       categories.forEach((category)=>{
         category.children = _.values(category.children);
+        category.id = category.id_category;
         convert(category.children);
       });
       return categories;
