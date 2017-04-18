@@ -403,7 +403,7 @@ class OrderHistoryCore extends ObjectModel
         Hook::exec('actionOrderStatusPostUpdate', array('newOrderStatus' => $new_os, 'id_order' => (int)$order->id, ), null, false, true, false, $order->id_shop);
 
         // sync all stock
-        (new \PrestaShop\PrestaShop\Adapter\StockManager())->updatePhysicalProductQuantity(
+        (new StockManagerAdapter())->updatePhysicalProductQuantity(
             $order->id_shop,
             (int)Configuration::get('PS_OS_ERROR'),
             (int)Configuration::get('PS_OS_CANCELED')

@@ -150,7 +150,7 @@ class Movement
     public function getIdStockMvtReason()
     {
         if (0 === $this->idStockMvtReason) {
-            $configuration = new Configuration;
+            $configuration = new Configuration();
             $this->setIdStockMvtReason($this->delta >= 1 ? $configuration->get('PS_STOCK_MVT_INC_REASON_DEFAULT') : $configuration->get('PS_STOCK_MVT_DEC_REASON_DEFAULT'));
         }
 
