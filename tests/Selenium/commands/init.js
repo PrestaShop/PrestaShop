@@ -64,6 +64,24 @@ module.exports = function initializePrestaShopBrowserCommands(browser) {
     ;
   });
 
+  browser.addCommand('dump', function dump () {
+    return browser
+      .getUrl().then(function(url) {
+        console.log(url);
+      })
+      .getSource().then(function(source) {
+          var randomId = Math.floor((Math.random() * 1000) + 1);
+          var randomFilename = "error-"+randomId+".html";
+
+          fs.writeFile('./errorDumps/'+randomFilename, source, function(err) {
+            if(err) {
+              return console.log(err);
+            }
+            console.log("Generated HTML file available at: /errors/"+randomFilename);
+          });
+        });
+    });
+
   /**
    * Generate a dump of page and display the url
    */
