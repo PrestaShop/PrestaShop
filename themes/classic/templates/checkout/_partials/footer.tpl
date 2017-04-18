@@ -23,8 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='footer'}
-<div class="text-xs-center">
-  <i class="material-icons">&#xE90C;</i> 2016 - <strong>CLASSIC</strong> - {l s='Ecommerce software by' d='Shop.Theme'}
-  <strong>PrestaShop<sup>TM</sup></strong>
+<div class="text-sm-center">
+  {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme'}
 </div>
 {/block}

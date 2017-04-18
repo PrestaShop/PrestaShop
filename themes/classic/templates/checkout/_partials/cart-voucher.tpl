@@ -33,7 +33,7 @@
                 <li class="cart-summary-line">
                   <span class="label">{$voucher.name}</span>
                   <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
-                  <div class="pull-xs-right">
+                  <div class="float-xs-right">
                     {$voucher.reduction_formatted}
                   </div>
                 </li>
@@ -60,7 +60,7 @@
 
           {block name='cart_voucher_notifications'}
             <div class="alert alert-danger js-error" role="alert">
-              <i class="material-icons">&#xE001;</i><span class="m-l-1 js-error-text"></span>
+              <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>
             </div>
           {/block}
         </div>

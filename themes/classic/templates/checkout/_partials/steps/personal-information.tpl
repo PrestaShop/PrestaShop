@@ -32,7 +32,7 @@
 
   {else}
 
-    <ul class="nav nav-inline m-y-2">
+    <ul class="nav nav-inline my-2">
       <li class="nav-item">
         <a class="nav-link {if !$show_login_form}active{/if}" data-toggle="tab" href="#checkout-guest-form" role="tab">
           {if $guest_allowed}

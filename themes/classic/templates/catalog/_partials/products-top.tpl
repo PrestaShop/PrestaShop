@@ -46,7 +46,7 @@
       {/if}
     </div>
   </div>
-  <div class="col-sm-12 hidden-md-up text-xs-center showing">
+  <div class="col-sm-12 hidden-md-up text-sm-center showing">
     {l s='Showing %from%-%to% of %total% item(s)' d='Shop.Theme.Catalog' sprintf=[
     '%from%' => $listing.pagination.items_shown_from ,
     '%to%' => $listing.pagination.items_shown_to,

@@ -113,7 +113,7 @@
 
       {if !$form_has_continue_button}
         <div class="clearfix">
-          <button type="submit" class="btn btn-primary continue pull-xs-right" name="confirm-addresses" value="1">
+          <button type="submit" class="btn btn-primary continue float-xs-right" name="confirm-addresses" value="1">
               {l s='Continue' d='Shop.Theme.Actions'}
           </button>
         </div>

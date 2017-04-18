@@ -34,7 +34,7 @@
         </div>
       {/if}
     </div>
-    <div class="text-xs-center hidden-md-up">
+    <div class="text-sm-center hidden-md-up">
       <h1 class="h1">{$category.name}</h1>
     </div>
 {/block}

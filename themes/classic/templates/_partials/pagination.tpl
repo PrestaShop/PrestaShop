@@ -31,7 +31,7 @@
 
   <div class="col-md-6">
     {block name='pagination_page_list'}
-      <ul class="page-list clearfix text-xs-center">
+      <ul class="page-list clearfix text-sm-center">
         {foreach from=$pagination.pages item="page"}
           <li {if $page.current} class="current" {/if}>
             {if $page.type === 'spacer'}

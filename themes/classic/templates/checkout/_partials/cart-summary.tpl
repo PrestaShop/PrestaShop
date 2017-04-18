@@ -68,7 +68,7 @@
     {include file='checkout/_partials/cart-voucher.tpl'}
   {/block}
 
-  <hr>
+  <hr class="separator">
 
   {block name='cart_summary_totals'}
     {include file='checkout/_partials/cart-summary-totals.tpl' cart=$cart}

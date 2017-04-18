@@ -47,7 +47,7 @@
           <tr>
             <th scope="row">{$cart_rule.code}</th>
             <td>{$cart_rule.name}</td>
-            <td class="text-xs-right">{$cart_rule.quantity_for_user}</td>
+            <td class="text-xsright">{$cart_rule.quantity_for_user}</td>
             <td>{$cart_rule.value}</td>
             <td>{$cart_rule.voucher_minimal}</td>
             <td>{$cart_rule.voucher_cumulable}</td>

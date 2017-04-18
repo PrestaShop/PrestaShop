@@ -1,20 +1,20 @@
 .contact-rich {
-  color: $gray-dark;
-  margin-bottom: rem(32px);
+  color: $gray;
+  margin-bottom: 2rem;
   word-wrap: break-word;
   h4 {
     text-transform: uppercase;
     color: $gray-darker;
-    margin-bottom: rem(32px);
+    margin-bottom: 2rem;
   }
   .block {
     height: auto;
     overflow: hidden;
     .icon {
       float: left;
-      width: rem(56px);
+      width: 3.5rem;
       i {
-        font-size: rem(32px);
+        font-size: 2rem;
       }
     }
     .data {
@@ -23,15 +23,15 @@
       width: auto;
       overflow: hidden;
       &.email{
-        padding-top: rem(6px);
+        padding-top: 0.375rem;
       }
     }
   }
 }
 .contact-form {
   background: white;
-  padding: rem(16px);
-  color: $gray-dark;
+  padding: 1rem;
+  color: $gray;
   width: 100%;
   h3 {
     text-transform: uppercase;

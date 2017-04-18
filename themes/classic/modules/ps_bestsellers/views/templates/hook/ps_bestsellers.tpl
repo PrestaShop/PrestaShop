@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<section class="featured-products clearfix m-t-3">
+<section class="featured-products clearfix mt-3">
   <h1 class="h1 products-section-title text-uppercase">
     {l s='Best Sellers' d='Shop.Theme.Catalog'}
   </h1>
@@ -31,7 +31,7 @@
       {include file="catalog/_partials/miniatures/product.tpl" product=$product}
     {/foreach}
   </div>
-  <a class="all-product-link pull-xs-left pull-md-right h4" href="{$allBestSellers}">
+  <a class="all-product-link float-xs-left float-md-right h4" href="{$allBestSellers}">
     {l s='All best sellers' d='Shop.Theme.Catalog'}<i class="material-icons">&#xE315;</i>
   </a>
 </section>

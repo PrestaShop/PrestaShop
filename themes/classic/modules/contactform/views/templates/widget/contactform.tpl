@@ -86,7 +86,7 @@
 
     </section>
 
-    <footer class="form-footer text-xs-right">
+    <footer class="form-footer text-sm-right">
       <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send' d='Shop.Theme.Actions'}">
     </footer>
 

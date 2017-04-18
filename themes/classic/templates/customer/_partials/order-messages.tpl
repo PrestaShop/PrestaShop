@@ -73,7 +73,7 @@
 
       </section>
 
-      <footer class="form-footer text-xs-center">
+      <footer class="form-footer text-sm-center">
         <input type="hidden" name="id_order" value="{$order.details.id}">
         <button type="submit" name="submitMessage" class="btn btn-primary form-control-submit">
           {l s='Send' d='Shop.Theme.Actions'}
