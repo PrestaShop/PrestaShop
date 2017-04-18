@@ -104,20 +104,27 @@ class StockRepository extends StockManagementRepository
     public function updateStock(Movement $movement)
     {
         $productIdentity = $movement->getProductIdentity();
-        $delta = $movement->getDelta();
-        $product = (new ProductDataProvider())->getProduct($productIdentity->getProductId());
 
-        $configurationAdapter = new Configuration();
-        (new StockManagerCore())->updateQuantity(
-            $product,
-            $productIdentity->getCombinationId(),
-            $delta,
-            $id_shop = null,
-            $add_movement = true,
-            array(
-                'id_stock_mvt_reason' => ($delta >= 1 ? $configurationAdapter->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configurationAdapter->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
-            )
-        );
+        if ($productIdentity->getProductId()) {
+            $product = (new ProductDataProvider())->getProduct($productIdentity->getProductId());
+
+            if ($product->id) {
+                $configurationAdapter = new Configuration();
+
+                $delta = $movement->getDelta();
+
+                (new StockManagerCore())->updateQuantity(
+                    $product,
+                    $productIdentity->getCombinationId(),
+                    $delta,
+                    $id_shop = null,
+                    $add_movement = true,
+                    array(
+                        'id_stock_mvt_reason' => ($delta >= 1 ? $configurationAdapter->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configurationAdapter->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
+                    )
+                );
+            }
+        }
 
         return $this->selectStockBy($productIdentity);
     }
