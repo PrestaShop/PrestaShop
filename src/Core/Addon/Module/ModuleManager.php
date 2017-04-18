@@ -213,7 +213,7 @@ class ModuleManager implements AddonManagerInterface
     public function install($source)
     {
         // in CLI mode, there is no employee set up
-        if (!Tools::isPHPCLI() && !$this->employee->can('edit', 'AdminModulessf')) {
+        if (!$this->allowedAccess(__FUNCTION__)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to install modules.',
@@ -258,8 +258,7 @@ class ModuleManager implements AddonManagerInterface
         // Check permissions:
         // * Employee can delete
         // * Employee can delete this specific module
-        if (!Tools::isPHPCLI() && (!$this->employee->can('delete', 'AdminModulessf')
-            || !$this->moduleProvider->can('uninstall', $name))) {
+        if (!$this->allowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to uninstall this module.',
@@ -293,8 +292,7 @@ class ModuleManager implements AddonManagerInterface
     */
     public function upgrade($name, $version = 'latest', $source = null)
     {
-        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name))) {
+        if (!$this->allowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to upgrade this module.',
@@ -332,8 +330,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disable($name)
     {
-        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name))) {
+        if (!$this->allowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to disable this module.',
@@ -370,8 +367,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enable($name)
     {
-        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name))) {
+        if (!$this->allowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to enable this module.',
@@ -407,8 +403,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disable_mobile($name)
     {
-        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name))) {
+        if (!$this->allowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to disable this module on mobile.',
@@ -443,8 +438,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enable_mobile($name)
     {
-        if (!Tools::isPHPCLI() && (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name))) {
+        if (!$this->allowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to enable this module on mobile.',
@@ -476,9 +470,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function reset($name, $keep_data = false)
     {
-        if (!Tools::isPHPCLI() && (!$this->employee->can('add', 'AdminModulessf')
-            || !$this->employee->can('delete', 'AdminModulessf')
-            || !$this->moduleProvider->can('uninstall', $name))) {
+        if (!$this->allowedAccess('install') || !$this->allowedAccess('uninstall', $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to reset this module.',
@@ -585,6 +577,32 @@ class ModuleManager implements AddonManagerInterface
                     'The module %module% must be installed first',
                     array('%module%' => $name),
                 'Admin.Modules.Notification'));
+        }
+    }
+
+    /**
+     * Check the permissions of the current context (CLI or employee) for a specified action
+     * 
+     * @param string $action The action called in ModuleManager
+     * @param string $name (Optionnal for 'install') The module name to check
+     * @return boolean
+     */
+    private function allowedAccess($action, $name = '')
+    {
+        if (Tools::isPHPCLI()) {
+            return true;
+        }
+
+        if ('install' === $action) {
+            return $this->employee->can('edit', 'AdminModulessf');
+        }
+
+        if ('uninstall' === $action) {
+            return ($this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name));
+        }
+
+        if (in_array($action, array('upgrade', 'disable', 'enable', 'disable_mobile', 'enable_mobile'))) {
+            return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
         }
     }
 }
