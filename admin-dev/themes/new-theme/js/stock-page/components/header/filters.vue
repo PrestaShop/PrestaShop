@@ -29,6 +29,7 @@
               itemID="id_category"
               label="name"
               getData="getCategories"
+              @active="onFilterActive"
             />
           </div>
         </div>

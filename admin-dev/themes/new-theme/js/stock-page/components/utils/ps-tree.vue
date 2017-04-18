@@ -70,7 +70,6 @@
 
 <style lang="sass" scoped>
   .tree {
-    font-size: 12px;
     .material-icons {
       vertical-align: middle;
       font-size: 20px;
