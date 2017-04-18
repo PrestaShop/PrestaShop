@@ -458,6 +458,18 @@
   <configuration id="PS_STOCK_MVT_SUPPLY_ORDER" name="PS_STOCK_MVT_SUPPLY_ORDER">
     <value>8</value>
   </configuration>
+  <configuration id="PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON" name="PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON">
+    <value>9</value>
+</configuration>
+  <configuration id="PS_STOCK_CUSTOMER_RETURN_REASON" name="PS_STOCK_CUSTOMER_RETURN_REASON">
+    <value>10</value>
+  </configuration>
+  <configuration id="PS_STOCK_MVT_INC_EMPLOYEE_EDITION" name="PS_STOCK_MVT_INC_EMPLOYEE_EDITION">
+    <value>11</value>
+  </configuration>
+  <configuration id="PS_STOCK_MVT_DEC_EMPLOYEE_EDITION" name="PS_STOCK_MVT_DEC_EMPLOYEE_EDITION">
+    <value>12</value>
+  </configuration>
   <configuration id="PS_STOCK_CUSTOMER_ORDER_REASON" name="PS_STOCK_CUSTOMER_ORDER_REASON">
     <value>3</value>
   </configuration>
