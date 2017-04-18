@@ -409,7 +409,7 @@ abstract class ModuleCore
 
     public function checkCompliancy()
     {
-        if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min'], '<') || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max'], '>')) {
+        if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min'], '<=') || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max'], '>')) {
             return false;
         } else {
             return true;
