@@ -3133,7 +3133,6 @@ class AdminControllerCore extends Controller
         $limit = $this->checkSqlLimit($limit);
 
         /* Determine offset from current page */
-        $start = 0;
         if ((int)Tools::getValue('submitFilter'.$this->list_id)) {
             $start = ((int)Tools::getValue('submitFilter'.$this->list_id) - 1) * $limit;
         } elseif (
