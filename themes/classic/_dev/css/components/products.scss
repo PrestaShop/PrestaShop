@@ -70,14 +70,14 @@
   }
 }
 .product-quantity {
-  .qty {
+  display: flex;
+  .qty, .add {
     float: left;
-    width: 80px;
+    display: inline-flex;
     margin-bottom: rem(8px);
   }
-  .add {
-    float: left;
-    margin-bottom: rem(8px);
+  .qty {
+    margin-right: rem(6px);
   }
   #quantity_wanted {
     color: $gray-darker;
@@ -87,9 +87,8 @@
     width: rem(48px);
   }
   .input-group-btn-vertical {
-    float: left;
-  }
-  .input-group-btn-vertical {
+    width: auto;
+
     .btn {
       padding: rem(8px) rem(11px);
       i {

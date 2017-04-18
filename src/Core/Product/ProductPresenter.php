@@ -411,7 +411,7 @@ class ProductPresenter
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
                 } else {
-                    if (isset($product['quantity_wanted']) && $product['quantity_wanted'] > $product['quantity']) {
+                    if (isset($product['quantity_wanted']) && $product['quantity_wanted'] > $product['quantity'] && !$product['allow_oosp']) {
                         $presentedProduct['availability_message'] = $this->translator->trans(
                             'There are not enough products in stock',
                             array(),
