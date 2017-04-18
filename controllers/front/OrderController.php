@@ -235,8 +235,8 @@ class OrderControllerCore extends FrontController
     {
         $addressForm = $this->makeAddressForm();
 
-        if (Tools::getIsset('id_address')) {
-            $addressForm->loadAddressById(Tools::getValue('id_address'));
+        if (Tools::getIsset('id_address') && ($id_address = (int)Tools::getValue('id_address'))) {
+            $addressForm->loadAddressById($id_address);
         }
 
         if (Tools::getIsset('id_country')) {
