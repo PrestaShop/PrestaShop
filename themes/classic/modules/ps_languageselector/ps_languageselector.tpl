@@ -22,6 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{if 1 < count($languages)}
 <div id="_desktop_language_selector">
   <div class="language-selector-wrapper">
     <span id="language-selector-label" class="hidden-md-up">{l s='Language:' d='Shop.Theme'}</span>
@@ -45,3 +46,4 @@
     </div>
   </div>
 </div>
+{/if}
