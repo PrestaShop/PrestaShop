@@ -1391,7 +1391,7 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         // Get folder name of theme
-        if (($theme = Tools::getValue('theme')) && !is_array($theme)) {
+        if (($theme = Tools::getValue('selected-theme')) && !is_array($theme)) {
             $theme_exists = $this->theme_exists($theme);
             if (!$theme_exists) {
                 throw new PrestaShopException(sprintf($this->trans('Invalid theme "%s"', array(), 'Admin.International.Notification'), Tools::safeOutput($theme)));
