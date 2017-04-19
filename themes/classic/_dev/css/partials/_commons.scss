@@ -96,6 +96,18 @@ p {
     border: $input-btn-border-width solid rgba(35, 35, 35, 0.2);
   }
 }
+.btn-unstyle {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  text-align: inherit;
+  &:focus {
+    outline: 0;
+    .expand-more {
+      color: $brand-primary;
+    }
+  }
+}
 .card {
   @include box-shadow;
 }
@@ -283,15 +295,20 @@ input, textarea {
     opacity: 0;
     cursor: pointer;
   }
-  input[type="radio"]:checked + span {
-    display: block;
-    background-color: $brand-primary;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    position: absolute;
-    left: 0.125rem;
-    top: 0.125rem;
+  input[type="radio"] {
+    &:checked + span {
+      display: block;
+      background-color: $brand-primary;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      position: absolute;
+      left: 0.125rem;
+      top: 0.125rem;
+    }
+    &:focus + span {
+      border-color: $gray;
+    }
   }
 }
 .custom-checkbox {
@@ -320,6 +337,9 @@ input, textarea {
       .checkbox-checked {
         display: block;
       }
+    }
+    &:focus + span {
+      border-color: $gray;
     }
   }
   label {

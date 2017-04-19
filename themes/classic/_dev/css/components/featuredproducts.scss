@@ -21,7 +21,7 @@
     width: 257px;
     background: white;
     @include box-shadow;
-    &:hover {
+    &:hover, &:focus {
       .highlighted-informations {
         bottom: 5.5rem;
         &::after {

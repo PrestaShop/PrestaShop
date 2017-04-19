@@ -28,7 +28,7 @@
   <div id="carousel" data-ride="carousel" class="carousel slide hidden-sm-down" data-interval="{$homeslider.speed}" data-wrap="{(string)$homeslider.wrap}" data-pause="{$homeslider.pause}">
     <ul class="carousel-inner" role="listbox">
       {foreach from=$homeslider.slides item=slide name='homeslider'}
-        <li class="carousel-item {if $smarty.foreach.homeslider.first}active{/if}">
+        <li class="carousel-item {if $smarty.foreach.homeslider.first}active{/if}" role="option" aria-hidden="{if $smarty.foreach.homeslider.first}false{else}true{/if}">
           <a href="{$slide.url}">
             <figure>
               <img src="{$slide.image_url}" alt="{$slide.legend|escape}">
@@ -43,7 +43,7 @@
         </li>
       {/foreach}
     </ul>
-    <div class="direction">
+    <div class="direction" aria-label="{l s='Carousel buttons' d='Shop.Theme'}">
       <a class="left carousel-control" href="#carousel" role="button" data-slide="prev">
         <span class="icon-prev hidden-xs" aria-hidden="true">
           <i class="material-icons">&#xE5CB;</i>

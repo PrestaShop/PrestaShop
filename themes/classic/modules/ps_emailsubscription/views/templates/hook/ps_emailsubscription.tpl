@@ -25,7 +25,7 @@
 
 <div class="block_newsletter col-lg-8 col-md-12 col-sm-12">
   <div class="row">
-    <p class="col-md-5 col-xs-12">{l s='Get our latest news and special sales' d='Shop.Theme'}</p>
+    <p id="block-newsletter-label" class="col-md-5 col-xs-12">{l s='Get our latest news and special sales' d='Shop.Theme'}</p>
     <div class="col-md-7 col-xs-12">
       <form action="{$urls.pages.index}#footer" method="post">
         <div class="row">
@@ -48,6 +48,7 @@
                 type="text"
                 value="{$value}"
                 placeholder="{l s='Your email address' d='Shop.Forms.Labels'}"
+                aria-labelledby="block-newsletter-label"
               >
             </div>
             <input type="hidden" name="action" value="0">
