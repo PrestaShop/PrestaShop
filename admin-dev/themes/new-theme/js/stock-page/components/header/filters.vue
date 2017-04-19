@@ -53,18 +53,30 @@
     },
     methods: {
       onClick() {
-        this.supplierFilter();
+        this.applyFilter();
       },
-      onFilterActive(val, list) {
-        this.suppliers = list;
-        this.disabled= !val;
-        if(!list) {
-          this.supplierFilter();
+      onFilterActive(list, type) {
+        if(type === 'supplier') {
+          this.suppliers = list;
+        }
+        else {
+          this.categories = list;
+        }
+
+        if(!this.suppliers.length && !this.categories.length) {
+          this.disabled = true;
+        }
+        else {
+          this.disabled= false;
+        }
+        if(!list.length) {
+          this.applyFilter();
         }
       },
-      supplierFilter() {
+      applyFilter() {
         this.$store.dispatch('getStock', {
-          suppliers : this.suppliers
+          suppliers : this.suppliers,
+          categories: this.categories
         });
       }
     },
@@ -74,7 +86,8 @@
     data() {
       return {
         disabled: true,
-        suppliers: []
+        suppliers: [],
+        categories: []
       }
     }
   }

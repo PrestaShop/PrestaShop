@@ -16,7 +16,8 @@ const state = {
   productsPerPage: 100,
   combinationsPerPage: 50,
   suppliers: [],
-  categories: []
+  categories: [],
+  categoryList:[]
 };
 
 // getters are functions
@@ -37,13 +38,16 @@ const getters = {
     function convert(categories) {
       categories.forEach((category)=>{
         category.children = _.values(category.children);
-        category.id = category.id_category;
+        state.categoryList.push(category);
         convert(category.children);
       });
       return categories;
     }
 
     return convert(state.categories);
+  },
+  categoryList(state) {
+    return state.categoryList;
   }
 };
 

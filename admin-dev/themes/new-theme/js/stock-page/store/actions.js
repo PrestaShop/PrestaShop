@@ -14,7 +14,8 @@ export const getStock = ({ commit, state }, payload) => {
       page_size: payload.page_size,
       page_index: payload.page_index,
       keywords: payload.keywords ? payload.keywords : [],
-      supplier_id: payload.suppliers ? payload.suppliers : []
+      supplier_id: payload.suppliers ? payload.suppliers : [],
+      category_id: payload.categories ? payload.categories : []
     }
   }).then(function(response) {
     commit(types.SET_PAGE_INDEX, payload.page_index);
