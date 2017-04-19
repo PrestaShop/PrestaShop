@@ -117,7 +117,6 @@ class TreeBuilder
                 $subtree = &$subtree[$subdomain];
             }
 
-            $subtree['__messages'] = array($domain => $messages);
             if (isset($messages['__metadata'])) {
                 $subtree['__fixed_length_id'] = '_' . sha1($domain);
                 list($subtree['__domain']) = explode('.', $domain);
@@ -125,6 +124,7 @@ class TreeBuilder
                 $subtree['__metadata']['domain'] = $subtree['__domain'];
                 unset($messages['__metadata']);
             }
+            $subtree['__messages'] = array($domain => $messages);
         }
 
         return $translationsTree;
