@@ -15,7 +15,9 @@ GitHub contributors:
 - Alexander Galaydyuk
 - Alexander Grosul
 - Alexander Otchenashev
+- Alexander Simonchik
 - Alexandra Even
+- Alexandre Alouit
 - Alexandre Segura
 - alexdee2007
 - AlexEven
@@ -44,6 +46,7 @@ GitHub contributors:
 - Axome
 - Aylab
 - Balestrino
+- bbsimon
 - bellini13
 - Benjamin PONGY
 - bercik999
@@ -77,6 +80,7 @@ GitHub contributors:
 - Claire Meuriot
 - cmouleyre
 - cocoweb
+- Code Utopia
 - codvir
 - Comkwatt
 - Conner
@@ -97,11 +101,15 @@ GitHub contributors:
 - danoosh
 - Danoosh Mir
 - Dany Maillard
+- dariusakafest
 - David Eschmeyer
 - David Gasperoni
 - David Sivocha
 - David-Julian BUCH
+- Davide
 - Davy Rolink
+- de saint leger
+- Debusschere Alexandre
 - Denis Yurevich
 - Denver Prophit Jr
 - Denver Prophit Jr.
@@ -109,6 +117,7 @@ GitHub contributors:
 - DevNet
 - Dh42
 - Dheeraj
+- Dheeraj Sharma
 - Dimitrios Karvounaris
 - Dinis Lage
 - djbuch
@@ -136,6 +145,7 @@ GitHub contributors:
 - elationbase
 - eleazar
 - Elitius
+- Emiliano 'AlberT' Gabrielli
 - Emilien Puget
 - emilien-puget
 - emily-d
@@ -157,13 +167,17 @@ GitHub contributors:
 - fird
 - firstred
 - flashmaestro
+- florervd
 - Florian Kwakkenbos
+- Florian Lemaitre
+- Flowster
 - fojtcz
 - fram
 - Francois Gaillard
 - Francois-Marie de Jouvencel
-- Fran�ois Gaillard
+- Francois Gaillard
 - Frederic BENOIST
+- Gabriel Arama
 - Gabriel Schwardy
 - Gaelle ITZKOVITZ
 - Galaydyuk Alexandr
@@ -189,13 +203,16 @@ GitHub contributors:
 - Guillaume Lafarge
 - Guillaume Leseur
 - Guillaume Marsille
+- Guillaume P
 - Guisardo
+- Gustavo
 - Gytis
 - Gytis Skėma
 - Ha!*!*y
 - ha99y
 - hadjedjvincent
 - harelguy
+- hibatallahAouadni
 - hiousi
 - htrex
 - hubiktomas
@@ -204,6 +221,7 @@ GitHub contributors:
 - indesign47
 - iNem0o
 - Inetbiz
+- iqit-commerce
 - ironwo0d
 - ITBpro.com
 - Ivan
@@ -225,7 +243,7 @@ GitHub contributors:
 - Joan
 - Joan Juvanteny
 - joce
-- Jocelyn Fournier
+- jocelyn fournier
 - Joe Siwiak
 - joemartin247
 - Joep Hendrix
@@ -248,11 +266,13 @@ GitHub contributors:
 - Jeremie Tabet
 - Jonatan Nunez
 - Kamil Szymański
+- Karel Faille
 - Kelly Karnetsky
 - kermes
 - Kevin Granger
 - Kijam Lopez
 - kiropowered
+- kompilorb
 - kpodemski
 - Krystian Podemski
 - Kevin Dunglas
@@ -283,6 +303,8 @@ GitHub contributors:
 - Marco Cervellin
 - Marcos
 - Marius
+- Mark Wienk
+- MarkC
 - Martin Fojtik
 - martinfojtik
 - matiasiglesias
@@ -290,9 +312,11 @@ GitHub contributors:
 - Matteo
 - Matteo Spreafico
 - MatthieuB
+- mauglee
 - MaX3315
 - Maxence
 - Maxime
+- Maxime - Vaisonet
 - Maxime Biloe
 - Maxime Vasse
 - Mbechezi Mlanawo
@@ -302,7 +326,7 @@ GitHub contributors:
 - melvin
 - Michael Dekker
 - Michael Hjulskov
-- Michael SALIHI
+- Michael Salihi
 - Michal Spaček
 - Michel ANTOINE
 - Michel Courtade
@@ -323,9 +347,11 @@ GitHub contributors:
 - natrim
 - neemzy
 - nezenmoins
+- Nicolas Lœuillet
 - Nicolas Martin
 - Nicolas Sorosac
 - Niels Wouda
+- nihco2
 - Niklas Ekman
 - Niko Wicaksono
 - Nils-Helge Garli Hegvik
@@ -354,9 +380,12 @@ GitHub contributors:
 - Petyuska
 - PhpMadman
 - Pierre
+- Pierre Avizou
 - Pierrick
+- pilothuy
 - Piotr Kaczor
 - Piotr Moćko
+- Pliciweb - Nicolas
 - Praneeth Nidarshan
 - Presta Module
 - PrestaEdit
@@ -370,6 +399,7 @@ GitHub contributors:
 - Profileo
 - Pronux
 - proydsl
+- psandmore
 - pxls
 - quadrateam
 - Quentin Leonetti
@@ -378,19 +408,23 @@ GitHub contributors:
 - Quetzacoalt91
 - Racochejl
 - Rafael Cunha
+- Raphael
 - raphael-homann
 - Raphael Droz
 - Raphael Malie
 - raulgundin
 - rav88
 - Remigiusz Jackowski
+- Renaud Sanchez - ChouetteWeb.fr
 - rGaillard
 - Rhys
 - Richard LT
+- Ricki Hirner
 - Rimas Kudelis
 - robert
 - Roland Schütz
 - romainberger
+- Roman Gusev
 - Roy
 - runningz
 - Remi Gaillard
@@ -407,7 +441,7 @@ GitHub contributors:
 - Seb
 - SebSept
 - Sergio Quinonez
-- Seynaeve
+- seynaeve
 - sfroment42
 - shaffe-fr
 - Shagshag
@@ -439,7 +473,10 @@ GitHub contributors:
 - Sebastien Monterisi
 - Tanguy JACQUET
 - tchauviere
+- TechhDan
+- Ted Sanders
 - The Gitter Badger
+- themella
 - therampagerado
 - Thibaud Chauviere
 - Thierry Marianne
@@ -458,6 +495,7 @@ GitHub contributors:
 - Tom Panier
 - Tomasz Slominski
 - tomek
+- Tomas Liska
 - Tomas Votruba
 - Travis-CI
 - tucoinfo
@@ -472,6 +510,7 @@ GitHub contributors:
 - venditdevs
 - Vincent Augagneur
 - vincent beudez
+- Vincent HADJEDJ
 - Vincent Schoener
 - Vincent Terenti
 - vincentbz
@@ -481,6 +520,7 @@ GitHub contributors:
 - Wayann
 - web-plus
 - webbax
+- webmake
 - Wojciech Grzebieniowski
 - Xavier
 - Xavier Borderie
@@ -494,6 +534,8 @@ GitHub contributors:
 - ZiZuu.com
 - Zollner Robert
 - zuzul
+- Angel Guzman Maeso
+- Sarūnas Jonusas
 
 SVN contributors:
 --------------------------------
