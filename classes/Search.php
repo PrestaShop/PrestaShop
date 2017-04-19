@@ -814,7 +814,7 @@ class SearchCore
 			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 			'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
 			WHERE product_shop.`active` = 1
-			AND p.visibility IN (\'both\', \'search\')
+			AND product_shop.`visibility` IN (\'both\', \'search\')
 			AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 			'.$sql_groups.'
 			AND t.`name` LIKE \'%'.pSQL($tag).'%\'');
@@ -849,6 +849,7 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				'.Product::sqlStock('p', 0).'
 				WHERE product_shop.`active` = 1
+                    AND product_shop.`visibility` IN (\'both\', \'search\')
 					AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 					'.$sql_groups.'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'
