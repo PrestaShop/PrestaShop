@@ -1,12 +1,12 @@
 <template>
   <div :class="className">
-    <Checkbox :ref="label" :id="computedId" :item="item" @checked="onCheck"/>
+    <PSCheckbox :ref="label" :id="computedId" :item="item" @checked="onCheck"/>
     <span class="tree-label">{{label}}</span>
   </div>
 </template>
 
 <script>
-  import Checkbox from './checkbox';
+  import PSCheckbox from './ps-checkbox';
   import { EventBus } from './event-bus';
 
   export default {
@@ -23,7 +23,7 @@
       }
     },
     components: {
-      Checkbox
+      PSCheckbox
     },
     mounted() {
       EventBus.$on('toggleCheckbox', (tag) => {

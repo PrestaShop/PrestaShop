@@ -31,7 +31,6 @@
         this.$emit('tagChange', this.tag);
       },
       close(index) {
-        console.log(this.tags)
         this.$emit('tagChange', this.tags[index]);
         this.tags.splice(index, 1);
       },
@@ -74,7 +73,6 @@
       font-family: Open Sans, sans-serif;
       cursor: text;
       padding-left: 2px;
-      background-color: white;
       border: none;
       outline: none;
     }

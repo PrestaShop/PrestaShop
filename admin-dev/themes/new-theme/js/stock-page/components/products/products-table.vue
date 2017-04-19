@@ -1,5 +1,5 @@
 <template>
-  <PSTable>
+  <PSTable class="m-t-1">
     <thead>
       <tr>
         <th width="40%" class="thead-title">Product<Sort order="product" :isDesc="isSorted" v-on:sort="toggleSort" /></th>

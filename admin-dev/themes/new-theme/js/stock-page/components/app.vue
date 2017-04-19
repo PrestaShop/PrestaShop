@@ -111,4 +111,8 @@
       flex-direction: column;
     }
   }
+  .btn:disabled {
+    background-color: $gray-light;
+    border-color: $gray-light;
+  }
 </style>

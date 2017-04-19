@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td class="flex p-r-1">
-      <Checkbox :id="id" />
+      <PSCheckbox :id="id" />
       <ProductDesc
         class="m-l-1"
         :has-combination="hasCombination"
@@ -41,7 +41,7 @@
 <script>
   import Spinner from './spinner';
   import ProductDesc from './product-desc';
-  import Checkbox from '../../utils/checkbox';
+  import PSCheckbox from '../../utils/ps-checkbox';
 
   export default {
     props: ['product'],
@@ -74,7 +74,7 @@
     components: {
       Spinner,
       ProductDesc,
-      Checkbox
+      PSCheckbox
     }
   }
 </script>
