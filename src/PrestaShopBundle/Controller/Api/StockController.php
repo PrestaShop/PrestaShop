@@ -33,19 +33,12 @@ use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Entity\Repository\StockRepository;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class StockController
+class StockController extends ApiController
 {
-    /**
-     * @var LoggerInterface
-     */
-    public $logger;
-
     /**
      * @var StockRepository
      */
@@ -180,17 +173,6 @@ class StockController
         }
 
         return $decodedContent;
-    }
-
-    /**
-     * @param HttpException $exception
-     * @return JsonResponse
-     */
-    private function handleException(HttpException $exception)
-    {
-        $this->logger->info($exception->getMessage());
-
-        return new JsonResponse(array('error' => $exception->getMessage()), $exception->getStatusCode());
     }
 
     /**

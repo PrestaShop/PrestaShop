@@ -347,18 +347,24 @@ services:
             - "@prestashop.adapter.legacy.context"
             - "%database_prefix%"
 
+    prestashop.core.api.controller:
+        abstract: true
+        class: PrestaShopBundle\Controller\Api\ApiController
+        calls:
+            - [setLogger, ['@logger']]
+
     prestashop.core.api.stock.controller:
         class: PrestaShopBundle\Controller\Api\StockController
+        parent: prestashop.core.api.controller
         properties:
-            logger: "@logger"
             movements: "@prestashop.core.api.stock.movements_collection"
             stockRepository: "@prestashop.core.api.stock.repository"
             queryParams: "@prestashop.core.api.query_params_collection"
 
     prestashop.core.api.stockMovement.controller:
         class: PrestaShopBundle\Controller\Api\StockMovementController
+        parent: prestashop.core.api.controller
         properties:
-            logger: "@logger"
             stockMovementRepository: "@prestashop.core.api.stockMovement.repository"
             queryParams: "@prestashop.core.api.query_params_collection"
 
@@ -381,6 +387,12 @@ services:
         class: PrestaShopBundle\Controller\Api\FeatureController
         properties:
             featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
+
+    prestashop.core.api.i18n.controller:
+        class: PrestaShopBundle\Controller\Api\I18nController
+        parent: prestashop.core.api.controller
+        properties:
+            translator: "@translator"
 
     # Managers
     prestashop.adapter.image_manager:

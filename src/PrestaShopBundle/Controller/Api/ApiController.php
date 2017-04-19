@@ -26,40 +26,30 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
-use PrestaShopBundle\Api\QueryParamsCollection;
-use PrestaShopBundle\Entity\Repository\StockMovementRepository;
-use PrestaShopBundle\Exception\InvalidPaginationParamsException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class StockMovementController extends ApiController
+abstract class ApiController
 {
     /**
-     * @var StockMovementRepository
+     * @var LoggerInterface
      */
-    public $stockMovementRepository;
+    protected $logger;
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
-     * @var QueryParamsCollection
-     */
-    public $queryParams;
-
-    /**
-     * @param Request $request
+     * @param HttpException $exception
      * @return JsonResponse
      */
-    public function listMovementsAction(Request $request)
+    protected function handleException(HttpException $exception)
     {
-        try {
-            $queryParamsCollection = $this->queryParams->fromRequest($request, 'id_stock_mvt DESC');
-        } catch (InvalidPaginationParamsException $exception) {
-            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
-        }
+        $this->logger->info($exception->getMessage());
 
-        $stockMovement = $this->stockMovementRepository->getData($queryParamsCollection);
-        $totalPages = $this->stockMovementRepository->countPages($queryParamsCollection);
-
-        return new JsonResponse($stockMovement, 200, array('Total-Pages' => $totalPages));
+        return new JsonResponse(array('error' => $exception->getMessage()), $exception->getStatusCode());
     }
 }
