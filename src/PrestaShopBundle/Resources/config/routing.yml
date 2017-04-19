@@ -25,3 +25,7 @@ _api_attribute:
 _api_feature:
     resource: "api/routing_feature.yml"
     prefix: /api
+
+_api_i18n:
+    resource: "api/routing_i18n.yml"
+    prefix: /api
