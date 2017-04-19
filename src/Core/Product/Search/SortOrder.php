@@ -150,11 +150,11 @@ class SortOrder
     public function toLegacyOrderBy($prefix = false)
     {
         if ($prefix) {
-            return $this->getLegacyPrefix() . $this->field;
+            return $this->getLegacyPrefix() . '`' . bqSQL($this->field) . '`';
         } elseif ($this->entity === 'manufacturer' && $this->field === 'name') {
-            return 'manufacturer_name';
+            return '`manufacturer_name`';
         } else {
-            return $this->field;
+            return '`'.bqSQL($this->field).'`';
         }
     }
 
