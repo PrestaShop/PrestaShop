@@ -18,7 +18,7 @@
 
 <script>
   import Filters from './filters';
-  import PSTags from '../utils/ps-tags';
+  import PSTags from 'app/widgets/ps-tags';
 
   export default {
     components: {

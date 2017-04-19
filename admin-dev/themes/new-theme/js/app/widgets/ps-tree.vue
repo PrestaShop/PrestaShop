@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import PSTreeItem from './ps-tree-item';
+  import PSTreeItem from 'app/widgets/ps-tree-item';
   export default {
     name: 'PSTree',
     props: {

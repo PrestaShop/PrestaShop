@@ -22,7 +22,7 @@
   import ProductLine from './product/product-line';
   import Alert from './alert';
   import Sort from './sort';
-  import PSTable from '../utils/ps-table';
+  import PSTable from 'app/widgets/ps-table';
 
   export default {
     components: {

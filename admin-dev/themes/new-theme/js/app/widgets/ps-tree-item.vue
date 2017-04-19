@@ -7,7 +7,7 @@
 
 <script>
   import PSCheckbox from './ps-checkbox';
-  import { EventBus } from './event-bus';
+  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     props:['id','item','label','className'],
