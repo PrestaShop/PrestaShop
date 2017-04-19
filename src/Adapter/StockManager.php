@@ -139,11 +139,11 @@ class StockManager implements StockInterface
      */
     public function newStockMvt($stockMvtId = null)
     {
-        if (is_null($stockMvtId)) {
-            return new \StockMvt();
+        if (is_integer($stockMvtId)) {
+            return new \StockMvt($stockMvtId);
         }
 
-        return new \StockMvt($stockMvtId);
+        return new \StockMvt();
     }
 
     /**
@@ -154,11 +154,11 @@ class StockManager implements StockInterface
      */
     public function newStockAvailable($stockAvailableId = null)
     {
-        if (is_null($stockAvailableId)) {
-            return new \StockAvailable();
+        if (is_integer($stockAvailableId)) {
+            return new \StockAvailable($stockAvailableId);
         }
 
-        return new \StockAvailable($stockAvailableId);
+        return new \StockAvailable();
     }
 
     /**
