@@ -396,7 +396,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 
             case self::TYPE_DATE:
                 if (!$value) {
-                    return '0000-00-00';
+                    $value = '0000-00-00';
                 }
 
                 if ($with_quotes) {
