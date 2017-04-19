@@ -220,7 +220,7 @@ class StockController
             'The item of index #%d is invalid.';
 
         array_walk($decodedContent, function ($item, $index) use ($message) {
-            if (!array_key_exists('product_id', $item) || !array_key_exists('delta', $item)) {
+            if (!array_key_exists('product_id', $item) || !array_key_exists('delta', $item) || $item['delta'] == 0) {
                 throw new BadRequestHttpException(sprintf($message, $index));
             }
         });

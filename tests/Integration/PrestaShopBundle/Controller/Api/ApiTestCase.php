@@ -151,8 +151,12 @@ abstract class ApiTestCase extends WebTestCase
         /** @var \Shop $shopMock */
         $shopMock = $this->prophet->prophesize('\Shop');
         $shopMock->getContextualShopId()->willReturn(1);
-
         $shopMock->getContextType()->willReturn(Shop::CONTEXT_SHOP);
+        $shopMock->id = 1;
+
+        $shopGroupMock = $this->prophet->prophesize('\ShopGroup');
+        $shopGroupMock->id = 1;
+        $shopMock->getGroup()->willReturn($shopGroupMock);
 
         return $shopMock;
     }
