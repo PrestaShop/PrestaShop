@@ -41,7 +41,7 @@
 <script>
   import Spinner from './spinner';
   import ProductDesc from './product-desc';
-  import PSCheckbox from '../../utils/ps-checkbox';
+  import PSCheckbox from 'app/widgets/ps-checkbox';
 
   export default {
     props: ['product'],

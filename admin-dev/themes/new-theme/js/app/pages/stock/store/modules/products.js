@@ -1,7 +1,7 @@
 import * as types from '../mutation-types';
 import Vue from 'vue';
 import VueResource from 'vue-resource';
-import { showGrowl } from '../utils/growl';
+import { showGrowl } from 'app/utils/growl';
 import _ from 'lodash';
 
 Vue.use(VueResource);

@@ -60,10 +60,10 @@
 </template>
 
 <script>
-  import PSTags from '../../utils/ps-tags';
-  import PSTreeItem from '../../utils/ps-tree-item';
-  import PSTree from '../../utils/ps-tree';
-  import { EventBus } from '../../utils/event-bus';
+  import PSTags from 'app/widgets/ps-tags';
+  import PSTreeItem from 'app/widgets/ps-tree-item';
+  import PSTree from 'app/widgets/ps-tree';
+  import { EventBus } from 'app/utils/event-bus';
   import _ from 'lodash';
 
   export default {
@@ -77,8 +77,14 @@
       hasPlaceholder() {
         return !this.tags.length;
       },
+<<<<<<< 26a1b99444f8a8767fb70a3fa06f3660f36c8ee5:admin-dev/themes/new-theme/js/stock-page/components/header/filters/filter-component.vue
       items() {
 >>>>>>> BO: Improve tags component
+||||||| merged common ancestors
+      items() {
+=======
+      items() {
+>>>>>>> BO: Start stock refacto:admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/filter-component.vue
         let matchList = [];
         this.list.filter((data)=> {
           let label = data[this.label].toLowerCase();
