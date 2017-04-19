@@ -44,7 +44,7 @@ class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterf
      */
     public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
     {
-        return new \StockAvailableCore(\StockAvailableCore::getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
+        return $this->newStockAvailable($this->getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
     }
 
     /**
@@ -129,8 +129,46 @@ class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterf
         return Db::getInstance()->execute($updateReservedQuantityQuery);
     }
 
-    public function newStockMvt()
+    /**
+     * Instance a new StockMvt
+     *
+     * @param null $stockMvtId
+     * @return \StockMvt
+     */
+    public function newStockMvt($stockMvtId = null)
     {
-        return new \StockMvt();
+        if (is_null($stockMvtId)) {
+            return new \StockMvt();
+        }
+
+        return new \StockMvt($stockMvtId);
+    }
+
+    /**
+     * Instance a new StockAvailable
+     *
+     * @param null $stockAvailableId
+     * @return \StockAvailable
+     */
+    public function newStockAvailable($stockAvailableId = null)
+    {
+        if (is_null($stockAvailableId)) {
+            return new \StockAvailable();
+        }
+
+        return new \StockAvailable($stockAvailableId);
+    }
+
+    /**
+     * Use legacy getStockAvailableIdByProductId
+     *
+     * @param $productId
+     * @param null $productAttributeId
+     * @param null $shopId
+     * @return bool|int
+     */
+    public function getStockAvailableIdByProductId($productId, $productAttributeId = null, $shopId = null)
+    {
+        return \StockAvailable::getStockAvailableIdByProductId($productId, $productAttributeId, $shopId);
     }
 }

@@ -92,16 +92,20 @@ class StockRepository extends StockManagementRepository
      */
     public function bulkUpdateStock(MovementsCollection $movements)
     {
-        return $movements->map(function (Movement $movement) {
-            return $this->updateStock($movement);
+        $products = $movements->map(function (Movement $movement) {
+            return $this->updateStock($movement, true);
         });
+
+        $this->syncAllStock();
+
+        return $products;
     }
 
     /**
      * @param Movement $movement
      * @return mixed
      */
-    public function updateStock(Movement $movement)
+    public function updateStock(Movement $movement, $syncStock = true)
     {
         $productIdentity = $movement->getProductIdentity();
         $delta = $movement->getDelta();
@@ -116,16 +120,32 @@ class StockRepository extends StockManagementRepository
                     $product,
                     $productIdentity->getCombinationId(),
                     $delta,
-                    $id_shop = null,
+                    $this->contextAdapter->getContext()->shop->id,
                     $add_movement = true,
                     array(
                         'id_stock_mvt_reason' => ($delta >= 1 ? $configurationAdapter->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configurationAdapter->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
                     )
                 );
             }
+
+            if (true === $syncStock) {
+                $this->syncAllStock();
+            }
         }
 
         return $this->selectStockBy($productIdentity);
+    }
+
+    /**
+     * Sync all stock with Manager
+     */
+    private function syncAllStock()
+    {
+        (new \PrestaShop\PrestaShop\Adapter\StockManager())->updatePhysicalProductQuantity(
+            $this->contextAdapter->getContext()->shop->id,
+            $this->orderStates['error'],
+            $this->orderStates['cancellation']
+        );
     }
 
     /**
