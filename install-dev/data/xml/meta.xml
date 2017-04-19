@@ -8,8 +8,8 @@
 			<page>pagenotfound</page>
 			<configurable>1</configurable>
 		</meta>
-		<meta id="best-sales">
-			<page>best-sales</page>
+		<meta id="best-sellers">
+			<page>best-sellers</page>
 			<configurable>1</configurable>
 		</meta>
 		<meta id="contact">
@@ -32,8 +32,8 @@
 			<page>password</page>
 			<configurable>1</configurable>
 		</meta>
-		<meta id="prices-drop">
-			<page>prices-drop</page>
+		<meta id="on-sale">
+			<page>on-sale</page>
 			<configurable>1</configurable>
 		</meta>
 		<meta id="sitemap">
