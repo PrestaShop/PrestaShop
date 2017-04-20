@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<localizationPack name="Sénégal">
+  <currencies>
+    
+
+<currency name="West African CFA franc" iso_code="XOF" iso_code_num="4217" 
+
+sign="XOF" blank="1" conversion_rate="1" format="1" decimals="0"/>
+  
+
+</currencies>
+  <languages>
+    <language iso_code="fr"/>
+  </languages>
+<taxes>
+    <tax id="1" name="TVA SN 18%" rate="18" account_number=""/>
+  
+</taxes><taxes/>
+  <units>
+    <unit type="weight" value="kg"/>
+    <unit 
+
+type="volume" value="L"/>
+    <unit type="short_distance" value="cm"/>
+    
+
+<unit type="base_distance" value="m"/>
+    <unit type="long_distance" 
+
+value="km"/>
+  </units>
+</localizationPack>
