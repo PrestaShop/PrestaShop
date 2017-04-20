@@ -35,8 +35,8 @@ class StockApi extends AbstractApi implements ApiInterface
     public function getTranslations()
     {
         return array(
-            'stock.search' => $this->translator->trans('Search products', array(), 'Admin.Catalog.Feature'),
-            'stock.apply' => $this->translator->trans('Apply new quantity', array(), 'Admin.Catalog.Feature')
+            'menu_stock' => $this->translator->trans('Stock', array(), 'Admin.Catalog.Feature'),
+            'menu_movements' => $this->translator->trans('Movements', array(), 'Admin.Catalog.Feature')
         );
     }
 }
