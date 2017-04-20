@@ -215,6 +215,7 @@ class QueryParamsCollection
             'available_quantity',
             'physical_quantity',
             'id_stock_mvt',
+            'date_add',
         );
     }
 
