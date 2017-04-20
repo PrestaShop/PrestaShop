@@ -77,6 +77,7 @@
       hasPlaceholder() {
         return !this.tags.length;
       },
+<<<<<<< a8c052fd1ac5d5076d2f6d0d7b696c7453a51afc
 <<<<<<< 26a1b99444f8a8767fb70a3fa06f3660f36c8ee5:admin-dev/themes/new-theme/js/stock-page/components/header/filters/filter-component.vue
       items() {
 >>>>>>> BO: Improve tags component
@@ -85,6 +86,11 @@
 =======
       items() {
 >>>>>>> BO: Start stock refacto:admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/filter-component.vue
+||||||| merged common ancestors
+      items() {
+=======
+      items() {
+>>>>>>> BO: Improve stock movements
         let matchList = [];
         this.list.filter((data)=> {
           let label = data[this.label].toLowerCase();
