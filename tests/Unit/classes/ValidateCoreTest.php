@@ -91,6 +91,14 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider isUnsignedIntDataProvider
+     */
+    public function testIsUnsignedInt($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isUnsignedInt($input));
+    }
+    
+    /**
      * @depends testIsFloat
      * @dataProvider isOptFloatDataProvider
      */
@@ -176,6 +184,22 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function isUnsignedIntDataProvider()
+    {
+        return array(
+                array(false, -100),
+                array(false, -13.5),
+                array(false, 13.5),
+                array(false, ''),
+                array(false, 'A'),
+                array(false, null),
+                array(true, 10),
+                array(true, 2147483647),
+                array(true, 2147483649),
+                array(true, 4294967290),
+            );
+    }
+    
     public function trueFloatDataProvider()
     {
         return array(
