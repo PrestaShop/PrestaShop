@@ -132,6 +132,17 @@ abstract class StockManagementRepository
      * @param array $rows
      * @return array
      */
+    protected function addAdditionalData(array $rows)
+    {
+        $rows = $this->addImageThumbnailPaths($rows);
+
+        return $rows;
+    }
+
+    /**
+     * @param array $rows
+     * @return array
+     */
     protected function addImageThumbnailPaths(array $rows)
     {
         array_walk($rows, function (&$row) {
@@ -172,7 +183,7 @@ abstract class StockManagementRepository
         $statement->execute();
         $rows = $statement->fetchAll();
 
-        $rows = $this->addImageThumbnailPaths($rows);
+        $rows = $this->addAdditionalData($rows);
 
         return $this->castNumericToInt($rows);
     }

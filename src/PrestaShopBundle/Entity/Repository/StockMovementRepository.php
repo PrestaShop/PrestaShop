@@ -241,4 +241,33 @@ class StockMovementRepository extends StockManagementRepository
     {
         return 'ORDER BY sm.id_stock_mvt DESC';
     }
+
+    /**
+     * @param array $rows
+     * @return array
+     */
+    protected function addAdditionalData(array $rows)
+    {
+        $rows = $this->addImageThumbnailPaths($rows);
+        $rows = $this->addOrderLink($rows);
+
+        return $rows;
+    }
+
+    /**
+     * @param array $rows
+     * @return array
+     */
+    private function addOrderLink(array $rows)
+    {
+        array_walk($rows, function (&$row) {
+            if ($row['id_order']) {
+                $row['order_link'] = $this->contextAdapter->getContext()->link->getAdminLink('AdminOrders', true, array(), array('vieworder' => true, 'id_order' => (int)$row['id_order']));
+            } else {
+                $row['order_link'] = 'N/A';
+            }
+        });
+
+        return $rows;
+    }
 }
