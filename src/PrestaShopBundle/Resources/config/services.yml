@@ -66,7 +66,6 @@ services:
         class: PrestaShopBundle\Service\DataProvider\StockInterface
 
     # DISPATCHERS
-
     prestashop.hook.dispatcher:
         class: PrestaShopBundle\Service\Hook\HookDispatcher
         calls:
@@ -83,7 +82,6 @@ services:
             - "@service_container"
 
     # ADAPTERS (prestashop.adapter.*)
-
     # Legacy context service, transitional
     prestashop.adapter.legacy.configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration
@@ -302,12 +300,14 @@ services:
         arguments:
             - PrestaShopBundle\Entity\Lang
 
+    # Api
     prestashop.core.api.query_params_collection:
         class: PrestaShopBundle\Api\QueryParamsCollection
 
     prestashop.core.api.stock.movements_collection:
         class: PrestaShopBundle\Api\Stock\MovementsCollection
 
+    # Api - Repositories
     prestashop.core.api.stock.repository:
         class: PrestaShopBundle\Entity\Repository\StockRepository
         arguments:
@@ -347,11 +347,13 @@ services:
             - "@prestashop.adapter.legacy.context"
             - "%database_prefix%"
 
+    # Api - Controllers
     prestashop.core.api.controller:
         abstract: true
         class: PrestaShopBundle\Controller\Api\ApiController
         calls:
             - [setLogger, ['@logger']]
+            - [setContainer, ['@service_container']]
 
     prestashop.core.api.stock.controller:
         class: PrestaShopBundle\Controller\Api\StockController
@@ -391,8 +393,21 @@ services:
     prestashop.core.api.i18n.controller:
         class: PrestaShopBundle\Controller\Api\I18nController
         parent: prestashop.core.api.controller
-        properties:
-            translator: "@translator"
+
+    # Api - i18n
+    prestashop.translation.api:
+        abstract: true
+        class: PrestaShopBundle\Translation\Api\AbstractApi
+        calls:
+            - [setTranslator, ['@translator']]
+
+    prestashop.translation.api.stock:
+        class: PrestaShopBundle\Translation\Api\StockApi
+        parent: prestashop.translation.api
+
+    prestashop.translation.api.stockMovement:
+        class: PrestaShopBundle\Translation\Api\StockMovementApi
+        parent: prestashop.translation.api
 
     # Managers
     prestashop.adapter.image_manager:
