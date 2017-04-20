@@ -24,6 +24,42 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.1.1 - (2017-04-19)
+####################################
+- Back Office:
+   - Bug fix:
+     - #7769: Fix the datepicker to use locale instead of iso code
+     - #7738: Fix access to domainized modules translations
+     - #7723: Fix catalog ASC sorting
+     - #7724: Fix translations theme export on Windows
+     - #7690: Incorrect translation on Symfony page (problems with TinyMCE)
+     - #7730: Alphabetically sort features on product page
+
+ - Front Office:
+   - Bug fix:
+     - #7710: Fix country change in checkout form
+     - #7742: Fix for image change in zoom modal window
+     - #7734: Catch the exception when a template is missing in prod mode
+     - #7720: Display product reference when product has no combination
+     - #7689: Save zero to id_state if country has no states
+     - #7729: Fixed display amount with good taxes
+     - #7726: Fixed Terms and conditions popup on mobile not possible to close
+     - #7693: Password controller must be in SSL when available
+
+ - Core:
+   - Bug fix:
+     - #7776: Fix cache on install
+     - #7753: Added nullable for Tab entity
+     - #7746: Doctrine without foreign for autoupgrade backup
+     - #7714: Module code cleanup and fix module action in details modal
+     - #7739: Allow modules compliancy on 3 digits
+
+ - Installer:
+   - Improvement:
+     - #7743: Allow 255 char to company field in Adress
+
+
+####################################
 #   v1.7.1.0 - (2017-04-03)
 ####################################
 - Back Office:
