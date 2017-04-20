@@ -154,7 +154,7 @@ export default function() {
       url: $('#form_step3_attributes').attr('data-action'),
       data: $('#attributes-generator input.attribute-generator, #form_id_product').serialize(),
       beforeSend: function() {
-        $('#create-combinations').attr('disabled', 'disabled');
+        $('#create-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
       },
       success: function(response) {
         $('#accordion_combinations').append(response.form);
@@ -175,7 +175,7 @@ export default function() {
         $('#combinations_thead').fadeIn();
       },
       complete: function() {
-        $('#create-combinations').removeAttr('disabled');
+        $('#create-combinations, #submit, .btn-submit').removeAttr('disabled');
         supplierCombinations.refresh();
         warehouseCombinations.refresh();
       }

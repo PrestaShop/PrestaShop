@@ -117,6 +117,9 @@ export default function() {
               'attribute-ids': combinationsIds
             },
             url: deletionURL,
+            beforeSend: function () {
+              $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
+            },
             success: function(response) {
               showSuccessMessage(response.message);
               combinationsIds.forEach((combinationId) => {
@@ -127,6 +130,9 @@ export default function() {
             },
             error: function(response) {
               showErrorMessage(jQuery.parseJSON(response.responseText).message);
+            },
+            complete: function () {
+              $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
             },
           });
         }
