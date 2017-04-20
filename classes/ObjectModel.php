@@ -1891,6 +1891,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
             $definition = $reflection->getStaticPropertyValue('definition');
 
+            // New hook to allow modification of each objects class in a clean way
+            Hook::exec('action'.$class.'DefinitionModifier', array(
+                'definition' => &$definition,
+                'class' => &$class
+            ), null, true, false);
+
             $definition['classname'] = $class;
 
             if (!empty($definition['multilang'])) {
