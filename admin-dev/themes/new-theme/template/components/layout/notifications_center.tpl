@@ -85,10 +85,6 @@
           <div class="tab-pane {$active} empty" id="orders-notifications" role="tabpanel">
             <p class="no-notification">
               {l s='No new order for now :('}<br>
-              {l
-              s='Have you checked your [1][2]abandonned carts[/2][/1]?' html=true
-              sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a href="'|cat:$abandoned_cart_url|cat:'">', '[/2]' => '</a>']
-              }<br>
               {$no_order_tip}
             </p>
             <div class="notification-elements"></div>

@@ -1926,9 +1926,19 @@ class AdminControllerCore extends Controller
     {
         $tips = array(
             'order' => array(
-                $this->l('Your next order could be hiding there!'),
                 $this->l('Did you check your conversion rate lately?'),
                 $this->l('How about some seasonal discounts?'),
+                $this->trans(
+                    'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
+                        array(
+                            '[1]' => '<strong>',
+                            '[/1]' => '</strong>',
+                            '[2]' => '<a href="'.$this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts">',
+                             '[/2]' => '</a>',
+                            '[3]' => '<br>',
+                        ),
+                        'Admin.Navigation.Notification'
+                ),
             ),
             'customer' => array(
                 $this->l('Have you sent any acquisition email lately?'),
