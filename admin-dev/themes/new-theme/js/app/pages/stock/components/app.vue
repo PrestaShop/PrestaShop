@@ -3,9 +3,7 @@
     <StockHeader />
     <Search />
     <div class="card p-a-2">
-      <ProductsActions />
-      <Products />
-      <Pagination />
+      <router-view class="view"></router-view>
     </div>
   </div>
 </template>
@@ -13,17 +11,12 @@
 <script>
   import StockHeader from './header/stock-header';
   import Search from './header/search';
-  import ProductsActions from './products/products-actions';
-  import Products from './products/products-table';
-  import Pagination from './products/pagination';
+
   export default {
     name: 'app',
     components: {
       StockHeader,
-      Search,
-      ProductsActions,
-      Products,
-      Pagination
+      Search
     },
   }
 </script>

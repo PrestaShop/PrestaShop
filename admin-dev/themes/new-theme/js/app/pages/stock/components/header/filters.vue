@@ -10,12 +10,21 @@
         <div class="col-md-6">
           <div class="p-y-2 p-x-2">
             <h2>Filter by Supplier</h2>
+<<<<<<< 7ee1d3df952b6daaee9bc0b873b309d925556ce8
             <FilterComponent
               placeholder="Search a supplier"
               :list="this.$store.state.suppliers"
+||||||| merged common ancestors
+            <FilterComponent
+              placeholder="Search a supplier"
+              :list="this.$store.state.suppliers"
+=======
+            <FilterComponent
+              placeholder="Search a supplier"
+              :list="this.$store.getters.suppliers"
+>>>>>>> BO: Add vue-router
               itemID="supplier_id"
               label="name"
-              getData="getSuppliers"
               @active="onFilterActive"
             />
           </div>
@@ -28,7 +37,6 @@
               :list="this.$store.getters.categories"
               itemID="id_category"
               label="name"
-              getData="getCategories"
               @active="onFilterActive"
             />
           </div>
@@ -82,6 +90,10 @@
     },
     components: {
       FilterComponent
+    },
+    mounted() {
+      this.$store.dispatch('getSuppliers');
+      this.$store.dispatch('getCategories');
     },
     data() {
       return {

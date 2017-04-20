@@ -12,7 +12,9 @@
       </tr>
     </thead>
     <tbody>
-      <Alert v-if="emptyProducts" />
+      <PSAlert v-if="emptyProducts">
+        No product matches your search. Try changing search terms.
+      </PSAlert>
       <ProductLine v-for="(product, index) in products" key=${index} :product="product" />
     </tbody>
   </PSTable>
@@ -20,15 +22,15 @@
 
 <script>
   import ProductLine from './product/product-line';
-  import Alert from './alert';
   import Sort from './sort';
+  import PSAlert from 'app/widgets/ps-alert';
   import PSTable from 'app/widgets/ps-table';
 
   export default {
     components: {
       ProductLine,
       Sort,
-      Alert,
+      PSAlert,
       PSTable
     },
     methods: {

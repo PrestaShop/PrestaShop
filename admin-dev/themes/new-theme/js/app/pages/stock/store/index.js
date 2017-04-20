@@ -17,7 +17,9 @@ const state = {
   combinationsPerPage: 50,
   suppliers: [],
   categories: [],
-  categoryList:[]
+  categoryList: [],
+  movements: [],
+  translations: {}
 };
 
 // getters are functions
@@ -34,6 +36,9 @@ const getters = {
   products(state) {
     return state.products.products;
   },
+  suppliers(state) {
+    return state.suppliers;
+  },
   categories(state) {
     function convert(categories) {
       categories.forEach((category)=>{
@@ -48,6 +53,12 @@ const getters = {
   },
   categoryList(state) {
     return state.categoryList;
+  },
+  movements(state) {
+    return state.movements;
+  },
+  translations(state) {
+    return state.translations;
   }
 };
 
