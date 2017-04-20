@@ -1218,6 +1218,7 @@ class AdminModulesControllerCore extends AdminController
                 }
             }
         }
+        ksort($this->modules_authors);
         $this->serial_modules = urlencode($this->serial_modules);
     }
 
