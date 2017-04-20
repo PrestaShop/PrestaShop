@@ -293,7 +293,12 @@ class DispatcherCore
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$module_name.'/controllers/front/');
                     if (isset($controllers[strtolower($this->controller)])) {
                         include_once(_PS_MODULE_DIR_.$module_name.'/controllers/front/'.$this->controller.'.php');
-                        $controller_class = $module_name.$this->controller.'ModuleFrontController';
+                        if (file_exists(_PS_OVERRIDE_DIR_.'modules/'. $module_name.'/controllers/front/'.$this->controller.'.php')) {
+                            include_once(_PS_OVERRIDE_DIR_ .'modules/'.$module_name.'/controllers/front/'.$this->controller.'.php');
+                            $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
+                        } else {
+                            $controller_class = $module_name.$this->controller.'ModuleFrontController';
+                        }
                     }
                 }
                 $params_hook_action_dispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 1);
