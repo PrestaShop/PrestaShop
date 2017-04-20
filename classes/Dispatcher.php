@@ -291,9 +291,15 @@ class DispatcherCore
                 $controller_class = 'PageNotFoundController';
                 if (Validate::isLoadedObject($module) && $module->active) {
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$module_name.'/controllers/front/');
-                    if (isset($controllers[strtolower($this->controller)])) {
+                    if (isset($controllers[Tools::strtolower($this->controller)])) {
                         include_once(_PS_MODULE_DIR_.$module_name.'/controllers/front/'.$this->controller.'.php');
+                        if (Tools::file_exists_no_cache(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/controllers/front'.'/'.$this->controller.'.php'))
+                            include_once(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/controllers/front'.'/'.$this->controller.'.php');
+
                         $controller_class = $module_name.$this->controller.'ModuleFrontController';
+
+                        if (class_exists($controller_class.'Override', false))
+                            $controller_class = $controller_class.'Override';
                     }
                 }
                 $params_hook_action_dispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 1);
