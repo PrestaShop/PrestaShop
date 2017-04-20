@@ -4680,28 +4680,28 @@ class AdminControllerCore extends Controller
     {
         if(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_DELETE;
         } elseif(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_ADD;
         } elseif(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_EDIT;
         } elseif(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ',
                 $this->context->employee->id_profile
             )
         ) {
