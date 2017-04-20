@@ -1926,8 +1926,8 @@ class AdminControllerCore extends Controller
     {
         $tips = array(
             'order' => array(
-                $this->l('Did you check your conversion rate lately?'),
-                $this->l('How about some seasonal discounts?'),
+                $this->trans('Did you check your conversion rate lately?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('How about some seasonal discounts?', array(), 'Admin.Navigation.Notification'),
                 $this->trans(
                     'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
                         array(
@@ -1941,14 +1941,14 @@ class AdminControllerCore extends Controller
                 ),
             ),
             'customer' => array(
-                $this->l('Have you sent any acquisition email lately?'),
-                $this->l('Are you active on social media these days?'),
-                $this->l('Have you considered selling on marketplaces?'),
+                $this->trans('Have you sent any acquisition email lately?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('Are you active on social media these days?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('Have you considered selling on marketplaces?', array(), 'Admin.Navigation.Notification'),
             ),
             'customer_message' => array(
-                $this->l('That\'s more time for something else!'),
-                $this->l('No news is good news, isn\'t it?'),
-                $this->l('Seems like all your customers are happy :)'),
+                $this->trans('That\'s more time for something else!', array(), 'Admin.Navigation.Notification'),
+                $this->trans('No news is good news, isn\'t it?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('Seems like all your customers are happy :)', array(), 'Admin.Navigation.Notification'),
             ),
         );
 

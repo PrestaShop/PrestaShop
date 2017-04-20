@@ -41,7 +41,7 @@
               href="#orders-notifications"
               role="tab"
             >
-              {l s='Orders[1][/1]' html=true sprintf=['[1]' => '<span id="_nb_new_orders_">', '[/1]' => '</span>']}
+              {l s='Orders[1][/1]' html=true sprintf=['[1]' => '<span id="_nb_new_orders_">', '[/1]' => '</span>'] d='Admin.Navigation.Notification'}
             </a>
           </li>
           {$active = ""}
@@ -56,7 +56,7 @@
               href="#customers-notifications"
               role="tab"
             >
-              {l s='Customers[1][/1]' html=true sprintf=['[1]' => '<span id="_nb_new_customers_">', '[/1]' => '</span>']}
+              {l s='Customers[1][/1]' html=true sprintf=['[1]' => '<span id="_nb_new_customers_">', '[/1]' => '</span>'] d='Admin.Navigation.Notification'}
             </a>
           </li>
           {$active = ""}
@@ -71,7 +71,7 @@
               href="#messages-notifications"
               role="tab"
             >
-              {l s='Messages[1][/1]' html=true sprintf=['[1]' => '<span id="_nb_new_messages_">', '[/1]' => '</span>']}
+              {l s='Messages[1][/1]' html=true sprintf=['[1]' => '<span id="_nb_new_messages_">', '[/1]' => '</span>'] d='Admin.Navigation.Notification'}
             </a>
           </li>
           {$active = ""}
@@ -84,7 +84,7 @@
         {if $show_new_orders}
           <div class="tab-pane {$active} empty" id="orders-notifications" role="tabpanel">
             <p class="no-notification">
-              {l s='No new order for now :('}<br>
+              {l s='No new order for now :(' d='Admin.Navigation.Notification'}<br>
               {$no_order_tip}
             </p>
             <div class="notification-elements"></div>
@@ -94,7 +94,7 @@
         {if $show_new_customers}
           <div class="tab-pane {$active} empty" id="customers-notifications" role="tabpanel">
             <p class="no-notification">
-              {l s='No new customer for now :('}<br>
+              {l s='No new customer for now :(' d='Admin.Navigation.Notification'}<br>
               {$no_customer_tip}
             </p>
             <div class="notification-elements"></div>
@@ -104,7 +104,7 @@
         {if $show_new_messages}
           <div class="tab-pane {$active} empty" id="messages-notifications" role="tabpanel">
             <p class="no-notification">
-              {l s='No new message for now.'}<br>
+              {l s='No new message for now.' d='Admin.Navigation.Notification'}<br>
               {$no_customer_message_tip}
             </p>
             <div class="notification-elements"></div>
@@ -120,7 +120,7 @@
   <script type="text/html" id="order-notification-template">
     <a class="notif" href='order_url'>
       #_id_order_ -
-      {l s="from"} <strong>_customer_name_</strong> (_iso_code_)_carrier_
+      {l s='from' d='Admin.Navigation.Notification'} <strong>_customer_name_</strong> (_iso_code_)_carrier_
       <strong class="pull-xs-right">_total_paid_</strong>
     </a>
   </script>
@@ -129,7 +129,7 @@
 {if $show_new_customers}
   <script type="text/html" id="customer-notification-template">
     <a class="notif" href='customer_url'>
-      #_id_customer_ - <strong>_customer_name_</strong>_company_ - {l s="registered"} <strong>_date_add_</strong>
+      #_id_customer_ - <strong>_customer_name_</strong>_company_ - {l s='registered' d='Admin.Navigation.Notification'} <strong>_date_add_</strong>
     </a>
   </script>
 {/if}
