@@ -3320,7 +3320,7 @@ class CartCore extends ObjectModel
     *
     * @return bool true if is a virtual cart or false
     */
-    public function isVirtualCart($strict = false)
+    public function isVirtualCart()
     {
         if (!ProductDownload::isFeatureActive()) {
             return false;
