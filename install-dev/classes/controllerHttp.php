@@ -259,7 +259,13 @@ class InstallControllerHttp
 
     public function init()
     {
+        if('welcome' === self::$steps->current()->getName()) {
+            $parametersFile = _PS_ROOT_DIR_  . '/app/config/parameters.php';
 
+            if (file_exists($parametersFile)) {
+                unlink($parametersFile);
+            }
+        }
     }
 
     public function process()
