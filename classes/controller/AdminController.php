@@ -676,6 +676,19 @@ class AdminControllerCore extends Controller
 
                 if (($val = Tools::getValue($this->table.'Filter_'.$field)) || $val = $this->context->cookie->{$this->getCookieFilterPrefix().$this->table.'Filter_'.$field}) {
                     if (!is_array($val)) {
+
+                        // unserialize $val if is datetime
+                        if (array_key_exists('type', $t) && $t['type'] === 'datetime') {
+                            $valUnserialized = Tools::unSerialize($val);
+                            if (is_array($valUnserialized)) {
+                                // remove empty value (date is submitted with "from" & "to", and one of them can be empty)
+                                $valUnserialized = array_filter($valUnserialized, 'strlen');
+                                if (!empty($valUnserialized)) {
+                                    $val = implode(' > ', $valUnserialized);
+                                }
+                            }
+                        }
+
                         $filter_value = '';
                         if (isset($t['type']) && $t['type'] == 'bool') {
                             $filter_value = ((bool)$val) ? $this->l('yes') : $this->l('no');
