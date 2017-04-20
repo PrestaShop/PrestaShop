@@ -1,16 +1,19 @@
 <template>
   <ul class="nav nav-tabs" id="tab" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#stock" role="tab">Stock</a>
+      <router-link data-toggle="tab" class="nav-link active" to="/" role="tab">{{trans('menu_stock')}}</router-link>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#movement" role="tab">Movements</a>
+       <router-link data-toggle="tab" class="nav-link" to="/movements" role="tab">{{trans('menu_movements')}}</router-link>
     </li>
   </ul>
 </template>
 
-<style lang="sass?outputStyle=expanded" scoped>
+<style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
+  .nav-item {
+    cursor: pointer;
+  }
   .nav-link.active, .nav-link.active:hover, .nav-link.active:focus {
     border-top: none;
     border-bottom: 3px solid $brand-primary;
