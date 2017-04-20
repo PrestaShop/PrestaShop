@@ -220,3 +220,14 @@
       <input class="attribute-default" type="radio" {{ checked }} data-id="{{ form.vars.value.id_product_attribute }}">
     </td>
 </tr>
+
+{% block javascripts %}
+  <script>
+      $(function() {
+        $('.js-combination-images').find("img").each(function() {
+          title = path.split('/').reverse()[0];
+          $(this).attr('title',title);
+        });
+      });
+  </script>
+{% endblock %}
