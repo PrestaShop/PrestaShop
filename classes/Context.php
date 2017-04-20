@@ -338,6 +338,17 @@ class ContextCore
     }
 
     /**
+     * Setter: Translator
+     *
+     * @param $translator
+     * @return void
+     */
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
      *
      * @return Translator
      */
