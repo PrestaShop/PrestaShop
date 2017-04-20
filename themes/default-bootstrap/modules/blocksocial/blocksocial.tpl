@@ -75,12 +75,19 @@
         	</li>
         {/if}
         {if isset($instagram_url) && $instagram_url != ''}
-        	<li class="instagram">
-        		<a class="_blank" href="{$instagram_url|escape:html:'UTF-8'}">
-        			<span>{l s='Instagram' mod='blocksocial'}</span>
-        		</a>
-        	</li>
-        {/if}
+			<li class="instagram">
+				<a class="_blank" href="{$instagram_url|escape:html:'UTF-8'}">
+					<span>{l s='Instagram' mod='blocksocial'}</span>
+				</a>
+			</li>
+		{/if}
+		{if isset($vkontakte_url) && $vkontakte_url != ''}
+			<li class="vkontakte">
+				<a class="_blank" href="{$vkontakte_url|escape:html:'UTF-8'}">
+					<span>{l s='Vkontakte' mod='blocksocial'}</span>
+				</a>
+			</li>
+		{/if}
 	</ul>
     <h4>{l s='Follow us' mod='blocksocial'}</h4>
 </section>

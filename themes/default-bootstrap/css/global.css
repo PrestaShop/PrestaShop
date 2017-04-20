@@ -7359,6 +7359,8 @@ div.star a:hover {
             content: "\f194"; }
           .footer-container #footer #social_block ul li.instagram a:before {
             content: "\f16d"; }
+          .footer-container #footer #social_block ul li.vkontakte a:before {
+            content: "\f189"; }
       .footer-container #footer #social_block h4 {
         float: right;
         margin-bottom: 0;
