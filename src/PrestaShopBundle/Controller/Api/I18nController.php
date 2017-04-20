@@ -26,15 +26,28 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class I18nController extends ApiController
 {
-
     public function listTranslationAction(Request $request)
     {
-        return new JsonResponse(array('1' => 'Français', '2' => 'Anglais'));
+        try {
+            $page = $request->attributes->get('page');
+
+            try {
+                $translationClass = $this->container->get('prestashop.translation.api.'.$page);
+            }
+            catch (Exception $exception) {
+                throw new Exception('This \'page\' param is not valid.');
+            }
+        } catch (Exception $exception) {
+            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
+        }
+
+        return new JsonResponse($translationClass->getTranslations());
     }
 }
