@@ -14,11 +14,5 @@ new Vue({
   components: { app },
   mounted() {
     this.$store.dispatch('getTranslations');
-
-    this.$store.dispatch('getStock', {
-      order: this.$store.state.order,
-      page_size: this.$store.state.productsPerPage,
-      page_index: 1
-    });
   }
 });

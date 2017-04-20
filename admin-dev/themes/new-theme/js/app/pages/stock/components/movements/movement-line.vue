@@ -4,7 +4,7 @@
 
     </td>
     <td>
-      {{ product.product_reference }}
+      {{ movement.product_reference }}
     </td>
     <td>
 
@@ -26,7 +26,7 @@
 <script>
 
   export default {
-    props: ['product'],
+    props: ['movement'],
     computed: {
 
     },

@@ -25,7 +25,7 @@
         <PSAlert v-if="emptyMovements">
           No product matches your search. Try changing search terms.
         </PSAlert>
-        <MovementLine v-for="(movement, index) in movements" key=${index} :product="product" />
+        <MovementLine v-for="(movement, index) in movements" key=${index} :movement="movement" />
       </tbody>
     </PSTable>
   </section>
@@ -34,6 +34,7 @@
 <script>
   import PSTable from 'app/widgets/ps-table';
   import PSAlert from 'app/widgets/ps-alert';
+  import MovementLine from './movement-line';
 
   export default {
     computed: {
@@ -41,11 +42,16 @@
         return this.$store.getters.movements;
       },
       emptyMovements() {
-        return !!this.movements.length;
+        return !this.$store.getters.movements.length;
       }
     },
+    mounted() {
+      this.$store.dispatch('getMovements');
+    },
     components: {
-      PSTable
+      PSTable,
+      PSAlert,
+      MovementLine
     }
   }
 </script>
