@@ -67,7 +67,7 @@
   import _ from 'lodash';
 
   export default {
-    props: ['placeholder', 'getData', 'itemID', 'label', 'list'],
+    props: ['placeholder', 'itemID', 'label', 'list'],
     computed: {
 <<<<<<< 44769b26d4e1a09d32b42ed2c6ce2b3deaecab80
       items() {
@@ -170,9 +170,6 @@
         splice: true,
         hasChildren: false
       }
-    },
-    mounted() {
-      this.$store.dispatch(this.getData);
     },
     components: {
       PSTags,

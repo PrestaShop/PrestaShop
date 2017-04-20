@@ -3,7 +3,9 @@
     <td colspan="7">
       <div class="alert alert-info" role="alert">
         <i class="material-icons">info_outline</i>
-        <p class="alert-text">No product matches your search. Try changing search terms.</p>
+        <p class="alert-text">
+          <slot />
+        </p>
       </div>
     </td>
   </tr>

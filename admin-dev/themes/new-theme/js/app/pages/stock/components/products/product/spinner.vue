@@ -88,7 +88,7 @@
 
         // POST when qty !=0
 
-        if(this.isEnabled && !isNaN(this.product.qty)) {
+        if(this.product.qty && !isNaN(this.product.qty)) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
             delta: this.value
@@ -117,7 +117,7 @@
         top: 3.5px;
         right: 0;
         border: none;
-        height: 30px;
+        height: 31px;
         width: 40px;
         background: $brand-primary;
         z-index: 2;

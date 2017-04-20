@@ -48,3 +48,21 @@ export const getCategories = ({ commit }) => {
     return showGrowl('error', error.statusText);
   });
 };
+
+export const getMovements = ({ commit }) => {
+  let url = `${window.data.baseUrl}/api/movements`;
+  Vue.http.get(url).then(function(response) {
+    commit(types.SET_MOVEMENTS, response.body);
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};
+
+export const getTranslations = ({ commit }) => {
+  let url = `${window.data.baseUrl}/api/i18n/stock`;
+  Vue.http.get(url).then(function(response) {
+    commit(types.SET_TRANSLATIONS, response.body);
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};

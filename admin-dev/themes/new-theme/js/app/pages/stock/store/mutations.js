@@ -15,5 +15,11 @@ export default {
   },
   [types.SET_CATEGORIES](state, categories) {
     state.categories = categories;
+  },
+  [types.SET_MOVEMENTS](state, movements) {
+    state.movements = movements;
+  },
+  [types.SET_TRANSLATIONS](state, translations) {
+    state.translations = translations;
   }
 };
