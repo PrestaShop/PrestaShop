@@ -388,7 +388,6 @@ class CartRuleCore extends ObjectModel
                 }
             }
         }
-
         $result_bak = $result;
         $result = array();
         $country_restriction = false;
@@ -823,7 +822,7 @@ class CartRuleCore extends ObjectModel
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                             }
-                            $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'categories':
                             $cart_categories = Db::getInstance()->executeS('
@@ -928,7 +927,8 @@ class CartRuleCore extends ObjectModel
 
         $asplit = explode('-', $a);
         $bsplit = explode('-', $b);
-        if ($asplit[0] == $bsplit[0] && (!(int)$asplit[1] || !(int)$bsplit[1])) {
+
+        if($asplit[0] == $bsplit[0] && (!(int)$asplit[1] || !(int)$bsplit[1])) {
             return 0;
         }
 
@@ -1560,5 +1560,36 @@ class CartRuleCore extends ObjectModel
         } else {
             return Db::getInstance()->executeS($sql_base.' WHERE code LIKE \'%'.pSQL($name).'%\'');
         }
+    }
+
+    /**
+     * CartRules compare function to use the Product and the rules
+     *
+     * @param array $arrayProduct List Products,
+     * @param array $arrayRules List Rules,
+     *
+     * @return int 0 = same
+     *             1 = different
+     */
+    public function cartRulesCompare($arrayProduct, $arrayRules, $type)
+    {
+
+        if ($arrayProduct == $arrayRules) {
+            return $arrayProduct;
+        }
+        $return = array();
+        $array  = 0;
+        $productList = explode('-', implode('-', $arrayProduct));
+
+        foreach( $productList as $product )
+        {
+            if( !in_array($product.'-0', $arrayRules)) {
+                continue;
+            } else {
+                    $return[] = $arrayProduct[$array];
+            }
+            $array++;
+        }
+        return $return;
     }
 }
