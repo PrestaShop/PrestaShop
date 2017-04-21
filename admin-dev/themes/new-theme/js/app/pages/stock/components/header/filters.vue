@@ -10,19 +10,9 @@
         <div class="col-md-6">
           <div class="p-y-2 p-x-2">
             <h2>Filter by Supplier</h2>
-<<<<<<< 7ee1d3df952b6daaee9bc0b873b309d925556ce8
-            <FilterComponent
-              placeholder="Search a supplier"
-              :list="this.$store.state.suppliers"
-||||||| merged common ancestors
-            <FilterComponent
-              placeholder="Search a supplier"
-              :list="this.$store.state.suppliers"
-=======
             <FilterComponent
               placeholder="Search a supplier"
               :list="this.$store.getters.suppliers"
->>>>>>> BO: Add vue-router
               itemID="supplier_id"
               label="name"
               @active="onFilterActive"
@@ -116,10 +106,10 @@
   .collapse-button {
     width: 100%;
     text-align: left;
-    .material-icons {
-      vertical-align: bottom;
-      font-size: 20px;
-      color: $gray-medium;
-    }
+  .material-icons {
+    vertical-align: bottom;
+    font-size: 20px;
+    color: $gray-medium;
+  }
   }
 </style>

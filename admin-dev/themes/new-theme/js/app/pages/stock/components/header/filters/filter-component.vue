@@ -1,26 +1,5 @@
 <template>
   <div class="filter-container">
-<<<<<<< 44769b26d4e1a09d32b42ed2c6ce2b3deaecab80
-    <SearchFilter
-      ref="search"
-      :placeholder="placeholder"
-      :match="match"
-      :label="label"
-      @typing="onTyping"
-      @submit="onSubmit"
-      @tagChanged="onTagChanged"
-      />
-||||||| merged common ancestors
-    <SearchFilter
-      ref="search"
-      :placeholder="placeholder"
-      :match="match"
-      :label="label"
-      @typing="onTyping"
-      @submit="onSubmit"
-      @tagChanged="onTagChanged"
-      />
-=======
     <PSTags
       v-if="!hasChildren"
       ref="tags"
@@ -30,7 +9,6 @@
       @tagChange="onTagChanged"
       @typing="onTyping"
     />
->>>>>>> BO: Improve tags component
     <ul class="m-t-1">
       <PSTree
         v-if="hasChildren"
@@ -69,28 +47,10 @@
   export default {
     props: ['placeholder', 'itemID', 'label', 'list'],
     computed: {
-<<<<<<< 44769b26d4e1a09d32b42ed2c6ce2b3deaecab80
-      items() {
-||||||| merged common ancestors
-      items() {
-=======
       hasPlaceholder() {
         return !this.tags.length;
       },
-<<<<<<< a8c052fd1ac5d5076d2f6d0d7b696c7453a51afc
-<<<<<<< 26a1b99444f8a8767fb70a3fa06f3660f36c8ee5:admin-dev/themes/new-theme/js/stock-page/components/header/filters/filter-component.vue
       items() {
->>>>>>> BO: Improve tags component
-||||||| merged common ancestors
-      items() {
-=======
-      items() {
->>>>>>> BO: Start stock refacto:admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/filter-component.vue
-||||||| merged common ancestors
-      items() {
-=======
-      items() {
->>>>>>> BO: Improve stock movements
         let matchList = [];
         this.list.filter((data)=> {
           let label = data[this.label].toLowerCase();
@@ -127,7 +87,7 @@
           if(this.splice) {
             this.tags.splice(index, 1);
           }
-           this.splice = true;
+          this.splice = true;
         }
         if(this.tags.length) {
           this.$emit('active', this.filterList(this.tags), filterType);
@@ -141,7 +101,7 @@
       },
       onTagChanged(tag) {
         if(this.tags.indexOf(this.currentVal) !== -1){
-           this.tags.pop();
+          this.tags.pop();
         }
         this.splice = false;
         if(this.match) {
