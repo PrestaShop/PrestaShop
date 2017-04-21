@@ -41,7 +41,13 @@ export default class ProductSelect {
       $('.js-modal-product-cover').attr('src', $(event.target).data('image-large-src'));
       $('.js-modal-product-cover').attr('title', $(event.target).attr('title'));
       $('.js-modal-product-cover').attr('alt', $(event.target).attr('alt'));
+    })
+    .on('click', 'aside#thumbnails', (event) => {
+      if (event.target.id == 'thumbnails'){
+        $('#product-modal').modal('hide');
+      }
     });
+
     if($onsale.length && $('#product').length){
       $('.new').css('top',$onsale.height() + FLAG_MARGIN);
     }
