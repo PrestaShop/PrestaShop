@@ -4,10 +4,10 @@
       <PSCheckbox :id="id" />
       <ProductDesc
         class="m-l-1"
-        :has-combination="hasCombination"
-        :name="productName"
-        :thumbnail="product.combination_thumbnail"
-        :combinationName="product.combination_name"
+        :has-combination="hasCombination" 
+        :name="productName" 
+        :thumbnail="product.combination_thumbnail" 
+        :combinationName="product.combination_name" 
       />
     </td>
     <td>
@@ -33,14 +33,14 @@
         {{availableQtyUpdated}}
       </span>
     </td>
-    <td>
+    <td class="qty-spinner">
       <Spinner :product="product" class="pull-xs-right" />
     </td>
   </tr>
 </template>
 <script>
-  import Spinner from './spinner';
-  import ProductDesc from './product-desc';
+  import Spinner from 'app/pages/stock/components/product/spinner';
+  import ProductDesc from 'app/pages/stock/components/product/product-desc';
   import PSCheckbox from 'app/widgets/ps-checkbox';
 
   export default {

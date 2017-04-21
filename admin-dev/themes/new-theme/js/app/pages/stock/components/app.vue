@@ -33,7 +33,7 @@
   .table tr td {
     padding: 5px 0;
     vertical-align: top;
-    &:not(:last-child) {
+    &:not(.qty-spinner) {
       padding-top:14px;
     }
   }

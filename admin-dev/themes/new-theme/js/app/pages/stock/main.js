@@ -12,7 +12,7 @@ new Vue({
   el: '#stock-app',
   template: '<app />',
   components: { app },
-  mounted() {
+  beforeMount() {
     this.$store.dispatch('getTranslations');
   }
 });

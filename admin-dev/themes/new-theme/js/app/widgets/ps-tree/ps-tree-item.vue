@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import PSCheckbox from './ps-checkbox';
+  import PSCheckbox from 'app/widgets/ps-checkbox';
   import { EventBus } from 'app/utils/event-bus';
 
   export default {

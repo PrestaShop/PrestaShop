@@ -10,8 +10,8 @@ Vue.use(Vuex);
 // root state object.
 
 const state = {
-  order: 'product',
-  pageIndex: 0,
+  order: '',
+  pageIndex: 1,
   totalPages: 0,
   productsPerPage: 100,
   combinationsPerPage: 50,
@@ -32,6 +32,9 @@ const getters = {
   },
   pageIndex(state) {
     return state.pageIndex;
+  },
+  order(state) {
+    return state.order;
   },
   products(state) {
     return state.products.products;
