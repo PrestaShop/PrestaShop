@@ -2,30 +2,7 @@
 _admin_routing:
     resource: "@PrestaShopBundle/Resources/config/routing_admin.yml"
 
-_api_stock_management:
-    resource: "api/routing_stock_management.yml"
-    prefix: /api
-
-_api_stock_movement:
-    resource: "api/routing_stock_movement.yml"
-    prefix: /api
-
-_api_supplier:
-    resource: "api/routing_supplier.yml"
-    prefix: /api
-
-_api_category:
-    resource: "api/routing_category.yml"
-    prefix: /api
-
-_api_attribute:
-    resource: "api/routing_attribute.yml"
-    prefix: /api
-
-_api_feature:
-    resource: "api/routing_feature.yml"
-    prefix: /api
-
-_api_i18n:
-    resource: "api/routing_i18n.yml"
+# include Api routing
+_api_routing:
+    resource: "@PrestaShopBundle/Resources/config/routing_api.yml"
     prefix: /api
