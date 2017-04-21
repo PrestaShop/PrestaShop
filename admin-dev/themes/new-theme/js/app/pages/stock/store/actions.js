@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 Vue.use(VueResource);
 
-export const getStock = ({ commit, state }, payload) => {
+export const getStock = ({ commit }, payload) => {
   let url = window.data.apiRootUrl.replace(/\?.*/, '');
   Vue.http.get(url, {
     params: {
@@ -19,7 +19,6 @@ export const getStock = ({ commit, state }, payload) => {
     }
   }).then(function(response) {
     commit(types.SET_PAGE_INDEX, payload.page_index);
-    commit(types.UPDATE_ORDER, payload.order);
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.ADD_PRODUCTS, response.body);
   }, function(error) {
@@ -49,9 +48,19 @@ export const getCategories = ({ commit }) => {
   });
 };
 
-export const getMovements = ({ commit }) => {
+export const getMovements = ({ commit }, payload) => {
   let url = `${window.data.baseUrl}/api/movements`;
-  Vue.http.get(url).then(function(response) {
+
+  Vue.http.get(url, {
+    params: {
+      order: payload.order,
+      page_size: payload.page_size,
+      page_index: payload.page_index,
+      keywords: payload.keywords ? payload.keywords : [],
+      supplier_id: payload.suppliers ? payload.suppliers : [],
+      category_id: payload.categories ? payload.categories : []
+    }
+  }).then(function(response) {
     commit(types.SET_MOVEMENTS, response.body);
   }, function(error) {
     return showGrowl('error', error.statusText);
@@ -65,4 +74,8 @@ export const getTranslations = ({ commit }) => {
   }, function(error) {
     return showGrowl('error', error.statusText);
   });
+};
+
+export const updateOrder = ({ commit }, order) => {
+  commit(types.UPDATE_ORDER, order);
 };

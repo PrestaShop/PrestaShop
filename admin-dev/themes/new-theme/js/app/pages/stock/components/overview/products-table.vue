@@ -2,13 +2,33 @@
   <PSTable class="m-t-1">
     <thead>
       <tr>
-        <th width="40%" class="thead-title">Product<Sort order="product" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
-        <th>Reference<Sort order="reference" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
-        <th>Supplier<Sort order="supplier" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
-        <th class="text-xs-center">Physical<Sort order="physical_quantity" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
-        <th class="text-xs-center">Reserved</th>
-        <th class="text-xs-center">Available<Sort order="available_quantity" :isDesc="isSorted" v-on:sort="toggleSort" /></th>
-        <th class="text-xs-right"><i class="material-icons">edit</i>Edit Quantity</th>
+        <th width="40%" class="thead-title">
+          Product
+          <PSSort order="product" :isDesc="isSorted" @sort="toggleSort" />
+        </th>
+        <th>
+          Reference
+          <PSSort order="reference" :isDesc="isSorted" @sort="toggleSort" />
+        </th>
+        <th>
+          Supplier
+          <PSSort order="supplier" :isDesc="isSorted" @sort="toggleSort" />
+        </th>
+        <th class="text-xs-center">
+          Physical
+          <PSSort order="physical_quantity" :isDesc="isSorted" @sort="toggleSort" />
+        </th>
+        <th class="text-xs-center">
+          Reserved
+        </th>
+        <th class="text-xs-center">
+          Available
+          <PSSort order="available_quantity" :isDesc="isSorted" @sort="toggleSort" />
+        </th>
+        <th class="text-xs-right">
+          <i class="material-icons">edit</i>
+          Edit Quantity
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -21,21 +41,23 @@
 </template>
 
 <script>
-  import ProductLine from './product/product-line';
-  import Sort from './sort';
+  import ProductLine from './product-line';
   import PSAlert from 'app/widgets/ps-alert';
-  import PSTable from 'app/widgets/ps-table';
+  import PSTable from 'app/widgets/ps-table/ps-table';
+  import PSSort from 'app/widgets/ps-table/ps-sort';
 
   export default {
     components: {
       ProductLine,
-      Sort,
+      PSSort,
       PSAlert,
       PSTable
     },
     methods: {
-      toggleSort() {
+      toggleSort(order, desc) {
         this.isSorted = !this.isSorted;
+        this.$store.dispatch('updateOrder', order);
+        this.$emit('sort', desc);
       }
     },
     computed: {

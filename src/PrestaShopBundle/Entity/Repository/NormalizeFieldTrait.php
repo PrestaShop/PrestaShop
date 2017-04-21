@@ -56,6 +56,7 @@ trait NormalizeFieldTrait
         return false !== strpos($columnName, '_id') ||
         false !== strpos($columnName, 'id_') ||
         false !== strpos($columnName, '_quantity') ||
+        false !== strpos($columnName, 'sign') ||
         false !== strpos($columnName, 'total_');
     }
 }
