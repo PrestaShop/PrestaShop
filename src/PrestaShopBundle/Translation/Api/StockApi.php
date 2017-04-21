@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Translation\Api;
 
-class StockApi extends AbstractApi implements ApiInterface
+class StockApi extends AbstractApi
 {
 
     /**
