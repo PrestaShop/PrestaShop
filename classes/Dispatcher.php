@@ -132,7 +132,7 @@ class DispatcherCore
             'keywords' => array(
                 'id' =>            array('regexp' => '[0-9]+', 'param' => 'id_category'),
                 /* Selected filters is used by the module blocklayered */
-                'selected_filters' =>    array('regexp' => '.*', 'param' => 'selected_filters'),
+                'selected_filters' =>    array('regexp' => '.*', 'param' => 'q'),
                 'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
                 'meta_keywords' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
