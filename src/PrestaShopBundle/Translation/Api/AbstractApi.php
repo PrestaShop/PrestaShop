@@ -39,4 +39,6 @@ abstract class AbstractApi
     {
         $this->translator = $translator;
     }
+
+    abstract function getTranslations();
 }
