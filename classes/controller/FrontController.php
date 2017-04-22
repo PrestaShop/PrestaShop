@@ -1590,6 +1590,10 @@ class FrontControllerCore extends Controller
             'fax' => Configuration::get('PS_SHOP_FAX'),
         );
 
+        array_walk($shop, function (&$entry) {
+                $entry = utf8_encode($entry);
+        });
+
         return $shop;
     }
 
