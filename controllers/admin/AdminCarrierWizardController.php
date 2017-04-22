@@ -193,7 +193,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'name' => 'delay',
                         'lang' => true,
                         'required' => true,
-                        'maxlength' => 128,
+                        'maxlength' => 512,
                         'hint' => $this->l('The estimated delivery time will be displayed during checkout.')
                     ),
                     array(
