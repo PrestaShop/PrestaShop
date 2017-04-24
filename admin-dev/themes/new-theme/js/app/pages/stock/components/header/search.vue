@@ -26,7 +26,7 @@
       PSTags
     },
     methods: {
-      onSubmit() {
+      onSubmit(tag) {
         let request = (this.$route.name === 'overview') ? 'getStock' : 'getMovements';
 
         this.$store.dispatch(request, {
