@@ -74,7 +74,7 @@
   }
 </script>
 
-<style lang="sass?outputStyle=expanded" scoped>
+<style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
   .page-link, .page-item.active .page-link {
     background-color: transparent;

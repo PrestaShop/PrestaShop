@@ -3,20 +3,39 @@
     <StockHeader />
     <Search />
     <div class="card p-a-2">
-      <router-view class="view"></router-view>
+      <router-view class="view" @fetch="fetch"></router-view>
     </div>
+    <PSPagination pageNumber="3" activeMultiPagination="5" @pageChanged="onPageChanged" />
   </div>
 </template>
 
 <script>
   import StockHeader from './header/stock-header';
   import Search from './header/search';
+  import PSPagination from 'app/widgets/ps-pagination/ps-pagination';
 
   export default {
     name: 'app',
+    methods: {
+      onPageChanged(pageIndex) {
+        let desc = this.$route.name === 'overview' ? '' : ' desc';
+        this.$store.dispatch('updatePageIndex', pageIndex);
+        this.fetch(desc);
+      },
+      fetch(desc) {
+        let action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
+
+        this.$store.dispatch(action, {
+          order: `${this.$store.getters.order}${desc}`,
+          page_size: this.$store.state.productsPerPage,
+          page_index: this.$store.getters.pageIndex
+        });
+      }
+    },
     components: {
       StockHeader,
-      Search
+      Search,
+      PSPagination
     },
   }
 </script>

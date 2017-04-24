@@ -14,7 +14,6 @@ const state = {
   pageIndex: 1,
   totalPages: 0,
   productsPerPage: 100,
-  combinationsPerPage: 50,
   suppliers: [],
   categories: [],
   categoryList: [],
