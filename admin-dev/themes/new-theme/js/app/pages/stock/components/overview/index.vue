@@ -11,6 +11,8 @@
   import ProductsTable from './products-table';
   import Pagination from 'app/pages/stock/components/product/pagination';
 
+  const DEFAULT_SORT = '';
+
   export default {
     methods: {
       fetch(desc) {
@@ -23,7 +25,7 @@
     },
     mounted() {
       this.$store.dispatch('updateOrder', 'product');
-      this.fetch('');
+      this.fetch(DEFAULT_SORT);
     },
     components: {
       ProductsActions,

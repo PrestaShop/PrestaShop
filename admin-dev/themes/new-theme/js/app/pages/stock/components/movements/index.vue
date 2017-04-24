@@ -42,6 +42,8 @@
   import PSAlert from 'app/widgets/ps-alert';
   import MovementLine from './movement-line';
 
+  const DEFAULT_SORT = ' desc';
+
   export default {
     computed: {
       movements() {
@@ -67,7 +69,7 @@
     },
     mounted() {
       this.$store.dispatch('updateOrder', 'date_add');
-      this.fetch(' desc');
+      this.fetch(DEFAULT_SORT);
     },
     data() {
       return {
