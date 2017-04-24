@@ -800,7 +800,7 @@ class CartRuleCore extends ObjectModel
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                             }
-                            $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'products':
                             $cart_products = Db::getInstance()->executeS('
@@ -1573,17 +1573,28 @@ class CartRuleCore extends ObjectModel
      */
     public function cartRulesCompare($arrayProduct, $arrayRules, $type)
     {
-
+        //If the two same array, no verification todo.
         if ($arrayProduct == $arrayRules) {
             return $arrayProduct;
         }
         $return = array();
         $array  = 0;
-        $productList = explode('-', implode('-', $arrayProduct));
+
+        if($type === 'products') {
+            //If products, code attributes values is null.
+            //you have a specific treatment.
+            $code = "-0";
+            $productList = explode('-', implode('-', $arrayProduct));
+        }
+        else
+        {
+            $code   = "";
+            $productList = $arrayProduct;
+        }
 
         foreach( $productList as $product )
         {
-            if( !in_array($product.'-0', $arrayRules)) {
+            if( !in_array($product.$code, $arrayRules)) {
                 continue;
             } else {
                     $return[] = $arrayProduct[$array];
