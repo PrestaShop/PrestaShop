@@ -872,7 +872,7 @@ class CartRuleCore extends ObjectModel
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                             }
-                            $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'suppliers':
                             $cart_suppliers = Db::getInstance()->executeS('
@@ -1580,14 +1580,12 @@ class CartRuleCore extends ObjectModel
         $return = array();
         $array  = 0;
 
-        if($type === 'products' || $type === 'categories') {
-            // Attribute id is not important for this filter in the global list
-            // so the ids are replaced by 0
+        // Attribute id is not important for this filter in the global list
+        // so the ids are replaced by 0
+        if(in_array($type, array('products','categories','manufacturers'))) {
             $code = "-0";
             $productList = explode('-', implode('-', $arrayProduct));
-        }
-        else
-        {
+        } else {
             $code   = "";
             $productList = $arrayProduct;
         }
