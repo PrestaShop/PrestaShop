@@ -773,8 +773,9 @@ class CartRuleCore extends ObjectModel
                 if (!count($eligible_products_list)) {
                     return (!$display_error) ? false : $this->trans('You cannot use this voucher in an empty cart', array(), 'Shop.Notifications.Error');
                 }
-
                 $product_rules = $this->getProductRules($id_product_rule_group);
+                $countRulesProduct = count($product_rules);
+                $condition = 0;
                 foreach ($product_rules as $product_rule) {
                     switch ($product_rule['type']) {
                         case 'attributes':
@@ -798,7 +799,12 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
                             $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
@@ -820,7 +826,12 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
                             $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
@@ -846,7 +857,12 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
                             // Attribute id is not important for this filter in the global list, so the ids are replaced by 0
                             foreach ($matching_products_list as &$matching_product) {
@@ -870,7 +886,12 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
                             $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
@@ -890,20 +911,28 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
-                            $eligible_products_list_0 = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                     }
-
                     if (!count($eligible_products_list)) {
-                        return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                        if( $countRulesProduct === 1) {
+                            return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                        }
                     }
+                }
+                if ($countRulesProduct !== 1 && $condition == $countRulesProduct) {
+                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                 }
                 $selected_products = array_merge($selected_products, $eligible_products_list);
             }
         }
-
         if ($return_products) {
             return $selected_products;
         }
@@ -1571,6 +1600,7 @@ class CartRuleCore extends ObjectModel
             if( !in_array($product.$code, $arrayRules)) {
                 continue;
             } else {
+                if(isset($arrayProduct[$array]))
                 $return[] = $arrayProduct[$array];
             }
             $array++;
