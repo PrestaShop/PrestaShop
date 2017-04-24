@@ -15,7 +15,7 @@
         ref="tree"
         className="flex"
         :model="list[0]"
-        :id="itemID"
+        :id="this.itemID"
         @checked="onCheck"
       >
       </PSTree>
@@ -27,7 +27,7 @@
       >
         <PSTreeItem
           :label="item[label]"
-          :id="item[itemID]"
+          :id="item[this.itemID]"
           :item="item"
           className="flex"
           @checked="onCheck"

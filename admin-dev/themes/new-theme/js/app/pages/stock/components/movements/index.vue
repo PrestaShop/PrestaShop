@@ -30,7 +30,7 @@
         <PSAlert v-if="emptyMovements">
           No product matches your search. Try changing search terms.
         </PSAlert>
-        <MovementLine v-for="(movement, index) in movements" key=${index} :movement="movement" />
+        <MovementLine v-for="(product, index) in movements" key=${index} :product="product" />
       </tbody>
     </PSTable>
   </section>

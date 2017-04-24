@@ -31,12 +31,15 @@
         this.$emit('tagChange', this.tag);
       },
       close(index) {
-        this.$emit('tagChange', this.tags[index]);
+
         this.tags.splice(index, 1);
+        this.$emit('tagChange', this.tags[index]);
       },
       remove() {
+       if(!!this.tags.length) {
         this.tags.pop();
         this.$emit('tagChange', this.tag);
+       }
       },
       focus() {
         this.$refs.tags.focus();
@@ -52,7 +55,6 @@
 <style lang="sass?outputStyle=expanded">
   @import "~PrestaKit/scss/custom/_variables.scss";
   .tags-input {
-    padding: 4px;
     .tag {
       background: $brand-primary;
       color: white;
@@ -69,12 +71,14 @@
         cursor: pointer;
       }
     }
-    input.input {
+    input.input, input.input:focus {
+      background-color: white;
       font-family: Open Sans, sans-serif;
       cursor: text;
       padding-left: 2px;
       border: none;
       outline: none;
+      min-height: 33px;
     }
   }
 </style>

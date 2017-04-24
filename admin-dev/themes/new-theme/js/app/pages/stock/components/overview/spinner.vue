@@ -13,8 +13,6 @@
     mounted() {
       let self = this;
       $(`#${this.id}`).spinner({
-        max: 999999999,
-        min: -999999999,
         spin(event, ui) {
           self.value = ui.value;
           self.isEnabled = !!self.value;
@@ -150,7 +148,7 @@
   }
   .edit-qty {
     text-indent: 5px;
-    height: 32px;
+    height: 33px;
     width: 70px;
     border: 1px solid $gray-light;
     margin-right: 0;

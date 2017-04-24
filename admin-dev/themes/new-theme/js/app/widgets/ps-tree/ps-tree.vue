@@ -9,7 +9,7 @@
         ref="item"
         :class="className"
         :item="model"
-        :id="model.id"
+        :id="model[this.id]"
         :label="model.name"
         @checked="onCheck"
       />
@@ -38,7 +38,7 @@
       id: String
     },
     computed: {
-      isFolder: function () {
+      isFolder() {
         return this.model.children && this.model.children.length;
       },
       chevron() {

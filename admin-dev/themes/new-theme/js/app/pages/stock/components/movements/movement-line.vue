@@ -1,23 +1,35 @@
 <template>
   <tr>
     <td>
-      <ProductDesc
-        :name="movement.product_name"
-        :thumbnail="movement.combination_thumbnail"
-        :combinationName="movement.combination_name"
-      />
+      <PSMedia
+        :thumbnail="thumbnail"
+      >
+        <p>
+          {{ product.product_name }}
+          <small v-if="hasCombination"><br />
+            {{ combinationName }}
+          </small>
+        </p>
+      </PSMedia>
     </td>
     <td>
-      {{ movement.product_reference }}
+      {{ product.product_reference }}
     </td>
     <td>
-      {{ movement.movement_reason }}
+      <a v-if="orderLink" :href="orderLink" target="_blank">
+        {{ product.movement_reason }}
+      </a>
+      <span v-else>{{ product.movement_reason }}</span>
     </td>
     <td class="text-xs-center">
-      <span class="qty-number" :class="{'is-positive' : isPositive}">{{ qty }}</span>
+      <span class="qty-number" :class="{'is-positive' : isPositive}">
+        <span v-if="isPositive">+</span>
+        <span v-else>-</span>
+        {{ qty }}
+      </span>
     </td>
     <td class="text-xs-center">
-      {{ movement.date_add }}
+      {{ product.date_add }}
     </td>
     <td>
       {{ employeeName }}
@@ -25,22 +37,33 @@
   </tr>
 </template>
 <script>
-  import ProductDesc from 'app/pages/stock/components/product/product-desc';
+  import PSMedia from 'app/widgets/ps-media';
+  import productDesc from 'app/pages/stock/mixins/product-desc';
+
   export default {
-    props: ['movement'],
+    props: ['product'],
+    mixins: [productDesc],
     computed: {
       qty() {
-        return this.movement.sign * this.movement.physical_quantity;
+        return this.product.physical_quantity;
       },
       employeeName() {
-        return `${this.movement.employee_firstname} ${this.movement.employee_lastname}`;
+        return `${this.product.employee_firstname} ${this.product.employee_lastname}`;
       },
       isPositive() {
-        return this.movement.sign > 0;
+        return this.product.sign > 0;
+      },
+      orderLink() {
+        if(this.product.order_link !== 'N/A') {
+          return this.product.order_link;
+        }
+        else {
+          return false;
+        }
       }
     },
     components: {
-      ProductDesc
+      PSMedia
     }
   }
 </script>

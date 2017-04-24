@@ -2,13 +2,17 @@
   <tr>
     <td class="flex p-r-1">
       <PSCheckbox :id="id" />
-      <ProductDesc
+      <PSMedia
         class="m-l-1"
-        :has-combination="hasCombination"
-        :name="productName"
-        :thumbnail="product.combination_thumbnail"
-        :combinationName="product.combination_name"
-      />
+        :thumbnail="thumbnail"
+      >
+        <p>
+          {{ product.product_name }}
+          <small v-if="hasCombination"><br />
+            {{ combinationName }}
+          </small>
+        </p>
+      </PSMedia>
     </td>
     <td>
       {{ product.product_reference }}
@@ -39,21 +43,17 @@
   </tr>
 </template>
 <script>
-  import Spinner from 'app/pages/stock/components/product/spinner';
-  import ProductDesc from 'app/pages/stock/components/product/product-desc';
+  import Spinner from './spinner';
   import PSCheckbox from 'app/widgets/ps-checkbox';
+  import PSMedia from 'app/widgets/ps-media';
+  import ProductDesc from 'app/pages/stock/mixins/product-desc';
 
   export default {
     props: ['product'],
+    mixins: [ProductDesc],
     computed: {
       id() {
         return `${this.product.product_id}-${this.product.combination_id}`;
-      },
-      productName() {
-        return this.product.product_name;
-      },
-      hasCombination() {
-        return !!this.product.combination_id;
       },
       updatedQty() {
          if(isNaN(this.product.qty)) {
@@ -73,7 +73,7 @@
     },
     components: {
       Spinner,
-      ProductDesc,
+      PSMedia,
       PSCheckbox
     }
   }
