@@ -852,7 +852,7 @@ class CartRuleCore extends ObjectModel
                             foreach ($matching_products_list as &$matching_product) {
                                 $matching_product = preg_replace('/^([0-9]+)-[0-9]+$/', '$1-0', $matching_product);
                             }
-                            $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'manufacturers':
                             $cart_manufacturers = Db::getInstance()->executeS('
@@ -1580,9 +1580,9 @@ class CartRuleCore extends ObjectModel
         $return = array();
         $array  = 0;
 
-        if($type === 'products') {
-            //If products, code attributes values is null.
-            //you have a specific treatment.
+        if($type === 'products' || $type === 'categories') {
+            // Attribute id is not important for this filter in the global list
+            // so the ids are replaced by 0
             $code = "-0";
             $productList = explode('-', implode('-', $arrayProduct));
         }
@@ -1597,7 +1597,7 @@ class CartRuleCore extends ObjectModel
             if( !in_array($product.$code, $arrayRules)) {
                 continue;
             } else {
-                    $return[] = $arrayProduct[$array];
+                $return[] = $arrayProduct[$array];
             }
             $array++;
         }
