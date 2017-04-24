@@ -80,6 +80,10 @@ class ProductSeo extends CommonAbstractType
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Meta title', [], 'Admin.Catalog.Feature'),
+            'label_attr' => [
+                'popover' => $this->translator->trans('Public title for the product\'s page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.', [], 'Admin.Catalog.Help'),
+                'popover_placement' => 'right',
+            ],
             'required' => false
         ))
         ->add('meta_description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
@@ -87,14 +91,18 @@ class ProductSeo extends CommonAbstractType
             'options' => [
                 'attr' => [
                     'placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
-                'counter' => 160,
-                'counter_type' => 'recommended',
+                    'counter' => 160,
+                    'counter_type' => 'recommended',
                 ],
                 'required' => false
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Meta description', [], 'Admin.Catalog.Feature'),
+            'label_attr' => [
+                'popover' => $this->translator->trans('This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)', [], 'Admin.Catalog.Help'),
+                'popover_placement' => 'right',
+            ],
             'required' => false
         ))
         ->add('link_rewrite', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
