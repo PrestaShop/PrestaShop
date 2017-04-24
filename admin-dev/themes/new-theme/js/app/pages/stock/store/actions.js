@@ -18,7 +18,6 @@ export const getStock = ({ commit }, payload) => {
       category_id: payload.categories ? payload.categories : []
     }
   }).then(function(response) {
-    commit(types.SET_PAGE_INDEX, payload.page_index);
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.ADD_PRODUCTS, response.body);
   }, function(error) {
@@ -78,4 +77,8 @@ export const getTranslations = ({ commit }) => {
 
 export const updateOrder = ({ commit }, order) => {
   commit(types.UPDATE_ORDER, order);
+};
+
+export const updatePageIndex = ({ commit }, pageIndex) => {
+  commit(types.SET_PAGE_INDEX, pageIndex);
 };

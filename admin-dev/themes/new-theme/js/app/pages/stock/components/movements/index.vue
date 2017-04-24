@@ -40,6 +40,7 @@
   import PSTable from 'app/widgets/ps-table/ps-table';
   import PSSort from 'app/widgets/ps-table/ps-sort';
   import PSAlert from 'app/widgets/ps-alert';
+  import PSPagination from 'app/widgets/ps-pagination/ps-pagination';
   import MovementLine from './movement-line';
 
   const DEFAULT_SORT = ' desc';
@@ -54,22 +55,15 @@
       }
     },
     methods: {
-      fetch(desc) {
-        this.$store.dispatch('getMovements', {
-          order: `${this.$store.getters.order}${desc}`,
-          page_size: this.$store.state.productsPerPage,
-          page_index: this.$store.getters.pageIndex
-        });
-      },
       toggleSort(order, desc) {
         this.isSorted = !this.isSorted;
         this.$store.dispatch('updateOrder', order);
-        this.fetch(desc);
+        this.$emit('fetch', desc);
       }
     },
     mounted() {
       this.$store.dispatch('updateOrder', 'date_add');
-      this.fetch(DEFAULT_SORT);
+      this.$emit('fetch', DEFAULT_SORT);
     },
     data() {
       return {
@@ -80,6 +74,7 @@
       PSTable,
       PSSort,
       PSAlert,
+      PSPagination,
       MovementLine
     }
   }
