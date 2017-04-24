@@ -70,8 +70,11 @@ class ProductSeo extends CommonAbstractType
         $builder->add('meta_title', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'Admin.Catalog.Help'),
-                    'counter' => 70],
+                'attr' => [
+                    'placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'Admin.Catalog.Help'),
+                    'counter' => 70,
+                    'counter_type' => 'recommended',
+                ],
                 'required' => false
             ],
             'locales' => $this->locales,
@@ -82,8 +85,11 @@ class ProductSeo extends CommonAbstractType
         ->add('meta_description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
-                'counter' => 160],
+                'attr' => [
+                    'placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
+                'counter' => 160,
+                'counter_type' => 'recommended',
+                ],
                 'required' => false
             ],
             'locales' => $this->locales,
