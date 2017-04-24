@@ -911,31 +911,6 @@ class CartRuleCore extends ObjectModel
     }
 
     /**
-     * CartRule compare function to use for array_uintersect
-     *
-     * @param array $a List A
-     * @param array $b List B
-     *
-     * @return int 0 = same
-     *             1 = different
-     */
-    protected static function cartRuleCompare($a, $b)
-    {
-        if ($a == $b) {
-            return 0;
-        }
-
-        $asplit = explode('-', $a);
-        $bsplit = explode('-', $b);
-
-        if($asplit[0] == $bsplit[0] && (!(int)$asplit[1] || !(int)$bsplit[1])) {
-            return 0;
-        }
-
-        return 1;
-    }
-
-    /**
      * The reduction value is POSITIVE
      *
      * @param bool    $use_tax   Apply taxes
@@ -1567,6 +1542,7 @@ class CartRuleCore extends ObjectModel
      *
      * @param array $arrayProduct List Products,
      * @param array $arrayRules List Rules,
+     * @param string $type type voucher,
      *
      * @return int 0 = same
      *             1 = different
