@@ -72,7 +72,8 @@
         }
       },
       applyFilter() {
-        this.$store.dispatch('getStock', {
+        let request = (this.$route.name === 'overview') ? 'getStock' : 'getMovements';
+        this.$store.dispatch(request, {
           suppliers : this.suppliers,
           categories: this.categories
         });

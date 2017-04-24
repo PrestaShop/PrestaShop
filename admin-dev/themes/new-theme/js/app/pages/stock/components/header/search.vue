@@ -27,10 +27,12 @@
     },
     methods: {
       onSubmit() {
-        this.$store.dispatch('getStock', {
-          order: this.$store.state.order,
+        let request = (this.$route.name === 'overview') ? 'getStock' : 'getMovements';
+
+        this.$store.dispatch(request, {
+          order: this.$store.getters.order,
           page_size: this.$store.state.productsPerPage,
-          page_index: this.$store.state.pageIndex,
+          page_index: this.$store.getters.pageIndex,
           keywords: this.tags
         });
       }
