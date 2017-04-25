@@ -80,7 +80,7 @@
                             {/if}
                           </span>
                         {else}
-                          <span class="custom-checkbox">
+                          <span class="custom-radio">
                             <input
                               data-search-url="{$filter.nextEncodedFacetsURL}"
                               type="radio"
