@@ -42,6 +42,7 @@ GitHub contributors:
 - BigZ
 - BluTiGeS
 - BMS-fenaille
+- Bogdan Turcu
 - brouillon
 - Bruno Desprez
 - Bruno Leveque
@@ -142,7 +143,6 @@ GitHub contributors:
 - fram
 - Francois Gaillard
 - Francois-Marie de Jouvencel
-- François Gaillard
 - Frederic BENOIST
 - Gabriel Arama
 - Gabriel Schwardy
@@ -167,6 +167,7 @@ GitHub contributors:
 - ha99y
 - hadjedjvincent
 - harelguy
+- hibatallahAouadni
 - hiousi
 - htrex
 - hubiktomas

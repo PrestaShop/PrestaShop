@@ -28,6 +28,33 @@ Release Notes for PrestaShop 1.6
 ####################################
 
 	Fixed bugs:
+    CO: Optimization for Cart Rules
+    CO: Fix url rewrite setting not used on multishop
+    CO: Clean order detail cache after setting invoice id
+    CO: Update Israel localization
+    CO: Remove unused variables declarations and assignations
+
+    BO: Error importing theme when cache directory is cleared
+    BO: Allow stock transfer between warehouses in multishop context
+    BO: Fix search in Advanced Stock Management
+    BO: Use native round instead of 2 forced decimals
+    BO: Replace comma with dot in special price
+    BO: Don't double encode test email
+    BO: Generate PDF invoices in user language
+    BO: Fixes on must-have module upgrade
+
+    FO: Fix Combination filter in stock management section
+    FO: Fix price display when quantity discount on combination
+    FO: Style categories tree in footer
+
+    IN: Allow 255 char to company field in Adress
+    IN: Fix install language
+
+####################################
+#   v1.6.1.12 - (2017-03-14)
+####################################
+
+	Fixed bugs:
 	CO: Deflate .svg files
 	CO: Webservices now show PS validation errors
 	CO: Update Israel VAT to 17%
