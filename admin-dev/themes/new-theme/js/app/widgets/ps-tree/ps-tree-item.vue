@@ -1,7 +1,7 @@
 <template>
   <div :class="className">
-    <PSCheckbox :ref="label" :id="computedId" :item="item" @checked="onCheck"/>
-    <span class="tree-label">{{label}}</span>
+    <PSCheckbox :ref="model.name" :id="id" :model="model" @checked="onCheck"/>
+    <span class="tree-label">{{model.name}}</span>
   </div>
 </template>
 
@@ -10,12 +10,11 @@
   import { EventBus } from 'app/utils/event-bus';
 
   export default {
-    props:['id','item','label','className'],
-    computed:{
-      computedId() {
-        let id = this.label + this.id;
-        return id.replace(/\s/g,'');
-      }
+    props:['model','className'],
+    computed: {
+      id() {
+        return this.model.id;
+      },
     },
     methods: {
       onCheck(obj) {

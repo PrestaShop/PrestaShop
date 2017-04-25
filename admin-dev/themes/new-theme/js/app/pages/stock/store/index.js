@@ -39,13 +39,21 @@ const getters = {
     return state.products.products;
   },
   suppliers(state) {
-    return state.suppliers;
+    function convert(suppliers) {
+      suppliers.forEach((supplier)=>{
+        supplier.id = supplier.supplier_id;
+      });
+      return suppliers;
+    }
+
+    return convert(state.suppliers);
   },
   categories(state) {
     function convert(categories) {
       categories.forEach((category)=>{
         category.children = _.values(category.children);
         state.categoryList.push(category);
+        category.id = `${category.id_parent}-${category.id_category}`;
         convert(category.children);
       });
       return categories;

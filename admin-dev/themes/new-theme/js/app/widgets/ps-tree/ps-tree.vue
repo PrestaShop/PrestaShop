@@ -2,14 +2,13 @@
   <li class="tree">
     <div :class="className">
       <div :class="chevron" @click="toggle">
-        <i class="material-icons" v-if="open" >keyboard_arrow_down</i>
+        <i class="material-icons" v-if="open">keyboard_arrow_down</i>
         <i class="material-icons" v-else>chevron_right</i>
       </div>
       <PSTreeItem
         ref="item"
         :class="className"
-        :item="model"
-        :id="model[this.id]"
+        :model="model"
         :label="model.name"
         @checked="onCheck"
       />
@@ -33,9 +32,7 @@
     name: 'PSTree',
     props: {
       model: Object,
-      className: String,
-      slotName: String,
-      id: String
+      className: String
     },
     computed: {
       isFolder() {
