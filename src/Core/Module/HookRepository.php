@@ -139,8 +139,8 @@ class HookRepository
             $position = 0;
             foreach ($module_names as $key => $module) {
                 if (is_array($module)) {
-                    $module_name = $key;
-                    $extra_data  = $module;
+                    $module_name = key($module);
+                    $extra_data  = current($module);
                 } else {
                     $module_name = $module;
                     $extra_data  = [];
