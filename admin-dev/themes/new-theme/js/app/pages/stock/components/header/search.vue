@@ -2,7 +2,7 @@
   <div id="search" class="row m-b-2">
     <div class="col-md-8">
       <div class="m-b-2">
-        <form class="search-form" @submit.prevent="onSubmit" @keyup.enter="onSubmit">
+        <form class="search-form" @submit.prevent>
           <label>{{trans('product_search')}}</label>
           <PSTags :tags="tags" @tagChange="onSubmit"/>
           <button type="button" class="btn btn-primary search-button" @click="onSubmit">
@@ -26,15 +26,8 @@
       PSTags
     },
     methods: {
-      onSubmit(tag) {
-        let request = (this.$route.name === 'overview') ? 'getStock' : 'getMovements';
-
-        this.$store.dispatch(request, {
-          order: this.$store.getters.order,
-          page_size: this.$store.state.productsPerPage,
-          page_index: this.$store.getters.pageIndex,
-          keywords: this.tags
-        });
+      onSubmit() {
+        this.$emit('search', this.tags);
       }
     },
     data() {
