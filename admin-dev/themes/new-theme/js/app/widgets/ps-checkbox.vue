@@ -7,7 +7,7 @@
 
 <script>
   export default {
-    props: ['id','item'],
+    props: ['id','model'],
     data() {
       return {
         checked: false
@@ -17,7 +17,7 @@
       checked(val) {
         this.$emit('checked', {
           checked: val,
-          item: this.item
+          item: this.model
         });
       }
     }
