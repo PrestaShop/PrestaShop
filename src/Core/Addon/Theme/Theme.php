@@ -90,6 +90,11 @@ class Theme implements AddonInterface
         return $modulesToEnable;
     }
 
+    public function getModulesToDisable()
+    {
+        return $this->get('dependencies.modules', array());
+    }
+
     public function getPageSpecificAssets($pageId)
     {
         return [

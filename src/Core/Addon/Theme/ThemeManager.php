@@ -189,6 +189,11 @@ class ThemeManager implements AddonManagerInterface
      */
     public function disable($name)
     {
+        $theme = $this->themeRepository->getInstanceByName($name);
+        $theme->getModulesToDisable();
+
+        $this->doDisableModules($theme->getModulesToDisable());
+
         @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         return true;
@@ -325,8 +330,8 @@ class ThemeManager implements AddonManagerInterface
                 $destination = $module_root_dir.basename($dir->getFileName());
                 if (!$this->filesystem->exists($destination)) {
                     $this->filesystem->mkdir($destination);
-                    $this->filesystem->mirror($dir->getPathName(), $destination);
                 }
+                $this->filesystem->mirror($dir->getPathName(), $destination);
             }
             $this->filesystem->remove($modules_parent_dir);
         }
