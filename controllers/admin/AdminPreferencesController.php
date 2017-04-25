@@ -140,6 +140,13 @@ class AdminPreferencesControllerCore extends AdminController
                     'type' => 'bool',
                     'default' => '0'
                 ),
+                'PS_API_KEY' => array(
+                    'title' => $this->l('API key'),
+                    'desc' => $this->l('Add your API key to display Google Map'),
+                    'cast' => 'strval',
+                    'type' => 'text',
+                    'class' => 'fixed-width-xxl'
+                ),
                 'PS_PRICE_ROUND_MODE' => array(
                     'title' => $this->l('Round mode'),
                     'desc' => $this->l('You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.'),
