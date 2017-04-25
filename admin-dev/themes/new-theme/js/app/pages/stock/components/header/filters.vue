@@ -3,15 +3,15 @@
     <button class="search-input collapse-button" type="button" data-toggle="collapse" data-target="#filters">
       <i class="material-icons m-r-1">filter_list</i>
       <i class="material-icons pull-right ">keyboard_arrow_down</i>
-      Advanced Filters
+      {{trans('button_advanced_filter')}}
     </button>
     <div class="collapse" id="filters">
       <div class="row">
         <div class="col-md-6">
           <div class="p-y-2 p-x-2">
-            <h2>Filter by Supplier</h2>
+            <h2>{{trans('filter_suppliers')}}</h2>
             <FilterComponent
-              placeholder="Search a supplier"
+              :placeholder="trans('filter_search_suppliers')"
               :list="this.$store.getters.suppliers"
               itemID="supplier_id"
               label="name"
@@ -21,9 +21,9 @@
         </div>
         <div class="col-md-6">
           <div class="p-y-2 p-x-2">
-            <h2>Filter by categories</h2>
+            <h2>{{trans('filter_categories')}}</h2>
             <FilterComponent
-              placeholder="Search a category"
+              :placeholder="trans('filter_search_category')"
               :list="this.$store.getters.categories"
               itemID="id_category"
               label="name"
@@ -33,7 +33,7 @@
         </div>
         <button type="button" class="btn btn-primary pull-right m-y-2 m-x-2" :disabled="disabled" @click="onClick">
           <i class="material-icons m-r-1">filter_list</i>
-          APPLY ADVANCED FILTERS
+          {{trans('button_apply_advanced_filter')}}
         </button>
       </div>
     </div>

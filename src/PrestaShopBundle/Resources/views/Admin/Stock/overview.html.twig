@@ -30,7 +30,9 @@
     <script>
     var data = {
       apiRootUrl: '{{url('api_stock_list_products')}}',
-      baseUrl: '{{ app.request.getBasePath() }}'
+      baseUrl: '{{ app.request.getBasePath() }}',
+      catalogUrl: '{{url('admin_product_catalog')}}',
+      stockUrl: '{{url('admin_stock_overview')}}'
     }
     </script>
 

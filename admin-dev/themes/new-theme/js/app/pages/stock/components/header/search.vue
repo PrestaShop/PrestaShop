@@ -3,11 +3,11 @@
     <div class="col-md-8">
       <div class="m-b-2">
         <form class="search-form" @submit.prevent="onSubmit" @keyup.enter="onSubmit">
-          <label>Search products (search by name,reference,supplier)</label>
+          <label>{{trans('product_search')}}</label>
           <PSTags :tags="tags" @tagChange="onSubmit"/>
           <button type="button" class="btn btn-primary search-button" @click="onSubmit">
             <i class="material-icons">search</i>
-            Search
+            {{trans('button_search')}}
           </button>
         </form>
       </div>
