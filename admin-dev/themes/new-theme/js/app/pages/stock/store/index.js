@@ -14,6 +14,7 @@ const state = {
   pageIndex: 1,
   totalPages: 0,
   productsPerPage: 100,
+  keywords:[],
   suppliers: [],
   categories: [],
   categoryList: [],
@@ -37,6 +38,9 @@ const getters = {
   },
   products(state) {
     return state.products.products;
+  },
+  keywords(state) {
+    return state.keywords;
   },
   suppliers(state) {
     function convert(suppliers) {

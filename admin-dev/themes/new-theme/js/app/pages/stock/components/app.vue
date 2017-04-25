@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="stock-app">
     <StockHeader />
-    <Search />
+    <Search @search="onSearch" />
     <div class="card p-a-2">
       <router-view class="view" @fetch="fetch"></router-view>
     </div>
@@ -28,8 +28,13 @@
         this.$store.dispatch(action, {
           order: `${this.$store.getters.order}${desc}`,
           page_size: this.$store.state.productsPerPage,
-          page_index: this.$store.getters.pageIndex
+          page_index: this.$store.getters.pageIndex,
+          keywords: this.$store.getters.keywords
         });
+      },
+      onSearch(keywords) {
+        this.$store.dispatch('updateKeywords', keywords);
+        this.fetch('');
       }
     },
     components: {

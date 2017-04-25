@@ -82,3 +82,7 @@ export const updateOrder = ({ commit }, order) => {
 export const updatePageIndex = ({ commit }, pageIndex) => {
   commit(types.SET_PAGE_INDEX, pageIndex);
 };
+
+export const updateKeywords = ({ commit }, keywords) => {
+  commit(types.UPDATE_KEYWORDS, keywords);
+};

@@ -4,6 +4,9 @@ export default {
   [types.UPDATE_ORDER](state, order) {
     state.order = order;
   },
+  [types.UPDATE_KEYWORDS](state, keywords) {
+    state.keywords = keywords;
+  },
   [types.SET_TOTAL_PAGES](state, totalPages) {
     state.totalPages = Number(totalPages);
   },
