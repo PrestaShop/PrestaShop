@@ -568,8 +568,8 @@
 						html_orders += '<tr>';
 						html_orders += '<td>'+this.id_order+'</td><td>'+this.date_add+'</td><td>'+(this.nb_products ? this.nb_products : '0')+'</td><td>'+this.total_paid_real+'</span></td><td>'+this.payment+'</td><td>'+this.order_state+'</td>';
 						html_orders += '<td class="text-right">';
-						html_orders += '<a href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#" title="{l s='View this order'}" class="fancybox btn btn-default"><i class="icon-search"></i>&nbsp;{l s="Details"}</a>';
-						html_orders += '&nbsp;<a href="#" "title="{l s='Duplicate this order'}" class="duplicate_order btn btn-default" rel="'+this.id_order+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Use"}</a>';
+						html_orders += "<a href=\"{$link->getAdminLink('AdminOrders')}&id_order="+this.id_order+"&vieworder&liteDisplaying=1#\" title=\"{l s='View this order'}\" class=\"fancybox btn btn-default\"><i class=\"icon-search\"></i>&nbsp;{l s="Details"}</a>";
+						html_orders += "&nbsp;<a href=\"#\" \"title=\"{l s='Duplicate this order'}\" class=\"duplicate_order btn btn-default\" rel=\"'+this.id_order+'\"><i class=\"icon-arrow-right\"></i>&nbsp;{l s="Use"}</a>";
 						html_orders += '</td>';
 						html_orders += '</tr>';
 					});
@@ -1054,7 +1054,7 @@
 		});
 		if (addresses.length == 0)
 		{
-			$('#addresses_err').show().html('{l s='You must add at least one address to process the order.'}');
+			$('#addresses_err').show().html("{l s='You must add at least one address to process the order.'}");
 			$('#address_delivery, #address_invoice').hide();
 		}
 		else
