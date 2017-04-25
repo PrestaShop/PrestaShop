@@ -105,11 +105,11 @@ class SitemapControllerCore extends FrontController
         if (isset($cms['children'])) {
             foreach ($cms['children'] as $c) {
                 $links[] = array(
-                'id' => 'cms-category-' . $c['id_cms_category'],
-                'label' => $c['name'],
-                'url' => $c['link'],
-                'children' => $this->getCmsTree($c),
-            );
+                    'id' => 'cms-category-' . $c['id_cms_category'],
+                    'label' => $c['name'],
+                    'url' => $c['link'],
+                    'children' => $this->getCmsTree($c),
+                );
             }
         }
 
