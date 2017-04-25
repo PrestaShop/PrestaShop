@@ -734,7 +734,11 @@ class HookCore extends ObjectModel
 
         // Check if hook exists
         if (!$id_hook = Hook::getIdByName($hook_name)) {
-            return false;
+            if ($array_return) {
+                return array();
+            } else {
+                return false;
+            }
         }
 
         if (array_key_exists($hook_name, self::$deprecated_hooks)) {
