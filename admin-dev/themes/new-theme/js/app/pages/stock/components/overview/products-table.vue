@@ -3,37 +3,37 @@
     <thead>
       <tr>
         <th width="40%" class="thead-title">
-          Product
+          {{trans('title_product')}}
           <PSSort order="product" :isDesc="isSorted" @sort="toggleSort" />
         </th>
         <th>
-          Reference
+          {{trans('title_reference')}}
           <PSSort order="reference" :isDesc="isSorted" @sort="toggleSort" />
         </th>
         <th>
-          Supplier
+           {{trans('title_supplier')}}
           <PSSort order="supplier" :isDesc="isSorted" @sort="toggleSort" />
         </th>
         <th class="text-xs-center">
-          Physical
+           {{trans('title_physical')}}
           <PSSort order="physical_quantity" :isDesc="isSorted" @sort="toggleSort" />
         </th>
         <th class="text-xs-center">
-          Reserved
+          {{trans('title_reserved')}}
         </th>
         <th class="text-xs-center">
-          Available
+          {{trans('title_available')}}
           <PSSort order="available_quantity" :isDesc="isSorted" @sort="toggleSort" />
         </th>
         <th class="text-xs-right">
           <i class="material-icons">edit</i>
-          Edit Quantity
+          {{trans('title_edit_quantity')}}
         </th>
       </tr>
     </thead>
     <tbody>
       <PSAlert v-if="emptyProducts">
-        No product matches your search. Try changing search terms.
+        {{trans('no_product')}}
       </PSAlert>
       <ProductLine v-for="(product, index) in products" key=${index} :product="product" />
     </tbody>

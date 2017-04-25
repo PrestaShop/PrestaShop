@@ -3,32 +3,32 @@
     <PSTable class="m-t-1">
       <thead>
         <tr>
-          <th width="40%">
-            Product
+          <th width="30%">
+            {{trans('title_product')}}
             <PSSort order="product" :isDesc="isSorted" @sort="toggleSort" />
           </th>
           <th>
-            Reference
+            {{trans('title_reference')}}
             <PSSort order="reference" :isDesc="isSorted" @sort="toggleSort" />
           </th>
           <th>
-            Movements type
+            {{trans('title_movements_type')}}
           </th>
           <th class="text-xs-center">
-            Quantity
+            {{trans('title_quantity')}}
           </th>
           <th class="text-xs-center">
-            Date & time
+            {{trans('title_date')}}
             <PSSort order="date_add" :isDesc="isSorted" @sort="toggleSort" />
           </th>
           <th>
-            Employee
+            {{trans('title_employee')}}
           </th>
         </tr>
       </thead>
       <tbody>
         <PSAlert v-if="emptyMovements">
-          No product matches your search. Try changing search terms.
+           {{trans('no_product')}}
         </PSAlert>
         <MovementLine v-for="(product, index) in movements" key=${index} :product="product" />
       </tbody>

@@ -1,7 +1,7 @@
 <template>
   <div class="stock-header">
     <Breadcrumb />
-    <h1>Stock Management</h1>
+    <h1>{{trans('head_title')}}</h1>
     <Tabs />
   </div>
 </template>
