@@ -1,7 +1,6 @@
 <template>
   <tr>
     <td class="flex p-r-1">
-      <PSCheckbox :id="id" />
       <PSMedia
         class="m-l-1"
         :thumbnail="thumbnail"
@@ -52,9 +51,6 @@
     props: ['product'],
     mixins: [ProductDesc],
     computed: {
-      id() {
-        return `${this.product.product_id}-${this.product.combination_id}`;
-      },
       updatedQty() {
          if(isNaN(this.product.qty)) {
           return false;
