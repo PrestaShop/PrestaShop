@@ -706,6 +706,10 @@ class ToolsCore
             case 5:
                 $ret = number_format($price, $c_decimals, '.', "'").$blank.$c_char;
                 break;
+            /* 0.000,00 X */
+            case 6:
+                $ret = number_format($price, $c_decimals, ',', '.').$blank.$c_char;
+                break;
         }
         if ($is_negative) {
             $ret = '-'.$ret;
