@@ -39,7 +39,7 @@
 			<div class="alert alert-info">
 				<ul class="list-unstyled">
 					<li>{l s='You can read information on import at:'}
-						<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" class="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
+						<a href="http://doc.prestashop.com/display/PS17/Import" class="_blank">http://doc.prestashop.com/display/PS17/Import</a>
 					</li>
 					<li>{l s='Read more about the CSV format at:'}
 						<a href="http://en.wikipedia.org/wiki/Comma-separated_values" class="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
