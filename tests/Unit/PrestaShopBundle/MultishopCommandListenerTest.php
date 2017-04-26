@@ -92,4 +92,17 @@ class MultishopCommandListenerTest extends UnitTestCase
         // Check!
         $this->assertTrue($this->multishopContext->isShopGroupContext());
     }
+
+    public function testExceptionWhenIdShopAndIdShopGroupSet()
+    {
+        // Prepare ...
+        $command = new Command('Fake');
+        $input = new StringInput('--id_shop=2 --id_shop_group=1');
+        $output = new NullOutput();
+        $event = new ConsoleCommandEvent($command, $input, $output);
+
+        // Call ...
+        $this->setExpectedException('LogicException', 'Do not specify an ID shop and an ID group shop at the same time.');
+        $this->commandListener->onConsoleCommand($event);
+    }
 }
