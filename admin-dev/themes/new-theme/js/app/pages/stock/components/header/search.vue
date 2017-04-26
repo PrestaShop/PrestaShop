@@ -4,8 +4,8 @@
       <div class="m-b-2">
         <form class="search-form" @submit.prevent>
           <label>{{trans('product_search')}}</label>
-          <PSTags :tags="tags" @tagChange="onSubmit"/>
-          <button type="button" class="btn btn-primary search-button" @click="onSubmit">
+          <PSTags :tags="tags" @tagChange="onSearch" />
+          <button type="button" class="btn btn-primary search-button" @click="onSearch">
             <i class="material-icons">search</i>
             {{trans('button_search')}}
           </button>
@@ -26,8 +26,13 @@
       PSTags
     },
     methods: {
-      onSubmit() {
+      onSearch() {
         this.$emit('search', this.tags);
+      }
+    },
+    watch: {
+      '$route' () {
+        this.tags = [];
       }
     },
     data() {

@@ -32,7 +32,8 @@
       apiRootUrl: '{{url('api_stock_list_products')}}',
       baseUrl: '{{ app.request.getBasePath() }}',
       catalogUrl: '{{url('admin_product_catalog')}}',
-      stockUrl: '{{url('admin_stock_overview')}}'
+      stockUrl: '{{url('admin_stock_overview')}}',
+      translationUrl: '{{url('api_i18n', {'page' : 'stock'})}}'
     }
     </script>
 

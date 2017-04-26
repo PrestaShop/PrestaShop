@@ -24,5 +24,8 @@ export default {
   },
   [types.SET_TRANSLATIONS](state, translations) {
     state.translations = translations;
+  },
+  [types.INIT_STATE](state) {
+    state.products = [];
   }
 };

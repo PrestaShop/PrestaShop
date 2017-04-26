@@ -25,6 +25,9 @@
         this.$emit('typing', this.$refs.tags.value);
       },
       add(tag) {
+        if(!tag) {
+          return false;
+        }
         this.tags.push(tag);
         this.tag = '';
         this.focus();

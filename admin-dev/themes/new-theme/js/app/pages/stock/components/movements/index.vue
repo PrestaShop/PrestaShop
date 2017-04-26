@@ -62,6 +62,7 @@
       }
     },
     mounted() {
+      this.$store.dispatch('updateKeywords', []);
       this.$store.dispatch('updateOrder', 'date_add');
       this.$emit('fetch', DEFAULT_SORT);
     },
