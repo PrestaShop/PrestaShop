@@ -35,7 +35,7 @@
       <PSAlert v-if="emptyProducts">
         {{trans('no_product')}}
       </PSAlert>
-      <ProductLine v-for="(product, index) in products" key=${index} :product="product" />
+      <ProductLine v-show="!this.isFiltered" v-for="(product, index) in products" key=${index} :product="product" />
     </tbody>
   </PSTable>
 </template>
@@ -65,7 +65,9 @@
        return this.$store.getters.products;
       },
       emptyProducts() {
-        return !this.$store.getters.products.length;
+        if(this.$store.getters.products) {
+          return !this.$store.getters.products.length;
+        }
       }
     },
     data() {

@@ -9,7 +9,15 @@ export default new VueRouter({
   mode: 'history',
   base: `${window.data.baseUrl}/stock`,
   routes: [
-    { path: '/', name: 'overview', component: Overview },
-    { path: '/movements', name: 'movements', component: Movements }
+    {
+      path: '/',
+      name: 'overview',
+      component: Overview
+    },
+    {
+      path: '/movements',
+      name: 'movements',
+      component: Movements
+    }
   ]
 });

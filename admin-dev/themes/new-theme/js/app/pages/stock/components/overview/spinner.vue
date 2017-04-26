@@ -1,6 +1,21 @@
 <template>
-  <form class="qty text-xs-right" :class="classObject" v-on:mouseover="focusIn" v-on:mouseleave="focusOut($event)" v-on:submit.prevent="sendQty($event)">
-    <input @keyup="onKeyup($event.target.value)" v-on:focus="focusIn" v-on:blur="focusOut($event)" :id="id" class="edit-qty" name="qty" v-model="qty" placeholder="0" >
+  <form
+    class="qty text-xs-right"
+    :class="classObject"
+    @mouseover="focusIn"
+    @mouseleave="focusOut($event)"
+    @submit.prevent="sendQty($event)"
+  >
+    <input
+      name="qty"
+      class="edit-qty"
+      placeholder="0"
+      :id="id"
+      :model="qty"
+      @keyup="onKeyup($event.target.value)"
+      @focus="focusIn"
+      @blur="focusOut($event)"
+    >
     <transition name="fade">
       <button v-if="isActive" class="check-button"><i class="material-icons">check</i></button>
     </transition>

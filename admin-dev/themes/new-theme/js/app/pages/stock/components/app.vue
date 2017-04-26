@@ -33,9 +33,10 @@
         });
       },
       onSearch(keywords) {
+        let desc = this.$route.name === 'overview' ? '' : ' desc';
         this.$store.dispatch('updateKeywords', keywords);
-        this.fetch('');
-      }
+        this.fetch(desc);
+      },
     },
     components: {
       StockHeader,

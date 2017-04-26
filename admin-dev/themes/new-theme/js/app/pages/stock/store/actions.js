@@ -18,6 +18,7 @@ export const getStock = ({ commit }, payload) => {
       category_id: payload.categories ? payload.categories : []
     }
   }).then(function(response) {
+
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.ADD_PRODUCTS, response.body);
   }, function(error) {
@@ -67,7 +68,7 @@ export const getMovements = ({ commit }, payload) => {
 };
 
 export const getTranslations = ({ commit }) => {
-  let url = `${window.data.baseUrl}/api/i18n/stock`;
+  let url = window.data.translationUrl;
   Vue.http.get(url).then(function(response) {
     commit(types.SET_TRANSLATIONS, response.body);
   }, function(error) {
@@ -85,4 +86,8 @@ export const updatePageIndex = ({ commit }, pageIndex) => {
 
 export const updateKeywords = ({ commit }, keywords) => {
   commit(types.UPDATE_KEYWORDS, keywords);
+};
+
+export const initState = ({ commit }) => {
+  commit(types.INIT_STATE);
 };
