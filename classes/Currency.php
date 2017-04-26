@@ -565,7 +565,7 @@ class CurrencyCore extends ObjectModel
      *
      * @return int|string
      */
-    public function getConversationRate()
+    public function getConversionRate()
     {
         return ($this->id != (int) Configuration::get('PS_CURRENCY_DEFAULT')) ? $this->conversion_rate : 1;
     }
