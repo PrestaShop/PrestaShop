@@ -74,6 +74,8 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 		return (formatNumber(price, priceDisplayPrecision, ',', '.') + blank + currencySign);
 	if (currencyFormat == 5)
 		return (currencySign + blank + formatNumber(price, priceDisplayPrecision, '\'', '.'));
+	if (currencyFormat == 6)
+		return (formatNumber(price, priceDisplayPrecision, '.', ',') + blank + currencySign);
 	return price;
 }
 
