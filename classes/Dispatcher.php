@@ -531,7 +531,7 @@ class DispatcherCore
                 $prepend_regexp = $append_regexp = '';
                 if ($prepend || $append) {
                     $prepend_regexp = '('.$prepend;
-                    $append_regexp = $append.')?';
+                    $append_regexp = $append.')??';
                 }
 
                 if (isset($keywords[$keyword]['param'])) {
@@ -543,7 +543,7 @@ class DispatcherCore
             $keywords = $transform_keywords;
         }
 
-        $regexp = '#^/'.$regexp.'$#u';
+        $regexp = '#^/'.$regexp.'$#uU';
         if (!isset($this->routes[$id_shop])) {
             $this->routes[$id_shop] = array();
         }
