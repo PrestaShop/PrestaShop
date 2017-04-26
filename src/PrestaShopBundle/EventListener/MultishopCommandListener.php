@@ -29,7 +29,6 @@ namespace PrestaShopBundle\EventListener;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Exception\LogicException;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputOption;
 
 class MultishopCommandListener
@@ -66,11 +65,22 @@ class MultishopCommandListener
 
         if ($id_shop) {
             // Unfortunately, there is SQL requests executed in the legacy. I have to include the config file.
-            require($this->rootDir.'/../config/config.inc.php');
+            $this->fixUnloadedConfig();
             $this->context->setShopContext($id_shop);
         }
         if ($id_shop_group) {
             $this->context->setShopGroupContext($id_shop_group);
+        }
+    }
+
+    /**
+     * This function is an hack.
+     * Calling setShopContext will trigger a sql request, we need to be sure the config is properly loaded.
+     */
+    private function fixUnloadedConfig()
+    {
+        if (!defined('_DB_PREFIX_')) {
+            require_once($this->rootDir.'/../config/config.inc.php');
         }
     }
 }
