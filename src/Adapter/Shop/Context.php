@@ -94,5 +94,33 @@ class Context
         return \ShopCore::getContext() === \ShopCore::CONTEXT_ALL;
     }
 
+    /**
+     * Update Multishop context for only one shop
+     *
+     * @param int $id Shop id to set in the current context
+     */
+    public function setShopContext($id)
+    {
+        \ShopCore::setContext(\ShopCore::CONTEXT_SHOP, $id);
+    }
 
+    /**
+     * Update Multishop context for only one shop group
+     *
+     * @param int $id Shop id to set in the current context
+     */
+    public function setShopGroupContext($id)
+    {
+        \ShopCore::setContext(\ShopCore::CONTEXT_GROUP, $id);
+    }
+
+    /**
+     * Update Multishop context for only one shop group
+     *
+     * @param int $id Shop id to set in the current context
+     */
+    public function setAllContext($id)
+    {
+        \ShopCore::setContext(\ShopCore::CONTEXT_ALL, $id);
+    }
 }
