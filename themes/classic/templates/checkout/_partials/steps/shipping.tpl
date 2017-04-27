@@ -81,22 +81,16 @@
           <div class="order-options">
             {if $recyclablePackAllowed}
               <span class="custom-checkbox">
-                <input type="checkbox" name="recyclable" value="1" {if $recyclable} checked {/if}>
+                <input type="checkbox" id="input_recyclable" name="recyclable" value="1" {if $recyclable} checked {/if}>
                 <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
-                <label>{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</label>
+                <label for="input_recyclable">{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</label>
               </span>
             {/if}
             {if $gift.allowed}
               <span class="custom-checkbox">
-                <input
-                  class="js-gift-checkbox"
-                  name="gift"
-                  type="checkbox"
-                  value="1"
-                  {if $gift.isGift}checked="checked"{/if}
-                >
+                <input class="js-gift-checkbox" id="input_gift" name="gift" type="checkbox" value="1" {if $gift.isGift}checked="checked"{/if}>
                 <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
-                <label>{$gift.label}</label >
+                <label for="input_gift">{$gift.label}</label >
               </span>
 
               <div id="gift" class="collapse{if $gift.isGift} in{/if}">
