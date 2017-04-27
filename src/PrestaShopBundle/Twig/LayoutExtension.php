@@ -227,14 +227,4 @@ EOF;
         return '<iframe width="560" height="315" src="'.$embedUrl.
             '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';
     }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'twig_layout_extension';
-    }
 }

@@ -95,14 +95,4 @@ class DataFormatterExtension extends \Twig_Extension
         unset($array[$key]);
         return $array;
     }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'twig_data_formatter_extension';
-    }
 }

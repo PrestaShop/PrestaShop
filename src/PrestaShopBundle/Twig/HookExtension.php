@@ -94,16 +94,6 @@ class HookExtension extends \Twig_Extension
     }
 
     /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'twig_hook_extension';
-    }
-
-    /**
      * Calls the HookDispatcher, and dispatch a RenderingHookEvent.
      *
      * The listeners will then return html data to display in the Twig template.
