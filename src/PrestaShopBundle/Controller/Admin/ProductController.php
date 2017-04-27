@@ -416,7 +416,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
 
@@ -970,7 +971,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
 
         $form = $this->createFormBuilder($modelMapper->getFormData());
