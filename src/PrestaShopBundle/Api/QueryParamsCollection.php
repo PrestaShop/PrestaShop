@@ -128,7 +128,16 @@ class QueryParamsCollection
      */
     private function getValidFilterParams()
     {
-        return array('productId', 'supplier_id', 'category_id', 'keywords', 'attributes', 'features');
+        return array(
+            'productId',
+            'supplier_id',
+            'category_id',
+            'keywords',
+            'attributes',
+            'features',
+            'date_add',
+            'id_employee',
+        );
     }
 
     /**
@@ -334,6 +343,10 @@ class QueryParamsCollection
             return $this->appendSqlCategoryFilter($filters);
         }
 
+        if ($column === 'date_add') {
+            return $this->appendSqlDateAddFilter($filters, $value);
+        }
+
         if (!is_array($value)) {
             $filters[] = sprintf('AND {%s} = :%s', $column, $column);
 
@@ -419,6 +432,10 @@ class QueryParamsCollection
             return $this->appendSqlCategoryFilterParam($value, $sqlParams);
         }
 
+        if ($column === 'date_add') {
+            return $this->appendSqlDateAddFilterParam($value, $sqlParams);
+        }
+
         if (!is_array($value)) {
             $sqlParams[$column] = (int)$value;
 
@@ -439,6 +456,27 @@ class QueryParamsCollection
     private function appendSqlCategoryFilter(array $filters)
     {
         $filters[] = sprintf('AND FIND_IN_SET({%s}, %s)', 'category_id', ':categories_ids');
+
+        return $filters;
+    }
+
+    /**
+     * @param array $filters
+     * @param dateAdd
+     * @return array
+     */
+    private function appendSqlDateAddFilter(array $filters, $dateAdd)
+    {
+        if (!is_array($dateAdd)) {
+            $dateAdd = array($dateAdd);
+        }
+
+        if (array_key_exists('sup', $dateAdd)) {
+            $filters[] = sprintf('AND %s >= %s', '{date_add}', ':date_add_sup');
+        }
+        if (array_key_exists('inf', $dateAdd)) {
+            $filters[] = sprintf('AND %s <= %s', '{date_add}', ':date_add_inf');
+        }
 
         return $filters;
     }
@@ -500,6 +538,27 @@ class QueryParamsCollection
 
         $value = array_map('intval', $value);
         $sqlParams[':categories_ids'] = implode(',', $value);
+
+        return $sqlParams;
+    }
+
+    /**
+     * @param $value
+     * @param $sqlParams
+     * @return mixed
+     */
+    private function appendSqlDateAddFilterParam($value, $sqlParams)
+    {
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+
+        if (array_key_exists('sup', $value)) {
+            $sqlParams[':date_add_sup'] = $value['sup'];
+        }
+        if (array_key_exists('inf', $value)) {
+            $sqlParams[':date_add_inf'] = $value['inf'];
+        }
 
         return $sqlParams;
     }
