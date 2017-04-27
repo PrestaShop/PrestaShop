@@ -403,10 +403,11 @@ class AdminControllerCore extends Controller
     /** @var string */
     protected $tabSlug;
 
-    public static $timer_start;
-
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
+        global $timer_start;
+        $this->timer_start = $timer_start;
+
         $this->controller_type = 'admin';
         $this->controller_name = !empty($forceControllerName) ? $forceControllerName : get_class($this);
         if (strpos($this->controller_name, 'Controller')) {
@@ -2260,7 +2261,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign(array(
             'ps_version' => _PS_VERSION_,
-            'timer_start' => self::$timer_start,
+            'timer_start' => $this->timer_start,
             'iso_is_fr' => strtoupper($this->context->language->iso_code) == 'FR',
             'modals' => $this->renderModal(),
         ));
