@@ -110,7 +110,7 @@ if (isset($_GET['action']) && method_exists($upgrade, 'do'.$_GET['action'])) {
 }
 
 $result = '<?xml version="1.0" encoding="UTF-8"?>';
-if (empty($upgrade->hasFailure())) {
+if (!$upgrade->hasFailure()) {
     if (!isset($_GET['action']) || 'UpgradeComplete' === $_GET['action']) {
         Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 0);
         Configuration::updateValue('PS_NEED_REBUILD_INDEX', 1);
