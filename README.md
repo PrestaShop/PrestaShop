@@ -59,6 +59,19 @@ If you installed PrestaShop from GitHub:
 >
     composer install
 
+Docker compose
+--------
+
+This software can also be deployed with Docker and its tool [Docker compose][24].
+
+To run the software, use:
+
+>
+    docker-compose up
+
+It will bind your ports 80 and 443 to the web server. If you want to use other ports, open and modify the file `docker-compose.yml`.
+MySQL credentials can also be found and modified in this file if needed.
+
 User documentation
 --------
 
@@ -150,3 +163,4 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [21]: CONTRIBUTORS.md
 [22]: https://getcomposer.org
 [23]: docs/server_config/nginx.conf.dist
+[24]: https://docs.docker.com/compose/
