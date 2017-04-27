@@ -351,8 +351,9 @@ class ProductController extends FrameworkBundleAdminController
 
         /** @var \Product $product */
         $product = $productAdapter->getProductInstance();
-        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
         $product->id_category_default = $context->shop->id_category;
+        $product->id_tax_rules_group = 0;
+        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
         $product->state = \Product::STATE_TEMP;
 
         //set name and link_rewrite in each lang

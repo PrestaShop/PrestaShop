@@ -436,7 +436,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'step2' => [
                 'price' => $this->product->price,
                 'ecotax' => $this->product->ecotax,
-                'id_tax_rules_group' => $this->product->id_tax_rules_group,
+                'id_tax_rules_group' => !empty($this->product->id_tax_rules_group) ? $this->product->id_tax_rules_group : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),
                 'on_sale' => (bool) $this->product->on_sale,
                 'wholesale_price' => $this->product->wholesale_price,
                 'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
