@@ -1,7 +1,16 @@
 <template>
   <div class="col-md-4">
     <div class="movements">
-      <button v-on:click="sendQty" type="button" class="btn update-qty pull-xs-right" :class="classObject" :disabled="disabled"><i class="material-icons">edit</i>{{trans('button_movement_type')}}</button>
+      <button
+        type="button"
+        class="btn update-qty pull-xs-right"
+        :class="classObject"
+        :disabled="disabled"
+        @click="sendQty"
+      >
+        <i class="material-icons">edit</i>
+        {{trans('button_movement_type')}}
+      </button>
     </div>
   </div>
 </template>

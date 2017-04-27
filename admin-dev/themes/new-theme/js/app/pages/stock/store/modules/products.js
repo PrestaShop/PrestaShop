@@ -105,8 +105,9 @@ const mutations = {
     if (index !== -1) {
       return state.productsToUpdate.splice(index, 1, updatedProduct);
     }
-
-    state.productsToUpdate.push(updatedProduct);
+    if(updatedProduct.delta) {
+      state.productsToUpdate.push(updatedProduct);
+    }
   }
 };
 

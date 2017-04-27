@@ -9,9 +9,11 @@
     <input
       name="qty"
       class="edit-qty"
+      type="number"
       placeholder="0"
+      pattern= "[-+]?[0-9]*[.,]?[0-9]+"
       :id="id"
-      :model="qty"
+      v-model="qty"
       @keyup="onKeyup($event.target.value)"
       @focus="focusIn"
       @blur="focusOut($event)"
@@ -70,18 +72,9 @@
     },
     methods: {
       onKeyup(val) {
-        let validChars = /^[-]?\d*$/g;
-        let invalidChars = /[^-0-9]/g;
-        let invalidChars2 = /[^0-9]/g;
-
-        if(!validChars.test(val)) {
-          let firstLetter = val.charAt(0).replace(invalidChars,'');
-          let lastChars = val.substring(1,val.length).replace(invalidChars2,'');
-          return  $(`#${this.id}`).val(firstLetter.concat(lastChars));
-        }
-        this.value = val;
-        if(this.value) {
+        if(!isNaN(parseInt(val))) {
           this.isActive = this.isEnabled = true;
+          this.value = val;
         }
       },
       focusIn() {
@@ -101,13 +94,13 @@
 
         // POST when qty !=0
 
-        if(this.product.qty && !isNaN(this.product.qty)) {
+        if(this.product.qty && !isNaN(parseInt(this.value))) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
             delta: this.value
           });
           this.isActive = this.isEnabled = false;
-          this.value = null;
+          this.value = this.product.qty = null;
         }
       }
     }
@@ -166,6 +159,12 @@
     height: 33px;
     width: 70px;
     border: 1px solid $gray-light;
-    margin-right: 0;
+    margin: 3px 0;
   }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
 </style>
