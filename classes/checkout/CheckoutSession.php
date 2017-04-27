@@ -86,6 +86,46 @@ class CheckoutSessionCore
         return $this->context->cart->id_address_invoice;
     }
 
+    public function setMessage($message)
+    {
+        $this->_updateMessage(Tools::safeOutput($message));
+
+        return $this;
+    }
+
+    public function getMessage()
+    {
+        if ($message = Message::getMessageByCartId($this->context->cart->id)) {
+            return $message['message'];
+        }
+
+        return false;
+    }
+
+    private function _updateMessage($messageContent)
+    {
+        if ($messageContent) {
+            if ($oldMessage = Message::getMessageByCartId((int)$this->context->cart->id)) {
+                $message = new Message((int)$oldMessage['id_message']);
+                $message->message = $messageContent;
+                $message->update();
+            } else {
+                $message = new Message();
+                $message->message = $messageContent;
+                $message->id_cart = (int)$this->context->cart->id;
+                $message->id_customer = (int)$this->context->cart->id_customer;
+                $message->add();
+            }
+        } else {
+            if ($oldMessage = Message::getMessageByCartId($this->context->cart->id)) {
+                $message = new Message($oldMessage['id_message']);
+                $message->delete();
+            }
+        }
+
+        return true;
+    }
+
     public function setDeliveryOption($option)
     {
         $this->context->cart->setDeliveryOption($option);
