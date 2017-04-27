@@ -234,6 +234,8 @@ abstract class StockManagementRepository
             '{category_id}' => 'cp.id_category',
             '{attributes}' => 'product_attributes.attributes',
             '{features}' => 'product_features.features',
+            '{id_employee}' => 'sm.id_employee',
+            '{date_add}' => 'sm.date_add',
         ));
 
         return $filters;
