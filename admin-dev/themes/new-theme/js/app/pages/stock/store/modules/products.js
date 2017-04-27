@@ -37,7 +37,7 @@ const actions = {
   updateQtyByProductsId({ commit, state }, payload) {
     let url = payload.url,
       productsQty = state.productsToUpdate;
-
+    
     Vue.http.post(url, productsQty).then((res) => {
       commit(types.UPDATE_PRODUCTS, res.body);
       return showGrowl('notice', 'Stock successfully updated');
@@ -105,8 +105,9 @@ const mutations = {
     if (index !== -1) {
       return state.productsToUpdate.splice(index, 1, updatedProduct);
     }
-
-    state.productsToUpdate.push(updatedProduct);
+    if(updatedProduct.delta) {
+      state.productsToUpdate.push(updatedProduct);
+    }  
   }
 };
 
