@@ -139,6 +139,10 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             );
         }
 
+        if (isset($requestParams['delivery_message'])) {
+            $this->getCheckoutSession()->setMessage($requestParams['delivery_message']);
+        }
+
         if ($this->step_is_reachable && isset($requestParams['confirmDeliveryOption'])) {
             // we're done if
             // - the step was reached (= all previous steps complete)
@@ -152,13 +156,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             ;
         }
 
-        $this->setTitle(
-            $this->getTranslator()->trans(
-                'Shipping Method',
-                array(),
-                'Shop.Theme.Checkout'
-            )
-        );
+        $this->setTitle($this->getTranslator()->trans('Shipping Method', array(), 'Shop.Theme.Checkout'));
 
         Hook::exec('actionCarrierProcess', array('cart' => $this->getCheckoutSession()->getCart()));
     }
@@ -176,6 +174,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 'delivery_option' => $this->getCheckoutSession()->getSelectedDeliveryOption(),
                 'recyclable' => $this->getCheckoutSession()->isRecyclable(),
                 'recyclablePackAllowed' => $this->isRecyclablePackAllowed(),
+                'delivery_message' => $this->getCheckoutSession()->getMessage(),
                 'gift' => array(
                     'allowed' => $this->isGiftAllowed(),
                     'isGift' => $this->getCheckoutSession()->getGift()['isGift'],

@@ -337,9 +337,13 @@ body#checkout {
       }
     }
   }
-  #gift_message{
+  #gift_message, #delivery{
     max-width: 100%;
     border-color: $gray-darker;
+    textarea {
+      max-width: 100%;
+      margin-bottom: 10px;
+    }
   }
   #footer {
     @include box-shadow;

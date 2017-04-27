@@ -79,6 +79,11 @@
             </div>
           {/block}
           <div class="order-options">
+            <div id="delivery">
+              <label for="delivery_message">{l s='If you would like to add a comment about your order, please write it in the field below.' d='Shop.Theme.Checkout'}</label>
+              <textarea rows="2" cols="120" id="delivery_message" name="delivery_message">{$delivery_message}</textarea>
+            </div>
+
             {if $recyclablePackAllowed}
               <span class="custom-checkbox">
                 <input type="checkbox" id="input_recyclable" name="recyclable" value="1" {if $recyclable} checked {/if}>
@@ -86,6 +91,7 @@
                 <label for="input_recyclable">{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</label>
               </span>
             {/if}
+
             {if $gift.allowed}
               <span class="custom-checkbox">
                 <input class="js-gift-checkbox" id="input_gift" name="gift" type="checkbox" value="1" {if $gift.isGift}checked="checked"{/if}>
@@ -97,8 +103,8 @@
                 <label for="gift_message">{l s='If you\'d like, you can add a note to the gift:' d='Shop.Theme.Checkout'}</label>
                 <textarea rows="2" cols="120" id="gift_message" name="gift_message">{$gift.message}</textarea>
               </div>
-
             {/if}
+
           </div>
         </div>
         <button type="submit" class="continue btn btn-primary float-xs-right" name="confirmDeliveryOption" value="1">
