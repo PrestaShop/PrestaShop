@@ -59,14 +59,25 @@
 
 		$(document).ready(function() {
       var themeSelector = $('#ps_theme_selector');
+      var themeSelectorSelect = themeSelector.find('select[name="selected-theme"]');
       var themeCoreOption = themeSelector.find('select[name="selected-theme"] option#core-option');
+
       var emailSelector = $('#ps_email_selector');
+      var emailSelectorSelect = emailSelector.find('select[name="selected-emails"]');
+
       var moduleSelector = $('#ps_module_selector');
+      var moduleSelectorSelect = moduleSelector.find('select[name="selected-modules"]');
+
       var allSelectors = $('select[name="selected-modules"], select[name="selected-emails"], select[name="selected-theme"], select[name="locale"]');
 
       themeSelector.hide();
+      themeSelectorSelect.attr('disabled', true);
+
       emailSelector.hide();
+      emailSelectorSelect.attr('disabled', true);
+
       moduleSelector.hide();
+      moduleSelectorSelect.attr('disabled', true);
 
       $('#type').on('change', function () {
 
@@ -77,14 +88,18 @@
 
         if ('mails' === $(this).val()) {
           emailSelector.show();
+          emailSelectorSelect.attr('disabled', false);
         } else {
           emailSelector.hide();
+          emailSelectorSelect.attr('disabled', true);
         }
 
         if ('modules' === $(this).val()) {
           moduleSelector.show();
+          moduleSelectorSelect.attr('disabled', false);
         } else {
           moduleSelector.hide();
+          moduleSelectorSelect.attr('disabled', true);
         }
 
         if ('themes' === $(this).val()) {
@@ -96,16 +111,20 @@
 
         if (1 === $('#type option:selected').data('choicetheme')) {
           themeSelector.show();
+          themeSelectorSelect.attr('disabled', false);
         } else {
           themeSelector.hide();
+          themeSelectorSelect.attr('disabled', true);
         }
       });
 
       $('select[name="selected-emails"]').on('change', function() {
         if ('subject' === $(this).val()) {
           themeSelector.hide();
+          themeSelectorSelect.attr('disabled', true);
         } else {
           themeSelector.show();
+          themeSelectorSelect.attr('disabled', false);
         }
       });
 
