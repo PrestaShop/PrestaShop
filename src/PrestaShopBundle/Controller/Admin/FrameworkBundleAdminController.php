@@ -25,8 +25,10 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Security\Voter\PageVoter;
 
@@ -43,6 +45,30 @@ class FrameworkBundleAdminController extends Controller
     public function __construct()
     {
         $this->configuration = new Configuration();
+    }
+
+    /**
+     * @Template
+     *
+     * @return array Template vars
+     */
+    public function overviewAction()
+    {
+        return [];
+    }
+
+    public function hashUpdateJsAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
+
+        return new Response($contents);
+    }
+
+    public function hashUpdateJsonAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
+
+        return new Response($contents);
     }
 
     /**

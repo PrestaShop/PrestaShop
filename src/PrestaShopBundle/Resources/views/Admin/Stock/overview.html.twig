@@ -43,9 +43,9 @@
     </script>
 
     {% if app.environment == 'dev' %}
-    <script src="http://localhost:8080/stock.bundle.js"></script>
+        <script src="http://localhost:8080/stock.bundle.js"></script>
     {% else %}
-    <script src="{{ asset('themes/new-theme/public/stock.bundle.js') }}"></script>
+        <script src="{{ asset('themes/new-theme/public/stock.bundle.js') }}"></script>
     {% endif %}
 
 {% endblock %}
