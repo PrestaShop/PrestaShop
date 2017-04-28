@@ -414,6 +414,10 @@ services:
         class: PrestaShopBundle\Translation\Api\StockApi
         parent: prestashop.translation.api
 
+    prestashop.translation.api.international:
+            class: PrestaShopBundle\Translation\Api\InternationalApi
+            parent: prestashop.translation.api
+
     # Managers
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager

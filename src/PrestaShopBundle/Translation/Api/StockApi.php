@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Translation\Api;
 
 class StockApi extends AbstractApi
 {
-
     /**
      * @return string[] List of translations
      */
