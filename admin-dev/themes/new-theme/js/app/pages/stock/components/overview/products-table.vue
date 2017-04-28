@@ -32,10 +32,21 @@
       </tr>
     </thead>
     <tbody>
-      <PSAlert v-if="emptyProducts">
+      <tr v-if="this.isLoading">
+        <td colspan="7">
+          <PSLoader v-for="(n, index) in 3" class="m-t-1" :key="index">
+            <div class="background-masker header-top"></div>
+            <div class="background-masker header-left"></div>
+            <div class="background-masker header-bottom"></div>
+            <div class="background-masker subheader-left"></div>
+            <div class="background-masker subheader-bottom"></div>
+          </PSLoader>
+        </td>
+      </tr>
+      <PSAlert v-else-if="emptyProducts">
         {{trans('no_product')}}
       </PSAlert>
-      <ProductLine v-show="!this.isFiltered" v-for="(product, index) in products" key=${index} :product="product" />
+      <ProductLine v-else v-for="(product, index) in products" key=${index} :product="product" />
     </tbody>
   </PSTable>
 </template>
@@ -45,13 +56,16 @@
   import PSAlert from 'app/widgets/ps-alert';
   import PSTable from 'app/widgets/ps-table/ps-table';
   import PSSort from 'app/widgets/ps-table/ps-sort';
+  import PSLoader from 'app/widgets/ps-loader';
 
   export default {
+    props: ['isLoading'],
     components: {
       ProductLine,
       PSSort,
       PSAlert,
-      PSTable
+      PSTable,
+      PSLoader
     },
     methods: {
       toggleSort(order, desc) {

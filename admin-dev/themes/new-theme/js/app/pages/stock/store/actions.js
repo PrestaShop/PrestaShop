@@ -18,7 +18,7 @@ export const getStock = ({ commit }, payload) => {
       category_id: payload.categories ? payload.categories : []
     }
   }).then(function(response) {
-
+    commit(types.LOADING_STATE, false);
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.ADD_PRODUCTS, response.body);
   }, function(error) {
@@ -61,6 +61,7 @@ export const getMovements = ({ commit }, payload) => {
       category_id: payload.categories ? payload.categories : []
     }
   }).then(function(response) {
+    commit(types.LOADING_STATE, false);
     commit(types.SET_MOVEMENTS, response.body);
   }, function(error) {
     return showGrowl('error', error.statusText);
@@ -71,6 +72,7 @@ export const getTranslations = ({ commit }) => {
   let url = window.data.translationUrl;
   Vue.http.get(url).then(function(response) {
     commit(types.SET_TRANSLATIONS, response.body);
+    commit(types.APP_IS_READY);
   }, function(error) {
     return showGrowl('error', error.statusText);
   });
@@ -88,6 +90,6 @@ export const updateKeywords = ({ commit }, keywords) => {
   commit(types.UPDATE_KEYWORDS, keywords);
 };
 
-export const initState = ({ commit }) => {
-  commit(types.INIT_STATE);
+export const loadingState = ({ commit }) => {
+  commit(types.LOADING_STATE, true);
 };

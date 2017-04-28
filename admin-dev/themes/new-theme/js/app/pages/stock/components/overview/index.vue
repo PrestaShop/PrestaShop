@@ -1,7 +1,7 @@
 <template>
   <section>
     <ProductsActions />
-    <ProductsTable @sort="sort" />
+    <ProductsTable :isLoading="isLoading" @sort="sort" />
   </section>
 </template>
 
@@ -12,6 +12,11 @@
   const DEFAULT_SORT = '';
 
   export default {
+    computed: {
+      isLoading() {
+        return this.$store.getters.isLoading;
+      }
+    },
     methods: {
       sort(desc) {
         this.$emit('fetch', desc);
@@ -20,6 +25,7 @@
     mounted() {
       this.$store.dispatch('updateKeywords', []);
       this.$store.dispatch('updateOrder', 'product');
+      this.$store.dispatch('loadingState');
       this.$emit('fetch', DEFAULT_SORT);
     },
     components: {

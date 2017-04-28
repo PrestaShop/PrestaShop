@@ -27,10 +27,21 @@
         </tr>
       </thead>
       <tbody>
-        <PSAlert v-if="emptyMovements">
+        <tr v-if="this.isLoading">
+          <td colspan="7">
+            <PSLoader v-for="(n, index) in 3" class="m-t-1" :key="index">
+              <div class="background-masker header-top"></div>
+              <div class="background-masker header-left"></div>
+              <div class="background-masker header-bottom"></div>
+              <div class="background-masker subheader-left"></div>
+              <div class="background-masker subheader-bottom"></div>
+            </PSLoader>
+          </td>
+        </tr>
+        <PSAlert v-else-if="emptyMovements">
            {{trans('no_product')}}
         </PSAlert>
-        <MovementLine v-for="(product, index) in movements" key=${index} :product="product" />
+        <MovementLine v-else v-for="(product, index) in movements" key=${index} :product="product" />
       </tbody>
     </PSTable>
   </section>
@@ -41,17 +52,23 @@
   import PSSort from 'app/widgets/ps-table/ps-sort';
   import PSAlert from 'app/widgets/ps-alert';
   import PSPagination from 'app/widgets/ps-pagination/ps-pagination';
+  import PSLoader from 'app/widgets/ps-loader';
   import MovementLine from './movement-line';
 
   const DEFAULT_SORT = ' desc';
 
   export default {
     computed: {
+      isLoading() {
+        return this.$store.getters.isLoading;
+      },
       movements() {
         return this.$store.getters.movements;
       },
       emptyMovements() {
-        return !this.$store.getters.movements.length;
+        if(this.$store.getters.movements) {
+          return !this.$store.getters.movements.length;
+        }
       }
     },
     methods: {
@@ -62,6 +79,7 @@
       }
     },
     mounted() {
+      this.$store.dispatch('loadingState');
       this.$store.dispatch('updateKeywords', []);
       this.$store.dispatch('updateOrder', 'date_add');
       this.$emit('fetch', DEFAULT_SORT);
@@ -76,6 +94,7 @@
       PSSort,
       PSAlert,
       PSPagination,
+      PSLoader,
       MovementLine
     }
   }

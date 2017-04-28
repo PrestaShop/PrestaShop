@@ -19,7 +19,9 @@ const state = {
   categories: [],
   categoryList: [],
   movements: [],
-  translations: {}
+  translations: {},
+  isLoading: false,
+  isReady: false
 };
 
 // getters are functions
@@ -73,6 +75,12 @@ const getters = {
   },
   translations(state) {
     return state.translations;
+  },
+  isLoading(state) {
+    return state.isLoading;
+  },
+  isReady(state) {
+    return state.isReady;
   }
 };
 

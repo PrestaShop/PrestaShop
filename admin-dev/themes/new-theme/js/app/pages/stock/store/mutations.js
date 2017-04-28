@@ -25,7 +25,10 @@ export default {
   [types.SET_TRANSLATIONS](state, translations) {
     state.translations = translations;
   },
-  [types.INIT_STATE](state) {
-    state.products = [];
+  [types.LOADING_STATE](state, isLoading) {
+    state.isLoading = isLoading;
+  },
+  [types.APP_IS_READY](state) {
+    state.isReady = true;
   }
 };

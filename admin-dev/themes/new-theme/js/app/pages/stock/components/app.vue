@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="stock-app">
+  <div v-show="isReady" id="app" class="stock-app">
     <StockHeader />
     <Search @search="onSearch" />
     <div class="card p-a-2">
@@ -16,6 +16,11 @@
 
   export default {
     name: 'app',
+    computed : {
+      isReady() {
+        return this.$store.getters.isReady;
+      }
+    },
     methods: {
       onPageChanged(pageIndex) {
         let desc = this.$route.name === 'overview' ? '' : ' desc';
