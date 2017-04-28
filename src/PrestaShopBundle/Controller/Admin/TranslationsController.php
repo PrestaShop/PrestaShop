@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Doctrine\Common\Util\Inflector;
 use PrestashopBundle\Entity\Translation;
+use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use PrestaShopBundle\Translation\Provider\ModuleProvider;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -36,6 +37,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Admin controller for the International pages.
@@ -276,6 +278,15 @@ class TranslationsController extends FrameworkBundleAdminController
         } else {
             $translation->setTheme($theme);
             $translation->setTranslation($requestParams['translation_value']);
+        }
+
+        $validator = Validation::createValidator();
+        $violations = $validator->validate($translation, new PassVsprintf);
+        if (0 !== count($violations)) {
+            foreach ($violations as $violation) {
+                $this->container->get('logger')->error($violation->getMessage());
+            }
+            return false;
         }
 
         $updatedTranslationSuccessfully = false;
