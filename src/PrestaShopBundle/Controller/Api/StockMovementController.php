@@ -62,4 +62,38 @@ class StockMovementController extends ApiController
 
         return new JsonResponse($stockMovement, 200, array('Total-Pages' => $totalPages));
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listMovementsEmployeesAction(Request $request)
+    {
+        try {
+            $queryParamsCollection = $this->queryParams->fromRequest($request);
+        } catch (InvalidPaginationParamsException $exception) {
+            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
+        }
+
+        $employees = $this->stockMovementRepository->getEmployees($queryParamsCollection);
+
+        return new JsonResponse($employees, 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listMovementsTypesAction(Request $request)
+    {
+        try {
+            $queryParamsCollection = $this->queryParams->fromRequest($request);
+        } catch (InvalidPaginationParamsException $exception) {
+            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
+        }
+
+        $types = $this->stockMovementRepository->getTypes($queryParamsCollection);
+
+        return new JsonResponse($types, 200);
+    }
 }
