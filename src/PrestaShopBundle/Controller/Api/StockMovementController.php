@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
-use PrestaShopBundle\Api\QueryParamsCollection;
+use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -41,7 +41,7 @@ class StockMovementController extends ApiController
     public $stockMovementRepository;
 
     /**
-     * @var QueryParamsCollection
+     * @var QueryStockMovementParamsCollection
      */
     public $queryParams;
 
@@ -52,7 +52,7 @@ class StockMovementController extends ApiController
     public function listMovementsAction(Request $request)
     {
         try {
-            $queryParamsCollection = $this->queryParams->fromRequest($request, 'id_stock_mvt DESC');
+            $queryParamsCollection = $this->queryParams->fromRequest($request);
         } catch (InvalidPaginationParamsException $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }

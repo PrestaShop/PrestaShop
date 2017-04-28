@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
-use PrestaShopBundle\Api\QueryParamsCollection;
+use PrestaShopBundle\Api\QueryStockParamsCollection;
 use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Api\Stock\MovementsCollection;
 use PrestaShopBundle\Entity\ProductIdentity;
@@ -45,7 +45,7 @@ class StockController extends ApiController
     public $stockRepository;
 
     /**
-     * @var QueryParamsCollection
+     * @var QueryStockParamsCollection
      */
     public $queryParams;
 
