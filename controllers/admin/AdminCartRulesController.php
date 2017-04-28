@@ -527,6 +527,7 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('customerFilter')) {
+            $query_multishop = Shop::isFeatureActive() ? 's.`name` AS `from_shop_name`,' : '';
             $search_query = trim(Tools::getValue('q'));
             $customers = Db::getInstance()->executeS('
 			SELECT `id_customer`, `email`, CONCAT(`firstname`, \' \', `lastname`) as cname

@@ -57,6 +57,9 @@ class UploaderCore
      */
     public function setAcceptTypes($value)
     {
+        if (is_array($value) && count($value)) {
+            $value = array_map(array('Tools', 'strtolower'), $value);
+        }
         $this->_accept_types = $value;
 
         return $this;

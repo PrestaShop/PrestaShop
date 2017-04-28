@@ -41,6 +41,11 @@
 			{if ($product['product_supplier_reference'])}{l s='Supplier reference:'} {$product['product_supplier_reference']}{/if}
 			</a>
 		</td>
+		{if ($order->getTaxCalculationMethod() != $smarty.const.PS_TAX_EXC)}
+		<td>
+			<span>{displayPrice price=$product.unit_price_tax_excl currency=$currency->id}</span>
+		</td>
+		{/if}
 		<td>
 			<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id|intval}</span>
 			{if $can_edit}
@@ -73,9 +78,9 @@
 		{if $stock_management}<td class="text-center">{$product['current_stock']}</td>{/if}
 		<td class="total_product">
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
-			{displayPrice price=Tools::ps_round($product['product_price'] * $product['customizationQuantityTotal'], 2) currency=$currency->id|intval}
+			{displayPrice price=($product['unit_price_tax_excl'] * $product['customizationQuantityTotal']) currency=$currency->id|intval}
 		{else}
-			{displayPrice price=Tools::ps_round($product['product_price_wt'] * $product['customizationQuantityTotal'], 2) currency=$currency->id|intval}
+			{displayPrice price=($product['unit_price_tax_incl'] * $product['customizationQuantityTotal']) currency=$currency->id|intval}
 		{/if}
 		</td>
 		<td class="cancelQuantity standard_refund_fields current-edit" style="display:none" colspan="2">
@@ -169,9 +174,9 @@
 				<td class="text-center">-</td>
 				<td class="total_product">
 					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
-						{displayPrice price=Tools::ps_round($product['product_price'] * $customization['quantity'], 2) currency=$currency->id|intval}
+						{displayPrice price=($product['unit_price_tax_excl'] * $customization['quantity']) currency=$currency->id|intval}
 					{else}
-						{displayPrice price=Tools::ps_round($product['product_price_wt'] * $customization['quantity'], 2) currency=$currency->id|intval}
+						{displayPrice price=($product['unit_price_tax_incl'] * $customization['quantity']) currency=$currency->id|intval}
 					{/if}
 				</td>
 				<td class="cancelCheck standard_refund_fields current-edit" style="display:none">

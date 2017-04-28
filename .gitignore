@@ -24,6 +24,7 @@ admin-dev/import/*
 !admin-dev/import/index.php
 
 themes/*/cache/*
+admin-dev/themes/*/cache/*
 
 # Config
 

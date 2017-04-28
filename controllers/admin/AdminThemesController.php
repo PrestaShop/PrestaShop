@@ -130,7 +130,16 @@ class AdminThemesControllerCore extends AdminController
 
     protected function processUpdateOptions()
     {
-        parent::processUpdateOptions();
+        if(
+            !in_array(
+                $this->authorizationLevel(),
+                array(AdminController::LEVEL_EDIT, AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
+            || _PS_MODE_DEMO_
+        ) {
+            $this->errors[] = Tools::displayError('You do not have permission to edit here.');
+        } else {
+            parent::processUpdateOptions();
+        }
 
         if (!count($this->errors)) {
             Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=6');

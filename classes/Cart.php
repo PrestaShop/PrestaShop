@@ -1269,7 +1269,7 @@ class CartCore extends ObjectModel
 
                 /* Delete product from cart */
                 if ($new_qty <= 0) {
-                    return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
+                    return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization, 0, $auto_add_cart_rule);
                 } elseif ($new_qty < $minimal_quantity) {
                     return -1;
                 } else {
@@ -1601,7 +1601,9 @@ class CartCore extends ObjectModel
             // refresh cache of self::_products
             $this->_products = $this->getProducts(true);
             CartRule::autoRemoveFromCart();
-            CartRule::autoAddToCart();
+            if ($auto_add_cart_rule) {
+                CartRule::autoAddToCart();
+            }
 
             return $return;
         }
@@ -3526,7 +3528,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        $shipping_cost = (float)Tools::ps_round((float)$shipping_cost, 2);
+        $shipping_cost = (float)Tools::ps_round((float)$shipping_cost, (Currency::getCurrencyInstance((int)$this->id_currency)->decimals * _PS_PRICE_DISPLAY_PRECISION_));
         Cache::store($cache_id, $shipping_cost);
 
         return $shipping_cost;

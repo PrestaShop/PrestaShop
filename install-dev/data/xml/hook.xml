@@ -671,5 +671,8 @@
       <title>Before sending an email</title>
       <description>This hook is used to filter the content or the metadata of an email before sending it or even prevent its sending</description>
     </hook>
+    <hook id="displayCartExtraProductActions" live_edit="0">
+      <name>displayCartExtraProductActions</name><title>Extra buttons in shopping cart</title><description>This hook adds extra buttons to the product lines, in the shopping cart</description>
+    </hook>
   </entities>
 </entity_hook>
