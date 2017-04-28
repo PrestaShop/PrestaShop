@@ -302,7 +302,16 @@ services:
 
     # Api
     prestashop.core.api.query_params_collection:
+        abstract: true
         class: PrestaShopBundle\Api\QueryParamsCollection
+
+    prestashop.core.api.query_stock_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryStockParamsCollection
+
+    prestashop.core.api.query_stock_movement_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryStockMovementParamsCollection
 
     prestashop.core.api.stock.movements_collection:
         class: PrestaShopBundle\Api\Stock\MovementsCollection
@@ -361,14 +370,14 @@ services:
         properties:
             movements: "@prestashop.core.api.stock.movements_collection"
             stockRepository: "@prestashop.core.api.stock.repository"
-            queryParams: "@prestashop.core.api.query_params_collection"
+            queryParams: "@prestashop.core.api.query_stock_params_collection"
 
     prestashop.core.api.stockMovement.controller:
         class: PrestaShopBundle\Controller\Api\StockMovementController
         parent: prestashop.core.api.controller
         properties:
             stockMovementRepository: "@prestashop.core.api.stockMovement.repository"
-            queryParams: "@prestashop.core.api.query_params_collection"
+            queryParams: "@prestashop.core.api.query_stock_movement_params_collection"
 
     prestashop.core.api.supplier.controller:
         class: PrestaShopBundle\Controller\Api\SupplierController
