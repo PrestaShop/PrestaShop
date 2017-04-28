@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShopBundle\Translation\Provider\SearchProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -49,5 +50,63 @@ class I18nController extends ApiController
         }
 
         return new JsonResponse($translationClass->getTranslations());
+    }
+
+    public function listDomainTranslationAction(Request $request)
+    {
+        try {
+            $translationProvider = $this->container->get('prestashop.translation.search_provider');
+
+            $translationProvider->setLocale($request->attributes->get('locale'));
+            $translationProvider->setDomain($request->attributes->get('domain'));
+
+            $type = 'get' . ucfirst($request->attributes->get('type'));
+
+            $result = $this->{$type}($translationProvider);
+
+            return new JsonResponse($result);
+
+        } catch (Exception $exception) {
+            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
+        }
+    }
+
+    /**
+     * Get domain from Search provider
+     *
+     * @param SearchProvider $searchProvider
+     * @return mixed
+     */
+    public function getDomain(SearchProvider $searchProvider)
+    {
+        return current($searchProvider->getMessageCatalogue()->all());
+    }
+
+    /**
+     * Get info from from Search provider catalog
+     *
+     * @param SearchProvider $searchProvider
+     * @return mixed
+     */
+    public function getInfo(SearchProvider $searchProvider)
+    {
+        $info = array(
+            'locale' => $searchProvider->getLocale(),
+            'domain' => $searchProvider->getDomain(),
+            'missing' => 0,
+            'total' => 0,
+        );
+
+        $catalog = current($searchProvider->getMessageCatalogue()->all());
+
+        foreach ($catalog as $original => $translated) {
+            if ($original === $translated) {
+                $info['missing']++;
+            }
+
+            $info['total']++;
+        }
+
+        return $info;
     }
 }

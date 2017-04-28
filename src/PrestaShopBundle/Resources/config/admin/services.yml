@@ -209,6 +209,14 @@ services:
         tags:
             - { name: "ps.translation_provider" }
 
+    prestashop.translation.search_provider:
+        class: PrestaShopBundle\Translation\Provider\SearchProvider
+        arguments:
+            - "@prestashop.translation.database_loader"
+            - "%translations_dir%"
+        tags:
+            - { name: "ps.translation_provider" }
+
     # TRANSLATIONS
     prestashop.translation.database_loader:
         class: PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
