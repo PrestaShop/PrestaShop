@@ -35,13 +35,13 @@
     </script>
 
     {% if app.environment == 'dev' %}
-        <script src="http://localhost:8080/translation.bundle.js"></script>
+        <script src="http://localhost:8080/translations.bundle.js"></script>
     {% else %}
-        <script src="{{ asset('themes/new-theme/public/translation.bundle.js') }}"></script>
+        <script src="{{ asset('themes/new-theme/public/translations.bundle.js') }}"></script>
     {% endif %}
 
 {% endblock %}
 
 {% block content %}
-  <div id="translation-app"></div>
+  <div id="translations-app"></div>
 {% endblock %}
