@@ -3652,7 +3652,7 @@ class ProductCore extends ObjectModel
 				GROUP BY product_shop.id_product';
 
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
-            return false;
+            return array();
         }
 
         foreach ($result as $k => &$row) {
