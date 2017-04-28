@@ -60,53 +60,26 @@ class I18nController extends ApiController
             $translationProvider->setLocale($request->attributes->get('locale'));
             $translationProvider->setDomain($request->attributes->get('domain'));
 
-            $type = 'get' . ucfirst($request->attributes->get('type'));
+            $info = array(
+                'locale' => $translationProvider->getLocale(),
+                'domain' => $translationProvider->getDomain(),
+                'missing' => 0,
+                'total' => 0,
+            );
 
-            $result = $this->{$type}($translationProvider);
+            $catalog = current($translationProvider->getMessageCatalogue()->all());
+            foreach ($catalog as $original => $translated) {
+                if ($original === $translated) {
+                    $info['missing']++;
+                }
 
-            return new JsonResponse($result);
+                $info['total']++;
+            }
+
+            return new JsonResponse($catalog, 200, $info);
 
         } catch (Exception $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
-    }
-
-    /**
-     * Get domain from Search provider
-     *
-     * @param SearchProvider $searchProvider
-     * @return mixed
-     */
-    public function getDomain(SearchProvider $searchProvider)
-    {
-        return current($searchProvider->getMessageCatalogue()->all());
-    }
-
-    /**
-     * Get info from from Search provider catalog
-     *
-     * @param SearchProvider $searchProvider
-     * @return mixed
-     */
-    public function getInfo(SearchProvider $searchProvider)
-    {
-        $info = array(
-            'locale' => $searchProvider->getLocale(),
-            'domain' => $searchProvider->getDomain(),
-            'missing' => 0,
-            'total' => 0,
-        );
-
-        $catalog = current($searchProvider->getMessageCatalogue()->all());
-
-        foreach ($catalog as $original => $translated) {
-            if ($original === $translated) {
-                $info['missing']++;
-            }
-
-            $info['total']++;
-        }
-
-        return $info;
     }
 }
