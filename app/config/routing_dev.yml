@@ -30,3 +30,17 @@ _admin_stock_hot_reload_js:
         _controller: PrestaShopBundle:Admin/Stock:hashUpdateJs
     requirements:
         hash: .+
+
+_admin_translations_hot_reload_json:
+    path:     /international/{hash}.hot-update.json
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:hashUpdateJson
+
+_admin_translations_hot_reload_js:
+    path:     /international/{hash}.hot-update.js
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:hashUpdateJs
+    requirements:
+        hash: .+
