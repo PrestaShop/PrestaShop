@@ -1,5 +1,5 @@
 <template>
   <div id="app" class="translations-app">
-    To be done
+    {{trans('button_save')}}
   </div>
 </template>

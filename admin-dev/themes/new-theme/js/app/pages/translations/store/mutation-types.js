@@ -1,0 +1,1 @@
+export const SET_TRANSLATIONS = 'SET_TRANSLATIONS';

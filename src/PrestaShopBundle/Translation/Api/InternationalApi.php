@@ -34,7 +34,7 @@ class InternationalApi extends AbstractApi
     public function getTranslations()
     {
         return array(
-            'my_string' => $this->translator->trans('Youhou', array(), 'Admin.International.Feature'),
+            'button_save' => $this->translator->trans('Save', array(), 'Admin.Global'),
         );
     }
 }
