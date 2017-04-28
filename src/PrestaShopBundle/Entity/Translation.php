@@ -28,6 +28,7 @@
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 
 /**
  * Translation.
@@ -36,6 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     indexes={@ORM\Index(name="key", columns={"domain"})},
  * )
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TranslationRepository")
+ * @PassVsprintf
  */
 class Translation
 {
