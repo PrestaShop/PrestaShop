@@ -95,9 +95,9 @@ let config = {
         loader: 'vue-loader',
         options: {
           loaders: {
-            js: 'babel-loader?presets[]=es2015&presets[]=stage-2'
+            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
+            css: 'postcss-loader'
           },
-          postcss: [require('postcss-cssnext')()]
         }
       },
       {
