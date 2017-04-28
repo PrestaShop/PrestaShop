@@ -1,3 +1,9 @@
+admin_international_translation_overview:
+    path:     /translations
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:overview
+
 admin_international_translations_list:
     path: /translations/list
     methods:  [GET, POST]

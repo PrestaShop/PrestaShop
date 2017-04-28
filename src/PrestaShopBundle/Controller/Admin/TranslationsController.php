@@ -45,6 +45,22 @@ use Symfony\Component\Validator\Validation;
 class TranslationsController extends FrameworkBundleAdminController
 {
     const controller_name = 'ADMINTRANSLATIONS';
+
+    // overview method on FrameworkBundleAdminController for all vue-js app
+    // redirect to the new translation application
+    // before, clean request params
+     private function redirectToTranslationApp(Request $request)
+    {
+        $params = array();
+        foreach ($request->request->all() as $k => $p) {
+            if (!empty($p) && !in_array($k, array('controller'))) {
+                $params[$k] = $p;
+            }
+        }
+
+        return $this->redirectToRoute('admin_international_translation_overview', $params);
+    }
+
     /**
      * List translations keys and corresponding editable values.
      *
@@ -74,8 +90,7 @@ class TranslationsController extends FrameworkBundleAdminController
             return $this->redirect('admin_dashboard');
         }
 
-        $lang = $request->get('lang');
-        $theme = $request->get('selected-theme');
+        return $this->redirectToTranslationApp($request);
 
         $catalogue = $this->getTranslationsCatalogue($request);
         $treeBuilder = new TreeBuilder($this->langToLocale($lang), $theme);
@@ -118,6 +133,8 @@ class TranslationsController extends FrameworkBundleAdminController
         if (!$request->isMethod('POST')) {
             return $this->redirect('./admin-dev/index.php?controller=AdminTranslations');
         }
+
+        return $this->redirectToTranslationApp($request);
 
         $lang = $request->get('lang');
         $theme = $request->get('selected-theme');
