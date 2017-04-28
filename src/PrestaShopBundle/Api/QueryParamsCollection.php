@@ -30,7 +30,7 @@ use Doctrine\Common\Util\Inflector;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use Symfony\Component\HttpFoundation\Request;
 
-class QueryParamsCollection
+abstract class QueryParamsCollection
 {
     const DEFAULT_PAGE_INDEX = 1;
 
@@ -47,20 +47,19 @@ class QueryParamsCollection
     /**
      * @var array
      */
-    private $queryParams = array();
+    protected $queryParams = array();
 
     /**
      * @param Request $request
-     * @param string $defaultOrder order by default for sql
      * @return $this
      */
-    public function fromRequest(Request $request, $defaultOrder = null)
+    public function fromRequest(Request $request)
     {
         $queryParams = $request->query->all();
 
         $queryParams = $this->excludeUnknownParams($queryParams);
         $queryParams = $this->parsePaginationParams($queryParams);
-        $queryParams = $this->parseOrderParams($queryParams, $defaultOrder);
+        $queryParams = $this->parseOrderParams($queryParams);
         $this->queryParams = $this->parseFilterParams($queryParams, $request);
 
         return $this;
@@ -70,7 +69,7 @@ class QueryParamsCollection
      * @param $queryParams
      * @return mixed
      */
-    private function excludeUnknownParams(array $queryParams)
+    protected function excludeUnknownParams(array $queryParams)
     {
         $queryParamsNames = array_keys($queryParams);
         array_walk($queryParamsNames, function ($name) use (&$queryParams) {
@@ -93,7 +92,7 @@ class QueryParamsCollection
      * @param Request $request
      * @return array
      */
-    private function parseFilterParams(array $queryParams, Request $request)
+    protected function parseFilterParams(array $queryParams, Request $request)
     {
         $allParameters = array_merge(
             $request->attributes->all(),
@@ -126,25 +125,13 @@ class QueryParamsCollection
     /**
      * @return array
      */
-    private function getValidFilterParams()
-    {
-        return array(
-            'productId',
-            'supplier_id',
-            'category_id',
-            'keywords',
-            'attributes',
-            'features',
-            'date_add',
-            'id_employee',
-        );
-    }
+    abstract protected function getValidFilterParams();
 
     /**
      * @param array $queryParams
      * @return array
      */
-    private function parsePaginationParams(array $queryParams)
+    protected function parsePaginationParams(array $queryParams)
     {
         if (!array_key_exists('page_index', $queryParams)) {
             $queryParams['page_index'] = self::DEFAULT_PAGE_INDEX;
@@ -179,7 +166,7 @@ class QueryParamsCollection
     /**
      * @return array
      */
-    private function getValidPaginationParams() {
+    protected function getValidPaginationParams() {
         return array(
             'page_size',
             'page_index',
@@ -189,17 +176,12 @@ class QueryParamsCollection
 
     /**
      * @param array $queryParams
-     * @param string $defaultOrder order by default for sql
      * @return array|mixed
      */
-    private function parseOrderParams(array $queryParams, $defaultOrder = null)
+    protected function parseOrderParams(array $queryParams)
     {
         if (!array_key_exists('order', $queryParams)) {
-            if (!empty($defaultOrder)) {
-                $queryParams['order'] = $defaultOrder;
-            } else {
-                $queryParams = $this->setDefaultOrderParam($queryParams);
-            }
+            $queryParams = $this->setDefaultOrderParam($queryParams);
         }
 
         $queryParams['order'] = strtolower($queryParams['order']);
@@ -215,35 +197,19 @@ class QueryParamsCollection
     /**
      * @return array
      */
-    private function getValidOrderParams()
-    {
-        return array(
-            'product',
-            'reference',
-            'supplier',
-            'available_quantity',
-            'physical_quantity',
-            'id_stock_mvt',
-            'date_add',
-        );
-    }
+    abstract protected function getValidOrderParams();
 
     /**
      * @param $queryParams
      * @return mixed
      */
-    private function setDefaultOrderParam($queryParams)
-    {
-        $queryParams['order'] = 'product DESC';
-
-        return $queryParams;
-    }
+    abstract protected function setDefaultOrderParam($queryParams);
 
     /**
      * @param $subject
      * @return mixed
      */
-    private function removeDirection($subject)
+    protected function removeDirection($subject)
     {
         $subject = str_replace(' asc', '', $subject);
         return str_replace(' desc', '', $subject);
@@ -286,35 +252,12 @@ class QueryParamsCollection
         return $filters;
     }
 
-    private function hasSearchFilter()
+    /**
+     * @return bool
+     */
+    protected function hasSearchFilter()
     {
         return array_key_exists('keywords', $this->queryParams['filter']);
-    }
-
-    /**
-     * @param $filters
-     * @return mixed
-     */
-    private function appendSqlSearchFilter($filters)
-    {
-        if (!$this->hasSearchFilter()) {
-            return $filters;
-        }
-
-        $parts = array_map(function ($index) {
-            return sprintf(
-                'AND (' .
-                '{supplier_name} LIKE :keyword_%d OR '.
-                '{product_reference} LIKE :keyword_%d OR ' .
-                '{product_name} LIKE :keyword_%d OR ' .
-                '{combination_name} LIKE :keyword_%d' .
-                ')',
-                $index, $index, $index, $index);
-        }, range(0, count($this->queryParams['filter']['keywords']) - 1));
-
-        $filters[self::SQL_CLAUSE_HAVING] = implode("\n", $parts);
-
-        return $filters;
     }
 
     /**
@@ -323,7 +266,7 @@ class QueryParamsCollection
      * @param array $filters
      * @return array
      */
-    private function appendSqlFilter($value, $column, array $filters)
+    protected function appendSqlFilter($value, $column, array $filters)
     {
         $column = Inflector::tableize($column);
 
@@ -412,7 +355,7 @@ class QueryParamsCollection
      * @param $sqlParams
      * @return mixed
      */
-    private function appendSqlFilterParams($column, $value, $sqlParams)
+    protected function appendSqlFilterParams($column, $value, $sqlParams)
     {
         $column = Inflector::tableize($column);
 
@@ -453,7 +396,7 @@ class QueryParamsCollection
      * @param array $filters
      * @return array
      */
-    private function appendSqlCategoryFilter(array $filters)
+    protected function appendSqlCategoryFilter(array $filters)
     {
         $filters[] = sprintf('AND FIND_IN_SET({%s}, %s)', 'category_id', ':categories_ids');
 
@@ -461,11 +404,29 @@ class QueryParamsCollection
     }
 
     /**
+     * @param $value
+     * @param $sqlParams
+     * @return mixed
+     */
+    protected function appendSqlCategoryFilterParam($value, $sqlParams)
+    {
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+
+        $value = array_map('intval', $value);
+        $sqlParams[':categories_ids'] = implode(',', $value);
+
+        return $sqlParams;
+    }
+
+
+    /**
      * @param array $filters
      * @param dateAdd
      * @return array
      */
-    private function appendSqlDateAddFilter(array $filters, $dateAdd)
+    protected function appendSqlDateAddFilter(array $filters, $dateAdd)
     {
         if (!is_array($dateAdd)) {
             $dateAdd = array($dateAdd);
@@ -482,11 +443,33 @@ class QueryParamsCollection
     }
 
     /**
+     * @param $value
+     * @param $sqlParams
+     * @return mixed
+     */
+    protected function appendSqlDateAddFilterParam($value, $sqlParams)
+    {
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+
+        if (array_key_exists('sup', $value)) {
+            $sqlParams[':date_add_sup'] = $value['sup'];
+        }
+        if (array_key_exists('inf', $value)) {
+            $sqlParams[':date_add_inf'] = $value['inf'];
+        }
+
+        return $sqlParams;
+    }
+
+
+    /**
      * @param array $filters
      * @param $attributes
      * @return array
      */
-    private function appendSqlAttributesFilter(array $filters, $attributes)
+    protected function appendSqlAttributesFilter(array $filters, $attributes)
     {
         if (!is_array($attributes)) {
             $attributes = array($attributes);
@@ -504,11 +487,30 @@ class QueryParamsCollection
     }
 
     /**
+     * @param array $value
+     * @param $sqlParams
+     * @return array
+     */
+    protected function appendSqlAttributesFilterParam($value, $sqlParams)
+    {
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+
+        array_map(function ($index, $value) use (&$sqlParams) {
+            $sqlParams['attribute_' . $index] = strval($value);
+        }, range(0, count($value) - 1), $value);
+
+        return $sqlParams;
+    }
+
+
+    /**
      * @param array $filters
      * @param $attributes
      * @return array
      */
-    private function appendSqlFeaturesFilter(array $filters, $attributes)
+    protected function appendSqlFeaturesFilter(array $filters, $attributes)
     {
         if (!is_array($attributes)) {
             $attributes = array($attributes);
@@ -526,44 +528,51 @@ class QueryParamsCollection
     }
 
     /**
-     * @param $value
+     * @param array $value
      * @param $sqlParams
-     * @return mixed
+     * @return array
      */
-    private function appendSqlCategoryFilterParam($value, $sqlParams)
+    protected function appendSqlFeaturesFilterParam($value, $sqlParams)
     {
         if (!is_array($value)) {
             $value = array($value);
         }
 
-        $value = array_map('intval', $value);
-        $sqlParams[':categories_ids'] = implode(',', $value);
+        array_map(function ($index, $value) use (&$sqlParams) {
+            $sqlParams['feature_' . $index] = strval($value);
+        }, range(0, count($value) - 1), $value);
 
         return $sqlParams;
     }
+
 
     /**
-     * @param $value
-     * @param $sqlParams
+     * @param $filters
      * @return mixed
      */
-    private function appendSqlDateAddFilterParam($value, $sqlParams)
+    protected function appendSqlSearchFilter($filters)
     {
-        if (!is_array($value)) {
-            $value = array($value);
+        if (!$this->hasSearchFilter()) {
+            return $filters;
         }
 
-        if (array_key_exists('sup', $value)) {
-            $sqlParams[':date_add_sup'] = $value['sup'];
-        }
-        if (array_key_exists('inf', $value)) {
-            $sqlParams[':date_add_inf'] = $value['inf'];
-        }
+        $parts = array_map(function ($index) {
+            return sprintf(
+                'AND (' .
+                '{supplier_name} LIKE :keyword_%d OR '.
+                '{product_reference} LIKE :keyword_%d OR ' .
+                '{product_name} LIKE :keyword_%d OR ' .
+                '{combination_name} LIKE :keyword_%d' .
+                ')',
+                $index, $index, $index, $index);
+        }, range(0, count($this->queryParams['filter']['keywords']) - 1));
 
-        return $sqlParams;
+        $filters[self::SQL_CLAUSE_HAVING] = implode("\n", $parts);
+
+        return $filters;
     }
 
-    private function appendSqlSearchFilterParam($value, $sqlParams)
+    protected function appendSqlSearchFilterParam($value, $sqlParams)
     {
         if (!is_array($value)) {
             $value = array($value);
@@ -576,39 +585,7 @@ class QueryParamsCollection
         return $sqlParams;
     }
 
-    /**
-     * @param array $value
-     * @param $sqlParams
-     * @return array
-     */
-    private function appendSqlAttributesFilterParam($value, $sqlParams)
-    {
-        if (!is_array($value)) {
-            $value = array($value);
-        }
 
-        array_map(function ($index, $value) use (&$sqlParams) {
-            $sqlParams['attribute_' . $index] = strval($value);
-        }, range(0, count($value) - 1), $value);
 
-        return $sqlParams;
-    }
 
-    /**
-     * @param array $value
-     * @param $sqlParams
-     * @return array
-     */
-    private function appendSqlFeaturesFilterParam($value, $sqlParams)
-    {
-        if (!is_array($value)) {
-            $value = array($value);
-        }
-
-        array_map(function ($index, $value) use (&$sqlParams) {
-            $sqlParams['feature_' . $index] = strval($value);
-        }, range(0, count($value) - 1), $value);
-
-        return $sqlParams;
-    }
 }
