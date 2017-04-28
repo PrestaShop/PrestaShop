@@ -92,6 +92,9 @@ class TranslationsController extends FrameworkBundleAdminController
 
         return $this->redirectToTranslationApp($request);
 
+        $lang = $request->get('lang');
+        $theme = $request->get('selected-theme');
+
         $catalogue = $this->getTranslationsCatalogue($request);
         $treeBuilder = new TreeBuilder($this->langToLocale($lang), $theme);
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
