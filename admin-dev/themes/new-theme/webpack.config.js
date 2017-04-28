@@ -51,6 +51,9 @@ let config = {
     ],
     stock: [
       './js/app/pages/stock/main.js',
+    ],
+    translations: [
+      './js/app/pages/translations/main.js',
     ]
   },
   output: {
