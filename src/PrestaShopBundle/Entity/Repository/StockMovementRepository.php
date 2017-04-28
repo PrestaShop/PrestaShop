@@ -30,6 +30,7 @@ use Doctrine\DBAL\Driver\Connection;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShopBundle\Api\QueryStockParamsCollection;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -93,7 +94,7 @@ class StockMovementRepository extends StockManagementRepository
             sm.id_stock_mvt, sm.id_stock, sm.id_order,
             sm.id_employee, sm.employee_lastname, sm.employee_firstname,
             sm.physical_quantity, sm.date_add, sm.sign,
-            smrl.name as movement_reason,
+            smrl.id_stock_mvt_reason, smrl.name as movement_reason,
             p.id_product AS product_id,
             COALESCE(pa.id_product_attribute, 0) AS combination_id,
             IF (
@@ -269,5 +270,40 @@ class StockMovementRepository extends StockManagementRepository
         });
 
         return $rows;
+    }
+
+    public function getEmployees(QueryStockParamsCollection $queryParamsCollection)
+    {
+        $data = $this->getData($queryParamsCollection);
+
+        $employees = array();
+        foreach ($data as $d) {
+            if (!array_key_exists($d['id_employee'], $employees)) {
+                $employees[$d['id_employee']] = array(
+                    'id_employee' => $d['id_employee'],
+                    'employee_lastname' => $d['employee_lastname'],
+                    'employee_firstname' => $d['employee_firstname'],
+                );
+            }
+        }
+
+        return $employees;
+    }
+
+    public function getTypes(QueryStockParamsCollection $queryParamsCollection)
+    {
+        $data = $this->getData($queryParamsCollection);
+
+        $types = array();
+        foreach ($data as $d) {
+            if (!array_key_exists($d['id_stock_mvt_reason'], $types)) {
+                $types[$d['id_stock_mvt_reason']] = array(
+                    'id_stock_mvt_reason' => $d['id_stock_mvt_reason'],
+                    'movement_reason' => $d['movement_reason'],
+                );
+            }
+        }
+
+        return $types;
     }
 }
