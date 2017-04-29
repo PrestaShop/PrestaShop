@@ -858,7 +858,7 @@
 						</button>
 						{/if}
 						{if isset($show_cancel_button) && $show_cancel_button}
-						<a href="{$back_url|escape:'html':'UTF-8'}" class="btn btn-default" onclick="window.history.back();">
+						<a href="{if isset($back_url) && $back_url}{$back_url|escape:'html':'UTF-8'}{else}#{/if}" class="btn btn-default js-back">
 							<i class="process-icon-cancel"></i> {l s='Cancel'}
 						</a>
 						{/if}

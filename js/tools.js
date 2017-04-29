@@ -628,4 +628,8 @@ $(document).ready(function()
 
 	// attribute target="_blank" is not W3C compliant
 	$('a._blank, a.js-new-window').attr('target', '_blank');
+	$('button.js-back, a.js-back').click(function(e){
+		e.preventDefault();
+		window.history.back();
+	});
 });

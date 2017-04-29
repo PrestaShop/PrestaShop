@@ -80,7 +80,7 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="newImportMatchs">{l s='Save your data matching configuration'}</label>
 				<div class="col-lg-7">
-					<input type="text" name="newImportMatchs" id="newImportMatchs" />		
+					<input type="text" name="newImportMatchs" id="newImportMatchs" />
 				</div>
 				<div class="col-lg-2">
 					<a id="saveImportMatchs" class="btn btn-default" href="#"><i class="icon-save"></i> {l s='Save'}</a>
@@ -132,7 +132,7 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<button type="button" class="btn btn-default" onclick="window.history.back();">
+				<button type="button" class="btn btn-default js-back">
 					<i class="process-icon-cancel text-danger"></i>
 					{l s='Cancel'}
 				</button>

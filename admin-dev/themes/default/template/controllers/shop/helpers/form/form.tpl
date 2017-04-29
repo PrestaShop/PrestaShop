@@ -123,7 +123,7 @@
 			<button type="submit" value="1" id="shop_form_submit_btn" name="submitAddshop" class="btn btn-default pull-right">
 				<i class="process-icon-save"></i> {l s='Save'}
 			</button>
-			<a href="{$currentIndex|escape:'html':'UTF-8'}&amp;id_shop_group=0&amp;token={$token|escape:'html':'UTF-8'}" class="btn btn-default" onclick="window.history.back();">
+			<a href="{$currentIndex|escape:'html':'UTF-8'}&amp;id_shop_group=0&amp;token={$token|escape:'html':'UTF-8'}" class="btn btn-default js-back">
 				<i class="process-icon-cancel"></i> {l s='Cancel'}
 			</a>
 		</div>
