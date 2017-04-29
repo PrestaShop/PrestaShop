@@ -2482,8 +2482,19 @@ class AdminThemesControllerCore extends AdminController
 
         foreach ($module_hooks as $hooks) {
             foreach ($hooks as $hook) {
+                $id_hook = (int)Hook::getIdByName($hook['hook']);
+                // If hook does not exist, we create it
+                if (!$id_hook) {
+                    $new_hook = new Hook();
+                    $new_hook->name = pSQL($hook['hook']);
+                    $new_hook->title = pSQL($hook['hook']);
+                    $new_hook->live_edit = (bool)preg_match('/^display/i', $new_hook->name);
+                    $new_hook->position = (bool)$new_hook->live_edit;
+                    $new_hook->add();
+                    $id_hook = (int) $new_hook->id;
+                }
                 $sql_hook_module = 'INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
-									VALUES ('.(int)$id_module.', '.(int)$shop.', '.(int)Hook::getIdByName($hook['hook']).', '.(int)$hook['position'].')';
+									VALUES ('.(int)$id_module.', '.(int)$shop.', '.(int)$id_hook.', '.(int)$hook['position'].')';
 
                 if (count($hook['exceptions']) > 0) {
                     foreach ($hook['exceptions'] as $exception) {
