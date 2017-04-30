@@ -861,7 +861,7 @@ class StockManagerCore implements StockManagerInterface
             return -1;
         }
 
-        $quantity_per_day = Tools::ps_round($quantity_out / $coverage);
+        $quantity_per_day = $quantity_out / $coverage;
         $physical_quantity = $this->getProductPhysicalQuantities($id_product,
                                                                  $id_product_attribute,
                                                                  ($id_warehouse ? array($id_warehouse) : null),
