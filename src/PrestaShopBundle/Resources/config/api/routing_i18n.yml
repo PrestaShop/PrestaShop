@@ -4,7 +4,7 @@ api_i18n_translations_list:
     defaults:
         _controller: prestashop.core.api.i18n.controller:listTranslationAction
 
-api_i18n_domain:
+api_i18n_domain_list:
     path: /i18n/{locale}/{domain}
     methods: [GET]
     defaults:
