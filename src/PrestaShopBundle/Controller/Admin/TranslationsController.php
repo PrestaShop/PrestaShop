@@ -53,6 +53,9 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         $params = array();
         foreach ($request->request->all() as $k => $p) {
+            if (strstr('selected', $k)) {
+                $k = 'selected';
+            }
             if (!empty($p) && !in_array($k, array('controller'))) {
                 $params[$k] = $p;
             }
@@ -91,35 +94,6 @@ class TranslationsController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToTranslationApp($request);
-
-        $lang = $request->get('lang');
-        $theme = $request->get('selected-theme');
-
-        $catalogue = $this->getTranslationsCatalogue($request);
-        $treeBuilder = new TreeBuilder($this->langToLocale($lang), $theme);
-        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $editable = $this->isGranted(PageVoter::UPDATE, $this::controller_name.'_');
-
-        return array(
-            'translationsTree' => $translationsTree,
-            'theme' => $this->getSelectedTheme($request),
-            'requestParams' => array(
-                'lang' => $request->get('lang'),
-                'type' => $request->get('type'),
-                'theme' => $request->get('selected-theme'),
-            ),
-            'total_remaining_translations' => $this->get('translator')->trans(
-                '%nb_translations% missing',
-                array('%nb_translations%' => '%d'),
-                'Admin.International.Feature'
-            ),
-            'total_translations' => $this->get('translator')->trans(
-                '%d expressions',
-                array(),
-                'Admin.International.Feature'
-            ),
-            'editable' => $editable,
-        );
     }
 
     /**
@@ -138,41 +112,6 @@ class TranslationsController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToTranslationApp($request);
-
-        $lang = $request->get('lang');
-        $theme = $request->get('selected-theme');
-        $module = $request->get('selected-modules');
-
-        $moduleProvider = new ModuleProvider(
-            $this->container->get('prestashop.translation.database_loader'),
-            $this->container->getParameter('translations_dir')
-        );
-        $moduleProvider->setModuleName($module);
-
-        $treeBuilder = new TreeBuilder($this->langToLocale($lang), $theme);
-        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider);
-        $editable = $this->isGranted(PageVoter::UPDATE, $this::controller_name.'_');
-
-        return array(
-            'translationsTree' => $treeBuilder->makeTranslationsTree($catalogue),
-            'theme' => $this->getSelectedTheme($request),
-            'requestParams' => array(
-                'lang' => $lang,
-                'type' => $request->get('type'),
-                'theme' => $theme,
-            ),
-            'total_remaining_translations' => $this->get('translator')->trans(
-                '%nb_translations% missing',
-                array('%nb_translations%' => '%d'),
-                'Admin.International.Feature'
-            ),
-            'total_translations' => $this->get('translator')->trans(
-                '%d expressions',
-                array(),
-                'Admin.International.Feature'
-            ),
-            'editable' => $editable,
-        );
     }
 
     /**
