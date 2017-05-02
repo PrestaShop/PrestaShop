@@ -61,6 +61,11 @@ services:
         arguments:
             - "@prestashop.adapter.data_provider.product"
 
+    prestashop.service.translation:
+        class: PrestaShopBundle\Service\TranslationService
+        properties:
+            container: "@service_container"
+
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
         class: PrestaShopBundle\Service\DataProvider\StockInterface
@@ -402,6 +407,10 @@ services:
     prestashop.core.api.i18n.controller:
         class: PrestaShopBundle\Controller\Api\I18nController
         parent: prestashop.core.api.controller
+
+    prestashop.core.api.translation.controller:
+            class: PrestaShopBundle\Controller\Api\TranslationController
+            parent: prestashop.core.api.controller
 
     # Api - i18n
     prestashop.translation.api:

@@ -183,36 +183,9 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function langToLocale($lang)
     {
-        $legacyToStandardLocales = $this->getLangToLocalesMapping();
+        $translationService = $this->get('prestashop.service.translation');
 
-        return $legacyToStandardLocales[$lang];
-    }
-
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    protected function getLangToLocalesMapping()
-    {
-        $translationsDirectory = $this->getResourcesDirectory();
-
-        $legacyToStandardLocalesJson = file_get_contents($translationsDirectory . '/legacy-to-standard-locales.json');
-        $legacyToStandardLocales = json_decode($legacyToStandardLocalesJson, true);
-
-        $jsonLastErrorCode = json_last_error();
-        if (JSON_ERROR_NONE !== $jsonLastErrorCode) {
-            throw new \Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
-        }
-
-        return $legacyToStandardLocales;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getResourcesDirectory()
-    {
-        return $this->container->getParameter('kernel.root_dir') . '/Resources';
+        return $translationService->langToLocale($lang);
     }
 
     /**
@@ -230,11 +203,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getDemoModeErrorMessage()
     {
-        return $this->get('translator')->trans(
-            'This functionality has been disabled.',
-            array(),
-            'Admin.Notifications.Error'
-        );
+        return $this->get('translator')->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
     }
 
     /**
