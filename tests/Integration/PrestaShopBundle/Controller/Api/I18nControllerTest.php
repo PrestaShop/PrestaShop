@@ -28,12 +28,10 @@ namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Ap
 
 /**
  * @group api
- * @group supplier
+ * @group i18n
  */
 class I18nControllerTest extends ApiTestCase
 {
-    // Translation list
-
     /**
      * @dataProvider getBadListTranslations
      * @test
@@ -84,88 +82,5 @@ class I18nControllerTest extends ApiTestCase
                 array('page' => 'stock'),
             ),
         );
-    }
-
-
-    // Domain retrieve
-    /**
-     * @dataProvider getBadDomains
-     * @test
-     *
-     * @param $params
-     */
-    public function it_should_return_bad_response_when_requesting_domain($params)
-    {
-        $this->assertBadRequest('api_translation_domain_catalog', $params);
-    }
-
-    /**
-     * @dataProvider getGoodDomains
-     * @test
-     *
-     * @param $params
-     */
-    public function it_should_return_ok_response_when_requesting_domain($params)
-    {
-        $this->assetOkRequest('api_translation_domain_catalog', $params);
-    }
-
-    /**
-     * @return array
-     */
-    public function getBadDomains()
-    {
-        return array(
-            array(
-                array('locale' => 'default', 'domain' => 'AdminGloabl'), // syntax error wanted
-            ),
-            array(
-                array('locale' => 'defaultt', 'domain' => 'AdminGlobal'),
-            ),
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function getGoodDomains()
-    {
-        return array(
-            array(
-                array('locale' => 'default', 'domain' => 'AdminGlobal'),
-            ),
-            array(
-                array('locale' => 'default', 'domain' => 'AdminNavigationMenu'),
-            ),
-        );
-    }
-
-
-    /**
-     * @param $route
-     * @param $params
-     */
-    private function assertBadRequest($route, $params)
-    {
-        $route = $this->router->generate($route, $params);
-        $this->client->request('GET', $route);
-
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
-        $response = $this->client->getResponse();
-        $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
-    }
-
-    /**
-     * @param $route
-     * @param $params
-     */
-    private function assetOkRequest($route, $params)
-    {
-        $route = $this->router->generate($route, $params);
-        $this->client->request('GET', $route);
-
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
     }
 }

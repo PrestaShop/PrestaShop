@@ -171,4 +171,32 @@ abstract class ApiTestCase extends WebTestCase
 
         return $controller;
     }
+
+    /**
+     * @param $route
+     * @param $params
+     */
+    protected function assertBadRequest($route, $params)
+    {
+        $route = $this->router->generate($route, $params);
+        $this->client->request('GET', $route);
+
+        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        $response = $this->client->getResponse();
+        $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+    }
+
+    /**
+     * @param $route
+     * @param $params
+     */
+    protected function assetOkRequest($route, $params)
+    {
+        $route = $this->router->generate($route, $params);
+        $this->client->request('GET', $route);
+
+        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+    }
 }

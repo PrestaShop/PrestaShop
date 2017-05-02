@@ -30,6 +30,7 @@ use PrestaShopBundle\Api\QueryParamsCollection;
 
 /**
  * @group api
+ * @group stockmanagement
  */
 class StockManagementControllerTest extends ApiTestCase
 {
