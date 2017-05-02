@@ -102,7 +102,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
              * allow showing the product
              * In all the others cases => 404 "Product is no longer available"
              */
-            if (!$this->product->isAssociatedToShop() || !$this->product->active) {
+            if (!$this->product->isAssociatedToShop() || !$this->product->active && !(bool)Tools::getValue('preview',0)) {
                 if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int) Tab::getIdFromClassName('AdminProducts').(int) Tools::getValue('id_employee')) && $this->product->isAssociatedToShop()) {
                     $this->adminNotifications['inactive_product'] = array(
                         'type' => 'warning',
@@ -153,6 +153,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->errors[] = $this->trans('You do not have access to this product.', array(), 'Shop.Notifications.Error');
                 $this->setTemplate('errors/forbidden');
             } else {
+                if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int) Tab::getIdFromClassName('AdminProducts').(int) Tools::getValue('id_employee')) && $this->product->isAssociatedToShop() && (bool)Tools::getValue('preview',0)) {
+                    $this->adminNotifications['inactive_product'] = array(
+                        'type' => 'warning',
+                        'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
+                    );
+                }
                 // Load category
                 $id_category = false;
                 if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] == Tools::secureReferrer($_SERVER['HTTP_REFERER']) // Assure us the previous page was one of the shop
@@ -401,7 +407,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product['id_product_attribute'],
                 false,
                 false,
-                true
+                true,
+                (bool)Tools::getValue('preview',0)?array('preview' => Tools::getValue('preview',0)):array()
             ),
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
