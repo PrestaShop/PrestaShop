@@ -55,6 +55,19 @@ function add_new_status_stock()
     );
 
     $languages = Language::getLanguages();
+
+    // insert ps_tab AdminStockManagement
+    Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tab` (`id_tab`, `id_parent`, `position`, `module`, `class_name`, `active`, `hide_host_mode`, `icon`)
+      VALUES (null, 9, 7, NULL, \'AdminStockManagement\', 1, 0, \'\')');
+    $lastIdTab = Db::getInstance()->insert_id();
+
+    // ps_tab_lang
+    foreach ($languages as $lang) {
+        Db::getInstance()->execute(
+            'INSERT INTO `'._DB_PREFIX_.'tab_lang` (`id_tab`, `id_lang`, `name`)
+                VALUES ('.(int)$lastIdTab.', '.(int)$lang['id_lang'].', "'.pSQL($translator->trans('Stock', array(), 'Admin.Navigation.Menu', $lang['locale'])).'")');
+    }
+
     foreach ($data as $d) {
         // ps_stock_mvt_reason
          Db::getInstance()->execute('
