@@ -186,7 +186,9 @@ class StockManagementControllerTest extends ApiTestCase
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
 
-        $this->assertResponseHasTotalPages($parameters, $expectedTotalPages);
+        if ($expectedTotalPages) {
+            $this->assertResponseHasTotalPages($parameters, $expectedTotalPages);
+        }
     }
 
     /**
@@ -535,5 +537,27 @@ class StockManagementControllerTest extends ApiTestCase
                 $expectedTotalPages = 2
             )
         );
+    }
+
+    /**
+     * @test
+     *
+     * @param $params
+     * @param $expectedTotalPages
+     */
+    public function it_should_return_ok_response_when_requesting_movements_types()
+    {
+        $this->assertOkResponseOnList('api_stock_list_movements_types');
+    }
+
+    /**
+     * @test
+     *
+     * @param $params
+     * @param $expectedTotalPages
+     */
+    public function it_should_return_ok_response_when_requesting_movements_employees()
+    {
+        $this->assertOkResponseOnList('api_stock_list_movements_employees');
     }
 }
