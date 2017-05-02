@@ -341,30 +341,4 @@ class TranslationsController extends FrameworkBundleAdminController
         $treeBuilder = new TreeBuilder('en-US', null);
         return $treeBuilder->getUnbreakableWords();
     }
-
-    /**
-     * @param $locale
-     * @param $theme
-     * @return array
-     */
-    protected function getTranslationsInDatabase($locale, $theme = null)
-    {
-        $translationRepository = $this->get('prestashop.core.admin.translation.repository');
-        $translations = $translationRepository->findByLanguageAndTheme(
-            $this->findLanguageByLocale($locale),
-            $theme
-        );
-
-        $translationsMap = array();
-        array_map(function ($translation) use (&$translationsMap, $locale) {
-            $domainLocale = $translation->getDomain().'.'.$locale;
-            if (!array_key_exists($domainLocale, $translationsMap)) {
-                $translationsMap[$domainLocale] = array();
-            }
-
-            $translationsMap[$domainLocale][$translation->getKey()] = $translation->getTranslation();
-        }, $translations);
-
-        return $translationsMap;
-    }
 }
