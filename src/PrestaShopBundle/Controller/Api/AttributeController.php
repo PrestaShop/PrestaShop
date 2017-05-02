@@ -26,12 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use PrestaShopBundle\Entity\Repository\FeatureAttributeRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AttributeController
 {
     /**
-     * @var \PrestaShopBundle\Entity\Repository\FeatureAttributeRepository
+     * @var FeatureAttributeRepository
      */
     public $featureAttributeRepository;
 

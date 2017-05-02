@@ -26,12 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use PrestaShopBundle\Entity\Repository\CategoryRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CategoryController
 {
     /**
-     * @var \PrestaShopBundle\Entity\Repository\CategoryRepository
+     * @var CategoryRepository
      */
     public $categoryRepository;
 

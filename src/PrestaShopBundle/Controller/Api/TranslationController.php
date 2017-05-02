@@ -41,6 +41,12 @@ class TranslationController extends ApiController
      */
     public $translationService;
 
+    /**
+     * Show translations for 1 domain & 1 locale given
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function listDomainTranslationAction(Request $request)
     {
         try {
@@ -73,6 +79,9 @@ class TranslationController extends ApiController
     }
 
     /**
+     * Show tree for translation page with some params
+     *
+     * @param Request $request
      * @return JsonResponse
      */
     public function listTreeAction(Request $request)

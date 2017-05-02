@@ -26,12 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use PrestaShopBundle\Entity\Repository\SupplierRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class SupplierController
 {
     /**
-     * @var \PrestaShopBundle\Entity\Repository\SupplierRepository
+     * @var SupplierRepository
      */
     public $supplierRepository;
 
