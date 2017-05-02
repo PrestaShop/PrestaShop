@@ -12,6 +12,7 @@
       @keyup="onKeyUp"
       @keydown.enter="add(tag)"
       @keydown.delete.stop="remove()"
+      :size="inputSize"
     />
   </div>
 </template>
@@ -20,6 +21,11 @@
 
   export default {
     props:['tags','placeholder'],
+    computed: {
+      inputSize() {
+         return (this.placeholder) ? this.placeholder.length : 0;
+      }
+    },
     methods: {
       onKeyUp() {
         this.$emit('typing', this.$refs.tags.value);
@@ -82,6 +88,9 @@
       border: none;
       outline: none;
       min-height: 33px;
+      &::placeholder {
+       font-style: italic;
+      }
     }
   }
 </style>
