@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
-use PrestaShopBundle\Translation\Provider\SearchProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -50,36 +49,5 @@ class I18nController extends ApiController
         }
 
         return new JsonResponse($translationClass->getTranslations());
-    }
-
-    public function listDomainTranslationAction(Request $request)
-    {
-        try {
-            $translationProvider = $this->container->get('prestashop.translation.search_provider');
-
-            $translationProvider->setLocale($request->attributes->get('locale'));
-            $translationProvider->setDomain($request->attributes->get('domain'));
-
-            $info = array(
-                'locale' => $translationProvider->getLocale(),
-                'domain' => $translationProvider->getDomain(),
-                'missing' => 0,
-                'total' => 0,
-            );
-
-            $catalog = current($translationProvider->getMessageCatalogue()->all());
-            foreach ($catalog as $original => $translated) {
-                if ($original === $translated) {
-                    $info['missing']++;
-                }
-
-                $info['total']++;
-            }
-
-            return new JsonResponse($catalog, 200, $info);
-
-        } catch (Exception $exception) {
-            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
-        }
     }
 }

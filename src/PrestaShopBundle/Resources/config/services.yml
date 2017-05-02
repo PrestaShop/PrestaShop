@@ -409,8 +409,10 @@ services:
         parent: prestashop.core.api.controller
 
     prestashop.core.api.translation.controller:
-            class: PrestaShopBundle\Controller\Api\TranslationController
-            parent: prestashop.core.api.controller
+        class: PrestaShopBundle\Controller\Api\TranslationController
+        parent: prestashop.core.api.controller
+        properties:
+            translationService: "@prestashop.service.translation"
 
     # Api - i18n
     prestashop.translation.api:

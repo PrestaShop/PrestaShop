@@ -33,8 +33,7 @@ class TranslationService {
     /**
      * @var Container
      */
-    private $container;
-
+    public $container;
 
     /**
      * @param $lang
@@ -72,6 +71,45 @@ class TranslationService {
     private function getResourcesDirectory()
     {
         return $this->container->getParameter('kernel.root_dir') . '/Resources';
+    }
+
+    /**
+     * @param $lang
+     * @param $type
+     * @param $selected
+     *
+     * @return mixed
+     */
+    public function getTranslationsCatalogue($lang, $type, $selected)
+    {
+        $factory = $this->container->get('ps.translations_factory');
+
+        if ($selected !== 'classic' && $this->requiresThemeTranslationsFactory($selected, $type)) {
+            $factory = $this->container->get('ps.theme_translations_factory');
+        }
+
+        $locale = $this->langToLocale($lang);
+
+        if ($this->requiresThemeTranslationsFactory($selected, $type)) {
+            if ('classic' === $selected) {
+                $type = 'front';
+            } else {
+                $type = $selected;
+            }
+        }
+
+        return $factory->createTranslationsArray($type, $locale);
+    }
+
+    /**
+     * @param $theme
+     * @param $type
+     *
+     * @return bool
+     */
+    private function requiresThemeTranslationsFactory($theme, $type)
+    {
+        return $type === 'themes' && !is_null($theme);
     }
 
 }

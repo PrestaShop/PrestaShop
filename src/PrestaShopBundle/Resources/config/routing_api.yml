@@ -18,3 +18,6 @@ _api_feature:
 
 _api_i18n:
     resource: "api/routing_i18n.yml"
+
+_api_translation:
+    resource: "api/routing_translation.yml"

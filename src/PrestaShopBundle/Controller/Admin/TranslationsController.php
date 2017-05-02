@@ -121,7 +121,14 @@ class TranslationsController extends FrameworkBundleAdminController
     public function messagesFragmentsAction(Request $request)
     {
         $theme = $this->getSelectedTheme($request);
-        $catalogue = $this->getTranslationsCatalogue($request);
+
+        $translationService = $this->get('prestashop.service.translation');
+        $catalogue = $translationService->getTranslationsCatalogue(
+            $request->get('lang'),
+            $request->get('type'),
+            $request->get('selected-theme')
+        );
+
         $treeBuilder = new TreeBuilder($request->get('lang'), $theme);
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
 
@@ -286,47 +293,6 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         return $this->getDoctrine()->getManager()
             ->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\Translation\MessageCatalogue
-     *
-     * @throws \Exception
-     */
-    protected function getTranslationsCatalogue(Request $request)
-    {
-        $lang = $request->get('lang');
-        $type = $request->get('type');
-        $theme = $request->get('selected-theme');
-
-        $factory = $this->get('ps.translations_factory');
-        if ($theme !== 'classic' && $this->requiresThemeTranslationsFactory($theme, $type)) {
-            $factory = $this->get('ps.theme_translations_factory');
-        }
-
-        $locale = $this->langToLocale($lang);
-
-        if ($this->requiresThemeTranslationsFactory($theme, $type)) {
-            if ('classic' === $theme) {
-                $type = 'front';
-            } else {
-                $type = $theme;
-            }
-        }
-
-        return $factory->createTranslationsArray($type, $locale);
-    }
-
-    /**
-     * @param $theme
-     * @param $type
-     * @return bool
-     */
-    private function requiresThemeTranslationsFactory($theme, $type)
-    {
-        return $type === 'themes' && !is_null($theme);
     }
 
     /**
