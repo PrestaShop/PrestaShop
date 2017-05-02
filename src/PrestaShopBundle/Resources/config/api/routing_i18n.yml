@@ -1,4 +1,4 @@
-api_i18n:
+api_i18n_translations_list:
     path: /i18n/{page}
     methods: [GET]
     defaults:
