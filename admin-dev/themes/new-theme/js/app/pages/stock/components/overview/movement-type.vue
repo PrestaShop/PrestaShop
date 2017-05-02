@@ -1,21 +1,23 @@
 <template>
   <div class="col-md-4">
     <div class="movements">
-      <button
+      <PSButton
         type="button"
-        class="btn update-qty pull-xs-right"
+        class="update-qty pull-xs-right"
         :class="classObject"
         :disabled="disabled"
+        :primary="true"
         @click="sendQty"
       >
         <i class="material-icons">edit</i>
         {{trans('button_movement_type')}}
-      </button>
+      </PSButton>
     </div>
   </div>
 </template>
 
 <script>
+  import PSButton from 'app/widgets/ps-button';
   export default {
     computed: {
       disabled() {
@@ -34,6 +36,9 @@
           url: postUrl
         });
       }
+    },
+    components: {
+      PSButton
     }
   }
 </script>
