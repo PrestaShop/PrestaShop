@@ -5,10 +5,10 @@
         <form class="search-form" @submit.prevent>
           <label>{{trans('product_search')}}</label>
           <PSTags :tags="tags" @tagChange="onSearch" />
-          <button type="button" class="btn btn-primary search-button" @click="onSearch">
+          <PSButton @click="onSearch" class="search-button" :primary="true">
             <i class="material-icons">search</i>
             {{trans('button_search')}}
-          </button>
+          </PSButton>
         </form>
       </div>
       <Filters />
@@ -19,11 +19,13 @@
 <script>
   import Filters from './filters';
   import PSTags from 'app/widgets/ps-tags';
+  import PSButton from 'app/widgets/ps-button';
 
   export default {
     components: {
       Filters,
-      PSTags
+      PSTags,
+      PSButton
     },
     methods: {
       onSearch() {
@@ -59,11 +61,9 @@
     .search-button {
       float: right;
       position: absolute;
-      right: 8px;
+      right: 12px;
       top: 1px;
-      border-radius: 0;
       margin-top: 28px;
-      height:35px;
     }
   }
 </style>

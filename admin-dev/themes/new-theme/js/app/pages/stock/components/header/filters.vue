@@ -8,7 +8,7 @@
     <div class="collapse" id="filters">
       <div class="row">
         <div class="col-md-6">
-          <div class="p-y-2 p-x-2">
+          <div v-if="isOverview" class="p-y-2 p-x-2">
             <h2>{{trans('filter_suppliers')}}</h2>
             <FilterComponent
               :placeholder="trans('filter_search_suppliers')"
@@ -17,6 +17,13 @@
               label="name"
               @active="onFilterActive"
             />
+          </div>
+          <div v-else class="p-y-2 p-x-2">
+            <h2>{{trans('filter_movements_type')}}</h2>
+            <PSSelect />
+            <h2>{{trans('filter_movements_employee')}}</h2>
+            <PSSelect />
+            <h2>{{trans('filter_movements_period')}}</h2>
           </div>
         </div>
         <div class="col-md-6">
@@ -31,10 +38,10 @@
             />
           </div>
         </div>
-        <button type="button" class="btn btn-primary pull-right m-y-2 m-x-2" :disabled="disabled" @click="onClick">
+        <PSButton type="button" class="pull-right m-y-2 m-x-2" :primary="true" :disabled="disabled" @click="onClick">
           <i class="material-icons m-r-1">filter_list</i>
           {{trans('button_apply_advanced_filter')}}
-        </button>
+        </PSButton>
       </div>
     </div>
   </div>
@@ -42,11 +49,13 @@
 
 <script>
   import FilterComponent from './filters/filter-component';
+  import PSSelect from 'app/widgets/ps-select';
+  import PSButton from 'app/widgets/ps-button';
 
   export default {
     computed : {
-      disabled() {
-        return this.disabled;
+      isOverview() {
+        return this.$route.name === 'overview';
       }
     },
     methods: {
@@ -80,7 +89,9 @@
       }
     },
     components: {
-      FilterComponent
+      FilterComponent,
+      PSSelect,
+      PSButton
     },
     mounted() {
       this.$store.dispatch('getSuppliers');
