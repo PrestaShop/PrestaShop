@@ -32,6 +32,8 @@ namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Ap
  */
 class I18nControllerTest extends ApiTestCase
 {
+    // Translation list
+
     /**
      * @dataProvider getBadListTranslations
      * @test
@@ -40,12 +42,7 @@ class I18nControllerTest extends ApiTestCase
      */
     public function it_should_return_bad_response_when_requesting_list_of_translations($params)
     {
-        $route = $this->router->generate('api_i18n_translations_list', $params);
-        $this->client->request('GET', $route);
-
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
-        $response = $this->client->getResponse();
-        $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+        $this->assertBadRequest('api_i18n_translations_list', $params);
     }
 
     /**
@@ -56,12 +53,7 @@ class I18nControllerTest extends ApiTestCase
      */
     public function it_should_return_ok_response_when_requesting_list_of_translations($params)
     {
-        $route = $this->router->generate('api_i18n_translations_list', $params);
-        $this->client->request('GET', $route);
-
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+        $this->assetOkRequest('api_i18n_translations_list', $params);
     }
 
     /**
@@ -92,5 +84,88 @@ class I18nControllerTest extends ApiTestCase
                 array('page' => 'stock'),
             ),
         );
+    }
+
+
+    // Domain retrieve
+    /**
+     * @dataProvider getBadDomains
+     * @test
+     *
+     * @param $params
+     */
+    public function it_should_return_bad_response_when_requesting_domain($params)
+    {
+        $this->assertBadRequest('api_i18n_domain', $params);
+    }
+
+    /**
+     * @dataProvider getGoodDomains
+     * @test
+     *
+     * @param $params
+     */
+    public function it_should_return_ok_response_when_requesting_domain($params)
+    {
+        $this->assetOkRequest('api_i18n_domain', $params);
+    }
+
+    /**
+     * @return array
+     */
+    public function getBadDomains()
+    {
+        return array(
+            array(
+                array('locale' => 'default', 'domain' => 'AdminGloabl'), // syntax error wanted
+            ),
+            array(
+                array('locale' => 'defaultt', 'domain' => 'AdminGlobal'),
+            ),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getGoodDomains()
+    {
+        return array(
+            array(
+                array('locale' => 'default', 'domain' => 'AdminGlobal'),
+            ),
+            array(
+                array('locale' => 'default', 'domain' => 'AdminNavigationMenu'),
+            ),
+        );
+    }
+
+
+    /**
+     * @param $route
+     * @param $params
+     */
+    private function assertBadRequest($route, $params)
+    {
+        $route = $this->router->generate($route, $params);
+        $this->client->request('GET', $route);
+
+        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        $response = $this->client->getResponse();
+        $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+    }
+
+    /**
+     * @param $route
+     * @param $params
+     */
+    private function assetOkRequest($route, $params)
+    {
+        $route = $this->router->generate($route, $params);
+        $this->client->request('GET', $route);
+
+        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
     }
 }
