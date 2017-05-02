@@ -272,37 +272,49 @@ class StockMovementRepository extends StockManagementRepository
         return $rows;
     }
 
-    public function getEmployees(QueryStockParamsCollection $queryParamsCollection)
+    public function getEmployees()
     {
-        $data = $this->getData($queryParamsCollection);
+        $query = str_replace('{table_prefix}', $this->tablePrefix,
+            'SELECT DISTINCT sm.id_employee, CONCAT(sm.employee_lastname, \' \', sm.employee_firstname) AS display_name
+            FROM {table_prefix}stock_mvt sm
+            INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
+            WHERE
+            sa.id_shop = :shop_id
+            ORDER BY display_name ASC'
+        );
 
-        $employees = array();
-        foreach ($data as $d) {
-            if (!array_key_exists($d['id_employee'], $employees)) {
-                $employees[$d['id_employee']] = array(
-                    'id_employee' => $d['id_employee'],
-                    'employee_lastname' => $d['employee_lastname'],
-                    'employee_firstname' => $d['employee_firstname'],
-                );
-            }
-        }
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
+        $statement->execute();
+
+        $rows = $statement->fetchAll();
+        $employees = $this->castNumericToInt($rows);
 
         return $employees;
     }
 
-    public function getTypes(QueryStockParamsCollection $queryParamsCollection)
+    public function getTypes()
     {
-        $data = $this->getData($queryParamsCollection);
+        $query = str_replace('{table_prefix}', $this->tablePrefix,
+            'SELECT sm.id_stock_mvt_reason, smrl.name AS display_name
+            FROM {table_prefix}stock_mvt sm
+            INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
+            INNER JOIN {table_prefix}stock_mvt_reason_lang smrl ON (
+              smrl.id_stock_mvt_reason = sm.id_stock_mvt_reason
+              AND smrl.id_lang = :language_id)
+            WHERE
+            sa.id_shop = :shop_id
+            GROUP BY id_stock_mvt_reason
+            ORDER BY display_name ASC'
+        );
 
-        $types = array();
-        foreach ($data as $d) {
-            if (!array_key_exists($d['id_stock_mvt_reason'], $types)) {
-                $types[$d['id_stock_mvt_reason']] = array(
-                    'id_stock_mvt_reason' => $d['id_stock_mvt_reason'],
-                    'movement_reason' => $d['movement_reason'],
-                );
-            }
-        }
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
+        $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
+        $statement->execute();
+
+        $rows = $statement->fetchAll();
+        $types = $this->castNumericToInt($rows);
 
         return $types;
     }
