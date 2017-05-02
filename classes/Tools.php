@@ -329,6 +329,14 @@ class ToolsCore
         } else {
             $headers = $_SERVER;
         }
+        
+        // CloudFlare support
+        if (array_key_exists('CF-Connecting-IP', $headers)) {
+            // Validate IP address (IPv4/IPv6)
+            if (filter_var($headers['CF-Connecting-IP'], FILTER_VALIDATE_IP)) {
+                return $headers['CF-Connecting-IP'];
+            }
+        }
 
         if (array_key_exists('X-Forwarded-For', $headers)) {
             $_SERVER['HTTP_X_FORWARDED_FOR'] = $headers['X-Forwarded-For'];
