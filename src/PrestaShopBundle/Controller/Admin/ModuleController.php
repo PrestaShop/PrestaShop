@@ -247,18 +247,18 @@ class ModuleController extends FrameworkBundleAdminController
         );
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
-                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Manage installed modules', array(), 'Admin.Modules.Feature'),
-                'modules' => $modules,
-                'topMenuData' => $this->getTopMenuData($categoriesMenu),
-                'requireAddonsSearch' => false,
-                'requireBulkActions' => true,
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminModules'),
-                'requireFilterStatus' => true,
-                'level' => $this->authorizationLevel($this::controller_name),
-                'errorMessage' => $errorMessage,
-            ));
+            'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+            'layoutTitle' => $translator->trans('Manage installed modules', array(), 'Admin.Modules.Feature'),
+            'modules' => $modules,
+            'topMenuData' => $this->getTopMenuData($categoriesMenu),
+            'requireAddonsSearch' => false,
+            'requireBulkActions' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminModules'),
+            'requireFilterStatus' => true,
+            'level' => $this->authorizationLevel($this::controller_name),
+            'errorMessage' => $errorMessage,
+        ));
     }
 
     public function moduleAction(Request $request)
@@ -305,9 +305,20 @@ class ModuleController extends FrameworkBundleAdminController
                         '%module% did not return a valid response on %action% action.',
                         array(
                             '%module%' => $module,
+<<<<<<< d510188f37a12d27c1f08601b5c9a1c95ad35b90
                             '%action%' => $action, ),
                         'Admin.Modules.Notification'
                         );
+||||||| merged common ancestors
+                            '%action%' => $action, ),
+                        'Admin.Notifications.Error'
+                        );
+=======
+                            '%action%' => $action,
+                        ),
+                        'Admin.Notifications.Error'
+                    );
+>>>>>>> CO: some refacto on controllers..
                 } elseif ($response[$module]['status'] === false) {
                     $error = $moduleManager->getError($module);
                     $response[$module]['msg'] = $translator->trans(
@@ -315,16 +326,34 @@ class ModuleController extends FrameworkBundleAdminController
                         array(
                             '%action%' => str_replace('_', ' ', $action),
                             '%module%' => $module,
+<<<<<<< d510188f37a12d27c1f08601b5c9a1c95ad35b90
                             '%error_details%' => $error, ),
                         'Admin.Modules.Notification'
+||||||| merged common ancestors
+                            '%error_details%' => $error, ),
+                        'Admin.Notifications.Error'
+=======
+                            '%error_details%' => $error,
+                        ),
+                        'Admin.Notifications.Error'
+>>>>>>> CO: some refacto on controllers..
                     );
                 } else {
                     $response[$module]['msg'] = $translator->trans(
                         '%action% action on module %module% succeeded.',
                         array(
                             '%action%' => ucfirst(str_replace('_', ' ', $action)),
+<<<<<<< d510188f37a12d27c1f08601b5c9a1c95ad35b90
                             '%module%' => $module, ),
                         'Admin.Modules.Notification'
+||||||| merged common ancestors
+                            '%module%' => $module, ),
+                        'Admin.Notifications.Success'
+=======
+                            '%module%' => $module,
+                        ),
+                        'Admin.Notifications.Success'
+>>>>>>> CO: some refacto on controllers..
                     );
                 }
             } catch (Exception $e) {
@@ -332,10 +361,23 @@ class ModuleController extends FrameworkBundleAdminController
                 $response[$module]['msg'] = $translator->trans(
                     'Exception thrown by module %module% on %action%. %error_details%',
                     array(
+<<<<<<< d510188f37a12d27c1f08601b5c9a1c95ad35b90
                             '%action%' => str_replace('_', ' ', $action),
                             '%module%' => $module,
                             '%error_details%' => $e->getMessage(), ),
                     'Admin.Modules.Notification'
+||||||| merged common ancestors
+                            '%action%' => str_replace('_', ' ', $action),
+                            '%module%' => $module,
+                            '%error_details%' => $e->getMessage(), ),
+                    'Admin.Notifications.Error'
+=======
+                        '%action%' => str_replace('_', ' ', $action),
+                        '%module%' => $module,
+                        '%error_details%' => $e->getMessage(),
+                    ),
+                    'Admin.Notifications.Error'
+>>>>>>> CO: some refacto on controllers..
                 );
 
                 $logger = $this->get('logger');
@@ -567,7 +609,8 @@ class ModuleController extends FrameworkBundleAdminController
                         'msg' => $translator->trans(
                             'You do not have permission to add this.',
                             array(),
-                            'Admin.Notifications.Error'),
+                            'Admin.Notifications.Error'
+                        ),
                     ),
                     200,
                     array('Content-Type' => 'application/json')
@@ -609,12 +652,14 @@ class ModuleController extends FrameworkBundleAdminController
                 $installation_response['msg'] = $translator->trans(
                     '%module% did not return a valid response on installation.',
                     array('%module%' => $module_name),
-                    'Admin.Modules.Notification');
+                    'Admin.Modules.Notification'
+                );
             } elseif ($installation_response['status'] === true) {
                 $installation_response['msg'] = $translator->trans(
                     'Installation of module %module% was successful.',
                     array('%module%' => $module_name),
-                    'Admin.Modules.Notification');
+                    'Admin.Modules.Notification'
+                );
                 $installation_response['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
             } else {
                 $error = $moduleManager->getError($module_name);
@@ -622,8 +667,10 @@ class ModuleController extends FrameworkBundleAdminController
                     'Installation of module %module% failed. %error%',
                     array(
                         '%module%' => $module_name,
-                        '%error%' => $error, ),
-                    'Admin.Modules.Notification');
+                        '%error%' => $error,
+                    ),
+                    'Admin.Modules.Notification'
+                );
             }
 
             return new JsonResponse(

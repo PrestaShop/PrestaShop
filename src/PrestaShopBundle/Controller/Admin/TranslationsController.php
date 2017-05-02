@@ -26,13 +26,16 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use Doctrine\Common\Util\Inflector;
 use PrestashopBundle\Entity\Translation;
+<<<<<<< d510188f37a12d27c1f08601b5c9a1c95ad35b90
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use PrestaShopBundle\Translation\Provider\ModuleProvider;
+||||||| merged common ancestors
+use PrestaShopBundle\Translation\Provider\ModuleProvider;
+=======
+>>>>>>> CO: some refacto on controllers..
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,11 +70,8 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * List translations keys and corresponding editable values.
      *
-     * @Template
-     *
      * @param Request $request
-     *
-     * @return array Template vars
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function listAction(Request $request)
     {
@@ -99,11 +99,8 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * List translations keys and corresponding editable values for one module.
      *
-     * @Template("@PrestaShop/Admin/Translations/list.html.twig")
-     *
      * @param Request $request
-     *
-     * @return array Template vars
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function moduleAction(Request $request)
     {
@@ -181,11 +178,10 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
-     * extract theme using locale and theme name.
+     * Extract theme using locale and theme name.
      *
      * @param Request $request
-     *
-     * @return file to be downloaded
+     * @return $this
      */
     public function exportThemeAction(Request $request)
     {
@@ -291,8 +287,7 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     protected function findLanguageByLocale($locale)
     {
-        return $this->getDoctrine()->getManager()
-            ->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
+        return $this->getDoctrine()->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
     }
 
     /**

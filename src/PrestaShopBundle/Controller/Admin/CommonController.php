@@ -59,7 +59,7 @@ class CommonController extends FrameworkBundleAdminController
      * @param integer $offset
      * @param integer $total
      * @param string $view full|quicknav To change default template used to render the content
-     * @return array Template vars
+     * @return array|\Symfony\Component\HttpFoundation\Response
      */
     public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
@@ -190,6 +190,11 @@ class CommonController extends FrameworkBundleAdminController
 
     /**
      * Render a right sidebar with content from an URL
+     *
+     * @param $url
+     * @param string $title
+     * @param string $footer
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function renderSidebarAction($url, $title = '', $footer = '')
     {

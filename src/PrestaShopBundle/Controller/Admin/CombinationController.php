@@ -30,8 +30,6 @@ namespace PrestaShopBundle\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
-use PrestaShopBundle\Form\Admin\Product\ProductCombination;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 
 class CombinationController extends Controller

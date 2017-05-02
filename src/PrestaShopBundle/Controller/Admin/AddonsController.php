@@ -41,7 +41,7 @@ class AddonsController extends Controller
     /**
      * Controller responsible of the authentication on PrestaShop Addons
      * @param  Request $request
-     * @return Response
+     * @return JsonResponse
      */
     public function loginAction(Request $request)
     {
@@ -77,9 +77,11 @@ class AddonsController extends Controller
         } catch (Exception $e) {
             $response->setData([
                 'success' => 0,
-                'message' => $translator->trans('PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.',
-                        array(),
-                        'Admin.Notifications.Error'),
+                'message' => $translator->trans(
+                    'PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.',
+                    array(),
+                    'Admin.Notifications.Error'
+                ),
             ]);
         }
 
@@ -89,7 +91,7 @@ class AddonsController extends Controller
     /**
      * Controller responsible of the authentication on PrestaShop Addons
      * @param  Request $request
-     * @return Response
+     * @return JsonResponse
      */
     public function logoutAction(Request $request)
     {
