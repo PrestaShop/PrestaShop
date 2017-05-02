@@ -1,13 +1,24 @@
 <template>
   <div id="app" class="translations-app">
     <TranslationsHeader />
-    <Search @search="onSearch" />
+    <div class="container-fluid">
+      <div class="row">
+        <Search @search="onSearch" />
+      </div>
+
+      <div class="row">
+        <Sidebar />
+        <Main />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import TranslationsHeader from './header/translations-header';
   import Search from './header/search';
+  import Sidebar from './sidebar';
+  import Main from './main';
 
   export default {
     name: 'app',
@@ -20,7 +31,9 @@
     },
     components: {
       TranslationsHeader,
-      Search
+      Search,
+      Sidebar,
+      Main
     },
   }
 </script>

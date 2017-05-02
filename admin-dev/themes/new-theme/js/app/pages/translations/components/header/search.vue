@@ -1,16 +1,14 @@
 <template>
-  <div id="search" class="row m-b-2">
-    <div class="col-md-8">
-      <div class="m-b-2">
-        <form class="search-form" @submit.prevent>
-          <label>{{trans('search_label')}}</label>
-          <PSTags :tags="tags" @tagChange="onSearch" :placeholder="trans('search_placeholder')" />
-          <button type="button" class="btn btn-primary search-button" @click="onSearch">
-            <i class="material-icons">search</i>
-            {{trans('button_search')}}
-          </button>
-        </form>
-      </div>
+  <div id="search" class="col-md-8">
+    <div class="m-b-2">
+      <form class="search-form" @submit.prevent>
+        <label>{{trans('search_label')}}</label>
+        <PSTags :tags="tags" @tagChange="onSearch" :placeholder="trans('search_placeholder')" />
+        <button type="button" class="btn btn-primary search-button" @click="onSearch">
+          <i class="material-icons">search</i>
+          {{trans('button_search')}}
+        </button>
+      </form>
     </div>
   </div>
 </template>
