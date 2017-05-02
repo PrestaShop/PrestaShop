@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Overview from 'app/pages/translations/components/overview/index';
+import Overview from 'app/pages/translations/components/app';
 
 Vue.use(VueRouter);
 
