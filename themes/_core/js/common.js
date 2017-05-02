@@ -28,3 +28,23 @@ export function psShowHide () {
   $('.ps-shown-by-js').show();
   $('.ps-hidden-by-js').hide();
 }
+
+/**
+ * This function returns the value of the requested parameter from the URL
+ * @param {string} paramName - the name of the requested parameter
+ * @returns {string|null}
+ */
+export function psGetRequestParameter(paramName) {
+  var vars = {};
+  window.location.href.replace(location.hash, '').replace(
+    /[?&]+([^=&]+)=?([^&]*)?/gi,
+    function (m, key, value) {
+      vars[key] = value !== undefined ? value : '';
+    }
+  );
+  if (paramName) {
+    return vars[paramName] ? vars[paramName] : null;
+  }
+
+  return vars;
+}
