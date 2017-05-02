@@ -57,6 +57,9 @@ $(document).ready(() => {
   }
 
   prestashop.on('updatedDeliveryForm', (params) => {
+    if (typeof params.deliveryOption === 'undefined' || 0 === params.deliveryOption.length) {
+        return;
+    }
     // Hide all carrier extra content ...
     $(".carrier-extra-content").hide();
     // and show the one related to the selected carrier
