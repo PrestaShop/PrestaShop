@@ -138,104 +138,100 @@ class TreeBuilder
      */
     public function cleanTreeToApi($tree)
     {
-        $tree['__metadata'] = array(
-            'total_translations' => 0,
-            'total_missing_translations' => 0
+        $cleanTree = array(
+//            'total_translations' => 0,
+//            'total_missing_translations' => 0,
         );
 
-        foreach ($tree as $k1 => &$t1) {
-            if ('__metadata' === $k1) {
-                break;
-            }
-            $this->cleanMetadata($t1);
-            if (isset($t1['__metadata']['missing_translations'])) {
-                $t1['__metadata']['total_missing_translations'] += $t1['__metadata']['missing_translations'];
-                $tree['__metadata']['total_missing_translations'] += $t1['__metadata']['missing_translations'];
-                unset($t1['__metadata']['missing_translations']);
-            }
+        foreach ($tree as $k1 => $t1) {
+            if ('__metadata' !== $k1) {
+                $this->addTreeInfo($cleanTree, $k1, $k1);
 
-            if (isset($t1['__messages'])) {
-                $t1['__metadata']['total_translations'] += count(current($t1['__messages']));
-                $tree['__metadata']['total_translations'] += count(current($t1['__messages']));
-                unset($t1['__messages']);
+                if (array_key_exists('__messages', $t1)) {
+                    $cleanTree[$k1]['total_translations'] += count(current($t1['__messages']));
+//                    $cleanTree['total_translations'] += count(current($t1['__messages']));
 
-            } else {
-                foreach ($t1 as $k2 => &$t2) {
-                    if ('__metadata' !== $k2) {
-                        $this->cleanMetadata($t2);
-                    }
-                    if (isset($t2['__metadata']['missing_translations'])) {
-                        $t1['__metadata']['total_missing_translations'] += $t2['__metadata']['missing_translations'];
-                        $t2['__metadata']['total_missing_translations'] += $t2['__metadata']['missing_translations'];
-                        $tree['__metadata']['total_missing_translations'] += $t2['__metadata']['missing_translations'];
-                        unset($t2['__metadata']['missing_translations']);
+                    if (array_key_exists('__metadata', $t1) && array_key_exists('missing_translations', $t1['__metadata'])) {
+                        $cleanTree[$k1]['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
+//                        $cleanTree['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
                     }
 
-                    if (isset($t2['__messages'])) {
-                        $t1['__metadata']['total_translations'] += count(current($t2['__messages']));
-                        $t2['__metadata']['total_translations'] += count(current($t2['__messages']));
-                        $tree['__metadata']['total_translations'] += count(current($t2['__messages']));
-                        unset($t2['__messages']);
+                } else {
+                    foreach ($t1 as $k2 => $t2) {
+                        if ('__metadata' !== $k2) {
+                            $this->addTreeInfo($cleanTree[$k1]['children'], $k2, $k1 . $k2);
 
-                    } else {
-                        foreach ($t2 as $k3 => &$t3) {
-                            if ('__metadata' !== $k3) {
-                                $this->cleanMetadata($t3);
-                            }
-                            if (isset($t3['__metadata']['missing_translations'])) {
-                                $t1['__metadata']['total_missing_translations'] += $t3['__metadata']['missing_translations'];
-                                $t2['__metadata']['total_missing_translations'] += $t3['__metadata']['missing_translations'];
-                                $t3['__metadata']['total_missing_translations'] += $t3['__metadata']['missing_translations'];
-                                $tree['__metadata']['total_missing_translations'] += $t3['__metadata']['missing_translations'];
-                                unset($t3['__metadata']['missing_translations']);
+                            if (array_key_exists('__messages', $t2)) {
+                                $cleanTree[$k1]['children'][$k2]['total_translations'] += count(current($t2['__messages']));
+                                $cleanTree[$k1]['total_translations'] += count(current($t2['__messages']));
+//                                $cleanTree['total_translations'] += count(current($t2['__messages']));
+
+                                if (array_key_exists('__metadata', $t2) && array_key_exists('missing_translations', $t2['__metadata'])) {
+                                    $cleanTree[$k1]['children'][$k2]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
+                                    $cleanTree[$k1]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
+//                                    $cleanTree['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
+                                }
+
+                            } else {
+                                foreach ($t2 as $k3 => $t3) {
+                                    if ('__metadata' !== $k3) {
+                                        $this->addTreeInfo($cleanTree[$k1]['children'][$k2]['children'], $k3, $k1 . $k2 . $k3);
+
+                                        if (array_key_exists('__messages', $t3)) {
+                                            $cleanTree[$k1]['children'][$k2]['children'][$k3]['total_translations'] += count(current($t3['__messages']));
+                                            $cleanTree[$k1]['children'][$k2]['total_translations'] += count(current($t3['__messages']));
+                                            $cleanTree[$k1]['total_translations'] += count(current($t3['__messages']));
+//                                            $cleanTree['total_translations'] += count(current($t3['__messages']));
+                                        }
+
+                                        if (array_key_exists('__metadata', $t3) && array_key_exists('missing_translations', $t3['__metadata'])) {
+                                            $cleanTree[$k1]['children'][$k2]['children'][$k3]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                            $cleanTree[$k1]['children'][$k2]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                            $cleanTree[$k1]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+//                                            $cleanTree['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                        }
+
+                                        if (empty($cleanTree[$k1]['children'][$k2]['children'][$k3]['children'])) {
+                                            unset($cleanTree[$k1]['children'][$k2]['children'][$k3]['children']);
+                                        }
+                                    }
+                                }
                             }
 
-                            if (isset($t3['__messages'])) {
-                                $t1['__metadata']['total_translations'] += count(current($t3['__messages']));
-                                $t2['__metadata']['total_translations'] += count(current($t3['__messages']));
-                                $t3['__metadata']['total_translations'] += count(current($t3['__messages']));
-                                $tree['__metadata']['total_translations'] += count(current($t3['__messages']));
-                                unset($t3['__messages']);
+                            if (empty($cleanTree[$k1]['children'][$k2]['children'])) {
+                                unset($cleanTree[$k1]['children'][$k2]['children']);
                             }
                         }
+                    }
+
+                    if (empty($cleanTree[$k1]['children'])) {
+                        unset($cleanTree[$k1]['children']);
                     }
                 }
             }
         }
 
-        return $tree;
+        return $cleanTree;
     }
 
     /**
-     * @param $subtree
+     * @param $tree
+     * @param $name
+     * @param $fullName
+     * @param bool $withChild
      * @return mixed
      */
-    private function cleanMetadata(&$subtree)
+    private function addTreeInfo(&$tree, $name, $fullName)
     {
-        if (is_array($subtree)) {
-            if (!isset($subtree['__metadata'])) {
-                $subtree['__metadata']['total_translations'] = 0;
-                $subtree['__metadata']['total_missing_translations'] = 0;
-            }
+        $tree[$name]['name'] = $name;
+        $tree[$name]['full_name'] = $fullName;
+        $tree[$name]['total_translations'] = 0;
+        $tree[$name]['total_missing_translations'] = 0;
+        $tree[$name]['children'] = array();
 
-            if (!isset($subtree['__metadata']['total_translations'])) {
-                $subtree['__metadata']['total_translations'] = 0;
-            }
-
-            if (!isset($subtree['__metadata']['total_missing_translations'])) {
-                $subtree['__metadata']['total_missing_translations'] = 0;
-            }
-        }
-
-        if (isset($subtree['__fixed_length_id'])) {
-            unset($subtree['__fixed_length_id']);
-        }
-        if (isset($subtree['__domain'])) {
-            unset($subtree['__domain']);
-        }
-
-        return $subtree;
+        return $tree;
     }
+
     /**
      * There are domains containing multiple words,
      * hence these domains should not be split from those words in camelcase.
