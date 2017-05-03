@@ -110,13 +110,14 @@
           this.applyFilter();
         }
       },
-      applyFilter(id_stock_mvt_reason, id_employee) {
+      applyFilter() {
         let request = (this.$route.name === 'overview') ? 'getStock' : 'getMovements';
         this.$store.dispatch(request, {
           suppliers : this.suppliers,
           categories: this.categories,
           id_stock_mvt_reason : this.id_stock_mvt_reason,
-          id_employee: this.id_employee
+          id_employee: this.id_employee,
+          keywords: this.$store.getters.keywords
         });
       },
       onChange(item) {
@@ -161,10 +162,10 @@
   .collapse-button {
     width: 100%;
     text-align: left;
-  .material-icons {
-    vertical-align: bottom;
-    font-size: 20px;
-    color: $gray-medium;
-  }
+    .material-icons {
+      vertical-align: bottom;
+      font-size: 20px;
+      color: $gray-medium;
+    }
   }
 </style>
