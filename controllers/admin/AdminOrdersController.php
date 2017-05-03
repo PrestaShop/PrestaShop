@@ -546,10 +546,10 @@ class AdminOrdersControllerCore extends AdminController
                                     }
                                 }
                             }
-
-                            Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
                         }
-                        $this->errors[] = Tools::displayError('An error occurred while changing order status, or we were unable to send an email to the customer.');
+			else{
+                            $this->errors[] = Tools::displayError('An error occurred while changing order status, or we were unable to send an email to the customer.');
+			}
                     } else {
                         $this->errors[] = Tools::displayError('The order has already been assigned this status.');
                     }
