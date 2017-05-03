@@ -65,7 +65,7 @@ class UpdateLicensesCommand extends Command
 
     private $aflLicense = array(
         'themes/classic/',
-        'themes/starterTheme/',
+        'themes/StarterTheme/',
         'modules/',
     );
 
@@ -301,8 +301,8 @@ class UpdateLicensesCommand extends Command
         $content = $file->getContents();
 
         $regexToFind = array(
-            '' => '/"(author)": "(\w+|)?"/',
-            'license' => '/"(license)": "(\w+|)?"/',
+            'author' => '/"(author)": "(.+|)?"/',
+            'license' => '/"(license)": "(.+|)?"/',
         );
         $regexToReplace = array(
             '"author": "PrestaShop"',
