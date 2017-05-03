@@ -186,7 +186,7 @@ class CustomerCore extends ObjectModel
             'optin' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'website' => array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
             'company' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'siret' => array('type' => self::TYPE_STRING, 'validate' => 'isSiret'),
+            'siret' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'ape' => array('type' => self::TYPE_STRING, 'validate' => 'isApe'),
             'outstanding_allow_amount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'copy_post' => false),
             'show_public_prices' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
