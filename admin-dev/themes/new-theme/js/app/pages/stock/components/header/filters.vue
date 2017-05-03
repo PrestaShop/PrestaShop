@@ -20,11 +20,11 @@
           </div>
           <div v-else class="p-y-2 p-x-2">
             <h2>{{trans('filter_movements_type')}}</h2>
-            <PSSelect :items="movementsTypes" itemID="id_stock_mvt_reason" itemName="display_name">
+            <PSSelect :items="movementsTypes" itemID="id_stock_mvt_reason" itemName="display_name" @change="onChange">
               {{trans('none')}}
             </PSSelect>
             <h2 class="m-t-2">{{trans('filter_movements_employee')}}</h2>
-            <PSSelect :items="employees" itemID="id_employee" itemName="display_name">
+            <PSSelect :items="employees" itemID="id_employee" itemName="display_name" @change="onChange">
              {{trans('none')}}
             </PSSelect>
             <h2 class="m-t-2">{{trans('filter_movements_period')}}</h2>
@@ -55,6 +55,7 @@
   import FilterComponent from './filters/filter-component';
   import PSSelect from 'app/widgets/ps-select';
   import PSButton from 'app/widgets/ps-button';
+  import _ from 'lodash';
 
   export default {
     computed : {
@@ -65,7 +66,26 @@
         return this.$store.getters.employees;
       },
       movementsTypes() {
-        return this.$store.getters.movementsTypes;
+        let displayName;
+        let movements = [];
+        return this.$store.getters.movementsTypes.filter(movement => {
+          if(displayName !== movement.display_name) {
+            displayName = movement.display_name;
+            movements.push(movement);
+            return movements;
+          }
+          else {
+            let item = _.find(movements, {
+              display_name : displayName
+            });
+
+            let clone = Object.assign(item, {
+              id_stock_mvt_reason: [item.id_stock_mvt_reason]
+            });
+
+            clone.id_stock_mvt_reason.push(movement.id_stock_mvt_reason);
+          }
+        });
       }
     },
     methods: {
@@ -90,12 +110,23 @@
           this.applyFilter();
         }
       },
-      applyFilter() {
+      applyFilter(id_stock_mvt_reason, id_employee) {
         let request = (this.$route.name === 'overview') ? 'getStock' : 'getMovements';
         this.$store.dispatch(request, {
           suppliers : this.suppliers,
-          categories: this.categories
+          categories: this.categories,
+          id_stock_mvt_reason : this.id_stock_mvt_reason,
+          id_employee: this.id_employee
         });
+      },
+      onChange(item) {
+        if(item.itemID === 'id_stock_mvt_reason') {
+          this.id_stock_mvt_reason = item.value === 'default' ? [] : item.value;
+        }
+        else {
+          this.id_employee = item.value === 'default' ? [] : item.value;
+        }
+        this.applyFilter();
       }
     },
     components: {
@@ -111,7 +142,9 @@
       return {
         disabled: true,
         suppliers: [],
-        categories: []
+        categories: [],
+        id_stock_mvt_reason : [],
+        id_employee: []
       }
     }
   }

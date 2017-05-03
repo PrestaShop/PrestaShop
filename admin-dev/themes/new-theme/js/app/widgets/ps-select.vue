@@ -19,7 +19,10 @@
     props: ['items', 'itemID', 'itemName'],
     methods: {
       onChange(e) {
-        this.$emit('change', this.selected);
+        this.$emit('change', {
+          value: this.selected,
+          itemID: this.itemID
+        });
       }
     },
     data() {

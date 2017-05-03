@@ -58,7 +58,9 @@ export const getMovements = ({ commit }, payload) => {
       page_index: payload.page_index,
       keywords: payload.keywords ? payload.keywords : [],
       supplier_id: payload.suppliers ? payload.suppliers : [],
-      category_id: payload.categories ? payload.categories : []
+      category_id: payload.categories ? payload.categories : [],
+      id_stock_mvt_reason: payload.id_stock_mvt_reason ? payload.id_stock_mvt_reason : [],
+      id_employee: payload.id_employee ? payload.id_employee : []
     }
   }).then(function(response) {
     commit(types.LOADING_STATE, false);
