@@ -42,6 +42,7 @@ class QueryStockMovementParamsCollection  extends QueryStockParamsCollection
             'features',
             'date_add',
             'id_employee',
+            'id_stock_mvt_reason',
         );
     }
 
