@@ -10,6 +10,7 @@ Vue.use(Vuex);
 const state = {
   translations: {},
   catalog: {},
+  domainsTree: {},
 };
 
 // getters are functions
@@ -19,6 +20,9 @@ const getters = {
   },
   catalog(state) {
     return state.catalog;
+  },
+  domainsTree(state) {
+    return state.domainsTree;
   }
 };
 

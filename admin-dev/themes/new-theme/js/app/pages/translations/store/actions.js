@@ -22,3 +22,12 @@ export const getCatalog = ({ commit }) => {
     return showGrowl('error', error.statusText);
   });
 };
+
+export const getDomainsTree = ({ commit }) => {
+  let url = window.data.domainsTreeUrl;
+  Vue.http.get(url).then(function(response) {
+    commit(types.SET_DOMAINS_TREE, response.body);
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};

@@ -7,4 +7,7 @@ export default {
   [types.SET_CATALOG](state, catalog) {
     state.catalog = catalog;
   },
+  [types.SET_DOMAINS_TREE](state, domainsTree) {
+    state.domainsTree = domainsTree;
+  },
 };
