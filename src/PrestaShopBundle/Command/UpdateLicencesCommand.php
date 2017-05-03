@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -40,10 +40,10 @@ class UpdateLicencesCommand extends Command
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the {licenceName}
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * {licenceLink}
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -56,9 +56,17 @@ class UpdateLicencesCommand extends Command
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-{currentYear} PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   {licenceLink} {licenceName}
  * International Registered Trademark & Property of PrestaShop SA
  */";
+
+    private $licence;
+
+    private $aflLicence = array(
+        'themes/classic/',
+        'themes/starterTheme/',
+        'modules/',
+    );
 
     protected function configure()
     {
@@ -71,11 +79,17 @@ class UpdateLicencesCommand extends Command
     {
         $this->text = str_replace('{currentYear}', date('Y'), $this->text);
 
-        $this->findAndCheckExtension($output, 'php');
-        $this->findAndCheckExtension($output, 'js');
-        $this->findAndCheckExtension($output, 'css');
-        $this->findAndCheckExtension($output, 'tpl');
-        $this->findAndCheckExtension($output, 'html.twig');
+        $extensions = array(
+            'php',
+            'js',
+            'css',
+            'tpl',
+            'html.twig',
+        );
+
+        foreach ($extensions as $extension) {
+            $this->findAndCheckExtension($output, $extension);
+        }
     }
 
     private function findAndCheckExtension(OutputInterface $output, $ext)
@@ -85,8 +99,23 @@ class UpdateLicencesCommand extends Command
             ->files()
             ->name('*.'.$ext)
             ->in(_PS_ROOT_DIR_)
-            ->exclude(array('.git', 'admin-dev/filemanager', 'js/tiny_mce', 'js/jquery', 'js/cropper',
-                'modules', 'tests/resources/ModulesOverrideInstallUninstallTest', 'tools/htmlpurifier', 'vendor'))
+            ->exclude(array(
+                '.git',
+                '.github',
+                '.composer',
+                'admin-dev/filemanager',
+                'js/tiny_mce',
+                'js/jquery',
+                'js/cropper',
+                'tests/resources/ModulesOverrideInstallUninstallTest',
+                'tools/htmlpurifier',
+                'vendor',
+                'node_modules',
+                'themes/classic/assets/',
+                'themes/starterTheme/assets/',
+                'admin-dev/themes/default/public/',
+                'admin-dev/themes/new-theme/public/',
+            ))
             ->ignoreDotFiles(false);
         $parser = (new \PhpParser\ParserFactory)->create(\PhpParser\ParserFactory::PREFER_PHP7);
 
@@ -97,6 +126,9 @@ class UpdateLicencesCommand extends Command
 
         foreach ($finder as $file)
         {
+            $this->licence = $this->text;
+            $this->makeGoodLicence($file->getRelativePathname());
+
             switch ($file->getExtension()) {
                 case 'php':
                     try {
@@ -126,13 +158,58 @@ class UpdateLicencesCommand extends Command
         $output->writeln('');
     }
 
+    /**
+     * @param $fileName
+     */
+    private function makeGoodLicence($fileName)
+    {
+        if ($this->isAFLLicence($fileName)) {
+            $this->makeAFLLicence();
+        } else {
+            $this->makeOSLLicence();
+        }
+    }
+
+    /**
+     * @param $fileName
+     * @return bool
+     */
+    private function isAFLLicence($fileName)
+    {
+        foreach ($this->aflLicence as $afl) {
+            if (0 === strpos($fileName, $afl)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Replace for OSL licences
+     */
+    private function makeOSLLicence()
+    {
+        $this->licence = str_replace('{licenceName}', 'Open Software License (OSL 3.0)', $this->licence);
+        $this->licence = str_replace('{licenceLink}', 'https://opensource.org/licenses/OSL-3.0', $this->licence);
+    }
+
+    /**
+     * Replace for AFL licences
+     */
+    private function makeAFLLicence()
+    {
+        $this->licence = str_replace('{licenceName}', 'Academic Free License 3.0 (AFL-3.0)', $this->licence);
+        $this->licence = str_replace('{licenceLink}', 'https://opensource.org/licenses/AFL-3.0', $this->licence);
+    }
+
     private function addLicenceToFile($file, $startDelimiter = '\/', $endDelimiter = '\/')
     {
         $content = $file->getContents();
         // Regular expression found thanks to Stephen Ostermiller's Blog. http://blog.ostermiller.org/find-comment
         $regex = '%'.$startDelimiter.'\*([^*]|[\r\n]|(\*+([^*'.$endDelimiter.']|[\r\n])))*\*+'.$endDelimiter.'%';
         $matches = array();
-        $text = $this->text;
+        $text = $this->licence;
         if ($startDelimiter != '\/') {
             $text = $startDelimiter.ltrim($text, '/');
         }
@@ -162,7 +239,7 @@ class UpdateLicencesCommand extends Command
     {
         if (!$node->hasAttribute('comments')) {
             $needle = "<?php";
-            $replace = "<?php\n".$this->text."\n";
+            $replace = "<?php\n".$this->licence."\n";
             $haystack = $file->getContents();
 
             $pos = strpos($haystack, $needle);
@@ -178,8 +255,8 @@ class UpdateLicencesCommand extends Command
         $comments = $node->getAttribute('comments');
         foreach ($comments as $comment) {
             if ($comment instanceof \PhpParser\Comment
-                    && strpos($comment->getText(), 'prestashop') !== false) {
-                file_put_contents($file->getRelativePathname(), str_replace($comment->getText(), $this->text, $file->getContents()));
+                && strpos($comment->getText(), 'prestashop') !== false) {
+                file_put_contents($file->getRelativePathname(), str_replace($comment->getText(), $this->licence, $file->getContents()));
             }
         }
     }
