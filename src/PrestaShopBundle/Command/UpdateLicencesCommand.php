@@ -32,6 +32,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 class UpdateLicencesCommand extends Command
 {
@@ -85,6 +86,7 @@ class UpdateLicencesCommand extends Command
             'css',
             'tpl',
             'html.twig',
+            'json',
         );
 
         foreach ($extensions as $extension) {
@@ -127,7 +129,7 @@ class UpdateLicencesCommand extends Command
         foreach ($finder as $file)
         {
             $this->licence = $this->text;
-            $this->makeGoodLicence($file->getRelativePathname());
+            $this->makeGoodLicence($file);
 
             switch ($file->getExtension()) {
                 case 'php':
@@ -150,6 +152,9 @@ class UpdateLicencesCommand extends Command
                 case 'twig':
                     $this->addLicenceToTwigTemplate($file);
                     break;
+                case 'json':
+                    $this->addLicenceToJsonFile($file);
+                    break;
             }
             $progress->advance();
         }
@@ -159,11 +164,11 @@ class UpdateLicencesCommand extends Command
     }
 
     /**
-     * @param $fileName
+     * @param SplFileInfo $file
      */
-    private function makeGoodLicence($fileName)
+    private function makeGoodLicence(SplFileInfo $file)
     {
-        if ($this->isAFLLicence($fileName)) {
+        if ($this->isAFLLicence($file->getRelativePathname())) {
             $this->makeAFLLicence();
         } else {
             $this->makeOSLLicence();
@@ -235,7 +240,11 @@ class UpdateLicencesCommand extends Command
         file_put_contents($file->getRelativePathname(), $content);
     }
 
-    private function addLicenceToNode($node, $file)
+    /**
+     * @param $node
+     * @param SplFileInfo $file
+     */
+    private function addLicenceToNode($node, SplFileInfo $file)
     {
         if (!$node->hasAttribute('comments')) {
             $needle = "<?php";
@@ -261,15 +270,49 @@ class UpdateLicencesCommand extends Command
         }
     }
 
-    private function addLicenceToSmartyTemplate($file)
+    /**
+     * @param SplFileInfo $file
+     */
+    private function addLicenceToSmartyTemplate(SplFileInfo $file)
     {
         $this->addLicenceToFile($file, '{', '}');
     }
 
-    private function addLicenceToTwigTemplate($file)
+    /**
+     * @param SplFileInfo $file
+     */
+    private function addLicenceToTwigTemplate(SplFileInfo $file)
     {
         if (strrpos($file->getRelativePathName(), 'html.twig') !== false) {
             $this->addLicenceToFile($file, '{#', '#}');
         }
+    }
+
+    /**
+     * @param SplFileInfo $file
+     * @return bool
+     */
+    private function addLicenceToJsonFile(SplFileInfo $file)
+    {
+        if (!in_array($file->getFilename(), array('composer.json', 'package.json'))) {
+            return false;
+        }
+
+        $content = $file->getContents();
+
+        $regexToFind = array(
+            '' => '/"(author)": "(\w+|)?"/',
+            'license' => '/"(license)": "(\w+|)?"/',
+        );
+        $regexToReplace = array(
+            '"author": "PrestaShop"',
+            '"license": "'.($this->isAFLLicence($file->getRelativePathname()) ? 'AFL-3.0' : 'OSL 3.0').'"',
+        );
+
+        $content = preg_replace($regexToFind, $regexToReplace, $content);
+
+        file_put_contents($file->getRelativePathname(), $content);
+
+        return true;
     }
 }
