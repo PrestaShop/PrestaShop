@@ -34,17 +34,17 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class UpdateLicencesCommand extends Command
+class UpdateLicensesCommand extends Command
 {
     private $text = "/**
  * 2007-{currentYear} PrestaShop
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the {licenceName}
+ * This source file is subject to the {licenseName}
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * {licenceLink}
+ * {licenseLink}
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -57,13 +57,13 @@ class UpdateLicencesCommand extends Command
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-{currentYear} PrestaShop SA
- * @license   {licenceLink} {licenceName}
+ * @license   {licenseLink} {licenseName}
  * International Registered Trademark & Property of PrestaShop SA
  */";
 
-    private $licence;
+    private $license;
 
-    private $aflLicence = array(
+    private $aflLicense = array(
         'themes/classic/',
         'themes/starterTheme/',
         'modules/',
@@ -72,8 +72,8 @@ class UpdateLicencesCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('prestashop:licences:update')
-            ->setDescription('Rewrite your licences to be up-to-date');
+            ->setName('prestashop:licenses:update')
+            ->setDescription('Rewrite your licenses to be up-to-date');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -128,15 +128,15 @@ class UpdateLicencesCommand extends Command
 
         foreach ($finder as $file)
         {
-            $this->licence = $this->text;
-            $this->makeGoodLicence($file);
+            $this->license = $this->text;
+            $this->makeGoodLicense($file);
 
             switch ($file->getExtension()) {
                 case 'php':
                     try {
                         $nodes = $parser->parse($file->getContents());
                         if (count($nodes)) {
-                            $this->addLicenceToNode($nodes[0], $file);
+                            $this->addLicenseToNode($nodes[0], $file);
                         }
                     } catch (\PhpParser\Error $exception) {
                         $output->writeln("Syntax error on file ". $file->getRelativePathname() .". Continue ...");
@@ -144,16 +144,16 @@ class UpdateLicencesCommand extends Command
                     break;
                 case 'js':
                 case 'css':
-                    $this->addLicenceToFile($file);
+                    $this->addLicenseToFile($file);
                     break;
                 case 'tpl':
-                    $this->addLicenceToSmartyTemplate($file);
+                    $this->addLicenseToSmartyTemplate($file);
                     break;
                 case 'twig':
-                    $this->addLicenceToTwigTemplate($file);
+                    $this->addLicenseToTwigTemplate($file);
                     break;
                 case 'json':
-                    $this->addLicenceToJsonFile($file);
+                    $this->addLicenseToJsonFile($file);
                     break;
             }
             $progress->advance();
@@ -166,12 +166,12 @@ class UpdateLicencesCommand extends Command
     /**
      * @param SplFileInfo $file
      */
-    private function makeGoodLicence(SplFileInfo $file)
+    private function makeGoodLicense(SplFileInfo $file)
     {
-        if ($this->isAFLLicence($file->getRelativePathname())) {
-            $this->makeAFLLicence();
+        if ($this->isAFLLicense($file->getRelativePathname())) {
+            $this->makeAFLLicense();
         } else {
-            $this->makeOSLLicence();
+            $this->makeOSLLicense();
         }
     }
 
@@ -179,9 +179,9 @@ class UpdateLicencesCommand extends Command
      * @param $fileName
      * @return bool
      */
-    private function isAFLLicence($fileName)
+    private function isAFLLicense($fileName)
     {
-        foreach ($this->aflLicence as $afl) {
+        foreach ($this->aflLicense as $afl) {
             if (0 === strpos($fileName, $afl)) {
                 return true;
             }
@@ -191,30 +191,30 @@ class UpdateLicencesCommand extends Command
     }
 
     /**
-     * Replace for OSL licences
+     * Replace for OSL licenses
      */
-    private function makeOSLLicence()
+    private function makeOSLLicense()
     {
-        $this->licence = str_replace('{licenceName}', 'Open Software License (OSL 3.0)', $this->licence);
-        $this->licence = str_replace('{licenceLink}', 'https://opensource.org/licenses/OSL-3.0', $this->licence);
+        $this->license = str_replace('{licenseName}', 'Open Software License (OSL 3.0)', $this->license);
+        $this->license = str_replace('{licenseLink}', 'https://opensource.org/licenses/OSL-3.0', $this->license);
     }
 
     /**
-     * Replace for AFL licences
+     * Replace for AFL licenses
      */
-    private function makeAFLLicence()
+    private function makeAFLLicense()
     {
-        $this->licence = str_replace('{licenceName}', 'Academic Free License 3.0 (AFL-3.0)', $this->licence);
-        $this->licence = str_replace('{licenceLink}', 'https://opensource.org/licenses/AFL-3.0', $this->licence);
+        $this->license = str_replace('{licenseName}', 'Academic Free License 3.0 (AFL-3.0)', $this->license);
+        $this->license = str_replace('{licenseLink}', 'https://opensource.org/licenses/AFL-3.0', $this->license);
     }
 
-    private function addLicenceToFile($file, $startDelimiter = '\/', $endDelimiter = '\/')
+    private function addLicenseToFile($file, $startDelimiter = '\/', $endDelimiter = '\/')
     {
         $content = $file->getContents();
         // Regular expression found thanks to Stephen Ostermiller's Blog. http://blog.ostermiller.org/find-comment
         $regex = '%'.$startDelimiter.'\*([^*]|[\r\n]|(\*+([^*'.$endDelimiter.']|[\r\n])))*\*+'.$endDelimiter.'%';
         $matches = array();
-        $text = $this->licence;
+        $text = $this->license;
         if ($startDelimiter != '\/') {
             $text = $startDelimiter.ltrim($text, '/');
         }
@@ -244,11 +244,11 @@ class UpdateLicencesCommand extends Command
      * @param $node
      * @param SplFileInfo $file
      */
-    private function addLicenceToNode($node, SplFileInfo $file)
+    private function addLicenseToNode($node, SplFileInfo $file)
     {
         if (!$node->hasAttribute('comments')) {
             $needle = "<?php";
-            $replace = "<?php\n".$this->licence."\n";
+            $replace = "<?php\n".$this->license."\n";
             $haystack = $file->getContents();
 
             $pos = strpos($haystack, $needle);
@@ -265,7 +265,7 @@ class UpdateLicencesCommand extends Command
         foreach ($comments as $comment) {
             if ($comment instanceof \PhpParser\Comment
                 && strpos($comment->getText(), 'prestashop') !== false) {
-                file_put_contents($file->getRelativePathname(), str_replace($comment->getText(), $this->licence, $file->getContents()));
+                file_put_contents($file->getRelativePathname(), str_replace($comment->getText(), $this->license, $file->getContents()));
             }
         }
     }
@@ -273,18 +273,18 @@ class UpdateLicencesCommand extends Command
     /**
      * @param SplFileInfo $file
      */
-    private function addLicenceToSmartyTemplate(SplFileInfo $file)
+    private function addLicenseToSmartyTemplate(SplFileInfo $file)
     {
-        $this->addLicenceToFile($file, '{', '}');
+        $this->addLicenseToFile($file, '{', '}');
     }
 
     /**
      * @param SplFileInfo $file
      */
-    private function addLicenceToTwigTemplate(SplFileInfo $file)
+    private function addLicenseToTwigTemplate(SplFileInfo $file)
     {
         if (strrpos($file->getRelativePathName(), 'html.twig') !== false) {
-            $this->addLicenceToFile($file, '{#', '#}');
+            $this->addLicenseToFile($file, '{#', '#}');
         }
     }
 
@@ -292,7 +292,7 @@ class UpdateLicencesCommand extends Command
      * @param SplFileInfo $file
      * @return bool
      */
-    private function addLicenceToJsonFile(SplFileInfo $file)
+    private function addLicenseToJsonFile(SplFileInfo $file)
     {
         if (!in_array($file->getFilename(), array('composer.json', 'package.json'))) {
             return false;
@@ -306,7 +306,7 @@ class UpdateLicencesCommand extends Command
         );
         $regexToReplace = array(
             '"author": "PrestaShop"',
-            '"license": "'.($this->isAFLLicence($file->getRelativePathname()) ? 'AFL-3.0' : 'OSL 3.0').'"',
+            '"license": "'.($this->isAFLLicense($file->getRelativePathname()) ? 'AFL-3.0' : 'OSL 3.0').'"',
         );
 
         $content = preg_replace($regexToFind, $regexToReplace, $content);
