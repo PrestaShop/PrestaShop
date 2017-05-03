@@ -78,6 +78,25 @@ export const getTranslations = ({ commit }) => {
   });
 };
 
+export const getEmployees = ({ commit }) => {
+  let url = window.data.employeesUrl;
+  Vue.http.get(url).then(function(response) {
+    commit(types.SET_EMPLOYEES_LIST, response.body);
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};
+
+export const getMovementsTypes = ({ commit }) => {
+  let url = window.data.movementsTypesUrl;
+  Vue.http.get(url).then(function(response) {
+    commit(types.SET_MOVEMENTS_TYPES, response.body);
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};
+
+
 export const updateOrder = ({ commit }, order) => {
   commit(types.UPDATE_ORDER, order);
 };

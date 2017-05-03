@@ -1,16 +1,51 @@
 <template>
-  <select class="ps-select form-control">
-    <option selected>Open this select menu</option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-  </select>
+  <div class="ps-select">
+    <select class="form-control" v-model="selected" @change="onChange">
+      <option value="default" selected>
+        <slot />
+      </option>
+      <option
+        v-for="item in items"
+        :value="item[itemID]"
+      >
+        {{item[itemName]}}
+      </option>
+    </select>
+  </div>
 </template>
+
+<script>
+  export default {
+    props: ['items', 'itemID', 'itemName'],
+    methods: {
+      onChange(e) {
+        this.$emit('change', this.selected);
+      }
+    },
+    data() {
+      return {
+        selected: 'default'
+      }
+    }
+  }
+</script>
 
 <style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
   .ps-select {
-    appearance: none;
-    border-radius: 0;
+    position: relative;
+    select {
+      appearance: none;
+      border-radius: 0;
+    }
+    &::after {
+      content: "\E313";
+      font-family: 'Material Icons';
+      color: $gray-medium;
+      font-size: 20px;
+      position: absolute;
+      right: 5px;
+      top: 5px;
+    }
   }
 </style>

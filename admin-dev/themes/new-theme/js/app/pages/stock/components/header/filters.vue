@@ -20,10 +20,14 @@
           </div>
           <div v-else class="p-y-2 p-x-2">
             <h2>{{trans('filter_movements_type')}}</h2>
-            <PSSelect />
-            <h2>{{trans('filter_movements_employee')}}</h2>
-            <PSSelect />
-            <h2>{{trans('filter_movements_period')}}</h2>
+            <PSSelect :items="movementsTypes" itemID="id_stock_mvt_reason" itemName="display_name">
+              {{trans('none')}}
+            </PSSelect>
+            <h2 class="m-t-2">{{trans('filter_movements_employee')}}</h2>
+            <PSSelect :items="employees" itemID="id_employee" itemName="display_name">
+             {{trans('none')}}
+            </PSSelect>
+            <h2 class="m-t-2">{{trans('filter_movements_period')}}</h2>
           </div>
         </div>
         <div class="col-md-6">
@@ -56,6 +60,12 @@
     computed : {
       isOverview() {
         return this.$route.name === 'overview';
+      },
+      employees() {
+        return this.$store.getters.employees;
+      },
+      movementsTypes() {
+        return this.$store.getters.movementsTypes;
       }
     },
     methods: {

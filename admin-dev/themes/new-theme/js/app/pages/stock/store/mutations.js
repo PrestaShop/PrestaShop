@@ -30,5 +30,11 @@ export default {
   },
   [types.APP_IS_READY](state) {
     state.isReady = true;
+  },
+  [types.SET_EMPLOYEES_LIST](state, employees) {
+    state.employees = employees;
+  },
+  [types.SET_MOVEMENTS_TYPES](state, movementsTypes) {
+    state.movementsTypes = movementsTypes;
   }
 };
