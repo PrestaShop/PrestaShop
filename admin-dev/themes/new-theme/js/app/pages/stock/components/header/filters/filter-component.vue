@@ -9,17 +9,20 @@
       @tagChange="onTagChanged"
       @typing="onTyping"
     />
-    <ul class="m-t-1">
-      <PSTree
-        v-if="hasChildren"
-        ref="tree"
-        className="flex"
-        :model="list[0]"
-        @checked="onCheck"
-      >
-      </PSTree>
+
+    <PSTree
+      v-if="hasChildren"
+      ref="tree"
+      :hasCheckbox="true"
+      :model="list"
+      @checked="onCheck"
+    >
+    </PSTree>
+    <ul
+      class="m-t-1"
+      v-else
+    >
       <li
-        v-else
         v-for="(item, index) in items"
         v-show="item.visible"
         class="item"
@@ -27,8 +30,8 @@
         <PSTreeItem
           :label="item[label]"
           :model="item"
-          className="flex"
           @checked="onCheck"
+          :hasCheckbox="true"
         />
       </li>
     </ul>

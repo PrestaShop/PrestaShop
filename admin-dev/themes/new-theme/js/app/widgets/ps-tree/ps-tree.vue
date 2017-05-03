@@ -1,29 +1,16 @@
 <template>
-  <li class="tree">
-    <div :class="className">
-      <div :class="chevron" @click="toggle">
-        <i class="material-icons" v-if="open">keyboard_arrow_down</i>
-        <i class="material-icons" v-else>chevron_right</i>
-      </div>
+  <ul class="tree">
+    <li v-for="(element, index) in model">
       <PSTreeItem
         ref="item"
         :class="className"
-        :model="model"
-        :label="model.name"
+        :hasCheckbox="hasCheckbox"
+        :model="element"
+        :label="element.name"
         @checked="onCheck"
       />
-    </div>
-    <ul v-show="open" v-if="isFolder">
-      <PSTree
-        v-for="(model, index) in model.children"
-        :className="className"
-        :model="model"
-        :key="index"
-        @checked="onCheck"
-      >
-      </PSTree>
-    </ul>
-  </li>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -31,25 +18,11 @@
   export default {
     name: 'PSTree',
     props: {
-      model: Object,
-      className: String
-    },
-    computed: {
-      isFolder() {
-        return this.model.children && this.model.children.length;
-      },
-      chevron() {
-        if(!this.isFolder) {
-          return 'hidden';
-        }
-      }
+      model: Array,
+      className: String,
+      hasCheckbox: Boolean
     },
     methods: {
-      toggle() {
-        if (this.isFolder) {
-          this.open = !this.open;
-        }
-      },
       onCheck(obj) {
        this.$emit('checked', obj);
       }
@@ -66,24 +39,10 @@
 </script>
 
 <style lang="sass" scoped>
-  .tree {
-    .material-icons {
-      vertical-align: middle;
-      font-size: 20px;
-      cursor: pointer;
-    }
-  }
   ul {
-    margin-top: 5px;
-    padding-left: 15px;
     list-style-type: none;
-    cursor:pointer;
-    margin-bottom: 5px;
-    li {
-      margin-bottom: 5px;
-    }
-  }
-  .hidden {
-    visibility: hidden;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
   }
 </style>
