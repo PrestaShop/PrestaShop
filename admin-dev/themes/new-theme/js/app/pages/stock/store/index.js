@@ -19,6 +19,8 @@ const state = {
   categories: [],
   categoryList: [],
   movements: [],
+  employees: [],
+  movementsTypes: [],
   translations: {},
   isLoading: false,
   isReady: false
@@ -66,6 +68,12 @@ const getters = {
     }
 
     return convert(state.categories);
+  },
+  employees(state) {
+    return state.employees;
+  },
+  movementsTypes(state) {
+    return state.movementsTypes;
   },
   categoryList(state) {
     return state.categoryList;
