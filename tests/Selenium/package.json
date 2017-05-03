@@ -8,8 +8,8 @@
     "test": "php prepare-shop.php && wdio wdio.conf.js",
     "selenium": "selenium-standalone start"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "PrestaShop",
+  "license": "OSL 3.0",
   "dependencies": {
     "babel-polyfill": "^6.3.14",
     "babel-preset-es2015": "^6.3.13",

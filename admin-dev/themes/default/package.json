@@ -8,8 +8,8 @@
     "build": "webpack --progress --colors --debug --display-chunks",
     "watch": "webpack --progress --colors --debug --display-chunks --watch"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "PrestaShop",
+  "license": "OSL 3.0",
   "devDependencies": {
     "babel-core": "^6.5.2",
     "babel-loader": "^6.2.2",

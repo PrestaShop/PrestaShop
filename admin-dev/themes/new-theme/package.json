@@ -9,8 +9,8 @@
     "watch": "webpack --progress --colors --debug --display-chunks --watch",
     "start-dev-server": "webpack-dev-server --config webpack.config.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "PrestaShop",
+  "license": "OSL 3.0",
   "devDependencies": {
     "PrestaKit": "git+https://github.com/PrestaShop/prestashop-ui-kit.git",
     "autoprefixer": "^6.7.7",
