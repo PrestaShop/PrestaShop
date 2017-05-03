@@ -1,1 +1,2 @@
 export const SET_TRANSLATIONS = 'SET_TRANSLATIONS';
+export const SET_CATALOG= 'SET_CATALOG';

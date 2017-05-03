@@ -28,10 +28,11 @@
     {{ parent() }}
 
     <script>
-    var data = {
-      baseUrl: '{{ app.request.getBasePath() }}',
-      translationUrl: '{{url('api_i18n_translations_list', {'page' : 'international'})}}'
-    }
+      var data = {
+        baseUrl: '{{ app.request.getBasePath() }}',
+        domainCatalogUrl: '{{url('api_i18n_domain', {'locale' : 'fr-FR', 'domain' : 'AdminGlobal'})}}',
+        translationUrl: '{{url('api_i18n_translations_list', {'page' : 'international'})}}'
+      }
     </script>
 
     {% if app.environment == 'dev' %}

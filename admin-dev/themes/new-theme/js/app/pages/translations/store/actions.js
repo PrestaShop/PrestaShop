@@ -13,3 +13,12 @@ export const getTranslations = ({ commit }) => {
     return showGrowl('error', error.statusText);
   });
 };
+
+export const getCatalog = ({ commit }) => {
+  let url = window.data.domainCatalogUrl;
+  Vue.http.get(url).then(function(response) {
+    commit(types.SET_CATALOG, response.body);
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};

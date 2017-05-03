@@ -8,13 +8,17 @@ Vue.use(Vuex);
 // root state object.
 
 const state = {
-  translations: {}
+  translations: {},
+  catalog: {},
 };
 
 // getters are functions
 const getters = {
   translations(state) {
     return state.translations;
+  },
+  catalog(state) {
+    return state.catalog;
   }
 };
 

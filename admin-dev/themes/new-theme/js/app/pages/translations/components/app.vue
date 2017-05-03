@@ -8,7 +8,7 @@
 
       <div class="row">
         <Sidebar />
-        <Main />
+        <Principal />
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@
   import TranslationsHeader from './header/translations-header';
   import Search from './header/search';
   import Sidebar from './sidebar';
-  import Main from './main';
+  import Principal from './principal';
 
   export default {
     name: 'app',
@@ -33,7 +33,7 @@
       TranslationsHeader,
       Search,
       Sidebar,
-      Main
+      Principal
     },
   }
 </script>
