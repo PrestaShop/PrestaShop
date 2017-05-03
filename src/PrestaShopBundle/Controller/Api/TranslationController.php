@@ -140,10 +140,7 @@ class TranslationController extends ApiController
      */
     private function getModulesTree($lang, $type, $selected)
     {
-        $moduleProvider = new ModuleProvider(
-            $this->container->get('prestashop.translation.database_loader'),
-            $this->container->getParameter('translations_dir')
-        );
+        $moduleProvider = $this->container->get('prestashop.translation.module_provider');
         $moduleProvider->setModuleName($selected);
 
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
