@@ -18,7 +18,6 @@
           :hasCheckbox="hasCheckbox"
           :model="element"
           :label="element.name"
-          :opened="open"
           @checked="onCheck"
         />
       </li>
@@ -28,6 +27,8 @@
 
 <script>
   import PSTreeItem from './ps-tree-item';
+  import { EventBus } from 'app/utils/event-bus';
+
   export default {
     name: 'PSTree',
     props: {
@@ -44,19 +45,14 @@
        this.$emit('checked', obj);
       },
       expand() {
-        this.open = true;
+        EventBus.$emit('expand');
       },
       reduce() {
-        this.open = false;
+        EventBus.$emit('reduce');
       },
     },
     components: {
       PSTreeItem
-    },
-    data() {
-      return {
-        open: false
-      }
     }
   }
 </script>
