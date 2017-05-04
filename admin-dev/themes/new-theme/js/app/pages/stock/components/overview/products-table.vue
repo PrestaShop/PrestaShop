@@ -92,7 +92,7 @@
   }
 </script>
 
-<style lang="sass?outputStyle=expanded">
+<style lang="sass">
   @import "~PrestaKit/scss/custom/_variables.scss";
   .table {
     font-size: .9em;

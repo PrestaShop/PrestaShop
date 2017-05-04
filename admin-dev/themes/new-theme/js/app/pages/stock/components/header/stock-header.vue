@@ -18,7 +18,7 @@
   }
 </script>
 
-<style lang="sass?outputStyle=expanded" scoped>
+<style lang="sass" scoped>
   .stock-header {
     position: fixed;
     top: 40px;

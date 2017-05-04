@@ -44,7 +44,7 @@
     }
   }
 </script>
-<style lang="sass?outputStyle=expanded">
+<style lang="sass">
   @import "~PrestaKit/scss/custom/_variables.scss";
   #search {
     .search-input {

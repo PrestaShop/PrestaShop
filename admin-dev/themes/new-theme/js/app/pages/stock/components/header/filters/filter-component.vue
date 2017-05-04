@@ -148,7 +148,7 @@
   }
 </script>
 
-<style lang="sass?outputStyle=expanded" scoped>
+<style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
   .filter-container {
     border: $gray-light 1px solid;

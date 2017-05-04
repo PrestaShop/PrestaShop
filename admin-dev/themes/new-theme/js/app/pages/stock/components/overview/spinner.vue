@@ -107,7 +107,7 @@
   }
 </script>
 
-<style lang="sass?outputStyle=expanded" scoped>
+<style lang="sass" scoped>
   @import "~jquery-ui/themes/base/minified/jquery.ui.spinner.min.css";
   @import "~PrestaKit/scss/custom/_variables.scss";
   *{
