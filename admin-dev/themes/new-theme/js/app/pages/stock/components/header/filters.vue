@@ -151,7 +151,7 @@
   }
 </script>
 
-<style lang="sass?outputStyle=expanded" scoped>
+<style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
   #filters {
     background: white;
