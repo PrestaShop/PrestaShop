@@ -112,6 +112,6 @@ export const updateKeywords = ({ commit }, keywords) => {
   commit(types.UPDATE_KEYWORDS, keywords);
 };
 
-export const loadingState = ({ commit }) => {
+export const isLoading = ({ commit }) => {
   commit(types.LOADING_STATE, true);
 };
