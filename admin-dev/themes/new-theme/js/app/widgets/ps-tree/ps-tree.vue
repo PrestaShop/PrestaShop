@@ -1,16 +1,28 @@
 <template>
-  <ul class="tree">
-    <li v-for="(element, index) in model">
-      <PSTreeItem
-        ref="item"
-        :class="className"
-        :hasCheckbox="hasCheckbox"
-        :model="element"
-        :label="element.name"
-        @checked="onCheck"
-      />
-    </li>
-  </ul>
+  <div>
+    <div class="m-b-1 tree-header">
+      <span class="text-uppercase">
+        <i class="material-icons">keyboard_arrow_down</i>
+        <strong v-if="translations">{{translations.expand}}</strong>
+      </span>
+      <span class="pull-right text-uppercase">
+        <i class="material-icons">keyboard_arrow_up</i>
+        <strong v-if="translations">{{translations.reduce}}</strong>
+      </span>
+    </div>
+    <ul class="tree">
+      <li v-for="(element, index) in model">
+        <PSTreeItem
+          ref="item"
+          :class="className"
+          :hasCheckbox="hasCheckbox"
+          :model="element"
+          :label="element.name"
+          @checked="onCheck"
+        />
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -20,7 +32,11 @@
     props: {
       model: Array,
       className: String,
-      hasCheckbox: Boolean
+      hasCheckbox: Boolean,
+      translations: {
+        type: Object,
+        required: false
+      }
     },
     methods: {
       onCheck(obj) {
@@ -39,10 +55,21 @@
 </script>
 
 <style lang="sass" scoped>
+  @import "~PrestaKit/scss/custom/_variables.scss";
   ul {
     list-style-type: none;
     cursor: pointer;
     padding: 0;
     margin: 0;
+  }
+  strong {
+    font-weight: 600;
+  }
+  .tree-header {
+    border-bottom: $gray-light 1px solid;
+    color: $gray-medium;
+  }
+  .material-icons {
+    vertical-align: middle;
   }
 </style>

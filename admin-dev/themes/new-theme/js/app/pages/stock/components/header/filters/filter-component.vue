@@ -16,6 +16,7 @@
       :hasCheckbox="true"
       :model="list"
       @checked="onCheck"
+      :translations="PSTreeTranslations"
     >
     </PSTree>
     <ul
@@ -73,6 +74,12 @@
           this.match = null;
         }
         return this.list;
+      },
+      PSTreeTranslations() {
+        return {
+          expand: this.trans('tree_expand'),
+          reduce: this.trans('tree_reduce')
+        }
       }
     },
     methods: {

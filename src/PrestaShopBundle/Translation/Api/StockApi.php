@@ -67,6 +67,8 @@ class StockApi extends AbstractApi
             'title_reserved'  => $this->translator->trans('Reserved', array(), 'Admin.Catalog.Feature'),
             'title_supplier'  => $this->translator->trans('Supplier', array(), 'Admin.Catalog.Feature'),
             'title_quantity'=> $this->translator->trans('Quantity', array(), 'Admin.Catalog.Feature'),
+            'tree_expand'=> $this->translator->trans('Expand all', array(), 'Admin.Actions'),
+            'tree_reduce'=> $this->translator->trans('Reduce all', array(), 'Admin.Actions'),
         );
     }
 }
