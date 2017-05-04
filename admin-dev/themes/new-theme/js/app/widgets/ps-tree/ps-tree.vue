@@ -11,13 +11,13 @@
       </span>
     </div>
     <ul class="tree" :class="className">
-      <li v-for="(element, index) in firstChildren">
+      <li v-for="(element, index) in model">
         <PSTreeItem
           ref="item"
-          :class="className"
           :hasCheckbox="hasCheckbox"
           :model="element"
           :label="element.name"
+          :translations="translations"
           @checked="onCheck"
         />
       </li>

@@ -1,12 +1,13 @@
 <template>
   <div :class="className">
-    <div class="flex">
+    <div class="flex tree-name">
       <div class="flex" :class="chevron" @click="toggle">
         <i class="material-icons" v-if="open">keyboard_arrow_down</i>
         <i class="material-icons" v-else>chevron_right</i>
       </div>
       <PSCheckbox :ref="model.name" :id="id" :model="model" @checked="onCheck" v-if="hasCheckbox"/>
       <span class="tree-label">{{model.name}}</span>
+      <span class="tree-extra-label" v-if="displayExtraLabel">{{getExtraLabel}}</span>
     </div>
     <ul v-show="open" v-if="isFolder">
       <li v-for="(element, index) in model.children">
@@ -17,6 +18,7 @@
           :model="element"
           :label="element.name"
           :opened="open"
+          :translations="translations"
           @checked="onCheck"
         />
       </li>
@@ -30,13 +32,36 @@
 
   export default {
     name: 'PSTreeItem',
-    props:['model','className', 'hasCheckbox'],
+    props: {
+      model: {
+        type: Object,
+        required: true
+      },
+      className: {
+        type: String,
+        required: false
+      },
+      hasCheckbox: {
+        type: Boolean,
+        required: false
+      },
+      translations: {
+        type: Object,
+        required: false
+      }
+    },
     computed: {
       id() {
         return this.model.id;
       },
       isFolder() {
         return this.model.children && this.model.children.length;
+      },
+      displayExtraLabel() {
+        return this.isFolder && this.model.extraLabel;
+      },
+      getExtraLabel() {
+        return this.translations.extra.replace('%d', this.model.extraLabel);
       },
       chevron() {
         if(!this.isFolder) {
@@ -87,7 +112,6 @@
   }
   .tree-label {
     margin-left: 5px;
-    font-size: 12px;
   }
   .hidden {
     visibility: hidden;

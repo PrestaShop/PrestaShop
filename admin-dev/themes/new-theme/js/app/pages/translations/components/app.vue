@@ -47,4 +47,8 @@
   .translations-app {
     padding-top: 3em;
   }
+  .flex {
+    display: flex;
+    align-items: center;
+  }
 </style>

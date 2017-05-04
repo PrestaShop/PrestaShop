@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import * as actions from './actions';
 import mutations from './mutations';
+import _ from 'lodash';
 
 Vue.use(Vuex);
 
@@ -10,7 +11,7 @@ Vue.use(Vuex);
 const state = {
   translations: {},
   catalog: {},
-  domainsTree: {},
+  domainsTree: [],
 };
 
 // getters are functions
@@ -22,7 +23,16 @@ const getters = {
     return state.catalog;
   },
   domainsTree(state) {
-    return state.domainsTree;
+    function convert(domains) {
+      domains.forEach((domain)=>{
+        domain.children = _.values(domain.children);
+        domain.extraLabel = domain.total_missing_translations;
+        convert(domain.children);
+      });
+      return domains;
+    }
+
+    return convert(_.values(state.domainsTree));
   }
 };
 
