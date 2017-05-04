@@ -1,6 +1,6 @@
 <template>
   <span>
-    <a v-show="multi" v-on:click="changePage($event, index)" class="page-link" :class="classObject">
+    <a v-show="multi" @click.prevent="changePage(index)" class="page-link" :class="classObject">
       <span v-show="showFirstDots">...</span>
       {{ index }}
       <span v-show="showLastDots">...</span>
@@ -66,8 +66,7 @@
       }
     },
     methods: {
-      changePage(event, pageIndex) {
-        event.preventDefault();
+      changePage(pageIndex) {
         this.$emit('pageChanged', pageIndex);
       }
     }

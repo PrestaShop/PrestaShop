@@ -79,6 +79,7 @@
       }
     },
     mounted() {
+      this.$store.dispatch('updatePageIndex', 1);
       this.$store.dispatch('loadingState');
       this.$store.dispatch('updateKeywords', []);
       this.$store.dispatch('getEmployees');

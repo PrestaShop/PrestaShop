@@ -64,6 +64,7 @@ export const getMovements = ({ commit }, payload) => {
     }
   }).then(function(response) {
     commit(types.LOADING_STATE, false);
+    commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.SET_MOVEMENTS, response.body);
   }, function(error) {
     return showGrowl('error', error.statusText);
