@@ -338,7 +338,7 @@
 										{$input.desc = null}
 									{else}
 										<select name="{$input.name|escape:'html':'utf-8'}"
-												class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if} fixed-width-xl"
+												class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if} fixed-width-xl{if isset($input.advanced_select) && $input.advanced_select} advanced_select{/if}"
 												id="{if isset($input.id)}{$input.id|escape:'html':'utf-8'}{else}{$input.name|escape:'html':'utf-8'}{/if}"
 												{if isset($input.multiple) && $input.multiple} multiple="multiple"{/if}
 												{if isset($input.size)} size="{$input.size|escape:'html':'utf-8'}"{/if}
@@ -974,6 +974,11 @@
 			{if isset($use_textarea_autosize)}
 			$(".textarea-autosize").autosize();
 			{/if}
+
+			if ($(".advanced_select").length > 0)
+			$(".advanced_select").each(function(){
+				$(this).select2({ width: 'resolve' });
+			});
 		});
 	state_token = '{getAdminToken tab='AdminStates'}';
 	{block name="script"}{/block}
