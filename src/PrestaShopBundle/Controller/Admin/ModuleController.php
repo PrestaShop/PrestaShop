@@ -473,6 +473,7 @@ class ModuleController extends FrameworkBundleAdminController
         $twigParams = array(
             'currentIndex' => '',
             'modulesList' => $moduleListSorted,
+            'level' => $this->authorizationLevel($this::controller_name),
         );
 
         if ($request->request->has('admin_list_from_source')) {
