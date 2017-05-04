@@ -1,6 +1,6 @@
 <template>
   <div :class="className">
-    <div class="flex tree-name" @click="toggle">
+    <div class="flex tree-name" @click="clickItem">
       <div class="flex" :class="chevron">
         <i class="material-icons" v-if="open">keyboard_arrow_down</i>
         <i class="material-icons" v-else>chevron_right</i>
@@ -70,9 +70,13 @@
       }
     },
     methods: {
-      toggle() {
+      clickItem() {
         if (this.isFolder) {
           this.open = !this.open;
+        } else {
+          EventBus.$emit('lastTreeItemClick', {
+            item: this.model
+          });
         }
       },
       onCheck(obj) {

@@ -12,6 +12,7 @@
 
 <script>
   import PSTree from 'app/widgets/ps-tree/ps-tree';
+  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     computed: {
@@ -28,6 +29,9 @@
     },
     mounted () {
       this.$store.dispatch('getDomainsTree');
+      EventBus.$on('lastTreeItemClick', (el) => {
+        this.$store.dispatch('getCatalog', {url: el.item.dataValue});
+      })
     },
     components: {
       PSTree

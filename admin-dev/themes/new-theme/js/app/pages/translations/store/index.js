@@ -27,6 +27,7 @@ const getters = {
       domains.forEach((domain)=>{
         domain.children = _.values(domain.children);
         domain.extraLabel = domain.total_missing_translations;
+        domain.dataValue = domain.domain_catalog_link;
         convert(domain.children);
       });
       return domains;

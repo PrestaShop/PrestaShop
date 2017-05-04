@@ -14,9 +14,8 @@ export const getTranslations = ({ commit }) => {
   });
 };
 
-export const getCatalog = ({ commit }) => {
-  let url = window.data.domainCatalogUrl;
-  Vue.http.get(url).then(function(response) {
+export const getCatalog = ({ commit }, param) => {
+  Vue.http.get(param.url).then(function(response) {
     commit(types.SET_CATALOG, response.body);
   }, function(error) {
     return showGrowl('error', error.statusText);
