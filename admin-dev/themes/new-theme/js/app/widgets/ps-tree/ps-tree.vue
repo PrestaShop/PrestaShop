@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="m-b-1 tree-header">
-      <span class="text-uppercase">
+      <span class="text-uppercase pointer" @click="expand">
         <i class="material-icons">keyboard_arrow_down</i>
         <strong v-if="translations">{{translations.expand}}</strong>
       </span>
-      <span class="pull-right text-uppercase">
+      <span class="pull-right text-uppercase pointer" @click="reduce">
         <i class="material-icons">keyboard_arrow_up</i>
         <strong v-if="translations">{{translations.reduce}}</strong>
       </span>
@@ -18,6 +18,7 @@
           :hasCheckbox="hasCheckbox"
           :model="element"
           :label="element.name"
+          :opened="open"
           @checked="onCheck"
         />
       </li>
@@ -41,7 +42,13 @@
     methods: {
       onCheck(obj) {
        this.$emit('checked', obj);
-      }
+      },
+      expand() {
+        this.open = true;
+      },
+      reduce() {
+        this.open = false;
+      },
     },
     components: {
       PSTreeItem
@@ -71,5 +78,8 @@
   }
   .material-icons {
     vertical-align: middle;
+  }
+  .pointer {
+    cursor: pointer;
   }
 </style>

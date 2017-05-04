@@ -131,11 +131,6 @@
         return idList;
       }
     },
-    watch: {
-      tags(items) {
-
-      }
-    },
     data() {
       return {
         currentVal: '',
