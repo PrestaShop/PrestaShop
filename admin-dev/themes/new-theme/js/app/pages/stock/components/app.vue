@@ -5,7 +5,13 @@
     <div class="card p-a-2">
       <router-view class="view" @fetch="fetch"></router-view>
     </div>
-    <PSPagination pageNumber="3" activeMultiPagination="5" @pageChanged="onPageChanged" />
+    <PSPagination
+      pageNumber="3"
+      activeMultiPagination="5"
+      :current="currentPagination"
+      :pagesCount="pagesCount"
+      @pageChanged="onPageChanged"
+    />
   </div>
 </template>
 
@@ -19,6 +25,12 @@
     computed : {
       isReady() {
         return this.$store.getters.isReady;
+      },
+      pagesCount() {
+        return this.$store.getters.totalPages;
+      },
+      currentPagination() {
+         return this.$store.getters.pageIndex;
       }
     },
     methods: {

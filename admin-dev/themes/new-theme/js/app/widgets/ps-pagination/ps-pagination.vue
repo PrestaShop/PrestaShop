@@ -13,7 +13,7 @@
             :total="pagesCount"
             :isMulti="isMulti"
             :index="n"
-            :current="currentIndex"
+            :current="current"
             @pageChanged="onPageChanged"
         />
       </li>
@@ -31,11 +31,8 @@
   import PSPageIndex from './ps-page-index';
 
   export default {
-    props: ['pageNumber', 'activeMultiPagination'],
+    props: ['pageNumber', 'activeMultiPagination', 'pagesCount', 'current'],
     computed: {
-      pagesCount() {
-        return this.$store.getters.totalPages;
-      },
       isMulti() {
         return this.pagesCount > this.activeMultiPagination;
       },
@@ -78,7 +75,7 @@
     },
     data() {
       return {
-        currentIndex: 1
+        currentIndex: this.current
       }
     }
   }
