@@ -53,7 +53,7 @@ class AdminProductWrapper
      */
     public function getInstance()
     {
-        return new \AdminProductsControllerCore();
+        return new \AdminProductsController();
     }
 
     /**
