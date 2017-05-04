@@ -135,6 +135,10 @@ class ModuleTabRegister
                 continue;
             }
 
+            if ($this->tabRepository->findOneIdByClassName($adminControllerName)) {
+                continue;
+            }
+
             $tabs[] = array(
                 'class_name' => $adminControllerName,
                 'visible' => false,
