@@ -16,6 +16,7 @@
           :hasCheckbox="hasCheckbox"
           :model="element"
           :label="element.name"
+          :opened="open"
           @checked="onCheck"
         />
       </li>
@@ -29,7 +30,7 @@
 
   export default {
     name: 'PSTreeItem',
-    props:['model','className', 'hasCheckbox'],
+    props:['model','className', 'hasCheckbox', 'opened'],
     computed: {
       id() {
         return this.model.id;
@@ -55,6 +56,11 @@
     },
     components: {
       PSCheckbox
+    },
+    watch: {
+      opened(val) {
+        this.open = val
+      }
     },
     data() {
       return {
