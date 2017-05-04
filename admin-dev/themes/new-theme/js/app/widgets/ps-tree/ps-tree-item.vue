@@ -30,7 +30,7 @@
 
   export default {
     name: 'PSTreeItem',
-    props:['model','className', 'hasCheckbox', 'opened'],
+    props:['model','className', 'hasCheckbox'],
     computed: {
       id() {
         return this.model.id;
@@ -57,11 +57,6 @@
     components: {
       PSCheckbox
     },
-    watch: {
-      opened(val) {
-        this.open = val
-      }
-    },
     data() {
       return {
         open: false
@@ -73,6 +68,10 @@
         if(checkbox) {
           checkbox.$data.checked = !checkbox.$data.checked;
         }
+      }).$on('expand', _ => {
+        this.open = true;
+      }).$on('reduce', _ => {
+        this.open = false;
       });
     },
   }
