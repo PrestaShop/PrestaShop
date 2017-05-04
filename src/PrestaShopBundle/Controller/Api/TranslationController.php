@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
 use PrestaShopBundle\Service\TranslationService;
-use PrestaShopBundle\Translation\Provider\ModuleProvider;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -126,7 +125,7 @@ class TranslationController extends ApiController
 
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $selected);
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree);
+        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'));
 
         return $translationsTree;
     }
@@ -147,7 +146,7 @@ class TranslationController extends ApiController
 
         $catalogue = $treeBuilder->makeTranslationArray($moduleProvider);
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree);
+        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'));
 
         return $translationsTree;
     }
