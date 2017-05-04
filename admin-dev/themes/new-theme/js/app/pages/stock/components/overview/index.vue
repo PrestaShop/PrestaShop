@@ -26,7 +26,7 @@
       this.$store.dispatch('updatePageIndex', 1);
       this.$store.dispatch('updateKeywords', []);
       this.$store.dispatch('updateOrder', 'product');
-      this.$store.dispatch('loadingState');
+      this.$store.dispatch('isLoading');
       this.$emit('fetch', DEFAULT_SORT);
     },
     components: {

@@ -42,6 +42,8 @@
       fetch(desc) {
         let action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
 
+        this.$store.dispatch('isLoading');
+
         this.$store.dispatch(action, {
           order: `${this.$store.getters.order}${desc}`,
           page_size: this.$store.state.productsPerPage,
