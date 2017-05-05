@@ -54,11 +54,22 @@ class ModuleDataProvider
      */
     private $entityManager;
 
+    /**
+     * @var integer
+     */
+    private $employeeID;
+
     public function __construct(LoggerInterface $logger, TranslatorInterface $translator, EntityManager $entityManager = null)
     {
         $this->logger = $logger;
         $this->translator = $translator;
         $this->entityManager = $entityManager;
+        $this->employeeID = 0;
+    }
+
+    public function setEmployeeId($employeeID)
+    {
+        $this->employeeID = (int)$employeeID;
     }
 
     /**
@@ -75,17 +86,14 @@ class ModuleDataProvider
             $result['active_on_mobile'] = (bool)($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
             $lastAccessDate = '0000-00-00 00:00:00';
 
-            if (!Tools::isPHPCLI() && !is_null($this->entityManager)) {
+            if (!Tools::isPHPCLI() && !is_null($this->entityManager) && $this->employeeID) {
                 $moduleID = (int)$result['id'];
-                $legacyContext = new LegacyContext();
-                $legacyContext = $legacyContext->getContext();
-                $employeeID = (int)$legacyContext->employee->id;
 
                 $qb = $this->entityManager->createQueryBuilder();
                 $qb->select('mh')
                     ->from('PrestaShopBundle:ModuleHistory', 'mh', 'mh.idModule')
                     ->where('mh.idEmployee = ?1')
-                    ->setParameter(1, $employeeID);
+                    ->setParameter(1, $this->employeeID);
                 $query = $qb->getQuery();
                 $query->useResultCache(true);
                 $modulesHistory = $query->getResult();
