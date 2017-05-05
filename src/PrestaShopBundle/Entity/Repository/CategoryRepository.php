@@ -158,6 +158,6 @@ class CategoryRepository
             }
         }
 
-        return $categories;
+        return array('root' => array('children' => $categories));
     }
 }
