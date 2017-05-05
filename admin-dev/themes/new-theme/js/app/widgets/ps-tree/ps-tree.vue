@@ -19,6 +19,7 @@
           :label="element.name"
           :translations="translations"
           @checked="onCheck"
+          @setCurrentEl ="setCurrentEl"
         />
       </li>
     </ul>
@@ -50,6 +51,9 @@
       reduce() {
         EventBus.$emit('reduce');
       },
+      setCurrentEl(id) {
+        EventBus.$emit('setCurrentEl', id);
+      }
     },
     computed: {
       firstChildren: function firstChildren() {

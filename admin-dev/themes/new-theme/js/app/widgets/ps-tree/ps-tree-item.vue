@@ -12,14 +12,14 @@
     <ul v-show="open" v-if="isFolder">
       <li v-for="(element, index) in model.children">
         <PSTreeItem
-          ref="item"
+          :ref="element.id"
           :class="className"
           :hasCheckbox="hasCheckbox"
           :model="element"
           :label="element.name"
-          :opened="open"
           :translations="translations"
           @checked="onCheck"
+          @setCurrentEl ="setCurrentEl"
         />
       </li>
     </ul>
@@ -70,7 +70,13 @@
       }
     },
     methods: {
+      setCurrentEl() {
+        if(this.model.id) {
+          this.$emit('setCurrentEl', this.model.id);
+        }
+      },
       clickItem() {
+        this.setCurrentEl();
         if (this.isFolder) {
           this.open = !this.open;
         } else {
@@ -88,7 +94,8 @@
     },
     data() {
       return {
-        open: false
+        open: false,
+        current: false
       }
     },
     mounted() {
@@ -101,7 +108,22 @@
         this.open = true;
       }).$on('reduce', _ => {
         this.open = false;
+      }).$on('setCurrentEl', (el) => {
+        if(this.$refs[el]) {
+          this.clickItem();
+          this.current = true;
+          parentEl(this.$parent);
+        }
+        else {
+          this.current = false;
+        }
       });
+      function parentEl(parent){
+        if(parent.clickItem) {
+          parent.clickItem();
+          parentEl(parent.$parent);
+        }
+      }
     },
   }
 </script>
