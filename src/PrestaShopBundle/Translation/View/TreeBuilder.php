@@ -140,10 +140,15 @@ class TreeBuilder
      */
     public function cleanTreeToApi($tree, Router $router)
     {
-        $cleanTree = array(
-//            'total_translations' => 0,
-//            'total_missing_translations' => 0,
+        $rootTree = array(
+            'root' => array(
+                'total_translations' => 0,
+                'total_missing_translations' => 0,
+                'children' => array(),
+            ),
         );
+
+        $cleanTree = &$rootTree['root']['children'];
 
         foreach ($tree as $k1 => $t1) {
             if ('__metadata' !== $k1) {
@@ -151,11 +156,11 @@ class TreeBuilder
 
                 if (array_key_exists('__messages', $t1)) {
                     $cleanTree[$k1]['total_translations'] += count(current($t1['__messages']));
-//                    $cleanTree['total_translations'] += count(current($t1['__messages']));
+                    $rootTree['root']['total_translations'] += count(current($t1['__messages']));
 
                     if (array_key_exists('__metadata', $t1) && array_key_exists('missing_translations', $t1['__metadata'])) {
                         $cleanTree[$k1]['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
-//                        $cleanTree['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
+                        $rootTree['root']['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
                     }
 
                 } else {
@@ -166,12 +171,12 @@ class TreeBuilder
                             if (array_key_exists('__messages', $t2)) {
                                 $cleanTree[$k1]['children'][$k2]['total_translations'] += count(current($t2['__messages']));
                                 $cleanTree[$k1]['total_translations'] += count(current($t2['__messages']));
-//                                $cleanTree['total_translations'] += count(current($t2['__messages']));
+                                $rootTree['root']['total_translations'] += count(current($t2['__messages']));
 
                                 if (array_key_exists('__metadata', $t2) && array_key_exists('missing_translations', $t2['__metadata'])) {
                                     $cleanTree[$k1]['children'][$k2]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
                                     $cleanTree[$k1]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
-//                                    $cleanTree['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
+                                    $rootTree['root']['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
                                 }
 
                             } else {
@@ -183,14 +188,14 @@ class TreeBuilder
                                             $cleanTree[$k1]['children'][$k2]['children'][$k3]['total_translations'] += count(current($t3['__messages']));
                                             $cleanTree[$k1]['children'][$k2]['total_translations'] += count(current($t3['__messages']));
                                             $cleanTree[$k1]['total_translations'] += count(current($t3['__messages']));
-//                                            $cleanTree['total_translations'] += count(current($t3['__messages']));
+                                            $rootTree['root']['total_translations'] += count(current($t3['__messages']));
                                         }
 
                                         if (array_key_exists('__metadata', $t3) && array_key_exists('missing_translations', $t3['__metadata'])) {
                                             $cleanTree[$k1]['children'][$k2]['children'][$k3]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
                                             $cleanTree[$k1]['children'][$k2]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
                                             $cleanTree[$k1]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
-//                                            $cleanTree['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                            $rootTree['root']['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
                                         }
 
                                         if (empty($cleanTree[$k1]['children'][$k2]['children'][$k3]['children'])) {
@@ -213,7 +218,7 @@ class TreeBuilder
             }
         }
 
-        return $cleanTree;
+        return $rootTree;
     }
 
     /**
