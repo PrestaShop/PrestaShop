@@ -11,7 +11,7 @@
       </span>
     </div>
     <ul class="tree" :class="className">
-      <li v-for="(element, index) in model">
+      <li v-for="(element, index) in firstChildren">
         <PSTreeItem
           ref="item"
           :hasCheckbox="hasCheckbox"
