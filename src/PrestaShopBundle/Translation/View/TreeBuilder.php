@@ -150,70 +150,76 @@ class TreeBuilder
 
         $cleanTree = &$rootTree['root']['children'];
 
+        $index1 = 0;
         foreach ($tree as $k1 => $t1) {
+            $index2 = 0;
             if ('__metadata' !== $k1) {
-                $this->addTreeInfo($router, $cleanTree, $k1, $k1);
+                $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1);
 
                 if (array_key_exists('__messages', $t1)) {
-                    $cleanTree[$k1]['total_translations'] += count(current($t1['__messages']));
+                    $cleanTree[$index1]['total_translations'] += count(current($t1['__messages']));
                     $rootTree['root']['total_translations'] += count(current($t1['__messages']));
 
                     if (array_key_exists('__metadata', $t1) && array_key_exists('missing_translations', $t1['__metadata'])) {
-                        $cleanTree[$k1]['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
+                        $cleanTree[$index1]['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
                         $rootTree['root']['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
                     }
 
                 } else {
                     foreach ($t1 as $k2 => $t2) {
+                        $index3 = 0;
                         if ('__metadata' !== $k2) {
-                            $this->addTreeInfo($router, $cleanTree[$k1]['children'], $k2, $k1 . $k2);
+                            $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2);
 
                             if (array_key_exists('__messages', $t2)) {
-                                $cleanTree[$k1]['children'][$k2]['total_translations'] += count(current($t2['__messages']));
-                                $cleanTree[$k1]['total_translations'] += count(current($t2['__messages']));
+                                $cleanTree[$index1]['children'][$index2]['total_translations'] += count(current($t2['__messages']));
+                                $cleanTree[$index1]['total_translations'] += count(current($t2['__messages']));
                                 $rootTree['root']['total_translations'] += count(current($t2['__messages']));
 
                                 if (array_key_exists('__metadata', $t2) && array_key_exists('missing_translations', $t2['__metadata'])) {
-                                    $cleanTree[$k1]['children'][$k2]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
-                                    $cleanTree[$k1]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
+                                    $cleanTree[$index1]['children'][$index2]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
+                                    $cleanTree[$index1]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
                                     $rootTree['root']['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
                                 }
 
                             } else {
                                 foreach ($t2 as $k3 => $t3) {
                                     if ('__metadata' !== $k3) {
-                                        $this->addTreeInfo($router, $cleanTree[$k1]['children'][$k2]['children'], $k3, $k1 . $k2 . $k3);
+                                        $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3);
 
                                         if (array_key_exists('__messages', $t3)) {
-                                            $cleanTree[$k1]['children'][$k2]['children'][$k3]['total_translations'] += count(current($t3['__messages']));
-                                            $cleanTree[$k1]['children'][$k2]['total_translations'] += count(current($t3['__messages']));
-                                            $cleanTree[$k1]['total_translations'] += count(current($t3['__messages']));
+                                            $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_translations'] += count(current($t3['__messages']));
+                                            $cleanTree[$index1]['children'][$index2]['total_translations'] += count(current($t3['__messages']));
+                                            $cleanTree[$index1]['total_translations'] += count(current($t3['__messages']));
                                             $rootTree['root']['total_translations'] += count(current($t3['__messages']));
                                         }
 
                                         if (array_key_exists('__metadata', $t3) && array_key_exists('missing_translations', $t3['__metadata'])) {
-                                            $cleanTree[$k1]['children'][$k2]['children'][$k3]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
-                                            $cleanTree[$k1]['children'][$k2]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
-                                            $cleanTree[$k1]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                            $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                            $cleanTree[$index1]['children'][$index2]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                            $cleanTree[$index1]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
                                             $rootTree['root']['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
                                         }
 
-                                        if (empty($cleanTree[$k1]['children'][$k2]['children'][$k3]['children'])) {
-                                            unset($cleanTree[$k1]['children'][$k2]['children'][$k3]['children']);
+                                        if (empty($cleanTree[$index1]['children'][$index2]['children'][$index3]['children'])) {
+                                            unset($cleanTree[$index1]['children'][$index2]['children'][$index3]['children']);
                                         }
+                                        $index3++;
                                     }
                                 }
                             }
 
-                            if (empty($cleanTree[$k1]['children'][$k2]['children'])) {
-                                unset($cleanTree[$k1]['children'][$k2]['children']);
+                            if (empty($cleanTree[$index1]['children'][$index2]['children'])) {
+                                unset($cleanTree[$index1]['children'][$index2]['children']);
                             }
+                            $index2++;
                         }
                     }
 
-                    if (empty($cleanTree[$k1]['children'])) {
-                        unset($cleanTree[$k1]['children']);
+                    if (empty($cleanTree[$index1]['children'])) {
+                        unset($cleanTree[$index1]['children']);
                     }
+                    $index1++;
                 }
             }
         }
@@ -224,21 +230,22 @@ class TreeBuilder
     /**
      * @param Router $router
      * @param $tree
+     * @param $index
      * @param $name
      * @param $fullName
      * @return mixed
      */
-    private function addTreeInfo(Router $router, &$tree, $name, $fullName)
+    private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName)
     {
-        $tree[$name]['name'] = $name;
-        $tree[$name]['full_name'] = $fullName;
-        $tree[$name]['domain_catalog_link'] = $router->generate('api_translation_domain_catalog', array(
+        $tree[$index]['name'] = $name;
+        $tree[$index]['full_name'] = $fullName;
+        $tree[$index]['domain_catalog_link'] = $router->generate('api_translation_domain_catalog', array(
             'locale' => $this->locale,
             'domain' => $fullName,
         ));
-        $tree[$name]['total_translations'] = 0;
-        $tree[$name]['total_missing_translations'] = 0;
-        $tree[$name]['children'] = array();
+        $tree[$index]['total_translations'] = 0;
+        $tree[$index]['total_missing_translations'] = 0;
+        $tree[$index]['children'] = array();
 
         return $tree;
     }
