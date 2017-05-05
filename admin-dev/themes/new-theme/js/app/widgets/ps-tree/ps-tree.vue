@@ -54,7 +54,7 @@
     computed: {
       firstChildren: function firstChildren() {
         const keys = Object.keys(this.model);
-        return this.model[keys[0]].children;
+        return keys.length ? this.model[keys[0]].children : [];
       },
     },
     components: {
