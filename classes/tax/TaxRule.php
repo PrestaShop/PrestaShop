@@ -67,45 +67,45 @@ class TaxRuleCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'tax_rule`
-			WHERE `id_tax_rules_group` = '.(int)$id_group
+        return Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'tax_rule`
+            WHERE `id_tax_rules_group` = '.(int)$id_group
         );
     }
 
     public static function retrieveById($id_tax_rule)
     {
         return Db::getInstance()->getRow('
-			SELECT * FROM `'._DB_PREFIX_.'tax_rule`
-			WHERE `id_tax_rule` = '.(int)$id_tax_rule);
+            SELECT * FROM `'._DB_PREFIX_.'tax_rule`
+            WHERE `id_tax_rule` = '.(int)$id_tax_rule);
     }
 
     public static function getTaxRulesByGroupId($id_lang, $id_group)
     {
-        return Db::getInstance()->executeS('
-		SELECT g.`id_tax_rule`,
-				 c.`name` AS country_name,
-				 s.`name` AS state_name,
-				 t.`rate`,
-				 g.`zipcode_from`, g.`zipcode_to`,
-				 g.`description`,
-				 g.`behavior`,
-				 g.`id_country`,
-				 g.`id_state`
-		FROM `'._DB_PREFIX_.'tax_rule` g
-		LEFT JOIN `'._DB_PREFIX_.'country_lang` c ON (g.`id_country` = c.`id_country` AND `id_lang` = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'state` s ON (g.`id_state` = s.`id_state`)
-		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (g.`id_tax` = t.`id_tax`)
-		WHERE `id_tax_rules_group` = '.(int)$id_group.'
-		ORDER BY `country_name` ASC, `state_name` ASC, `zipcode_from` ASC, `zipcode_to` ASC'
+        return Db::getInstance()->executeS(
+            'SELECT g.`id_tax_rule`,
+                 c.`name` AS country_name,
+                 s.`name` AS state_name,
+                 t.`rate`,
+                 g.`zipcode_from`, g.`zipcode_to`,
+                 g.`description`,
+                 g.`behavior`,
+                 g.`id_country`,
+                 g.`id_state`
+            FROM `'._DB_PREFIX_.'tax_rule` g
+            LEFT JOIN `'._DB_PREFIX_.'country_lang` c ON (g.`id_country` = c.`id_country` AND `id_lang` = '.(int)$id_lang.')
+            LEFT JOIN `'._DB_PREFIX_.'state` s ON (g.`id_state` = s.`id_state`)
+            LEFT JOIN `'._DB_PREFIX_.'tax` t ON (g.`id_tax` = t.`id_tax`)
+            WHERE `id_tax_rules_group` = '.(int)$id_group.'
+            ORDER BY `country_name` ASC, `state_name` ASC, `zipcode_from` ASC, `zipcode_to` ASC'
         );
     }
 
     public static function deleteTaxRuleByIdTax($id_tax)
     {
-        return Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'tax_rule`
-			WHERE `id_tax` = '.(int)$id_tax
+        return Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'tax_rule`
+            WHERE `id_tax` = '.(int)$id_tax
         );
     }
 
@@ -170,10 +170,10 @@ class TaxRuleCore extends ObjectModel
     */
     public static function swapTaxId($old_id, $new_id)
     {
-        return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'tax_rule`
-		SET `id_tax` = '.(int)$new_id.'
-		WHERE `id_tax` = '.(int)$old_id
+        return Db::getInstance()->execute(
+            'UPDATE `'._DB_PREFIX_.'tax_rule`
+            SET `id_tax` = '.(int)$new_id.'
+            WHERE `id_tax` = '.(int)$old_id
         );
     }
 }
