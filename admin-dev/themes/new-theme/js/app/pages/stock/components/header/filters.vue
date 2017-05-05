@@ -35,7 +35,7 @@
             <h2>{{trans('filter_categories')}}</h2>
             <FilterComponent
               :placeholder="trans('filter_search_category')"
-              :list="this.$store.getters.categories"
+              :list="firstCategoryChildren"
               itemID="id_category"
               label="name"
               @active="onFilterActive"
@@ -78,14 +78,18 @@
             let item = _.find(movements, {
               display_name : displayName
             });
-            
+
             let clone = Object.assign(item, {
               id_stock_mvt_reason: [item.id_stock_mvt_reason]
             });
 
             clone.id_stock_mvt_reason.push(movement.id_stock_mvt_reason);
-          }    
+          }
         });
+      },
+      firstCategoryChildren: function firstCategoryChildren() {
+        const keys = Object.keys(this.$store.getters.categories);
+        return keys.length ? this.$store.getters.categories[keys[0]].children : [];
       }
     },
     methods: {
