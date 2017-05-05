@@ -112,4 +112,36 @@ class TranslationService {
         return $type === 'themes' && !is_null($theme);
     }
 
+    /**
+     * List translation for domain
+     *
+     * @param $locale
+     * @param $domain
+     * @return array|mixed
+     */
+    public function listDomainTranslation($locale, $domain){
+        $translationProvider= $this->container->get('prestashop.translation.search_provider');
+
+        $translationProvider->setLocale($locale);
+        $translationProvider->setDomain($domain);
+
+        $catalog = array();
+        $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
+
+        $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
+        $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
+        $dbCatalog = current($translationProvider->getDatabaseCatalogue()->all());
+
+        foreach ($defaultCatalog as $message) {
+            $catalog[] = array(
+                'default' => $message,
+                'xliff' => (array_key_exists($message, (array)$xliffCatalog) ? $xliffCatalog[$message] : null),
+                'database' => (array_key_exists($message, (array)$dbCatalog) ? $dbCatalog[$message] : null),
+                'tree_domain' => $treeDomain,
+            );
+        }
+
+        return $catalog;
+    }
+
 }

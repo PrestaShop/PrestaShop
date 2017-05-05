@@ -49,21 +49,22 @@ class TranslationController extends ApiController
     public function listDomainTranslationAction(Request $request)
     {
         try {
-            $translationProvider = $this->container->get('prestashop.translation.search_provider');
+            $translationService = $this->container->get('prestashop.service.translation');
 
-            $translationProvider->setLocale($request->attributes->get('locale'));
-            $translationProvider->setDomain($request->attributes->get('domain'));
+            $locale = $request->attributes->get('locale');
+            $domain = $request->attributes->get('domain');
+
+            $catalog = $translationService->listDomainTranslation($locale, $domain);
 
             $info = array(
-                'locale' => $translationProvider->getLocale(),
-                'domain' => $translationProvider->getDomain(),
+                'locale' => $locale,
+                'domain' => $domain,
                 'missing' => 0,
                 'total' => 0,
             );
 
-            $catalog = current($translationProvider->getMessageCatalogue()->all());
-            foreach ($catalog as $original => $translated) {
-                if ($original === $translated) {
+            foreach ($catalog as $message) {
+                if (empty($message['xliff']) && empty($message['database'])) {
                     $info['missing']++;
                 }
 
