@@ -60,12 +60,12 @@ class CategoriesProvider
      */
     public function getCategoriesMenu(array $modules)
     {
-
         if (null === self::$categories) {
             // The Root category is "Categories"
             $categories['categories'] = $this->createMenuObject('categories', 'Categories');
 
             foreach ($this->getCategories() as $category) {
+                $categoryId = $category->id_category;
                 $categoryName = $category->name;
                 $moduleIds = array();
 
@@ -79,9 +79,11 @@ class CategoriesProvider
                 }
 
                 if (count($moduleIds)) {
-                    $categories['categories']->subMenu[$categoryName] = $this->createMenuObject($categoryName,
+                    $categories['categories']->subMenu[$categoryName] = $this->createMenuObject(
                         $categoryName,
-                        $moduleIds
+                        $categoryName,
+                        $moduleIds,
+                        $categoryId
                     );
                 }
             }
@@ -117,10 +119,17 @@ class CategoriesProvider
 
     /**
      * Re-organize category data into a Menu item.
+     *
+     * @param $menu
+     * @param $name
+     * @param array $moduleIds
+     * @param null $id
+     * @return object
      */
-    private function createMenuObject($menu, $name, $moduleIds = array())
+    private function createMenuObject($menu, $name, $moduleIds = array(), $id = null)
     {
         return (object) array(
+            'id' => $id,
             'name' => $name,
             'refMenu' => $menu,
             'modules' => $moduleIds,
