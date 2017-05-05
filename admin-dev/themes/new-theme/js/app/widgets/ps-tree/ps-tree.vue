@@ -10,8 +10,8 @@
         <strong v-if="translations">{{translations.reduce}}</strong>
       </span>
     </div>
-    <ul class="tree">
-      <li v-for="(element, index) in model">
+    <ul class="tree" :class="className">
+      <li v-for="(element, index) in firstChildren">
         <PSTreeItem
           ref="item"
           :class="className"
@@ -49,6 +49,12 @@
       },
       reduce() {
         EventBus.$emit('reduce');
+      },
+    },
+    computed: {
+      firstChildren: function firstChildren() {
+        const keys = Object.keys(this.model);
+        return this.model[keys[0]].children;
       },
     },
     components: {
