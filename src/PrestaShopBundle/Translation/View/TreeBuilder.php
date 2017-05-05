@@ -47,29 +47,21 @@ class TreeBuilder
     public function makeTranslationArray(AbstractProvider $provider)
     {
         $provider->setLocale($this->locale);
-        $catalogue = $provider->getXliffCatalogue();
-        $catalogue = $this->addDefaultTranslations($provider, $catalogue);
-
-        $translations = $catalogue->all();
+        $translations = $provider->getDefaultCatalogue()->all();
+        $xliffCatalog = $provider->getXliffCatalogue()->all();
         $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme)->all();
 
         foreach ($translations as $domain => $messages) {
-            $databaseDomain = str_replace('.'.$this->locale, '', $domain);
-
             $missingTranslations = 0;
 
             foreach ($messages as $translationKey => $translationValue) {
-                $keyExists =
-                    array_key_exists($databaseDomain, $databaseCatalogue) &&
-                    array_key_exists($translationKey, $databaseCatalogue[$databaseDomain])
-                ;
-
-                $fallbackOnDefaultValue = $translationKey != $translationValue ||
-                    $this->locale === str_replace('_', '-', TranslationsFactory::DEFAULT_LOCALE);
-                ;
                 $translations[$domain][$translationKey] = array(
-                    'xlf' =>  $fallbackOnDefaultValue ? $translations[$domain][$translationKey] : '',
-                    'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
+                    'xlf' =>  (array_key_exists($domain, $xliffCatalog) &&
+                        array_key_exists($translationValue, $xliffCatalog[$domain]) ?
+                        $xliffCatalog[$domain][$translationValue] : null),
+                    'db' => (array_key_exists($domain, $databaseCatalogue) &&
+                        array_key_exists($translationValue, $databaseCatalogue[$domain]) ?
+                        $databaseCatalogue[$domain][$translationValue] : null),
                 );
 
                 if (
@@ -157,8 +149,13 @@ class TreeBuilder
                 $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1);
 
                 if (array_key_exists('__messages', $t1)) {
-                    $cleanTree[$index1]['total_translations'] += count(current($t1['__messages']));
-                    $rootTree['root']['total_translations'] += count(current($t1['__messages']));
+                    $nbMessage = count(current($t1['__messages']));
+                    if (array_key_exists('__metadata', $t1)) {
+                        $nbMessage -= 1;
+                    }
+
+                    $cleanTree[$index1]['total_translations'] += $nbMessage;
+                    $rootTree['root']['total_translations'] += $nbMessage;
 
                     if (array_key_exists('__metadata', $t1) && array_key_exists('missing_translations', $t1['__metadata'])) {
                         $cleanTree[$index1]['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
@@ -172,9 +169,14 @@ class TreeBuilder
                             $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2);
 
                             if (array_key_exists('__messages', $t2)) {
-                                $cleanTree[$index1]['children'][$index2]['total_translations'] += count(current($t2['__messages']));
-                                $cleanTree[$index1]['total_translations'] += count(current($t2['__messages']));
-                                $rootTree['root']['total_translations'] += count(current($t2['__messages']));
+                                $nbMessage = count(current($t2['__messages']));
+                                if (array_key_exists('__metadata', $t2)) {
+                                    $nbMessage -= 1;
+                                }
+
+                                $cleanTree[$index1]['children'][$index2]['total_translations'] += $nbMessage;
+                                $cleanTree[$index1]['total_translations'] += $nbMessage;
+                                $rootTree['root']['total_translations'] += $nbMessage;
 
                                 if (array_key_exists('__metadata', $t2) && array_key_exists('missing_translations', $t2['__metadata'])) {
                                     $cleanTree[$index1]['children'][$index2]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
@@ -188,10 +190,15 @@ class TreeBuilder
                                         $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3);
 
                                         if (array_key_exists('__messages', $t3)) {
-                                            $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_translations'] += count(current($t3['__messages']));
-                                            $cleanTree[$index1]['children'][$index2]['total_translations'] += count(current($t3['__messages']));
-                                            $cleanTree[$index1]['total_translations'] += count(current($t3['__messages']));
-                                            $rootTree['root']['total_translations'] += count(current($t3['__messages']));
+                                            $nbMessage = count(current($t3['__messages']));
+                                            if (array_key_exists('__metadata', $t3)) {
+                                                $nbMessage -= 1;
+                                            }
+
+                                            $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_translations'] += $nbMessage;
+                                            $cleanTree[$index1]['children'][$index2]['total_translations'] += $nbMessage;
+                                            $cleanTree[$index1]['total_translations'] += $nbMessage;
+                                            $rootTree['root']['total_translations'] += $nbMessage;
                                         }
 
                                         if (array_key_exists('__metadata', $t3) && array_key_exists('missing_translations', $t3['__metadata'])) {

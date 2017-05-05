@@ -59,16 +59,14 @@ class TranslationController extends ApiController
             $info = array(
                 'locale' => $locale,
                 'domain' => $domain,
-                'missing' => 0,
-                'total' => 0,
+                'total_translations' => count($catalog),
+                'total_missing_translations' => 0,
             );
 
-            foreach ($catalog as $message) {
+            foreach ($catalog as $k => $message) {
                 if (empty($message['xliff']) && empty($message['database'])) {
-                    $info['missing']++;
+                    $info['total_missing_translations']++;
                 }
-
-                $info['total']++;
             }
 
             return new JsonResponse($catalog, 200, $info);

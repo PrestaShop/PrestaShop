@@ -120,12 +120,12 @@ class TranslationService {
      * @return array|mixed
      */
     public function listDomainTranslation($locale, $domain){
-        $translationProvider= $this->container->get('prestashop.translation.search_provider');
+        $translationProvider = $this->container->get('prestashop.translation.search_provider');
 
         $translationProvider->setLocale($locale);
         $translationProvider->setDomain($domain);
 
-        $catalog = array();
+        $domains = array();
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 
         $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
@@ -133,7 +133,7 @@ class TranslationService {
         $dbCatalog = current($translationProvider->getDatabaseCatalogue()->all());
 
         foreach ($defaultCatalog as $message) {
-            $catalog[] = array(
+            $domains[] = array(
                 'default' => $message,
                 'xliff' => (array_key_exists($message, (array)$xliffCatalog) ? $xliffCatalog[$message] : null),
                 'database' => (array_key_exists($message, (array)$dbCatalog) ? $dbCatalog[$message] : null),
@@ -141,7 +141,7 @@ class TranslationService {
             );
         }
 
-        return $catalog;
+        return $domains;
     }
 
 }
