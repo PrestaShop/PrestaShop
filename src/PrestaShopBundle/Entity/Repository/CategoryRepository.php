@@ -152,9 +152,9 @@ class CategoryRepository
             $current = $row;
 
             if ($row['id_category'] == $idRootCategory) {
-                $categories[$row['id_category']] = &$current;
+                $categories[] = &$current;
             } else {
-                $buff[$row['id_parent']]['children'][$row['id_category']] = &$current;
+                $buff[$row['id_parent']]['children'][] = &$current;
             }
         }
 
