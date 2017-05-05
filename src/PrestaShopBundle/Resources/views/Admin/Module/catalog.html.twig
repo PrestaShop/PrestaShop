@@ -36,6 +36,13 @@
     <script src="{{ asset('themes/default/js/bundle/module/loader.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
+    {% if app.request.get('filterCategoryId') %}
+      <script>
+        $('body').on('moduleCatalogLoaded', function() {
+          $('.module-category-menu[data-category-id="{{ app.request.get('filterCategoryId') }}"]').click();
+      });
+      </script>
+    {% endif %}
 {% endblock %}
 
 {% block content %}

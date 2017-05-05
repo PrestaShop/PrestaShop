@@ -44,11 +44,11 @@ var AdminModuleController = function() {
   this.categoryGridItemSelector = '.module-category-item';
   this.addonItemGridSelector = '.module-addons-item-grid';
   this.addonItemListSelector = '.module-addons-item-list';
-  
+
   // Upgrade All selectors
   this.upgradeAllSource = '.module_action_menu_upgrade_all';
   this.upgradeAllTargets = '#modules-list-container-update .module_action_menu_upgrade:visible';
-  
+
   // Bulk action selectors
   this.bulkActionDropDownSelector = '.module-bulk-actions select';
   this.checkedBulkActionListSelector = '.module-checkbox-bulk-list input:checked';
@@ -257,6 +257,7 @@ var AdminModuleController = function() {
     self.addonsCardGrid = $(this.addonItemGridSelector);
     self.addonsCardList = $(this.addonItemListSelector);
     this.updateModuleVisibility();
+    $('body').trigger('moduleCatalogLoaded');
   };
 
   this.updateModuleVisibility = function() {
@@ -559,8 +560,8 @@ var AdminModuleController = function() {
       ? this.bulkActionCheckboxGridSelector
       : this.bulkActionCheckboxListSelector;
   };
-  
-  
+
+
   this.getBulkCheckboxesCheckedSelector = function () {
     return this.currentDisplay == 'grid'
       ? this.checkedBulkActionGridSelector
@@ -627,7 +628,7 @@ var AdminModuleController = function() {
       $(self.categoryItemSelector+'[data-category-ref="'+refCategory+'"]').click();
     });
   };
-  
+
   this.initCurrentDisplay = function() {
     var currentDisplaySwitch = $('.module-sort-active');
     if (currentDisplaySwitch.length) {
@@ -727,7 +728,7 @@ var AdminModuleController = function() {
         $next.fadeOut();
       });
     });
-    
+
     // "Upgrade All" button handler
     var that = this;
     $('body').on('click', this.upgradeAllSource, function(event) {
