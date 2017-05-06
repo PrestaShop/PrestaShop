@@ -41,6 +41,8 @@
 			<div class="container">
 				<div class="top-hr"></div>
 			</div>
+        {else}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.14/iframeResizer.contentWindow.min.js"></script>
 		{/if}
 		{if isset($adminActionDisplay) && $adminActionDisplay}
 			<div id="admin-action" class="container">
