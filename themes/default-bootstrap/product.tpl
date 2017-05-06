@@ -204,7 +204,7 @@
 					{/if}-->
 				</div> <!-- end short_description_block -->
 			{/if}
-			{if ($display_qties == 1 && !$PS_CATALOG_MODE && $PS_STOCK_MANAGEMENT && $product->available_for_order)}
+			{if ($display_qties == 1 && $PS_STOCK_MANAGEMENT && $product->available_for_order)}
 				<!-- number of item in stock -->
 				<p id="pQuantityAvailable"{if $product->quantity <= 0} style="display: none;"{/if}>
 					<span id="quantityAvailable">{$product->quantity|intval}</span>
@@ -257,7 +257,7 @@
 				</p>
 				<div class="box-info-product">
 					<div class="content_prices clearfix">
-						{if $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
+						{if $product->show_price && !isset($restricted_country_mode)}
 							<!-- prices -->
 							<div>
 								<p class="our_price_display" itemprop="offers" itemscope itemtype="https://schema.org/Offer">{strip}
@@ -534,7 +534,7 @@
 													{$accessory.name|truncate:20:'...':true|escape:'html':'UTF-8'}
 												</a>
 											</h5>
-											{if $accessory.show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
+											{if $accessory.show_price && !isset($restricted_country_mode)}
 											<span class="price">
 												{if $priceDisplay != 1}
 													{displayWtPrice p=$accessory.price}
@@ -739,7 +739,7 @@
 {addJsDef productPriceWithoutReduction=$productPriceWithoutReduction|floatval}
 {addJsDef productPrice=$productPrice|floatval}
 {addJsDef productUnitPriceRatio=$product->unit_price_ratio|floatval}
-{addJsDef productShowPrice=(!$PS_CATALOG_MODE && $product->show_price)|boolval}
+{addJsDef productShowPrice=($product->show_price)|boolval}
 {addJsDef PS_CATALOG_MODE=$PS_CATALOG_MODE}
 {if $product->specificPrice && $product->specificPrice|@count}
 	{addJsDef product_specific_price=$product->specificPrice}
