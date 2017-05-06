@@ -2,3 +2,7 @@
   padding-top: 25px; }
 
 /*# sourceMappingURL=blocktopmenu.css.map */
+
+.sf-menu.clearfix.menu-content.sf-js-enabled.sf-arrows > li:nth-last-child(-n+4) > ul.submenu-container.clearfix.first-in-line-xs > li:nth-last-child(-n+2) {
+    display: none;
+}
