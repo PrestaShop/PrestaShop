@@ -177,7 +177,20 @@ class AdminStockManagementControllerCore extends AdminController
             $this->_where = 'AND a.id_product = '.$product_id;
             $this->_group = 'GROUP BY a.id_product_attribute';
 
-            self::$currentIndex = self::$currentIndex.'&id_product='.(int)$product_id;
+            $this->fields_list['name'] =
+                array(
+                    'title' => $this->l('Name'),
+                    'orderby' => false,
+                    'filter' => false,
+                    'search' => false
+                );
+
+            if (Tools::getIsset('id_product_attribute')) {
+                self::$currentIndex = self::$currentIndex.'&id_product='.(int)$product_id;
+            } else {
+                self::$currentIndex = self::$currentIndex.'&id_product='.(int)$product_id.'&detailsproduct';
+            }
+            
             $this->processFilter();
             return parent::renderList();
         }
@@ -874,6 +887,13 @@ class AdminStockManagementControllerCore extends AdminController
             $redirect = self::$currentIndex.'&token='.$token;
         }
 
+        if (Tools::isSubmit('submitFilter') && Tools::getIsset('detailsproduct')) {
+            $id_product = (int)Tools::getValue('id_product', 0);
+            $token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+            $redirect = self::$currentIndex.'&id_product='.$id_product.'&detailsproduct&token='.$token;
+            Tools::redirectAdmin($redirect);
+        }
+
         // Global checks when add / remove product
         if ((Tools::isSubmit('addstock') || Tools::isSubmit('removestock')) && Tools::isSubmit('is_post')) {
             $stockAttributes = $this->getStockAttributes();
@@ -1351,6 +1371,10 @@ class AdminStockManagementControllerCore extends AdminController
     {
         if (!array_key_exists('RemoveStock', self::$cache_lang)) {
             self::$cache_lang['RemoveStock'] = $this->l('Remove stock');
+        }
+
+        if (Tools::getIsset('detailsproduct')) {
+            self::$currentIndex = str_replace('&detailsproduct', '', self::$currentIndex);
         }
 
         $this->context->smarty->assign(array(
