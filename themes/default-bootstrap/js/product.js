@@ -944,9 +944,9 @@ function updateDiscountTable(newPrice)
 		}
 
 		if (displayDiscountPrice != 0)
-			$(this).children('td').eq(1).text( formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank) );
-		$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo * currencyRate, currencyFormat, currencySign, currencyBlank));
-	});
+			$(this).children('td').eq(1).text( formatCurrency(discountedPrice, currencyFormat, currencySign, currencyBlank) );
+		$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo, currencyFormat, currencySign, currencyBlank));
+});
 }
 
 function serialScrollFixLock(event, targeted, scrolled, items, position)
