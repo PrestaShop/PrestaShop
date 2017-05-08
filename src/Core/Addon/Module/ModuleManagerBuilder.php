@@ -183,19 +183,20 @@ class ModuleManagerBuilder
 
         self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
         self::$lecacyContext = new LegacyContext();
+        self::$legacyLogger = new LegacyLogger();
 
         if (is_null(self::$adminModuleDataProvider)) {
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 self::$translator,
-                $this->getSymfonyRouter(),
+                self::$legacyLogger,
                 self::$addonsDataProvider,
                 self::$categoriesProvider,
                 self::$cacheProvider
             );
+            self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
 
             self::$translator = Context::getContext()->getTranslator();
             self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
-            self::$legacyLogger = new LegacyLogger();
             self::$moduleDataUpdater = new ModuleDataUpdater(
                 self::$addonsDataProvider,
                 self::$adminModuleDataProvider,

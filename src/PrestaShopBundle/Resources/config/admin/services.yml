@@ -75,10 +75,12 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
         arguments:
              - "@translator"
-             - "@router"
+             - "@logger"
              - "@prestashop.core.admin.data_provider.addons_interface"
              - "@prestashop.categories_provider"
              - "@doctrine.cache.provider"
+        calls:
+            - [ setRouter, ['@router']]
         decorates: prestashop.core.admin.data_provider.module_interface
         public: false
 
