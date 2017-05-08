@@ -13,3 +13,5 @@ ALTER TABLE `PREFIX_product_shop` ADD `low_stock_threshold` INT(10) NULL DEFAULT
 
 ALTER TABLE `PREFIX_product_attribute` ADD `low_stock_threshold` INT(10) NULL DEFAULT NULL AFTER `minimal_quantity`;
 ALTER TABLE `PREFIX_product_attribute_shop` ADD `low_stock_threshold` INT(10) NULL DEFAULT NULL AFTER `minimal_quantity`;
+
+ALTER TABLE `PREFIX_customization_field` ADD `is_deleted` TINYINT(1) NOT NULL DEFAULT '0';
