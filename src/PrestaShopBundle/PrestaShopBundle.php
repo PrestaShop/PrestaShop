@@ -56,5 +56,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new PopulateTranslationProvidersPass());
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
+        $container->addCompilerPass(new DependencyInjection\Compiler\OverrideServiceCompilerPass());
     }
 }
