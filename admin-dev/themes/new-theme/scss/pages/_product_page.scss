@@ -1,10 +1,5 @@
 .product-page {
 
-  //@TODO remove this tyniMce hack
-  .mce-tinymce iframe {
-    max-height: 400px !important;
-  }
-
   padding-bottom: 80px;
 
   .table-fixed {
@@ -56,6 +51,10 @@
   }
   .tab-content {
     padding: 0;
+
+    .bordered {
+      margin-top: -1px;
+    }
   }
 
   // Components

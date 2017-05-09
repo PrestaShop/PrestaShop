@@ -1871,7 +1871,7 @@ class AdminOrdersControllerCore extends AdminController
             'shipping_refundable_tax_incl' => $shipping_refundable_tax_incl,
             'customer_thread_message' => CustomerThread::getCustomerMessages($order->id_customer, null, $order->id),
             'orderMessages' => OrderMessage::getOrderMessages($order->id_lang),
-            'messages' => Message::getMessagesByOrderId($order->id, true),
+            'messages' => CustomerThread::getCustomerMessagesOrder($order->id_customer, $order->id),
             'carrier' => new Carrier($order->id_carrier),
             'history' => $history,
             'states' => OrderState::getOrderStates($this->context->language->id),

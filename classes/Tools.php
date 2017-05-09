@@ -961,8 +961,11 @@ class ToolsCore
     public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
     {
         if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-            return ('<pre>'.Tools::htmlentitiesUTF8(stripslashes($string)).'<br/>'.print_r(debug_backtrace(), true).'</pre>');
+            throw new PrestaShopException($string);
+        } else if ('Fatal error' !== $string) {
+            return $string;
         }
+
         return Context::getContext()->getTranslator()->trans('Fatal error', array(), 'Admin.Notifications.Error');
     }
 
@@ -1889,6 +1892,9 @@ class ToolsCore
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
             curl_setopt($curl, CURLOPT_CAINFO, _PS_CACHE_CA_CERT_FILE_);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($curl, CURLOPT_MAXREDIRS, 5);
+
             if ($opts != null) {
                 if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post') {
                     curl_setopt($curl, CURLOPT_POST, true);
@@ -1974,7 +1980,7 @@ class ToolsCore
             }
         }
 
-        return (empty($content) ? false : $content);
+        return $content;
     }
 
     /**

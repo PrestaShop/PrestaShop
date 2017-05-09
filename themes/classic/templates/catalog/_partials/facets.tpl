@@ -81,7 +81,7 @@
                             {/if}
                           </span>
                         {else}
-                          <span class="custom-checkbox">
+                          <span class="custom-radio">
                             <input
                               id="facet_input_{$_expand_id}_{$filter_key}"
                               data-search-url="{$filter.nextEncodedFacetsURL}"

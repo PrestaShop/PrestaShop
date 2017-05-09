@@ -9243,7 +9243,6 @@ textarea:focus:focus, input[type="text"]:focus:focus, input[type="password"]:foc
   .nav-bar.mobile-nav {
     margin-left: -100%;
     width: 90%;
-    -webkit-transition: all .5s ease-in;
     transition: all .5s ease-in; }
     .nav-bar.mobile-nav.expanded {
       visibility: visible;
@@ -9458,7 +9457,6 @@ textarea:focus:focus, input[type="text"]:focus:focus, input[type="password"]:foc
 
 @media (max-width: 767px) {
   .mobile-layer {
-    -webkit-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
     opacity: 0;
     visibility: hidden;
@@ -9683,8 +9681,6 @@ ul.category-tree {
 .product-page {
   padding-bottom: 80px;
   /* Last tab modules selection */ }
-  .product-page .mce-tinymce iframe {
-    max-height: 400px !important; }
   .product-page .table-fixed {
     table-layout: fixed;
     border: 0; }
@@ -9720,6 +9716,8 @@ ul.category-tree {
     padding-left: 0; }
   .product-page .tab-content {
     padding: 0; }
+    .product-page .tab-content .bordered {
+      margin-top: -1px; }
   .product-page .product-header {
     background: #FFFFFF;
     margin-top: -0.9375rem;
@@ -9840,7 +9838,6 @@ ul.category-tree {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     overflow-y: hidden;
-    -webkit-transition: width 0.5s ease-out, margin 0.5s ease-out;
     transition: width 0.5s ease-out, margin 0.5s ease-out;
     z-index: 1; }
     .product-page #product-images-dropzone.col-md-8 {
@@ -10110,7 +10107,6 @@ ul.category-tree {
     .product-page #product-attachment-file .checkbox {
       margin: 0; }
   .product-page #combinations-bulk-form {
-    -webkit-transition: opacity 1s ease-in-out;
     transition: opacity 1s ease-in-out; }
     .product-page #combinations-bulk-form.inactive {
       cursor: progress;
@@ -10240,7 +10236,6 @@ ul.category-tree {
     overflow-x: hidden; }
     #attributes-list .attribute-group .attributes .two-columns {
       -webkit-columns: 2;
-         -moz-columns: 2;
               columns: 2; }
     #attributes-list .attribute-group .attributes .attribute .js-attribute-checkbox {
       display: none; }
@@ -11131,7 +11126,6 @@ form#importDropzone {
 
 .mce-fade {
   opacity: 0;
-  -webkit-transition: opacity .15s linear;
   transition: opacity .15s linear; }
   .mce-fade.mce-in {
     opacity: 1; }
@@ -11169,7 +11163,9 @@ div.mce-edit-area {
   background: #FFF;
   -webkit-filter: none;
           filter: none;
-  padding: 1px; }
+  padding: 1px;
+  max-height: 400px;
+  overflow: auto; }
 
 .mce-statusbar {
   position: relative; }
@@ -11370,7 +11366,6 @@ div.mce-fullscreen {
   position: fixed;
   top: 0;
   opacity: 0;
-  -webkit-transition: opacity 150ms ease-in;
   transition: opacity 150ms ease-in;
   left: 0;
   border-radius: 6px; }
@@ -12177,7 +12172,6 @@ i.mce-i-resize {
   border: 1px solid #c5c5c5;
   border-radius: 3px;
   display: inline-block;
-  -webkit-transition: border linear .2s, box-shadow linear .2s;
   transition: border linear .2s, box-shadow linear .2s;
   height: 28px;
   resize: none;

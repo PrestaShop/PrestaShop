@@ -261,7 +261,7 @@ abstract class ModuleCore
         }
 
         if (strlen($this->ps_versions_compliancy['max']) == 5) {
-            $this->ps_versions_compliancy['max'] .= '.0';
+            $this->ps_versions_compliancy['max'] .= '.999';
         }
 
         if (strlen($this->ps_versions_compliancy['max']) == 3) {

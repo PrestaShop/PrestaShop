@@ -69,6 +69,8 @@ class ProductAssemblerCore
         $sql = "SELECT
                     p.*,
                     pl.*,
+                    sa.out_of_stock,
+                    IFNULL(sa.quantity, 0) as quantity,
                     (DATEDIFF(
 				p.`date_add`,
 				DATE_SUB(
@@ -81,7 +83,10 @@ class ProductAssemblerCore
                     ON pl.id_product = p.id_product
                     AND pl.id_shop = $idShop
                     AND pl.id_lang = $idLang
-                    AND p.id_product = $idProduct";
+                    AND p.id_product = $idProduct
+                LEFT JOIN {$prefix}stock_available sa
+			        ON sa.id_product = p.id_product 
+			        AND sa.id_shop = $idShop";
 
         $rows = Db::getInstance()->executeS($sql);
 

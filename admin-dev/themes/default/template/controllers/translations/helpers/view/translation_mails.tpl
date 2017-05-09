@@ -53,7 +53,7 @@
 			<div class="panel">
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
-				<input type="hidden" name="theme" value="{$theme}" />
+				<input type="hidden" name="selected-theme" value="{$theme}" />
 				<script type="text/javascript">
 					$(document).ready(function(){
 						$('a.useSpecialSyntax').click(function(){

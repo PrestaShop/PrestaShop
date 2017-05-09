@@ -29,6 +29,8 @@
       <h1 class="h1">{$category.name}</h1>
       {if $category.description}
         <div id="category-description" class="text-muted">{$category.description nofilter}</div>
+      {/if}
+      {if $category.image.large.url}
         <div class="category-cover">
           <img src="{$category.image.large.url}" alt="{$category.image.legend}">
         </div>

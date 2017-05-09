@@ -87,8 +87,10 @@ class HookRepositoryTest extends IntegrationTestCase
     {
         $this->hookRepository->persistHooksConfiguration([
             'displayTestHookNameWithExceptions' => [
-                'ps_emailsubscription' => [
-                    'except_pages' => ['category', 'product']
+                [
+                    'ps_emailsubscription' => [
+                        'except_pages' => ['category', 'product']
+                    ]
                 ]
             ]
         ]);

@@ -73,6 +73,7 @@ class CartPresenter implements PresenterInterface
         $settings->include_taxes = $this->includeTaxes();
         $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
         $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
+        $settings->showPrices = Configuration::showPrices();
 
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
             // return an array of attributes
@@ -106,14 +107,21 @@ class CartPresenter implements PresenterInterface
             $rawProduct['id_product_attribute']
         );
 
-        $rawProduct['ecotax_rate'] = '';
-        $rawProduct['specific_prices'] = '';
-        $rawProduct['customizable'] = '';
-        $rawProduct['online_only'] = '';
-        $rawProduct['reduction'] = '';
-        $rawProduct['new'] = '';
-        $rawProduct['condition'] = '';
-        $rawProduct['pack'] = '';
+        $resetFields = array(
+            'ecotax_rate',
+            'specific_prices',
+            'customizable',
+            'online_only',
+            'reduction',
+            'new',
+            'condition',
+            'pack',
+        );
+        foreach ($resetFields as $field) {
+            if (!array_key_exists($field, $rawProduct)) {
+                $rawProduct[$field] = '';
+            }
+        }
 
         if ($this->includeTaxes()) {
             $rawProduct['price_amount'] = $rawProduct['price_wt'];
@@ -454,7 +462,7 @@ class CartPresenter implements PresenterInterface
             if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'].'%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
-                $cartVoucher['reduction_formatted'] = $this->priceFormatter->format($cartVoucher['reduction_amount']);
+                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-'.$cartVoucher['reduction_formatted'];

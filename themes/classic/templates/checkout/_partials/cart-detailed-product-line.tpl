@@ -36,11 +36,27 @@
       <a class="label" href="{$product.url}" data-id_customization="{$product.id_customization|intval}">{$product.name}</a>
     </div>
 
-    <div class="product-line-info">
-      <span class="value">{$product.price}</span>
-      {if $product.unit_price_full}
-        <div class="unit-price-cart">{$product.unit_price_full}</div>
+    <div class="product-line-info product-price h5 {if $product.has_discount}has-discount{/if}">
+      {if $product.has_discount}
+        <div class="product-discount">
+          <span class="regular-price">{$product.regular_price}</span>
+          {if $product.discount_type === 'percentage'}
+            <span class="discount discount-percentage">
+                -{$product.discount_percentage_absolute}
+              </span>
+          {else}
+            <span class="discount discount-amount">
+                -{$product.discount_to_display}
+              </span>
+          {/if}
+        </div>
       {/if}
+      <div class="current-price">
+        <span class="price">{$product.price}</span>
+        {if $product.unit_price_full}
+          <div class="unit-price-cart">{$product.unit_price_full}</div>
+        {/if}
+      </div>
     </div>
 
     <br/>

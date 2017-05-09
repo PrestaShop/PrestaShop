@@ -64,7 +64,7 @@
         <div class="form-group row">
           <label class="col-md-3 form-control-label">{l s='Attachment' d='Shop.Forms.Labels'}</label>
           <div class="col-md-6">
-            <input type="file" name="fileUpload" class="filestyle">
+            <input type="file" name="fileUpload" class="filestyle" data-buttonText="{l s='Choose file' d='Shop.Theme.Actions'}">
           </div>
           <span class="col-md-3 form-control-comment">
             {l s='optional' d='Shop.Forms.Help'}
