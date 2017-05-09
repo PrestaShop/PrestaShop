@@ -91,6 +91,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleSelfConfigurator
         arguments:
             - "@prestashop.core.admin.module.repository"
+            - "@prestashop.adapter.legacy.configuration"
 
     # MODULE TAB MANAGEMENT
     prestashop.adapter.module.tab.register:

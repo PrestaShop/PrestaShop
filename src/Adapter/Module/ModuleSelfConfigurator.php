@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Exception;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
@@ -46,13 +48,19 @@ class ModuleSelfConfigurator
      * @var ModuleRepository
      */
     protected $moduleRepository;
+
+    /**
+     * @var Configuration
+     */
+    protected $configuration;
     
-    public function __construct(ModuleRepository $moduleRepository)
+    public function __construct(ModuleRepository $moduleRepository, Configuration $configuration)
     {
         $this->module = null;
         $this->configFile = null;
 
         $this->moduleRepository = $moduleRepository;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -191,9 +199,17 @@ class ModuleSelfConfigurator
      */
     public function configure()
     {
+        if (count($this->validate())) {
+            return false;
+        }
+        $config = $this->load($this->getFile());
+
+        $this->runConfigurationStep($config);
         return true;
     }
 
+    // PROTECTED ZONE
+    
     protected function load($file)
     {
         if (array_key_exists($file, $this->configs)) {
@@ -201,5 +217,41 @@ class ModuleSelfConfigurator
         }
         $this->configs[$file] = Yaml::parse(file_get_contents($file));
         return $this->configs[$file];
+    }
+
+    protected function runConfigurationStep($config)
+    {
+        if (empty($config['configuration'])) {
+            return;
+        }
+        
+        if (array_key_exists('update', $config['configuration'])) {
+            $this->runConfigurationUpdate($config['configuration']['update']);
+        }
+
+        if (array_key_exists('delete', $config['configuration'])) {
+            $this->runConfigurationDelete($config['configuration']['delete']);
+        }
+    }
+
+    protected function runConfigurationUpdate($config)
+    {
+        foreach($config as $key => $data) {
+            if (is_array($data) && isset($data['value'])) {
+                $value = $data['value'];
+            } elseif (is_scalar($data)) {
+                // string / integer / decimal / bool
+                $value = $data;
+            } else throw new Exception(sprintf('No value given for key %s', $key));
+
+            $this->configuration->set($key, $value);
+        }
+    }
+
+    protected function runConfigurationDelete($config)
+    {
+        foreach($config as $key) {
+            $this->configuration->delete($key);
+        }
     }
 }

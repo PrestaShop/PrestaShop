@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\tests\TestCase\UnitTestCase;
 
@@ -33,18 +34,22 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 {
     public $moduleSelfConfigurator;
 
+    private $configuration;
     private $moduleRepository;
+
+    public $defaultDir = __DIR__.'/../../../resources/module-self-config-files';
     
     public function setup()
     {
+        $this->configuration = new ConfigurationMock();
         $this->mockModuleRepository();
-        $this->moduleSelfConfigurator = new ModuleSelfConfigurator($this->moduleRepository);
+        $this->moduleSelfConfigurator = new ModuleSelfConfigurator($this->moduleRepository, $this->configuration);
         parent::setup();
     }
 
     public function testSuccessfulConfiguration()
     {
-        $name = 'dummy';
+        $name = 'bankwire';
         $this->assertTrue($this->moduleSelfConfigurator->module($name)->configure());
     }
 
@@ -63,13 +68,14 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     {
         // Module installed
         $name = 'ganalytics';
-        $this->assertEmpty($this->moduleSelfConfigurator->module($name)->file(__DIR__.'/moduleConfExample.yml')->validate());
+        $filepath = $this->defaultDir.'/moduleConfExample.yml';
+        $this->assertEmpty($this->moduleSelfConfigurator->module($name)->file($filepath)->validate());
     }
 
     public function testModuleInstallationRequirementFail()
     {
         // Module installed
-        $name = 'bankwire';
+        $name = 'ganalytics';
         $this->assertNotEmpty($this->moduleSelfConfigurator->module($name)->validate());
     }
 
@@ -83,11 +89,31 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testAllValid()
     {
-        $filepath = __DIR__.'/moduleConfExample.yml';
+        $filepath = $this->defaultDir.'/moduleConfExample.yml';
         $name = 'bankwire';
         $this->assertEmpty($this->moduleSelfConfigurator->module($name)->file($filepath)->validate());
     }
 
+    public function testConfigurationUpdate()
+    {
+        $filepath = $this->defaultDir.'/moduleConfExample.yml';
+        $name = 'bankwire';
+        // Test before
+        $this->assertNull($this->configuration->get('PAYPAL_SANDBOX'));
+        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+        $this->assertEquals(1, $this->configuration->get('PAYPAL_SANDBOX'));
+    }
+
+    public function testConfigurationDelete()
+    {
+        $filepath = $this->defaultDir.'/moduleConfExample.yml';
+        $name = 'bankwire';
+        // Test before
+        $this->configuration->set('PAYPAL_ONBOARDING', 1);
+        $this->assertEquals(1, $this->configuration->get('PAYPAL_ONBOARDING'));
+        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+        $this->assertNull($this->configuration->get('PAYPAL_ONBOARDING'));
+    }
 
     private function mockModuleRepository()
     {
@@ -123,5 +149,27 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->moduleRepository
             ->method('getModule')
             ->willReturn($moduleS);
+    }
+}
+
+class ConfigurationMock extends Configuration
+{
+    private $configurationData = array();
+    
+    public function set($key, $value)
+    {
+        $this->configurationData[$key] = $value;
+        return $this;
+    }
+
+    public function get($key)
+    {
+        return isset($this->configurationData[$key])?$this->configurationData[$key]:null;
+    }
+
+    public function delete($key)
+    {
+        unset($this->configurationData[$key]);
+        return $this;
     }
 }
