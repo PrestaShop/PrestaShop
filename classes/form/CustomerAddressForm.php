@@ -170,6 +170,8 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function getTemplateVariables()
     {
+        $context = Context::getContext();
+
         if (!$this->formFields) {
             // This is usually done by fillWith but the form may be
             // rendered before fillWith is called.
@@ -180,17 +182,26 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         $this->setValue('token', $this->persister->getToken());
+        $formFields = array_map(
+            function (FormField $item) {
+                return $item->toArray();
+            },
+            $this->formFields
+        );
+
+        if (empty($formFields['firstname']['value'])) {
+            $formFields['firstname']['value'] = $context->customer->firstname;
+        }
+
+        if (empty($formFields['lastname']['value'])) {
+            $formFields['lastname']['value'] = $context->customer->lastname;
+        }
 
         return array(
             'id_address' => (isset($this->address->id)) ? $this->address->id : 0,
             'action' => $this->action,
             'errors' => $this->getErrors(),
-            'formFields' => array_map(
-                function (FormField $item) {
-                    return $item->toArray();
-                },
-                $this->formFields
-            ),
+            'formFields' => $formFields,
         );
     }
 }
