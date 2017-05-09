@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e66527e5d9dcd365db8d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "442da752a1bf36cc1bf5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -43040,19 +43040,30 @@ let setNotificationsNumber = function (id, number) {
       }
     });
 
-  __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input.form-control[counter], textarea.form-control[counter]').each(function () {
-    var attr = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).attr('counter');
+  __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input.form-control[counter], textarea.form-control:not(.autoload_rte)[counter]').each(function () {
+    let counter = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).attr('counter');
 
-    if (typeof attr === undefined || attr === false) {
+    if (typeof counter === undefined || counter === false) {
       return;
     }
 
-    __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).parent().find('span.currentLength').text(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).val().length);
-    __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).parent().find('span.currentTotalMax').text(attr);
+    handleCounter(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(this));
     __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).on('input', function () {
-      __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).parent().find('span.currentLength').text(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).val().length);
-      __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).parent().find('span.currentTotalMax').text(attr);
+      handleCounter(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(this));
     });
+
+    function handleCounter(object) {
+      let counter = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(object).attr('counter');
+      let counter_type = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(object).attr('counter_type');
+      let max = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(object).val().length;
+
+      __WEBPACK_IMPORTED_MODULE_0_jquery___default()(object).parent().find('span.currentLength').text(max);
+      if ('recommended' !== counter_type && max > counter) {
+        __WEBPACK_IMPORTED_MODULE_0_jquery___default()(object).parent().find('span.maxLength').addClass('text-danger');
+      } else {
+        __WEBPACK_IMPORTED_MODULE_0_jquery___default()(object).parent().find('span.maxLength').removeClass('text-danger');
+      }
+    }
   });
 });
 

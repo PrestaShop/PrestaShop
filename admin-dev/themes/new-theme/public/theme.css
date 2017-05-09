@@ -10092,6 +10092,8 @@ ul.category-tree {
     font-size: 12px;
     font-style: italic;
     color: #6C868E; }
+  .product-page textarea.autoload_rte + .maxLength {
+    margin-top: 15px; }
   .product-page #form_step5_meta_description_1 {
     resize: none;
     height: 8.75rem; }
