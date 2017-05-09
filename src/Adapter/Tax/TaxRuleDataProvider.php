@@ -44,6 +44,16 @@ class TaxRuleDataProvider
     }
 
     /**
+     * Get most used Tax
+     *
+     * @return int
+     */
+    public function getIdTaxRulesGroupMostUsed()
+    {
+        return \Product::getIdTaxRulesGroupMostUsed();
+    }
+
+    /**
      * Get all Tax Rules Groups with rates
      *
      * @return array TaxRulesGroup

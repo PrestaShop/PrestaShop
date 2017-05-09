@@ -92,7 +92,8 @@ class CombinationController extends Controller
             $this->container->get('prestashop.adapter.data_provider.warehouse'),
             $this->container->get('prestashop.adapter.data_provider.feature'),
             $this->container->get('prestashop.adapter.data_provider.pack'),
-            $this->container->get('prestashop.adapter.shop.context')
+            $this->container->get('prestashop.adapter.shop.context'),
+            $this->container->get('prestashop.adapter.data_provider.tax')
         );
 
         $combinations = $modelMapper->getAttributesResume();

@@ -351,8 +351,9 @@ class ProductController extends FrameworkBundleAdminController
 
         /** @var \Product $product */
         $product = $productAdapter->getProductInstance();
-        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
         $product->id_category_default = $context->shop->id_category;
+        $product->id_tax_rules_group = 0;
+        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
         $product->state = \Product::STATE_TEMP;
 
         //set name and link_rewrite in each lang
@@ -416,7 +417,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
 
@@ -970,7 +972,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
 
         $form = $this->createFormBuilder($modelMapper->getFormData());

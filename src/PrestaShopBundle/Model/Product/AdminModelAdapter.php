@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Model\Product;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider;
@@ -43,6 +44,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 {
     private $context;
+    private $contextShop;
     private $adminProductWrapper;
     private $cldrRepository;
     private $locales;
@@ -57,6 +59,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $unmapKeys;
     private $configuration;
     private $shopContext;
+    private $taxRuleDataProvider;
 
     /**
      * Constructor
@@ -72,6 +75,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param FeatureDataProvider $featureDataProvider
      * @param PackDataProvider $packDataProvider
      * @param ShopContext $shopContext
+     * @param TaxRuleDataProvider $taxRuleDataProvider
      */
     public function __construct(
         \ProductCore $product,
@@ -83,7 +87,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         WarehouseDataProvider $warehouseDataProvider,
         FeatureDataProvider $featureDataProvider,
         PackDataProvider $packDataProvider,
-        ShopContext $shopContext
+        ShopContext $shopContext,
+        TaxRuleDataProvider $taxRuleDataProvider
     ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
@@ -102,6 +107,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->configuration = new Configuration();
         $this->product->loadStockData();
         $this->shopContext = $shopContext;
+        $this->taxRuleDataProvider = $taxRuleDataProvider;
 
         //define translatable key
         $this->translatableKeys = array(
@@ -430,7 +436,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'step2' => [
                 'price' => $this->product->price,
                 'ecotax' => $this->product->ecotax,
-                'id_tax_rules_group' => $this->product->id_tax_rules_group,
+                'id_tax_rules_group' => !empty($this->product->id_tax_rules_group) ? $this->product->id_tax_rules_group : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),
                 'on_sale' => (bool) $this->product->on_sale,
                 'wholesale_price' => $this->product->wholesale_price,
                 'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
