@@ -18,6 +18,7 @@
           :model="element"
           :label="element.name"
           :translations="translations"
+          :currentItem="currentItem"
           @checked="onCheck"
           @setCurrentEl ="setCurrentEl"
         />
@@ -35,6 +36,7 @@
     props: {
       model: Array,
       className: String,
+      currentItem: String,
       hasCheckbox: Boolean,
       translations: {
         type: Object,

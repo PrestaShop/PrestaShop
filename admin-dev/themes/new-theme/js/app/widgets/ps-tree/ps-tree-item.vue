@@ -18,6 +18,7 @@
           :model="element"
           :label="element.name"
           :translations="translations"
+          :currentItem="currentItem"
           @checked="onCheck"
           @setCurrentEl ="setCurrentEl"
         />
@@ -48,6 +49,10 @@
       translations: {
         type: Object,
         required: false
+      },
+      currentItem: {
+        type: String,
+        required: false
       }
     },
     computed: {
@@ -61,7 +66,7 @@
         return this.isFolder && this.model.extraLabel;
       },
       getExtraLabel() {
-        return this.translations.extra.replace('%d', this.model.extraLabel);
+        return this.translations.extra ? this.translations.extra.replace('%d', this.model.extraLabel) : '';
       },
       chevron() {
         if(!this.isFolder) {
@@ -70,13 +75,23 @@
       }
     },
     methods: {
-      setCurrentEl() {
-        if(this.model.id) {
-          this.$emit('setCurrentEl', this.model.id);
+      setCurrentEl(el) {
+        if(this.$refs[el]) {
+          this.clickItem();
+          this.current = true;
+          this.parentEl(this.$parent);
+        } else {
+          this.current = false;
+        }
+      },
+      parentEl(parent){
+        if(parent.clickItem) {
+          parent.clickItem();
+          this.parentEl(parent.$parent);
         }
       },
       clickItem() {
-        this.setCurrentEl();
+        this.setCurrentEl(this.model.full_name);
         if (this.isFolder) {
           this.open = !this.open;
         } else {
@@ -95,7 +110,7 @@
     data() {
       return {
         open: false,
-        current: false
+        current: false,
       }
     },
     mounted() {
@@ -108,22 +123,8 @@
         this.open = true;
       }).$on('reduce', _ => {
         this.open = false;
-      }).$on('setCurrentEl', (el) => {
-        if(this.$refs[el]) {
-          this.clickItem();
-          this.current = true;
-          parentEl(this.$parent);
-        }
-        else {
-          this.current = false;
-        }
       });
-      function parentEl(parent){
-        if(parent.clickItem) {
-          parent.clickItem();
-          parentEl(parent.$parent);
-        }
-      }
+      this.setCurrentEl(this.currentItem);
     },
   }
 </script>
