@@ -35,7 +35,7 @@
               </div>
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_to')}}</label>
-                <PSDatePicker @dpChange="onDpChange"data-type="inf" />
+                <PSDatePicker @dpChange="onDpChange" data-type="inf" />
               </div>
             </form>
           </div>
@@ -143,6 +143,7 @@
           this.id_employee = item.value === 'default' ? [] : item.value;
         }
         this.applyFilter();
+<<<<<<< HEAD
       },
       onDpChange(event) {
         let type = $(event.currentTarget).data('type');
@@ -150,6 +151,12 @@
         if(event.oldDate) {
           this.applyFilter();
         }
+||||||| parent of 708fdd5833... BO: Add datepicker
+=======
+      },
+      onDpChange(dates) {
+        //TODO
+>>>>>>> 708fdd5833... BO: Add datepicker
       }
     },
     components: {
