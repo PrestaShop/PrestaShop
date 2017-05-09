@@ -28,6 +28,16 @@
              {{trans('none')}}
             </PSSelect>
             <h2 class="m-t-2">{{trans('filter_movements_period')}}</h2>
+            <form class="row">
+              <div class="col-md-6">
+                <label>{{trans('filter_datepicker_from')}}</label>
+                <PSDatePicker @dpChange="onDpChange"/>
+              </div>
+              <div class="col-md-6">
+                <label>{{trans('filter_datepicker_to')}}</label>
+                <PSDatePicker @dpChange="onDpChange" />
+              </div>
+            </form>
           </div>
         </div>
         <div class="col-md-6">
@@ -55,6 +65,7 @@
   import FilterComponent from './filters/filter-component';
   import PSSelect from 'app/widgets/ps-select';
   import PSButton from 'app/widgets/ps-button';
+  import PSDatePicker from 'app/widgets/ps-datepicker';
   import _ from 'lodash';
 
   export default {
@@ -133,12 +144,16 @@
           this.id_employee = item.value === 'default' ? [] : item.value;
         }
         this.applyFilter();
+      },
+      onDpChange(dates) {
+        //TODO
       }
     },
     components: {
       FilterComponent,
       PSSelect,
-      PSButton
+      PSButton,
+      PSDatePicker
     },
     mounted() {
       this.$store.dispatch('getSuppliers');
