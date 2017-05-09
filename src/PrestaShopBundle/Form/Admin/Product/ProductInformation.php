@@ -156,7 +156,15 @@ class ProductInformation extends CommonAbstractType
         ->add('description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
             'options' => [
-                'attr' => array('class' => 'autoload_rte'),
+                'attr' => array(
+                    'class' => 'autoload_rte',
+                    'counter' => 6000,
+                ),
+                'constraints' => array(
+                    new TinyMceMaxLength(array(
+                        'max' => 6000
+                    ))
+                ),
                 'required' => false
             ],
             'locales' => $this->locales,
