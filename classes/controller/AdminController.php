@@ -1927,19 +1927,29 @@ class AdminControllerCore extends Controller
     {
         $tips = array(
             'order' => array(
-                $this->l('Your next order could be hiding there!'),
-                $this->l('Did you check your conversion rate lately?'),
-                $this->l('How about some seasonal discounts?'),
+                $this->trans('Did you check your conversion rate lately?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('How about some seasonal discounts?', array(), 'Admin.Navigation.Notification'),
+                $this->trans(
+                    'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
+                        array(
+                            '[1]' => '<strong>',
+                            '[/1]' => '</strong>',
+                            '[2]' => '<a href="'.$this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts">',
+                             '[/2]' => '</a>',
+                            '[3]' => '<br>',
+                        ),
+                        'Admin.Navigation.Notification'
+                ),
             ),
             'customer' => array(
-                $this->l('Have you sent any acquisition email lately?'),
-                $this->l('Are you active on social media these days?'),
-                $this->l('Have you considered selling on marketplaces?'),
+                $this->trans('Have you sent any acquisition email lately?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('Are you active on social media these days?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('Have you considered selling on marketplaces?', array(), 'Admin.Navigation.Notification'),
             ),
             'customer_message' => array(
-                $this->l('That\'s more time for something else!'),
-                $this->l('No news is good news, isn\'t it?'),
-                $this->l('Seems like all your customers are happy :)'),
+                $this->trans('That\'s more time for something else!', array(), 'Admin.Navigation.Notification'),
+                $this->trans('No news is good news, isn\'t it?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('Seems like all your customers are happy :)', array(), 'Admin.Navigation.Notification'),
             ),
         );
 
@@ -2810,7 +2820,6 @@ class AdminControllerCore extends Controller
             'token' => $this->token,
             'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
             'stock_management' => (int)Configuration::get('PS_STOCK_MANAGEMENT'),
-            'abandoned_cart_url' => $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts',
             'no_order_tip' => $this->getNotificationTip('order'),
             'no_customer_tip' => $this->getNotificationTip('customer'),
             'no_customer_message_tip' => $this->getNotificationTip('customer_message'),
@@ -4672,28 +4681,28 @@ class AdminControllerCore extends Controller
     {
         if(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_DELETE;
         } elseif(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_ADD;
         } elseif(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_EDIT;
         } elseif(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ',
                 $this->context->employee->id_profile
             )
         ) {

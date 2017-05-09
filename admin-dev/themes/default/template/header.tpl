@@ -280,8 +280,7 @@
                     {if $show_new_orders}
                       <div class="tab-pane {$active} empty" id="orders-notifications" role="tabpanel">
                         <p class="no-notification">
-                          {l s='No new order for now :('}<br>
-                          {l s='Have you checked your [1][2]abandonned carts[/2][/1]?' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a href="'|cat:$abandoned_cart_url|cat:'">', '[/2]' => '</a>']}<br>
+                          {l s='No new order for now :(' d='Admin.Navigation.Notification'}<br>
                           {$no_order_tip}
                         </p>
                         <div class="notification-elements"></div>
@@ -291,7 +290,7 @@
                     {if $show_new_customers}
                       <div class="tab-pane {$active} empty" id="customers-notifications" role="tabpanel">
                         <p class="no-notification">
-                          {l s='No new customer for now :('}<br>
+                          {l s='No new customer for now :(' d='Admin.Navigation.Notification'}<br>
                           {$no_customer_tip}
                         </p>
                         <div class="notification-elements"></div>
@@ -301,7 +300,7 @@
                     {if $show_new_messages}
                       <div class="tab-pane {$active} empty" id="messages-notifications" role="tabpanel">
                         <p class="no-notification">
-                          {l s='No new message for now.'}<br>
+                          {l s='No new message for now.' d='Admin.Navigation.Notification'}<br>
                           {$no_customer_message_tip}
                         </p>
                         <div class="notification-elements"></div>
