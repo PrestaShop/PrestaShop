@@ -254,15 +254,15 @@ class ThemeTranslationsFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @param $locale
      */
-    protected function assertTranslationsContainDefaultAndDatabaseMessages($locale)
+    protected function assertTranslationsContainCatalogueMessages($locale)
     {
         $domain = 'DefaultDomain.' . $locale;
         $this->assertArrayHasKey($domain, $this->translations);
 
         $this->assertSame(
             array(
-                'xlf' => 'Default MESSAGE',
-                'db' => '',
+                'xlf' => null,
+                'db' => null,
             ),
             $this->translations[$domain]['Default message'],
             'It should provide with default translations.'
@@ -270,18 +270,18 @@ class ThemeTranslationsFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             array(
-                'xlf' => 'Bis',
-                'db' => 'Bis override',
+                'xlf' => null,
+                'db' => null,
             ),
             $this->translations[$domain]['Default message bis'],
-            'It should provide with default translations and their database overrides.'
+            'It should provide with default translations.'
         );
     }
 
     /**
      * @param $locale
      */
-    protected function assertTranslationsContainCatalogueMessages($locale)
+    protected function assertTranslationsContainDefaultAndDatabaseMessages($locale)
     {
         $domain = 'ShopFront.' . $locale;
         $this->assertArrayHasKey($domain, $this->translations);
@@ -289,27 +289,21 @@ class ThemeTranslationsFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             array(
                 'xlf' => 'Add to CART',
-                'db' => '',
+                'db' => null,
             ),
             $this->translations[$domain]['Add to Cart'],
             'It should provide with translations from XLIFF catalogue overriding the defaults.'
         );
 
-        $this->assertSame(
-            array(
-                'xlf' => 'Remove from CART',
-                'db' => '',
-            ),
-            $this->translations[$domain]['Remove from Cart'],
-            'It should provide with translations from XLIFF catalogue.'
-        );
+        $domain = 'messages.' . $locale;
+        $this->assertArrayHasKey($domain, $this->translations);
 
         $this->assertSame(
             array(
-                'xlf' => 'Edit it!',
-                'db' => 'Edit',
+                'xlf' => 'Baz',
+                'db' => 'Baz is updated !',
             ),
-            $this->translations[$domain]['Edit product'],
+            $this->translations[$domain]['baz'],
             'It should provide with translations from XLIFF catalogue overriding the defaults and database overrides.'
         );
     }
