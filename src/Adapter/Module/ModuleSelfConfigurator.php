@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 class ModuleSelfConfigurator
 {
@@ -159,17 +161,23 @@ class ModuleSelfConfigurator
 
         if ($file === null) {
             $errors[] = 'No config file to apply';
-        }
-
-        if ($file && !file_exists($file)) {
+        } elseif (!file_exists($file)) {
             $errors[] = 'Specified config file is not found';
+        } else {
+            try {
+                $config = Yaml::parse(file_get_contents($file));
+            } catch (ParseException $e) {
+                $errors[] = $e->getMessage();
+            }
+
+            if (empty($config)) {
+                $errors = 'Parsed config file is empty';
+            }
         }
 
         if ($this->module && $this->moduleRepository->getModule($this->module)->hasValidInstance()) {
             $errors[] = 'The module specified is invalid';
         }
-
-        //\Symfony\Component\Yaml\Yaml::parse($errors);
         
         return $errors;
     }

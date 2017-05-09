@@ -81,6 +81,13 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->assertEquals($filepath, $this->moduleSelfConfigurator->file($filepath)->getFile());
     }
 
+    public function testAllValid()
+    {
+        $filepath = __DIR__.'/moduleConfExample.yml';
+        $name = 'bankwire';
+        $this->assertEmpty($this->moduleSelfConfigurator->module($name)->file($filepath)->validate());
+    }
+
 
     private function mockModuleRepository()
     {

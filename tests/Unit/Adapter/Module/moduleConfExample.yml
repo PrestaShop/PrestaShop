@@ -7,7 +7,7 @@ configuration:
         PAYPAL_SANDBOX: 1
         PAYPAL_API_CARD: 0
         # Option 2: use "value" subkey. Will allow to use addtionnal keys later
-        PAYPAL_SANDBOX:
+        PAYPAL_SANDBOX_2:
             value: 1
             multilang: false
         # Question: how to handle multi lang values ?
