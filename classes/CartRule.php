@@ -1063,12 +1063,13 @@ class CartRuleCore extends ObjectModel
                 }
             }
 
-            // Discount (%) on the selection of products
+            // Discount (%) on the selection of products - SST
             if ($this->reduction_percent && $this->reduction_product == -2) {
                 $selected_products_reduction = 0;
                 $selected_products = $this->checkProductRestrictions($context, true);
                 if (is_array($selected_products)) {
                     foreach ($package_products as $product) {
+
                         if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
                             || in_array($product['id_product'].'-0', $selected_products)
                             && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
@@ -1583,27 +1584,26 @@ class CartRuleCore extends ObjectModel
             return $arrayProduct;
         }
         $return = array();
-        $array  = 0;
+        $array  = -1;
 
         // Attribute id is not important for this filter in the global list
         // so the ids are replaced by 0
         if(in_array($type, array('products','categories','manufacturers','suppliers'))) {
             $code = "-0";
-            $productList = explode('-', implode('-', $arrayProduct));
+            $productList = explode(':', preg_replace("#\-[0-9]+#","-0",implode(':', $arrayProduct)));
         } else {
             $code   = "";
             $productList = $arrayProduct;
         }
-
         foreach( $productList as $product )
         {
-            if( !in_array($product.$code, $arrayRules)) {
+            $array++;
+            if( !in_array($product, $arrayRules)) {
                 continue;
             } else {
                 if(isset($arrayProduct[$array]))
                 $return[] = $arrayProduct[$array];
             }
-            $array++;
         }
         return $return;
     }
