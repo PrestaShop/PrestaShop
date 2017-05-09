@@ -1585,16 +1585,15 @@ class CartRuleCore extends ObjectModel
         }
         $return = array();
         $array  = -1;
-
+        
         // Attribute id is not important for this filter in the global list
         // so the ids are replaced by 0
         if(in_array($type, array('products','categories','manufacturers','suppliers'))) {
-            $code = "-0";
             $productList = explode(':', preg_replace("#\-[0-9]+#","-0",implode(':', $arrayProduct)));
         } else {
-            $code   = "";
             $productList = $arrayProduct;
         }
+        
         foreach( $productList as $product )
         {
             $array++;
@@ -1602,7 +1601,7 @@ class CartRuleCore extends ObjectModel
                 continue;
             } else {
                 if(isset($arrayProduct[$array]))
-                $return[] = $arrayProduct[$array];
+                    $return[] = $arrayProduct[$array];
             }
         }
         return $return;
