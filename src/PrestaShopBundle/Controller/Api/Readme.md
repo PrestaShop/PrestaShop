@@ -6,10 +6,10 @@
 You must declare your route in one of the files in:
 `src/PrestaShopBundle/Resources/config/api/routing_xxx.yml`.
 
-If the file corresponding to your context does not exist, you can create it by taking care to declare your new route file in:
+If the file corresponding to your context does not exist, you can create it by taking care of declaring your new route file in:
 `src/PrestaShopBundle/Resources/config/routing_api.yml`
 
-Examples, you want a route which show you list of warehouse available: in `src/PrestaShopBundle/Resources/config/api/routing_warehouse.yml`, add (if it does not exists)
+Example, you want a route showing you the list of the warehouses available: in `src/PrestaShopBundle/Resources/config/api/routing_warehouse.yml`, add (if it does not exist)
 ```yml
 _api_warehouse:
   resource: "api/routing_warehouse.yml"
@@ -25,20 +25,20 @@ api_warehouse_list_warehouses:
 ```
 
 ### 2/ Create your controller
-1) API controllers are on the folder: `src/PrestaShopBundle/Controller/Api/xxxController.php`.
-For our example, create `src/PrestaShopBundle/Controller/Api/WarehouseController.php` if not exists.
+1) API controllers are in the folder: `src/PrestaShopBundle/Controller/Api/xxxController.php`.
+In our example, create `src/PrestaShopBundle/Controller/Api/WarehouseController.php` if it does not exist.
 
-2) Register your controller in the `services.yml` localized in: `src/PrestaShopBundle/Resources/config/services.yml`
- Like others API controllers. (search `# Api - Controllers`), you need to register with the same `id` you put on your routing_xxx.yml (here, `prestashop.core.api.warehouse.controller`).
+2) Register your controller in the `services.yml` located in: `src/PrestaShopBundle/Resources/config/services.yml` like other API controllers (search `# Api - Controllers`).
+ You need to register with the same `id` you put on your routing_xxx.yml _(here, `prestashop.core.api.warehouse.controller`)_.
 
-3) Extends your controller with `ApiController`, then you should be able to use the Symfony container in your container.
+3) Extend your controller with `ApiController`, then you should be able to use the Symfony container in your controller.
 
 4) All your functions must return a `JsonResponse`.
 
-5) Please, be simple, small controllers (using Services if you need).
+5) Please, be simple, small controllers _(using Services if you need)_.
 
 ### 3/ Create Entities, Repositories and Services! (Optional)
-Please, do not use Legacy PrestaShop classes, create your own Service related with your context (here, Warehouse for example). Like your controllers, register them in the `services.yml`.
+Please, do not use Legacy PrestaShop classes, create your own Service related to your context. _(Here, Warehouse for example)_. Like your controllers, register them in the `services.yml`.
 Your controller must be really simple, for the same warehouse example, we can imagine something like this:
 
 ```php
@@ -49,11 +49,11 @@ public function listWarehousesAction()
 }
 ```
 
-And put your logic into the repository. If the logic is more complicated or not related with en entity, use services.
+And put your logic into the Repository. If the logic is more complicated or not related to the entity, use services.
 
 ### 4/ JSON return nomenclature
 We have 2 cases:
-1) Simple list of data, return like:
+1) Simple list of data, return something like:
 ```php
 $result = array(
     'data' => array(
@@ -69,7 +69,7 @@ $result = array(
 );
 ```
 
-2) A recursive data (for example, a tree), you must have a `tree` and `children` keys, return like:
+2) A recursive data (for example, a tree), you must have a `tree` and `children` keys, return something like:
 ```php
 $result = array(
     'tree' => array(
