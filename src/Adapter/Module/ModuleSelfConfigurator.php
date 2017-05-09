@@ -38,6 +38,8 @@ class ModuleSelfConfigurator
     protected $module;
     protected $configFile;
 
+    protected $configs = array();
+
     protected $defaultConfigFile = 'self_config.yml';
 
     /**
@@ -165,7 +167,7 @@ class ModuleSelfConfigurator
             $errors[] = 'Specified config file is not found';
         } else {
             try {
-                $config = Yaml::parse(file_get_contents($file));
+                $config = $this->load($file);
             } catch (ParseException $e) {
                 $errors[] = $e->getMessage();
             }
@@ -190,5 +192,14 @@ class ModuleSelfConfigurator
     public function configure()
     {
         return true;
+    }
+
+    protected function load($file)
+    {
+        if (array_key_exists($file, $this->configs)) {
+            return $this->configs[$file];
+        }
+        $this->configs[$file] = Yaml::parse(file_get_contents($file));
+        return $this->configs[$file];
     }
 }
