@@ -63,16 +63,8 @@ class SitemapControllerCore extends FrontController
      */
     protected function getPagesLinks()
     {
-        $links = array();
-
         $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
-        foreach ($cms['cms'] as $p) {
-            $links[] = array(
-                'id' => 'cms-page-' . $p['id_cms'],
-                'label' => $p['meta_title'],
-                'url' => $this->context->link->getCMSLink(new CMS($p['id_cms'])),
-            );
-        }
+        $links = $this->getCmsTree($cms);
 
         $links[] = array(
             'id' => 'stores-page',
@@ -91,6 +83,35 @@ class SitemapControllerCore extends FrontController
             'label' => $this->trans('Sitemap', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('sitemap'),
         );
+
+        return $links;
+    }
+    
+    /**
+     * @return array
+     */
+    protected function getCmsTree($cms)
+    {
+        $links = array();
+
+        foreach ($cms['cms'] as $p) {
+            $links[] = array(
+                'id' => 'cms-page-' . $p['id_cms'],
+                'label' => $p['meta_title'],
+                'url' => $p['link'],
+            );
+        }
+
+        if (isset($cms['children'])) {
+            foreach ($cms['children'] as $c) {
+                $links[] = array(
+                    'id' => 'cms-category-' . $c['id_cms_category'],
+                    'label' => $c['name'],
+                    'url' => $c['link'],
+                    'children' => $this->getCmsTree($c),
+                );
+            }
+        }
 
         return $links;
     }
