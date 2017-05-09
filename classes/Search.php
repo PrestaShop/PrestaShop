@@ -222,18 +222,27 @@ class SearchCore
             return ($ajax ? array() : array('total' => 0, 'result' => array()));
         }
 
-        $score = '';
-        if (is_array($score_array) && !empty($score_array)) {
-            $score = ',(
-				SELECT SUM(weight)
-				FROM '._DB_PREFIX_.'search_word sw
-				LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
-				WHERE sw.id_lang = '.(int)$id_lang.'
-					AND sw.id_shop = '.$context->shop->id.'
-					AND si.id_product = p.id_product
-					AND ('.implode(' OR ', $score_array).')
-			) position';
-        }
+	$advanced_stock = $score = '';
+	
+	if (count($score_array)){
+		
+		if(Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')){
+		   $advanced_stock = '(ps.`advanced_stock_management` = 1 AND stock.`quantity` = 0) OR ';
+		}
+		
+		$score  .= '
+		, IF( '.$advanced_stock.' (ps.`advanced_stock_management` = 0 AND p.quantity = 0), 0,
+    			(
+			SELECT SUM(weight)
+			FROM '._DB_PREFIX_.'search_word sw
+			LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
+			WHERE sw.id_lang = '.(int)$id_lang.'
+				AND sw.id_shop = '.$context->shop->id.'
+				AND si.id_product = p.id_product
+				AND ('.implode(' OR ', $score_array).')
+			)
+		) position';
+	}
 
         $sql_groups = '';
         if (Group::isFeatureActive()) {
