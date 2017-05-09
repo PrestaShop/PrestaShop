@@ -70,25 +70,39 @@ class ProductSeo extends CommonAbstractType
         $builder->add('meta_title', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'Admin.Catalog.Help'),
-                    'counter' => 70],
+                'attr' => [
+                    'placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'Admin.Catalog.Help'),
+                    'counter' => 70,
+                    'counter_type' => 'recommended',
+                ],
                 'required' => false
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Meta title', [], 'Admin.Catalog.Feature'),
+            'label_attr' => [
+                'popover' => $this->translator->trans('Public title for the product\'s page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.', [], 'Admin.Catalog.Help'),
+                'popover_placement' => 'right',
+            ],
             'required' => false
         ))
         ->add('meta_description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
-                'counter' => 160],
+                'attr' => [
+                    'placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
+                    'counter' => 160,
+                    'counter_type' => 'recommended',
+                ],
                 'required' => false
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Meta description', [], 'Admin.Catalog.Feature'),
+            'label_attr' => [
+                'popover' => $this->translator->trans('This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)', [], 'Admin.Catalog.Help'),
+                'popover_placement' => 'right',
+            ],
             'required' => false
         ))
         ->add('link_rewrite', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(

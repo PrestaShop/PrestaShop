@@ -30,11 +30,7 @@
   <div class="row">
     <div class="col-md-9">
       <fieldset class="form-group">
-        <label class="form-control-label">
-          {{ form.meta_title.vars.label }}
-          <span class="help-box" data-toggle="popover"
-            data-content="{{ "Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field."|trans({}, 'Admin.Catalog.Help') }}" ></span>
-        </label>
+        {{ form_label(form.meta_title) }}
         {{ form_errors(form.meta_title) }}
         {{ form_widget(form.meta_title) }}
       </fieldset>
@@ -44,11 +40,7 @@
   <div class="row">
     <div class="col-md-9">
       <fieldset class="form-group">
-        <label class="form-control-label">
-          {{ form.meta_description.vars.label }}
-          <span class="help-box" data-toggle="popover"
-            data-content="{{ "This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)."|trans({}, 'Admin.Catalog.Help') }}" ></span>
-        </label>
+        {{ form_label(form.meta_description) }}
         {{ form_errors(form.meta_description) }}
         {{ form_widget(form.meta_description) }}
       </fieldset>

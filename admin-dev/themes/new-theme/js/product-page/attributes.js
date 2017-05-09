@@ -52,18 +52,29 @@ export default function () {
       }
     });
 
-  $('input.form-control[counter], textarea.form-control[counter]').each(function () {
-    var attr = $(this).attr('counter');
+  $('input.form-control[counter], textarea.form-control:not(.autoload_rte)[counter]').each(function () {
+    let counter = $(this).attr('counter');
 
-    if (typeof attr === undefined || attr === false) {
+    if (typeof counter === undefined || counter === false) {
       return;
     }
 
-    $(this).parent().find('span.currentLength').text($(this).val().length);
-    $(this).parent().find('span.currentTotalMax').text(attr);
+    handleCounter($(this));
     $(this).on('input', function () {
-      $(this).parent().find('span.currentLength').text($(this).val().length);
-      $(this).parent().find('span.currentTotalMax').text(attr);
+      handleCounter($(this));
     });
+
+    function handleCounter(object) {
+      let counter = $(object).attr('counter');
+      let counter_type = $(object).attr('counter_type');
+      let max = $(object).val().length;
+
+      $(object).parent().find('span.currentLength').text(max);
+      if ('recommended' !== counter_type && max > counter) {
+        $(object).parent().find('span.maxLength').addClass('text-danger');
+      } else {
+        $(object).parent().find('span.maxLength').removeClass('text-danger');
+      }
+    }
   });
 }

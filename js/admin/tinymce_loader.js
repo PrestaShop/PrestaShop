@@ -26,23 +26,30 @@ $(document).ready(function() {
 	tinySetup({
 		editor_selector :"autoload_rte",
 		setup : function(ed) {
-			ed.on('keydown', function(ed, e) {
+      ed.on('loadContent', function(ed, e) {
+        handleCounterTiny(tinymce.activeEditor.id);
+      });
+			ed.on('change', function(ed, e) {
 				tinyMCE.triggerSave();
-				textarea = $('#'+tinymce.activeEditor.id);
-				var max = textarea.parent('div').find('span.counter').data('max');
-				if (max != 'none')
-				{
-					count = tinyMCE.activeEditor.getBody().textContent.length;
-					rest = max - count;
-					if (rest < 0)
-						textarea.parent('div').find('span.counter').html('<span style="color:red;">Maximum '+ max +' caractères : '+rest+'</span>');
-					else
-						textarea.parent('div').find('span.counter').html(' ');
-				}
+        handleCounterTiny(tinymce.activeEditor.id);
 			});
 			ed.on('blur', function(ed) {
 				tinyMCE.triggerSave();
 			});
 		}
 	});
+
+	function handleCounterTiny(id) {
+    let textarea = $('#'+id);
+    let counter = textarea.attr('counter');
+    let counter_type = textarea.attr('counter_type');
+    let max = tinyMCE.activeEditor.getBody().textContent.length;
+
+    textarea.parent().find('span.currentLength').text(max);
+    if ('recommended' !== counter_type && max > counter) {
+      textarea.parent().find('span.maxLength').addClass('text-danger');
+    } else {
+      textarea.parent().find('span.maxLength').removeClass('text-danger');
+    }
+  }
 });

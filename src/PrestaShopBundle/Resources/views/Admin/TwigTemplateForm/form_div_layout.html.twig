@@ -34,8 +34,8 @@
 
 {%- block form_widget_simple -%}
   {%- set type = type|default('text') -%}
-  {% include "PrestaShopBundle:Admin:Product/Include/form_max_length.html.twig" with {"attr": attr} %}
   <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+  {% include "PrestaShopBundle:Admin:Product/Include/form_max_length.html.twig" with {"attr": attr} %}
 {%- endblock form_widget_simple -%}
 
 {%- block form_widget_compound -%}
@@ -56,8 +56,8 @@
 {%- endblock collection_widget -%}
 
 {%- block textarea_widget -%}
-  {% include "PrestaShopBundle:Admin:Product/Include/form_max_length.html.twig" with {"attr": attr} %}
   <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+  {% include "PrestaShopBundle:Admin:Product/Include/form_max_length.html.twig" with {"attr": attr} %}
 {%- endblock textarea_widget -%}
 
 {%- block choice_widget -%}
@@ -251,12 +251,20 @@
         {% set label = name|humanize %}
       {%- endif -%}
     {%- endif -%}
-    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is same as(false) ? label|raw : label|raw }}</label>
-    {% if label_attr['tooltip'] is defined %}
-      {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
-      <i class="icon-question" data-toggle="tooltip" data-placement="{{ placement }}"
-         title="{{ label_attr['tooltip'] }}"></i>
-    {% endif %}
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is same as(false) ? label|raw : label|raw }}
+      {% if label_attr['tooltip'] is defined %}
+        {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
+        <i class="icon-question" data-toggle="tooltip" data-placement="{{ placement }}"
+           title="{{ label_attr['tooltip'] }}"></i>
+      {% endif %}
+
+      {% if label_attr['popover'] is defined %}
+        {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
+        <span class="help-box" data-toggle="popover" data-placement="{{ placement }}"
+           data-content="{{ label_attr['popover'] }}"></span>
+      {% endif %}
+    </label>
+
   {%- endif -%}
 {%- endblock form_label -%}
 

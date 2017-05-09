@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,24 +22,28 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% if attr.counter is defined %}
-  {% set isRecommandedType = attr.counter_type is defined and attr.counter_type == 'recommended' %}
-  <span class="maxLength {{ not(isRecommandedType) ? 'maxType' }}">
-    {% if isRecommandedType %}
-      {{ '[1][/1] of [2][/2] characters used (recommended)'|trans({}, 'Admin.Catalog.Feature')|replace({
-        '[1]': '<span class="currentLength">',
-        '[/1]': '</span>',
-        '[2]': '<span class="currentTotalMax">'~attr.counter,
-        '[/2]': '</span>',
-      })|raw }}
-    {% else %}
-      {{ '[1][/1] of [2][/2] characters used max'|trans({}, 'Admin.Catalog.Feature')|replace({
-        '[1]': '<span class="currentLength">',
-        '[/1]': '</span>',
-        '[2]': '<span class="currentTotalMax">'~attr.counter,
-        '[/2]': '</span>',
-      })|raw }}
-    {% endif %}
-  </span>
-{% endif %}
+ */
+namespace PrestaShopBundle\Form\Validator\Constraints;
+
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Exception\MissingOptionsException;
+
+class TinyMceMaxLength extends Constraint
+{
+    public $max;
+
+    public function __construct($options = null)
+    {
+        if (null !== $options && !is_array($options)) {
+            $options = array(
+                'max' => $options,
+            );
+        }
+
+         parent::__construct($options);
+
+        if (null === $this->max) {
+            throw new MissingOptionsException(sprintf('Option "max" must be given for constraint %s', __CLASS__), array('max'));
+        }
+    }
+}
