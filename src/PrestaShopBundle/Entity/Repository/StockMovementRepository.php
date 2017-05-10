@@ -275,12 +275,12 @@ class StockMovementRepository extends StockManagementRepository
     public function getEmployees()
     {
         $query = str_replace('{table_prefix}', $this->tablePrefix,
-            'SELECT DISTINCT sm.id_employee, CONCAT(sm.employee_lastname, \' \', sm.employee_firstname) AS display_name
+            'SELECT DISTINCT sm.id_employee, CONCAT(sm.employee_lastname, \' \', sm.employee_firstname) AS name
             FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
             WHERE
             sa.id_shop = :shop_id
-            ORDER BY display_name ASC'
+            ORDER BY name ASC'
         );
 
         $statement = $this->connection->prepare($query);
@@ -296,7 +296,7 @@ class StockMovementRepository extends StockManagementRepository
     public function getTypes()
     {
         $query = str_replace('{table_prefix}', $this->tablePrefix,
-            'SELECT sm.id_stock_mvt_reason, smrl.name AS display_name
+            'SELECT sm.id_stock_mvt_reason, smrl.name AS name
             FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
             INNER JOIN {table_prefix}stock_mvt_reason_lang smrl ON (
@@ -305,7 +305,7 @@ class StockMovementRepository extends StockManagementRepository
             WHERE
             sa.id_shop = :shop_id
             GROUP BY id_stock_mvt_reason
-            ORDER BY display_name ASC'
+            ORDER BY name ASC'
         );
 
         $statement = $this->connection->prepare($query);

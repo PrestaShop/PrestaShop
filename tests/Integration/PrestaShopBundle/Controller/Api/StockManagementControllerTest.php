@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
 
 use PrestaShopBundle\Api\QueryParamsCollection;
+use PrestaShopBundle\Api\QueryStockParamsCollection;
 
 /**
  * @group api
@@ -202,7 +203,8 @@ class StockManagementControllerTest extends ApiTestCase
             return;
         }
 
-        $pageSize = QueryParamsCollection::DEFAULT_PAGE_SIZE;
+        $QueryStockParamsCollection = new QueryStockParamsCollection();
+        $pageSize = $QueryStockParamsCollection->getDefaultPageSize();
         if (array_key_exists('page_size', $parameters)) {
             $pageSize = $parameters['page_size'];
         }

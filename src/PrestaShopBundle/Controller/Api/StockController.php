@@ -69,7 +69,7 @@ class StockController extends ApiController
         $stock = $this->stockRepository->getData($queryParamsCollection);
         $totalPages = $this->stockRepository->countPages($queryParamsCollection);
 
-        return new JsonResponse($stock, 200, array('Total-Pages' => $totalPages));
+        return $this->jsonResponse($stock, $request, $queryParamsCollection, 200, array('Total-Pages' => $totalPages));
     }
 
     /**
