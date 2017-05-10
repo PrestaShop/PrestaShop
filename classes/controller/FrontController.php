@@ -1664,9 +1664,8 @@ class FrontControllerCore extends Controller
                         'img_col_dir' => _THEME_COL_DIR_,
                         'col_img_dir' => _PS_COL_IMG_DIR_
                     ));
-                }
-                if (isset($colors[$product['id_product']])) {
-                    $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
+                    
+                  $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
                 } else {
                     $product['color_list'] = '';
                 }
@@ -1675,7 +1674,7 @@ class FrontControllerCore extends Controller
                 $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
             }
         }
-        Tools::restoreCacheSettings();     
+        Tools::restoreCacheSettings(); 
     }
 
     /**
