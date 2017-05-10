@@ -19,40 +19,43 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\Api;
+namespace PrestaShopBundle\Api;
 
-use Symfony\Component\Translation\TranslatorInterface;
-
-abstract class AbstractApi
+class QueryTranslationParamsCollection extends QueryParamsCollection
 {
+    protected $defaultPageIndex = 1;
+
+    protected $defaultPageSize = 20;
+
     /**
-     * @var TranslatorInterface
+     * @return array
      */
-    protected $translator;
-
-    public function setTranslator(TranslatorInterface $translator)
+    protected function getValidFilterParams()
     {
-        $this->translator = $translator;
+        return array();
     }
 
-    public function getFormattedTranslations()
+    /**
+     * @return array
+     */
+    protected function getValidOrderParams()
     {
-        $all = array();
-
-        foreach ($this->getTranslations() as $key => $translation) {
-            $all[] = array(
-                'translation_id' => $key,
-                'name' => $translation
-            );
-        }
-
-        return $all;
+        return array();
     }
 
-    abstract function getTranslations();
+    /**
+     * @param $queryParams
+     * @return mixed
+     */
+    protected function setDefaultOrderParam($queryParams)
+    {
+        $queryParams['order'] = 'unknown';
+
+        return $queryParams;
+    }
 }

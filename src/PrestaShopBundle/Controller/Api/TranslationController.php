@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +36,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TranslationController extends ApiController
 {
+    /**
+     * @var QueryTranslationParamsCollection
+     */
+    public $queryParams;
+
     /**
      * @var TranslationService
      */
@@ -49,27 +55,41 @@ class TranslationController extends ApiController
     public function listDomainTranslationAction(Request $request)
     {
         try {
+            $queryParamsCollection = $this->queryParams->fromRequest($request);
+            $queryParams = $queryParamsCollection->getQueryParams();
+
             $translationService = $this->container->get('prestashop.service.translation');
 
             $locale = $request->attributes->get('locale');
             $domain = $request->attributes->get('domain');
 
             $catalog = $translationService->listDomainTranslation($locale, $domain);
-
             $info = array(
-                'locale' => $locale,
-                'domain' => $domain,
-                'total_translations' => count($catalog),
-                'total_missing_translations' => 0,
+                'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size'])
             );
 
-            foreach ($catalog as $k => $message) {
+            $catalog['info'] = array_merge($catalog['info'],
+                array(
+                    'locale' => $locale,
+                    'domain' => $domain,
+                    'total_translations' => count($catalog['data']),
+                    'total_missing_translations' => 0,
+                )
+            );
+
+            foreach ($catalog['data'] as $k => $message) {
                 if (empty($message['xliff']) && empty($message['database'])) {
-                    $info['total_missing_translations']++;
+                    $catalog['info']['total_missing_translations']++;
                 }
             }
 
-            return new JsonResponse($catalog, 200, $info);
+            $catalog['data'] = array_slice(
+                $catalog['data'],
+                $queryParams['page_index'] * $queryParams['page_size'],
+                $queryParams['page_size']
+            );
+
+            return $this->jsonResponse($catalog, $request, $queryParamsCollection, 200, $info);
 
         } catch (Exception $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
@@ -104,7 +124,7 @@ class TranslationController extends ApiController
                 $tree = $this->getNormalTree($lang, $type, $selected);
             }
 
-            return new JsonResponse($tree, 200);
+            return $this->jsonResponse($tree, $request);
 
         } catch (Exception $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
