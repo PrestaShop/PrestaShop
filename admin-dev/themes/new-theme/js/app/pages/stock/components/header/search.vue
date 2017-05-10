@@ -11,7 +11,7 @@
           </PSButton>
         </form>
       </div>
-      <Filters />
+      <Filters @applyFilter="applyFilter"/>
     </div>
   </div>
 </template>
@@ -30,6 +30,9 @@
     methods: {
       onSearch() {
         this.$emit('search', this.tags);
+      },
+      applyFilter(filters) {
+        this.$emit('applyFilter', filters);
       }
     },
     watch: {
