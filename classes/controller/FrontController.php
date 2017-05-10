@@ -1674,7 +1674,7 @@ class FrontControllerCore extends Controller
                 $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
             }
         }
-        Tools::restoreCacheSettings(); 
+        Tools::restoreCacheSettings();
     }
 
     /**
