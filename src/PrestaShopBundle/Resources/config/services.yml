@@ -318,6 +318,10 @@ services:
         parent: prestashop.core.api.query_params_collection
         class: PrestaShopBundle\Api\QueryStockMovementParamsCollection
 
+    prestashop.core.api.query_translation_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryTranslationParamsCollection
+
     prestashop.core.api.stock.movements_collection:
         class: PrestaShopBundle\Api\Stock\MovementsCollection
 
@@ -346,6 +350,12 @@ services:
         arguments:
             - "@doctrine.dbal.default_connection"
             - "%database_prefix%"
+
+    prestashop.core.api.manufacturer.repository:
+            class: PrestaShopBundle\Entity\Repository\ManufacturerRepository
+            arguments:
+                - "@doctrine.dbal.default_connection"
+                - "%database_prefix%"
 
     prestashop.core.api.category.repository:
         class: PrestaShopBundle\Entity\Repository\CategoryRepository
@@ -386,21 +396,31 @@ services:
 
     prestashop.core.api.supplier.controller:
         class: PrestaShopBundle\Controller\Api\SupplierController
+        parent: prestashop.core.api.controller
         properties:
             supplierRepository: "@prestashop.core.api.supplier.repository"
 
+    prestashop.core.api.manufacturer.controller:
+        class: PrestaShopBundle\Controller\Api\ManufacturerController
+        parent: prestashop.core.api.controller
+        properties:
+            manufacturerRepository: "@prestashop.core.api.manufacturer.repository"
+
     prestashop.core.api.category.controller:
         class: PrestaShopBundle\Controller\Api\CategoryController
+        parent: prestashop.core.api.controller
         properties:
             categoryRepository: "@prestashop.core.api.category.repository"
 
     prestashop.core.api.attribute.controller:
         class: PrestaShopBundle\Controller\Api\AttributeController
+        parent: prestashop.core.api.controller
         properties:
             featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
 
     prestashop.core.api.feature.controller:
         class: PrestaShopBundle\Controller\Api\FeatureController
+        parent: prestashop.core.api.controller
         properties:
             featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
 
@@ -413,6 +433,7 @@ services:
         parent: prestashop.core.api.controller
         properties:
             translationService: "@prestashop.service.translation"
+            queryParams: "@prestashop.core.api.query_translation_params_collection"
 
     # Api - i18n
     prestashop.translation.api:
