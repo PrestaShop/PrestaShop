@@ -54,6 +54,6 @@ class I18nController extends ApiController
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
 
-        return new JsonResponse($translationClass->getTranslations());
+        return $this->jsonResponse($translationClass->getFormattedTranslations(), $request);
     }
 }
