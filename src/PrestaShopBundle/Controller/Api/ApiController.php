@@ -26,9 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use PrestaShopBundle\Api\QueryParamsCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -93,5 +95,82 @@ abstract class ApiController
         } catch (\Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
         }
+    }
+
+    /**
+     * Add additional info to JSON return
+     *
+     * @param Request $request
+     * @param QueryParamsCollection|null $queryParams
+     * @param array $headers
+     * @return array
+     */
+    protected function addAdditionalInfo(Request $request, QueryParamsCollection $queryParams = null, $headers = array())
+    {
+        $router = $this->container->get('router');
+
+        $queryParamsArray = array();
+        if (!is_null($queryParams)) {
+            $queryParamsArray = $queryParams->getQueryParams();
+        }
+
+        $allParams = array_merge($request->attributes->get('_route_params'), $queryParamsArray, $request->query->all());
+
+        $info = array(
+            'current_url' => $router->generate($request->attributes->get('_route'), $allParams)
+        );
+
+        if (array_key_exists('page_index', $allParams) && $allParams['page_index'] > 1) {
+            $previousParams = $allParams;
+            if (array_key_exists('page_index', $previousParams)) {
+                $previousParams['page_index']--;
+            }
+            $info['previous_url'] = $router->generate($request->attributes->get('_route'), $previousParams);
+        }
+
+        if (array_key_exists('Total-Pages', $headers) &&
+            array_key_exists('page_index', $allParams) &&
+            $headers['Total-Pages'] > $allParams['page_index']) {
+            $nextParams = $allParams;
+            if (array_key_exists('page_index', $nextParams)) {
+                $nextParams['page_index']++;
+            }
+            $info['next_url'] = $router->generate($request->attributes->get('_route'), $nextParams);
+        }
+
+
+        if(array_key_exists('Total-Pages', $headers)) {
+            $info['total_page'] = $headers['Total-Pages'];
+        }
+
+        if (!is_null($queryParams)) {
+            $info['page_index'] = $queryParamsArray['page_index'];
+            $info['page_size'] = $queryParamsArray['page_size'];
+        }
+
+        return $info;
+    }
+
+    /**
+     * @param Request $request
+     * @param QueryParamsCollection|null $queryParams
+     * @param null $data
+     * @param int $status
+     * @param array $headers
+     * @return JsonResponse
+     */
+    protected function jsonResponse(
+        $data,
+        Request $request,
+        QueryParamsCollection $queryParams = null,
+        $status = 200,
+        $headers = array()
+    ) {
+        $response = array(
+            'info' => $this->addAdditionalInfo($request, $queryParams, $headers),
+            'data' => $data
+        );
+
+        return new JsonResponse($response, $status, $headers);
     }
 }

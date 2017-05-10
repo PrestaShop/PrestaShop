@@ -72,35 +72,53 @@ $result = array(
 2) A recursive data (for example, a tree), you must have a `tree` and `children` keys, return something like:
 ```php
 $result = array(
-    'tree' => array(
-        array(
-            'id' => 1,
-            'name' => 'Example 1',
+    'data' => array(
+        'tree' => array(
             'children' => array(
                 array(
-                    'id' => 11,
-                    'name' => 'Children 1.1',
+                    'id' => 1,
+                    'name' => 'Example 1',
+                    'children' => array(
+                        array(
+                            'id' => 11,
+                            'name' => 'Children 1.1',
+                        ),
+                        array(
+                            'id' => 12,
+                            'name' => 'Children 1.2',
+                        )
+                    )
                 ),
                 array(
-                    'id' => 12,
-                    'name' => 'Children 1.2',
-                )
-            )
-        ),
-        array(
-            'id' => 2,
-            'name' => 'Example 2',
-            'children' => array(
-                array(
-                    'id' => 21,
-                    'name' => 'Children 2.1',
-                ),
-                array(
-                    'id' => 22,
-                    'name' => 'Children 2.2',
+                    'id' => 2,
+                    'name' => 'Example 2',
+                    'children' => array(
+                        array(
+                            'id' => 21,
+                            'name' => 'Children 2.1',
+                        ),
+                        array(
+                            'id' => 22,
+                            'name' => 'Children 2.2',
+                        )
+                    )
                 )
             )
         )
     )
 );
 ```
+Moreover, we can send information about request in a array `info` like that:
+```php
+$result = array(
+    'info' => array(
+        'current_url' => 'http://yoururl.com/api/...'
+        'next_url' => 'http://yoururl.com/api/...?page_index=3'
+        'previous_url' => 'http://yoururl.com/api/...?page_index=1'
+        'page_index' => 1,
+        'page_size' => 100,
+    )
+    'data' => array() // with your data like above
+);
+```
+_Be careful, some routes do not have pagination parameters because sometimes it is not relevant._
