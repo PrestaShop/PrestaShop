@@ -112,6 +112,28 @@ class TranslationController extends ApiController
     }
 
     /**
+     * Route to edit translation
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function translationEditAction(Request $request)
+    {
+        return new JsonResponse('ok', 200);
+    }
+
+    /**
+     * Route to reset translation
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function translationResetAction(Request $request)
+    {
+        return new JsonResponse('ok', 200);
+    }
+
+    /**
      * @param $lang
      * @param $type
      * @param $selected
