@@ -432,11 +432,16 @@ abstract class QueryParamsCollection
             $dateAdd = array($dateAdd);
         }
 
+        $search = '%s';
+        if ($this->isTimestamp($dateAdd)) {
+            $search = 'TIMESTAMP('.$search.')';
+        }
+
         if (array_key_exists('sup', $dateAdd)) {
-            $filters[] = sprintf('AND %s >= %s', '{date_add}', ':date_add_sup');
+            $filters[] = sprintf('AND '.$search.' >= %s', '{date_add}', ':date_add_sup');
         }
         if (array_key_exists('inf', $dateAdd)) {
-            $filters[] = sprintf('AND %s <= %s', '{date_add}', ':date_add_inf');
+            $filters[] = sprintf('AND '.$search.' <= %s', '{date_add}', ':date_add_inf');
         }
 
         return $filters;
@@ -585,7 +590,12 @@ abstract class QueryParamsCollection
         return $sqlParams;
     }
 
+    protected function isTimestamp($timestamp)
+    {
+        $check = (is_int($timestamp) OR is_float($timestamp)) ? $timestamp : (string) (int) $timestamp;
 
-
-
+        return  ($check === $timestamp)
+            AND ( (int) $timestamp <=  PHP_INT_MAX)
+            AND ( (int) $timestamp >= ~PHP_INT_MAX);
+    }
 }
