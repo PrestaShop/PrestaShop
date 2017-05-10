@@ -7,6 +7,9 @@ _api_stock_movement:
 _api_supplier:
     resource: "api/routing_supplier.yml"
 
+_api_manufacturers:
+    resource: "api/routing_manufacturer.yml"
+
 _api_category:
     resource: "api/routing_category.yml"
 
