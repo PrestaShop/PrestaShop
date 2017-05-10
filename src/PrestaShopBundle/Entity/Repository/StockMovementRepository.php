@@ -122,7 +122,7 @@ class StockMovementRepository extends StockManagementRepository
               smrl.id_stock_mvt_reason = sm.id_stock_mvt_reason
               AND smrl.id_lang = :language_id)
             INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
-            INNER JOIN {table_prefix}product p ON (p.id_product = sa.id_product)
+            LEFT JOIN {table_prefix}product p ON (p.id_product = sa.id_product)
             LEFT JOIN {table_prefix}product_attribute pa ON (pa.id_product_attribute = sa.id_product_attribute)
             LEFT JOIN {table_prefix}product_lang pl ON (
                 p.id_product = pl.id_product AND
