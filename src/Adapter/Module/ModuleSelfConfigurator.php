@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -53,6 +54,11 @@ class ModuleSelfConfigurator
      * @var Configuration
      */
     protected $configuration;
+
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
     
     public function __construct(ModuleRepository $moduleRepository, Configuration $configuration)
     {
@@ -61,6 +67,7 @@ class ModuleSelfConfigurator
 
         $this->moduleRepository = $moduleRepository;
         $this->configuration = $configuration;
+        $this->filesystem = new Filesystem;
     }
 
     /**
@@ -205,6 +212,7 @@ class ModuleSelfConfigurator
         $config = $this->load($this->getFile());
 
         $this->runConfigurationStep($config);
+        $this->runFilesStep($config);
         return true;
     }
 
@@ -231,6 +239,35 @@ class ModuleSelfConfigurator
 
         if (array_key_exists('delete', $config['configuration'])) {
             $this->runConfigurationDelete($config['configuration']['delete']);
+        }
+    }
+
+    protected function runFilesStep($config)
+    {
+        if (empty($config['files'])) {
+            return;
+        }
+
+        foreach($config['files'] as $copy) {
+            if (empty($copy['source'])) {
+                throw new Exception('Missing source file');
+            }
+            if (empty($copy['dest'])) {
+                throw new Exception('Missing destination file');
+            }
+
+            // If we get a relative path from the yml, add the original path
+            foreach(array('source', 'dest') as $prop) {
+                // If we do not deal with any kind of URL, add the path to the YML config file
+                if (!filter_var($copy[$prop], FILTER_VALIDATE_URL)) {
+                    $copy[$prop] = dirname($this->getFile()).'/'.$copy[$prop];
+                }
+            }
+
+            $this->filesystem->copy(
+                $copy['source'],
+                $copy['dest']
+            );
         }
     }
 

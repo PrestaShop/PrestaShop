@@ -24,10 +24,10 @@ sql:
 # File to copy from local disk or website
 files:
     - source: "/path/to/source/file.txt"
-      dest: "/module/path/docs/file.txt"
+      dest: "module/path/docs/file.txt"
       
-    - source: "https://www.domain.wow/uri/of/file"
-      dest: "/module/path/docs/another_file.txt"
+    - source: "https://www.prestashop.com"
+      dest: "modules/ganalytics/webpage.html"
 
 # Fox complex configuration data, allow PHP code to be executed
 php:

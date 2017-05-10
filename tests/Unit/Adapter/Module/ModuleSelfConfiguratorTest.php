@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\tests\TestCase\UnitTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleSelfConfiguratorTest extends UnitTestCase
 {
@@ -96,7 +97,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testConfigurationUpdate()
     {
-        $filepath = $this->defaultDir.'/moduleConfExample.yml';
+        $filepath = $this->defaultDir.'/moduleConfExampleConfStep.yml';
         $name = 'bankwire';
         // Test before
         $this->assertNull($this->configuration->get('PAYPAL_SANDBOX'));
@@ -106,7 +107,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testConfigurationDelete()
     {
-        $filepath = $this->defaultDir.'/moduleConfExample.yml';
+        $filepath = $this->defaultDir.'/moduleConfExampleConfStep.yml';
         $name = 'bankwire';
         // Test before
         $this->configuration->set('PAYPAL_ONBOARDING', 1);
@@ -114,6 +115,51 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
         $this->assertNull($this->configuration->get('PAYPAL_ONBOARDING'));
     }
+
+    public function testFilesExceptionMissingSource()
+    {
+        $filepath = $this->defaultDir.'/moduleConfCrashFileSource.yml';
+        $name = 'bankwire';
+
+        $this->setExpectedException('Exception', 'Missing source file');
+        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+    }
+
+    public function testFilesExceptionMissingDestination()
+    {
+        $filepath = $this->defaultDir.'/moduleConfCrashFileDestination.yml';
+        $name = 'bankwire';
+
+        $this->setExpectedException('Exception', 'Missing destination file');
+        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+    }
+
+    public function testFilesStep()
+    {
+        $filepath = $this->defaultDir.'/moduleConfExampleFilesStep.yml';
+        $name = 'ganalytics';
+
+        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+
+        // Check files are equals
+        $this->assertEquals(
+            file_get_contents(__DIR__.'/../../../resources/modules/ganalytics/webpage.html'),
+            file_get_contents('http://localhost')
+        );
+        $this->assertEquals(
+            file_get_contents(__DIR__.'/../../../resources/modules/ganalytics/ganalytics.php'),
+            file_get_contents(__DIR__.'/../../../resources/modules/ganalytics/ganalytics_copy.php')
+        );
+
+        // Then clean
+        $filesystem = new Filesystem();
+        $filesystem->remove(array(
+            __DIR__.'/../../../resources/modules/ganalytics/ganalytics_copy.php',
+            __DIR__.'/../../../resources/modules/ganalytics/webpage.html',
+        ));
+    }
+
+    // MOCK
 
     private function mockModuleRepository()
     {
