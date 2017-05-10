@@ -49,7 +49,7 @@ export const getCategories = ({ commit }) => {
 };
 
 export const getMovements = ({ commit }, payload) => {
-  let url = `${window.data.baseUrl}/api/movements`;
+  let url = window.data.movementsUrl;
 
   Vue.http.get(url, {
     params: {
@@ -60,7 +60,8 @@ export const getMovements = ({ commit }, payload) => {
       supplier_id: payload.suppliers ? payload.suppliers : [],
       category_id: payload.categories ? payload.categories : [],
       id_stock_mvt_reason: payload.id_stock_mvt_reason ? payload.id_stock_mvt_reason : [],
-      id_employee: payload.id_employee ? payload.id_employee : []
+      id_employee: payload.id_employee ? payload.id_employee : [],
+      date_add: payload.date_add ? payload.date_add : []
     }
   }).then(function(response) {
     commit(types.LOADING_STATE, false);

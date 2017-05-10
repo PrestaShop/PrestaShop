@@ -31,11 +31,11 @@
             <form class="row">
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_from')}}</label>
-                <PSDatePicker @dpChange="onDpChange"/>
+                <PSDatePicker @dpChange="onDpChange" data-type="sup"/>
               </div>
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_to')}}</label>
-                <PSDatePicker @dpChange="onDpChange" />
+                <PSDatePicker @dpChange="onDpChange"data-type="inf" />
               </div>
             </form>
           </div>
@@ -126,14 +126,13 @@
         }
       },
       applyFilter() {
-        let request = (this.$route.name === 'overview') ? 'getStock' : 'getMovements';
         this.$store.dispatch('isLoading');
-        this.$store.dispatch(request, {
+        this.$emit('applyFilter', {
           suppliers : this.suppliers,
           categories: this.categories,
           id_stock_mvt_reason : this.id_stock_mvt_reason,
           id_employee: this.id_employee,
-          keywords: this.$store.getters.keywords
+          date_add: this.date_add
         });
       },
       onChange(item) {
@@ -145,8 +144,12 @@
         }
         this.applyFilter();
       },
-      onDpChange(dates) {
-        //TODO
+      onDpChange(event) {
+        let type = $(event.currentTarget).data('type');
+        this.date_add[type] = event.timeStamp;
+        if(this.date_add.inf && this.date_add.sup) {
+          this.applyFilter();
+        }
       }
     },
     components: {
@@ -165,7 +168,11 @@
         suppliers: [],
         categories: [],
         id_stock_mvt_reason : [],
-        id_employee: []
+        id_employee: [],
+        date_add: {
+          sup: 0,
+          inf: 0
+        }
       }
     }
   }

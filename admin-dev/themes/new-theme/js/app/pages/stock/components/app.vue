@@ -1,7 +1,7 @@
 <template>
   <div v-show="isReady" id="app" class="stock-app">
     <StockHeader />
-    <Search @search="onSearch" />
+    <Search @search="onSearch" @applyFilter="applyFilter" />
     <div class="card p-a-2">
       <router-view class="view" @fetch="fetch"></router-view>
     </div>
@@ -41,21 +41,31 @@
       },
       fetch(desc) {
         let action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-
+        if(!desc) {
+          desc = this.$route.name === 'overview' ? '' : ' desc';
+        }
         this.$store.dispatch('isLoading');
 
-        this.$store.dispatch(action, {
+        this.$store.dispatch(action, Object.assign(this.filters, {
           order: `${this.$store.getters.order}${desc}`,
           page_size: this.$store.state.productsPerPage,
           page_index: this.$store.getters.pageIndex,
           keywords: this.$store.getters.keywords
-        });
+        }));
       },
       onSearch(keywords) {
-        let desc = this.$route.name === 'overview' ? '' : ' desc';
         this.$store.dispatch('updateKeywords', keywords);
-        this.fetch(desc);
+        this.fetch();
       },
+      applyFilter(filters) {
+        this.filters = filters;
+        this.fetch();
+      }
+    },
+    data() {
+      return {
+        filters: {}
+      }
     },
     components: {
       StockHeader,
