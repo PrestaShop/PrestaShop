@@ -28,8 +28,9 @@ namespace PrestaShopBundle\Controller\Api;
 
 use PrestaShopBundle\Entity\Repository\SupplierRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
-class SupplierController
+class SupplierController extends ApiController
 {
     /**
      * @var SupplierRepository
@@ -37,12 +38,11 @@ class SupplierController
     public $supplierRepository;
 
     /**
+     * @param Request $request
      * @return JsonResponse
      */
-    public function listSuppliersAction()
+    public function listSuppliersAction(Request $request)
     {
-        $suppliers = $this->supplierRepository->getSuppliers();
-
-        return new JsonResponse($suppliers, 200);
+        return $this->jsonResponse($this->supplierRepository->getSuppliers(), $request);
     }
 }
