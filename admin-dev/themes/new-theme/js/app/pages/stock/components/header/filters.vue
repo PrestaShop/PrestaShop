@@ -147,9 +147,7 @@
       onDpChange(event) {
         let type = $(event.currentTarget).data('type');
         this.date_add[type] = event.timeStamp;
-        if(this.date_add.inf && this.date_add.sup) {
-          this.applyFilter();
-        }
+        this.applyFilter();
       }
     },
     components: {
