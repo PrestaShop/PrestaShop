@@ -63,7 +63,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = 'product DESC';
+        $queryParams['order'] = 'product';
 
         return $queryParams;
     }

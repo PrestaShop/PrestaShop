@@ -32,10 +32,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class QueryParamsCollection
 {
-    const DEFAULT_PAGE_INDEX = 1;
-
-    const DEFAULT_PAGE_SIZE = 100;
-
     const SQL_PARAM_FIRST_RESULT = 'first_result';
 
     const SQL_PARAM_MAX_RESULTS = 'max_results';
@@ -48,6 +44,34 @@ abstract class QueryParamsCollection
      * @var array
      */
     protected $queryParams = array();
+
+    protected $defaultPageIndex = 1;
+
+    protected $defaultPageSize = 100;
+
+    /**
+     * @return array
+     */
+    public function getQueryParams()
+    {
+        return $this->queryParams;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultPageIndex()
+    {
+        return $this->defaultPageIndex;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultPageSize()
+    {
+        return $this->defaultPageSize;
+    }
 
     /**
      * @param Request $request
@@ -133,25 +157,26 @@ abstract class QueryParamsCollection
      */
     protected function parsePaginationParams(array $queryParams)
     {
+
         if (!array_key_exists('page_index', $queryParams)) {
-            $queryParams['page_index'] = self::DEFAULT_PAGE_INDEX;
+            $queryParams['page_index'] = $this->getDefaultPageIndex();
         }
 
         if (!array_key_exists('page_size', $queryParams)) {
-            $queryParams['page_size'] = self::DEFAULT_PAGE_SIZE;
+            $queryParams['page_size'] = $this->getDefaultPageSize();
         }
 
         $queryParams['page_size'] = (int)$queryParams['page_size'];
         $queryParams['page_index'] = (int)$queryParams['page_index'];
 
         if (
-            $queryParams['page_size'] > self::DEFAULT_PAGE_SIZE ||
+            $queryParams['page_size'] > $this->getDefaultPageSize() ||
             $queryParams['page_size'] < 1
         ) {
             throw new InvalidPaginationParamsException(
                 sprintf(
                     'A page size should be an integer greater than 1 and fewer than %s',
-                    self::DEFAULT_PAGE_SIZE
+                    $this->getDefaultPageSize()
                 )
             );
         }
