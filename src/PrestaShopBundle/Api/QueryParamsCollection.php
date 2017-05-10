@@ -432,15 +432,12 @@ abstract class QueryParamsCollection
             $dateAdd = array($dateAdd);
         }
 
-        $search = '%s';
-        if ($this->isTimestamp($dateAdd)) {
-            $search = 'TIMESTAMP('.$search.')';
-        }
-
         if (array_key_exists('sup', $dateAdd)) {
+            $search = ($this->isTimestamp($dateAdd['sup']) ? 'UNIX_TIMESTAMP(%s)' : '%s');
             $filters[] = sprintf('AND '.$search.' >= %s', '{date_add}', ':date_add_sup');
         }
         if (array_key_exists('inf', $dateAdd)) {
+            $search = ($this->isTimestamp($dateAdd['inf']) ? 'UNIX_TIMESTAMP(%s)' : '%s');
             $filters[] = sprintf('AND '.$search.' <= %s', '{date_add}', ':date_add_inf');
         }
 
