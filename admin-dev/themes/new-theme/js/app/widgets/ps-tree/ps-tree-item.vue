@@ -1,12 +1,12 @@
 <template>
-  <div :class="className">
-    <div class="flex tree-name" @click="clickItem">
+  <div :class="{className}">
+    <div class="flex tree-name" :class="{active: current}" @click="clickItem">
       <div class="flex" :class="chevron">
         <i class="material-icons" v-if="open">keyboard_arrow_down</i>
         <i class="material-icons" v-else>chevron_right</i>
       </div>
       <PSCheckbox :ref="model.name" :id="id" :model="model" @checked="onCheck" v-if="hasCheckbox"/>
-      <span class="tree-label">{{model.name}}</span>
+      <span class="tree-label" :class="{warning: isWarning}">{{model.name}}</span>
       <span class="tree-extra-label" v-if="displayExtraLabel">{{getExtraLabel}}</span>
     </div>
     <ul v-show="open" v-if="isFolder">
@@ -72,6 +72,9 @@
         if(!this.isFolder) {
           return 'hidden';
         }
+      },
+      isWarning () {
+        return !this.isFolder && this.model.warning;
       }
     },
     methods: {
@@ -130,6 +133,7 @@
 </script>
 
 <style lang="sass" scoped>
+  @import "~PrestaKit/scss/custom/_variables.scss";
   .tree {
     .material-icons {
       vertical-align: middle;
@@ -139,6 +143,10 @@
   }
   .tree-label {
     margin-left: 5px;
+  }
+  .warning {
+    color: $danger;
+    background: none;
   }
   .hidden {
     visibility: hidden;

@@ -28,6 +28,7 @@ const getters = {
         domain.children = _.values(domain.children);
         domain.extraLabel = domain.total_missing_translations;
         domain.dataValue = domain.domain_catalog_link;
+        domain.warning = Boolean(domain.total_missing_translations);
         domain.id = domain.full_name;
         convert(domain.children);
       });

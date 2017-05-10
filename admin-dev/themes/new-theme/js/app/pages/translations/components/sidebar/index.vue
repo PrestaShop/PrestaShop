@@ -79,6 +79,14 @@
     .tree-name {
       margin-bottom: .9375rem;
       line-height: 1.5rem;
+
+      &.active {
+        font-weight: bold;
+      }
+
+      &.extra {
+        color: $danger;
+      }
     }
     .tree-extra-label {
       color: $danger;
