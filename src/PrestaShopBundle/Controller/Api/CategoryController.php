@@ -28,8 +28,9 @@ namespace PrestaShopBundle\Controller\Api;
 
 use PrestaShopBundle\Entity\Repository\CategoryRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
-class CategoryController
+class CategoryController extends ApiController
 {
     /**
      * @var CategoryRepository
@@ -37,12 +38,11 @@ class CategoryController
     public $categoryRepository;
 
     /**
+     * @param Request $request
      * @return JsonResponse
      */
-    public function listCategoriesAction()
+    public function listCategoriesAction(Request $request)
     {
-        $categories = $this->categoryRepository->getCategories($tree = true);
-
-        return new JsonResponse($categories, 200);
+        return $this->jsonResponse($this->categoryRepository->getCategories(true), $request);
     }
 }
