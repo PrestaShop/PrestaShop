@@ -1,6 +1,7 @@
 // Tools
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "../node_modules/PrestaKit/scss/custom/_variables.scss";
+@import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
@@ -18,6 +19,7 @@
 @import "components/category_tree";
 @import "components/dropzone";
 @import "components/notifications";
+@import "components/datepicker";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
