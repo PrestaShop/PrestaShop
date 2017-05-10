@@ -28,8 +28,9 @@ namespace PrestaShopBundle\Controller\Api;
 
 use PrestaShopBundle\Entity\Repository\FeatureAttributeRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
-class FeatureController
+class FeatureController extends ApiController
 {
     /**
      * @var FeatureAttributeRepository
@@ -37,12 +38,11 @@ class FeatureController
     public $featureAttributeRepository;
 
     /**
+     * @param Request $request
      * @return JsonResponse
      */
-    public function listFeaturesAction()
+    public function listFeaturesAction(Request $request)
     {
-        $features = $this->featureAttributeRepository->getFeatures();
-
-        return new JsonResponse($features, 200);
+        return $this->jsonResponse($this->featureAttributeRepository->getFeatures(), $request);
     }
 }
