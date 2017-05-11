@@ -22,15 +22,14 @@
 </template>
 
 <script>
-  import _ from 'lodash';
   import TranslationInput from './translation-input';
   import PSButton from 'app/widgets/ps-button';
+  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     computed: {
       translationsCatalog () {
         this.translations = this.$store.getters.catalog.data;
-        this.originalTranslations = _.cloneDeep(this.$store.getters.catalog.data);
         return this.translations;
       },
       saveAction () {
@@ -81,6 +80,22 @@
         translations: [],
         originalTranslations: []
       }
+    },
+    mounted () {
+      EventBus.$on('resetTranslation', (el) => {
+        let translations = [];
+
+        translations.push({
+          default: el.default,
+          domain: el.tree_domain.join(''),
+          locale: 'fr-FR'
+        });
+
+        this.$store.dispatch('resetTranslation', {
+          url: this.resetAction,
+          translations: translations
+        });
+      })
     },
     components: {
       TranslationInput,

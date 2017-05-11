@@ -43,3 +43,16 @@ export const saveTranslations =  ({ commit }, payload) => {
     return showGrowl('error', error.statusText);
   });
 };
+
+export const resetTranslation =  ({ commit }, payload) => {
+  let url = payload.url,
+    translations = payload.translations;
+
+  Vue.http.post(url, {
+    translations
+  }).then((res) => {
+    return showGrowl('notice', 'Translations successfully reset');
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};

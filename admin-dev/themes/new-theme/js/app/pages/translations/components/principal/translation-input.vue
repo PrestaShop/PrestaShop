@@ -2,7 +2,7 @@
   <div>
     <label>{{label}}</label>
     <textarea v-model="getTranslated"></textarea>
-    <PSButton :primary="false">
+    <PSButton :primary="false" @click="resetTranslation">
       Reset
     </PSButton>
     {{extraInfo}}
@@ -11,6 +11,7 @@
 
 <script>
   import PSButton from 'app/widgets/ps-button';
+  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     name: 'TranslationInput',
@@ -37,6 +38,12 @@
           modifiedTranslated.database = modifiedTranslated.edited = modifiedValue;
           this.$emit('input', modifiedTranslated);
         }
+      },
+    },
+    methods: {
+      resetTranslation: function () {
+        this.getTranslated = '';
+        EventBus.$emit('resetTranslation', this.translated);
       },
     },
     components: {
