@@ -1,3 +1,8 @@
 # include Admin, Front and other dependent bundles
 _admin_routing:
     resource: "@PrestaShopBundle/Resources/config/routing_admin.yml"
+
+# include Api routing
+_api_routing:
+    resource: "@PrestaShopBundle/Resources/config/routing_api.yml"
+    prefix: /api

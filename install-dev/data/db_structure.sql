@@ -2183,6 +2183,8 @@ CREATE TABLE `PREFIX_stock_available` (
 `id_shop` INT(11) UNSIGNED NOT NULL,
 `id_shop_group` INT(11) UNSIGNED NOT NULL,
 `quantity` INT(10) NOT NULL DEFAULT '0',
+`physical_quantity` INT(11) NOT NULL DEFAULT '0',
+`reserved_quantity` INT(11) NOT NULL DEFAULT '0',
 `depends_on_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 `out_of_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_stock_available`),

@@ -230,4 +230,9 @@ class CategoryDataProvider
 
         return $results;
     }
+
+    public function getRootCategory($idLang = null, Shop $shop = null)
+    {
+        return \Category::getRootCategory($idLang, $shop);
+    }
 }
