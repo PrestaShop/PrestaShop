@@ -151,7 +151,7 @@ class OrderInvoiceCore extends ObjectModel
 		LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (al.`id_attribute` = a.`id_attribute` AND al.`id_lang` = ' . $id_lang . ')
 		WHERE od.`id_order` = ' . (int)$this->id_order . ' 
 		' . ($this->id && $this->number ? ' AND od.`id_order_invoice` = ' . (int)$this->id : '') . '
-		GROUP BY agl.`id_lang` 
+		GROUP BY od.product_id
 		ORDER BY pl.`name`');
     }
 
