@@ -1985,18 +1985,22 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $id = (int)Tools::getValue('id_'.$this->table);
+
         /* Update an existing product */
         if (isset($id) && !empty($id)) {
             /** @var Product $object */
             $object = new $this->className((int)$id);
+
             $this->object = $object;
 
             if (Validate::isLoadedObject($object)) {
+
                 $this->_removeTaxFromEcotax();
                 $product_type_before = $object->getType();
                 $this->copyFromPost($object, $this->table);
                 $object->indexed = 0;
 
+                /* if we are in "All shops" context, only update checked fields */
                 if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
                     $object->setFieldsToUpdate((array)Tools::getValue('multishop_check', array()));
                 }
