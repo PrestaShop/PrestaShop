@@ -146,8 +146,10 @@
       },
       onDpChange(event) {
         let type = $(event.currentTarget).data('type');
-        this.date_add[type] = event.timeStamp;
-        this.applyFilter();
+        this.date_add[type] = event.date.unix();
+        if(event.oldDate) {
+          this.applyFilter();
+        }
       }
     },
     components: {
@@ -167,10 +169,7 @@
         categories: [],
         id_stock_mvt_reason : [],
         id_employee: [],
-        date_add: {
-          sup: 0,
-          inf: 0
-        }
+        date_add: {}
       }
     }
   }
