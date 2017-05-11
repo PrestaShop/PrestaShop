@@ -9,9 +9,19 @@ Vue.use(Vuex);
 // root state object.
 
 const state = {
-  translations: {},
-  catalog: {},
-  domainsTree: [],
+  translations: {
+    data: {},
+    info: {}
+  },
+  catalog: {
+    data: {},
+    info: {}
+  },
+  domainsTree: {
+    data: {},
+    info: {}
+  },
+  isReady: false,
 };
 
 // getters are functions
@@ -35,7 +45,10 @@ const getters = {
       return domains;
     }
 
-    return convert(_.values(state.domainsTree));
+    return convert(_.values(state.domainsTree.data));
+  },
+  isReady(state) {
+    return state.isReady;
   }
 };
 

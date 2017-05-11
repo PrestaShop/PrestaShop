@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="translations-app">
+  <div v-if="isReady" id="app" class="translations-app">
     <TranslationsHeader />
     <div class="container-fluid">
       <div class="row">
@@ -22,6 +22,11 @@
 
   export default {
     name: 'app',
+    computed: {
+      isReady() {
+        return this.$store.getters.isReady;
+      },
+    },
     methods: {
       onSearch(keywords) {
         let desc = this.$route.name === 'overview' ? '' : ' desc';

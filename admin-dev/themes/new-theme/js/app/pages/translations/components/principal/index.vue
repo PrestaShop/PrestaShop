@@ -29,14 +29,14 @@
   export default {
     computed: {
       translationsCatalog () {
-        this.translations = this.$store.getters.catalog.data;
+        this.translations = this.$store.getters.catalog.data.data;
         return this.translations;
       },
       saveAction () {
-        return this.$store.getters.catalog.info ? this.$store.getters.catalog.info.edit_url : '';
+        return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.edit_url : '';
       },
       resetAction () {
-        return this.$store.getters.catalog.info ? this.$store.getters.catalog.info.reset_url : '';
+        return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.reset_url : '';
       }
     },
     methods: {

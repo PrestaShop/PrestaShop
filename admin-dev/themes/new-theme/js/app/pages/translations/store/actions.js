@@ -9,6 +9,7 @@ export const getTranslations = ({ commit }) => {
   let url = window.data.translationUrl;
   Vue.http.get(url).then(function(response) {
     commit(types.SET_TRANSLATIONS, response.body);
+    commit(types.APP_IS_READY);
   }, function(error) {
     return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
