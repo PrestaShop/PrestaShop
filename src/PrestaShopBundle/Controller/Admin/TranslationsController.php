@@ -58,6 +58,9 @@ class TranslationsController extends FrameworkBundleAdminController
         foreach ($request->request->all() as $k => $p) {
             if (strstr($k, 'selected')) {
                 $k = 'selected';
+            } else if ('locale' === $k) {
+                $translationService = $this->get('prestashop.service.translation');
+                $p = $translationService->langToLocale($p);
             }
             if (!empty($p) && !in_array($k, array('controller'))) {
                 $params[$k] = $p;
