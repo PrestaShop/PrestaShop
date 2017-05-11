@@ -151,4 +151,140 @@ class TranslationControllerTest extends ApiTestCase
             ),
         );
     }
+
+
+    /**
+     * @test
+     */
+    public function it_should_return_error_response_when_requesting_translations_edition()
+    {
+        $this->assertErrorResponseOnTranslationEdition();
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_return_valid_response_when_requesting_translations_edition()
+    {
+        $this->assertOkResponseOnTranslationEdition();
+    }
+
+
+
+    /**
+     * @test
+     */
+    public function it_should_return_error_response_when_requesting_translations_reset()
+    {
+        $this->assertErrorResponseOnTranslationReset();
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_return_valid_response_when_requesting_translations_reset()
+    {
+        $this->assertOkResponseOnTranslationReset();
+    }
+
+    /**
+     * @return array
+     */
+    private function assertErrorResponseOnTranslationEdition()
+    {
+        $editTranslationRoute = $this->router->generate(
+            'api_translation_value_edit',
+            array('locale' => 'en-EN', 'domain' => 'AdminActions')
+        );
+
+        $this->client->request('POST', $editTranslationRoute);
+        $this->assertResponseBodyValidJson(400);
+
+
+        $this->client->request('POST', $editTranslationRoute, array(), array(), array(), '{}');
+        $this->assertResponseBodyValidJson(400);
+
+        $fails = array(
+            array(
+                'locale' => 'en-EN',
+                'domain' => 'AdminActions',
+                'defaultfoo' => 'foo',
+                'edited' => 'boo',
+                'theme' => 'classic'
+            ),
+            array(
+                'default' => 'AdminActions',
+                'edited' => 'boo',
+                'theme' => 'classic'
+            ),
+            array(
+                'locale' => 'en-EN',
+            ),
+        );
+
+        foreach ($fails as $fail) {
+            $post = json_encode(array('translations' => $fail));
+            $this->client->request('POST', $editTranslationRoute, array(), array(), array(), $post);
+            $this->assertResponseBodyValidJson(400);
+        }
+    }
+
+    private function assertErrorResponseOnTranslationReset()
+    {
+        $resetTranslationRoute = $this->router->generate(
+            'api_translation_value_reset',
+            array('locale' => 'en-EN', 'domain' => 'AdminActions')
+        );
+
+        $this->client->request('POST', $resetTranslationRoute);
+        $this->assertResponseBodyValidJson(400);
+
+
+        $this->client->request('POST', $resetTranslationRoute, array(), array(), array(), '{}');
+        $this->assertResponseBodyValidJson(400);
+
+        $fails = array(
+            array(
+                'locale' => 'en-EN',
+                'domain' => 'AdminActions',
+                'defaultfoo' => 'foo',
+            ),
+            array(
+                'default' => 'foo',
+                'theme' => 'classic'
+            ),
+            array(
+                'locale' => 'en-EN',
+            ),
+        );
+
+        foreach ($fails as $fail) {
+            $post = json_encode(array('translations' => $fail));
+            $this->client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
+            $this->assertResponseBodyValidJson(400);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function assertOkResponseOnTranslationEdition()
+    {
+//        $editProductStockRoute = $this->router->generate(
+//            'api_stock_edit_product_combination',
+//            array(
+//                'productId' => 8,
+//                'combinationId' => 1
+//            )
+//        );
+//
+//        $this->client->request('POST', $editProductStockRoute, array('delta' => 1));
+//
+//        $this->assertResponseBodyValidJson(404);
+    }
+
+    private function assertOkResponseOnTranslationReset()
+    {
+
+    }
 }

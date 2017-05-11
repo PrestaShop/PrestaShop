@@ -288,44 +288,7 @@ class StockManagementControllerTest extends ApiTestCase
         $this->assertResponseBodyValidJson(404);
     }
 
-    /**
-     * @param $expectedStatusCode
-     * @return mixed
-     */
-    private function assertResponseBodyValidJson($expectedStatusCode)
-    {
-        /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
-        $response = $this->client->getResponse();
 
-        $message = 'Unexpected status code.';
-
-        switch ($expectedStatusCode) {
-            case 200:
-                $message = 'It should return a response with "OK" Status.';
-                break;
-            case 400:
-                $message = 'It should return a response with "Bad Request" Status.';
-                break;
-            case 404:
-                $message = 'It should return a response with "Not Found" Status.';
-                break;
-
-            default:
-                $this->fail($message);
-        }
-
-        $this->assertEquals($expectedStatusCode, $response->getStatusCode(), $message);
-
-        $content = json_decode($response->getContent(), true);
-
-        $this->assertEquals(
-            JSON_ERROR_NONE,
-            json_last_error(),
-            'The response body should be a valid json document.'
-        );
-
-        return $content;
-    }
 
     private function assertOkResponseOnEditProductCombination()
     {

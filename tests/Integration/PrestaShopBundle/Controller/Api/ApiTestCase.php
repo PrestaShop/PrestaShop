@@ -31,6 +31,7 @@ use Prophecy\Prophet;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+// bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
 abstract class ApiTestCase extends WebTestCase
 {
     /**
@@ -198,5 +199,44 @@ abstract class ApiTestCase extends WebTestCase
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+    }
+
+    /**
+     * @param $expectedStatusCode
+     * @return mixed
+     */
+    protected function assertResponseBodyValidJson($expectedStatusCode)
+    {
+        /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
+        $response = $this->client->getResponse();
+
+        $message = 'Unexpected status code.';
+
+        switch ($expectedStatusCode) {
+            case 200:
+                $message = 'It should return a response with "OK" Status.';
+                break;
+            case 400:
+                $message = 'It should return a response with "Bad Request" Status.';
+                break;
+            case 404:
+                $message = 'It should return a response with "Not Found" Status.';
+                break;
+
+            default:
+                $this->fail($message);
+        }
+
+        $this->assertEquals($expectedStatusCode, $response->getStatusCode(), $message);
+
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertEquals(
+            JSON_ERROR_NONE,
+            json_last_error(),
+            'The response body should be a valid json document.'
+        );
+
+        return $content;
     }
 }
