@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Service;
 
+use PrestaShopBundle\Entity\Translation;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
 
 class TranslationService {
 
@@ -44,6 +46,18 @@ class TranslationService {
         $legacyToStandardLocales = $this->getLangToLocalesMapping();
 
         return $legacyToStandardLocales[$lang];
+    }
+
+    /**
+     * @param $locale
+     *
+     * @return mixed
+     */
+    protected function findLanguageByLocale($locale)
+    {
+        $doctrine = $this->container->get('doctrine');
+
+        return $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
     }
 
     /**
@@ -153,5 +167,58 @@ class TranslationService {
 
         return $domains;
     }
+
+    /**
+     * @param $locale
+     * @param $domain
+     * @param $key
+     * @param $translationValue
+     * @param null $theme
+     * @return bool
+     */
+    public function saveTranslationMessage($locale, $domain, $key, $translationValue, $theme = null)
+    {
+        $doctrine = $this->container->get('doctrine');
+        $entityManager = $doctrine->getManager();
+
+        $lang = $this->findLanguageByLocale($locale);
+
+        /**
+         * @var \PrestaShopBundle\Entity\Translation $translation
+         */
+        $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
+            ->findOneBy(array(
+                'lang' => $lang,
+                'domain' => $domain,
+                'key' => $key,
+                'theme' => $theme
+            ));
+
+        if (is_null($translation)) {
+            $translation = new Translation();
+            $translation->setDomain($domain);
+            $translation->setLang($lang);
+            $translation->setKey(htmlspecialchars_decode($key, ENT_QUOTES));
+            $translation->setTranslation($translationValue);
+            $translation->setTheme($theme);
+        } else {
+            $translation->setTheme($theme);
+            $translation->setTranslation($translationValue);
+        }
+
+        $updatedTranslationSuccessfully = false;
+
+        try {
+            $entityManager->persist($translation);
+            $entityManager->flush();
+
+            $updatedTranslationSuccessfully = true;
+        } catch (\Exception $exception) {
+            $this->container->get('logger')->error($exception->getMessage());
+        }
+
+        return $updatedTranslationSuccessfully;
+    }
+
 
 }

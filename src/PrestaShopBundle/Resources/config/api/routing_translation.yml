@@ -13,12 +13,12 @@ api_translation_domain_catalog:
 
 api_translation_value_edit:
     path: /translation/{locale}/{domain}/edit
-    methods: [GET]
+    methods: [POST]
     defaults:
         _controller: prestashop.core.api.translation.controller:translationEditAction
 
 api_translation_value_reset:
     path: /translation/{locale}/{domain}/reset
-    methods: [GET]
+    methods: [POST]
     defaults:
         _controller: prestashop.core.api.translation.controller:translationResetAction

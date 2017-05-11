@@ -112,14 +112,42 @@ class TranslationController extends ApiController
     }
 
     /**
-     * Route to edit translation
+     * Edit translations
      *
      * @param Request $request
      * @return JsonResponse
      */
     public function translationEditAction(Request $request)
     {
-        return new JsonResponse('ok', 200);
+        try {
+            $decodedContent = $this->guardAgainstInvalidTranslationEditionRequest($request);
+            $translations = $decodedContent['translations'];
+
+            $translationService = $this->container->get('prestashop.service.translation');
+
+            $response = array();
+
+            foreach ($translations as $translation) {
+                if (!array_key_exists('theme', $translation)) {
+                    $translation['theme'] = null;
+                }
+
+                $response[$translation['default']] = $translationService->saveTranslationMessage(
+                    $translation['locale'],
+                    $translation['domaine'],
+                    $translation['default'],
+                    $translation['edited'],
+                    $translation['theme']
+                );
+            }
+
+            $this->clearCache();
+
+            return new JsonResponse($response, 200);
+
+        } catch (BadRequestHttpException $exception) {
+            return $this->handleException($exception);
+        }
     }
 
     /**
@@ -130,7 +158,27 @@ class TranslationController extends ApiController
      */
     public function translationResetAction(Request $request)
     {
+        var_dump($_POST);
+        die('ok');
         return new JsonResponse('ok', 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    private function guardAgainstInvalidTranslationEditionRequest(Request $request)
+    {
+        $content = $request->getContent();
+
+        $decodedContent = $this->guardAgainstInvalidJsonBody($content);
+
+        if (!array_key_exists('translations', $decodedContent)) {
+            $message = 'The request body should contain a JSON-encoded array of translations';
+            throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
+        }
+
+        return $decodedContent;
     }
 
     /**

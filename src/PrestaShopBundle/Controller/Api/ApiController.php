@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Api;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 abstract class ApiController
@@ -62,5 +63,35 @@ abstract class ApiController
         $this->logger->info($exception->getMessage());
 
         return new JsonResponse(array('error' => $exception->getMessage()), $exception->getStatusCode());
+    }
+
+    /**
+     * @param $content
+     * @return mixed
+     */
+    protected function guardAgainstInvalidJsonBody($content)
+    {
+        $decodedContent = json_decode($content, true);
+
+        $jsonLastError = json_last_error();
+        if ($jsonLastError !== JSON_ERROR_NONE) {
+            throw new BadRequestHttpException('The request body should be a valid JSON content');
+        }
+
+        return $decodedContent;
+    }
+
+    /**
+     * @see \Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand
+     */
+    protected function clearCache()
+    {
+        $cacheRefresh = $this->container->get('prestashop.cache.refresh');
+
+        try {
+            $cacheRefresh->execute();
+        } catch (\Exception $exception) {
+            $this->container->get('logger')->error($exception->getMessage());
+        }
     }
 }

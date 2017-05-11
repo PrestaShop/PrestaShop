@@ -160,22 +160,6 @@ class StockController extends ApiController
     }
 
     /**
-     * @param $content
-     * @return mixed
-     */
-    private function guardAgainstInvalidJsonBody($content)
-    {
-        $decodedContent = json_decode($content, true);
-
-        $jsonLastError = json_last_error();
-        if ($jsonLastError !== JSON_ERROR_NONE) {
-            throw new BadRequestHttpException('The request body should be a valid JSON content');
-        }
-
-        return $decodedContent;
-    }
-
-    /**
      * @param Request $request
      * @return mixed
      */
