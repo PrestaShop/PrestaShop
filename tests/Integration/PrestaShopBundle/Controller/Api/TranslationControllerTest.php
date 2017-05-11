@@ -194,7 +194,7 @@ class TranslationControllerTest extends ApiTestCase
     {
         $editTranslationRoute = $this->router->generate(
             'api_translation_value_edit',
-            array('locale' => 'en-EN', 'domain' => 'AdminActions')
+            array('locale' => 'en-US', 'domain' => 'AdminActions')
         );
 
         $this->client->request('POST', $editTranslationRoute);
@@ -206,7 +206,7 @@ class TranslationControllerTest extends ApiTestCase
 
         $fails = array(
             array(
-                'locale' => 'en-EN',
+                'locale' => 'en-US',
                 'domain' => 'AdminActions',
                 'defaultfoo' => 'foo',
                 'edited' => 'boo',
@@ -218,12 +218,12 @@ class TranslationControllerTest extends ApiTestCase
                 'theme' => 'classic'
             ),
             array(
-                'locale' => 'en-EN',
+                'locale' => 'en-US',
             ),
         );
 
         foreach ($fails as $fail) {
-            $post = json_encode(array('translations' => $fail));
+            $post = json_encode(array('translations' => array($fail)));
             $this->client->request('POST', $editTranslationRoute, array(), array(), array(), $post);
             $this->assertResponseBodyValidJson(400);
         }
@@ -233,7 +233,7 @@ class TranslationControllerTest extends ApiTestCase
     {
         $resetTranslationRoute = $this->router->generate(
             'api_translation_value_reset',
-            array('locale' => 'en-EN', 'domain' => 'AdminActions')
+            array('locale' => 'en-US', 'domain' => 'AdminActions')
         );
 
         $this->client->request('POST', $resetTranslationRoute);
@@ -245,7 +245,7 @@ class TranslationControllerTest extends ApiTestCase
 
         $fails = array(
             array(
-                'locale' => 'en-EN',
+                'locale' => 'en-US',
                 'domain' => 'AdminActions',
                 'defaultfoo' => 'foo',
             ),
@@ -254,12 +254,12 @@ class TranslationControllerTest extends ApiTestCase
                 'theme' => 'classic'
             ),
             array(
-                'locale' => 'en-EN',
+                'locale' => 'en-US',
             ),
         );
 
         foreach ($fails as $fail) {
-            $post = json_encode(array('translations' => $fail));
+            $post = json_encode(array('translations' => array($fail)));
             $this->client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
             $this->assertResponseBodyValidJson(400);
         }
@@ -270,21 +270,59 @@ class TranslationControllerTest extends ApiTestCase
      */
     private function assertOkResponseOnTranslationEdition()
     {
-//        $editProductStockRoute = $this->router->generate(
-//            'api_stock_edit_product_combination',
-//            array(
-//                'productId' => 8,
-//                'combinationId' => 1
-//            )
-//        );
-//
-//        $this->client->request('POST', $editProductStockRoute, array('delta' => 1));
-//
-//        $this->assertResponseBodyValidJson(404);
+        $editTranslationRoute = $this->router->generate(
+        'api_translation_value_edit',
+            array('locale' => 'en-US', 'domain' => 'AdminActions')
+        );
+
+        $goods = array(
+            array(
+                'locale' => 'en-US',
+                'domain' => 'AdminActions',
+                'default' => 'First message',
+                'edited' => 'First translation',
+                'theme' => 'classic'
+            ),
+            array(
+                'locale' => 'en-US',
+                'domain' => 'AdminActions',
+                'default' => 'Second message',
+                'edited' => 'Seconde translation',
+            ),
+        );
+
+        foreach ($goods as $good) {
+            $post = json_encode(array('translations' => array($good)));
+            $this->client->request('POST', $editTranslationRoute, array(), array(), array(), $post);
+            $this->assertResponseBodyValidJson(200);
+        }
     }
 
     private function assertOkResponseOnTranslationReset()
     {
+        $resetTranslationRoute = $this->router->generate(
+            'api_translation_value_reset',
+            array('locale' => 'en-US', 'domain' => 'AdminActions')
+        );
 
+        $goods = array(
+            array(
+                'locale' => 'en-US',
+                'domain' => 'AdminActions',
+                'default' => 'First message',
+                'theme' => 'classic'
+            ),
+            array(
+                'locale' => 'en-US',
+                'domain' => 'AdminActions',
+                'default' => 'Second message',
+            ),
+        );
+
+        foreach ($goods as $good) {
+            $post = json_encode(array('translations' => array($good)));
+            $this->client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
+            $this->assertResponseBodyValidJson(200);
+        }
     }
 }
