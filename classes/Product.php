@@ -923,6 +923,7 @@ class ProductCore extends ObjectModel
         $result &= ($this->deleteProductAttributes() && $this->deleteImages() && $this->deleteSceneProducts());
         // If there are still entries in product_shop, don't remove completely the product
         if ($this->hasMultishopEntries()) {
+            Search::removeProductsSearchIndex([$this]);
             return true;
         }
 
@@ -1893,7 +1894,7 @@ class ProductCore extends ObjectModel
                 'DELETE `'._DB_PREFIX_.'search_index`, `'._DB_PREFIX_.'search_word`
 				FROM `'._DB_PREFIX_.'search_index` JOIN `'._DB_PREFIX_.'search_word`
 				WHERE `'._DB_PREFIX_.'search_index`.`id_product` = '.(int)$this->id.'
-						AND `'._DB_PREFIX_.'search_word`.`id_word` = `'._DB_PREFIX_.'search_index`.id_word'
+				AND `'._DB_PREFIX_.'search_word`.`id_word` = `'._DB_PREFIX_.'search_index`.`id_word`'
             )
         );
     }
