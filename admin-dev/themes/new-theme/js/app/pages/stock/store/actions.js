@@ -27,7 +27,7 @@ export const getStock = ({ commit }, payload) => {
 };
 
 export const getSuppliers = ({ commit }) => {
-  let url = `${window.data.baseUrl}/api/suppliers`;
+  let url = window.data.suppliersUrl;
   Vue.http.get(url).then(function(response) {
     commit(types.SET_SUPPLIERS, response.body);
   }, function(error) {
@@ -36,7 +36,7 @@ export const getSuppliers = ({ commit }) => {
 };
 
 export const getCategories = ({ commit }) => {
-  let url = `${window.data.baseUrl}/api/categories`;
+  let url = window.data.categoriesUrl;
   let categories = [];
   Vue.http.get(url).then(function(response) {
     for(let category in response.body) {
