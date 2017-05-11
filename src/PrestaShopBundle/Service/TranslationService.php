@@ -57,7 +57,13 @@ class TranslationService {
     {
         $doctrine = $this->container->get('doctrine');
 
-        return $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
+        $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
+
+        if (!$lang) {
+            throw new \Exception('The language for this locale is not available');
+        }
+
+        return $lang;
     }
 
     /**
@@ -184,6 +190,10 @@ class TranslationService {
         $entityManager = $doctrine->getManager();
 
         $lang = $this->findLanguageByLocale($locale);
+
+        if (empty($theme)) {
+            $theme = null;
+        }
 
         $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
             ->findOneBy(array(
