@@ -50,10 +50,14 @@
         return domain.slice(0, -3);
       },
       saveTranslations() {
-        this.$store.dispatch('saveTranslations', {
-          url: this.saveAction,
-          translations: this.getModifiedTranslations()
-        });
+        let modifiedTranslations = this.getModifiedTranslations();
+
+        if (modifiedTranslations.length) {
+          this.$store.dispatch('saveTranslations', {
+            url: this.saveAction,
+            translations: this.getModifiedTranslations()
+          });
+        }
       },
       getModifiedTranslations() {
         let modifiedTranslations = [];
