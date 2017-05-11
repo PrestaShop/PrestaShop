@@ -1,31 +1,46 @@
 <template>
   <div class="col-xs-9">
     <div class="card p-a-1">
-      <TranslationInput
-        v-for="(translation, key) in translationsCatalog"
-        :key="key"
-        :label="translation.default"
-        :translated="getTranslated(translation)"
-        :extraInfo="getDomain(translation.tree_domain)"
-      >
-      </TranslationInput>
+      <form :action="saveAction" method="post" @submit.prevent="saveTranslations">
+        <PSButton :primary="true" type="submit">
+          {{ trans('button_save') }}
+        </PSButton>
+
+        <TranslationInput
+          v-for="(translation, key) in translationsCatalog"
+          :key="key"
+          :translated="translation"
+          :label="translation.default"
+          :extraInfo="getDomain(translation.tree_domain)">
+        </TranslationInput>
+        <PSButton :primary="true" type="submit">
+          {{ trans('button_save') }}
+        </PSButton>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
+  import _ from 'lodash';
   import TranslationInput from './translation-input';
+  import PSButton from 'app/widgets/ps-button';
 
   export default {
     computed: {
       translationsCatalog () {
-        return this.$store.getters.catalog;
+        this.translations = this.$store.getters.catalog.data;
+        this.originalTranslations = _.cloneDeep(this.$store.getters.catalog.data);
+        return this.translations;
+      },
+      saveAction () {
+        return this.$store.getters.catalog.info ? this.$store.getters.catalog.info.edit_url : '';
+      },
+      resetAction () {
+        return this.$store.getters.catalog.info ? this.$store.getters.catalog.info.reset_url : '';
       }
     },
     methods: {
-      getTranslated (el) {
-        return el.database ? el.database : el.xliff;
-      },
       getDomain(domains) {
         let domain = '';
         domains.forEach((d) => {
@@ -33,10 +48,34 @@
         });
 
         return domain.slice(0, -3);
+      },
+      saveTranslations() {
+        this.$store.dispatch('saveTranslations', {
+          url: this.saveAction,
+          translations: this.getModifiedTranslations()
+        });
+      },
+      getModifiedTranslations() {
+        let modifiedTranslations = [];
+
+        this.translations.forEach((translation) => {
+          if (translation.edited) {
+            modifiedTranslations.push({default: translation.default, edited: translation.edited});
+          }
+        });
+
+        return modifiedTranslations;
+      }
+    },
+    data() {
+      return {
+        translations: [],
+        originalTranslations: []
       }
     },
     components: {
       TranslationInput,
+      PSButton,
     }
   }
 </script>

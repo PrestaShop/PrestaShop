@@ -1,7 +1,7 @@
 <template>
   <div>
     <label>{{label}}</label>
-    <textarea >{{translated}}</textarea>
+    <textarea v-model="getTranslated"></textarea>
     <PSButton :primary="false">
       Reset
     </PSButton>
@@ -26,6 +26,18 @@
       translated: {
         required: true
       }
+    },
+    computed: {
+      getTranslated: {
+        get: function() {
+          return this.translated.database ? this.translated.database : this.translated.xliff;
+        },
+        set: function(modifiedValue) {
+          let modifiedTranslated = this.translated;
+          modifiedTranslated.database = modifiedTranslated.edited = modifiedValue;
+          this.$emit('input', modifiedTranslated);
+        }
+      },
     },
     components: {
       PSButton

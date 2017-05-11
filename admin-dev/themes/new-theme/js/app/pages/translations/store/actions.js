@@ -30,3 +30,16 @@ export const getDomainsTree = ({ commit }) => {
     return showGrowl('error', error.statusText);
   });
 };
+
+export const saveTranslations =  ({ commit }, payload) => {
+  let url = payload.url,
+    translations = payload.translations;
+
+  Vue.http.post(url, {
+    translations
+  }).then((res) => {
+    return showGrowl('notice', 'Translations successfully updated');
+  }, function(error) {
+    return showGrowl('error', error.statusText);
+  });
+};
