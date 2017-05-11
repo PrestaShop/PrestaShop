@@ -1654,28 +1654,24 @@ class FrontControllerCore extends Controller
 
         Tools::enableCache();
         foreach ($products as &$product) {
-            if (in_array($product['id_product'], $products_need_cache)) { 
-                $tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
-                if (isset($colors[$product['id_product']])) {
-                    $tpl->assign(array(
-                        'id_product'  => $product['id_product'],
-                        'colors_list' => $colors[$product['id_product']],
-                        'link'        => Context::getContext()->link,
-                        'img_col_dir' => _THEME_COL_DIR_,
-                        'col_img_dir' => _PS_COL_IMG_DIR_
-                    ));
-                }
-                if (isset($colors[$product['id_product']])) {
-                    $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
-                } else {
-                    $product['color_list'] = '';
-                }
-            } else {
-                $tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
+            $tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
+            if (isset($colors[$product['id_product']])) {
+                $tpl->assign(array(
+                    'id_product'  => $product['id_product'],
+                    'colors_list' => $colors[$product['id_product']],
+                    'link'        => Context::getContext()->link,
+                    'img_col_dir' => _THEME_COL_DIR_,
+                    'col_img_dir' => _PS_COL_IMG_DIR_
+                ));
+            }
+
+            if (!in_array($product['id_product'], $products_need_cache) || isset($colors[$product['id_product']])) {
                 $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
+            } else {
+                $product['color_list'] = '';
             }
         }
-        Tools::restoreCacheSettings();     
+        Tools::restoreCacheSettings();
     }
 
     /**
