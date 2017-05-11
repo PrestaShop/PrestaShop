@@ -29,7 +29,7 @@
 {if isset($updateOrderStatus_mode) && $updateOrderStatus_mode}
 	<div class="panel">
 		<div class="panel-heading">
-			{l s='Choose an order status'}
+			{l s='Choose an order status' d='Admin.Orderscustomers.Feature'}
 		</div>
 		<form action="{$REQUEST_URI}" method="post">
 			<div class="radio">
@@ -58,7 +58,7 @@
 				</button>
 				<button type="submit" class="btn btn-default" name="submitUpdateOrderStatus">
 					<i class="icon-check"></i>
-					{l s='Update Order Status'}
+					{l s='Update Order Status' d='Admin.Orderscustomers.Feature'}
 				</button>
 			</div>
 		</form>
