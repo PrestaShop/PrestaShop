@@ -430,6 +430,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
                 return $link;
             }, $pagination->buildLinks()),
+            // Compare to 3 because there are the next and previous links
+            'should_be_displayed' => (count($pagination->buildLinks()) > 3)
         );
     }
 

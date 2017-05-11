@@ -185,7 +185,7 @@
   }
   .page-list {
     background: white;
-    padding: 0.625rem 1.25rem;
+    padding: 0.375rem;
     margin-bottom: 0;
     @include box-shadow-light;
     li {
@@ -195,6 +195,9 @@
   a {
     color: black;
     font-weight: 600;
+    &:not(.previous):not(.next) {
+      letter-spacing: 0.125rem;
+    }
   }
   .previous {
     float: left;
@@ -208,6 +211,7 @@
   .current a {
     color: $brand-primary;
     text-decoration: none;
+    font-size: 1.25rem;
   }
 }
 .active_filters {
