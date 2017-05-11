@@ -160,28 +160,10 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
-     * Edit a translation value.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function editAction(Request $request)
-    {
-        $updatedTranslationSuccessfully = $this->saveTranslationMessage($request);
-        $this->clearCache();
-
-        return new JsonResponse(array(
-            'successful_update' => $updatedTranslationSuccessfully,
-            'translation_value' => $request->request->get('translation_value'),
-        ));
-    }
-
-    /**
      * Extract theme using locale and theme name.
      *
      * @param Request $request
-     * @return $this
+     * @return BinaryFileResponse
      */
     public function exportThemeAction(Request $request)
     {
@@ -203,6 +185,7 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
+<<<<<<< 22d7add5c759c1e5fd1c63ad96a15076cc538437
      * @param Request $request
      *
      * @return bool
@@ -291,6 +274,87 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
+||||||| merged common ancestors
+     * @param Request $request
+     *
+     * @return bool
+     */
+    protected function saveTranslationMessage(Request $request)
+    {
+        $requestParams = $request->request->all();
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $lang = $this->findLanguageByLocale($requestParams['locale']);
+
+        $theme = $requestParams['theme'];
+        if (empty($requestParams['theme'])) {
+            $theme = null;
+        }
+
+        /**
+         * @var \PrestaShopBundle\Entity\Translation $translation
+         */
+        $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
+            ->findOneBy(array(
+                'lang' => $lang,
+                'domain' => $requestParams['domain'],
+                'key' => $requestParams['translation_key'],
+                'theme' => $theme
+            ));
+
+        if (is_null($translation)) {
+            $translation = new Translation();
+            $translation->setDomain($requestParams['domain']);
+            $translation->setLang($lang);
+            $translation->setKey(htmlspecialchars_decode($requestParams['translation_key'], ENT_QUOTES));
+            $translation->setTranslation($requestParams['translation_value']);
+            $translation->setTheme($theme);
+        } else {
+            $translation->setTheme($theme);
+            $translation->setTranslation($requestParams['translation_value']);
+        }
+
+        $updatedTranslationSuccessfully = false;
+
+        try {
+            $entityManager->persist($translation);
+            $entityManager->flush();
+
+            $updatedTranslationSuccessfully = true;
+        } catch (\Exception $exception) {
+            $this->container->get('logger')->error($exception->getMessage());
+        }
+
+        return $updatedTranslationSuccessfully;
+    }
+
+    /**
+     * @see \Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand
+     */
+    protected function clearCache()
+    {
+        $cacheRefresh = $this->container->get('prestashop.cache.refresh');
+
+        try {
+            $cacheRefresh->execute();
+        } catch (\Exception $exception) {
+            $this->container->get('logger')->error($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param $locale
+     *
+     * @return mixed
+     */
+    protected function findLanguageByLocale($locale)
+    {
+        return $this->getDoctrine()->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
+    }
+
+    /**
+=======
+>>>>>>> BO: clean old translation controller
      * @param $catalogue
      *
      * @return array
