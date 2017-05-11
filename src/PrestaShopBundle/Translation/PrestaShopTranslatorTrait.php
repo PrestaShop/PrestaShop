@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Translation;
 
 trait PrestaShopTranslatorTrait
 {
+    public static $regexSprintfParams = '#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
+    public static $regexClassicParams = '/%\w+%/';
+
     /**
      * {@inheritdoc}
      */
@@ -98,7 +101,7 @@ trait PrestaShopTranslatorTrait
      */
     final private function isSprintfString($string)
     {
-        return (bool) preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string)
-            && !(bool) preg_match_all('/%\w+%/', $string);
+        return (bool) preg_match_all(static::$regexSprintfParams, $string)
+            && !(bool) preg_match_all(static::$regexClassicParams, $string);
     }
 }
