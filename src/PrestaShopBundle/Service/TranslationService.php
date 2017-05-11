@@ -169,6 +169,8 @@ class TranslationService {
     }
 
     /**
+     * Save a translation in database
+     *
      * @param $locale
      * @param $domain
      * @param $key
@@ -183,9 +185,6 @@ class TranslationService {
 
         $lang = $this->findLanguageByLocale($locale);
 
-        /**
-         * @var \PrestaShopBundle\Entity\Translation $translation
-         */
         $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
             ->findOneBy(array(
                 'lang' => $lang,
@@ -218,6 +217,48 @@ class TranslationService {
         }
 
         return $updatedTranslationSuccessfully;
+    }
+
+    /**
+     * Reset translation from database
+     *
+     * @param $locale
+     * @param $domain
+     * @param $key
+     * @param null $theme
+     * @return bool
+     */
+    public function resetTranslationMessage($locale, $domain, $key, $theme = null)
+    {
+        $doctrine = $this->container->get('doctrine');
+        $entityManager = $doctrine->getManager();
+
+        $lang = $this->findLanguageByLocale($locale);
+
+        $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
+            ->findOneBy(array(
+                'lang' => $lang,
+                'domain' => $domain,
+                'key' => $key,
+                'theme' => $theme
+            ));
+
+        $resetTranslationSuccessfully = false;
+
+        if (is_null($translation)) {
+            $resetTranslationSuccessfully = true;
+        }
+
+        try {
+            $entityManager->remove($translation);
+            $entityManager->flush();
+
+            $resetTranslationSuccessfully = true;
+        } catch (\Exception $exception) {
+            $this->container->get('logger')->error($exception->getMessage());
+        }
+
+        return $resetTranslationSuccessfully;
     }
 
 

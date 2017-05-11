@@ -120,11 +120,12 @@ class TranslationController extends ApiController
     public function translationEditAction(Request $request)
     {
         try {
-            $decodedContent = $this->guardAgainstInvalidTranslationEditionRequest($request);
+            $decodedContent = $this->guardAgainstInvalidTranslationBulkRequest($request);
+
             $translations = $decodedContent['translations'];
+            $this->guardAgainstInvalidTranslationEditRequest($translations);
 
             $translationService = $this->container->get('prestashop.service.translation');
-
             $response = array();
 
             foreach ($translations as $translation) {
@@ -134,7 +135,7 @@ class TranslationController extends ApiController
 
                 $response[$translation['default']] = $translationService->saveTranslationMessage(
                     $translation['locale'],
-                    $translation['domaine'],
+                    $translation['domain'],
                     $translation['default'],
                     $translation['edited'],
                     $translation['theme']
@@ -158,16 +159,42 @@ class TranslationController extends ApiController
      */
     public function translationResetAction(Request $request)
     {
-        var_dump($_POST);
-        die('ok');
-        return new JsonResponse('ok', 200);
+        try {
+            $decodedContent = $this->guardAgainstInvalidTranslationBulkRequest($request);
+
+            $translations = $decodedContent['translations'];
+            $this->guardAgainstInvalidTranslationResetRequest($translations);
+
+            $translationService = $this->container->get('prestashop.service.translation');
+            $response = array();
+
+            foreach ($translations as $translation) {
+                if (!array_key_exists('theme', $translation)) {
+                    $translation['theme'] = null;
+                }
+
+                $response[$translation['default']] = $translationService->resetTranslationMessage(
+                    $translation['locale'],
+                    $translation['domain'],
+                    $translation['default'],
+                    $translation['theme']
+                );
+            }
+
+            $this->clearCache();
+
+            return new JsonResponse($response, 200);
+
+        } catch (BadRequestHttpException $exception) {
+            return $this->handleException($exception);
+        }
     }
 
     /**
      * @param Request $request
      * @return mixed
      */
-    private function guardAgainstInvalidTranslationEditionRequest(Request $request)
+    private function guardAgainstInvalidTranslationBulkRequest(Request $request)
     {
         $content = $request->getContent();
 
@@ -179,6 +206,45 @@ class TranslationController extends ApiController
         }
 
         return $decodedContent;
+    }
+
+    /**
+     * @param $content
+     */
+    private function guardAgainstInvalidTranslationEditRequest($content)
+    {
+        $message = 'Each item of JSON-encoded array in the request body should contain ' .
+            'a "locale", a "domain", a "default" and a "edited" values. '.
+            'The item of index #%d is invalid.';
+
+        array_walk($content, function ($item, $index) use ($message) {
+            if (!array_key_exists('locale', $item) ||
+                !array_key_exists('domain', $item) ||
+                !array_key_exists('default', $item) ||
+                !array_key_exists('edited', $item)
+            ) {
+                throw new BadRequestHttpException(sprintf($message, $index));
+            }
+        });
+    }
+
+    /**
+     * @param $content
+     */
+    function guardAgainstInvalidTranslationResetRequest($content)
+    {
+        $message = 'Each item of JSON-encoded array in the request body should contain ' .
+            'a "locale", a "domain" and a "default" values. '.
+            'The item of index #%d is invalid.';
+
+        array_walk($content, function ($item, $index) use ($message) {
+            if (!array_key_exists('locale', $item) ||
+                !array_key_exists('domain', $item) ||
+                !array_key_exists('default', $item)
+            ) {
+                throw new BadRequestHttpException(sprintf($message, $index));
+            }
+        });
     }
 
     /**
