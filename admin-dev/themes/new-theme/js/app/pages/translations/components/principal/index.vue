@@ -67,7 +67,8 @@
               default: translation.default,
               edited: translation.edited,
               domain: translation.tree_domain.join(''),
-              locale: 'fr-FR'
+              locale: window.data.locale,
+              theme: window.data.selected
             });
           }
         });
@@ -88,7 +89,8 @@
         translations.push({
           default: el.default,
           domain: el.tree_domain.join(''),
-          locale: 'fr-FR'
+          locale: window.data.locale,
+          theme: window.data.selected
         });
 
         this.$store.dispatch('resetTranslation', {

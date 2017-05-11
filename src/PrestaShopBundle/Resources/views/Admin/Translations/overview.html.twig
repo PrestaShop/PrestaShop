@@ -30,6 +30,8 @@
     <script>
       var data = {
         baseUrl: '{{ app.request.getBasePath() }}',
+        locale: '{{ app.request.query.get('locale') }}',
+        selected: '{{ app.request.query.get('selected') }}',
         domainsTreeUrl: '{{url('api_translation_domains_tree', {
           'lang' : app.request.query.get('lang'),
           'type' : app.request.query.get('type'),

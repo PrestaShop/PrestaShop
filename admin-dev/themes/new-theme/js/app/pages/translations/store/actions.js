@@ -10,7 +10,7 @@ export const getTranslations = ({ commit }) => {
   Vue.http.get(url).then(function(response) {
     commit(types.SET_TRANSLATIONS, response.body);
   }, function(error) {
-    return showGrowl('error', error.statusText);
+    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
@@ -18,7 +18,7 @@ export const getCatalog = ({ commit }, param) => {
   Vue.http.get(param.url).then(function(response) {
     commit(types.SET_CATALOG, response.body);
   }, function(error) {
-    return showGrowl('error', error.statusText);
+    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
@@ -27,7 +27,7 @@ export const getDomainsTree = ({ commit }) => {
   Vue.http.get(url).then(function(response) {
     commit(types.SET_DOMAINS_TREE, response.body);
   }, function(error) {
-    return showGrowl('error', error.statusText);
+    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
@@ -40,7 +40,7 @@ export const saveTranslations =  ({ commit }, payload) => {
   }).then((res) => {
     return showGrowl('notice', 'Translations successfully updated');
   }, function(error) {
-    return showGrowl('error', error.statusText);
+    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
@@ -53,6 +53,6 @@ export const resetTranslation =  ({ commit }, payload) => {
   }).then((res) => {
     return showGrowl('notice', 'Translations successfully reset');
   }, function(error) {
-    return showGrowl('error', error.statusText);
+    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
