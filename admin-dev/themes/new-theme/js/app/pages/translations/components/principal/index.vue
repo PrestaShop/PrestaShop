@@ -64,7 +64,12 @@
 
         this.translations.forEach((translation) => {
           if (translation.edited) {
-            modifiedTranslations.push({default: translation.default, edited: translation.edited});
+            modifiedTranslations.push({
+              default: translation.default,
+              edited: translation.edited,
+              domain: translation.tree_domain.join(''),
+              locale: 'fr-FR'
+            });
           }
         });
 
