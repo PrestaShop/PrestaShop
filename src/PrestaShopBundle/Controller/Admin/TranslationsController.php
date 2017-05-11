@@ -56,7 +56,7 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         $params = array();
         foreach ($request->request->all() as $k => $p) {
-            if (strstr('selected', $k)) {
+            if (strstr($k, 'selected')) {
                 $k = 'selected';
             }
             if (!empty($p) && !in_array($k, array('controller'))) {

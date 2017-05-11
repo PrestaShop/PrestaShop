@@ -30,8 +30,11 @@
     <script>
       var data = {
         baseUrl: '{{ app.request.getBasePath() }}',
-        domainsTreeUrl: '{{url('api_translation_domains_tree', {'lang' : 'fr', 'type' : 'back'})}}',
-        domainCatalogUrl: '{{url('api_translation_domain_catalog', {'locale' : 'fr-FR', 'domain' : 'AdminGlobal'})}}',
+        domainsTreeUrl: '{{url('api_translation_domains_tree', {
+          'lang' : app.request.query.get('lang'),
+          'type' : app.request.query.get('type'),
+          'selected': app.request.query.get('selected')
+        })}}',
         translationUrl: '{{url('api_i18n_translations_list', {'page' : 'international'})}}'
       }
     </script>
