@@ -33,11 +33,12 @@
       }
       .product-description::after{
         content: "";
-        border-top: $gray-light 1px solid;
+        border-top: $gray 1px solid;
         position: absolute;
         width: 80%;
         top: 0;
         left: 10%;
+        opacity: .25;
       }
     }
   }
