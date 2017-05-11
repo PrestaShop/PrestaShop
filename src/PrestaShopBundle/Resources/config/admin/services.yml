@@ -92,6 +92,7 @@ services:
         arguments:
             - "@prestashop.core.admin.module.repository"
             - "@prestashop.adapter.legacy.configuration"
+            - "@doctrine.dbal.default_connection"
 
     # MODULE TAB MANAGEMENT
     prestashop.adapter.module.tab.register:

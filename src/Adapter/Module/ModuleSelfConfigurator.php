@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Exception;
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use Symfony\Component\Filesystem\Filesystem;
@@ -56,17 +57,23 @@ class ModuleSelfConfigurator
     protected $configuration;
 
     /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
      * @var Filesystem
      */
     protected $filesystem;
     
-    public function __construct(ModuleRepository $moduleRepository, Configuration $configuration)
+    public function __construct(ModuleRepository $moduleRepository, Configuration $configuration, Connection $connection)
     {
         $this->module = null;
         $this->configFile = null;
 
         $this->moduleRepository = $moduleRepository;
         $this->configuration = $configuration;
+        $this->connection = $connection;
         $this->filesystem = new Filesystem;
     }
 
@@ -213,6 +220,7 @@ class ModuleSelfConfigurator
 
         $this->runConfigurationStep($config);
         $this->runFilesStep($config);
+        $this->runSqlStep($config);
         return true;
     }
 
@@ -225,6 +233,15 @@ class ModuleSelfConfigurator
         }
         $this->configs[$file] = Yaml::parse(file_get_contents($file));
         return $this->configs[$file];
+    }
+
+    protected function convertRelativeToAbsolutePaths($file)
+    {
+        // If we do not deal with any kind of URL, add the path to the YML config file
+        if (!filter_var($file, FILTER_VALIDATE_URL)) {
+            $file = dirname($this->getFile()).'/'.$file;
+        }
+        return $file;
     }
 
     protected function runConfigurationStep($config)
@@ -258,10 +275,7 @@ class ModuleSelfConfigurator
 
             // If we get a relative path from the yml, add the original path
             foreach(array('source', 'dest') as $prop) {
-                // If we do not deal with any kind of URL, add the path to the YML config file
-                if (!filter_var($copy[$prop], FILTER_VALIDATE_URL)) {
-                    $copy[$prop] = dirname($this->getFile()).'/'.$copy[$prop];
-                }
+                $copy[$prop] = $this->convertRelativeToAbsolutePaths($copy[$prop]);
             }
 
             $this->filesystem->copy(
@@ -269,6 +283,47 @@ class ModuleSelfConfigurator
                 $copy['dest']
             );
         }
+    }
+
+    protected function runSqlStep($config)
+    {
+        if (empty($config['sql'])) {
+            return;
+        }
+
+        // Avoid unconsistant state with transactions
+        $this->connection->setAutoCommit(false);
+        $this->connection->beginTransaction();
+        try {
+            foreach($config['sql'] as $data) {
+                $this->runSqlFile($data);
+            }
+            $this->connection->commit();
+        } catch (Exception $e) {
+            $this->connection->rollBack();
+            throw $e;
+        }
+    }
+
+    protected function runSqlFile($data)
+    {
+        if (is_scalar($data)) {
+            $file = $data;
+        } elseif (is_array($data) && !empty($data['file'])) {
+            $file = $data['file'];
+        } else {
+            throw new Exception('Missing SQL file path');
+        }
+
+        $content = file_get_contents($this->convertRelativeToAbsolutePaths($file));
+        foreach(explode(';', $content) as $sql) {
+            $sql = trim($sql);
+            if (empty($sql)) {
+                continue;
+            }
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute();
+       }
     }
 
     protected function runConfigurationUpdate($config)

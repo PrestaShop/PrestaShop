@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Driver\PDOMySql\Driver;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\tests\TestCase\UnitTestCase;
@@ -36,15 +39,19 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     public $moduleSelfConfigurator;
 
     private $configuration;
+    private $connection;
     private $moduleRepository;
 
-    public $defaultDir = __DIR__.'/../../../resources/module-self-config-files';
+    public $defaultDir;
     
     public function setup()
     {
         $this->configuration = new ConfigurationMock();
+        $this->connection = new ConnectionMock(array(), new Driver);
         $this->mockModuleRepository();
-        $this->moduleSelfConfigurator = new ModuleSelfConfigurator($this->moduleRepository, $this->configuration);
+        $this->moduleSelfConfigurator = new ModuleSelfConfigurator($this->moduleRepository, $this->configuration, $this->connection);
+
+        $this->defaultDir = __DIR__.'/../../../resources/module-self-config-files';
         parent::setup();
     }
 
@@ -143,8 +150,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
         // Check files are equals
         $this->assertEquals(
-            file_get_contents(__DIR__.'/../../../resources/modules/ganalytics/webpage.html'),
-            file_get_contents('http://localhost')
+            file_get_contents(__DIR__.'/../../../resources/modules/ganalytics/avatar.jpg'),
+            file_get_contents('https://avatars0.githubusercontent.com/u/2815696?v=3&u=5e6a82beeff1d799c28bf31e25540d334ae40435&s=400')
         );
         $this->assertEquals(
             file_get_contents(__DIR__.'/../../../resources/modules/ganalytics/ganalytics.php'),
@@ -155,8 +162,21 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $filesystem = new Filesystem();
         $filesystem->remove(array(
             __DIR__.'/../../../resources/modules/ganalytics/ganalytics_copy.php',
-            __DIR__.'/../../../resources/modules/ganalytics/webpage.html',
+            __DIR__.'/../../../resources/modules/ganalytics/avatar.jpg',
         ));
+    }
+
+    public function testSqlStep()
+    {
+        $filepath = $this->defaultDir.'/moduleConfExampleSqlStep.yml';
+        $name = 'ganalytics';
+
+        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+        // Check files are equals
+        $this->assertTrue(in_array('TRUNCATE TABLE `ps_doge_army`', $this->connection->executedSql));
+        $this->assertTrue(in_array('UPDATE `ps_doge` SET `wow` = 1', $this->connection->executedSql));
+        $this->assertFalse(in_array('UPDATE `ps_doge` SET `wow` = 1;', $this->connection->executedSql));
+        $this->assertTrue(in_array('TRUNCATE TABLE `ps_lolcat_army`', $this->connection->executedSql));
     }
 
     // MOCK
@@ -218,4 +238,40 @@ class ConfigurationMock extends Configuration
         unset($this->configurationData[$key]);
         return $this;
     }
+}
+
+class ConnectionMock extends Connection
+{
+    public $sql = array();
+    public $executedSql = array();
+    
+    public function connect()
+    {
+        return true;
+    }
+
+    public function beginTransaction() { }
+
+    public function commit()
+    {
+        $this->executedSql = array_merge($this->executedSql, $this->sql);
+        $this->sql = array();
+    }
+
+    public function rollBack()
+    {
+        $this->sql = array();
+    }
+
+    public function prepare($statement)
+    {
+        $this->sql[] = $statement;
+        return new StatementMock($statement, $this);
+    }
+}
+
+class StatementMock extends Statement
+{
+    public function __construct($sql, Connection $conn) { }
+    public function execute($params = null) { }
 }
