@@ -91,6 +91,7 @@ abstract class ApiController
         $cacheRefresh = $this->container->get('prestashop.cache.refresh');
 
         try {
+            $cacheRefresh->addCacheClear();
             $cacheRefresh->execute();
         } catch (\Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
