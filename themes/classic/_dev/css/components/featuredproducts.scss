@@ -31,8 +31,13 @@
           bottom: 4.2rem;
         }
       }
-      .product-description{
-        box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
+      .product-description::after{
+        content: "";
+        border-top: $gray-light 1px solid;
+        position: absolute;
+        width: 80%;
+        top: 0;
+        left: 10%;
       }
     }
   }
@@ -51,17 +56,18 @@
     text-align: center;
   }
   .variant-links {
-    background: $gray-light;
     position: relative;
     text-align: center;
     width: 100%;
-    top: 0.25em;
+    top: -0.25em;
     padding-top: 0.1875rem;
     min-height: 2.5rem;
+    background: white;
   }
   .highlighted-informations {
     position: absolute;
     bottom: 1.25rem;
+    padding-top: 0.625rem;
     z-index: 0;
     background: white;
     text-align: center;
