@@ -140,14 +140,19 @@ class OrderInvoiceCore extends ObjectModel
         $id_lang = Context::getContext()->language->id;
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *, pl.`name` as product_name
-		FROM `'._DB_PREFIX_.'order_detail` od
-		LEFT JOIN `'._DB_PREFIX_.'product` p
-		ON p.id_product = od.product_id
-		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = '.$id_lang.' AND pl.id_shop = od.id_shop)
-		WHERE od.`id_order` = '.(int)$this->id_order.'
-		'.($this->id && $this->number ? ' AND od.`id_order_invoice` = '.(int)$this->id : '').' ORDER BY pl.`name`');
+		SELECT *, CONCAT(pl.`name`," - ",GROUP_CONCAT(CONCAT(agl.`name`," : ",al.`name`))) as product_name
+		FROM `' . _DB_PREFIX_ . 'order_detail` od
+		LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.id_product = od.product_id
+		LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
+		LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = ' . $id_lang . ' AND pl.id_shop = od.id_shop)
+		LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON (od.`product_attribute_id` = pac.`id_product_attribute`)
+		LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
+		LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (agl.`id_attribute_group` = a.`id_attribute_group` AND agl.`id_lang` = ' . $id_lang . ')
+		LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (al.`id_attribute` = a.`id_attribute` AND al.`id_lang` = ' . $id_lang . ')
+		WHERE od.`id_order` = ' . (int)$this->id_order . ' 
+		' . ($this->id && $this->number ? ' AND od.`id_order_invoice` = ' . (int)$this->id : '') . '
+		GROUP BY od.product_id
+		ORDER BY pl.`name`');
     }
 
     public static function getInvoiceByNumber($id_invoice)
