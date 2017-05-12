@@ -50,10 +50,10 @@ class TranslationService {
 
     /**
      * @param $locale
-     *
      * @return mixed
+     * @throws \Exception
      */
-    protected function findLanguageByLocale($locale)
+    public function findLanguageByLocale($locale)
     {
         $doctrine = $this->container->get('doctrine');
 
@@ -177,19 +177,17 @@ class TranslationService {
     /**
      * Save a translation in database
      *
-     * @param $locale
+     * @param $lang
      * @param $domain
      * @param $key
      * @param $translationValue
      * @param null $theme
      * @return bool
      */
-    public function saveTranslationMessage($locale, $domain, $key, $translationValue, $theme = null)
+    public function saveTranslationMessage($lang, $domain, $key, $translationValue, $theme = null)
     {
         $doctrine = $this->container->get('doctrine');
         $entityManager = $doctrine->getManager();
-
-        $lang = $this->findLanguageByLocale($locale);
 
         if (empty($theme)) {
             $theme = null;
@@ -209,9 +207,13 @@ class TranslationService {
             $translation->setLang($lang);
             $translation->setKey(htmlspecialchars_decode($key, ENT_QUOTES));
             $translation->setTranslation($translationValue);
-            $translation->setTheme($theme);
+            if (!empty($theme)) {
+                $translation->setTheme($theme);
+            }
         } else {
-            $translation->setTheme($theme);
+            if (!empty($theme)) {
+                $translation->setTheme($theme);
+            }
             $translation->setTranslation($translationValue);
         }
 
@@ -232,18 +234,16 @@ class TranslationService {
     /**
      * Reset translation from database
      *
-     * @param $locale
+     * @param $lang
      * @param $domain
      * @param $key
      * @param null $theme
      * @return bool
      */
-    public function resetTranslationMessage($locale, $domain, $key, $theme = null)
+    public function resetTranslationMessage($lang, $domain, $key, $theme = null)
     {
         $doctrine = $this->container->get('doctrine');
         $entityManager = $doctrine->getManager();
-
-        $lang = $this->findLanguageByLocale($locale);
 
         $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
             ->findOneBy(array(

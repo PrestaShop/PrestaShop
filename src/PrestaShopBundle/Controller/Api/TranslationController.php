@@ -153,8 +153,14 @@ class TranslationController extends ApiController
                     $translation['theme'] = null;
                 }
 
+                try {
+                    $lang = $translationService->findLanguageByLocale($translation['locale']);
+                } catch (Exception $exception) {
+                    throw new BadRequestHttpException($exception->getMessage());
+                }
+
                 $response[$translation['default']] = $translationService->saveTranslationMessage(
-                    $translation['locale'],
+                    $lang,
                     $translation['domain'],
                     $translation['default'],
                     $translation['edited'],
@@ -193,8 +199,14 @@ class TranslationController extends ApiController
                     $translation['theme'] = null;
                 }
 
+                try {
+                    $lang = $translationService->findLanguageByLocale($translation['locale']);
+                } catch (Exception $exception) {
+                    throw new BadRequestHttpException($exception->getMessage());
+                }
+
                 $response[$translation['default']] = $translationService->resetTranslationMessage(
-                    $translation['locale'],
+                    $lang,
                     $translation['domain'],
                     $translation['default'],
                     $translation['theme']

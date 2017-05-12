@@ -37,7 +37,7 @@ abstract class ApiTestCase extends WebTestCase
     /**
      * @var \Prophecy\Prophet
      */
-    private $prophet;
+    protected $prophet;
 
     /**
      * @var \Symfony\Component\Routing\RouterInterface

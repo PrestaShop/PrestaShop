@@ -32,6 +32,18 @@ namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Ap
  */
 class TranslationControllerTest extends ApiTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $cacheRefreshMock = $this->prophet->prophesize('\PrestaShopBundle\Service\Cache\Refresh');
+        $cacheRefreshMock->addCacheClear()->willReturn(null);
+        $cacheRefreshMock->execute()->willReturn(null);
+
+        $container = self::$kernel->getContainer();
+        $container->set('prestashop.cache.refresh', $cacheRefreshMock->reveal());
+    }
+
     /**
      * @dataProvider getBadDomains
      * @test
@@ -210,15 +222,22 @@ class TranslationControllerTest extends ApiTestCase
                 'domain' => 'AdminActions',
                 'defaultfoo' => 'foo',
                 'edited' => 'boo',
-                'theme' => 'classic'
+                'theme' => 'classic',
             ),
             array(
                 'default' => 'AdminActions',
                 'edited' => 'boo',
-                'theme' => 'classic'
+                'theme' => 'classic',
             ),
             array(
                 'locale' => 'en-US',
+            ),
+            array(
+                'locale' => 'en-BOUH',
+                'domain' => 'AdminActions',
+                'default' => 'First message',
+                'edited' => 'First translation',
+                'theme' => 'classic',
             ),
         );
 
@@ -251,10 +270,17 @@ class TranslationControllerTest extends ApiTestCase
             ),
             array(
                 'default' => 'foo',
-                'theme' => 'classic'
+                'theme' => 'classic',
             ),
             array(
                 'locale' => 'en-US',
+            ),
+            array(
+                'locale' => 'en-BOUH',
+                'domain' => 'AdminActions',
+                'default' => 'First message',
+                'edited' => 'First translation',
+                'theme' => 'classic',
             ),
         );
 
@@ -281,13 +307,13 @@ class TranslationControllerTest extends ApiTestCase
                 'domain' => 'AdminActions',
                 'default' => 'First message',
                 'edited' => 'First translation',
-                'theme' => 'classic'
+                'theme' => 'classic',
             ),
             array(
                 'locale' => 'en-US',
                 'domain' => 'AdminActions',
                 'default' => 'Second message',
-                'edited' => 'Seconde translation',
+                'edited' => 'Second translation',
             ),
         );
 
@@ -310,7 +336,7 @@ class TranslationControllerTest extends ApiTestCase
                 'locale' => 'en-US',
                 'domain' => 'AdminActions',
                 'default' => 'First message',
-                'theme' => 'classic'
+                'theme' => 'classic',
             ),
             array(
                 'locale' => 'en-US',
