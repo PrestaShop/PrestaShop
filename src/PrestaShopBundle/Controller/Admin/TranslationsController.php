@@ -249,6 +249,7 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         $requestParams = $request->request->all();
         $entityManager = $this->getDoctrine()->getManager();
+        $logger = $this->container->get('logger');
 
         $lang = $this->findLanguageByLocale($requestParams['locale']);
 
@@ -284,7 +285,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $violations = $validator->validate($translation, new PassVsprintf);
         if (0 !== count($violations)) {
             foreach ($violations as $violation) {
-                $this->container->get('logger')->error($violation->getMessage());
+                $logger->error($violation->getMessage());
             }
             return false;
         }
@@ -297,7 +298,7 @@ class TranslationsController extends FrameworkBundleAdminController
 
             $updatedTranslationSuccessfully = true;
         } catch (\Exception $exception) {
-            $this->container->get('logger')->error($exception->getMessage());
+            $logger->error($exception->getMessage());
         }
 
         return $updatedTranslationSuccessfully;
