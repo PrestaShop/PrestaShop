@@ -9,6 +9,9 @@ Vue.use(Vuex);
 // root state object.
 
 const state = {
+  pageIndex: 1,
+  totalPages: 0,
+  translationsPerPage: 20,
   translations: {
     data: {},
     info: {}
@@ -26,6 +29,12 @@ const state = {
 
 // getters are functions
 const getters = {
+  totalPages(state) {
+    return state.totalPages;
+  },
+  pageIndex(state) {
+    return state.pageIndex;
+  },
   translations(state) {
     return state.translations;
   },

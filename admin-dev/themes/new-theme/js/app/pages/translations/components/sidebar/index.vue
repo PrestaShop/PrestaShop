@@ -42,6 +42,7 @@
       this.$store.dispatch('getDomainsTree');
       EventBus.$on('lastTreeItemClick', (el) => {
         this.$store.dispatch('getCatalog', {url: el.item.dataValue});
+        this.$store.dispatch('updatePageIndex', 1);
       })
     },
     methods: {

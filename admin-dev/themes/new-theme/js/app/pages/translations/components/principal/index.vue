@@ -1,6 +1,13 @@
 <template>
   <div class="col-xs-9">
     <div class="card p-a-1">
+      <PSPagination
+        pageNumber="3"
+        activeMultiPagination="5"
+        :current="currentPagination"
+        :pagesCount="pagesCount"
+        @pageChanged="onPageChanged"
+      />
       <form :action="saveAction" method="post" @submit.prevent="saveTranslations">
         <PSButton :primary="true" type="submit">
           {{ trans('button_save') }}
@@ -17,6 +24,13 @@
           {{ trans('button_save') }}
         </PSButton>
       </form>
+      <PSPagination
+        pageNumber="3"
+        activeMultiPagination="5"
+        :current="currentPagination"
+        :pagesCount="pagesCount"
+        @pageChanged="onPageChanged"
+      />
     </div>
   </div>
 </template>
@@ -24,6 +38,7 @@
 <script>
   import TranslationInput from './translation-input';
   import PSButton from 'app/widgets/ps-button';
+  import PSPagination from 'app/widgets/ps-pagination/ps-pagination';
   import { EventBus } from 'app/utils/event-bus';
 
   export default {
@@ -37,9 +52,26 @@
       },
       resetAction () {
         return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.reset_url : '';
-      }
+      },
+      pagesCount() {
+        return this.$store.getters.totalPages;
+      },
+      currentPagination() {
+        return this.$store.getters.pageIndex;
+      },
     },
     methods: {
+      onPageChanged(pageIndex) {
+        this.$store.dispatch('updatePageIndex', pageIndex);
+        this.fetch();
+      },
+      fetch() {
+        this.$store.dispatch('getCatalog', {
+          url: this.$store.getters.catalog.info.current_url_without_pagination,
+          page_size: this.$store.state.translationsPerPage,
+          page_index: this.$store.getters.pageIndex,
+        });
+      },
       getDomain(domains) {
         let domain = '';
         domains.forEach((d) => {
@@ -102,6 +134,7 @@
     components: {
       TranslationInput,
       PSButton,
+      PSPagination,
     }
   }
 </script>

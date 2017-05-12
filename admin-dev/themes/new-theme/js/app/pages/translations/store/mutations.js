@@ -15,4 +15,10 @@ export default {
   [types.APP_IS_READY](state) {
     state.isReady = true;
   },
+  [types.SET_TOTAL_PAGES](state, totalPages) {
+    state.totalPages = Number(totalPages);
+  },
+  [types.SET_PAGE_INDEX](state, pageIndex) {
+    state.pageIndex = pageIndex;
+  },
 };
