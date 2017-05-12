@@ -62,8 +62,9 @@ class TranslationController extends ApiController
 
             $locale = $request->attributes->get('locale');
             $domain = $request->attributes->get('domain');
+            $theme = $request->attributes->get('theme');
 
-            $catalog = $translationService->listDomainTranslation($locale, $domain);
+            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme);
             $info = array(
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size'])
             );
