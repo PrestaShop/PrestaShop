@@ -48,10 +48,10 @@ class I18nController extends ApiController
                 $translationClass = $this->container->get('prestashop.translation.api.'.$page);
             }
             catch (Exception $exception) {
-                throw new Exception('This \'page\' param is not valid.');
+                throw new BadRequestHttpException($exception->getMessage());
             }
-        } catch (Exception $exception) {
-            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
+        } catch (BadRequestHttpException $exception) {
+            return $this->handleException($exception);
         }
 
         return $this->jsonResponse($translationClass->getFormattedTranslations(), $request);
