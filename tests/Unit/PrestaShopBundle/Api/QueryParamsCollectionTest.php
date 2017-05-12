@@ -89,11 +89,11 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
         return array(
             array(
                 $pageIndex = 0,
-                $pageSize = $this->queryParams->getDefaultPageSize()
+                $pageSize = 100
             ),
             array(
                 $pageIndex = 1,
-                $pageSize = $this->queryParams->getDefaultPageSize() + 1
+                $pageSize = 100 + 1
             ),
         );
     }
