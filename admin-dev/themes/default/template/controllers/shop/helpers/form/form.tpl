@@ -72,7 +72,7 @@
 {block name="other_fieldsets"}
 	{if isset($form_import)}
 	<div class="panel">
-		<h3><i class="icon-cloud-download"></i> {l s='Import data from another shop'}</h3>
+		<h3><i class="icon-cloud-download"></i> {l s='Import data from another shop' d='Admin.Advparameters.Feature'}</h3>
 		{foreach $form_import as $key => $field}
 		<div class="form-group">
 		{if $key == 'radio'}
