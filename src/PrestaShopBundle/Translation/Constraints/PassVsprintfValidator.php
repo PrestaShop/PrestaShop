@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Translation\Constraints;
 
 use Exception;
 use PrestaShopBundle\Entity\Translation;
+use PrestaShopBundle\Translation\PrestaShopTranslatorTrait;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -35,14 +36,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class PassVsprintfValidator extends ConstraintValidator
 {
-    /**
-     * Regex found to test all vsprintf arguments
-     * Found on http://stackoverflow.com/questions/2053664/how-to-check-that-vsprintf-has-the-correct-number-of-arguments-before-running
-     *
-     * @var string
-     */
-    public $vsprintfRegex = "~%[-+]?(?:[ 0]|'.)?a?\d*(?:\.\d*)?[%bcdeEufFgGosxX]~";
-
     public function validate($translation, Constraint $constraint)
     {
         if (!$constraint instanceof PassVsprintf) {
@@ -62,7 +55,7 @@ class PassVsprintfValidator extends ConstraintValidator
     private function countArgumentsOfTranslation($property)
     {
         $matches = array();
-        if (preg_match_all($this->vsprintfRegex, $property, $matches) === false) {
+        if (preg_match_all(PrestaShopTranslatorTrait::$regexSprintfParams, $property, $matches) === false) {
             throw new Exception('Preg_match failed');
         }
 
