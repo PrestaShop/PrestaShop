@@ -85,7 +85,7 @@ class TranslationController extends ApiController
 
             $catalog['data'] = array_slice(
                 $catalog['data'],
-                $queryParams['page_index'] * $queryParams['page_size'],
+                ($queryParams['page_index'] - 1) * $queryParams['page_size'],
                 $queryParams['page_size']
             );
 
