@@ -12,6 +12,7 @@ const state = {
   pageIndex: 1,
   totalPages: 0,
   translationsPerPage: 20,
+  currentDomain: '',
   translations: {
     data: {},
     info: {}
@@ -34,6 +35,9 @@ const getters = {
   },
   pageIndex(state) {
     return state.pageIndex;
+  },
+  currentDomain(state) {
+    return state.currentDomain;
   },
   translations(state) {
     return state.translations;

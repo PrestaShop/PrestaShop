@@ -45,6 +45,7 @@ export const saveTranslations =  ({ commit }, payload) => {
   Vue.http.post(url, {
     translations
   }).then((res) => {
+    payload.store.dispatch('getDomainsTree');
     return showGrowl('notice', 'Translations successfully updated');
   }, function(error) {
     return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
@@ -66,4 +67,8 @@ export const resetTranslation =  ({ commit }, payload) => {
 
 export const updatePageIndex = ({ commit }, pageIndex) => {
   commit(types.SET_PAGE_INDEX, pageIndex);
+};
+
+export const updateCurrentDomain = ({ commit }, currentDomain) => {
+  commit(types.SET_CURRENT_DOMAIN, currentDomain);
 };

@@ -21,4 +21,7 @@ export default {
   [types.SET_PAGE_INDEX](state, pageIndex) {
     state.pageIndex = pageIndex;
   },
+  [types.SET_CURRENT_DOMAIN](state, currentDomain) {
+    state.currentDomain = currentDomain;
+  },
 };

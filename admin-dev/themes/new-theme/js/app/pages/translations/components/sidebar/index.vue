@@ -19,13 +19,15 @@
   export default {
     computed: {
       currentItem() {
-        if (this.domainsTree.length) {
-          let domain = this.getFirstDomainToDisplay(this.domainsTree);
-          this.$store.dispatch('getCatalog', {url: domain.dataValue});
-          return domain.full_name;
+        if (this.$store.getters.currentDomain === '') {
+          if (this.domainsTree.length) {
+            let domain = this.getFirstDomainToDisplay(this.domainsTree);
+            this.$store.dispatch('getCatalog', {url: domain.dataValue});
+            return domain.full_name;
+          }
         }
 
-        return '';
+        return this.$store.getters.currentDomain;
       },
       domainsTree () {
         return this.$store.getters.domainsTree;
@@ -41,6 +43,7 @@
     mounted () {
       this.$store.dispatch('getDomainsTree');
       EventBus.$on('lastTreeItemClick', (el) => {
+        this.$store.dispatch('updateCurrentDomain', el.item.full_name);
         this.$store.dispatch('getCatalog', {url: el.item.dataValue});
         this.$store.dispatch('updatePageIndex', 1);
       })

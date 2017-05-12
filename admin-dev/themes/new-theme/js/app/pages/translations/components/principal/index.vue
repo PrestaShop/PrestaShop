@@ -86,7 +86,8 @@
         if (modifiedTranslations.length) {
           this.$store.dispatch('saveTranslations', {
             url: this.saveAction,
-            translations: this.getModifiedTranslations()
+            translations: this.getModifiedTranslations(),
+            store: this.$store
           });
         }
       },
