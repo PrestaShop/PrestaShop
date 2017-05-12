@@ -1,7 +1,7 @@
 <template>
   <div>
     <label>{{label}}</label>
-    <textarea v-model="getTranslated"></textarea>
+    <textarea v-model="getTranslated" :class="{ missing : isMissing }"></textarea>
     <PSButton :primary="false" @click="resetTranslation">
       Reset
     </PSButton>
@@ -39,6 +39,9 @@
           this.$emit('input', modifiedTranslated);
         }
       },
+      isMissing() {
+        return this.getTranslated === null;
+      }
     },
     methods: {
       resetTranslation: function () {
@@ -51,3 +54,11 @@
     }
   }
 </script>
+
+<style lang="sass" scoped>
+  @import "~PrestaKit/scss/custom/_variables.scss";
+
+  .missing {
+    border: 1px solid $danger;
+  }
+</style>
