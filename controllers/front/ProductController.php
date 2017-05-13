@@ -87,6 +87,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'entity' => 'product',
             'id' => $id_product,
         ));
+        
+        // Get product by EAN-13
+        if ($ean13_product = (int) Tools::getValue('ean13_product')) {
+            $id_product = Db::getInstance()->getValue('SELECT `id_product` FROM `'._DB_PREFIX_.'product` p WHERE p.`ean13` = '. $ean13_product);
+            $id_product = (!$id_product) ? null : $id_product;
+        }
 
         if ($id_product) {
             $this->product = new Product($id_product, true, $this->context->language->id, $this->context->shop->id);
