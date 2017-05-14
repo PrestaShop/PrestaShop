@@ -176,10 +176,10 @@
       <div class="form-group" id="ps_module_selector">
         <label class="control-label col-lg-3" for="selected-modules">{l s='Select your module'}</label>
         <div class="col-lg-4">
-          <select name="selected-modules">
+          <select name="selected-modules" class="chosen">
             <option id="no-module" value="">---</option>
             {foreach $modules as $module}
-              <option value="{$module.name}" data-url-to-translate="{$module.urlToTranslate}">{$module.name}</option>
+              <option value="{$module.name}" data-url-to-translate="{$module.urlToTranslate}">{$module.displayName}</option>
             {/foreach}
           </select>
         </div>
