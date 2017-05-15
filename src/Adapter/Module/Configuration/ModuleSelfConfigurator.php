@@ -189,7 +189,7 @@ class ModuleSelfConfigurator
             $errors[] = 'Specified config file is not found';
         } else {
             try {
-                $config = $this->load($file);
+                $config = $this->loadYmlFile($file);
             } catch (ParseException $e) {
                 $errors[] = $e->getMessage();
             }
@@ -216,24 +216,16 @@ class ModuleSelfConfigurator
         if (count($this->validate())) {
             return false;
         }
-        $config = $this->load($this->getFile());
+        $config = $this->loadYmlFile($this->getFile());
 
         $this->runConfigurationStep($config);
         $this->runFilesStep($config);
         $this->runSqlStep($config);
+        $this->runPhpStep($config);
         return true;
     }
 
     // PROTECTED ZONE
-    
-    protected function load($file)
-    {
-        if (array_key_exists($file, $this->configs)) {
-            return $this->configs[$file];
-        }
-        $this->configs[$file] = Yaml::parse(file_get_contents($file));
-        return $this->configs[$file];
-    }
 
     protected function convertRelativeToAbsolutePaths($file)
     {
@@ -242,6 +234,38 @@ class ModuleSelfConfigurator
             $file = dirname($this->getFile()).'/'.$file;
         }
         return $file;
+    }
+
+    protected function extractFilePath($data)
+    {
+        if (is_scalar($data)) {
+            $file = $data;
+        } elseif (is_array($data) && !empty($data['file'])) {
+            $file = $data['file'];
+        } else {
+            throw new Exception('Missing file path');
+        }
+
+        return $this->convertRelativeToAbsolutePaths($file);
+    }
+
+    protected function loadPhpFile($file)
+    {
+        // Load file
+        require_once $file;
+
+        // Load class of same name as the file
+        $className = pathinfo($file, PATHINFO_FILENAME);
+        return new $className();
+    }
+
+    protected function loadYmlFile($file)
+    {
+        if (array_key_exists($file, $this->configs)) {
+            return $this->configs[$file];
+        }
+        $this->configs[$file] = Yaml::parse(file_get_contents($file));
+        return $this->configs[$file];
     }
 
     protected function runConfigurationStep($config)
@@ -285,6 +309,22 @@ class ModuleSelfConfigurator
         }
     }
 
+    protected function runPhpStep($config)
+    {
+        if (empty($config['php'])) {
+            return;
+        }
+
+        foreach($config['php'] as $data) {
+            $file = $this->extractFilePath($data);
+            
+            $module = $this->moduleRepository->getModule($this->module);
+            $params = !empty($data['params'])?$data['params']:array();
+
+            $this->loadPhpFile($file)->run($module, $params);
+        }
+    }
+
     protected function runSqlStep($config)
     {
         if (empty($config['sql'])) {
@@ -307,15 +347,8 @@ class ModuleSelfConfigurator
 
     protected function runSqlFile($data)
     {
-        if (is_scalar($data)) {
-            $file = $data;
-        } elseif (is_array($data) && !empty($data['file'])) {
-            $file = $data['file'];
-        } else {
-            throw new Exception('Missing SQL file path');
-        }
-
-        $content = file_get_contents($this->convertRelativeToAbsolutePaths($file));
+        $content = file_get_contents($this->extractFilePath($data));
+        
         foreach(explode(';', $content) as $sql) {
             $sql = trim($sql);
             if (empty($sql)) {

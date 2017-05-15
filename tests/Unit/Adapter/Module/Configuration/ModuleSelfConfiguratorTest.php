@@ -161,8 +161,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         // Then clean
         $filesystem = new Filesystem();
         $filesystem->remove(array(
-            __DIR__.'/../../../resources/modules/ganalytics/ganalytics_copy.php',
-            __DIR__.'/../../../resources/modules/ganalytics/avatar.jpg',
+            __DIR__.'/../../../../resources/modules/ganalytics/ganalytics_copy.php',
+            __DIR__.'/../../../../resources/modules/ganalytics/avatar.jpg',
         ));
     }
 
@@ -184,14 +184,33 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $filepath = $this->defaultDir.'/moduleConfCrashSql.yml';
         $name = 'bankwire';
 
-        $this->setExpectedException('Exception', 'Missing SQL file path');
+        $this->setExpectedException('Exception', 'Missing file path');
         $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
     }
 
     public function testPhpStep()
     {
         $filepath = $this->defaultDir.'/moduleConfExamplePhpStep.yml';
+        $php_filepath = __DIR__.'/../../../../resources/module-self-config-files/php/MyComplexModuleConfiguration.php';
         $name = 'ganalytics';
+
+        // Test context with mocks
+        require_once $php_filepath;
+        $mock = $this->getMockBuilder('\MyComplexModuleConfiguration')
+                     ->setMethods(array('run'))
+                     ->getMock();
+        $mock->expects($this->exactly(2))
+             ->method('run');
+
+        // Redefine self configuratrion as mock
+        $this->moduleSelfConfigurator = $this->getMockBuilder('\PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator')
+            ->setConstructorArgs(array($this->moduleRepository, $this->configuration, $this->connection))
+            ->setMethods(array('loadPhpFile'))
+            ->getMock();
+        $this->moduleSelfConfigurator->expects($this->exactly(2))
+            ->method('loadPhpFile')
+            ->with($php_filepath)
+            ->will($this->returnValue($mock));
 
         $this->assertTrue($this->moduleSelfConfigurator->module($name)->file($filepath)->configure());
     }
