@@ -16,6 +16,40 @@ export default function() {
   var impactOnPriceSelector = 'input.attribute_priceTE';
   var finalPriceSelector = '.attribute-finalprice span';
 
+  let refreshDefaultImage = () => {
+    var productDefaultImageUrl = null;
+    var productCoverImageElem = $('#product-images-dropzone').find('.iscover');
+
+    /** get product cover image */
+    if (productCoverImageElem.length === 1) {
+      var imgElem = productCoverImageElem.parent().find('.dz-image');
+
+      /** Dropzone.js workaround : If this is a fresh upload image, look up for an img, else find a background url */
+      if (imgElem.find('img').length) {
+        productDefaultImageUrl = imgElem.find('img').attr('src');
+      } else {
+        productDefaultImageUrl = imgElem.css('background-image')
+          .replace(/^url\(["']?/, '')
+          .replace(/["']?\)$/, '');
+      }
+    }
+
+    $.each($('#form .combination-form'), function (key, elem) {
+      var defaultImageUrl = productDefaultImageUrl;
+
+      /** get first selected image */
+      var defaultImageElem = $(elem).find('.product-combination-image input:checked:first');
+      if (defaultImageElem.length === 1) {
+        defaultImageUrl = defaultImageElem.parent().find('img').attr('src');
+      }
+
+      if (defaultImageUrl) {
+        var img = '<img src="' + defaultImageUrl + '" class="img-responsive" />';
+        $('#accordion_combinations #attribute_' + $(elem).attr('data')).find('td.img').html(img);
+      }
+    });
+  };
+
   return {
     'init': function init() {
       var that = this;
@@ -32,6 +66,7 @@ export default function() {
             .resetForm()
             .unselectCombinations()
             .submitUpdate();
+        refreshDefaultImage();
       });
 
       /* if final price change with user interaction, combinations should be impacted */
@@ -76,8 +111,29 @@ export default function() {
       $(document).on('change', '.js-combination', () => {
         if ($('.bulk-action').attr('aria-expanded') === "false" || !$('.js-combination').is(':checked')) {
           $('.js-collapse').collapse('toggle');
+          that.fillBulkActionImages();
         }
         $('span.js-bulk-combinations').text($('input.js-combination:checked').length);
+      });
+
+      /** product combination bulk images */
+      $('#tab_step3').on('click', function () {
+        that.getBulkActionImages();
+      });
+      $('#product_combination_bulk_images').on("select2:select", function () {
+        $('#product_combination_bulk_images').select2('open');
+        that.setBulkActionImagesCheckboxStatus();
+      });
+      $('#product_combination_bulk_images').on("select2:unselect", function () {
+        $('#product_combination_bulk_images').select2('open');
+        that.setBulkActionImagesCheckboxStatus();
+      });
+      $('body').on('DOMNodeInserted', function () {
+        that.setBulkActionImagesCheckboxStatus();
+      });
+
+      $('.bulk-action').on('click', function () {
+        that.fillBulkActionImages();
       });
     },
     'getSelectedCombinations': function getSelectedCombinations() {
@@ -142,10 +198,19 @@ export default function() {
           });
         }
       });
+      $(bulkForm).find('select').each(function () {
+        if ($(this).val() !== '') {
+          values.push({
+            'id': $(this).attr('id'),
+            'value': $(this).val()
+          });
+        }
+      });
       return values;
     },
     'resetForm': function resetForm() {
       bulkForm.find('input').val('');
+      $('#product_combination_bulk_images').select2('val', 'ALL');
 
       return this;
     },
@@ -177,6 +242,42 @@ export default function() {
         var newFinalPrice = new Number(newPrice) + new Number(impactOnPrice);
         jQueryFinalPriceEl.text(ps_round(newFinalPrice, 6));
       });
+    },
+    'getBulkActionImages': function getBulkActionImages() {
+      let productImages = [];
+      $.ajax({
+        type: 'GET',
+        url: $('#images-combinations').attr('data'),
+        success: function (response) {
+          response.forEach(function (element) {
+            productImages.push({id: element.id, image: element.image, text: element.label});
+          });
+          $('#product_combination_bulk_images').select2({
+            data: productImages,
+            templateResult: function (element) {
+              return $("<input type='checkbox' id='product_combination_bulk_images_checkbox_" + element.id + "'><img src='" + element.image + "' class='combination-bulk-images'><span class='combination-bulk-images-label'>" + element.text + "</span></img>");
+            },
+            minimumResultsForSearch: Infinity,
+            tags: false,
+          });
+        }
+      });
+    },
+    'setBulkActionImagesCheckboxStatus': function setBulkActionImagesCheckboxStatus() {
+      let select = $('#product_combination_bulk_images');
+      if (select.data('select2')) {
+        let selectedIndex = select.select2('val');
+        if (selectedIndex != null) {
+          selectedIndex.forEach(function (item) {
+            $('#product_combination_bulk_images_checkbox_' + item).prop('checked', "checked");
+          });
+        }
+      }
+    },
+    'fillBulkActionImages': function fillBulkActionImages() {
+      if ($('#product_combination_bulk_images option').length === 0) {
+        this.getBulkActionImages();
+      }
     }
   };
 }
@@ -202,8 +303,22 @@ class Combination {
   updateForm(values) {
     values.forEach((valueObject) => {
       var valueId = valueObject.id.substr(this.inputBulkPattern.length);
-      $('#'+this.convertInput(valueId)).val(valueObject.value);
-    });
+      if (this.convertInput(valueId) == this.inputPattern + 'id_image_attr') {
+        if (valueObject.value != null) {
+          var combinationId = this.domId
+          valueObject.value.forEach(function (element) {
+            $('#combination_form_' + combinationId + ' .product-combination-image').each(function () {
+              if ($(this).find('input').val() == element) {
+                $(this).find('input').prop('checked', true);
+                $(this).addClass('img-highlight');
+              }
+            });
+          });
+        }
+      } else {
+        $('#' + this.convertInput(valueId)).val(valueObject.value);
+      }
+  });
     return this.form;
   }
 
@@ -237,6 +352,9 @@ class Combination {
         break;
       case "impact_on_price_ti":
         convertedInput = this.inputPattern + 'attribute_priceTI';
+        break;
+      case "images":
+        convertedInput = this.inputPattern + 'id_image_attr';
         break;
       default:
     }

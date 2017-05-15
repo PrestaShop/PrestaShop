@@ -95,10 +95,10 @@ class ProductCombinationBulk extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('Minimum quantity', [], 'Admin.Catalog.Feature'),
             ))
-            ->add('images','Symfony\Component\Form\Extension\Core\Type\ChoiceType',array(
+            ->add('images', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'required' => false,
                 'multiple' => true,
-                'label' => $this->translator->trans('Image', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Image', [], 'Admin.Global'),
             ));
     }
 

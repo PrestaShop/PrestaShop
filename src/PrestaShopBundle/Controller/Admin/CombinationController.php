@@ -27,6 +27,9 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Context;
+use PrestaShop\PrestaShop\Adapter\Entity\Product;
+use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -115,22 +118,22 @@ class CombinationController extends Controller
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @throws \Exception
      */
-    public function getProductImagesCombinationsAction($idProduct){
+    public function getProductImagesCombinationsAction($idProduct)
+    {
         $response = new JsonResponse();
-        $product = new \Product($idProduct);
-        $results = [];
-        $context = \Context::getContext();
+        $product = new Product($idProduct);
+        $results = array();
+        $context = Context::getContext();
         foreach ($product->getImages($context->language->id) as $item) {
             $results[] = array(
                 'id' => $item['id_image'],
-                'image' => str_replace('http://', \Tools::getShopProtocol(), $context->link->getImageLink(is_array($product->link_rewrite) ? $product->link_rewrite[$context->language->id] : $product->link_rewrite, $item['id_image'], 'home_default')),
+                'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink(is_array($product->link_rewrite) ? $product->link_rewrite[$context->language->id] : $product->link_rewrite, $item['id_image'], 'home_default')),
                 'label' => $item['legend']
             );
         }
         $response->setData($results);
 
         return $response;
-
     }
 
 }
