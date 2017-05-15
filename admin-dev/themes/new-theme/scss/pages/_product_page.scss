@@ -1065,3 +1065,73 @@
     }
   }
 }
+
+#select2-product_combination_bulk_images-results .select2-results__option--highlighted[aria-selected],
+#select2-product_combination_bulk_images-results .select2-results__option[aria-selected=true]{
+  background-color: inherit;
+  color: inherit;
+}
+#select2-product_combination_bulk_images-results li.select2-results__option[aria-selected="true"]::before {
+  background: #3ED2F0;
+  border-color: #3ED2F0;
+  content: '\E5CA';
+  font-family: Material Icons;
+  color: white;
+  line-height: rem(12px);
+}
+#select2-product_combination_bulk_images-results li.select2-results__option::before {
+  content: "";
+  display: inline-block;
+  width: rem(16px);
+  height: rem(16px);
+  border: rem(2px) solid #bbcdd2;
+  margin: rem(0px) rem(10px) rem(0px) rem(5px);
+  vertical-align: middle;
+  border-radius: rem(2px);
+}
+
+.combination-bulk-images{
+  width: rem(40px);
+  height: rem(40px);
+  background-color: #bbcdd2;
+  border: solid rem(1px) #bbcdd2;
+}
+.combination-bulk-images-label{
+  height: rem(20px);
+  object-fit: contain;
+  font-family: NotoSans;
+  font-size: rem(14px);
+  line-height: 1.43;
+  color: #363a41;
+  margin: rem(9px) rem(0px) rem(0px) rem(9px);
+}
+
+#select2-product_combination_bulk_images-results::-webkit-scrollbar{
+  width: rem(8px);
+  background-color: rgba(187, 205, 210, 0.3);
+}
+#select2-product_combination_bulk_images-results::-webkit-scrollbar-thumb{
+  width: rem(8px);
+  border-radius: rem(100px);
+  background-color: #bbcdd2;
+}
+
+#select2-product_combination_bulk_images-container .select2-container--prestakit .select2-selection--multiple{
+  padding: inherit;
+  padding-right: rem(20px);
+}
+
+#select2-product_combination_bulk_images-container .select2-container--prestakit .select2-selection--multiple::before{
+  content: "\E313";
+  font-family: Material Icons;
+  position: absolute;
+  top: 50%;
+  right: rem(5px);
+  transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+}
+#select2-product_combination_bulk_images-container .select2-container--prestakit .select2-selection--multiple ul{
+  display: none;
+}
