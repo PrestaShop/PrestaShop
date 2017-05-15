@@ -59,15 +59,16 @@ class TreeBuilder
 
         foreach ($translations as $domain => $messages) {
             $missingTranslations = 0;
+            $domainDatabase = str_replace('.'.$provider->getLocale(), '', $domain);
 
             foreach ($messages as $translationKey => $translationValue) {
                 $translations[$domain][$translationKey] = array(
                     'xlf' =>  (array_key_exists($domain, $xliffCatalog) &&
                         array_key_exists($translationValue, $xliffCatalog[$domain]) ?
                         $xliffCatalog[$domain][$translationValue] : null),
-                    'db' => (array_key_exists($domain, $databaseCatalogue) &&
-                        array_key_exists($translationValue, $databaseCatalogue[$domain]) ?
-                        $databaseCatalogue[$domain][$translationValue] : null),
+                    'db' => (array_key_exists($domainDatabase, $databaseCatalogue) &&
+                        array_key_exists($translationValue, $databaseCatalogue[$domainDatabase]) ?
+                        $databaseCatalogue[$domainDatabase][$translationValue] : null),
                 );
 
                 if (
@@ -127,10 +128,10 @@ class TreeBuilder
      *
      * @param $tree
      * @param Router $router
-     * @param bool $theme
+     * @param null $theme
      * @return array
      */
-    public function cleanTreeToApi($tree, Router $router, $theme = false)
+    public function cleanTreeToApi($tree, Router $router, $theme = null)
     {
         $rootTree = array(
             'tree' => array(

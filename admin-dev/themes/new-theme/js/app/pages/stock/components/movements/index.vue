@@ -38,9 +38,13 @@
             </PSLoader>
           </td>
         </tr>
-        <PSAlert v-else-if="emptyMovements">
-           {{trans('no_product')}}
-        </PSAlert>
+        <tr v-else-if="emptyMovements">
+          <td colspan="7">
+            <PSAlert alertType="info" :hasClose="false">
+              {{trans('no_product')}}
+            </PSAlert>
+          </td>
+        </tr>
         <MovementLine v-else v-for="(product, index) in movements" key=${index} :product="product" />
       </tbody>
     </PSTable>

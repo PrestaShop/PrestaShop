@@ -137,10 +137,10 @@ class TranslationService {
      *
      * @param $locale
      * @param $domain
-     * @param bool $theme
+     * @param null $theme
      * @return array
      */
-    public function listDomainTranslation($locale, $domain, $theme = false){
+    public function listDomainTranslation($locale, $domain, $theme = null){
         if (!empty($theme) && 'classic' !== $theme) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);

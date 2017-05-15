@@ -43,9 +43,13 @@
           </PSLoader>
         </td>
       </tr>
-      <PSAlert v-else-if="emptyProducts">
-        {{trans('no_product')}}
-      </PSAlert>
+      <tr v-else-if="emptyProducts">
+        <td colspan="7">
+          <PSAlert alertType="info" :hasClose="false" >
+            {{trans('no_product')}}
+          </PSAlert>
+        </td>
+      </tr>
       <ProductLine v-else v-for="(product, index) in products" key=${index} :product="product" />
     </tbody>
   </PSTable>

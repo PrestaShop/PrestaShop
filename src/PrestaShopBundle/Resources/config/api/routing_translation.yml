@@ -3,14 +3,14 @@ api_translation_domains_tree:
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.translation.controller:listTreeAction
-        selected: false
+        selected: null
 
 api_translation_domain_catalog:
     path: /translation/{locale}/{domain}/{theme}
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.translation.controller:listDomainTranslationAction
-        theme: false
+        theme: null
 
 api_translation_value_edit:
     path: /translation/edit

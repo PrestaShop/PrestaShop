@@ -79,7 +79,7 @@
       movementsTypes() {
         let displayName;
         let movements = [];
-                    console.log(this.$store.getters.movementsTypes)
+
         return this.$store.getters.movementsTypes.filter(movement => {
           if(displayName !== movement.name) {
             displayName = movement.name;
