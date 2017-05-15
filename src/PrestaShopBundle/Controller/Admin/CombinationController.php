@@ -108,4 +108,29 @@ class CombinationController extends Controller
 
         return $response;
     }
+
+    /**
+     * get product images to assigning for combination
+     * @param $idProduct
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Exception
+     */
+    public function getProductImagesCombinationsAction($idProduct){
+        $response = new JsonResponse();
+        $product = new \Product($idProduct);
+        $results = [];
+        $context = \Context::getContext();
+        foreach ($product->getImages($context->language->id) as $item) {
+            $results[] = array(
+                'id' => $item['id_image'],
+                'image' => str_replace('http://', \Tools::getShopProtocol(), $context->link->getImageLink(is_array($product->link_rewrite) ? $product->link_rewrite[$context->language->id] : $product->link_rewrite, $item['id_image'], 'home_default')),
+                'label' => $item['legend']
+            );
+        }
+        $response->setData($results);
+
+        return $response;
+
+    }
+
 }

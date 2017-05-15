@@ -14,3 +14,13 @@ admin_get_product_combinations:
         idProduct: 0
     requirements:
         idProduct: \d+
+
+admin_get_images_product_combinations:
+    path:     /product-images-combinations/{idProduct}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Combination:getProductImagesCombinations
+        _format: json
+        idProduct: 0
+    requirements:
+        idProduct: \d+
