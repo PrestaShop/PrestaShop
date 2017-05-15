@@ -47,7 +47,13 @@ class TreeBuilder
     public function makeTranslationArray(AbstractProvider $provider)
     {
         $provider->setLocale($this->locale);
-        $translations = $provider->getDefaultCatalogue()->all();
+
+        if ('theme' === $provider->getIdentifier()) {
+            $translations = $provider->getMessageCatalogue()->all();
+        } else {
+            $translations = $provider->getDefaultCatalogue()->all();
+        }
+
         $xliffCatalog = $provider->getXliffCatalogue()->all();
         $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme)->all();
 
@@ -86,22 +92,15 @@ class TreeBuilder
     public function makeTranslationsTree($catalogue)
     {
         $translationsTree = array();
-        $flippedUnbreakableWords = array_flip($this->getUnbreakableWords());
 
         foreach ($catalogue as $domain => $messages) {
-            $unbreakableDomain = $this->makeDomainUnbreakable($domain);
-
-            $tableisedDomain = Inflector::tableize($unbreakableDomain);
+            $tableisedDomain = Inflector::tableize($domain);
             list($basename) = explode('.', $tableisedDomain);
             $parts = array_reverse(explode('_', $basename));
-
             $subtree = &$translationsTree;
 
             while (count($parts) > 0) {
                 $subdomain = ucfirst(array_pop($parts));
-                if (array_key_exists($subdomain, $flippedUnbreakableWords)) {
-                    $subdomain = $flippedUnbreakableWords[$subdomain];
-                }
 
                 if (!array_key_exists($subdomain, $subtree)) {
                     $subtree[$subdomain] = array();
@@ -128,9 +127,10 @@ class TreeBuilder
      *
      * @param $tree
      * @param Router $router
+     * @param bool $theme
      * @return array
      */
-    public function cleanTreeToApi($tree, Router $router)
+    public function cleanTreeToApi($tree, Router $router, $theme = false)
     {
         $rootTree = array(
             'tree' => array(
@@ -145,8 +145,8 @@ class TreeBuilder
         $index1 = 0;
         foreach ($tree as $k1 => $t1) {
             $index2 = 0;
-            if ('__metadata' !== $k1) {
-                $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1);
+            if (is_array($t1) && '__' !== substr($k1, 0, 2)) {
+                $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1, $theme);
 
                 if (array_key_exists('__messages', $t1)) {
                     $nbMessage = count(current($t1['__messages']));
@@ -162,72 +162,72 @@ class TreeBuilder
                         $rootTree['tree']['total_missing_translations'] += (int)$t1['__metadata']['missing_translations'];
                     }
 
-                } else {
-                    foreach ($t1 as $k2 => $t2) {
-                        $index3 = 0;
-                        if ('__metadata' !== $k2) {
-                            $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2);
-
-                            if (array_key_exists('__messages', $t2)) {
-                                $nbMessage = count(current($t2['__messages']));
-                                if (array_key_exists('__metadata', $t2)) {
-                                    $nbMessage -= 1;
-                                }
-
-                                $cleanTree[$index1]['children'][$index2]['total_translations'] += $nbMessage;
-                                $cleanTree[$index1]['total_translations'] += $nbMessage;
-                                $rootTree['tree']['total_translations'] += $nbMessage;
-
-                                if (array_key_exists('__metadata', $t2) && array_key_exists('missing_translations', $t2['__metadata'])) {
-                                    $cleanTree[$index1]['children'][$index2]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
-                                    $cleanTree[$index1]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
-                                    $rootTree['tree']['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
-                                }
-
-                            } else {
-                                foreach ($t2 as $k3 => $t3) {
-                                    if ('__metadata' !== $k3) {
-                                        $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3);
-
-                                        if (array_key_exists('__messages', $t3)) {
-                                            $nbMessage = count(current($t3['__messages']));
-                                            if (array_key_exists('__metadata', $t3)) {
-                                                $nbMessage -= 1;
-                                            }
-
-                                            $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_translations'] += $nbMessage;
-                                            $cleanTree[$index1]['children'][$index2]['total_translations'] += $nbMessage;
-                                            $cleanTree[$index1]['total_translations'] += $nbMessage;
-                                            $rootTree['tree']['total_translations'] += $nbMessage;
-                                        }
-
-                                        if (array_key_exists('__metadata', $t3) && array_key_exists('missing_translations', $t3['__metadata'])) {
-                                            $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
-                                            $cleanTree[$index1]['children'][$index2]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
-                                            $cleanTree[$index1]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
-                                            $rootTree['tree']['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
-                                        }
-
-                                        if (empty($cleanTree[$index1]['children'][$index2]['children'][$index3]['children'])) {
-                                            unset($cleanTree[$index1]['children'][$index2]['children'][$index3]['children']);
-                                        }
-                                        $index3++;
-                                    }
-                                }
-                            }
-
-                            if (empty($cleanTree[$index1]['children'][$index2]['children'])) {
-                                unset($cleanTree[$index1]['children'][$index2]['children']);
-                            }
-                            $index2++;
-                        }
-                    }
-
-                    if (empty($cleanTree[$index1]['children'])) {
-                        unset($cleanTree[$index1]['children']);
-                    }
-                    $index1++;
                 }
+
+                foreach ($t1 as $k2 => $t2) {
+                    $index3 = 0;
+                    if (is_array($t2) && '__' !== substr($k2, 0, 2)) {
+                        $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2, $theme);
+
+                        if (array_key_exists('__messages', $t2)) {
+                            $nbMessage = count(current($t2['__messages']));
+                            if (array_key_exists('__metadata', $t2)) {
+                                $nbMessage -= 1;
+                            }
+
+                            $cleanTree[$index1]['children'][$index2]['total_translations'] += $nbMessage;
+                            $cleanTree[$index1]['total_translations'] += $nbMessage;
+                            $rootTree['tree']['total_translations'] += $nbMessage;
+
+                            if (array_key_exists('__metadata', $t2) && array_key_exists('missing_translations', $t2['__metadata'])) {
+                                $cleanTree[$index1]['children'][$index2]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
+                                $cleanTree[$index1]['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
+                                $rootTree['tree']['total_missing_translations'] += (int)$t2['__metadata']['missing_translations'];
+                            }
+
+                        }
+
+                        foreach ($t2 as $k3 => $t3) {
+                            if (is_array($t3) && '__' !== substr($k3, 0, 2)) {
+                                $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3, $theme);
+
+                                if (array_key_exists('__messages', $t3)) {
+                                    $nbMessage = count(current($t3['__messages']));
+                                    if (array_key_exists('__metadata', $t3)) {
+                                        $nbMessage -= 1;
+                                    }
+
+                                    $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_translations'] += $nbMessage;
+                                    $cleanTree[$index1]['children'][$index2]['total_translations'] += $nbMessage;
+                                    $cleanTree[$index1]['total_translations'] += $nbMessage;
+                                    $rootTree['tree']['total_translations'] += $nbMessage;
+                                }
+
+                                if (array_key_exists('__metadata', $t3) && array_key_exists('missing_translations', $t3['__metadata'])) {
+                                    $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                    $cleanTree[$index1]['children'][$index2]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                    $cleanTree[$index1]['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                    $rootTree['tree']['total_missing_translations'] += (int)$t3['__metadata']['missing_translations'];
+                                }
+
+                                if (empty($cleanTree[$index1]['children'][$index2]['children'][$index3]['children'])) {
+                                    unset($cleanTree[$index1]['children'][$index2]['children'][$index3]['children']);
+                                }
+                                $index3++;
+                            }
+                        }
+
+                        if (empty($cleanTree[$index1]['children'][$index2]['children'])) {
+                            unset($cleanTree[$index1]['children'][$index2]['children']);
+                        }
+                        $index2++;
+                    }
+                }
+
+                if (empty($cleanTree[$index1]['children'])) {
+                    unset($cleanTree[$index1]['children']);
+                }
+                $index1++;
             }
         }
 
@@ -240,75 +240,25 @@ class TreeBuilder
      * @param $index
      * @param $name
      * @param $fullName
+     * @param bool $theme
      * @return mixed
      */
-    private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName)
+    private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName, $theme = false)
     {
-        $tree[$index]['name'] = $name;
-        $tree[$index]['full_name'] = $fullName;
-        $tree[$index]['domain_catalog_link'] = $router->generate('api_translation_domain_catalog', array(
-            'locale' => $this->locale,
-            'domain' => $fullName,
-        ));
-        $tree[$index]['total_translations'] = 0;
-        $tree[$index]['total_missing_translations'] = 0;
-        $tree[$index]['children'] = array();
-
-        return $tree;
-    }
-
-    /**
-     * There are domains containing multiple words,
-     * hence these domains should not be split from those words in camelcase.
-     * The latter are replaced from a list of unbreakable words.
-     *
-     * @param $domain
-     *
-     * @return string
-     */
-    public function makeDomainUnbreakable($domain)
-    {
-        $adjustedDomain = $domain;
-        $unbreakableWords = $this->getUnbreakableWords();
-
-        foreach ($unbreakableWords as $search => $replacement) {
-            if (false !== strpos($domain, $search)) {
-                $adjustedDomain = str_replace($search, $replacement, $domain);
-
-                break;
-            }
+        if (!isset($tree[$index])) {
+            $tree[$index]['name'] = $name;
+            $tree[$index]['full_name'] = $fullName;
+            $tree[$index]['domain_catalog_link'] = $router->generate('api_translation_domain_catalog', array(
+                'locale' => $this->locale,
+                'domain' => $fullName,
+                'theme' => $theme,
+            ));
+            $tree[$index]['total_translations'] = 0;
+            $tree[$index]['total_missing_translations'] = 0;
+            $tree[$index]['children'] = array();
         }
 
-        return $adjustedDomain;
-    }
-
-    /**
-     * @return array
-     */
-    public function getUnbreakableWords()
-    {
-        return array(
-            'BankWire' => 'Bankwire',
-            'BlockBestSellers' => 'Blockbestsellers',
-            'BlockCart' => 'Blockcart',
-            'CheckPayment' => 'Checkpayment',
-            'ContactInfo' => 'Contactinfo',
-            'EmailSubscription' => 'Emailsubscription',
-            'FacetedSearch' => 'Facetedsearch',
-            'FeaturedProducts' => 'Featuredproducts',
-            'LegalCompliance' => 'Legalcompliance',
-            'ShareButtons' => 'Sharebuttons',
-            'ShoppingCart' => 'Shoppingcart',
-            'SocialFollow' => 'Socialfollow',
-            'WirePayment' => 'Wirepayment',
-            'BlockAdvertising' => 'Blockadvertising',
-            'CategoryTree' => 'Categorytree',
-            'CustomerSignIn' => 'Customersignin',
-            'CustomText' => 'Customtext',
-            'ImageSlider' => 'Imageslider',
-            'LinkList' => 'Linklist',
-            'ShopPDF' => 'ShopPdf',
-        );
+        return $tree;
     }
 
     /*

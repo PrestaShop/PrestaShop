@@ -371,36 +371,4 @@ class TranslationsController extends FrameworkBundleAdminController
         $treeBuilder = new TreeBuilder('en-US', null);
         return $treeBuilder->makeTranslationsTree($catalogue);
     }
-
-    /**
-     * There are domains containing multiple words,
-     * hence these domains should not be split from those words in camelcase.
-     * The latter are replaced from a list of unbreakable words.
-     *
-     * @param $domain
-     *
-     * @return string
-     *
-     * @deprecated since 1.7.1.0
-     */
-    protected function makeDomainUnbreakable($domain)
-    {
-        trigger_error('makeDomainUnbreakable() is deprecated since version 1.7.1. Use PrestaShopBundle\Translation\View\TreeBuilder instead.', E_USER_DEPRECATED);
-
-        $treeBuilder = new TreeBuilder('en-US', null);
-        return $treeBuilder->makeDomainUnbreakable($domain);
-    }
-
-    /**
-     * @return array
-     *
-     * @deprecated since 1.7.1.0
-     */
-    protected function getUnbreakableWords()
-    {
-        trigger_error('getUnbreakableWords() is deprecated since version 1.7.1. Use PrestaShopBundle\Translation\View\TreeBuilder instead.', E_USER_DEPRECATED);
-
-        $treeBuilder = new TreeBuilder('en-US', null);
-        return $treeBuilder->getUnbreakableWords();
-    }
 }

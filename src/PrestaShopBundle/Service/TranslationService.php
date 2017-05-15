@@ -137,38 +137,56 @@ class TranslationService {
      *
      * @param $locale
      * @param $domain
-     * @return array|mixed
+     * @param bool $theme
+     * @return array
      */
-    public function listDomainTranslation($locale, $domain){
-        $translationProvider = $this->container->get('prestashop.translation.search_provider');
-        $router = $this->container->get('router');
-        $paramsRouter = array(
-            'locale' => $locale,
-            'domain' => $domain,
-        );
+    public function listDomainTranslation($locale, $domain, $theme = false){
+        if (!empty($theme) && 'classic' !== $theme) {
+            $translationProvider = $this->container->get('prestashop.translation.theme_provider');
+            $translationProvider->setThemeName($theme);
+        } else {
+            $translationProvider = $this->container->get('prestashop.translation.search_provider');
+        }
 
-        $translationProvider->setLocale($locale);
+        if ('Messages' === $domain){
+            $domain = 'messages';
+        }
+
         $translationProvider->setDomain($domain);
+        $translationProvider->setLocale($locale);
 
+        $router = $this->container->get('router');
         $domains = array(
             'info' => array(
-                'edit_url' => $router->generate('api_translation_value_edit', $paramsRouter),
-                'reset_url' => $router->generate('api_translation_value_reset', $paramsRouter),
-            )
+                'edit_url' => $router->generate('api_translation_value_edit'),
+                'reset_url' => $router->generate('api_translation_value_reset'),
+            ),
+            'data' => array(),
         );
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 
-        $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
+        if (!empty($theme) && 'classic' !== $theme) {
+            $defaultCatalog = current($translationProvider->getThemeCatalogue()->all());
+        } else {
+            $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
+        }
+
         $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
-        $dbCatalog = current($translationProvider->getDatabaseCatalogue()->all());
+        $dbCatalog = current($translationProvider->getDatabaseCatalogue($theme)->all());
 
         foreach ($defaultCatalog as $message) {
-            $domains['data'][] = array(
+            $data = array(
                 'default' => $message,
                 'xliff' => (array_key_exists($message, (array)$xliffCatalog) ? $xliffCatalog[$message] : null),
                 'database' => (array_key_exists($message, (array)$dbCatalog) ? $dbCatalog[$message] : null),
                 'tree_domain' => $treeDomain,
             );
+
+            if (!array_key_exists($message, (array)$xliffCatalog) && !array_key_exists($message, (array)$dbCatalog)) {
+                array_unshift($domains['data'], $data);
+            } else {
+                array_push($domains['data'], $data);
+            }
         }
 
         return $domains;

@@ -51,12 +51,43 @@ class ThemeProvider extends AbstractProvider
      */
     public $themeExtractor;
 
+    private $domain;
+
+    /**
+     * Set domain
+     *
+     * @param $domain
+     * @return $this
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * Get domain
+     *
+     * @return mixed
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getTranslationDomains()
     {
-        return array('*');
+        if (empty($this->domain)) {
+            return array('*');
+        } else {
+            return array(
+                '^'.$this->getDomain(),
+            );
+        }
     }
 
     /**
@@ -64,7 +95,13 @@ class ThemeProvider extends AbstractProvider
      */
     public function getFilters()
     {
-        return array('*');
+        if (empty($this->domain)) {
+            return array('*');
+        } else {
+            return array(
+                '#^'.$this->getDomain().'#',
+            );
+        }
     }
 
     /**
@@ -178,6 +215,8 @@ class ThemeProvider extends AbstractProvider
      */
     public function getThemeCatalogue()
     {
-        return $this->getCatalogueFromPaths($this->getThemeResourcesDirectory(), $this->locale, '*');
+        $path = $this->resourceDirectory.'/'.$this->themeName.'/translations';
+
+        return $this->getCatalogueFromPaths($path, $this->locale, current($this->getFilters()));
     }
 }

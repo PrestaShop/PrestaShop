@@ -152,7 +152,7 @@ services:
         class: PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory
         arguments: ['@prestashop.translation.theme_provider']
         calls:
-            - [ addProvider, ['@prestashop.translation.frontoffice_provider']]
+            - [ addProvider, ['@prestashop.translation.theme_provider']]
 
     ps.theme_translations_factory:
         alias: "prestashop.translation.theme_translations_factory"

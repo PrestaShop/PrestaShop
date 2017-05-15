@@ -47,7 +47,7 @@ class TranslationController extends ApiController
     public $translationService;
 
     /**
-     * Show translations for 1 domain & 1 locale given
+     * Show translations for 1 domain & 1 locale given & 1 theme given (optional)
      *
      * @param Request $request
      * @return JsonResponse
@@ -73,6 +73,7 @@ class TranslationController extends ApiController
                 array(
                     'locale' => $locale,
                     'domain' => $domain,
+                    'theme' => $theme,
                     'total_translations' => count($catalog['data']),
                     'total_missing_translations' => 0,
                 )
@@ -169,7 +170,7 @@ class TranslationController extends ApiController
                 );
             }
 
-            $this->clearCache();
+//            $this->clearCache();
 
             return new JsonResponse($response, 200);
 
@@ -214,7 +215,7 @@ class TranslationController extends ApiController
                 );
             }
 
-            $this->clearCache();
+//            $this->clearCache();
 
             return new JsonResponse($response, 200);
 
@@ -292,10 +293,7 @@ class TranslationController extends ApiController
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
 
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $selected);
-        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'));
-
-        return $translationsTree;
+        return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected);
     }
 
     /**
@@ -313,8 +311,24 @@ class TranslationController extends ApiController
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
 
         $catalogue = $treeBuilder->makeTranslationArray($moduleProvider);
+        return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected);
+    }
+
+    /**
+     * Make final tree
+     *
+     * @param TreeBuilder $treeBuilder
+     * @param $catalogue
+     * @param $type
+     * @param $selected
+     * @return array
+     */
+    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected)
+    {
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'));
+
+        $theme = ('themes' === $type && 'classic' !== $selected ? $selected : false);
+        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme);
 
         return $translationsTree;
     }
