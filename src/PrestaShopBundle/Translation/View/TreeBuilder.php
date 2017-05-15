@@ -32,6 +32,7 @@ use Doctrine\Common\Util\Inflector;
 use PrestaShopBundle\Translation\Provider\UseDefaultCatalogueInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class TreeBuilder
 {
@@ -62,18 +63,20 @@ class TreeBuilder
             $domainDatabase = str_replace('.'.$provider->getLocale(), '', $domain);
 
             foreach ($messages as $translationKey => $translationValue) {
-                $translations[$domain][$translationKey] = array(
+                $data = array(
                     'xlf' =>  (array_key_exists($domain, $xliffCatalog) &&
-                        array_key_exists($translationValue, $xliffCatalog[$domain]) ?
-                        $xliffCatalog[$domain][$translationValue] : null),
+                    array_key_exists($translationKey, $xliffCatalog[$domain]) ?
+                        $xliffCatalog[$domain][$translationKey] : null),
                     'db' => (array_key_exists($domainDatabase, $databaseCatalogue) &&
-                        array_key_exists($translationValue, $databaseCatalogue[$domainDatabase]) ?
-                        $databaseCatalogue[$domainDatabase][$translationValue] : null),
+                    array_key_exists($translationKey, $databaseCatalogue[$domainDatabase]) ?
+                        $databaseCatalogue[$domainDatabase][$translationKey] : null),
                 );
 
+                $translations[$domain][$translationKey] = $data;
+
                 if (
-                    empty($translations[$domain][$translationKey]['xlf']) &&
-                    empty($translations[$domain][$translationKey]['db'])
+                    empty($data['xlf']) &&
+                    empty($data['db'])
                 ) {
                     $missingTranslations++;
                 }
@@ -260,22 +263,5 @@ class TreeBuilder
         }
 
         return $tree;
-    }
-
-    /*
-    * @param AbstractProvider $provider
-    * @param MessageCatalogueInterface $catalogue
-    * @return MessageCatalogueInterface
-    */
-    private function addDefaultTranslations(AbstractProvider $provider, MessageCatalogueInterface $catalogue)
-    {
-        if (!$provider instanceof UseDefaultCatalogueInterface) {
-            return $catalogue;
-        }
-
-        $catalogueWithDefault = $provider->getDefaultCatalogue();
-        $catalogueWithDefault->addCatalogue($catalogue);
-
-        return $catalogueWithDefault;
     }
 }

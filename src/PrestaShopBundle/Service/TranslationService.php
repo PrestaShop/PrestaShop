@@ -174,15 +174,15 @@ class TranslationService {
         $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
         $dbCatalog = current($translationProvider->getDatabaseCatalogue($theme)->all());
 
-        foreach ($defaultCatalog as $message) {
+        foreach ($defaultCatalog as $key => $message) {
             $data = array(
-                'default' => $message,
-                'xliff' => (array_key_exists($message, (array)$xliffCatalog) ? $xliffCatalog[$message] : null),
-                'database' => (array_key_exists($message, (array)$dbCatalog) ? $dbCatalog[$message] : null),
+                'default' => $key,
+                'xliff' => (array_key_exists($key, (array)$xliffCatalog) ? $xliffCatalog[$key] : null),
+                'database' => (array_key_exists($key, (array)$dbCatalog) ? $dbCatalog[$key] : null),
                 'tree_domain' => $treeDomain,
             );
 
-            if (!array_key_exists($message, (array)$xliffCatalog) && !array_key_exists($message, (array)$dbCatalog)) {
+            if (!array_key_exists('xliff', $data) && !array_key_exists('database', $data)) {
                 array_unshift($domains['data'], $data);
             } else {
                 array_push($domains['data'], $data);
@@ -288,6 +288,4 @@ class TranslationService {
 
         return $resetTranslationSuccessfully;
     }
-
-
 }

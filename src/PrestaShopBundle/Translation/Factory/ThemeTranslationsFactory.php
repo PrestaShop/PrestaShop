@@ -63,7 +63,7 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * {@inheritdoc}
      */
-    public function createTranslationsArray($themeName, $locale = 'en_US')
+    public function createTranslationsArray($themeName, $locale = 'en_US', $theme = null)
     {
         $this->themeProvider
             ->setThemeName($themeName)
