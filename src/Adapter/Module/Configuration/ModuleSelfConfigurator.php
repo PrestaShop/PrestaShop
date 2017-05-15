@@ -37,6 +37,13 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * This class allow system users and developers to configure their module
+ * with a single config file.
+ *
+ * Use validate() to check everything is ready to run.
+ * Use configure() to run the configuration with the provided parameters.
+ */
 class ModuleSelfConfigurator
 {
     protected $module;
@@ -227,6 +234,13 @@ class ModuleSelfConfigurator
 
     // PROTECTED ZONE
 
+    /**
+     * Helper function which adds the relative path from the YML config file.
+     * Do not alter URLs
+     *
+     * @param string $file
+     * @return string
+     */
     protected function convertRelativeToAbsolutePaths($file)
     {
         // If we do not deal with any kind of URL, add the path to the YML config file
@@ -236,6 +250,14 @@ class ModuleSelfConfigurator
         return $file;
     }
 
+    /**
+     * Finds and returns filepath from a config key in the YML config file.
+     * Can be a string of a value of "file" key.
+     * 
+     * @param array $data
+     * @return string
+     * @throws Exception if file data not provided
+     */
     protected function extractFilePath($data)
     {
         if (is_scalar($data)) {
@@ -249,6 +271,12 @@ class ModuleSelfConfigurator
         return $this->convertRelativeToAbsolutePaths($file);
     }
 
+    /**
+     * Require a PHP file and instanciate the class of the same name in it.
+     * 
+     * @param string $file
+     * @return stdClass
+     */
     protected function loadPhpFile($file)
     {
         // Load file
@@ -259,6 +287,12 @@ class ModuleSelfConfigurator
         return new $className();
     }
 
+    /**
+     * Parse and return the YML content.
+     *
+     * @param string $file
+     * @return array
+     */
     protected function loadYmlFile($file)
     {
         if (array_key_exists($file, $this->configs)) {
@@ -268,6 +302,12 @@ class ModuleSelfConfigurator
         return $this->configs[$file];
     }
 
+    /**
+     * Run configuration for "configuration" step
+     * 
+     * @param array $config
+     * @return void
+     */
     protected function runConfigurationStep($config)
     {
         if (empty($config['configuration'])) {
@@ -283,6 +323,12 @@ class ModuleSelfConfigurator
         }
     }
 
+    /**
+     * Run configuration for "file" step
+     *
+     * @param array $config
+     * @return void
+     */
     protected function runFilesStep($config)
     {
         if (empty($config['files'])) {
@@ -309,6 +355,12 @@ class ModuleSelfConfigurator
         }
     }
 
+    /**
+     * Run configuration for "php" step
+     *
+     * @param array $config
+     * @return void
+     */
     protected function runPhpStep($config)
     {
         if (empty($config['php'])) {
@@ -325,6 +377,12 @@ class ModuleSelfConfigurator
         }
     }
 
+    /**
+     * Run configuration for "sql" step
+     *
+     * @param array $config
+     * @return void
+     */
     protected function runSqlStep($config)
     {
         if (empty($config['sql'])) {
@@ -345,6 +403,11 @@ class ModuleSelfConfigurator
         }
     }
 
+    /**
+     * Subtask of Sql step. Get and prepare all SQL requests from a file.
+     *
+     * @param array $data
+     */
     protected function runSqlFile($data)
     {
         $content = file_get_contents($this->extractFilePath($data));
@@ -359,6 +422,12 @@ class ModuleSelfConfigurator
        }
     }
 
+    /**
+     * Subtask of configuration step, for all configuration key to update.
+     *
+     * @param array $config
+     * @throws Exception
+     */
     protected function runConfigurationUpdate($config)
     {
         foreach($config as $key => $data) {
@@ -373,6 +442,11 @@ class ModuleSelfConfigurator
         }
     }
 
+    /**
+     * Subtask of configuration step, for all configuration keys to delete
+     *
+     * @param array $config
+     */
     protected function runConfigurationDelete($config)
     {
         foreach($config as $key) {
