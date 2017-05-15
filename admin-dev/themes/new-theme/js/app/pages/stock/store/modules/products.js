@@ -59,23 +59,23 @@ const mutations = {
   },
 
   [types.UPDATE_PRODUCT](state, updatedProduct) {
-    let index = _.findIndex(state.products, {
+    let index = _.findIndex(state.products.data, {
       'product_id': updatedProduct.product_id,
       'combination_id': updatedProduct.combination_id
     });
     updatedProduct.qty = 0;
-    state.products.splice(index, 1, updatedProduct);
+    state.products.data.splice(index, 1, updatedProduct);
   },
 
   [types.UPDATE_PRODUCTS](state, updatedProducts) {
     state.productsToUpdate = [];
     _.forEach(updatedProducts, (product) => {
-      let index = _.findIndex(state.products, {
+      let index = _.findIndex(state.products.data, {
         'product_id': product.product_id,
         'combination_id': product.combination_id
       });
       product.qty = 0;
-      state.products.splice(index, 1, product);
+      state.products.data.splice(index, 1, product);
     });
     state.hasQty = false;
   },
@@ -88,12 +88,12 @@ const mutations = {
       'combination_id': updatedProduct.combination_id
     });
 
-    let productToUpdate = _.find(state.products, {
+    let productToUpdate = _.find(state.products.data, {
       'product_id': updatedProduct.product_id,
       'combination_id': updatedProduct.combination_id
     });
 
-    _.forEach(state.products, (product) => {
+    _.forEach(state.products.data, (product) => {
       productToUpdate.qty = updatedProduct.delta;
       if (product.qty) {
         hasQty = true;

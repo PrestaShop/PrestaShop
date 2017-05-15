@@ -11,7 +11,7 @@
       </span>
     </div>
     <ul class="tree" :class="className">
-      <li v-for="(element, index) in firstChildren">
+      <li v-for="(element, index) in model">
         <PSTreeItem
           ref="item"
           :hasCheckbox="hasCheckbox"
@@ -56,12 +56,6 @@
       setCurrentEl(id) {
         EventBus.$emit('setCurrentEl', id);
       }
-    },
-    computed: {
-      firstChildren: function firstChildren() {
-        const keys = Object.keys(this.model);
-        return keys.length ? this.model[keys[0]].children : [];
-      },
     },
     components: {
       PSTreeItem

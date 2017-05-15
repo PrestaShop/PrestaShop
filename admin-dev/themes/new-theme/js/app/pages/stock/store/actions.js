@@ -37,12 +37,8 @@ export const getSuppliers = ({ commit }) => {
 
 export const getCategories = ({ commit }) => {
   let url = window.data.categoriesUrl;
-  let categories = [];
   Vue.http.get(url).then(function(response) {
-    for(let category in response.body) {
-      categories.push(response.body[category]);
-    }
-    commit(types.SET_CATEGORIES, categories);
+    commit(types.SET_CATEGORIES, response.body);
   }, function(error) {
     return showGrowl('error', error.statusText);
   });

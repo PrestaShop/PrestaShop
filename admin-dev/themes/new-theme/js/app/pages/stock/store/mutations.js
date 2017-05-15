@@ -23,7 +23,9 @@ export default {
     state.movements = movements;
   },
   [types.SET_TRANSLATIONS](state, translations) {
-    state.translations = translations;
+    translations.data.forEach((t) => {
+      state.translations[t.translation_id] = t.name;
+    });
   },
   [types.LOADING_STATE](state, isLoading) {
     state.isLoading = isLoading;

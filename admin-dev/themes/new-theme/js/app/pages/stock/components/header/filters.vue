@@ -20,11 +20,11 @@
           </div>
           <div v-else class="p-y-2 p-x-2">
             <h2>{{trans('filter_movements_type')}}</h2>
-            <PSSelect :items="movementsTypes" itemID="id_stock_mvt_reason" itemName="display_name" @change="onChange">
+            <PSSelect :items="movementsTypes" itemID="id_stock_mvt_reason" itemName="name" @change="onChange">
               {{trans('none')}}
             </PSSelect>
             <h2 class="m-t-2">{{trans('filter_movements_employee')}}</h2>
-            <PSSelect :items="employees" itemID="id_employee" itemName="display_name" @change="onChange">
+            <PSSelect :items="employees" itemID="id_employee" itemName="name" @change="onChange">
              {{trans('none')}}
             </PSSelect>
             <h2 class="m-t-2">{{trans('filter_movements_period')}}</h2>
@@ -45,7 +45,7 @@
             <h2>{{trans('filter_categories')}}</h2>
             <FilterComponent
               :placeholder="trans('filter_search_category')"
-              :list="firstCategoryChildren"
+              :list="categoriesList"
               itemID="id_category"
               label="name"
               @active="onFilterActive"
@@ -79,16 +79,18 @@
       movementsTypes() {
         let displayName;
         let movements = [];
+                    console.log(this.$store.getters.movementsTypes)
         return this.$store.getters.movementsTypes.filter(movement => {
-          if(displayName !== movement.display_name) {
-            displayName = movement.display_name;
+          if(displayName !== movement.name) {
+            displayName = movement.name;
             movements.push(movement);
             return movements;
           }
           else {
             let item = _.find(movements, {
-              display_name : displayName
+              name : displayName
             });
+
 
             let clone = Object.assign(item, {
               id_stock_mvt_reason: [item.id_stock_mvt_reason]
@@ -98,9 +100,8 @@
           }
         });
       },
-      firstCategoryChildren: function firstCategoryChildren() {
-        const keys = Object.keys(this.$store.getters.categories);
-        return keys.length ? this.$store.getters.categories[keys[0]].children : [];
+      categoriesList() {
+        return this.$store.getters.categories;
       }
     },
     methods: {

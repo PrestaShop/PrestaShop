@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isReady" id="app" class="stock-app">
+  <div v-if="isReady" id="app" class="stock-app">
     <StockHeader />
     <Search @search="onSearch" @applyFilter="applyFilter" />
     <div class="card p-a-2">

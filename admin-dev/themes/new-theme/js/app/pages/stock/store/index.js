@@ -15,12 +15,23 @@ const state = {
   totalPages: 0,
   productsPerPage: 100,
   keywords:[],
-  suppliers: [],
-  categories: [],
+  suppliers: {
+    data: []
+  },
+  categories: {
+    data: {
+      tree: {
+        children: [
+        ]
+      }
+    }
+  },
   categoryList: [],
   movements: [],
   employees: [],
-  movementsTypes: [],
+  movementsTypes: {
+    data: []
+  },
   translations: {},
   isLoading: false,
   isReady: false
@@ -41,7 +52,7 @@ const getters = {
     return state.order;
   },
   products(state) {
-    return state.products.products;
+    return state.products.products.data;
   },
   keywords(state) {
     return state.keywords;
@@ -53,12 +64,11 @@ const getters = {
       });
       return suppliers;
     }
-
-    return convert(state.suppliers);
+    return convert(state.suppliers.data);
   },
   categories(state) {
     function convert(categories) {
-      categories.forEach((category)=>{
+      categories.forEach((category)=> {
         category.children = _.values(category.children);
         state.categoryList.push(category);
         category.id = `${category.id_parent}-${category.id_category}`;
@@ -66,20 +76,19 @@ const getters = {
       });
       return categories;
     }
-
-    return convert(state.categories);
+    return convert(state.categories.data.tree.children);
   },
   employees(state) {
-    return state.employees;
+    return state.employees.data;
   },
   movementsTypes(state) {
-    return state.movementsTypes;
+    return state.movementsTypes.data;
   },
   categoryList(state) {
     return state.categoryList;
   },
   movements(state) {
-    return state.movements;
+    return state.movements.data;
   },
   translations(state) {
     return state.translations;
