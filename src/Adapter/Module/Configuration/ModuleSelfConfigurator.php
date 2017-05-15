@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Module;
+namespace PrestaShop\PrestaShop\Adapter\Module\Configuration;
 
 use Exception;
 use Doctrine\DBAL\Connection;

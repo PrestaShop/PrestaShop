@@ -24,13 +24,13 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module;
+namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleSelfConfigurator;
+use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\tests\TestCase\UnitTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -51,7 +51,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->mockModuleRepository();
         $this->moduleSelfConfigurator = new ModuleSelfConfigurator($this->moduleRepository, $this->configuration, $this->connection);
 
-        $this->defaultDir = __DIR__.'/../../../resources/module-self-config-files';
+        $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';
         parent::setup();
     }
 
@@ -150,12 +150,12 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
         // Check files are equals
         $this->assertEquals(
-            file_get_contents(__DIR__.'/../../../resources/modules/ganalytics/avatar.jpg'),
+            file_get_contents(__DIR__.'/../../../../resources/modules/ganalytics/avatar.jpg'),
             file_get_contents('https://avatars0.githubusercontent.com/u/2815696?v=3&u=5e6a82beeff1d799c28bf31e25540d334ae40435&s=400')
         );
         $this->assertEquals(
-            file_get_contents(__DIR__.'/../../../resources/modules/ganalytics/ganalytics.php'),
-            file_get_contents(__DIR__.'/../../../resources/modules/ganalytics/ganalytics_copy.php')
+            file_get_contents(__DIR__.'/../../../../resources/modules/ganalytics/ganalytics.php'),
+            file_get_contents(__DIR__.'/../../../../resources/modules/ganalytics/ganalytics_copy.php')
         );
 
         // Then clean
