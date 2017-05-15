@@ -95,7 +95,6 @@ class AdminOrdersControllerCore extends AdminController
             'new' => array(
                 'title' => $this->trans('New client', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'text-center',
-                'type' => 'bool',
                 'tmpTableFilter' => true,
                 'orderby' => false,
             ),
