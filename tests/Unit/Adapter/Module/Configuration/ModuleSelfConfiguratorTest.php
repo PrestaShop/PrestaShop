@@ -108,7 +108,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $name = 'bankwire';
         // Test before
         $this->assertNull($this->configuration->get('PAYPAL_SANDBOX'));
-        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+        $this->assertTrue($this->moduleSelfConfigurator->module($name)->file($filepath)->configure());
         $this->assertEquals(1, $this->configuration->get('PAYPAL_SANDBOX'));
     }
 
@@ -119,7 +119,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         // Test before
         $this->configuration->set('PAYPAL_ONBOARDING', 1);
         $this->assertEquals(1, $this->configuration->get('PAYPAL_ONBOARDING'));
-        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+        $this->assertTrue($this->moduleSelfConfigurator->module($name)->file($filepath)->configure());
         $this->assertNull($this->configuration->get('PAYPAL_ONBOARDING'));
     }
 
@@ -146,7 +146,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $filepath = $this->defaultDir.'/moduleConfExampleFilesStep.yml';
         $name = 'ganalytics';
 
-        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+        $this->assertTrue($this->moduleSelfConfigurator->module($name)->file($filepath)->configure());
 
         // Check files are equals
         $this->assertEquals(
@@ -171,13 +171,31 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $filepath = $this->defaultDir.'/moduleConfExampleSqlStep.yml';
         $name = 'ganalytics';
 
-        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+        $this->assertTrue($this->moduleSelfConfigurator->module($name)->file($filepath)->configure());
         // Check files are equals
         $this->assertTrue(in_array('TRUNCATE TABLE `ps_doge_army`', $this->connection->executedSql));
         $this->assertTrue(in_array('UPDATE `ps_doge` SET `wow` = 1', $this->connection->executedSql));
         $this->assertFalse(in_array('UPDATE `ps_doge` SET `wow` = 1;', $this->connection->executedSql));
         $this->assertTrue(in_array('TRUNCATE TABLE `ps_lolcat_army`', $this->connection->executedSql));
     }
+
+    public function testSqlExceptionMissingFile()
+    {
+        $filepath = $this->defaultDir.'/moduleConfCrashSql.yml';
+        $name = 'bankwire';
+
+        $this->setExpectedException('Exception', 'Missing SQL file path');
+        $this->moduleSelfConfigurator->module($name)->file($filepath)->configure();
+    }
+
+    public function testPhpStep()
+    {
+        $filepath = $this->defaultDir.'/moduleConfExamplePhpStep.yml';
+        $name = 'ganalytics';
+
+        $this->assertTrue($this->moduleSelfConfigurator->module($name)->file($filepath)->configure());
+    }
+
 
     // MOCK
 
