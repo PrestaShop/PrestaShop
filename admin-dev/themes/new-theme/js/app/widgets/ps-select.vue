@@ -18,19 +18,15 @@
   export default {
     props: ['items', 'itemID', 'itemName'],
     methods: {
-      onChange(e) {
+      onChange() {
         this.$emit('change', {
           value: this.selected,
-          itemID: this.itemID
+          itemID: this.itemID,
         });
-      }
+      },
     },
-    data() {
-      return {
-        selected: 'default'
-      }
-    }
-  }
+    data: () => ({ selected: 'default' }),
+  };
 </script>
 
 <style lang="sass" scoped>

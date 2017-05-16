@@ -14,12 +14,10 @@
     props: ['thumbnail'],
     computed: {
       displayThumb() {
-        if(this.thumbnail) {
-          return true;
-        }
-      }
-    }
-  }
+        return !!this.thumbnail;
+      },
+    },
+  };
 </script>
 
 <style lang="sass" scoped>

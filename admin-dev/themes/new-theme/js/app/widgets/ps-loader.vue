@@ -1,17 +1,17 @@
 <template>
   <div class="ps-loader">
     <div class="timeline-item">
-        <div class="animated-background">
-            <slot />
-        </div>
+      <div class="animated-background">
+        <slot />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['thumb']
-  }
+    props: ['thumb'],
+  };
 </script>
 <style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";

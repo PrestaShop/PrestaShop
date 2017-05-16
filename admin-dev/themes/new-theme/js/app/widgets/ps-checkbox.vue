@@ -7,21 +7,17 @@
 
 <script>
   export default {
-    props: ['id','model'],
-    data() {
-      return {
-        checked: false
-      }
-    },
-    watch : {
+    props: ['id', 'model'],
+    watch: {
       checked(val) {
         this.$emit('checked', {
           checked: val,
-          item: this.model
+          item: this.model,
         });
-      }
-    }
-  }
+      },
+    },
+    data: () => ({ checked: false }),
+  };
 </script>
 <style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";

@@ -40,12 +40,12 @@
       hasCheckbox: Boolean,
       translations: {
         type: Object,
-        required: false
-      }
+        required: false,
+      },
     },
     methods: {
       onCheck(obj) {
-       this.$emit('checked', obj);
+        this.$emit('checked', obj);
       },
       expand() {
         EventBus.$emit('expand');
@@ -55,12 +55,12 @@
       },
       setCurrentEl(id) {
         EventBus.$emit('setCurrentEl', id);
-      }
+      },
     },
     components: {
-      PSTreeItem
-    }
-  }
+      PSTreeItem,
+    },
+  };
 </script>
 
 <style lang="sass" scoped>

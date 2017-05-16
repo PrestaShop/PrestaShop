@@ -36,24 +36,24 @@
     props: {
       model: {
         type: Object,
-        required: true
+        required: true,
       },
       className: {
         type: String,
-        required: false
+        required: false,
       },
       hasCheckbox: {
         type: Boolean,
-        required: false
+        required: false,
       },
       translations: {
         type: Object,
-        required: false
+        required: false,
       },
       currentItem: {
         type: String,
-        required: false
-      }
+        required: false,
+      },
     },
     computed: {
       id() {
@@ -69,17 +69,15 @@
         return this.translations.extra ? this.translations.extra.replace('%d', this.model.extraLabel) : '';
       },
       chevron() {
-        if(!this.isFolder) {
-          return 'hidden';
-        }
+        return !this.isFolder ? 'hidden' : '';
       },
-      isWarning () {
+      isWarning() {
         return !this.isFolder && this.model.warning;
-      }
+      },
     },
     methods: {
       setCurrentEl(el) {
-        if(this.$refs[el]) {
+        if (this.$refs[el]) {
           this.clickItem();
           this.current = true;
           this.parentEl(this.$parent);
@@ -87,8 +85,8 @@
           this.current = false;
         }
       },
-      parentEl(parent){
-        if(parent.clickItem) {
+      parentEl(parent) {
+        if (parent.clickItem) {
           parent.clickItem();
           this.parentEl(parent.$parent);
         }
@@ -99,37 +97,35 @@
           this.open = !this.open;
         } else {
           EventBus.$emit('lastTreeItemClick', {
-            item: this.model
+            item: this.model,
           });
         }
       },
       onCheck(obj) {
         this.$emit('checked', obj);
-      }
-    },
-    components: {
-      PSCheckbox
-    },
-    data() {
-      return {
-        open: false,
-        current: false,
-      }
+      },
     },
     mounted() {
       EventBus.$on('toggleCheckbox', (tag) => {
-        let checkbox = this.$refs[tag];
-        if(checkbox) {
+        const checkbox = this.$refs[tag];
+        if (checkbox) {
           checkbox.$data.checked = !checkbox.$data.checked;
         }
-      }).$on('expand', _ => {
+      }).$on('expand', () => {
         this.open = true;
-      }).$on('reduce', _ => {
+      }).$on('reduce', () => {
         this.open = false;
       });
       this.setCurrentEl(this.currentItem);
     },
-  }
+    components: {
+      PSCheckbox,
+    },
+    data: () => ({
+      open: false,
+      current: false,
+    }),
+  };
 </script>
 
 <style lang="sass" scoped>

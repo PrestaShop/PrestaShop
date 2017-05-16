@@ -7,27 +7,25 @@
 <script>
  export default {
    props: {
-    primary: {
-      type: Boolean,
-      required: true
-    }
+     primary: {
+       type: Boolean,
+       required: true,
+     },
    },
    computed: {
-    buttonType() {
-      if(this.primary) {
-        return 'btn-primary'
-      }
-      else {
-        return 'btn-secondary'
-      }
-    }
+     buttonType() {
+       if (this.primary) {
+         return 'btn-primary';
+       }
+       return 'btn-secondary';
+     },
    },
    methods: {
      onClick() {
        this.$emit('click');
-     }
-   }
- }
+     },
+   },
+ };
 </script>
 
 <style lang="sass" scoped>

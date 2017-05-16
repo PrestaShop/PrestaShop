@@ -14,28 +14,28 @@
 <script>
   export default {
     props: {
-      alertType : {
+      alertType: {
         type: String,
-        required: true
+        required: true,
       },
       hasClose: {
         type: Boolean,
-        required: true
-      }
+        required: true,
+      },
     },
     computed: {
       classObject() {
         return {
           'alert-info': this.alertType === 'info',
           'alert-warning': this.alertType === 'warning',
-          'alert-danger': this.alertType === 'danger'
-        }
+          'alert-danger': this.alertType === 'danger',
+        };
       },
       isInfo() {
-        return this.alertType === 'info'
-      }
+        return this.alertType === 'info';
+      },
     },
-  }
+  };
 </script>
 
 <style lang="sass" scoped>

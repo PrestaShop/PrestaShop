@@ -1,0 +1,36 @@
+{
+  "extends": "airbnb-base",
+  "plugins": [
+    "import",
+    "html"
+  ],
+  "settings": {
+  "import/resolver": {
+    "webpack": {
+      "config": "../../webpack.config.js"
+      },
+      "alias": [
+        [
+          "app",
+          "../app"
+        ]
+      ]
+    }
+  },
+  "rules": {
+    "import/extensions": [
+      "error",
+      "always",
+      {
+        "js": "never",
+        "vue": "never"
+      }
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ]
+  }
+}

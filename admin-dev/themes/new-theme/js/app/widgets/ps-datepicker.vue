@@ -8,11 +8,13 @@
 </template>
 
 <script>
+  import $ from 'jquery';
+
   export default {
     mounted() {
-       $(this.$el).datetimepicker().on('dp.change', (infos) =>{
-         this.$emit('dpChange', infos);
-       });
-    }
-  }
+      $(this.$el).datetimepicker().on('dp.change', (infos) =>{
+        this.$emit('dpChange', infos);
+      });
+    },
+  };
 </script>

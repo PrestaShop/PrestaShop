@@ -6,14 +6,14 @@
 
 <script>
   export default {
-    props: ['order','isDesc'],
+    props: ['order', 'isDesc'],
     methods: {
       sortFilter() {
-        let desc = this.isDesc ? ' desc' : '';
+        const desc = this.isDesc ? ' desc' : '';
         this.$emit('sort', this.order, desc);
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 <style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";

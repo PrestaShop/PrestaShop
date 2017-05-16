@@ -20,46 +20,40 @@
 <script>
 
   export default {
-    props:['tags','placeholder'],
+    props: ['tags', 'placeholder'],
     computed: {
       inputSize() {
-         return (this.placeholder) ? this.placeholder.length : 0;
-      }
+        return this.placeholder ? this.placeholder.length : 0;
+      },
     },
     methods: {
       onKeyUp() {
         this.$emit('typing', this.$refs.tags.value);
       },
       add(tag) {
-        if(!tag) {
-          return false;
+        if (tag) {
+          this.tags.push(tag);
+          this.tag = '';
+          this.focus();
+          this.$emit('tagChange', this.tag);
         }
-        this.tags.push(tag);
-        this.tag = '';
-        this.focus();
-        this.$emit('tagChange', this.tag);
       },
       close(index) {
-
         this.tags.splice(index, 1);
         this.$emit('tagChange', this.tags[index]);
       },
       remove() {
-       if(!!this.tags.length) {
-        this.tags.pop();
-        this.$emit('tagChange', this.tag);
-       }
+        if (this.tags.length) {
+          this.tags.pop();
+          this.$emit('tagChange', this.tag);
+        }
       },
       focus() {
         this.$refs.tags.focus();
-      }
+      },
     },
-    data() {
-      return {
-        tag: ''
-      }
-    }
-  }
+    data: () => ({ tag: null }),
+  };
 </script>
 <style lang="sass">
   @import "~PrestaKit/scss/custom/_variables.scss";
