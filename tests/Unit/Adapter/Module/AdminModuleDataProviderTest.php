@@ -52,9 +52,9 @@ class AdminModuleDataProviderTest extends UnitTestCase
         }
 
         $this->setupSfKernel();
-        $this->sfRouter = $this->sfKernel->getContainer()->get('router');
         $this->translator = $this->sfKernel->getContainer()->get('translator');
         list($this->languageISOCode) = explode('-', $this->translator->getLocale());
+        $this->logger = $this->sfKernel->getContainer()->get('logger');
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()
@@ -104,7 +104,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
         $this->adminModuleDataProvider = new AdminModuleDataProvider(
             $this->translator,
-            $this->sfRouter,
+            $this->logger,
             $this->addonsDataProviderS,
             $this->categoriesProviderS,
             $this->cacheProviderS
@@ -158,7 +158,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
             array('convertJsonForNewCatalog'),
             array(
                 'languageISO' => $this->translator,
-                'router' => $this->sfRouter,
+                'logger' => $this->logger,
                 'addonsDataProvider' => $this->addonsDataProviderS,
                 'categoriesProvider' => $this->categoriesProviderS,
                 'cacheProvider' => $this->cacheProviderS,

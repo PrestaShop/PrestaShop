@@ -85,7 +85,7 @@ class ModuleRepositoryTest extends UnitTestCase
             ->willReturn(true);
 
         $this->setupSfKernel();
-        $this->sfRouter = $this->sfKernel->getContainer()->get('router');
+        $this->logger = $this->sfKernel->getContainer()->get('logger');
 
         $this->apiClientS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient')
             ->disableOriginalConstructor()
@@ -111,7 +111,7 @@ class ModuleRepositoryTest extends UnitTestCase
 
         $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
             array('getCatalogModulesNames'),
-            array($this->translatorStub, $this->sfRouter, $this->addonsDataProviderS, $this->categoriesProviderS)
+            array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS)
         );
 
         $this->adminModuleDataProviderStub
@@ -128,7 +128,7 @@ class ModuleRepositoryTest extends UnitTestCase
                     $this->addonsDataProviderS,
                     new AdminModuleDataProvider(
                         $this->translatorStub,
-                        $this->sfRouter,
+                        $this->logger,
                         $this->addonsDataProviderS,
                         $this->categoriesProviderS
                     )

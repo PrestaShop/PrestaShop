@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -46,26 +47,34 @@ class AdminModuleDataProvider implements ModuleInterface
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     private $languageISO;
-    private $router;
+    private $logger;
+    private $router = null;
     private $addonsDataProvider;
     private $categoriesProvider;
     private $cacheProvider;
+
     protected $catalog_modules = array();
     protected $catalog_modules_names;
+    public $failed = false;
 
     public function __construct(
         TranslatorInterface $translator,
-        Router $router = null,
+        LoggerInterface $logger,
         AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider,
         CacheProvider $cacheProvider = null
     ) {
         list($this->languageISO) = explode('-', $translator->getLocale());
 
-        $this->router = $router;
+        $this->logger = $logger;
         $this->addonsDataProvider = $addonsDataProvider;
         $this->categoriesProvider = $categoriesProvider;
         $this->cacheProvider = $cacheProvider;
+    }
+
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
     }
 
     public function clearCatalogCache()
@@ -86,7 +95,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function getCatalogModules(array $filters = array())
     {
-        if (count($this->catalog_modules) === 0) {
+        if (count($this->catalog_modules) === 0 && !$this->failed) {
             $this->loadCatalogData();
         }
 
@@ -294,7 +303,8 @@ class AdminModuleDataProvider implements ModuleInterface
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
                     $this->catalog_modules = array();
-                    throw new \Exception('Data from PrestaShop Addons is invalid, and cannot fallback on cache', 0, $e);
+                    $this->failed = true;
+                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', array('exception' => $e->getMessage()));
                 }
             }
         }
