@@ -304,7 +304,7 @@ class ModuleController extends FrameworkBundleAdminController
                         array(
                             '%module%' => $module,
                             '%action%' => $action, ),
-                        'Admin.Notifications.Error'
+                        'Admin.Modules.Notification'
                         );
                 } elseif ($response[$module]['status'] === false) {
                     $error = $moduleManager->getError($module);
@@ -314,7 +314,7 @@ class ModuleController extends FrameworkBundleAdminController
                             '%action%' => str_replace('_', ' ', $action),
                             '%module%' => $module,
                             '%error_details%' => $error, ),
-                        'Admin.Notifications.Error'
+                        'Admin.Modules.Notification'
                     );
                 } else {
                     $response[$module]['msg'] = $translator->trans(
@@ -322,7 +322,7 @@ class ModuleController extends FrameworkBundleAdminController
                         array(
                             '%action%' => ucfirst(str_replace('_', ' ', $action)),
                             '%module%' => $module, ),
-                        'Admin.Notifications.Success'
+                        'Admin.Modules.Notification'
                     );
                 }
             } catch (Exception $e) {
@@ -333,7 +333,7 @@ class ModuleController extends FrameworkBundleAdminController
                             '%action%' => str_replace('_', ' ', $action),
                             '%module%' => $module,
                             '%error_details%' => $e->getMessage(), ),
-                    'Admin.Notifications.Error'
+                    'Admin.Modules.Notification'
                 );
 
                 $logger = $this->get('logger');

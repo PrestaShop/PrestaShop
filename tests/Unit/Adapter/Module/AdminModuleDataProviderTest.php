@@ -43,11 +43,6 @@ class AdminModuleDataProviderTest extends UnitTestCase
     {
         parent::setup();
 
-        return $this->markTestSkipped(
-            "Cannot use kernel in unit tests while legacy is here. To fix when legacy will be fully refactored."
-        );
-
-        $this->languageISOCode = 'en';
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
 
@@ -58,6 +53,8 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
         $this->setupSfKernel();
         $this->sfRouter = $this->sfKernel->getContainer()->get('router');
+        $this->translator = $this->sfKernel->getContainer()->get('translator');
+        list($this->languageISOCode) = explode('-', $this->translator->getLocale());
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()
@@ -106,7 +103,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         Phake::when($this->cacheProviderS)->fetch($this->languageISOCode.'_addons_modules')->thenReturn($fakeModules);
 
         $this->adminModuleDataProvider = new AdminModuleDataProvider(
-            $this->languageISOCode,
+            $this->translator,
             $this->sfRouter,
             $this->addonsDataProviderS,
             $this->categoriesProviderS,
@@ -160,7 +157,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
             array('convertJsonForNewCatalog'),
             array(
-                'languageISO' => $this->languageISOCode,
+                'languageISO' => $this->translator,
                 'router' => $this->sfRouter,
                 'addonsDataProvider' => $this->addonsDataProviderS,
                 'categoriesProvider' => $this->categoriesProviderS,

@@ -39,10 +39,6 @@ class UrlGeneratorTest extends UnitTestCase
     {
         parent::setUp();
 
-        return $this->markTestSkipped(
-            "Cannot use kernel in unit tests while legacy is here. To fix when legacy will be fully refactored."
-        );
-
         $this->context->language = new \Language;
         $this->context->language->id = 42;
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');

@@ -74,7 +74,7 @@ services:
     prestashop.adapter.admin.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
         arguments:
-             - "@=service('prestashop.adapter.legacy.context').getEmployeeLanguageIso()"
+             - "@translator"
              - "@router"
              - "@prestashop.core.admin.data_provider.addons_interface"
              - "@prestashop.categories_provider"

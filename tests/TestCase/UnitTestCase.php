@@ -117,6 +117,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         Phake::when($this->context)->cloneContext()->thenReturn($this->context);
 
         $this->context->shop = Phake::mock('Shop');
+        $this->context->controller = new \stdClass;
         Context::setInstanceForTesting($this->context);
 
         $this->cache = Phake::mock('Cache');

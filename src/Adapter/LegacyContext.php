@@ -166,12 +166,12 @@ class LegacyContext
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
         $languages = \LanguageCore::getLanguages($active, $id_shop, $ids_only);
-        $defaultLanguageFirst = $this->getContext()->employee->id_lang;
+        $defaultLanguageFirst = $this->getLanguage();
         usort($languages, function ($a, $b) use ($defaultLanguageFirst) {
-            if ($a['id_lang'] == $defaultLanguageFirst) {
+            if ($a['id_lang'] == $defaultLanguageFirst->id) {
                 return -1; // $a is the default one.
             }
-            if ($b['id_lang'] == $defaultLanguageFirst) {
+            if ($b['id_lang'] == $defaultLanguageFirst->id) {
                 return 1; // $b is the default one.
             }
             return 0;

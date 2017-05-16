@@ -38,10 +38,6 @@ class ApiClientTest extends KernelTestCase
 
     public function setUp()
     {
-        return $this->markTestSkipped(
-            "Cannot use kernel in unit tests while legacy is here. To fix when legacy will be fully refactored."
-        );
-
         $kernel = $this->createKernel();
         $kernel->boot();
 

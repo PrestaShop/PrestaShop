@@ -72,10 +72,6 @@ class ModuleTabRegisterTest extends UnitTestCase
     public function setUp()
     {
         parent::setup();
-
-        return $this->markTestSkipped(
-            "Cannot use kernel in unit tests while legacy is here. To fix when legacy will be fully refactored."
-        );
         
         $this->setupSfKernel();
 
