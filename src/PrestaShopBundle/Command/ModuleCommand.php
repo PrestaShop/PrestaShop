@@ -65,7 +65,7 @@ class ModuleCommand extends ContainerAwareCommand
         $translator = $this->getContainer()->get('translator');
 
         if (!in_array($action, $this->allowedActions)) {
-            $msg = $translator->trans('Unknown module action. It must be one of these values: %actions%', array('%actions%' => implode(' / ', $this->allowedActions)), '<domain undefined>');
+            $msg = $translator->trans('Unknown module action. It must be one of these values: %actions%', array('%actions%' => implode(' / ', $this->allowedActions)), 'Admin.Modules.Notification');
             $formattedBlock = $formatter->formatBlock($msg, 'error', true);
             $output->writeln($formattedBlock);
             return;
