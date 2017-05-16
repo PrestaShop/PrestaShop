@@ -27,8 +27,9 @@
 namespace PrestaShopBundle\Service;
 
 use PrestaShopBundle\Entity\Translation;
+use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Validation;
 
 class TranslationService {
 
@@ -206,6 +207,7 @@ class TranslationService {
     {
         $doctrine = $this->container->get('doctrine');
         $entityManager = $doctrine->getManager();
+        $logger = $this->container->get('logger');
 
         if (empty($theme)) {
             $theme = null;
@@ -235,6 +237,15 @@ class TranslationService {
             $translation->setTranslation($translationValue);
         }
 
+        $validator = Validation::createValidator();
+        $violations = $validator->validate($translation, new PassVsprintf());
+        if (0 !== count($violations)) {
+            foreach ($violations as $violation) {
+                $logger->error($violation->getMessage());
+            }
+            return false;
+        }
+
         $updatedTranslationSuccessfully = false;
 
         try {
@@ -243,7 +254,7 @@ class TranslationService {
 
             $updatedTranslationSuccessfully = true;
         } catch (\Exception $exception) {
-            $this->container->get('logger')->error($exception->getMessage());
+            $logger->error($exception->getMessage());
         }
 
         return $updatedTranslationSuccessfully;

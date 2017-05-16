@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
@@ -305,20 +304,9 @@ class ModuleController extends FrameworkBundleAdminController
                         '%module% did not return a valid response on %action% action.',
                         array(
                             '%module%' => $module,
-<<<<<<< d510188f37a12d27c1f08601b5c9a1c95ad35b90
                             '%action%' => $action, ),
                         'Admin.Modules.Notification'
-                        );
-||||||| merged common ancestors
-                            '%action%' => $action, ),
-                        'Admin.Notifications.Error'
-                        );
-=======
-                            '%action%' => $action,
-                        ),
-                        'Admin.Notifications.Error'
                     );
->>>>>>> CO: some refacto on controllers..
                 } elseif ($response[$module]['status'] === false) {
                     $error = $moduleManager->getError($module);
                     $response[$module]['msg'] = $translator->trans(
@@ -326,34 +314,16 @@ class ModuleController extends FrameworkBundleAdminController
                         array(
                             '%action%' => str_replace('_', ' ', $action),
                             '%module%' => $module,
-<<<<<<< d510188f37a12d27c1f08601b5c9a1c95ad35b90
                             '%error_details%' => $error, ),
                         'Admin.Modules.Notification'
-||||||| merged common ancestors
-                            '%error_details%' => $error, ),
-                        'Admin.Notifications.Error'
-=======
-                            '%error_details%' => $error,
-                        ),
-                        'Admin.Notifications.Error'
->>>>>>> CO: some refacto on controllers..
                     );
                 } else {
                     $response[$module]['msg'] = $translator->trans(
                         '%action% action on module %module% succeeded.',
                         array(
                             '%action%' => ucfirst(str_replace('_', ' ', $action)),
-<<<<<<< d510188f37a12d27c1f08601b5c9a1c95ad35b90
                             '%module%' => $module, ),
                         'Admin.Modules.Notification'
-||||||| merged common ancestors
-                            '%module%' => $module, ),
-                        'Admin.Notifications.Success'
-=======
-                            '%module%' => $module,
-                        ),
-                        'Admin.Notifications.Success'
->>>>>>> CO: some refacto on controllers..
                     );
                 }
             } catch (Exception $e) {
@@ -361,23 +331,10 @@ class ModuleController extends FrameworkBundleAdminController
                 $response[$module]['msg'] = $translator->trans(
                     'Exception thrown by module %module% on %action%. %error_details%',
                     array(
-<<<<<<< d510188f37a12d27c1f08601b5c9a1c95ad35b90
-                            '%action%' => str_replace('_', ' ', $action),
-                            '%module%' => $module,
-                            '%error_details%' => $e->getMessage(), ),
-                    'Admin.Modules.Notification'
-||||||| merged common ancestors
-                            '%action%' => str_replace('_', ' ', $action),
-                            '%module%' => $module,
-                            '%error_details%' => $e->getMessage(), ),
-                    'Admin.Notifications.Error'
-=======
                         '%action%' => str_replace('_', ' ', $action),
                         '%module%' => $module,
-                        '%error_details%' => $e->getMessage(),
-                    ),
-                    'Admin.Notifications.Error'
->>>>>>> CO: some refacto on controllers..
+                        '%error_details%' => $e->getMessage(), ),
+                    'Admin.Modules.Notification'
                 );
 
                 $logger = $this->get('logger');
