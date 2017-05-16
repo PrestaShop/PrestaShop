@@ -80,7 +80,7 @@ class ModuleCommand extends ContainerAwareCommand
                         array(
                             '%action%' => ucfirst(str_replace('_', ' ', $action)),
                             '%module%' => $moduleName, ),
-                        'Admin.Notifications.Success');
+                        'Admin.Modules.Notification');
             $formattedBlock = $formatter->formatBlock($msg, 'info', true);
             $output->writeln($formattedBlock);
             return;
@@ -93,7 +93,7 @@ class ModuleCommand extends ContainerAwareCommand
                 '%action%' => str_replace('_', ' ', $action),
                 '%module%' => $moduleName,
                 '%error_details%' => $error, ),
-            'Admin.Notifications.Error'
+            'Admin.Modules.Notification'
         );
         $formattedBlock = $formatter->formatBlock($msg, 'error', true);
         $output->writeln($formattedBlock);
