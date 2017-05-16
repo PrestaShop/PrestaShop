@@ -10,7 +10,7 @@
         "start-dev-server": "webpack-dev-server --config webpack.config.js"
     },
     "author": "PrestaShop",
-    "license": "OSL 3.0",
+    "license": "OSL-3.0",
     "devDependencies": {
         "PrestaKit": "git+https://github.com/PrestaShop/prestashop-ui-kit.git",
         "autoprefixer": "^6.7.7",

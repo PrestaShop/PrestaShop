@@ -8,7 +8,7 @@
         "watch": "webpack -w"
     },
     "author": "PrestaShop",
-    "license": "OSL 3.0",
+    "license": "OSL-3.0",
     "devDependencies": {
         "jquery": "^2.1.4",
         "babel-loader": "^5.3.2",

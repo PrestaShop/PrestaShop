@@ -10251,7 +10251,6 @@ ul.category-tree {
     overflow-x: hidden; }
     #attributes-list .attribute-group .attributes .two-columns {
       -webkit-columns: 2;
-         -moz-columns: 2;
               columns: 2; }
     #attributes-list .attribute-group .attributes .attribute .js-attribute-checkbox {
       display: none; }

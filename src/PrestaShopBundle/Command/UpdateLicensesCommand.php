@@ -300,7 +300,7 @@ class UpdateLicensesCommand extends Command
 
         $content = (array) json_decode($file->getContents());
         $content['author'] = 'PrestaShop';
-        $content['license'] = $this->isAFLLicense($file->getRelativePathname()) ? 'AFL-3.0' : 'OSL 3.0';
+        $content['license'] = $this->isAFLLicense($file->getRelativePathname()) ? 'AFL-3.0' : 'OSL-3.0';
 
         return file_put_contents($file->getRelativePathname(), json_encode($content, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
     }
