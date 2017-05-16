@@ -88,6 +88,7 @@ class ConfigurationTestCore
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
+                'fopen' => false,
             ));
         }
 
@@ -104,7 +105,6 @@ class ConfigurationTestCore
     {
         return array(
             'new_phpversion' => false,
-            'fopen' => false,
             'gz' => false,
             'mbstring' => false,
             'dom' => false,
