@@ -550,15 +550,11 @@ class ProductPresenter
     public function addFeaturesToDisplay($presentedProduct)
     {
         $features = array();
-        foreach ($presentedProduct['features'] as $key => $feature) {
-            if ($key === 0) {
-                $features[0] = $presentedProduct['features'][0];
+        foreach ($presentedProduct['features'] as $feature) {
+            if (array_key_exists($feature['name'], $features)) {
+                $features[$feature['name']]['value'] .= "\n" . $feature['value'];
             } else {
-                if (array_search($feature['id_feature'], array_column($features, 'id_feature')) !== false) {
-                    $features[array_search($feature['id_feature'], array_column($features, 'id_feature'))]['value'] .= "\n" . $feature['value'];
-                } else {
-                    array_push($features, $feature);
-                }
+                $features[$feature['name']] = $feature;
             }
         }
         $presentedProduct['feature_to_display'] = $features;

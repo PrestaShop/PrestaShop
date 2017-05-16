@@ -50,19 +50,19 @@
     </div>
   {/block}
 
-    {block name='product_features'}
-      {if $product.feature_to_display}
-        <section class="product-features">
-          <h3 class="h6">{l s='Data sheet' d='Shop.Theme.Catalog'}</h3>
-          <dl class="data-sheet">
-            {foreach from=$product.feature_to_display item=feature}
-              <dt class="name">{$feature.name}</dt>
-              <dd class="value">{$feature.value|nl2br nofilter}</dd>
-            {/foreach}
-          </dl>
-        </section>
-      {/if}
-    {/block}
+  {block name='product_features'}
+    {if $product.feature_to_display}
+      <section class="product-features">
+        <h3 class="h6">{l s='Data sheet' d='Shop.Theme.Catalog'}</h3>
+        <dl class="data-sheet">
+          {foreach from=$product.feature_to_display item=feature}
+            <dt class="name">{$feature.name}</dt>
+            <dd class="value">{$feature.value|nl2br nofilter}</dd>
+          {/foreach}
+        </dl>
+      </section>
+    {/if}
+  {/block}
 
   {* if product have specific references, a table will be added to product details section *}
   {block name='product_specific_references'}
