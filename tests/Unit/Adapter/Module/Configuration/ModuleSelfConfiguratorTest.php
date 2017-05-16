@@ -244,6 +244,9 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $moduleS
             ->method('onMobileEnable')
             ->willReturn(true);
+        $moduleS
+            ->method('hasValidInstance')
+            ->willReturn(true);
 
         $this->moduleRepository = $this->getMockBuilder('PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository')
             ->disableOriginalConstructor()
