@@ -110,15 +110,15 @@
   <configuration id="PS_PRODUCT_PICTURE_HEIGHT" name="PS_PRODUCT_PICTURE_HEIGHT">
     <value>64</value>
   </configuration>
-    <configuration id="PS_INVOICE_PREFIX" name="PS_INVOICE_PREFIX">
-      <value>#IN</value>
-    </configuration>
-    <configuration id="PS_INVCE_INVOICE_ADDR_RULES" name="PS_INVCE_INVOICE_ADDR_RULES">
-      <value>{"avoid":[]}</value>
-    </configuration>
-    <configuration id="PS_INVCE_DELIVERY_ADDR_RULES" name="PS_INVCE_DELIVERY_ADDR_RULES">
-      <value>{"avoid":[]}</value>
-    </configuration>
+  <configuration id="PS_INVOICE_PREFIX" name="PS_INVOICE_PREFIX">
+    <value>#IN</value>
+  </configuration>
+  <configuration id="PS_INVCE_INVOICE_ADDR_RULES" name="PS_INVCE_INVOICE_ADDR_RULES">
+    <value>{"avoid":[]}</value>
+  </configuration>
+  <configuration id="PS_INVCE_DELIVERY_ADDR_RULES" name="PS_INVCE_DELIVERY_ADDR_RULES">
+    <value>{"avoid":[]}</value>
+  </configuration>
   <configuration id="PS_DELIVERY_PREFIX" name="PS_DELIVERY_PREFIX">
     <value>#DE</value>
   </configuration>
@@ -816,6 +816,9 @@ Country</value>
     </configuration>
     <configuration id="PS_MAINTENANCE_TEXT" name="PS_MAINTENANCE_TEXT">
       <value/>
+    </configuration>
+    <configuration id="PS_PRODUCT_SHORT_DESC_LIMIT" name="PS_PRODUCT_SHORT_DESC_LIMIT">
+      <value>800</value>
     </configuration>
   </entities>
 </entity_configuration>
