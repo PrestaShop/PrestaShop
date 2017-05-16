@@ -178,7 +178,6 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         require_once __DIR__.'/../../app/autoload.php';
         require_once __DIR__.'/../../app/AppKernel.php';
         $this->sfKernel = new \AppKernel('test', true);
-        $this->sfKernel->loadClassCache();
         $this->sfKernel->boot();
 
         return $this->sfKernel;
