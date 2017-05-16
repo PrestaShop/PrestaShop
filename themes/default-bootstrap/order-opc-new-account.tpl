@@ -57,7 +57,7 @@
 					<input type="hidden" id="is_new_customer" name="is_new_customer" value="0" />
 					<input type="hidden" id="opc_id_customer" name="opc_id_customer" value="{if isset($guestInformations) && isset($guestInformations.id_customer) && $guestInformations.id_customer}{$guestInformations.id_customer}{else}0{/if}" />
 					<input type="hidden" id="opc_id_address_delivery" name="opc_id_address_delivery" value="{if isset($guestInformations) && isset($guestInformations.id_address_delivery) && $guestInformations.id_address_delivery}{$guestInformations.id_address_delivery}{else}0{/if}" />
-					<input type="hidden" id="opc_id_address_invoice" name="opc_id_address_invoice" value="{if isset($guestInformations) && isset($guestInformations.id_address_delivery) && $guestInformations.id_address_delivery}{$guestInformations.id_address_delivery}{else}0{/if}" />
+					<input type="hidden" id="opc_id_address_invoice" name="opc_id_address_invoice" value="{if isset($guestInformations) && isset($guestInformations.id_address_invoice) && $guestInformations.id_address_invoice}{$guestInformations.id_address_invoice}{else}0{/if}" />
 					<p class="required"><sup>*</sup>{l s='Required field'}</p>
 					<div class="required text form-group">
 						<label for="email">{l s='Email'} <sup>*</sup></label>
