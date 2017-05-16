@@ -1645,6 +1645,9 @@ var formImagesProduct = (function() {
     'form': function(id) {
       dropZoneElem.find(".dz-preview.active").removeClass("active");
       dropZoneElem.find(".dz-preview[data-id='"+id+"']").addClass("active");
+      if(imagesProduct.shouldDisplayExpander() == false){
+        dropZoneElem.css('height','auto');
+      }
       $.ajax({
         url: dropZoneElem.find(".dz-preview[data-id='"+id+"']").attr('url-update'),
         success: function(response) {
@@ -1713,6 +1716,7 @@ var formImagesProduct = (function() {
     },
     'close': function() {
       toggleColDropzone(true);
+      dropZoneElem.css('height','');
       formZoneElem.find('#product-images-form').html('');
       formZoneElem.hide();
       dropZoneElem.find(".dz-preview.active").removeClass("active");
