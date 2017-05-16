@@ -88,7 +88,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
         
     prestashop.adapter.module.self_configurator:
-        class: PrestaShop\PrestaShop\Adapter\Module\ModuleSelfConfigurator
+        class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator
         arguments:
             - "@prestashop.core.admin.module.repository"
             - "@prestashop.adapter.legacy.configuration"

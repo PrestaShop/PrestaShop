@@ -206,7 +206,7 @@ class ModuleSelfConfigurator
             }
         }
 
-        if ($this->module && $this->moduleRepository->getModule($this->module)->hasValidInstance()) {
+        if (!$this->module || !$this->moduleRepository->getModule($this->module)->hasValidInstance()) {
             $errors[] = 'The module specified is invalid';
         }
         
