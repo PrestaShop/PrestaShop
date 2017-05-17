@@ -170,7 +170,7 @@ class TranslationController extends ApiController
                 );
             }
 
-            // $this->clearCache();
+             $this->clearCache();
 
             return new JsonResponse($response, 200);
 
@@ -215,7 +215,7 @@ class TranslationController extends ApiController
                 );
             }
 
-            // $this->clearCache();
+             $this->clearCache();
 
             return new JsonResponse($response, 200);
 
