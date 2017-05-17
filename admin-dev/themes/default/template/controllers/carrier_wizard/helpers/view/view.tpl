@@ -30,19 +30,19 @@
 	var labelPrevious = '{$labels.previous|addslashes}';
 	var	labelFinish = '{$labels.finish|addslashes}';
 	var	labelDelete = '{l s='Delete' d='Admin.Actions' js=1}';
-	var	labelValidate = '{l s='Validate' js=1}';
+	var	labelValidate = '{l s='Validate' js=1 d='Admin.Actions'}';
 	var validate_url = '{$validate_url|addslashes}';
 	var carrierlist_url = '{$carrierlist_url|addslashes}';
 	var nbr_steps = {$wizard_steps.steps|count};
 	var enableAllSteps = {if $enableAllSteps|intval == 1}true{else}false{/if};
-	var need_to_validate = '{l s='Please validate the last range before create a new one.' js=1}';
-	var delete_range_confirm = '{l s='Are you sure to delete this range ?' js=1}';
+	var need_to_validate = '{l s='Please validate the last range before creating a new one.' js=1 d='Admin.Shipping.Notification'}';
+	var delete_range_confirm = '{l s='Are you sure to delete this range ?' js=1 d='Admin.Shipping.Notification'}';
 	var currency_sign = '{$currency_sign}';
 	var PS_WEIGHT_UNIT = '{$PS_WEIGHT_UNIT}';
-	var invalid_range = '{l s='This range is not valid' js=1}';
-	var overlapping_range = '{l s='Ranges are overlapping' js=1}';
-	var range_is_overlapping = '{l s='Ranges are overlapping' js=1}';
-	var select_at_least_one_zone = '{l s='Please select at least one zone' js=1}';
+	var invalid_range = '{l s='This range is not valid' js=1 d='Admin.Shipping.Notification'}';
+	var overlapping_range = '{l s='Ranges are overlapping' js=1 d='Admin.Shipping.Notification'}';
+	var range_is_overlapping = '{l s='Ranges are overlapping' js=1 d='Admin.Shipping.Notification'}';
+	var select_at_least_one_zone = '{l s='Please select at least one zone' js=1 d='Admin.Shipping.Notification'}';
 	var multistore_enable = '{$multistore_enable}';
 </script>
 
