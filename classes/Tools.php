@@ -408,20 +408,20 @@ class ToolsCore
     * Get a value from $_POST / $_GET
     * if unavailable, take a default value
     *
-    * @param string $key Value key
-    * @param mixed $default_value (optional)
-    * @return mixed Value
+    * @param string     $key          Value key
+    * @param mixed|null $defaultValue (optional)
+    * @return mixed|null Value
     */
-    public static function getValue($key, $default_value = false)
+    public static function getValue($key, $defaultValue = null)
     {
         if (!isset($key) || empty($key) || !is_string($key)) {
-            return false;
+            return $defaultValue;
         }
 
         if (getenv('kernel.environment') === 'test' && self::$request instanceof Request) {
-            $value = self::$request->request->get($key, self::$request->query->get($key, $default_value));
+            $value = self::$request->request->get($key, self::$request->query->get($key, $defaultValue));
         } else {
-            $value = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default_value));
+            $value = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $defaultValue));
         }
 
         if (is_string($value)) {

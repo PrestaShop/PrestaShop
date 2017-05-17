@@ -66,7 +66,7 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('world', Tools::getValue('hello'));
     }
 
-    public function testGetValueAcceptsOnlyTruthyStringsAsKeys()
+    public function testGetValueReturnsDefaultValueWhenKeyIsEmptyOrNull()
     {
         $this->setPostAndGet(array(
             '' => true,
@@ -74,9 +74,9 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
             null => true
         ));
 
-        $this->assertEquals(false, Tools::getValue('', true));
+        $this->assertEquals('default', Tools::getValue('', 'default'));
         $this->assertEquals(true, Tools::getValue(' '));
-        $this->assertEquals(false, Tools::getValue(null, true));
+        $this->assertEquals('default', Tools::getValue(null, 'default'));
     }
 
     public function testGetValueStripsNullCharsFromReturnedStringsExamples()
