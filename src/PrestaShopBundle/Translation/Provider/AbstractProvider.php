@@ -116,6 +116,13 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getDefaultCatalogue($empty = true) {
+
+    }
+
+    /**
      * Get the Catalogue from xliff files only.
      *
      * @return MessageCatalogue A MessageCatalogue instance
