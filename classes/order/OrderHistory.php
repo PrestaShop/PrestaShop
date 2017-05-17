@@ -327,10 +327,8 @@ class OrderHistoryCore extends ObjectModel
         $order->valid = $new_os->logable;
         $order->update();
 
-        if ($new_os->invoice && !$order->invoice_number) {
+        if (($new_os->invoice && !$order->invoice_number) || ($new_os->delivery && !$order->delivery_number)) {
             $order->setInvoice($use_existing_payment);
-        } elseif ($new_os->delivery && !$order->delivery_number) {
-            $order->setDeliverySlip();
         }
 
         // set orders as paid
