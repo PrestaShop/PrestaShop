@@ -20,7 +20,7 @@
 
   export default {
     name: 'app',
-    computed : {
+    computed: {
       isReady() {
         return this.$store.getters.isReady;
       },
@@ -28,27 +28,28 @@
         return this.$store.getters.totalPages;
       },
       currentPagination() {
-         return this.$store.getters.pageIndex;
-      }
+        return this.$store.getters.pageIndex;
+      },
     },
     methods: {
       onPageChanged(pageIndex) {
-        let desc = this.$route.name === 'overview' ? '' : ' desc';
+        const desc = this.$route.name === 'overview' ? '' : ' desc';
         this.$store.dispatch('updatePageIndex', pageIndex);
         this.fetch(desc);
       },
       fetch(desc) {
-        let action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-        if(!desc) {
-          desc = this.$route.name === 'overview' ? '' : ' desc';
+        let sorting = desc;
+        const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
+        if (typeof desc !== 'string') {
+          sorting = this.$route.name === 'overview' ? '' : ' desc';
         }
         this.$store.dispatch('isLoading');
 
         this.$store.dispatch(action, Object.assign(this.filters, {
-          order: `${this.$store.getters.order}${desc}`,
+          order: `${this.$store.getters.order}${sorting}`,
           page_size: this.$store.state.productsPerPage,
           page_index: this.$store.getters.pageIndex,
-          keywords: this.$store.getters.keywords
+          keywords: this.$store.getters.keywords,
         }));
       },
       onSearch(keywords) {
@@ -58,19 +59,17 @@
       applyFilter(filters) {
         this.filters = filters;
         this.fetch();
-      }
-    },
-    data() {
-      return {
-        filters: {}
-      }
+      },
     },
     components: {
       StockHeader,
       Search,
-      PSPagination
+      PSPagination,
     },
-  }
+    data: () => ({
+      filters: {},
+    }),
+  };
 </script>
 
 <style lang="sass">

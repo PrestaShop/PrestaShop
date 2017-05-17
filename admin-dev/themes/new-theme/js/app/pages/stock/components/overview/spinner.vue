@@ -4,7 +4,7 @@
     :class="classObject"
     @mouseover="focusIn"
     @mouseleave="focusOut($event)"
-    @submit.prevent="sendQty($event)"
+    @submit.prevent="sendQty"
   >
     <input
       name="qty"
@@ -28,52 +28,39 @@
   export default {
     props: ['product'],
     mounted() {
-      let self = this;
+      const self = this;
       $(`#${this.id}`).spinner({
         spin(event, ui) {
           self.value = ui.value;
           self.isEnabled = !!self.value;
-        }
+        },
       });
     },
     computed: {
-      qty () {
-        if(!this.product.qty) {
-          this.isActive = this.isEnabled = false;
-          this.value = this.product.qty = null;
+      qty() {
+        if (!this.product.qty) {
+          this.isActive = false;
+          this.isEnabled = false;
+          this.value = null;
+          this.product.qty = null;
         }
         return this.product.qty;
       },
-      id () {
+      id() {
         return `qty-${this.product.product_id}-${this.product.combination_id}`;
       },
       classObject() {
         return {
           active: this.isActive,
-          disabled: !this.isEnabled
-        }
-      }
-    },
-    data() {
-      return {
-        value: null,
-        isActive: false,
-        isEnabled: false
-      }
-    },
-    watch: {
-      value(val) {
-        this.$store.commit('UPDATE_PRODUCT_QTY', {
-          product_id: this.product.product_id,
-          combination_id: this.product.combination_id,
-          delta: val
-        });
-      }
+          disabled: !this.isEnabled,
+        };
+      },
     },
     methods: {
       onKeyup(val) {
-        if(!isNaN(parseInt(val))) {
-          this.isActive = this.isEnabled = true;
+        if (!isNaN(parseInt(val, 10))) {
+          this.isActive = true;
+          this.isEnabled = true;
           this.value = val;
         }
       },
@@ -81,30 +68,40 @@
         this.isActive = true;
       },
       focusOut(event) {
-        if(!$(event.relatedTarget).hasClass('check-button') && !this.value) {
+        if (!$(event.relatedTarget).hasClass('check-button') && !this.value) {
           this.isActive = false;
         }
         this.isEnabled = !!this.value;
       },
-      sendQty(event) {
-        let apiRootUrl = data.apiRootUrl.replace(/\?.*/,'');
-        let apiEditProductsUrl = `${apiRootUrl}/product/${this.product.product_id}`
-        let apiEditCombinationsUrl = `${apiRootUrl}/product/${this.product.product_id}/combination/${this.product.combination_id}`;
-        let postUrl = this.product.combination_id ? apiEditCombinationsUrl : apiEditProductsUrl;
-
-        // POST when qty !=0
-
-        if(this.product.qty && !isNaN(parseInt(this.value))) {
+      sendQty() {
+        const postUrl = this.product.edit_url;
+        if (this.product.qty && !isNaN(parseInt(this.value, 10))) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
-            delta: this.value
+            delta: this.value,
           });
-          this.isActive = this.isEnabled = false;
-          this.value = this.product.qty = null;
+          this.isActive = false;
+          this.isEnabled = false;
+          this.value = null;
+          this.product.qty = null;
         }
-      }
-    }
-  }
+      },
+    },
+    watch: {
+      value(val) {
+        this.$store.dispatch('updateProductQty', {
+          product_id: this.product.product_id,
+          combination_id: this.product.combination_id,
+          delta: val,
+        });
+      },
+    },
+    data: () => ({
+      value: null,
+      isActive: false,
+      isEnabled: false,
+    }),
+  };
 </script>
 
 <style lang="sass" scoped>

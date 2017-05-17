@@ -17,9 +17,9 @@
       },
       isMovements() {
         return this.$route.name === 'movements';
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 
 <style lang="sass" scoped>

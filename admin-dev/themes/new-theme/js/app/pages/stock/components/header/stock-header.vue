@@ -13,9 +13,9 @@
   export default {
     components: {
       Breadcrumb,
-      Tabs
-    }
-  }
+      Tabs,
+    },
+  };
 </script>
 
 <style lang="sass" scoped>

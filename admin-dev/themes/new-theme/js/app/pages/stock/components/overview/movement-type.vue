@@ -25,22 +25,22 @@
       },
       classObject() {
         return {
-          'btn-primary': !this.disabled
-        }
-      }
+          'btn-primary': !this.disabled,
+        };
+      },
     },
     methods: {
       sendQty() {
-        let postUrl = `${data.apiRootUrl.replace(/\?.*/,'')}/products`;
+        const postUrl = window.data.bulkEditProductsUrl;
         this.$store.dispatch('updateQtyByProductsId', {
-          url: postUrl
+          url: postUrl,
         });
-      }
+      },
     },
     components: {
-      PSButton
-    }
-  }
+      PSButton,
+    },
+  };
 </script>
 <style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";

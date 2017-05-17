@@ -25,7 +25,7 @@
     components: {
       Filters,
       PSTags,
-      PSButton
+      PSButton,
     },
     methods: {
       onSearch() {
@@ -33,19 +33,15 @@
       },
       applyFilter(filters) {
         this.$emit('applyFilter', filters);
-      }
+      },
     },
     watch: {
-      '$route' () {
+      $route() {
         this.tags = [];
-      }
+      },
     },
-    data() {
-      return {
-        tags:[]
-      }
-    }
-  }
+    data: () => ({ tags: [] }),
+  };
 </script>
 <style lang="sass">
   @import "~PrestaKit/scss/custom/_variables.scss";

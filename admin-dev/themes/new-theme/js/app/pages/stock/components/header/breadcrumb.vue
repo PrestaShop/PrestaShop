@@ -16,11 +16,11 @@
         return this.$route.name === 'overview';
       },
       catalogLink() {
-        return data.catalogUrl;
+        return window.data.catalogUrl;
       },
       stockLink() {
-        return data.stockUrl;
-      }
-    }
-  }
+        return window.data.stockUrl;
+      },
+    },
+  };
 </script>

@@ -34,7 +34,7 @@ Vue.use(VueResource);
 const state = {
   productsToUpdate: [],
   products: [],
-  hasQty: false
+  hasQty: false,
 };
 
 // getters
@@ -74,8 +74,7 @@ const actions = {
 // mutations
 const mutations = {
   [types.ADD_PRODUCTS](state, products) {
-
-    _.forEach(products, (product) => {
+    _.forEach(products.data, (product) => {
       product.qty = 0;
     });
 
@@ -83,9 +82,9 @@ const mutations = {
   },
 
   [types.UPDATE_PRODUCT](state, updatedProduct) {
-    let index = _.findIndex(state.products.data, {
-      'product_id': updatedProduct.product_id,
-      'combination_id': updatedProduct.combination_id
+    const index = _.findIndex(state.products.data, {
+      product_id: updatedProduct.product_id,
+      combination_id: updatedProduct.combination_id,
     });
     updatedProduct.qty = 0;
     state.products.data.splice(index, 1, updatedProduct);
@@ -94,9 +93,9 @@ const mutations = {
   [types.UPDATE_PRODUCTS](state, updatedProducts) {
     state.productsToUpdate = [];
     _.forEach(updatedProducts, (product) => {
-      let index = _.findIndex(state.products.data, {
-        'product_id': product.product_id,
-        'combination_id': product.combination_id
+      const index = _.findIndex(state.products.data, {
+        product_id: product.product_id,
+        combination_id: product.combination_id,
       });
       product.qty = 0;
       state.products.data.splice(index, 1, product);
@@ -107,14 +106,14 @@ const mutations = {
   [types.UPDATE_PRODUCT_QTY](state, updatedProduct) {
     let hasQty = false;
 
-    let index = _.findIndex(state.productsToUpdate, {
-      'product_id': updatedProduct.product_id,
-      'combination_id': updatedProduct.combination_id
+    const index = _.findIndex(state.productsToUpdate, {
+      product_id: updatedProduct.product_id,
+      combination_id: updatedProduct.combination_id,
     });
 
-    let productToUpdate = _.find(state.products.data, {
-      'product_id': updatedProduct.product_id,
-      'combination_id': updatedProduct.combination_id
+    const productToUpdate = _.find(state.products.data, {
+      product_id: updatedProduct.product_id,
+      combination_id: updatedProduct.combination_id,
     });
 
     _.forEach(state.products.data, (product) => {
@@ -129,15 +128,15 @@ const mutations = {
     if (index !== -1) {
       return state.productsToUpdate.splice(index, 1, updatedProduct);
     }
-    if(updatedProduct.delta) {
+    if (updatedProduct.delta) {
       state.productsToUpdate.push(updatedProduct);
     }
-  }
+  },
 };
 
 export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

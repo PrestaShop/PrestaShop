@@ -69,17 +69,18 @@
         return this.$store.getters.movements;
       },
       emptyMovements() {
-        if(this.$store.getters.movements) {
+        if (this.$store.getters.movements) {
           return !this.$store.getters.movements.length;
         }
-      }
+        return null;
+      },
     },
     methods: {
       toggleSort(order, desc) {
         this.isSorted = !this.isSorted;
         this.$store.dispatch('updateOrder', order);
         this.$emit('fetch', desc);
-      }
+      },
     },
     mounted() {
       this.$store.dispatch('updatePageIndex', 1);
@@ -89,17 +90,13 @@
       this.$store.dispatch('updateOrder', 'date_add');
       this.$emit('fetch', DEFAULT_SORT);
     },
-    data() {
-      return {
-        isSorted: true
-      }
-    },
     components: {
       PSTable,
       PSSort,
       PSAlert,
       PSLoader,
-      MovementLine
-    }
-  }
+      MovementLine,
+    },
+    data: () => ({ isSorted: true }),
+  };
 </script>

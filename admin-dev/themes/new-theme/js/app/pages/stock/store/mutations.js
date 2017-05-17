@@ -62,5 +62,5 @@ export default {
   },
   [types.SET_MOVEMENTS_TYPES](state, movementsTypes) {
     state.movementsTypes = movementsTypes;
-  }
+  },
 };

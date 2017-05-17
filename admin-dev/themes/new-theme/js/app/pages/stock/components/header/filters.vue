@@ -69,7 +69,7 @@
   import _ from 'lodash';
 
   export default {
-    computed : {
+    computed: {
       isOverview() {
         return this.$route.name === 'overview';
       },
@@ -78,102 +78,93 @@
       },
       movementsTypes() {
         let displayName;
-        let movements = [];
+        const movements = [];
 
-        return this.$store.getters.movementsTypes.filter(movement => {
-          if(displayName !== movement.name) {
+        return this.$store.getters.movementsTypes.filter((movement) => {
+          if (displayName !== movement.name) {
             displayName = movement.name;
             movements.push(movement);
             return movements;
           }
-          else {
-            let item = _.find(movements, {
-              name : displayName
-            });
+          const item = _.find(movements, {
+            name: displayName,
+          });
+          const clone = Object.assign(item, {
+            id_stock_mvt_reason: [item.id_stock_mvt_reason]
+          });
 
-
-            let clone = Object.assign(item, {
-              id_stock_mvt_reason: [item.id_stock_mvt_reason]
-            });
-
-            clone.id_stock_mvt_reason.push(movement.id_stock_mvt_reason);
-          }
+          return clone.id_stock_mvt_reason.push(movement.id_stock_mvt_reason);
         });
       },
       categoriesList() {
         return this.$store.getters.categories;
-      }
+      },
     },
     methods: {
       onClick() {
         this.applyFilter();
       },
       onFilterActive(list, type) {
-        if(type === 'supplier') {
+        if (type === 'supplier') {
           this.suppliers = list;
-        }
-        else {
+        } else {
           this.categories = list;
         }
 
-        if(!this.suppliers.length && !this.categories.length) {
+        if (!this.suppliers.length && !this.categories.length) {
           this.disabled = true;
+        } else {
+          this.disabled = false;
         }
-        else {
-          this.disabled= false;
-        }
-        if(!list.length) {
+        if (!list.length) {
           this.applyFilter();
         }
       },
       applyFilter() {
         this.$store.dispatch('isLoading');
         this.$emit('applyFilter', {
-          suppliers : this.suppliers,
+          suppliers: this.suppliers,
           categories: this.categories,
-          id_stock_mvt_reason : this.id_stock_mvt_reason,
+          id_stock_mvt_reason: this.id_stock_mvt_reason,
           id_employee: this.id_employee,
-          date_add: this.date_add
+          date_add: this.date_add,
         });
       },
       onChange(item) {
-        if(item.itemID === 'id_stock_mvt_reason') {
+        if (item.itemID === 'id_stock_mvt_reason') {
           this.id_stock_mvt_reason = item.value === 'default' ? [] : item.value;
-        }
-        else {
+        } else {
           this.id_employee = item.value === 'default' ? [] : item.value;
         }
         this.applyFilter();
       },
       onDpChange(event) {
-        let type = $(event.currentTarget).data('type');
+        const type = $(event.currentTarget).data('type');
         this.date_add[type] = event.date.unix();
-        if(event.oldDate) {
+        if (event.oldDate) {
           this.applyFilter();
         }
-      }
+      },
     },
     components: {
       FilterComponent,
       PSSelect,
       PSButton,
-      PSDatePicker
+      PSDatePicker,
     },
     mounted() {
       this.$store.dispatch('getSuppliers');
       this.$store.dispatch('getCategories');
     },
-    data() {
-      return {
-        disabled: true,
-        suppliers: [],
-        categories: [],
-        id_stock_mvt_reason : [],
-        id_employee: [],
-        date_add: {}
-      }
-    }
-  }
+    data: () => ({
+      disabled: true,
+      suppliers: [],
+      categories: [],
+      id_stock_mvt_reason: [],
+      id_employee: [],
+      date_add: {},
+    }),
+  };
 </script>
 
 <style lang="sass" scoped>

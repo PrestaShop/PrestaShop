@@ -15,12 +15,12 @@
     computed: {
       isLoading() {
         return this.$store.getters.isLoading;
-      }
+      },
     },
     methods: {
       sort(desc) {
         this.$emit('fetch', desc);
-      }
+      },
     },
     mounted() {
       this.$store.dispatch('updatePageIndex', 1);
@@ -31,7 +31,7 @@
     },
     components: {
       ProductsActions,
-      ProductsTable
-    }
-  }
+      ProductsTable,
+    },
+  };
 </script>

@@ -38,27 +38,27 @@ const state = {
   pageIndex: 1,
   totalPages: 0,
   productsPerPage: 100,
-  keywords:[],
+  keywords: [],
   suppliers: {
-    data: []
+    data: [],
   },
   categories: {
     data: {
       tree: {
         children: [
-        ]
-      }
-    }
+        ],
+      },
+    },
   },
   categoryList: [],
   movements: [],
   employees: [],
   movementsTypes: {
-    data: []
+    data: [],
   },
   translations: {},
   isLoading: false,
-  isReady: false
+  isReady: false,
 };
 
 // getters are functions
@@ -83,7 +83,7 @@ const getters = {
   },
   suppliers(state) {
     function convert(suppliers) {
-      suppliers.forEach((supplier)=>{
+      suppliers.forEach((supplier) => {
         supplier.id = supplier.supplier_id;
       });
       return suppliers;
@@ -92,7 +92,7 @@ const getters = {
   },
   categories(state) {
     function convert(categories) {
-      categories.forEach((category)=> {
+      categories.forEach((category) => {
         category.children = _.values(category.children);
         state.categoryList.push(category);
         category.id = `${category.id_parent}-${category.id_category}`;
@@ -122,7 +122,7 @@ const getters = {
   },
   isReady(state) {
     return state.isReady;
-  }
+  },
 };
 
 // A Vuex instance is created by combining the state, mutations, actions,
@@ -133,6 +133,6 @@ export default new Vuex.Store({
   actions,
   mutations,
   modules: {
-    products
-  }
+    products,
+  },
 });

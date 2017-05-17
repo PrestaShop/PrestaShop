@@ -53,24 +53,23 @@
         return !this.tags.length;
       },
       items() {
-        let matchList = [];
-        this.list.filter((data)=> {
-          let label = data[this.label].toLowerCase();
+        const matchList = [];
+        this.list.filter((data) => {
+          const label = data[this.label].toLowerCase();
           data.visible = false;
-          if(!!label.match(this.currentVal)) {
+          if (label.match(this.currentVal)) {
             data.visible = true;
             matchList.push(data);
           }
-          if(data.children) {
+          if (data.children) {
             this.hasChildren = true;
           }
           return data;
         });
 
-        if(matchList.length === 1) {
+        if (matchList.length === 1) {
           this.match = matchList[0];
-        }
-        else {
+        } else {
           this.match = null;
         }
         return this.list;
@@ -78,29 +77,27 @@
       PSTreeTranslations() {
         return {
           expand: this.trans('tree_expand'),
-          reduce: this.trans('tree_reduce')
-        }
-      }
+          reduce: this.trans('tree_reduce'),
+        };
+      },
     },
     methods: {
       onCheck(obj) {
-        let itemLabel = obj.item[this.label];
-        let filterType = this.hasChildren ? 'category' : 'supplier';
+        const itemLabel = obj.item[this.label];
+        const filterType = this.hasChildren ? 'category' : 'supplier';
 
-        if(obj.checked) {
+        if (obj.checked) {
           this.tags.push(itemLabel);
-        }
-        else {
-          let index = this.tags.indexOf(itemLabel);
-          if(this.splice) {
+        } else {
+          const index = this.tags.indexOf(itemLabel);
+          if (this.splice) {
             this.tags.splice(index, 1);
           }
           this.splice = true;
         }
-        if(this.tags.length) {
+        if (this.tags.length) {
           this.$emit('active', this.filterList(this.tags), filterType);
-        }
-        else {
+        } else {
           this.$emit('active', [], filterType);
         }
       },
@@ -108,28 +105,31 @@
         this.currentVal = val.toLowerCase();
       },
       onTagChanged(tag) {
-        if(this.tags.indexOf(this.currentVal) !== -1){
+        let checkedTag = tag;
+        if (this.tags.indexOf(this.currentVal) !== -1) {
           this.tags.pop();
         }
         this.splice = false;
-        if(this.match) {
-          tag = this.match[this.label];
+        if (this.match) {
+          checkedTag = this.match[this.label];
         }
-        EventBus.$emit('toggleCheckbox', tag);
+        EventBus.$emit('toggleCheckbox', checkedTag);
         this.currentVal = '';
       },
       filterList(tags) {
-        let idList = [];
-        let categoryList = this.$store.getters.categoryList;
-        let list = this.hasChildren ? categoryList : this.list;
+        const idList = [];
+        const categoryList = this.$store.getters.categoryList;
+        const list = this.hasChildren ? categoryList : this.list;
 
-        list.map((data)=> {
-          if(tags.indexOf(data[this.label]) !== -1 && idList.indexOf(Number(data[this.itemID])) === -1) {
+        list.map((data) => {
+          const isInIdList = idList.indexOf(Number(data[this.itemID])) === -1;
+          if (tags.indexOf(data[this.label]) !== -1 && isInIdList) {
             idList.push(Number(data[this.itemID]));
           }
+          return idList;
         });
         return idList;
-      }
+      },
     },
     data() {
       return {
@@ -137,15 +137,15 @@
         match: null,
         tags: [],
         splice: true,
-        hasChildren: false
-      }
+        hasChildren: false,
+      };
     },
     components: {
       PSTags,
       PSTree,
-      PSTreeItem
-    }
-  }
+      PSTreeItem,
+    },
+  };
 </script>
 
 <style lang="sass" scoped>

@@ -69,31 +69,30 @@
       PSSort,
       PSAlert,
       PSTable,
-      PSLoader
+      PSLoader,
     },
     methods: {
       toggleSort(order, desc) {
         this.isSorted = !this.isSorted;
         this.$store.dispatch('updateOrder', order);
         this.$emit('sort', desc);
-      }
+      },
     },
     computed: {
       products() {
-       return this.$store.getters.products;
+        return this.$store.getters.products;
       },
       emptyProducts() {
-        if(this.$store.getters.products) {
+        if (this.$store.getters.products) {
           return !this.$store.getters.products.length;
         }
-      }
+        return null;
+      },
     },
-    data() {
-      return {
-        isSorted: true
-      }
-    }
-  }
+    data: () => ({
+      isSorted: true,
+    }),
+  };
 </script>
 
 <style lang="sass">

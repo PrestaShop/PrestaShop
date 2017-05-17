@@ -36,12 +36,12 @@ export default new VueRouter({
     {
       path: '/',
       name: 'overview',
-      component: Overview
+      component: Overview,
     },
     {
       path: '/movements',
       name: 'movements',
-      component: Movements
-    }
-  ]
+      component: Movements,
+    },
+  ],
 });

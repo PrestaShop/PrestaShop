@@ -54,18 +54,13 @@
         return this.product.sign > 0;
       },
       orderLink() {
-        if(this.product.order_link !== 'N/A') {
-          return this.product.order_link;
-        }
-        else {
-          return false;
-        }
-      }
+        return this.product.order_link !== 'N/A' ? this.product.order_link : null;
+      },
     },
     components: {
-      PSMedia
-    }
-  }
+      PSMedia,
+    },
+  };
 </script>
 
 <style lang="sass" scoped>

@@ -52,27 +52,26 @@
     mixins: [ProductDesc],
     computed: {
       updatedQty() {
-         if(isNaN(this.product.qty)) {
-          return false;
-        }
         return !!this.product.qty;
       },
-      physicalQtyUpdated () {
+      physicalQtyUpdated() {
         return Number(this.physical) + Number(this.product.qty);
       },
       availableQtyUpdated() {
         return Number(this.product.product_available_quantity) + Number(this.product.qty);
       },
       physical() {
-        return Number(this.product.product_available_quantity) + Number(this.product.product_reserved_quantity);
-      }
+        const productAvailableQty = Number(this.product.product_available_quantity);
+        const productReservedQty = Number(this.product.product_reserved_quantity);
+        return productAvailableQty + productReservedQty;
+      },
     },
     components: {
       Spinner,
       PSMedia,
-      PSCheckbox
-    }
-  }
+      PSCheckbox,
+    },
+  };
 </script>
 
 <style lang="sass" scoped>

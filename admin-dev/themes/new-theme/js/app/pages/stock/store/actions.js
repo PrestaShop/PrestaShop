@@ -136,3 +136,7 @@ export const updateKeywords = ({ commit }, keywords) => {
 export const isLoading = ({ commit }) => {
   commit(types.LOADING_STATE, true);
 };
+
+export const updateProductQty = ({ commit }, payload) => {
+  commit(types.UPDATE_PRODUCT_QTY, payload);
+};
