@@ -23,17 +23,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="panel">
-	<h3><i class="icon-tag"></i> {l s='Cart rule'}</h3>
+	<h3><i class="icon-tag"></i> {l s='Cart rule' d='Admin.Catalog.Feature'}</h3>
 	<div class="productTabs">
 		<ul class="tab nav nav-tabs">
 			<li class="tab-row">
-				<a class="tab-page" id="cart_rule_link_informations" href="javascript:displayCartRuleTab('informations');"><i class="icon-info"></i> {l s='Information'}</a>
+				<a class="tab-page" id="cart_rule_link_informations" href="javascript:displayCartRuleTab('informations');"><i class="icon-info"></i> {l s='Information' d='Admin.Catalog.Feature'}</a>
 			</li>
 			<li class="tab-row">
-				<a class="tab-page" id="cart_rule_link_conditions" href="javascript:displayCartRuleTab('conditions');"><i class="icon-random"></i> {l s='Conditions'}</a>
+				<a class="tab-page" id="cart_rule_link_conditions" href="javascript:displayCartRuleTab('conditions');"><i class="icon-random"></i> {l s='Conditions' d='Admin.Catalog.Feature'}</a>
 			</li>
 			<li class="tab-row">
-				<a class="tab-page" id="cart_rule_link_actions" href="javascript:displayCartRuleTab('actions');"><i class="icon-wrench"></i> {l s='Actions'}</a>
+				<a class="tab-page" id="cart_rule_link_actions" href="javascript:displayCartRuleTab('actions');"><i class="icon-wrench"></i> {l s='Actions' d='Admin.Global'}</a>
 			</li>
 		</ul>
 	</div>
@@ -59,12 +59,12 @@
 		var product_rule_counters = new Array();
 		var currentToken = '{$currentToken|escape:'quotes'}';
 		var currentFormTab = '{if isset($smarty.post.currentFormTab)}{$smarty.post.currentFormTab|escape:'quotes'}{else}informations{/if}';
-		var currentText = '{l s='Now' js=1}';
-		var closeText = '{l s='Done' js=1}';
-		var timeOnlyTitle = '{l s='Choose Time' js=1}';
-		var timeText = '{l s='Time' js=1}';
-		var hourText = '{l s='Hour' js=1}';
-		var minuteText = '{l s='Minute' js=1}';
+		var currentText = '{l s='Now' js=1 d='Admin.Catalog.Feature'}';
+		var closeText = '{l s='Done' js=1 d='Admin.Catalog.Feature'}';
+		var timeOnlyTitle = '{l s='Choose Time' js=1 d='Admin.Catalog.Feature'}';
+		var timeText = '{l s='Time' js=1 d='Admin.Catalog.Feature'}';
+		var hourText = '{l s='Hour' js=1 d='Admin.Global'}';
+		var minuteText = '{l s='Minute' js=1 d='Admin.Catalog.Feature'}';
 
 		var languages = new Array();
 		{foreach from=$languages item=language key=k}
