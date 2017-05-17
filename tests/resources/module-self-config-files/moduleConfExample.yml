@@ -32,7 +32,7 @@ files:
 # Fox complex configuration data, allow PHP code to be executed
 php:
     - file: "path/to/file.php"
-      # Question: should we make a class to extend or do we ask for a function to call ?
+      # Must have a class which implements interface PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleComplexConfigurationInterface
       params:
         - myParam1: 1
         - oneArrayParam:

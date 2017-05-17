@@ -390,7 +390,6 @@ class ModuleSelfConfigurator
         }
 
         // Avoid unconsistant state with transactions
-        $this->connection->setAutoCommit(false);
         $this->connection->beginTransaction();
         try {
             foreach($config['sql'] as $data) {
@@ -417,6 +416,9 @@ class ModuleSelfConfigurator
             if (empty($sql)) {
                 continue;
             }
+            // Set _DB_PREFIX_
+            $sql = str_replace('PREFIX_', $this->configuration->get('_DB_PREFIX_'), $sql);
+
             $stmt = $this->connection->prepare($sql);
             $stmt->execute();
        }
