@@ -416,4 +416,40 @@ class StockRepository extends StockManagementRepository
     {
         return 'ORDER BY p.id_product DESC, COALESCE(pa.id_product_attribute, 0)';
     }
+
+    /**
+     * @param array $rows
+     * @return array
+     */
+    protected function addAdditionalData(array $rows)
+    {
+        $rows = $this->addImageThumbnailPaths($rows);
+        $rows = $this->addEditProductLink($rows);
+
+        return $rows;
+    }
+
+    private function addEditProductLink(array $rows)
+    {
+        $router = $this->container->get('router');
+
+        array_walk($rows, function (&$row) use ($router) {
+            $row['combinations_product_url'] = $router->generate('api_stock_list_product_combinations', array(
+                'productId' => $row['product_id'],
+            ));
+
+            if (!empty($row['combination_id'])) {
+                $row['edit_url'] = $router->generate('api_stock_edit_product_combination', array(
+                    'productId' => $row['product_id'],
+                    'combinationId' => $row['combination_id'],
+                ));
+            } else {
+                $row['edit_url'] = $router->generate('api_stock_edit_product', array(
+                    'productId' => $row['product_id'],
+                ));
+            }
+        });
+
+        return $rows;
+    }
 }
