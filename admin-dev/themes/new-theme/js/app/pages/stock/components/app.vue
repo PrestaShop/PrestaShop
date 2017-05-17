@@ -6,8 +6,6 @@
       <router-view class="view" @fetch="fetch"></router-view>
     </div>
     <PSPagination
-      pageNumber="3"
-      activeMultiPagination="5"
       :current="currentPagination"
       :pagesCount="pagesCount"
       @pageChanged="onPageChanged"
@@ -18,7 +16,7 @@
 <script>
   import StockHeader from './header/stock-header';
   import Search from './header/search';
-  import PSPagination from 'app/widgets/ps-pagination/ps-pagination';
+  import PSPagination from 'app/widgets/ps-pagination';
 
   export default {
     name: 'app',

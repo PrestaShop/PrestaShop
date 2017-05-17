@@ -55,7 +55,6 @@
   import PSTable from 'app/widgets/ps-table/ps-table';
   import PSSort from 'app/widgets/ps-table/ps-sort';
   import PSAlert from 'app/widgets/ps-alert';
-  import PSPagination from 'app/widgets/ps-pagination/ps-pagination';
   import PSLoader from 'app/widgets/ps-loader';
   import MovementLine from './movement-line';
 
@@ -99,7 +98,6 @@
       PSTable,
       PSSort,
       PSAlert,
-      PSPagination,
       PSLoader,
       MovementLine
     }

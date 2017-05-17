@@ -25,8 +25,6 @@
         </PSButton>
       </form>
       <PSPagination
-        pageNumber="3"
-        activeMultiPagination="5"
         :current="currentPagination"
         :pagesCount="pagesCount"
         @pageChanged="onPageChanged"
@@ -38,7 +36,7 @@
 <script>
   import TranslationInput from './translation-input';
   import PSButton from 'app/widgets/ps-button';
-  import PSPagination from 'app/widgets/ps-pagination/ps-pagination';
+  import PSPagination from 'app/widgets/ps-pagination';
   import { EventBus } from 'app/utils/event-bus';
 
   export default {

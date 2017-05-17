@@ -8,8 +8,6 @@
 </template>
 
 <script>
-  import $ from 'jquery';
-
   export default {
     mounted() {
       $(this.$el).datetimepicker().on('dp.change', (infos) =>{
