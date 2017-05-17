@@ -234,7 +234,7 @@ class TranslationController extends ApiController
 
         $decodedContent = $this->guardAgainstInvalidJsonBody($content);
 
-        if (!array_key_exists('translations', $decodedContent)) {
+        if (empty($decodedContent) || !array_key_exists('translations', $decodedContent) || !is_array($decodedContent['translations'])) {
             $message = 'The request body should contain a JSON-encoded array of translations';
             throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
         }
