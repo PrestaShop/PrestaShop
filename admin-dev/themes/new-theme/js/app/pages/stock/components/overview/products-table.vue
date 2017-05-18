@@ -28,26 +28,26 @@
       <tr>
         <th width="40%" class="thead-title">
           {{trans('title_product')}}
-          <PSSort order="product" :isDesc="isSorted" @sort="toggleSort" />
+          <PSSort order="product" @sort="toggleSort" />
         </th>
         <th>
           {{trans('title_reference')}}
-          <PSSort order="reference" :isDesc="isSorted" @sort="toggleSort" />
+          <PSSort order="reference" @sort="toggleSort" />
         </th>
         <th>
            {{trans('title_supplier')}}
-          <PSSort order="supplier" :isDesc="isSorted" @sort="toggleSort" />
+          <PSSort order="supplier" @sort="toggleSort" />
         </th>
         <th class="text-xs-center">
            {{trans('title_physical')}}
-          <PSSort order="physical_quantity" :isDesc="isSorted" @sort="toggleSort" />
+          <PSSort order="physical_quantity" @sort="toggleSort" />
         </th>
         <th class="text-xs-center">
           {{trans('title_reserved')}}
         </th>
         <th class="text-xs-center">
           {{trans('title_available')}}
-          <PSSort order="available_quantity" :isDesc="isSorted" @sort="toggleSort" />
+          <PSSort order="available_quantity" @sort="toggleSort" />
         </th>
         <th class="text-xs-right">
           <i class="material-icons">edit</i>
@@ -96,8 +96,8 @@
       PSLoader,
     },
     methods: {
-      toggleSort(order, desc) {
-        this.isSorted = !this.isSorted;
+      toggleSort(order, isSorted) {
+        const desc = isSorted ? ' desc' : '';
         this.$store.dispatch('updateOrder', order);
         this.$emit('sort', desc);
       },
@@ -113,9 +113,6 @@
         return null;
       },
     },
-    data: () => ({
-      isSorted: true,
-    }),
   };
 </script>
 

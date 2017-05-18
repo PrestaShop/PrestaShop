@@ -65,6 +65,7 @@
     </td>
   </tr>
 </template>
+
 <script>
   import Spinner from './spinner';
   import PSCheckbox from 'app/widgets/ps-checkbox';

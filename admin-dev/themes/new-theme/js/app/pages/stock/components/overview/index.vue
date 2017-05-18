@@ -33,7 +33,7 @@
   import ProductsActions from './products-actions';
   import ProductsTable from './products-table';
 
-  const DEFAULT_SORT = '';
+  const DEFAULT_SORT = ' desc';
 
   export default {
     computed: {

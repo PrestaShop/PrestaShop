@@ -23,28 +23,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <a href="#" @click.prevent="sortFilter">
+  <button class="ps-sort" @click.prevent="sortFilter">
     <i class="material-icons">swap_vert</i>
-  </a>
+  </button>
 </template>
 
 <script>
   export default {
-    props: ['order', 'isDesc'],
+    props: ['order'],
     methods: {
       sortFilter() {
-        const desc = this.isDesc ? ' desc' : '';
-        this.$emit('sort', this.order, desc);
+        this.isSorted = !this.isSorted;
+        this.$emit('sort', this.order, this.isSorted);
       },
     },
+    data: () => ({ isSorted: true }),
   };
 </script>
+
 <style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
-  a .material-icons {
-    vertical-align: middle;
-    margin-left: 5px;
-    color: $gray-medium;
-    font-size: 20px;
+  .ps-sort {
+    background: transparent;
+    border: none;
+    outline: none;
   }
 </style>

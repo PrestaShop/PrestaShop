@@ -60,6 +60,7 @@
     </td>
   </tr>
 </template>
+
 <script>
   import PSMedia from 'app/widgets/ps-media';
   import productDesc from 'app/pages/stock/mixins/product-desc';

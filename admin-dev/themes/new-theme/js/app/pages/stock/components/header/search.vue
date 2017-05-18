@@ -67,6 +67,7 @@
     data: () => ({ tags: [] }),
   };
 </script>
+
 <style lang="sass">
   @import "~PrestaKit/scss/custom/_variables.scss";
   #search {
