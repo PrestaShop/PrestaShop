@@ -31,7 +31,7 @@ import _ from 'lodash';
 Vue.use(VueResource);
 
 export const getStock = ({ commit }, payload) => {
-  let url = window.data.apiRootUrl.replace(/\?.*/, '');
+  const url = window.data.apiStockUrl;
   Vue.http.get(url, {
     params: {
       order: payload.order,
@@ -39,37 +39,37 @@ export const getStock = ({ commit }, payload) => {
       page_index: payload.page_index,
       keywords: payload.keywords ? payload.keywords : [],
       supplier_id: payload.suppliers ? payload.suppliers : [],
-      category_id: payload.categories ? payload.categories : []
-    }
-  }).then(function(response) {
+      category_id: payload.categories ? payload.categories : [],
+    },
+  }).then((response) => {
     commit(types.LOADING_STATE, false);
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.ADD_PRODUCTS, response.body);
-  }, function(error) {
-    return showGrowl('error', error.statusText);
+  }, (error) => {
+    showGrowl('error', error.statusText);
   });
 };
 
 export const getSuppliers = ({ commit }) => {
-  let url = window.data.suppliersUrl;
-  Vue.http.get(url).then(function(response) {
+  const url = window.data.suppliersUrl;
+  Vue.http.get(url).then((response) => {
     commit(types.SET_SUPPLIERS, response.body);
-  }, function(error) {
-    return showGrowl('error', error.statusText);
+  }, (error) => {
+    showGrowl('error', error.statusText);
   });
 };
 
 export const getCategories = ({ commit }) => {
-  let url = window.data.categoriesUrl;
-  Vue.http.get(url).then(function(response) {
+  const url = window.data.categoriesUrl;
+  Vue.http.get(url).then((response) => {
     commit(types.SET_CATEGORIES, response.body);
-  }, function(error) {
-    return showGrowl('error', error.statusText);
+  }, (error) => {
+    showGrowl('error', error.statusText);
   });
 };
 
 export const getMovements = ({ commit }, payload) => {
-  let url = window.data.movementsUrl;
+  const url = window.data.movementsUrl;
 
   Vue.http.get(url, {
     params: {
@@ -81,45 +81,44 @@ export const getMovements = ({ commit }, payload) => {
       category_id: payload.categories ? payload.categories : [],
       id_stock_mvt_reason: payload.id_stock_mvt_reason ? payload.id_stock_mvt_reason : [],
       id_employee: payload.id_employee ? payload.id_employee : [],
-      date_add: payload.date_add ? payload.date_add : []
-    }
-  }).then(function(response) {
+      date_add: payload.date_add ? payload.date_add : [],
+    },
+  }).then((response) => {
     commit(types.LOADING_STATE, false);
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.SET_MOVEMENTS, response.body);
-  }, function(error) {
-    return showGrowl('error', error.statusText);
+  }, (error) => {
+    showGrowl('error', error.statusText);
   });
 };
 
 export const getTranslations = ({ commit }) => {
-  let url = window.data.translationUrl;
-  Vue.http.get(url).then(function(response) {
+  const url = window.data.translationUrl;
+  Vue.http.get(url).then((response) => {
     commit(types.SET_TRANSLATIONS, response.body);
     commit(types.APP_IS_READY);
-  }, function(error) {
-    return showGrowl('error', error.statusText);
+  }, (error) => {
+    showGrowl('error', error.statusText);
   });
 };
 
 export const getEmployees = ({ commit }) => {
-  let url = window.data.employeesUrl;
-  Vue.http.get(url).then(function(response) {
+  const url = window.data.employeesUrl;
+  Vue.http.get(url).then((response) => {
     commit(types.SET_EMPLOYEES_LIST, response.body);
-  }, function(error) {
-    return showGrowl('error', error.statusText);
+  }, (error) => {
+    showGrowl('error', error.statusText);
   });
 };
 
 export const getMovementsTypes = ({ commit }) => {
-  let url = window.data.movementsTypesUrl;
-  Vue.http.get(url).then(function(response) {
+  const url = window.data.movementsTypesUrl;
+  Vue.http.get(url).then((response) => {
     commit(types.SET_MOVEMENTS_TYPES, response.body);
-  }, function(error) {
-    return showGrowl('error', error.statusText);
+  }, (error) => {
+    showGrowl('error', error.statusText);
   });
 };
-
 
 export const updateOrder = ({ commit }, order) => {
   commit(types.UPDATE_ORDER, order);
@@ -139,4 +138,30 @@ export const isLoading = ({ commit }) => {
 
 export const updateProductQty = ({ commit }, payload) => {
   commit(types.UPDATE_PRODUCT_QTY, payload);
+};
+
+export const updateQtyByProductId = ({ commit, state }, payload) => {
+  const url = payload.url;
+  const delta = payload.delta;
+
+  Vue.http.post(url, {
+    delta,
+  }).then((res) => {
+    commit(types.UPDATE_PRODUCT, res.body);
+    return showGrowl('notice', 'Stock successfully updated');
+  }, (error) => {
+    showGrowl('error', error.statusText);
+  });
+};
+
+export const updateQtyByProductsId = ({ commit, state }, payload) => {
+  const url = payload.url;
+  const productsQty = state.productsToUpdate;
+
+  Vue.http.post(url, productsQty).then((res) => {
+    commit(types.UPDATE_PRODUCTS, res.body);
+    return showGrowl('notice', 'Stock successfully updated');
+  }, (error) => {
+    showGrowl('error', error.statusText);
+  });
 };

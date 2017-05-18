@@ -98,13 +98,13 @@
         return this.$route.name === 'overview';
       },
       employees() {
-        return this.$store.getters.employees;
+        return this.$store.state.employees;
       },
       movementsTypes() {
         let displayName;
         const movements = [];
 
-        return this.$store.getters.movementsTypes.filter((movement) => {
+        return this.$store.state.movementsTypes.filter((movement) => {
           if (displayName !== movement.name) {
             displayName = movement.name;
             movements.push(movement);

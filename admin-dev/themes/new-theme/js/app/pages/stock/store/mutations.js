@@ -44,7 +44,7 @@ export default {
     state.categories = categories;
   },
   [types.SET_MOVEMENTS](state, movements) {
-    state.movements = movements;
+    state.movements = movements.data;
   },
   [types.SET_TRANSLATIONS](state, translations) {
     translations.data.forEach((t) => {
@@ -58,9 +58,65 @@ export default {
     state.isReady = true;
   },
   [types.SET_EMPLOYEES_LIST](state, employees) {
-    state.employees = employees;
+    state.employees = employees.data;
   },
   [types.SET_MOVEMENTS_TYPES](state, movementsTypes) {
-    state.movementsTypes = movementsTypes;
+    state.movementsTypes = movementsTypes.data;
+  },
+  [types.ADD_PRODUCTS](state, products) {
+    _.forEach(products.data, (product) => {
+      product.qty = 0;
+    });
+
+    state.products = products.data;
+  },
+  [types.UPDATE_PRODUCT](state, updatedProduct) {
+    const index = _.findIndex(state.products, {
+      product_id: updatedProduct.product_id,
+      combination_id: updatedProduct.combination_id,
+    });
+    updatedProduct.qty = 0;
+    state.products.splice(index, 1, updatedProduct);
+  },
+  [types.UPDATE_PRODUCTS](state, updatedProducts) {
+    state.productsToUpdate = [];
+    _.forEach(updatedProducts, (product) => {
+      const index = _.findIndex(state.products, {
+        product_id: product.product_id,
+        combination_id: product.combination_id,
+      });
+      product.qty = 0;
+      state.products.splice(index, 1, product);
+    });
+    state.hasQty = false;
+  },
+  [types.UPDATE_PRODUCT_QTY](state, updatedProduct) {
+    let hasQty = false;
+
+    const index = _.findIndex(state.productsToUpdate, {
+      product_id: updatedProduct.product_id,
+      combination_id: updatedProduct.combination_id,
+    });
+
+    const productToUpdate = _.find(state.products, {
+      product_id: updatedProduct.product_id,
+      combination_id: updatedProduct.combination_id,
+    });
+
+    _.forEach(state.products, (product) => {
+      productToUpdate.qty = updatedProduct.delta;
+      if (product.qty) {
+        hasQty = true;
+      }
+    });
+
+    state.hasQty = hasQty;
+
+    if (index !== -1) {
+      return state.productsToUpdate.splice(index, 1, updatedProduct);
+    }
+    if (updatedProduct.delta) {
+      state.productsToUpdate.push(updatedProduct);
+    }
   },
 };

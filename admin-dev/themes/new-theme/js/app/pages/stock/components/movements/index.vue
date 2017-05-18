@@ -64,7 +64,7 @@
         </tr>
         <tr v-else-if="emptyMovements">
           <td colspan="7">
-            <PSAlert alertType="info" :hasClose="false">
+            <PSAlert alertType="ALERT_TYPE_INFO" :hasClose="false">
               {{trans('no_product')}}
             </PSAlert>
           </td>
@@ -87,16 +87,13 @@
   export default {
     computed: {
       isLoading() {
-        return this.$store.getters.isLoading;
+        return this.$store.state.isLoading;
       },
       movements() {
-        return this.$store.getters.movements;
+        return this.$store.state.movements;
       },
       emptyMovements() {
-        if (this.$store.getters.movements) {
-          return !this.$store.getters.movements.length;
-        }
-        return null;
+        return !this.$store.state.movements.length;
       },
     },
     methods: {

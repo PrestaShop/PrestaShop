@@ -45,7 +45,7 @@
   export default {
     computed: {
       disabled() {
-        return !this.$store.getters.hasQty;
+        return !this.$store.state.hasQty;
       },
       classObject() {
         return {

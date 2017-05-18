@@ -104,13 +104,10 @@
     },
     computed: {
       products() {
-        return this.$store.getters.products;
+        return this.$store.state.products;
       },
       emptyProducts() {
-        if (this.$store.getters.products) {
-          return !this.$store.getters.products.length;
-        }
-        return null;
+        return !this.$store.state.products.length;
       },
     },
   };

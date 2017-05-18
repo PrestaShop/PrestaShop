@@ -142,7 +142,7 @@
       },
       filterList(tags) {
         const idList = [];
-        const categoryList = this.$store.getters.categoryList;
+        const categoryList = this.$store.state.categoryList;
         const list = this.hasChildren ? categoryList : this.list;
 
         list.map((data) => {

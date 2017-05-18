@@ -46,13 +46,13 @@
     name: 'app',
     computed: {
       isReady() {
-        return this.$store.getters.isReady;
+        return this.$store.state.isReady;
       },
       pagesCount() {
-        return this.$store.getters.totalPages;
+        return this.$store.state.totalPages;
       },
       currentPagination() {
-        return this.$store.getters.pageIndex;
+        return this.$store.state.pageIndex;
       },
     },
     methods: {
@@ -70,10 +70,10 @@
         this.$store.dispatch('isLoading');
 
         this.$store.dispatch(action, Object.assign(this.filters, {
-          order: `${this.$store.getters.order}${sorting}`,
+          order: `${this.$store.state.order}${sorting}`,
           page_size: this.$store.state.productsPerPage,
-          page_index: this.$store.getters.pageIndex,
-          keywords: this.$store.getters.keywords,
+          page_index: this.$store.state.pageIndex,
+          keywords: this.$store.state.keywords,
         }));
       },
       onSearch(keywords) {

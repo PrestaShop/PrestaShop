@@ -38,7 +38,7 @@
   export default {
     computed: {
       isLoading() {
-        return this.$store.getters.isLoading;
+        return this.$store.state.isLoading;
       },
     },
     methods: {
