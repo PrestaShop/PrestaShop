@@ -44,7 +44,7 @@
           :translations="translations"
           :currentItem="currentItem"
           @checked="onCheck"
-          @setCurrentEl ="setCurrentEl"
+          @setCurrentElement ="setCurrentElement"
         />
       </li>
     </ul>
@@ -77,8 +77,8 @@
       reduce() {
         EventBus.$emit('reduce');
       },
-      setCurrentEl(id) {
-        EventBus.$emit('setCurrentEl', id);
+      setCurrentElement(id) {
+        EventBus.$emit('setCurrentElement', id);
       },
     },
     components: {

@@ -36,23 +36,21 @@
 </template>
 
 <script>
+  const ALERT_TYPE_INFO = 'ALERT_TYPE_INFO';
+  const ALERT_TYPE_WARNING = 'ALERT_TYPE_WARNING';
+  const ALERT_TYPE_DANGER = 'ALERT_TYPE_DANGER';
+
   export default {
     props: {
-      alertType: {
-        type: String,
-        required: true,
-      },
-      hasClose: {
-        type: Boolean,
-        required: true,
-      },
+      alertType: { type: String, required: true },
+      hasClose: { type: Boolean, required: true },
     },
     computed: {
       classObject() {
         return {
-          'alert-info': this.alertType === 'info',
-          'alert-warning': this.alertType === 'warning',
-          'alert-danger': this.alertType === 'danger',
+          'alert-info': this.alertType === ALERT_TYPE_INFO,
+          'alert-warning': this.alertType === ALERT_TYPE_WARNING,
+          'alert-danger': this.alertType === ALERT_TYPE_DANGER,
         };
       },
       isInfo() {

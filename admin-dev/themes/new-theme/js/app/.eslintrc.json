@@ -8,13 +8,7 @@
   "import/resolver": {
     "webpack": {
       "config": "../../webpack.config.js"
-      },
-      "alias": [
-        [
-          "app",
-          "../app"
-        ]
-      ]
+      }
     }
   },
   "rules": {

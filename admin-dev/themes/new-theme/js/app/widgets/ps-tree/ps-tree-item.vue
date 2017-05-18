@@ -24,7 +24,7 @@
  *-->
 <template>
   <div :class="{className}">
-    <div class="flex tree-name" :class="{active: current}" @click="clickItem">
+    <div class="flex tree-name" :class="{active: current}" @click="clickElement">
       <div class="flex" :class="chevron">
         <i class="material-icons" v-if="open">keyboard_arrow_down</i>
         <i class="material-icons" v-else>chevron_right</i>
@@ -33,8 +33,8 @@
       <span class="tree-label" :class="{warning: isWarning}">{{model.name}}</span>
       <span class="tree-extra-label" v-if="displayExtraLabel">{{getExtraLabel}}</span>
     </div>
-    <ul v-show="open" v-if="isFolder">
-      <li v-for="(element, index) in model.children">
+    <ul v-show="open" v-if="isFolder" class="tree">
+      <li v-for="(element, index) in model.children" class="tree-item">
         <PSTreeItem
           :ref="element.id"
           :class="className"
@@ -44,7 +44,7 @@
           :translations="translations"
           :currentItem="currentItem"
           @checked="onCheck"
-          @setCurrentEl ="setCurrentEl"
+          @setCurrentElement ="setCurrentElement"
         />
       </li>
     </ul>
@@ -58,26 +58,11 @@
   export default {
     name: 'PSTreeItem',
     props: {
-      model: {
-        type: Object,
-        required: true,
-      },
-      className: {
-        type: String,
-        required: false,
-      },
-      hasCheckbox: {
-        type: Boolean,
-        required: false,
-      },
-      translations: {
-        type: Object,
-        required: false,
-      },
-      currentItem: {
-        type: String,
-        required: false,
-      },
+      model: { type: Object, required: true },
+      className: { type: String, required: false },
+      hasCheckbox: { type: Boolean, required: false },
+      translations: { type: Object, required: false },
+      currentItem: { type: String, required: false },
     },
     computed: {
       id() {
@@ -100,23 +85,26 @@
       },
     },
     methods: {
-      setCurrentEl(el) {
+      setCurrentElement(el) {
         if (this.$refs[el]) {
-          this.clickItem();
+          this.openTreeItemAction();
           this.current = true;
-          this.parentEl(this.$parent);
+          this.parentElement(this.$parent);
         } else {
           this.current = false;
         }
       },
-      parentEl(parent) {
+      parentElement(parent) {
         if (parent.clickItem) {
           parent.clickItem();
-          this.parentEl(parent.$parent);
+          this.parentElement(parent.$parent);
         }
       },
-      clickItem() {
-        this.setCurrentEl(this.model.full_name);
+      clickElement() {
+        this.openTreeItemAction();
+      },
+      openTreeItemAction() {
+        this.setCurrentElement(this.model.full_name);
         if (this.isFolder) {
           this.open = !this.open;
         } else {
@@ -140,7 +128,7 @@
       }).$on('reduce', () => {
         this.open = false;
       });
-      this.setCurrentEl(this.currentItem);
+      this.setCurrentElement(this.currentItem);
     },
     components: {
       PSCheckbox,
@@ -171,11 +159,11 @@
   .hidden {
     visibility: hidden;
   }
-  ul {
+  .tree {
     padding: 0 0 0 20px;
-  }
-  li {
-    margin: 5px 0;
-    list-style-type: none;
+    .tree-item {
+      margin: 5px 0;
+      list-style-type: none;
+    }
   }
 </style>

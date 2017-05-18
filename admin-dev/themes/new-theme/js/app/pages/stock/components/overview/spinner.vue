@@ -92,9 +92,7 @@
         this.isActive = true;
       },
       focusOut(event) {
-        if (!$(event.relatedTarget).hasClass('check-button') && !this.value) {
-          this.isActive = false;
-        }
+        this.isActive = !$(event.relatedTarget).hasClass('check-button') && !this.value;
         this.isEnabled = !!this.value;
       },
       sendQty() {

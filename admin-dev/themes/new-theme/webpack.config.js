@@ -50,10 +50,10 @@ let config = {
       './js/theme.js',
     ],
     stock: [
-      './js/app/pages/stock/main.js',
+      './js/app/pages/stock',
     ],
     translations: [
-      './js/app/pages/translations/main.js',
+      './js/app/pages/translations',
     ]
   },
   output: {

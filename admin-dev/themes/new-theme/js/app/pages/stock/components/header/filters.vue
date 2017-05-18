@@ -134,12 +134,7 @@
         } else {
           this.categories = list;
         }
-
-        if (!this.suppliers.length && !this.categories.length) {
-          this.disabled = true;
-        } else {
-          this.disabled = false;
-        }
+        this.disabled = !this.suppliers.length && !this.categories.length;
         if (!list.length) {
           this.applyFilter();
         }

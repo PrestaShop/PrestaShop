@@ -31,10 +31,7 @@
 <script>
  export default {
    props: {
-     primary: {
-       type: Boolean,
-       required: true,
-     },
+     primary: { type: Boolean, required: true },
    },
    computed: {
      buttonType() {
