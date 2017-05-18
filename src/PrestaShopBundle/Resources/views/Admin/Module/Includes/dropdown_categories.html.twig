@@ -40,7 +40,7 @@
                 </li>
                 {% for subMenu in menu.subMenu|arrayCast %}
                     <li class="module-category-menu"
-                        {% if subMenu.id %}data-category-id="{{subMenu.id}}"{% endif %}
+                        {% if subMenu.tab %}data-category-tab="{{subMenu.tab}}"{% endif %}
                         data-category-ref="{{subMenu.refMenu}}"
                         data-category-display-name="{{subMenu.name}}"
                     >

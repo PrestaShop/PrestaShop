@@ -65,7 +65,7 @@ class CategoriesProvider
             $categories['categories'] = $this->createMenuObject('categories', 'Categories');
 
             foreach ($this->getCategories() as $category) {
-                $categoryId = $category->id_category;
+                $categoryTab = isset($category->tab) ? $category->tab : null;
                 $categoryName = $category->name;
                 $moduleIds = array();
 
@@ -83,7 +83,7 @@ class CategoriesProvider
                         $categoryName,
                         $categoryName,
                         $moduleIds,
-                        $categoryId
+                        $categoryTab
                     );
                 }
             }
@@ -123,13 +123,13 @@ class CategoriesProvider
      * @param $menu
      * @param $name
      * @param array $moduleIds
-     * @param null $id
+     * @param null $tab
      * @return object
      */
-    private function createMenuObject($menu, $name, $moduleIds = array(), $id = null)
+    private function createMenuObject($menu, $name, $moduleIds = array(), $tab = null)
     {
         return (object) array(
-            'id' => $id,
+            'tab' => $tab,
             'name' => $name,
             'refMenu' => $menu,
             'modules' => $moduleIds,

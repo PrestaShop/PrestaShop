@@ -40,7 +40,7 @@
 				{if $controller_name == 'AdminPayment' && isset($view_all)}
 					<div class="panel-footer">
 						<div class="col-lg-4 col-lg-offset-4">
-							<a class="btn btn-default btn-block" href="index.php?tab=AdminModules&amp;token={getAdminToken tab='AdminModules'}&amp;filterCategory=payments_gateways">
+							<a class="btn btn-default btn-block" href="{$link->getAdminLink('AdminModulesSf', true, ['filterCategoryTab' => 'payments_gateways'])|escape:'html':'UTF-8'}">
 								<i class="process-icon-payment"></i>
 								{l s='View all available payments solutions'}
 							</a>
