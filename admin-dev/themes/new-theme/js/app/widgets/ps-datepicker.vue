@@ -34,7 +34,9 @@
 <script>
   export default {
     mounted() {
-      $(this.$el).datetimepicker().on('dp.change', (infos) => {
+      $(this.$el).datetimepicker({
+        format: 'MM/dd/YYYY',
+      }).on('dp.change', (infos) => {
         this.$emit('dpChange', infos);
       });
     },
