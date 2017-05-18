@@ -75,6 +75,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                 $this->step_is_complete = true;
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
+                $this->show_login_form = true;
             }
         } elseif (array_key_exists('login', $requestParameters)) {
             $this->show_login_form = true;
