@@ -87,6 +87,7 @@ class UpdateLicensesCommand extends Command
             'tpl',
             'html.twig',
             'json',
+            'vue',
         );
 
         foreach ($extensions as $extension) {
@@ -154,6 +155,9 @@ class UpdateLicensesCommand extends Command
                     break;
                 case 'json':
                     $this->addLicenseToJsonFile($file);
+                    break;
+                case 'vue':
+                    $this->addLicenseToHtmlFile($file);
                     break;
             }
             $progress->advance();
@@ -286,6 +290,14 @@ class UpdateLicensesCommand extends Command
         if (strrpos($file->getRelativePathName(), 'html.twig') !== false) {
             $this->addLicenseToFile($file, '{#', '#}');
         }
+    }
+
+    /**
+     * @param SplFileInfo $file
+     */
+    private function addLicenseToHtmlFile(SplFileInfo $file)
+    {
+        $this->addLicenseToFile($file, '<!--', '-->');
     }
 
     /**
