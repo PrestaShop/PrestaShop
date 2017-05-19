@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Cldr\Composer;
 
 use Composer\Script\Event;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
+use Db;
 
 /**
  * Class Hook used to download CLDR data during composer install/update
@@ -60,7 +61,7 @@ class Hook
             }
 
             //get each defined languages and fetch cldr datas
-            $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+            $langs = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
 
             foreach ($langs as $lang) {
                 $language_code = explode('-', $lang['language_code']);

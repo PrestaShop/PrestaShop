@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Feature;
 
+use Feature;
+use FeatureValue;
+
 /**
  * This class will provide data from DB / ORM about Feature
  */
@@ -40,7 +43,7 @@ class FeatureDataProvider
      */
     public static function getFeatures($id_lang, $with_shop = true)
     {
-        return \FeatureCore::getFeatures($id_lang, $with_shop);
+        return Feature::getFeatures($id_lang, $with_shop);
     }
 
     /**
@@ -53,7 +56,7 @@ class FeatureDataProvider
      */
     public static function getFeatureValuesWithLang($id_lang, $id_feature, $custom = false)
     {
-        return \FeatureValueCore::getFeatureValuesWithLang($id_lang, $id_feature, $custom);
+        return FeatureValue::getFeatureValuesWithLang($id_lang, $id_feature, $custom);
     }
 
     /**
@@ -64,6 +67,6 @@ class FeatureDataProvider
      */
     public static function getFeatureValueLang($id_feature_value)
     {
-        return \FeatureValueCore::getFeatureValueLang($id_feature_value);
+        return FeatureValue::getFeatureValueLang($id_feature_value);
     }
 }

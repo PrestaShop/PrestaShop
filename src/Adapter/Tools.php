@@ -46,10 +46,10 @@ class Tools
     public function link_rewrite($str, $utf8_decode = null)
     {
         if ($utf8_decode !== null) {
-            \ToolsCore::displayParameterAsDeprecated('utf8_decode');
+            Tools::displayParameterAsDeprecated('utf8_decode');
         }
 
-        return \ToolsCore::str2url($str);
+        return Tools::str2url($str);
     }
 
     /**
@@ -121,11 +121,11 @@ class Tools
 
     public function purifyHTML($html, $uri_unescape = null, $allow_style = false)
     {
-        return \ToolsCore::purifyHTML($html, $uri_unescape, $allow_style);
+        return Tools::purifyHTML($html, $uri_unescape, $allow_style);
     }
 
     public function refreshCaCertFile()
     {
-        LegacyTools::refreshCaCertFile();
+        Tools::refreshCaCertFile();
     }
 }

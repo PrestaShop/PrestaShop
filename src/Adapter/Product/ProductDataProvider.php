@@ -100,7 +100,7 @@ class ProductDataProvider
      */
     public function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
     {
-        return \ProductCore::getQuantity($id_product, $id_product_attribute, $cache_is_pack);
+        return Product::getQuantity($id_product, $id_product_attribute, $cache_is_pack);
     }
 
     /**

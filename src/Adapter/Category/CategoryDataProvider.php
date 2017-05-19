@@ -89,7 +89,7 @@ class CategoryDataProvider
             $id_lang = $this->languageId;
         }
 
-        return \CategoryCore::getNestedCategories($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
+        return Category::getNestedCategories($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
     }
 
     /**
@@ -111,7 +111,7 @@ class CategoryDataProvider
             $id_lang = $this->languageId;
         }
 
-        $categories = \CategoryCore::getAllCategoriesName($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
+        $categories = Category::getAllCategoriesName($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
         array_shift($categories);
         return $categories;
     }
@@ -208,9 +208,9 @@ class CategoryDataProvider
             $limit = '';
         }
 
-        $searchCategories = \CategoryCore::getAllCategoriesName(
+        $searchCategories = Category::getAllCategoriesName(
             $root_category = null,
-            $id_lang = \ContextCore::getContext()->language->id,
+            $id_lang = Context::getContext()->language->id,
             $active = true,
             $groups = null,
             $use_shop_restriction = true,
@@ -226,7 +226,7 @@ class CategoryDataProvider
                 'id' => $category['id_category'],
                 'name' => ($nameAsBreadCrumb ? $breadCrumb : $category['name']),
                 'breadcrumb' => $breadCrumb,
-                'image' => \ContextCore::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
+                'image' => Context::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
             ];
         }
 

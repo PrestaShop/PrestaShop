@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use DbQuery;
 use Db;
+use Shop;
 
 class EntityMapper
 {
@@ -58,7 +59,7 @@ class EntityMapper
             }
 
             // Get shop informations
-            if (\ShopCore::isTableAssociated($entity_defs['table'])) {
+            if (Shop::isTableAssociated($entity_defs['table'])) {
                 $sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.`' . bqSQL($entity_defs['primary']) . '` = c.`' . bqSQL($entity_defs['primary']) . '` AND c.`id_shop` = ' . (int)$id_shop);
             }
 

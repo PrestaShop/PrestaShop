@@ -31,6 +31,8 @@ use ContextCore as OldContext;
 use Language;
 use AdminController;
 use Link;
+use Tools;
+use Dispatcher;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -86,11 +88,11 @@ class LegacyContext
         $id_lang = OldContext::getContext()->language->id;
         $params = $extraParams;
         if ($withToken) {
-            $params['token'] = \ToolsCore::getAdminTokenLite($controller);
+            $params['token'] = Tools::getAdminTokenLite($controller);
         }
 
         $link = new Link();
-        return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.\DispatcherCore::getInstance()->createUrl($controller, $id_lang, $params, false);
+        return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
@@ -167,7 +169,7 @@ class LegacyContext
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
-        $languages = \LanguageCore::getLanguages($active, $id_shop, $ids_only);
+        $languages = Language::getLanguages($active, $id_shop, $ids_only);
         $defaultLanguageFirst = $this->getLanguage();
         usort($languages, function ($a, $b) use ($defaultLanguageFirst) {
             if ($a['id_lang'] == $defaultLanguageFirst->id) {
@@ -188,7 +190,7 @@ class LegacyContext
      */
     public function getEmployeeLanguageIso()
     {
-        return \LanguageCore::getIsoById($this->getContext()->employee->id_lang);
+        return Language::getIsoById($this->getContext()->employee->id_lang);
     }
 
     /**

@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Group;
 
+use Group;
+
 /**
  * This class will provide data from DB / ORM about Group
  */
@@ -41,6 +43,6 @@ class GroupDataProvider
      */
     public function getGroups($id_lang, $id_shop = false)
     {
-        return \GroupCore::getGroups($id_lang, $id_shop);
+        return Group::getGroups($id_lang, $id_shop);
     }
 }

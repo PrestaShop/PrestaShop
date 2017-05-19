@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 
+use Manufacturer;
+
 /**
  * This class will provide data from DB / ORM about Manufacturer
  */
@@ -46,6 +48,6 @@ class ManufacturerDataProvider
      */
     public function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false, $group_by = false)
     {
-        return \ManufacturerCore::getManufacturers($get_nb_products, $id_lang, $active, $p, $n, $all_group, $group_by);
+        return Manufacturer::getManufacturers($get_nb_products, $id_lang, $active, $p, $n, $all_group, $group_by);
     }
 }

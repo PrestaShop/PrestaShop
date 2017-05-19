@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use PrestaShopLogger;
 
 class LegacyLogger implements LoggerInterface
 {
@@ -164,6 +165,6 @@ class LegacyLogger implements LoggerInterface
         $object_id = !empty($context['object_id'])?$context['object_id']:null;
         $allow_duplicate = !empty($context['allow_duplicate'])?$context['allow_duplicate']:null;
 
-        \PrestaShopLoggerCore::addLog($message, $pslevel, $error_code, $object_type, $object_id, $allow_duplicate);
+        PrestaShopLogger::addLog($message, $pslevel, $error_code, $object_type, $object_id, $allow_duplicate);
     }
 }

@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Pack;
+
 class PackItemsManager
 {
     /**
@@ -32,7 +34,7 @@ class PackItemsManager
      *
      * @param \Pack $pack
      * @param integer $id_lang Optional
-     * @return Array[Product] The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
+     * @return array(product) The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
      */
     public function getPackItems($pack, $id_lang = false)
     {
@@ -40,7 +42,7 @@ class PackItemsManager
             $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
-        return \PackCore::getItems($pack->id, $id_lang);
+        return Pack::getItems($pack->id, $id_lang);
     }
 
     /**
@@ -49,7 +51,7 @@ class PackItemsManager
      * @param \ProductCore $item
      * @param integer $item_attribute_id
      * @param integer $id_lang Optional
-     * @return Array[Pack] The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
+     * @return array(Pack) The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
      */
     public function getPacksContainingItem($item, $item_attribute_id, $id_lang = false)
     {
@@ -57,7 +59,7 @@ class PackItemsManager
             $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
-        return \PackCore::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
+        return Pack::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
     }
 
     /**
@@ -68,7 +70,7 @@ class PackItemsManager
      */
     public function isPack($product)
     {
-        return \PackCore::isPack($product->id);
+        return Pack::isPack($product->id);
     }
 
     /**
@@ -82,6 +84,6 @@ class PackItemsManager
      */
     public function isPacked($product, $id_product_attribute = false)
     {
-        return \PackCore::isPacked($product->id, $id_product_attribute);
+        return Pack::isPacked($product->id, $id_product_attribute);
     }
 }

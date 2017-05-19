@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
+use Carrier;
+
 /**
  * This class will provide data from DB / ORM about Category
  */
@@ -50,7 +52,7 @@ class CarrierDataProvider
      */
     public function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
     {
-        return \CarrierCore::getCarriers($id_lang, $active, $delete, $id_zone, $ids_group, $modules_filters);
+        return Carrier::getCarriers($id_lang, $active, $delete, $id_zone, $ids_group, $modules_filters);
     }
 
     /**
@@ -60,6 +62,6 @@ class CarrierDataProvider
      */
     public function getAllCarriersConstant()
     {
-        return \CarrierCore::ALL_CARRIERS;
+        return Carrier::ALL_CARRIERS;
     }
 }

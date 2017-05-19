@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Address;
+
 class AddressFactory
 {
     /**
@@ -49,6 +51,6 @@ class AddressFactory
      */
     public function addressExists($id_address)
     {
-        return \AddressCore::addressExists($id_address);
+        return Address::addressExists($id_address);
     }
 }

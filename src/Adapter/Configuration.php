@@ -25,9 +25,10 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Core\Foundation\Exception;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Shop;
+use Combination;
+use Feature;
 
 class Configuration implements ConfigurationInterface
 {
@@ -87,7 +88,7 @@ class Configuration implements ConfigurationInterface
      */
     public function featureIsActive()
     {
-        return \FeatureCore::isFeatureActive();
+        return Feature::isFeatureActive();
     }
 
     /**
@@ -96,7 +97,7 @@ class Configuration implements ConfigurationInterface
      */
     public function combinationIsActive()
     {
-        return  \CombinationCore::isFeatureActive();
+        return  Combination::isFeatureActive();
     }
 
     /**

@@ -42,7 +42,7 @@ class Context
      */
     public function getShops($active = true, $get_as_list_id = false)
     {
-        return Shop::getShops($active, \ShopCore::getContextShopGroupID(), $get_as_list_id);
+        return Shop::getShops($active, Shop::getContextShopGroupID(), $get_as_list_id);
     }
 
     /**
@@ -73,7 +73,7 @@ class Context
      */
     public function isShopGroupContext()
     {
-        return Shop::getContext() === \ShopCore::CONTEXT_GROUP;
+        return Shop::getContext() === Shop::CONTEXT_GROUP;
     }
 
     /**
@@ -83,7 +83,7 @@ class Context
      */
     public function isShopContext()
     {
-        return Shop::getContext() === \ShopCore::CONTEXT_SHOP;
+        return Shop::getContext() === Shop::CONTEXT_SHOP;
     }
 
     /**
@@ -93,7 +93,7 @@ class Context
      */
     public function isAllContext()
     {
-        return Shop::getContext() === \ShopCore::CONTEXT_ALL;
+        return Shop::getContext() === Shop::CONTEXT_ALL;
     }
 
     /**
@@ -103,7 +103,7 @@ class Context
      */
     public function setShopContext($id)
     {
-        \ShopCore::setContext(\ShopCore::CONTEXT_SHOP, $id);
+        Shop::setContext(Shop::CONTEXT_SHOP, $id);
     }
 
     /**
@@ -113,7 +113,7 @@ class Context
      */
     public function setShopGroupContext($id)
     {
-        \ShopCore::setContext(\ShopCore::CONTEXT_GROUP, $id);
+        Shop::setContext(Shop::CONTEXT_GROUP, $id);
     }
 
     /**
@@ -123,6 +123,6 @@ class Context
      */
     public function setAllContext($id)
     {
-        \ShopCore::setContext(\ShopCore::CONTEXT_ALL, $id);
+        Shop::setContext(Shop::CONTEXT_ALL, $id);
     }
 }

@@ -26,6 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Tax;
 
+use TaxRulesGroup;
+use Context;
+use TaxManagerFactory;
+use Tax;
+
 /**
  * This class will provide data from DB / ORM about tax rules
  */
@@ -40,7 +45,7 @@ class TaxRuleDataProvider
      */
     public function getTaxRulesGroups($only_active = true)
     {
-        return \TaxRulesGroupCore::getTaxRulesGroups($only_active);
+        return TaxRulesGroup::getTaxRulesGroups($only_active);
     }
 
     /**
@@ -61,7 +66,7 @@ class TaxRuleDataProvider
     public function getTaxRulesGroupWithRates()
     {
         $address = new \Address();
-        $address->id_country = (int)\ContextCore::getContext()->country->id;
+        $address->id_country = (int)Context::getContext()->country->id;
         $tax_rules_groups = $this->getTaxRulesGroups();
         $tax_rates = array(
             0 => array(
@@ -73,7 +78,7 @@ class TaxRuleDataProvider
 
         foreach ($tax_rules_groups as $tax_rules_group) {
             $id_tax_rules_group = (int)$tax_rules_group['id_tax_rules_group'];
-            $tax_calculator = \TaxManagerFactoryCore::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+            $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
             $tax_rates[$id_tax_rules_group] = array(
                 'id_tax_rules_group' => $id_tax_rules_group,
                 'rates' => array(),
@@ -99,6 +104,6 @@ class TaxRuleDataProvider
      */
     public function getProductEcotaxRate()
     {
-        return \TaxCore::getProductEcotaxRate();
+        return Tax::getProductEcotaxRate();
     }
 }

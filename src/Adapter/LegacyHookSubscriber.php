@@ -26,10 +26,10 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Prophecy\Exception\Doubler\MethodNotFoundException;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
-use \ContextCore as OldContext;
+use Context;
+use Hook;
 
 /**
  * The subscriber for HookDispatcher that triggers legacy Hooks.
@@ -224,12 +224,12 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         $listeners = array();
 
         //Hack SF2 cache clear : if context not mounted, bypass legacy call
-        $legacyContext = OldContext::getContext();
+        $legacyContext = Context::getContext();
         if (!$legacyContext || empty($legacyContext->shop) || empty($legacyContext->employee)) {
             return $listeners;
         }
 
-        $hooks = \HookCore::getHooks();
+        $hooks = Hook::getHooks();
 
         if (is_array($hooks)) {
             foreach ($hooks as $hook) {
@@ -240,7 +240,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
                 $modules = array();
                 //SF2 cache clear bug fix : call bqSQL alias function
                 if (function_exists("bqSQL")) {
-                    $modules = \HookCore::getHookModuleExecList($name);
+                    $modules = Hook::getHookModuleExecList($name);
                 }
 
                 if (is_array($modules)) {
@@ -287,7 +287,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         $hookName = $args[1];
         $event = $args[0];
         /* @var $event HookEvent */
-        $content = \HookCore::exec($hookName, $event->getHookParameters(), $moduleId, ($event instanceof RenderingHookEvent));
+        $content = Hook::exec($hookName, $event->getHookParameters(), $moduleId, ($event instanceof RenderingHookEvent));
 
         if ($event instanceof RenderingHookEvent) {
             $event->setContent(array_values($content)[0], array_keys($content)[0]);
