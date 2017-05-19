@@ -241,35 +241,22 @@ class SearchCore
             $sql_groups = 'AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
         }
 
-        $results = $db->executeS('
-		SELECT cp.`id_product`
-		FROM `'._DB_PREFIX_.'category_product` cp
-		'.(Group::isFeatureActive() ? 'INNER JOIN `'._DB_PREFIX_.'category_group` cg ON cp.`id_category` = cg.`id_category`' : '').'
-		INNER JOIN `'._DB_PREFIX_.'category` c ON cp.`id_category` = c.`id_category`
-		INNER JOIN `'._DB_PREFIX_.'product` p ON cp.`id_product` = p.`id_product`
-		'.Shop::addSqlAssociation('product', 'p', false).'
-		WHERE c.`active` = 1
-		AND product_shop.`active` = 1
-		AND product_shop.`visibility` IN ("both", "search")
-		AND product_shop.indexed = 1
-		'.$sql_groups, true, false);
-
         $eligible_products = array();
-        foreach ($results as $row) {
-            $eligible_products[] = $row['id_product'];
-        }
         foreach ($intersect_array as $query) {
-            $eligible_products2 = array();
+            $indexed_products = array();
             foreach ($db->executeS($query, true, false) as $row) {
-                $eligible_products2[] = $row['id_product'];
+                $indexed_products[] = $row['id_product'];
             }
-
-            $eligible_products = array_intersect($eligible_products, $eligible_products2);
-            if (!count($eligible_products)) {
-                return ($ajax ? array() : array('total' => 0, 'result' => array()));
-            }
-        }
-
+			if(empty($eligible_products)){
+				$eligible_products = $indexed_products;
+			} else{
+				$eligible_products = array_intersect($eligible_products, $indexed_products);
+			}
+			if (empty($indexed_products)) {
+				return ($ajax ? array() : array('total' => 0, 'result' => array()));
+			}
+		}
+		
         $eligible_products = array_unique($eligible_products);
 
         $product_pool = '';
@@ -311,7 +298,7 @@ class SearchCore
         } elseif (in_array($order_by, array('date_upd', 'date_add'))) {
             $alias = 'p.';
         }
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
+        $sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 			 image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name '.$score.',
 				DATEDIFF(
@@ -334,9 +321,10 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
 					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				WHERE p.`id_product` '.$product_pool.'
-				GROUP BY product_shop.id_product
-				'.($order_by ? 'ORDER BY  '.$alias.$order_by : '').($order_way ? ' '.$order_way : '').'
+				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+				LEFT JOIN `'._DB_PREFIX_.'category` c ON (cp.`id_category` = c.`id_category`)
+				WHERE c.`active` = 1 AND  product_shop.`active` = 1 AND p.`id_product` '.$product_pool.'
+				ORDER BY '.$alias.$order_by.' '.$order_way.' 
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
         $result = $db->executeS($sql, true, false);
 
