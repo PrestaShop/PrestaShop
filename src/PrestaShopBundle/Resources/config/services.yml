@@ -195,6 +195,8 @@ services:
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
         arguments: ["@prestashop.adapter.legacy.logger", "@translator", "@doctrine.orm.entity_manager"]
+        calls:
+                - [ "setEmployeeId", ["@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0"]]
 
     prestashop.categories_provider:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider

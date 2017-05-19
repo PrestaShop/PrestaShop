@@ -20,6 +20,10 @@ php:
   - 5.4
   - 5.6
   - 7.0
+  
+env:
+    global:
+        - SYMFONY_DEPRECATIONS_HELPER=disabled
 
 before_install:
   # Apache & php-fpm configuration
@@ -38,7 +42,7 @@ script:
   - bash tests/check_file_syntax.sh
   - bash travis-scripts/install-prestashop
   - php bin/phpunit -c tests/
-  - SYMFONY_DEPRECATIONS_HELPER=disabled php bin/phpunit -c tests/phpunit-admin.xml
+  - php bin/phpunit -c tests/phpunit-admin.xml
   - composer phpunit-sf
   - composer phpunit-controllers
   - bash ./travis-scripts/run-selenium-tests

@@ -473,6 +473,7 @@ class ModuleController extends FrameworkBundleAdminController
         $twigParams = array(
             'currentIndex' => '',
             'modulesList' => $moduleListSorted,
+            'level' => $this->authorizationLevel($this::controller_name),
         );
 
         if ($request->request->has('admin_list_from_source')) {
@@ -501,7 +502,7 @@ class ModuleController extends FrameworkBundleAdminController
             if (!isset($modulesSelectList) || in_array($module->get('name'), $modulesSelectList)) {
                 $perm = true;
                 if ($module->get('id')) {
-                    $perm &= \Module::getPermissionStatic($module->get('id'), 'configure');
+                    $perm &= \Module::getPermissionStatic($module->get('id'), 'configure', $this->getContext()->employee);
                 } else {
                     $id_admin_module = $tabRepository->findOneIdByClassName('AdminModules');
                     $access = \Profile::getProfileAccess($this->getContext()->employee->id_profile, $id_admin_module);

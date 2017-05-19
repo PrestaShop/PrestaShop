@@ -52,7 +52,8 @@ class WebTestCase extends TestCase
         $this->translator = self::$kernel->getContainer()->get('translator');
 
         $employeeMock = $this->getMockBuilder('\Employee')
-        ->getMock();
+            ->getMock();
+        $employeeMock->id_profile = 1;
 
         $contextMock = $this->getMockBuilder('\Context')
             ->disableAutoload()
@@ -66,6 +67,12 @@ class WebTestCase extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $contextMock->language = $languageMock;
+
+        $currencyMock = $this->getMockBuilder('\Currency')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $contextMock->currency = $currencyMock;
 
         $legacyContextMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Adapter\LegacyContext')
             ->setMethods([
