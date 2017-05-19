@@ -334,7 +334,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
             $product['price_final'] = Product::getPriceStatic($product['id_product'], true, null,
-                (int) \Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
+                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
                 true, null, null, null, $nothing, true, true);
             if ($formatCldr) {
                 $product['price'] = Tools::displayPrice($product['price'], $currency);
@@ -416,6 +416,6 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function isNewProductDefaultActivated()
     {
-        return (bool) \Configuration::get('PS_PRODUCT_ACTIVATION_DEFAULT');
+        return (bool) Configuration::get('PS_PRODUCT_ACTIVATION_DEFAULT');
     }
 }
