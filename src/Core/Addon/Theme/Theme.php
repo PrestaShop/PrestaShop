@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use Shudrum\Component\ArrayFinder\ArrayFinder;
 use Symfony\Component\Yaml\Yaml;
+use AbstractAssetManager;
 
 class Theme implements AddonInterface
 {
@@ -207,10 +208,10 @@ class Theme implements AddonInterface
                 continue;
             }
             if (!isset($entry['media'])) {
-                $entry['media'] = \AbstractAssetManager::DEFAULT_MEDIA;
+                $entry['media'] = AbstractAssetManager::DEFAULT_MEDIA;
             }
             if (!isset($entry['priority'])) {
-                $entry['priority'] = \AbstractAssetManager::DEFAULT_PRIORITY;
+                $entry['priority'] = AbstractAssetManager::DEFAULT_PRIORITY;
             }
             if (!isset($entry['inline'])) {
                 $entry['inline'] = false;
@@ -233,10 +234,10 @@ class Theme implements AddonInterface
                 continue;
             }
             if (!isset($entry['position'])) {
-                $entry['position'] = \AbstractAssetManager::DEFAULT_JS_POSITION;
+                $entry['position'] = AbstractAssetManager::DEFAULT_JS_POSITION;
             }
             if (!isset($entry['priority'])) {
-                $entry['priority'] = \AbstractAssetManager::DEFAULT_PRIORITY;
+                $entry['priority'] = AbstractAssetManager::DEFAULT_PRIORITY;
             }
             if (!isset($entry['inline'])) {
                 $entry['inline'] = false;

@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
 use Symfony\Component\Routing\Router;
+use Module;
 
 /**
  * Data provider for new Architecture, about recommended modules.
@@ -90,7 +91,7 @@ class RecommendedModules
         $installed_modules = [];
         array_map(function ($module) use (&$installed_modules) {
             $installed_modules[$module['name']] = $module;
-        }, \Module::getModulesInstalled());
+        }, Module::getModulesInstalled());
 
         foreach ($moduleFullList as $key => $module) {
             if ((bool)array_key_exists($module->attributes->get('name'), $installed_modules) === true) {

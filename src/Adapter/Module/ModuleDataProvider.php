@@ -34,6 +34,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 use Db;
 use Validate;
+use Module;
 
 class ModuleDataProvider
 {
@@ -119,7 +120,7 @@ class ModuleDataProvider
      */
     public function getModuleName($module)
     {
-        return \Module::getModuleName($module);
+        return Module::getModuleName($module);
     }
 
     /**
@@ -130,8 +131,8 @@ class ModuleDataProvider
      */
     public function can($action, $name)
     {
-        return \Module::getPermissionStatic(
-            \Module::getModuleIdByName($name),
+        return Module::getPermissionStatic(
+            Module::getModuleIdByName($name),
             $action
         );
     }

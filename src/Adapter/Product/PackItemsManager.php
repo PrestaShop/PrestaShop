@@ -34,7 +34,7 @@ class PackItemsManager
      *
      * @param \Pack $pack
      * @param integer $id_lang Optional
-     * @return array(product) The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
+     * @return array(Product) The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
      */
     public function getPackItems($pack, $id_lang = false)
     {
