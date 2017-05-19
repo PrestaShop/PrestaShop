@@ -37,6 +37,8 @@ use Context;
 use Hook;
 use Product;
 use Tools;
+use Configuration;
+use Currency;
 
 /**
  * Data provider for new Architecture, about Product object model.
@@ -310,7 +312,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             }
             // for 'filter_category', see next if($showPositionColumn) block.
         }
-        $sqlWhere[] = 'state = '.\Product::STATE_SAVED;
+        $sqlWhere[] = 'state = '.Product::STATE_SAVED;
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
         Hook::exec('actionAdminProductsListingFieldsModifier', array(
@@ -328,7 +330,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
-        $currency = new (\Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
             $product['price_final'] = Product::getPriceStatic($product['id_product'], true, null,

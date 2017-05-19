@@ -30,6 +30,7 @@ use TaxRulesGroup;
 use Context;
 use TaxManagerFactory;
 use Tax;
+use Product;
 
 /**
  * This class will provide data from DB / ORM about tax rules
@@ -55,7 +56,7 @@ class TaxRuleDataProvider
      */
     public function getIdTaxRulesGroupMostUsed()
     {
-        return \Product::getIdTaxRulesGroupMostUsed();
+        return Product::getIdTaxRulesGroupMostUsed();
     }
 
     /**

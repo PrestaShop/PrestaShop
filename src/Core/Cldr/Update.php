@@ -25,8 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
-use PrestaShop\PrestaShop\Core\Cldr\Localize;
-use PrestaShop\PrestaShop\Core\Cldr\Repository;
+use Tools as ToolsLegacy;
 use Curl\Curl;
 
 /**
@@ -126,7 +125,7 @@ class Update extends Repository
             throw new \Exception('Error : the locale is not valid');
         }
 
-        $cldrRepository = \Tools::getCldr(null, $locale);
+        $cldrRepository = ToolsLegacy::getCldr(null, $locale);
         $locale = $cldrRepository->getCulture();
 
         $file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip';

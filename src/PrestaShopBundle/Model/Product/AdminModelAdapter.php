@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use ProductDownload;
 use Attachment;
 use Configuration as ConfigurationLegacy;
+use Tools as ToolsLegacy;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -96,7 +97,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
         $this->adminProductWrapper = $adminProductWrapper;
-        $this->cldrRepository = \Tools::getCldr($this->contextShop);
+        $this->cldrRepository = ToolsLegacy::getCldr($this->contextShop);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
         $this->tools = $toolsAdapter;

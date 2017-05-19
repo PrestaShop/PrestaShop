@@ -268,7 +268,7 @@ class AdminProductWrapper
      */
     private function validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
     {
-        if (!\Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
+        if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
             $this->errors[] = 'Wrong IDs';
         } elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !Validate::isNegativePrice($price)) || (isset($reduction) && !Validate::isPrice($reduction))) {
             $this->errors[] = 'Invalid price/discount amount';
@@ -337,7 +337,7 @@ class AdminProductWrapper
                 if ($specific_price['reduction_type'] == 'percentage') {
                     $impact = '- ' . ($specific_price['reduction'] * 100) . ' %';
                 } elseif ($specific_price['reduction'] > 0) {
-                    $impact = '- ' . Tools::displayPrice(\Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
+                    $impact = '- ' . Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
                     if ($specific_price['reduction_tax']) {
                         $impact .= '(' . $this->translator->trans('Tax incl.', array(), 'Admin.Global') . ')';
                     } else {

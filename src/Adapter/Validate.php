@@ -25,15 +25,17 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Validate as ValidateLegacy;
+
 class Validate
 {
     public static function isOrderWay($way)
     {
-        return \Validate::isOrderWay($way);
+        return ValidateLegacy::isOrderWay($way);
     }
 
     public static function isOrderBy($order)
     {
-        return \Validate::isOrderBy($order);
+        return ValidateLegacy::isOrderBy($order);
     }
 }

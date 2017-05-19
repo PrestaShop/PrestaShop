@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Service;
 
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use Product;
 
 class ProductService {
     /** @var ProductDataProvider */
@@ -38,7 +39,7 @@ class ProductService {
 
     public function cleanupOldTempProducts()
     {
-        $oldProducts = \Product::getOldTempProducts();
+        $oldProducts = Product::getOldTempProducts();
 
         foreach ($oldProducts as $oldProduct) {
             $id_product = $oldProduct['id_product'];

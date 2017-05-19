@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Product;
+
 class PriceCalculator
 {
     public function getProductPrice(
@@ -47,7 +49,7 @@ class PriceCalculator
         $use_customer_price = true,
         $id_customization = null
     ) {
-        return \Product::getPriceStatic(
+        return Product::getPriceStatic(
             $id_product,
             $usetax,
             $id_product_attribute,

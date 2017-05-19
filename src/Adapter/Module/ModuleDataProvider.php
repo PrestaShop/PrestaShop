@@ -33,6 +33,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 use Db;
+use Validate;
 
 class ModuleDataProvider
 {
@@ -173,7 +174,7 @@ class ModuleDataProvider
      */
     public function isModuleMainClassValid($name)
     {
-        if (!\Validate::isModuleName($name)) {
+        if (!Validate::isModuleName($name)) {
             return false;
         }
 
