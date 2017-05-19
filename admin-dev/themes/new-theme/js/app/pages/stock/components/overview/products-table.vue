@@ -69,7 +69,7 @@
       </tr>
       <tr v-else-if="emptyProducts">
         <td colspan="7">
-          <PSAlert alertType="ALERT_TYPE_DANGER" :hasClose="false" >
+          <PSAlert alertType="ALERT_TYPE_INFO" :hasClose="false" >
             {{trans('no_product')}}
           </PSAlert>
         </td>

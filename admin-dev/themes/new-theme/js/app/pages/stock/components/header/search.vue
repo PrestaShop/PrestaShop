@@ -52,7 +52,10 @@
       PSButton,
     },
     methods: {
-      onSearch() {
+      onSearch(tag) {
+        if (tag.indexOf(this.tags) !== -1) {
+          this.tags.splice(tag, 1);
+        }
         this.$emit('search', this.tags);
       },
       applyFilter(filters) {

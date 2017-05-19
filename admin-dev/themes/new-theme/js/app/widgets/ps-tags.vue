@@ -63,8 +63,8 @@
         }
       },
       close(index) {
-        this.tags.splice(index, 1);
         this.$emit('tagChange', this.tags[index]);
+        this.tags.splice(index, 1);
       },
       remove() {
         if (this.tags.length) {
