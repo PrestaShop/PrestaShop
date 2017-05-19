@@ -78,6 +78,7 @@ GitHub contributors:
 - CINS
 - cippest
 - Claire Meuriot
+- Claudio Venturini
 - cmouleyre
 - cocoweb
 - Code Utopia
@@ -93,6 +94,7 @@ GitHub contributors:
 - Damien Metzger
 - Damien PIQUET
 - DamienMetzger
+- damien_low
 - Damon Skelhorn
 - Dan Hlavenka
 - danidomen
@@ -231,7 +233,7 @@ GitHub contributors:
 - janisVincent
 - Jaume
 - Javsmile
-- JEAN
+- jean
 - jeanbe
 - jeckyl
 - Jeroen Dewaele
@@ -277,6 +279,7 @@ GitHub contributors:
 - Krystian Podemski
 - Kevin Dunglas
 - Ladel
+- Lars Hallqvist
 - ldecoker
 - Lesley Paone
 - LOIC ROSSET ltd
@@ -359,6 +362,7 @@ GitHub contributors:
 - Nino Uzelac
 - nodexpl
 - nturato
+- okom3pom
 - oleacorner
 - Olivier Bonvalet
 - Otto Nascarella
@@ -422,6 +426,7 @@ GitHub contributors:
 - Ricki Hirner
 - Rimas Kudelis
 - robert
+- roja45
 - Roland Schütz
 - romainberger
 - Roman Gusev
@@ -459,6 +464,7 @@ GitHub contributors:
 - Stanislav Yordanov
 - Stefano Kowalke
 - Stephan Obadia
+- Steven
 - Steven "SDF" Sulley
 - Steven Sulley
 - Studio Kiwik

@@ -97,8 +97,7 @@ class SpecificPriceCore extends ObjectModel
     {
         if (parent::add($autodate, $nullValues)) {
             // Flush cache when we adding a new specific price
-            SpecificPrice::$_specificPriceCache = array();
-            Product::flushPriceCache();
+            $this->flushCache();
             // Set cache of feature detachable to true
             Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', '1');
             return true;
@@ -110,8 +109,7 @@ class SpecificPriceCore extends ObjectModel
     {
         if (parent::update($null_values)) {
             // Flush cache when we updating a new specific price
-            SpecificPrice::$_specificPriceCache = array();
-            Product::flushPriceCache();
+            $this->flushCache();
             return true;
         }
         return false;
@@ -121,8 +119,7 @@ class SpecificPriceCore extends ObjectModel
     {
         if (parent::delete()) {
             // Flush cache when we deletind a new specific price
-            SpecificPrice::$_specificPriceCache = array();
-            Product::flushPriceCache();
+            $this->flushCache();
             // Refresh cache of feature detachable
             Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', SpecificPrice::isCurrentlyUsed($this->def['table']));
             return true;

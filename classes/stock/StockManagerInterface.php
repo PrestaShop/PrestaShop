@@ -55,16 +55,31 @@ interface StockManagerInterface
     /**
      * For a given product, removes a given quantity
      *
-     * @param int $id_product
-     * @param int $id_product_attribute
-     * @param Warehouse $warehouse
-     * @param int $quantity
-     * @param int $id_stock_movement_reason
-     * @param bool $is_usable
-     * @param int $id_order Optionnal
+     * @param int           $id_product
+     * @param int|null      $id_product_attribute
+     * @param Warehouse     $warehouse
+     * @param int           $quantity
+     * @param int           $id_stock_mvt_reason
+     * @param bool          $is_usable
+     * @param int|null      $id_order
+     * @param int           $ignore_pack
+     * @param Employee|null $employee
+     * @param Stock|null    $stock
+     *
      * @return array - empty if an error occurred | details of removed products quantities with corresponding prices otherwise
      */
-    public function removeProduct($id_product, $id_product_attribute, Warehouse $warehouse, $quantity, $id_stock_movement_reason, $is_usable = true, $id_order = null);
+    public function removeProduct(
+        $id_product,
+        $id_product_attribute,
+        Warehouse $warehouse,
+        $quantity,
+        $id_stock_movement_reason,
+        $is_usable = true,
+        $id_order = null,
+        $ignore_pack = 0,
+        $employee = null,
+        Stock $stock = null
+    );
 
     /**
      * For a given product, returns its physical quantity

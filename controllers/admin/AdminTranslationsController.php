@@ -579,7 +579,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         // Get all email files
         foreach ($files_list as $file) {
-            if (preg_match('#^mails\/([a-z0-9]+)\/#Ui', $file['filename'], $matches)) {
+            if (preg_match('#^(\.\/)?mails\/([a-z0-9]+)\/#Ui', $file['filename'], $matches)) {
                 $slash_pos = strrpos($file['filename'], '/');
                 $mails_new_lang[] = substr($file['filename'], -(strlen($file['filename']) - $slash_pos - 1));
             }
@@ -691,7 +691,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         foreach ($files as $file) {
             // Check if file is a file theme
-            if (preg_match('#^translations\/'.$iso_code.'\/tabs.php#Ui', $file['filename'], $matches) && Validate::isLanguageIsoCode($iso_code)) {
+            if (preg_match('#translations\/'.$iso_code.'\/tabs.php#Ui', $file['filename'], $matches) && Validate::isLanguageIsoCode($iso_code)) {
                 // Include array width new translations tabs
                 $_TABS = array();
                 clearstatcache();
@@ -1673,6 +1673,8 @@ class AdminTranslationsControllerCore extends AdminController
                         if (_PS_MAGIC_QUOTES_GPC_) {
                             $content = stripslashes($content);
                         }
+
+                        $content = preg_replace('/<title>.*<\/title>/', '<title>'.$title.'</title>', $content);
                     }
 
                     if (Validate::isCleanHTML($content)) {
@@ -1890,6 +1892,8 @@ class AdminTranslationsControllerCore extends AdminController
         $name_var = $this->translations_informations[$this->type_selected]['var'];
         $GLOBALS[$name_var] = $this->fileExists();
         $missing_translations_back = array();
+        $missing_translations_found = array();
+        $tab_array = array();
 
         // Get all types of file (PHP, TPL...) and a list of files to parse by folder
         $files_per_directory = $this->getFileToParseByTypeTranslation();
@@ -2012,8 +2016,11 @@ class AdminTranslationsControllerCore extends AdminController
                                 $tabs_array[$prefix_key][$key]['trad'] = '';
                                 if (!isset($missing_translations_back[$prefix_key])) {
                                     $missing_translations_back[$prefix_key] = 1;
-                                } else {
+                                    $missing_translations_found[$prefix_key] = array();
+                                    $missing_translations_found[$prefix_key][] = $key;
+                                } elseif (!in_array($key, $missing_translations_found[$prefix_key])) {
                                     $missing_translations_back[$prefix_key]++;
+                                    $missing_translations_found[$prefix_key][] = $key;
                                 }
                             }
                         }
@@ -2043,8 +2050,11 @@ class AdminTranslationsControllerCore extends AdminController
                                 $tabs_array[$prefix_key][$key]['trad'] = '';
                                 if (!isset($missing_translations_back[$prefix_key])) {
                                     $missing_translations_back[$prefix_key] = 1;
-                                } else {
+                                    $missing_translations_found[$prefix_key] = array();
+                                    $missing_translations_found[$prefix_key][] = $key;
+                                } elseif(!in_array($key, $missing_translations_found[$prefix_key])) {
                                     $missing_translations_back[$prefix_key]++;
+                                    $missing_translations_found[$prefix_key][] = $key;
                                 }
                             }
                         }
@@ -2117,12 +2127,15 @@ class AdminTranslationsControllerCore extends AdminController
                                     $new_lang[$english_string]['trad'] = '';
                                     if (!isset($missing_translations_back[$prefix_key])) {
                                         $missing_translations_back[$prefix_key] = 1;
-                                    } else {
+                                        $missing_translations_found[$prefix_key] = array();
+                                        $missing_translations_found[$prefix_key][] = $english_string;
+                                    } elseif (!in_array($english_string, $missing_translations_found[$prefix_key])) {
                                         $missing_translations_back[$prefix_key]++;
+                                        $missing_translations_found[$prefix_key][] = $english_string;
                                     }
                                 }
                             }
-                            $new_lang[$english_string]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
+                            $new_lang[$english_string]['use_sprintf'] = $this->checkIfKeyUseSprintf($english_string);
                         }
                     }
                     if (isset($tabs_array[$prefix_key])) {

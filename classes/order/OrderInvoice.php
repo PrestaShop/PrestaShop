@@ -129,6 +129,8 @@ class OrderInvoiceCore extends ObjectModel
 
     public function getProductsDetail()
     {
+        $id_lang = Context::getContext()->language->id;
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT *
         FROM `'._DB_PREFIX_.'order_detail` od
