@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Category;
+use Context;
 
 /**
  * This class will provide data from DB / ORM about Category
@@ -58,10 +60,10 @@ class CategoryDataProvider
             throw new \LogicException('You need to provide a category id', 5002);
         }
 
-        $category = new \CategoryCore($idCategory, $idLang, $idShop);
+        $category = new Category($idCategory, $idLang, $idShop);
 
         if ($category) {
-            $category->image = \ContextCore::getContext()->link->getCatImageLink($category->name, $category->id);
+            $category->image = Context::getContext()->link->getCatImageLink($category->name, $category->id);
         }
 
         return $category;

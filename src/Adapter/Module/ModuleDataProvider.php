@@ -27,12 +27,12 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Doctrine\ORM\EntityManager;
 use PhpParser;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
+use Db;
 
 class ModuleDataProvider
 {
@@ -79,7 +79,7 @@ class ModuleDataProvider
      */
     public function findByName($name)
     {
-        $result = \Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
+        $result = Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
         if ($result) {
             $result['installed'] = 1;
             $result['active'] = $this->isEnabled($name);
@@ -145,7 +145,7 @@ class ModuleDataProvider
         $id_shops = (new Context())->getContextListShopID();
         // ToDo: Load list of all installed modules ?
 
-        $result = \Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
+        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
         FROM `'._DB_PREFIX_.'module` m
         LEFT JOIN `'._DB_PREFIX_.'module_shop` ms ON m.`id_module` = ms.`id_module`
         WHERE `name` = "'. pSQL($name) .'"
@@ -161,7 +161,7 @@ class ModuleDataProvider
     public function isInstalled($name)
     {
         // ToDo: Load list of all installed modules ?
-        return (bool)\Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
+        return (bool)Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
     }
 
 
@@ -242,7 +242,7 @@ class ModuleDataProvider
         $id_shops = (new Context())->getContextListShopID();
         // ToDo: Load list of all installed modules ?
 
-        $result = \Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
+        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
             FROM `'._DB_PREFIX_.'module` m
             LEFT JOIN `'._DB_PREFIX_.'module_shop` ms ON m.`id_module` = ms.`id_module`
             WHERE `name` = "'. pSQL($name) .'"

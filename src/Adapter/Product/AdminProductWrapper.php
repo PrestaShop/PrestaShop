@@ -25,6 +25,28 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Attachment;
+use SpecificPrice;
+use Customer;
+use Combination;
+use Image;
+use SpecificPriceRule;
+use Product;
+use ProductDownload;
+use AdminProductsController;
+use Tools;
+use StockAvailable;
+use Hook;
+use Validate;
+use Db;
+use Shop;
+use Language;
+use ObjectModel;
+use Configuration;
+use Context;
+use ShopUrl;
+use Category;
+
 /**
  * Admin controller wrapper for new Architecture, about Product admin controller.
  */
@@ -53,7 +75,7 @@ class AdminProductWrapper
      */
     public function getInstance()
     {
-        return new \AdminProductsController();
+        return new AdminProductsController();
     }
 
     /**
@@ -70,7 +92,7 @@ class AdminProductWrapper
         $id_product_attribute = (int)$combinationValues['id_product_attribute'];
         $images = array();
 
-        if (!\CombinationCore::isFeatureActive() || $id_product_attribute == 0) {
+        if (!Combination::isFeatureActive() || $id_product_attribute == 0) {
             return;
         }
 
@@ -113,13 +135,13 @@ class AdminProductWrapper
             $combinationValues['attribute_isbn']
         );
 
-        \StockAvailableCore::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, $id_product_attribute);
-        \StockAvailableCore::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, $id_product_attribute);
+        StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, $id_product_attribute);
+        StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, $id_product_attribute);
 
         $product->checkDefaultAttributes();
 
         if ((isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1)) {
-            \ProductCore::updateDefaultAttribute((int)$product->id);
+            Product::updateDefaultAttribute((int)$product->id);
             if (isset($id_product_attribute)) {
                 $product->cache_default_attribute = (int)$id_product_attribute;
             }
@@ -149,8 +171,8 @@ class AdminProductWrapper
     public function processQuantityUpdate(\ProductCore $product, $quantity, $forAttributeId = 0)
     {
         // Hook triggered by legacy code below: actionUpdateQuantity('id_product', 'id_product_attribute', 'quantity')
-        \StockAvailableCore::setQuantity((int)$product->id, $forAttributeId, $quantity);
-        \HookCore::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
+        StockAvailable::setQuantity((int)$product->id, $forAttributeId, $quantity);
+        Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
     }
 
     /**
@@ -161,7 +183,7 @@ class AdminProductWrapper
      */
     public function processProductOutOfStock(\ProductCore $product, $out_of_stock)
     {
-        \StockAvailableCore::setProductOutOfStock((int)$product->id, (int)$out_of_stock);
+        StockAvailable::setProductOutOfStock((int)$product->id, (int)$out_of_stock);
     }
 
     /**
@@ -175,7 +197,7 @@ class AdminProductWrapper
      */
     public function processDependsOnStock(\ProductCore $product, $dependsOnStock, $forAttributeId = 0)
     {
-        \StockAvailableCore::setProductDependsOnStock((int)$product->id, $dependsOnStock, null, $forAttributeId);
+        StockAvailable::setProductDependsOnStock((int)$product->id, $dependsOnStock, null, $forAttributeId);
     }
 
     /**
@@ -217,7 +239,7 @@ class AdminProductWrapper
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
             $this->errors[] = $this->translator->trans('Submitted reduction value (0-100) is out-of-range', array(), 'Admin.Catalog.Notification');
         } elseif ($this->validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
-            $specificPrice = new \SpecificPriceCore();
+            $specificPrice = new SpecificPrice();
             $specificPrice->id_product = (int)$id_product;
             $specificPrice->id_product_attribute = (int)$id_product_attribute;
             $specificPrice->id_shop = (int)$id_shop;
@@ -246,17 +268,17 @@ class AdminProductWrapper
      */
     private function validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
     {
-        if (!\Validate::isUnsignedId($id_shop) || !\ValidateCore::isUnsignedId($id_currency) || !\ValidateCore::isUnsignedId($id_country) || !\ValidateCore::isUnsignedId($id_group) || !\ValidateCore::isUnsignedId($id_customer)) {
+        if (!\Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
             $this->errors[] = 'Wrong IDs';
-        } elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !\ValidateCore::isNegativePrice($price)) || (isset($reduction) && !\ValidateCore::isPrice($reduction))) {
+        } elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !Validate::isNegativePrice($price)) || (isset($reduction) && !Validate::isPrice($reduction))) {
             $this->errors[] = 'Invalid price/discount amount';
-        } elseif (!\ValidateCore::isUnsignedInt($from_quantity)) {
+        } elseif (!Validate::isUnsignedInt($from_quantity)) {
             $this->errors[] = 'Invalid quantity';
-        } elseif ($reduction && !\ValidateCore::isReductionType($reduction_type)) {
+        } elseif ($reduction && !Validate::isReductionType($reduction_type)) {
             $this->errors[] = 'Please select a discount type (amount or percentage).';
-        } elseif ($from && $to && (!\ValidateCore::isDateFormat($from) || !\ValidateCore::isDateFormat($to))) {
+        } elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to))) {
             $this->errors[] = 'The from/to date is invalid.';
-        } elseif (\SpecificPriceCore::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
+        } elseif (SpecificPrice::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
             $this->errors[] = 'A specific price already exists for these parameters.';
         } else {
             return true;
@@ -279,7 +301,7 @@ class AdminProductWrapper
     public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups)
     {
         $content = array();
-        $specific_prices = \SpecificPriceCore::getByProductId((int)$product->id);
+        $specific_prices = SpecificPrice::getByProductId((int)$product->id);
 
         $tmp = array();
         foreach ($shops as $shop) {
@@ -315,7 +337,7 @@ class AdminProductWrapper
                 if ($specific_price['reduction_type'] == 'percentage') {
                     $impact = '- ' . ($specific_price['reduction'] * 100) . ' %';
                 } elseif ($specific_price['reduction'] > 0) {
-                    $impact = '- ' . \ToolsCore::displayPrice(\Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
+                    $impact = '- ' . Tools::displayPrice(\Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
                     if ($specific_price['reduction_tax']) {
                         $impact .= '(' . $this->translator->trans('Tax incl.', array(), 'Admin.Global') . ')';
                     } else {
@@ -331,7 +353,7 @@ class AdminProductWrapper
                     $period = $this->translator->trans('From', array(), 'Admin.Global') . ' ' . ($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00') . '<br />' . $this->translator->trans('to', array(), 'Admin.Global') . ' ' . ($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
                 }
                 if ($specific_price['id_product_attribute']) {
-                    $combination = new \CombinationCore((int)$specific_price['id_product_attribute']);
+                    $combination = new Combination((int)$specific_price['id_product_attribute']);
                     $attributes = $combination->getAttributesName(1);
                     $attributes_name = '';
                     foreach ($attributes as $attribute) {
@@ -342,25 +364,25 @@ class AdminProductWrapper
                     $attributes_name = $this->translator->trans('All combinations', array(), 'Admin.Catalog.Feature');
                 }
 
-                $rule = new \SpecificPriceRuleCore((int)$specific_price['id_specific_price_rule']);
+                $rule = new SpecificPriceRule((int)$specific_price['id_specific_price_rule']);
                 $rule_name = ($rule->id ? $rule->name : '--');
 
                 if ($specific_price['id_customer']) {
-                    $customer = new \CustomerCore((int)$specific_price['id_customer']);
-                    if (\ValidateCore::isLoadedObject($customer)) {
+                    $customer = new Customer((int)$specific_price['id_customer']);
+                    if (Validate::isLoadedObject($customer)) {
                         $customer_full_name = $customer->firstname . ' ' . $customer->lastname;
                     }
                     unset($customer);
                 }
 
-                if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], \ShopCore::getContextListShopID())) {
+                if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], Shop::getContextListShopID())) {
                     $can_delete_specific_prices = true;
-                    if (\ShopCore::isFeatureActive()) {
+                    if (Shop::isFeatureActive()) {
                         $can_delete_specific_prices = (count($this->legacyContext->employee->getAssociatedShops()) > 1 && !$specific_price['id_shop']) || $specific_price['id_shop'];
                     }
 
-                    $price = \ToolsCore::ps_round($specific_price['price'], 2);
-                    $fixed_price = ($price == \ToolsCore::ps_round($product->price, 2) || $specific_price['price'] == -1) ? '--' : \ToolsCore::displayPrice($price, $current_specific_currency);
+                    $price = Tools::ps_round($specific_price['price'], 2);
+                    $fixed_price = ($price == Tools::ps_round($product->price, 2) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
 
                     $content[] = [
                         'id_specific_price' => $specific_price['id_specific_price'],
@@ -396,10 +418,10 @@ class AdminProductWrapper
      */
     public function deleteSpecificPrice($id_specific_price)
     {
-        if (!$id_specific_price || !\ValidateCore::isUnsignedId($id_specific_price)) {
+        if (!$id_specific_price || !Validate::isUnsignedId($id_specific_price)) {
             $error = $this->translator->trans('The specific price ID is invalid.', array(), 'Admin.Catalog.Notification');
         } else {
-            $specificPrice = new \SpecificPriceCore((int)$id_specific_price);
+            $specificPrice = new SpecificPrice((int)$id_specific_price);
             if (!$specificPrice->delete()) {
                 $error = $this->translator->trans('An error occurred while attempting to delete the specific price.', array(), 'Admin.Catalog.Notification');
             }
@@ -436,7 +458,7 @@ class AdminProductWrapper
             ];
         }
 
-        $specific_price_priorities = \SpecificPriceCore::getPriority((int)$idProduct);
+        $specific_price_priorities = SpecificPrice::getPriority((int)$idProduct);
 
         // Not use id_customer
         if ($specific_price_priorities[0] == 'id_customer') {
@@ -463,20 +485,20 @@ class AdminProductWrapper
             }
         }
 
-        $shopList = \ShopCore::getContextListShopID();
+        $shopList = Shop::getContextListShopID();
 
         //remove customization field langs for current context shops
         foreach ($product->getCustomizationFieldIds() as $customizationFiled) {
             //if the customization_field is still in use, only delete the current context shops langs,
             //else delete all the langs
-            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE 
+            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE
 			`id_customization_field` = '.(int)$customizationFiled['id_customization_field'].
             (in_array((int)$customizationFiled['id_customization_field'], $customization_ids) ? ' AND `id_shop` IN ('.implode(',', $shopList).')' : ''));
         }
 
         //remove unused customization for the product
         if (!empty($customization_ids)) {
-            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE 
+            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE
             `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
         }
 
@@ -497,26 +519,26 @@ class AdminProductWrapper
                 //create label
                 if (isset($customization['id_customization_field'])) {
                     $id_customization_field = (int)$customization['id_customization_field'];
-                    \Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization_field`
+                    Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization_field`
 					SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int)$customization['type'] . '
 					WHERE `id_customization_field` = '.$id_customization_field);
                 } else {
-                		\Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
                     	VALUES ('.(int)$product->id.', '.(int)$customization['type'].', '.($customization['require'] ? 1 : 0).')');
-               		$id_customization_field = (int)\Db::getInstance()->Insert_ID();
+			$id_customization_field = (int)Db::getInstance()->Insert_ID();
                 }
 
                 $new_customization_fields_ids[$key] = $id_customization_field;
 
                 // Create multilingual label name
                 $langValues = '';
-                foreach (\LanguageCore::getLanguages() as $language) {
+                foreach (Language::getLanguages() as $language) {
                     $name = $customization['label'][$language['id_lang']];
                     foreach ($shopList as $id_shop) {
                         $langValues .= '('.(int)$id_customization_field.', '.(int)$language['id_lang'].', '.(int)$id_shop .',\''.pSQL($name).'\'), ';
                     }
                 }
-                \Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '.rtrim($langValues, ', '));
+                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '.rtrim($langValues, ', '));
 
                 if ($customization['type'] == 0) {
                     $countFieldFile++;
@@ -529,16 +551,16 @@ class AdminProductWrapper
         }
 
         //update product count fields labels
-        \Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = '.$productCustomizableValue.', `uploadable_files` = '.(int)$countFieldFile.', `text_fields` = '.(int)$countFieldText.' WHERE `id_product` = '.(int)$product->id);
+        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = '.$productCustomizableValue.', `uploadable_files` = '.(int)$countFieldFile.', `text_fields` = '.(int)$countFieldText.' WHERE `id_product` = '.(int)$product->id);
 
         //update product_shop count fields labels
-        \ObjectModelCore::updateMultishopTable('product', array(
+        ObjectModel::updateMultishopTable('product', array(
             'customizable' => $productCustomizableValue,
             'uploadable_files' => (int)$countFieldFile,
             'text_fields' => (int)$countFieldText,
         ), 'a.id_product = '.(int)$product->id);
 
-        \ConfigurationCore::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', '1');
+        Configuration::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', '1');
 
         return $new_customization_fields_ids;
     }
@@ -553,15 +575,15 @@ class AdminProductWrapper
      */
     public function updateDownloadProduct($product, $data)
     {
-        $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$product->id, false);
-        $download = new \ProductDownloadCore($id_product_download ? $id_product_download : null);
+        $id_product_download = ProductDownload::getIdFromIdProduct((int)$product->id, false);
+        $download = new ProductDownload($id_product_download ? $id_product_download : null);
 
         if ((int)$data['is_virtual_file'] == 1) {
             $fileName = null;
             $file = $data['file'];
 
             if (!empty($file)) {
-                $fileName = \ProductDownloadCore::getNewFilename();
+                $fileName = ProductDownload::getNewFilename();
                 $file->move(_PS_DOWNLOAD_DIR_, $fileName);
             }
 
@@ -600,12 +622,12 @@ class AdminProductWrapper
      */
     public function processDeleteVirtualProductFile($product)
     {
-        $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$product->id, false);
-        $download = new \ProductDownloadCore($id_product_download ? $id_product_download : null);
+        $id_product_download = ProductDownload::getIdFromIdProduct((int)$product->id, false);
+        $download = new ProductDownload($id_product_download ? $id_product_download : null);
 
         if ($download && !empty($download->filename)) {
             unlink(_PS_DOWNLOAD_DIR_.$download->filename);
-            \Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_download` SET filename = "" WHERE `id_product_download` = '.(int)$download->id);
+            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_download` SET filename = "" WHERE `id_product_download` = '.(int)$download->id);
         }
     }
 
@@ -616,8 +638,8 @@ class AdminProductWrapper
      */
     public function processDeleteVirtualProduct($product)
     {
-        $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$product->id, false);
-        $download = new \ProductDownloadCore($id_product_download ? $id_product_download : null);
+        $id_product_download = ProductDownload::getIdFromIdProduct((int)$product->id, false);
+        $download = new ProductDownload($id_product_download ? $id_product_download : null);
 
         if ($download) {
             $download->delete(true);
@@ -639,7 +661,7 @@ class AdminProductWrapper
         $file = $data['file'];
         if (!empty($file)) {
             $fileName = sha1(microtime());
-            $attachment = new \AttachmentCore();
+            $attachment = new Attachment();
 
             foreach ($locales as $locale) {
                 $attachment->name[(int)$locale['id_lang']] = $data['name'];
@@ -668,7 +690,7 @@ class AdminProductWrapper
      */
     public function processAttachments($product, $data)
     {
-        \AttachmentCore::attachToProduct($product->id, $data);
+        Attachment::attachToProduct($product->id, $data);
     }
 
     /**
@@ -679,7 +701,7 @@ class AdminProductWrapper
     public function ajaxProcessUpdateImagePosition($data)
     {
         foreach ($data as $id => $position) {
-            $img = new \ImageCore((int)$id);
+            $img = new Image((int)$id);
             $img->position = (int)$position;
             $img->update();
         }
@@ -695,9 +717,9 @@ class AdminProductWrapper
      */
     public function ajaxProcessUpdateImage($idImage, $data)
     {
-        $img = new \ImageCore((int)$idImage);
+        $img = new Image((int)$idImage);
         if ($data['cover']) {
-            \ImageCore::deleteCover((int)$img->id_product);
+            Image::deleteCover((int)$img->id_product);
             $img->cover = 1;
         }
         $img->legend = $data['legend'];
@@ -716,18 +738,18 @@ class AdminProductWrapper
      */
     public function getPreviewUrl($product, $preview=true)
     {
-        $context = \ContextCore::getContext();
-        $id_lang = \ConfigurationCore::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
+        $context = Context::getContext();
+        $id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
 
-        if (!\ShopUrlCore::getMainShopDomain()) {
+        if (!ShopUrl::getMainShopDomain()) {
             return false;
         }
 
-        $is_rewrite_active = (bool)\ConfigurationCore::get('PS_REWRITING_SETTINGS');
+        $is_rewrite_active = (bool)Configuration::get('PS_REWRITING_SETTINGS');
         $preview_url = $context->link->getProductLink(
             $product,
             $product->link_rewrite[$context->language->id],
-            \CategoryCore::getLinkRewrite($product->id_category_default, $context->language->id),
+            Category::getLinkRewrite($product->id_category_default, $context->language->id),
             null,
             $id_lang,
             (int)$context->shop->id,
@@ -751,8 +773,8 @@ class AdminProductWrapper
      */
     public function getPreviewUrlDeactivate($preview_url)
     {
-        $context = \ContextCore::getContext();
-        $token = \ToolsCore::getAdminTokenLite('AdminProducts');
+        $context = Context::getContext();
+        $token = Tools::getAdminTokenLite('AdminProducts');
 
         $admin_dir = dirname($_SERVER['PHP_SELF']);
         $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
@@ -770,7 +792,7 @@ class AdminProductWrapper
      */
     public function getPreviewUrlFromId($productId)
     {
-        $product = new \ProductCore($productId, false);
+        $product = new Product($productId, false);
         return $this->getPreviewUrl($product);
     }
 }

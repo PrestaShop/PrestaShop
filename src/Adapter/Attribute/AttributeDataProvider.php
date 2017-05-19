@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
+use Product;
+
 /**
  * This class will provide data from DB / ORM about Attributes
  */
@@ -87,7 +89,7 @@ class AttributeDataProvider
         $context = \ContextCore::getContext();
 
         //get product
-        $product = new \ProductCore((int)$idProduct, false);
+        $product = new Product((int)$idProduct, false);
         if (!is_object($product) || empty($product->id)) {
             return false;
         }

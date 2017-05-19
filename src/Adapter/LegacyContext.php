@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Symfony\Component\Process\Exception\LogicException;
 use ContextCore as OldContext;
 use Language;
+use AdminController;
+use Link;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -54,7 +56,7 @@ class LegacyContext
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
                 //init real legacy shop context
-                $adminController = new \AdminControllerCore();
+                $adminController = new AdminController();
                 $adminController->initShopContext();
             }
         }
@@ -87,7 +89,7 @@ class LegacyContext
             $params['token'] = \ToolsCore::getAdminTokenLite($controller);
         }
 
-        $link = new \LinkCore();
+        $link = new Link();
         return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.\DispatcherCore::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 

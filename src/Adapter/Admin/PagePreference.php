@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Admin;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
+use Db;
 
 /**
  * Adapter to know which page's version to display.
@@ -90,7 +91,7 @@ class PagePreference implements AdminPagePreferenceInterface
             return true;
         }
 
-        $version = \Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
+        $version = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
         if (!$version) {
             return false;
         }

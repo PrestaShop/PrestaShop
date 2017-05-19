@@ -25,6 +25,10 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Image;
+use Product;
+use Context;
+
 /**
  * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
  */
@@ -37,7 +41,7 @@ class ProductDataProvider
      */
     public function getProductInstance()
     {
-        return new \ProductCore();
+        return new Product();
     }
 
     /**
@@ -59,7 +63,7 @@ class ProductDataProvider
             throw new \LogicException('You need to provide a product id', 5002);
         }
 
-        $product = new \ProductCore($id_product, $full, $id_lang, $id_shop, $context);
+        $product = new Product($id_product, $full, $id_lang, $id_shop, $context);
         if ($product) {
             if (!is_array($product->link_rewrite)) {
                 $linkRewrite = $product->link_rewrite;
@@ -67,8 +71,8 @@ class ProductDataProvider
                 $linkRewrite = $product->link_rewrite[$id_lang ? $id_lang : key($product->link_rewrite)];
             }
 
-            $cover = \ProductCore::getCover($product->id);
-            $product->image = \Context::getContext()->link->getImageLink($linkRewrite, $cover ? $cover['id_image'] : '', 'home_default');
+            $cover = Product::getCover($product->id);
+            $product->image = Context::getContext()->link->getImageLink($linkRewrite, $cover ? $cover['id_image'] : '', 'home_default');
         }
 
         return $product;
@@ -81,7 +85,7 @@ class ProductDataProvider
      */
     public function getIdTaxRulesGroup()
     {
-        $product = new \ProductCore();
+        $product = new Product();
         return $product->getIdTaxRulesGroup();
     }
 
@@ -110,7 +114,7 @@ class ProductDataProvider
     public function getImages($id_product, $id_lang)
     {
         $data = [];
-        foreach (\ImageCore::getImages($id_lang, $id_product) as $image) {
+        foreach (Image::getImages($id_lang, $id_product) as $image) {
             $data[] = $this->getImage($image['id_image']);
         }
 
@@ -122,11 +126,11 @@ class ProductDataProvider
      *
      * @param int $id_image
      *
-     * @return object
+     * @return array()
      */
     public function getImage($id_image)
     {
-        $imageData = new \ImageCore((int)$id_image);
+        $imageData = new Image((int)$id_image);
 
         return [
             'id' => $imageData->id,

@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
+use AdminCategoriesController;
+
 /**
  * Admin controller wrapper for new Architecture, about Category admin controller.
  */
@@ -38,6 +40,6 @@ class AdminCategoryControllerWrapper
      */
     public function getInstance()
     {
-        return new \AdminCategoriesControllerCore();
+        return new AdminCategoriesController();
     }
 }

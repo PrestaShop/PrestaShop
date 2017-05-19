@@ -48,7 +48,7 @@ class TabCore extends ObjectModel
 
     /** @var int hide_host_mode */
     public $hide_host_mode = false;
-    
+
     /** @var string Icon font*/
     public $icon;
 
@@ -149,7 +149,7 @@ class TabCore extends ObjectModel
             Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'authorization_role` (`slug`) VALUES ("'.$slug.'_'.$action.'")');
         }
 
-        $access = new \Access;
+        $access = new Access();
 
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
             $access->updateLgcAccess('1', $idTab, $action, true);

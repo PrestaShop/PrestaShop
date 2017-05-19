@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use ProductDownload;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -550,7 +551,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$this->product->id, false);
         if ($id_product_download) {
-            $download = new \ProductDownloadCore($id_product_download);
+            $download = new ProductDownload($id_product_download);
             $dateValue = $download->date_expiration == '0000-00-00 00:00:00' ? '' : date('Y-m-d', strtotime($download->date_expiration));
 
             $res = [

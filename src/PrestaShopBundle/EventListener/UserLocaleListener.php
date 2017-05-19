@@ -28,6 +28,7 @@ namespace PrestaShopBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Language;
 
 class UserLocaleListener
 {
@@ -52,7 +53,7 @@ class UserLocaleListener
     private function getLocaleFromEmployee()
     {
         $employee = $this->prestaShopContext->employee;
-        $employeeLanguage = new \Language($employee->id_lang);
+        $employeeLanguage = new Language($employee->id_lang);
 
         return $employeeLanguage->locale;
     }
