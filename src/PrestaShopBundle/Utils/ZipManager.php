@@ -29,14 +29,15 @@ namespace PrestaShopBundle\Utils;
 
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use ZipArchive;
 
 class ZipManager
 {
     public function createArchive($filename, $folder)
     {
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
 
-        $zip->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $zip->open($filename, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         $files = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($folder),

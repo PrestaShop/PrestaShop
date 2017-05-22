@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Cldr;
 
 use Tools as ToolsLegacy;
 use Curl\Curl;
+use ZipArchive;
 
 /**
  * Class Update will download CLDR data and extract/install them into the cache directory.
@@ -90,7 +91,7 @@ class Update extends Repository
         }
 
         //extract ONLY supplemental json files
-        $archive = new \ZipArchive();
+        $archive = new ZipArchive();
         if ($archive->open($file) === true) {
             for ($i = 0; $i < $archive->numFiles; $i++) {
                 $filename = $archive->getNameIndex($i);
@@ -130,7 +131,7 @@ class Update extends Repository
 
         $file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip';
 
-        $archive = new \ZipArchive();
+        $archive = new ZipArchive();
         $archive->open($file);
 
         for ($i = 0; $i < $archive->numFiles; $i++) {

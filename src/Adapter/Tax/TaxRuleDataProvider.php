@@ -31,6 +31,7 @@ use Context;
 use TaxManagerFactory;
 use Tax;
 use Product;
+use Address;
 
 /**
  * This class will provide data from DB / ORM about tax rules
@@ -66,7 +67,7 @@ class TaxRuleDataProvider
      */
     public function getTaxRulesGroupWithRates()
     {
-        $address = new \Address();
+        $address = new Address();
         $address->id_country = (int)Context::getContext()->country->id;
         $tax_rules_groups = $this->getTaxRulesGroups();
         $tax_rates = array(

@@ -125,12 +125,12 @@ class ContextCore
     /**
      * Sets Mobile_Detect tool object
      *
-     * @return \Mobile_Detect
+     * @return Mobile_Detect
      */
     public function getMobileDetect()
     {
         if ($this->mobile_detect === null) {
-            $this->mobile_detect = new \Mobile_Detect();
+            $this->mobile_detect = new Mobile_Detect();
         }
 
         return $this->mobile_detect;
@@ -346,7 +346,7 @@ class ContextCore
         if (null !== $this->translator) {
             return $this->translator;
         }
-        
+
         $cacheDir = _PS_CACHE_DIR_.'translations';
         $this->translator = new Translator($this->language->locale, null, $cacheDir, false);
 

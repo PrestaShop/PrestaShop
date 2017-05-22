@@ -174,7 +174,7 @@ class CategoryDataProvider
      */
     public function getBreadCrumb($categoryId, $delimiter = " > ")
     {
-        $currentCategory = new \Category($categoryId);
+        $currentCategory = new Category($categoryId);
         $categories = $currentCategory->getParentsCategories();
         $categories = array_reverse($categories, true);
         $breadCrumb = '';
@@ -187,7 +187,7 @@ class CategoryDataProvider
     }
 
     /**
-     * Get Categories formatted like ajax_product_file.php using CategoryCore::getNestedCategories
+     * Get Categories formatted like ajax_product_file.php using Category::getNestedCategories
      *
      * @param $query
      * @param $limit

@@ -33,6 +33,7 @@ use AdminController;
 use Link;
 use Tools as ToolsLegacy;
 use Dispatcher;
+use AdminLegacyLayoutControllerCore;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -143,7 +144,7 @@ class LegacyContext
      */
     public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar, $helpLink = '')
     {
-        $originCtrl = new \AdminLegacyLayoutControllerCore(
+        $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
             $title,
             $headerToolbarBtn,

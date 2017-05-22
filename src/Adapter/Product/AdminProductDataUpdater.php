@@ -162,8 +162,8 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         $id_product_old = $product->id;
-        if (empty($product->price) && \Shop::getContext() == \Shop::CONTEXT_GROUP) {
-            $shops = ShopGroup::getShopsFromGroup(\Shop::getContextShopGroupID());
+        if (empty($product->price) && Shop::getContext() == Shop::CONTEXT_GROUP) {
+            $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
             foreach ($shops as $shop) {
                 if ($product->isAssociatedToShop($shop['id_shop'])) {
                     $product_price = new Product($id_product_old, false, null, $shop['id_shop']);

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use DbQuery;
 use Db;
 use Shop;
+use Cache;
 
 class EntityMapper
 {
@@ -93,11 +94,11 @@ class EntityMapper
                     }
                 }
                 if ($should_cache_objects) {
-                    \Cache::store($cache_id, $object_datas);
+                    Cache::store($cache_id, $object_datas);
                 }
             }
         } else {
-            $object_datas = \Cache::retrieve($cache_id);
+            $object_datas = Cache::retrieve($cache_id);
             if ($object_datas) {
                 $entity->id = (int)$id;
                 foreach ($object_datas as $key => $value) {

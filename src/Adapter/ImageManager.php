@@ -25,9 +25,9 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-/**
- * TODO
- */
+use Image;
+use ImageManager as ImageManagerLegacy;
+
 class ImageManager
 {
     /**
@@ -57,12 +57,12 @@ class ImageManager
     public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = 'p')
     {
         if ($tableName == 'product') {
-            $image = new \Image($imageId);
+            $image = new Image($imageId);
             $path_to_image = _PS_IMG_DIR_.$imageDir.'/'.$image->getExistingImgPath().'.'.$imageType;
         } else {
             $path_to_image = _PS_IMG_DIR_.$imageDir.'/'.$imageId.'.'.$imageType;
         }
-        $thumbPath = \ImageManager::thumbnail($path_to_image, $tableName.'_mini_'.$imageId.'.'.$imageType, 45, $imageType);
+        $thumbPath = ImageManagerLegacy::thumbnail($path_to_image, $tableName.'_mini_'.$imageId.'.'.$imageType, 45, $imageType);
 
         // because legacy uses relative path to reach a directory under root directory...
         $replacement = 'src="'.$this->legacyContext->getRootUrl();

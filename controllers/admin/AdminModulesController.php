@@ -415,7 +415,7 @@ class AdminModulesControllerCore extends AdminController
                 }
             }
         } else {
-            $archive = new \Archive_Tar($file);
+            $archive = new Archive_Tar($file);
             if ($archive->extract($tmp_folder)) {
                 $zip_folders = scandir($tmp_folder);
                 if ($archive->extract(_PS_MODULE_DIR_)) {

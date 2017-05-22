@@ -39,6 +39,8 @@ use Product;
 use Tools;
 use Configuration;
 use Currency;
+use DbQuery;
+use StockAvailable;
 
 /**
  * Data provider for new Architecture, about Product object model.
@@ -225,7 +227,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'table' => 'stock_available',
                 'join' => 'LEFT JOIN',
                 'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0'.
-                \StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
+                StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
             ),
             'sa' => array(
                 'table' => 'product_shop',
@@ -362,7 +364,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $idShop = Context::getContext()->shop->id;
 
-        $query = new \DbQuery();
+        $query = new DbQuery();
         $query->select('COUNT(ps.id_product)');
         $query->from('product_shop', 'ps');
         $query->where('ps.id_shop = '.(int)$idShop);
