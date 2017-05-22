@@ -66,7 +66,12 @@ class StockController extends ApiController
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
 
-        $stock = $this->stockRepository->getData($queryParamsCollection);
+        $stock = array(
+            'info' => array(
+                'edit_bulk_url' => $this->container->get('router')->generate('api_stock_bulk_edit_products'),
+            ),
+            'data' => $this->stockRepository->getData($queryParamsCollection)
+        );
         $totalPages = $this->stockRepository->countPages($queryParamsCollection);
 
         return $this->jsonResponse($stock, $request, $queryParamsCollection, 200, array('Total-Pages' => $totalPages));

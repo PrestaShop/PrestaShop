@@ -55,10 +55,7 @@
     },
     methods: {
       sendQty() {
-        const postUrl = window.data.bulkEditProductsUrl;
-        this.$store.dispatch('updateQtyByProductsId', {
-          url: postUrl,
-        });
+        this.$store.dispatch('updateQtyByProductsId');
       },
     },
     components: {

@@ -64,11 +64,11 @@ export default {
     state.movementsTypes = movementsTypes.data;
   },
   [types.ADD_PRODUCTS](state, products) {
-    _.forEach(products.data, (product) => {
+    _.forEach(products.data.data, (product) => {
       product.qty = 0;
     });
-
-    state.products = products.data;
+    state.editBulkUrl = products.data.info.edit_bulk_url;
+    state.products = products.data.data;
   },
   [types.UPDATE_PRODUCT](state, updatedProduct) {
     const index = _.findIndex(state.products, {

@@ -69,7 +69,7 @@ export const getCategories = ({ commit }) => {
 };
 
 export const getMovements = ({ commit }, payload) => {
-  const url = window.data.movementsUrl;
+  const url = window.data.apiMovementsUrl;
 
   Vue.http.get(url, {
     params: {
@@ -155,7 +155,7 @@ export const updateQtyByProductId = ({ commit, state }, payload) => {
 };
 
 export const updateQtyByProductsId = ({ commit, state }, payload) => {
-  const url = payload.url;
+  const url = state.editBulkUrl;
   const productsQty = state.productsToUpdate;
 
   Vue.http.post(url, productsQty).then((res) => {

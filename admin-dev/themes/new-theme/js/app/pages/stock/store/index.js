@@ -52,6 +52,7 @@ const state = {
   translations: {},
   isLoading: false,
   isReady: false,
+  editBulkUrl: '',
 };
 
 // getters are functions
