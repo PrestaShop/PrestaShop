@@ -32,7 +32,7 @@
 				{/if}
 			{/foreach}
 		{else}
-			{l s='No module has been installed.'}
+			{l s='No module has been installed.' d='Admin.Notifications.Warning'}
 		{/if}
 		</nav>
 	</div>
