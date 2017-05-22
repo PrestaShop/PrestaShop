@@ -63,8 +63,8 @@
 {block name="other_input"}
 	{if $key == 'hours'}
 			<div class="form-group">
-				<label class="control-label col-lg-3">{l s='Hours:'}</label>
-				<div class="col-lg-9"><p class="form-control-static">{l s='e.g. 10:00AM - 9:30PM'}</p></div>
+				<label class="control-label col-lg-3">{l s='Hours:' d='Admin.Shopparameters.Feature'}</label>
+				<div class="col-lg-9"><p class="form-control-static">{l s='e.g. 10:00AM - 9:30PM' d='Admin.Shopparameters.Help'}</p></div>
 			</div>
 			{foreach $fields_value.days as $k => $value}
 			<div class="form-group">

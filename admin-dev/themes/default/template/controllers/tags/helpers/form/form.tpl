@@ -27,7 +27,7 @@
 {block name="other_input"}
 {if $key eq 'selects'}
 <div class="row">
-	<label class="control-label col-lg-3">{l s='Products:'}</label>
+	<label class="control-label col-lg-3">{l s='Products' d='Admin.Global'}</label>
 
 	<div class="col-lg-9">
 		<div class="row">
@@ -48,7 +48,7 @@
 					{/foreach}
 				</select>
 				<a href="#" id="move_to_left" class="btn btn-default btn-block multiple_select_remove">
-					<i class="icon-arrow-left"></i> {l s='Remove'}
+					<i class="icon-arrow-left"></i> {l s='Remove' d='Admin.Actions'}
 				</a>
 			</div>
 		</div>
