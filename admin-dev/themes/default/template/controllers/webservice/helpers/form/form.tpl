@@ -26,17 +26,17 @@
 
 {block name="input"}
 	{if $input.type == 'resources'}
-		<div class="alert alert-info">{l s='Set the resource permissions for this key:'}</div>
+		<div class="alert alert-info">{l s='Set the resource permissions for this key:' d='Admin.Advparameters.Feature'}</div>
 		<table class="table accesses">
 			<thead>
 				<tr>
 					<th><span class="title_box">{l s='Resource'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='All'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='View (GET)'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='Modify (PUT)'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='Add (POST)'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='Delete (DELETE)'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='Fast view (HEAD)'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='All' d='Admin.Global'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='View (GET)' d='Admin.Advparameters.Feature'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Modify (PUT)' d='Admin.Advparameters.Feature'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Add (POST)' d='Admin.Advparameters.Feature'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Delete (DELETE)' d='Admin.Advparameters.Feature'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Fast view (HEAD)' d='Admin.Advparameters.Feature'}</span></th>
 				</tr>
 			</thead>
 			<tbody>

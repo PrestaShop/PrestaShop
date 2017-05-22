@@ -34,7 +34,7 @@
 {block name="input"}
 	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
 		<div class="alert alert-warning">
-			{l s='This feature cannot be disabled because it is currently in use.'}
+			{l s='This feature cannot be disabled because it is currently in use.' d='Admin.Notifications.Warning'}
 		</div>
 	{/if}
 	{$smarty.block.parent}
@@ -44,15 +44,15 @@
 	{$smarty.block.parent}
 	{if $input.type == 'radio' && $input.name == 'combination'}
 		<ul>
-			<li>{l s='Combinations tab on product page'}</li>
-			<li>{l s='Value'}</li>
-			<li>{l s='Attribute'}</li>
+			<li>{l s='Combinations tab on product page' d='Admin.Advparameters.Feature'}</li>
+			<li>{l s='Value' d='Admin.Global'}</li>
+			<li>{l s='Attribute' d='Admin.Global'}</li>
 		</ul>
 	{elseif $input.type == 'radio' && $input.name == 'feature'}
 		<ul>
-			<li>{l s='Features tab on product page'}</li>
-			<li>{l s='Feature'}</li>
-			<li>{l s='Feature value'}</li>
+			<li>{l s='Features tab on product page' d='Admin.Advparameters.Feature'}</li>
+			<li>{l s='Feature' d='Admin.Global'}</li>
+			<li>{l s='Feature value' d='Admin.Catalog.Feature'}</li>
 		</ul>
 	{/if}
 {/block}
@@ -63,33 +63,33 @@
 			<div class="form-group">
 				<div class="col-lg-9 col-lg-push-3">
 					<button id="addMemcachedServer" class="btn btn-default" type="button" >
-						<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Add server'}
+						<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Add server' d='Admin.Advparameters.Feature'}
 					</button>
 				</div>
 			</div>
 			<div id="formMemcachedServer" style="display:none;">
 					<div class="form-group">
-						<label class="control-label col-lg-3">{l s='IP Address'} </label>
+						<label class="control-label col-lg-3">{l s='IP Address' d='Admin.Advparameters.Feature'} </label>
 						<div class="col-lg-9">
 							<input class="form-control" type="text" name="memcachedIp" />
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-lg-3">{l s='Port'} </label>
+						<label class="control-label col-lg-3">{l s='Port' d='Admin.Advparameters.Feature'} </label>
 						<div class="col-lg-9">
 							<input class="form-control" type="text" name="memcachedPort" value="11211" />
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-lg-3">{l s='Weight'} </label>
+						<label class="control-label col-lg-3">{l s='Weight' d='Admin.Advparameters.Feature'} </label>
 						<div class="col-lg-9">
 							<input class="form-control" type="text" name="memcachedWeight" value="1" />
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-lg-9 col-lg-push-3">
-							<input type="submit" value="{l s='Add Server'}" name="submitAddServer" class="btn btn-default" />
-							<input type="button" value="{l s='Test Server'}" id="testMemcachedServer" class="btn btn-default" />
+							<input type="submit" value="{l s='Add Server' d='Admin.Advparameters.Feature'}" name="submitAddServer" class="btn btn-default" />
+							<input type="button" value="{l s='Test Server' d='Admin.Advparameters.Feature'}" id="testMemcachedServer" class="btn btn-default" />
 	                	</div>
 					</div>
 			</div>
@@ -100,8 +100,8 @@
 						<tr>
 							<th class="fixed-width-xs"><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 							<th><span class="title_box">{l s='IP address'}</span></th>
-							<th class="fixed-width-xs"><span class="title_box">{l s='Port'}</span></th>
-							<th class="fixed-width-xs"><span class="title_box">{l s='Weight'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='Port' d='Admin.Advparameters.Feature'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='Weight' d='Admin.Advparameters.Feature'}</span></th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
@@ -113,7 +113,7 @@
 						<td>{$server.port}</td>
 						<td>{$server.weight}</td>
 						<td>
-							<a class="btn btn-default" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
+							<a class="btn btn-default" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1 d='Admin.Advparameters.Warning'}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove' d='Admin.Actions'}</a>
 						</td>
 					</tr>
 				{/foreach}

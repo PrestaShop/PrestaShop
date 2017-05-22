@@ -27,9 +27,9 @@
 
 {block name="override_tpl"}
 <div class="panel">
-	<h3><i class="icon-cog"></i> {l s='SQL query result'}</h3>
+	<h3><i class="icon-cog"></i> {l s='SQL query result' d='Admin.Advparameters.Feature'}</h3>
 	{if isset($view['error'])}
-		<div class="alert alert-warning">{l s='This SQL query has no result.'}</div>
+		<div class="alert alert-warning">{l s='This SQL query has no result.' d='Admin.Advparameters.Notification'}</div>
 	{else}
 		<table class="table" id="viewRequestSql">
 			<thead>
