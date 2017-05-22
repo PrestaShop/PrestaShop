@@ -57,9 +57,9 @@
 			<form action="{$REQUEST_URI}" method="post">
 			<div class="panel-heading">
 				{if $need_delete_mode}
-					{l s='What do you want to do with the products associated with this category?'}
+					{l s='What do you want to do with the products associated with this category?' d='Admin.Catalog.Notification'}
 				{else}
-					{l s='Deleting multiple categories'}
+					{l s='Deleting multiple categories' d='Admin.Catalog.Notification'}
 				{/if}
 			</div>
 
@@ -67,23 +67,23 @@
 				<div class="radio">
 					<label for="deleteMode_linkanddisable">
 						<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" checked="checked" />
-						{l s='I want to associate the products without other categories to the parent category, then disable these products for now. I re-enable them when they are moved in their new category.'} <strong>{l s='(Recommended)'}</strong>
+						{l s='I want to associate the products without other categories to the parent category, then disable these products for now. I re-enable them when they are moved in their new category.' d='Admin.Catalog.Notification'} <strong>{l s='(Recommended)' d='Admin.Catalog.Notification'}</strong>
 					</label>
 				</div>
 				<div class="radio">
 					<label for="deleteMode_link">
 						<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
-						{l s='I want to associate the products without other categories to the parent category, and keep them enabled.'}
+						{l s='I want to associate the products without other categories to the parent category, and keep them enabled.' d='Admin.Catalog.Notification'}
 					</label>
 				</div>
 				<div class="radio">
 					<label for="deleteMode_delete">
 						<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
-						{l s='I want to remove the products which are listed only within this category and no others.'}
+						{l s='I want to remove the products which are listed only within this category and no others.' d='Admin.Catalog.Notification'}
 					</label>
 				</div>
 			{else}
-				<div class="alert alert-warning">{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}</div>
+				<div class="alert alert-warning">{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?' d='Admin.Catalog.Notification'}</div>
 				<input type="hidden" name="deleteMode" value="delete" id="deleteMode_delete" />
 
 			{/if}

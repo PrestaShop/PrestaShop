@@ -42,9 +42,9 @@
 	{if $input.name == 'current_texture'}
 		<div class="col-lg-9">
 			{if isset($imageTextureExists) && $imageTextureExists}
-				<img src="{$imageTexture}" alt="{l s='Texture'}" class="img-thumbnail" />
+				<img src="{$imageTexture}" alt="{l s='Texture' d='Admin.Catalog.Feature'}" class="img-thumbnail" />
 			{else}
-				<p class="form-control-static">{l s='None'}</p>
+				<p class="form-control-static">{l s='None' d='Admin.Global'}</p>
 			{/if}
 		</div>
 	{else}
