@@ -48,11 +48,11 @@
 						<p>{$val.description}</p>
 					{/if}
 					{if $total_thread == 0}
-						<span class="message-mail">{l s='No new messages'}</span>
+						<span class="message-mail">{l s='No new messages' d='Admin.OrdersCustomers.Feature'}</span>
 					{else}
 						<a href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_customer_thread={$id_customer_thread}&amp;viewcustomer_thread" class="button">
 							{$total_thread}
-							{if $total_thread > 1}{l s='New messages'}{else}{l s='New message'}{/if}
+							{if $total_thread > 1}{l s='New messages' d='Admin.OrdersCustomers.Feature'}{else}{l s='New message' d='Admin.OrdersCustomers.Feature'}{/if}
 						</a>
 					{/if}
 				</div>
@@ -61,20 +61,20 @@
 		<div class="col-lg-3">
 			<div id="MeaningStatus" class="panel">
 				<div class="panel-heading">
-					{l s='Meaning of status'}
+					{l s='Meaning of status' d='Admin.OrdersCustomers.Feature'}
 				</div>
 				<ul class="list-unstyled">
-					<li class="text-success"><i class="icon-circle"></i> {l s='Open'}</li>
-					<li class="text-danger"><i class="icon-circle"></i> {l s='Closed'}</li>
-					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 1'}</li>
-					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 2'}</li>
+					<li class="text-success"><i class="icon-circle"></i> {l s='Open' d='Admin.OrdersCustomers.Feature'}</li>
+					<li class="text-danger"><i class="icon-circle"></i> {l s='Closed' d='Admin.OrdersCustomers.Feature'}</li>
+					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 1' d='Admin.OrdersCustomers.Feature'}</li>
+					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 2' d='Admin.OrdersCustomers.Feature'}</li>
 				</ul>
 			</div>
 		</div>
 		<div class="col-lg-3">
 			<div id="CustomerService" class="panel">
 				<div class="panel-heading">
-					{l s='Statistics'}
+					{l s='Statistics' d='Admin.OrdersCustomers.Feature'}
 				</div>
 				<ul class="list-unstyled">
 					{assign var=count value=0}
