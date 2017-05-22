@@ -84,6 +84,7 @@
 			{if $edit_graft}
 				<input type="hidden" name="id_module" value="{$id_module}" />
 				<input type="hidden" name="id_hook" value="{$id_hook}" />
+				<input type="hidden" name="new_hook" id="new_hook" value="{$id_hook}" />
 			{/if}
 			<button type="submit" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save' d='Admin.Actions'}</button>
 		</div>
@@ -118,6 +119,9 @@
 		});
 		$('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){
 			$(this).change(position_exception_listchange);
+		});
+		$('select[name=id_hook]').on('change', function() {
+			$('#new_hook').attr('value', $(this).val());
 		});
 	});
 	//]]>
