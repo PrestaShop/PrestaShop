@@ -45,10 +45,9 @@ const state = {
     data: {},
     info: {}
   },
-  domainsTree: {
-    data: {},
-    info: {}
-  },
+  domainsTree: [],
+  total_missing_translations: 0,
+  total_translations: 0,
   isReady: false,
 };
 
@@ -82,7 +81,7 @@ const getters = {
       return domains;
     }
 
-    return convert(_.values(state.domainsTree.data));
+    return convert(state.domainsTree);
   },
   isReady(state) {
     return state.isReady;

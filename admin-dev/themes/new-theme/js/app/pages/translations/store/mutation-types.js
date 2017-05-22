@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 export const SET_TRANSLATIONS = 'SET_TRANSLATIONS';
-export const SET_CATALOG= 'SET_CATALOG';
-export const SET_DOMAINS_TREE= 'SET_DOMAINS_TREE';
+export const SET_CATALOG = 'SET_CATALOG';
+export const SET_DOMAINS_TREE = 'SET_DOMAINS_TREE';
 export const APP_IS_READY = 'APP_IS_READY';
 export const SET_TOTAL_PAGES = 'SET_TOTAL_PAGES';
 export const SET_PAGE_INDEX = 'SET_PAGE_INDEX';

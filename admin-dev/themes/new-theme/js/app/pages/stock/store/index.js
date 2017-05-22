@@ -44,14 +44,7 @@ const state = {
   suppliers: {
     data: [],
   },
-  categories: {
-    data: {
-      tree: {
-        children: [
-        ],
-      },
-    },
-  },
+  categories: [],
   categoryList: [],
   movements: [],
   employees: [],
@@ -82,7 +75,7 @@ const getters = {
       });
       return categories;
     }
-    return convert(rootState.categories.data.tree.children);
+    return convert(rootState.categories);
   },
 };
 

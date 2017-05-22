@@ -41,7 +41,7 @@ export default {
     state.suppliers = suppliers;
   },
   [types.SET_CATEGORIES](state, categories) {
-    state.categories = categories;
+    state.categories = categories.data.tree.children;
   },
   [types.SET_MOVEMENTS](state, movements) {
     state.movements = movements.data;
