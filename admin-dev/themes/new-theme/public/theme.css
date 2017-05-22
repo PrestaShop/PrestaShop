@@ -10535,6 +10535,7 @@ ul.category-tree {
     overflow-x: hidden; }
     #attributes-list .attribute-group .attributes .two-columns {
       -webkit-columns: 2;
+         -moz-columns: 2;
               columns: 2; }
     #attributes-list .attribute-group .attributes .attribute .js-attribute-checkbox {
       display: none; }
@@ -10703,6 +10704,72 @@ ul.category-tree {
 @media (min-width: 1300px) and (max-width: 1750px) {
   #bulk-combinations-container .custom-width {
     width: 33%; } }
+
+#select2-product_combination_bulk_images-results .select2-results__option--highlighted[aria-selected],
+#select2-product_combination_bulk_images-results .select2-results__option[aria-selected=true] {
+  background-color: inherit;
+  color: inherit; }
+
+#select2-product_combination_bulk_images-results li.select2-results__option[aria-selected="true"]::before {
+  background: #3ED2F0;
+  border-color: #3ED2F0;
+  content: '\E5CA';
+  font-family: Material Icons;
+  color: white;
+  line-height: 0.75rem; }
+
+#select2-product_combination_bulk_images-results li.select2-results__option::before {
+  content: "";
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 0.125rem solid #bbcdd2;
+  margin: 0rem 0.625rem 0rem 0.3125rem;
+  vertical-align: middle;
+  border-radius: 0.125rem; }
+
+.combination-bulk-images {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #bbcdd2;
+  border: solid 0.0625rem #bbcdd2; }
+
+.combination-bulk-images-label {
+  height: 1.25rem;
+  -o-object-fit: contain;
+     object-fit: contain;
+  font-family: NotoSans;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  color: #363a41;
+  margin: 0.5625rem 0rem 0rem 0.5625rem; }
+
+#select2-product_combination_bulk_images-results::-webkit-scrollbar {
+  width: 0.5rem;
+  background-color: rgba(187, 205, 210, 0.3); }
+
+#select2-product_combination_bulk_images-results::-webkit-scrollbar-thumb {
+  width: 0.5rem;
+  border-radius: 6.25rem;
+  background-color: #bbcdd2; }
+
+#select2-product_combination_bulk_images-container .select2-container--prestakit .select2-selection--multiple {
+  padding: inherit;
+  padding-right: 1.25rem; }
+
+#select2-product_combination_bulk_images-container .select2-container--prestakit .select2-selection--multiple::before {
+  content: "\E313";
+  font-family: Material Icons;
+  position: absolute;
+  top: 50%;
+  right: 0.3125rem;
+  transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%); }
+
+#select2-product_combination_bulk_images-container .select2-container--prestakit .select2-selection--multiple ul {
+  display: none; }
 
 .products-catalog > .content {
   background: #FFFFFF;
