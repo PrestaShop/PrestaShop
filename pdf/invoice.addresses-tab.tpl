@@ -32,4 +32,9 @@
 				{$invoice_address}
 		</td>
 	</tr>
+  <tr>
+    <td width="100%">
+      <tcpdf method="write1DBarcode" params="{$barcode_params}" />
+    </td>
+  </tr>
 </table>
