@@ -5329,25 +5329,31 @@ class ProductCore extends ObjectModel
     {
         $ids = array();
         foreach ($category_ids as $value) {
-            $ids[] = $value['id'];
-        }
-        if ($this->deleteCategories()) {
-            if ($ids) {
-                $sql_values = [];
-                $ids = array_map('intval', $ids);
-                foreach ($ids as $position => $id) {
-                    $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.(int)$position.')';
-                }
-                $result = Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
-					VALUES '.implode(',', $sql_values)
-                );
-                Hook::exec('updateProduct', array('id_product' => (int)$this->id));
-                return $result;
+            if ($value instanceof Category) {
+                $ids[] = (int)$value->id;
+            } else if (is_array($value) && array_key_exists('id', $value)) {
+                $ids[] = (int)$value['id'];
+            } else {
+                $ids[] = (int)$value;
             }
         }
+        $ids = array_unique($ids);
+
+        $return = true;
+        if ($this->deleteCategories() && !empty($ids)) {
+            $sql_values = array();
+            foreach ($ids as $position => $id) {
+                $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.(int)$position.')';
+            }
+
+            $return = Db::getInstance()->execute('
+                INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
+                VALUES '.implode(',', $sql_values)
+            );
+        }
+
         Hook::exec('updateProduct', array('id_product' => (int)$this->id));
-        return true;
+        return $return;
     }
 
     /**

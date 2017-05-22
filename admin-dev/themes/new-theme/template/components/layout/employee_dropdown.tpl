@@ -34,7 +34,7 @@
       <span>{$employee->firstname} {$employee->lastname}</span>
     </div>
     <hr>
-    <a class="employee-link profile-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" target="_blank">
+    <a class="employee-link profile-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee">
       <i class="material-icons">settings_applications</i> {l s='Your profile'}
     </a>
     <a class="employee-link m-t-1" id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout">
