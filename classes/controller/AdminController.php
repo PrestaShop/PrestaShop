@@ -1285,6 +1285,15 @@ class AdminControllerCore extends Controller
     {
         if (Validate::isLoadedObject($object = $this->loadObject())) {
             if ($object->toggleStatus()) {
+                PrestaShopLogger::addLog(
+                    sprintf($this->l('%s status switched to %s', 'AdminTab', false, false), $this->className, $object->active ? 'enable' : 'disable'),
+                    1,
+                    null,
+                    $this->className,
+                    (int)$object->id,
+                    true,
+                    (int)$this->context->employee->id
+                );
                 $matches = array();
                 if (preg_match('/[\?|&]controller=([^&]*)/', (string)$_SERVER['HTTP_REFERER'], $matches) !== false
                     && strtolower($matches[1]) != strtolower(preg_replace('/controller/i', '', get_class($this)))) {
@@ -2309,6 +2318,9 @@ class AdminControllerCore extends Controller
             'addons_forgot_password_link' => '//addons.prestashop.com/'.$this->context->language->iso_code.'/forgot-your-password'
         ));
 
+        //Force override translation key
+        Context::getContext()->override_controller_name_for_translations = 'AdminModules';
+
         $this->modals[] = array(
             'modal_id' => 'modal_addons_connect',
             'modal_class' => 'modal-md',
@@ -2318,6 +2330,9 @@ class AdminControllerCore extends Controller
             .'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'">PrestaShop Addons</a>',
             'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
         );
+
+        //After override translation, remove it
+        Context::getContext()->override_controller_name_for_translations = null;
     }
 
     /**
@@ -3661,7 +3676,7 @@ class AdminControllerCore extends Controller
             if (isset($def['lang']) && $def['lang']) {
                 if (isset($def['required']) && $def['required']) {
                     $value = Tools::getValue($field.'_'.$default_language->id);
-                    if (empty($value)) {
+                    if (!isset($value) || "" == $value) {
                         $this->errors[$field.'_'.$default_language->id] = sprintf(
                             $this->trans('The field %1$s is required at least in %2$s.', array(), 'Admin.Notifications.Error'),
                             $object->displayFieldName($field, $class_name),
@@ -4107,6 +4122,7 @@ class AdminControllerCore extends Controller
             foreach ($this->boxes as $id) {
                 /** @var ObjectModel $object */
                 $object = new $this->className((int)$id);
+                $object->setFieldsToUpdate(array('active' => true));
                 $object->active = (int)$status;
                 $result &= $object->update();
             }

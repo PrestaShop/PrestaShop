@@ -154,8 +154,10 @@
 				}
 			},
 		}).on('fileuploadalways', function (e, data) {
+				if (typeof {$id|escape:'html':'UTF-8'}_max_files !== 'undefined') {
+					{$id|escape:'html':'UTF-8'}_max_files--;
+				}
 				{$id|escape:'html':'UTF-8'}_total_files--;
-				{$id|escape:'html':'UTF-8'}_max_files--;
 
 				if ({$id|escape:'html':'UTF-8'}_total_files == 0)
 				{

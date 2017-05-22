@@ -71,7 +71,7 @@ class StockManagerCore implements StockManagerInterface
         }
 
         $price_te = round((float)$price_te, 6);
-        if ($price_te <= 0.0) {
+        if ($price_te < 0.0) { // why <= ?
             return false;
         }
 

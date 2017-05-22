@@ -530,7 +530,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
                 $this->combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
                 $this->combinations[$row['id_product_attribute']]['attributes'][] = (int) $row['id_attribute'];
-                $this->combinations[$row['id_product_attribute']]['price'] = (float) $row['price'];
+                $this->combinations[$row['id_product_attribute']]['price'] = (float) Tools::convertPriceFull($row['price'], null, Context::getContext()->currency, false);
 
                 // Call getPriceStatic in order to set $combination_specific_price
                 if (!isset($combination_prices_set[(int) $row['id_product_attribute']])) {
@@ -543,7 +543,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->combinations[$row['id_product_attribute']]['weight'] = (float) $row['weight'];
                 $this->combinations[$row['id_product_attribute']]['quantity'] = (int) $row['quantity'];
                 $this->combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
-                $this->combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
+                $this->combinations[$row['id_product_attribute']]['unit_impact'] = Tools::convertPriceFull($row['unit_price_impact'], null, Context::getContext()->currency, false);
                 $this->combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
                 if ($row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
                     $this->combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];

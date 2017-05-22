@@ -113,7 +113,7 @@ class AdminStockManagementControllerCore extends AdminController
         // overrides query
         $this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations';
         $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)'.Shop::addSqlAssociation('product_attribute', 'pa', false);
-        $this->_where = 'AND a.is_virtual = 0';
+        $this->_where = 'AND a.is_virtual = 0 AND a.advanced_stock_management = 1 ';
         $this->_group = 'GROUP BY a.id_product';
 
         // displays informations
@@ -137,7 +137,8 @@ class AdminStockManagementControllerCore extends AdminController
         $id_product_attribute = (int)Tools::getValue('id_product_attribute');
 
         // gets warehouses
-        $warehouses_add = $warehouses_remove = Warehouse::getWarehousesByProductId($id_product, $id_product_attribute);
+        $warehouses_add = Warehouse::getWarehouses();
+        $warehouses_remove = Warehouse::getWarehousesByProductId($id_product, $id_product_attribute);
 
         // displays warning if no warehouses
         if (!$warehouses_add) {
@@ -146,10 +147,8 @@ class AdminStockManagementControllerCore extends AdminController
 
         //get currencies list
         $currencies = Currency::getCurrencies();
-        $id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
-        $default_currency = Currency::getCurrency($id_default_currency);
-        if ($default_currency) {
-            $currencies = array_merge(array($default_currency, '-'), $currencies);
+        if (1 < count($currencies)) {
+            array_unshift($currencies, '-');
         }
 
         // switch, in order to display the form corresponding to the current action
@@ -839,6 +838,7 @@ class AdminStockManagementControllerCore extends AdminController
             $this->table = 'product_attribute';
             $this->list_id = 'product_attribute';
             $this->_select = 'a.id_product_attribute as id, a.id_product, a.reference, a.ean13, a.upc';
+            $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
             $this->_where = 'AND a.id_product = '.$product_id;
             $this->_group = 'GROUP BY a.id_product_attribute';
 
