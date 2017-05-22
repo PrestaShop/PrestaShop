@@ -27,7 +27,8 @@
 
 namespace PrestaShopBundle\Install;
 
-use Validate;
+use PrestaShop\PrestaShop\Adapter\Entity\Validate;
+use PrestaShop\PrestaShop\Adapter\Entity\Db;
 
 class Database extends AbstractInstall
 {

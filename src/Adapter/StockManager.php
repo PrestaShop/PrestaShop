@@ -27,7 +27,6 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use StockAvailable;
-use Configuration;
 
 /**
  * Data provider for new Architecture, about Product stocks.
@@ -56,6 +55,6 @@ class StockManager implements StockInterface
      */
     public function isAsmGloballyActivated()
     {
-        return (bool)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
+        return (bool)\Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
     }
 }

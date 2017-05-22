@@ -27,16 +27,16 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\Process\Exception\LogicException;
-use ContextCore as OldContext;
+use Context;
 use Language;
 use AdminController;
 use Link;
-use Tools;
+use Tools as ToolsLegacy;
 use Dispatcher;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
- * A merge is done, but the legacy values will be transfered to the new Context
+ * A merge is done, but the legacy values will be transferred to the new Context
  * during legacy refactoring.
  */
 class LegacyContext
@@ -54,7 +54,7 @@ class LegacyContext
         static $legacyContext = null;
 
         if (is_null($legacyContext)) {
-            $legacyContext = OldContext::getContext();
+            $legacyContext = Context::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
                 //init real legacy shop context
@@ -85,10 +85,10 @@ class LegacyContext
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        $id_lang = OldContext::getContext()->language->id;
+        $id_lang = Context::getContext()->language->id;
         $params = $extraParams;
         if ($withToken) {
-            $params['token'] = Tools::getAdminTokenLite($controller);
+            $params['token'] = ToolsLegacy::getAdminTokenLite($controller);
         }
 
         $link = new Link();
@@ -125,7 +125,7 @@ class LegacyContext
      */
     public function setupLegacyTranslationContext($legacyController = 'AdminTab')
     {
-        OldContext::getContext()->override_controller_name_for_translations = $legacyController;
+        Context::getContext()->override_controller_name_for_translations = $legacyController;
     }
 
     /**
@@ -186,7 +186,7 @@ class LegacyContext
     /**
      * Returns language ISO code set for the current employee
 
-     * @return array Languages
+     * @return string Languages
      */
     public function getEmployeeLanguageIso()
     {

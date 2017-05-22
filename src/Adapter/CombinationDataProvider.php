@@ -27,8 +27,10 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Tools;
+use PrestaShop\PrestaShop\Adapter\Tools;
+use Tools as ToolsLegacy;
 use Product;
+use Combination;
 
 /**
  * This class will provide data from DB / ORM about product combination
@@ -43,7 +45,7 @@ class CombinationDataProvider
     {
         $this->context = new LegacyContext();
         $this->productAdapter = new ProductDataProvider();
-        $this->cldrRepository = Tools::getCldr($this->context->getContext());
+        $this->cldrRepository = ToolsLegacy::getCldr($this->context->getContext());
         $this->tools = new Tools();
     }
 
@@ -56,7 +58,7 @@ class CombinationDataProvider
      */
     public function getFormCombination($combinationId)
     {
-        $product = new Product((new \Combination($combinationId))->id_product);
+        $product = new Product((new Combination($combinationId))->id_product);
 
         return $this->completeCombination(
             $product->getAttributeCombinationsById(
