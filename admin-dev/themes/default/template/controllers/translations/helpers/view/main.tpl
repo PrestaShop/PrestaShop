@@ -168,7 +168,7 @@
         <label class="control-label col-lg-3" for="selected-emails">{l s='Select the type of email content' d='Admin.International.Feature'}</label>
         <div class="col-lg-4">
           <select name="selected-emails">
-            <option value="subject" data-controller="sf">{l s='Subject' d='Admin.International.Feature'}</option>
+            <option value="subject" data-controller="sf">{l s='Subject' d='Admin.Global'}</option>
             <option value="body" data-controller="legacy">{l s='Body' d='Admin.International.Feature'}</option>
           </select>
         </div>
