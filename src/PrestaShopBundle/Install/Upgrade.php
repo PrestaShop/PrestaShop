@@ -76,6 +76,7 @@ namespace PrestaShopBundle\Install {
     use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+    use FileLogger;
 
     class Upgrade
     {
@@ -167,7 +168,7 @@ namespace PrestaShopBundle\Install {
 
         public function __construct($cacheDir, $installDir)
         {
-            $this->logger = new \FileLogger();
+            $this->logger = new FileLogger();
             $this->logger->setFilename($cacheDir.@date('Ymd').'_upgrade.log');
             $this->installDir = $installDir;
             $this->db = Db::getInstance();
@@ -792,7 +793,7 @@ namespace PrestaShopBundle\Install {
 
         public function run()
         {
-            \Tools::clearAllCache();
+            Tools::clearAllCache();
 
             $this->defineConst();
             $this->initContext();
@@ -830,7 +831,7 @@ namespace PrestaShopBundle\Install {
 
         public function doUpgradeDb()
         {
-            \Tools::clearAllCache();
+            Tools::clearAllCache();
 
             $this->defineConst();
             $this->initContext();

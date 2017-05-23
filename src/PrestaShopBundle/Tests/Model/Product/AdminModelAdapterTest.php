@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Tests\Model\Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
+use Product;
 
 class AdminModelAdapterTest extends KernelTestCase
 {
@@ -37,7 +38,7 @@ class AdminModelAdapterTest extends KernelTestCase
     private $container;
     protected static $kernel;
 
-    /* @var $product \ProductCore */
+    /* @var $product Product */
     private $product;
 
     private function fakeFormData()
@@ -152,7 +153,7 @@ class AdminModelAdapterTest extends KernelTestCase
 
     private function fakeProduct()
     {
-        $product = new \ProductCore();
+        $product = new Product();
         $product->name = 'Product name';
 
         return $product;

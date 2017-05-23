@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
+use Shop;
+
 /**
  * This class will provide legacy shop context
  */
@@ -40,7 +42,7 @@ class Context
      */
     public function getShops($active = true, $get_as_list_id = false)
     {
-        return \ShopCore::getShops($active, \ShopCore::getContextShopGroupID(), $get_as_list_id);
+        return Shop::getShops($active, Shop::getContextShopGroupID(), $get_as_list_id);
     }
 
     /**
@@ -50,7 +52,7 @@ class Context
      */
     public function getContextShopID($null_value_without_multishop = false)
     {
-        return \ShopCore::getContextShopID($null_value_without_multishop);
+        return Shop::getContextShopID($null_value_without_multishop);
     }
 
     /**
@@ -61,7 +63,7 @@ class Context
      */
     public function getContextListShopID($share = false)
     {
-        return \ShopCore::getContextListShopID($share);
+        return Shop::getContextListShopID($share);
     }
 
     /**
@@ -71,7 +73,7 @@ class Context
      */
     public function isShopGroupContext()
     {
-        return \ShopCore::getContext() === \ShopCore::CONTEXT_GROUP;
+        return Shop::getContext() === Shop::CONTEXT_GROUP;
     }
 
     /**
@@ -81,7 +83,7 @@ class Context
      */
     public function isShopContext()
     {
-        return \ShopCore::getContext() === \ShopCore::CONTEXT_SHOP;
+        return Shop::getContext() === Shop::CONTEXT_SHOP;
     }
 
     /**
@@ -91,7 +93,7 @@ class Context
      */
     public function isAllContext()
     {
-        return \ShopCore::getContext() === \ShopCore::CONTEXT_ALL;
+        return Shop::getContext() === Shop::CONTEXT_ALL;
     }
 
     /**
@@ -101,7 +103,7 @@ class Context
      */
     public function setShopContext($id)
     {
-        \ShopCore::setContext(\ShopCore::CONTEXT_SHOP, $id);
+        Shop::setContext(Shop::CONTEXT_SHOP, $id);
     }
 
     /**
@@ -111,7 +113,7 @@ class Context
      */
     public function setShopGroupContext($id)
     {
-        \ShopCore::setContext(\ShopCore::CONTEXT_GROUP, $id);
+        Shop::setContext(Shop::CONTEXT_GROUP, $id);
     }
 
     /**
@@ -121,6 +123,6 @@ class Context
      */
     public function setAllContext($id)
     {
-        \ShopCore::setContext(\ShopCore::CONTEXT_ALL, $id);
+        Shop::setContext(Shop::CONTEXT_ALL, $id);
     }
 }

@@ -536,7 +536,7 @@ class AdminTranslationsControllerCore extends AdminController
             $this->exportTabs();
             $items = array_flip(Language::getFilesList($this->lang_selected->iso_code, $this->theme_selected, false, false, false, false, true));
             $file_name = _PS_TRANSLATIONS_DIR_.'/export/'.$this->lang_selected->iso_code.'.gzip';
-            $gz = new \Archive_Tar($file_name, true);
+            $gz = new Archive_Tar($file_name, true);
             if ($gz->createModify($items, null, _PS_ROOT_DIR_)) {
                 ob_start();
                 header('Pragma: public');
@@ -772,7 +772,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (!isset($_FILES['file']['tmp_name']) || !$_FILES['file']['tmp_name']) {
             $this->errors[] = $this->trans('No file has been selected.', array(), 'Admin.Notifications.Error');
         } else {
-            $gz = new \Archive_Tar($_FILES['file']['tmp_name'], true);
+            $gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
             $filename = $_FILES['file']['name'];
             $iso_code = str_replace(array('.tar.gz', '.gzip'), '', $filename);
 
@@ -1157,9 +1157,9 @@ class AdminTranslationsControllerCore extends AdminController
                         _PS_CLASS_DIR_ => array('PaymentModule.php'),
                     ),
                     'php-sf2' => array(
-                        _PS_ROOT_DIR_.'/src/' => \Tools::scandir(_PS_ROOT_DIR_.'/src/', 'php', '', true),
+                        _PS_ROOT_DIR_.'/src/' => Tools::scandir(_PS_ROOT_DIR_.'/src/', 'php', '', true),
                     ),
-                    'tpl-sf2' => \Tools::scandir(_PS_ROOT_DIR_.'/src/PrestaShopBundle/Resources/views/', 'twig', '', true),
+                    'tpl-sf2' => Tools::scandir(_PS_ROOT_DIR_.'/src/PrestaShopBundle/Resources/views/', 'twig', '', true),
                     'tpl' => $this->listFiles(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes/'),
                     'specific' => array(
                         _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => array()

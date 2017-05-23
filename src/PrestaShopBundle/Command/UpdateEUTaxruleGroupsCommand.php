@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use DOMDocument;
+use SimpleXMLElement;
 
 /**
  * This script will update the tax rule groups for virtual products from all EU localization packs.
@@ -170,7 +172,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
                 unset($node[0]);
             }
 
-            $dom = new \DOMDocument("1.0");
+            $dom = new DOMDocument("1.0");
             $dom->preserveWhiteSpace = false;
             $dom->formatOutput = true;
             $dom->loadXML($file['pack']->asXML());
@@ -184,7 +186,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
 
     protected function addTax(\SimpleXMLElement $taxes, \SimpleXMLElement $tax, array $attributesToUpdate = array(), array $attributesToRemove = array())
     {
-        $newTax = new \SimpleXMLElement('<tax/>');
+        $newTax = new SimpleXMLElement('<tax/>');
 
         $taxRulesGroups = $taxes->xpath('//taxRulesGroup[1]');
         $insertBefore = $taxRulesGroups[0];

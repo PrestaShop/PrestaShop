@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Cache;
+
 /**
  * Class CacheManager drives the cache behavior.
  *
@@ -41,6 +43,6 @@ class CacheManager
      */
     public function clean($key)
     {
-        \Cache::clean($key);
+        Cache::clean($key);
     }
 }

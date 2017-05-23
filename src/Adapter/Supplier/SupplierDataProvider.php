@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
+use Supplier;
+use ProductSupplier;
+
 /**
  * This class will provide data from DB / ORM about Supplier
  */
@@ -45,7 +48,7 @@ class SupplierDataProvider
      */
     public function getSuppliers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_groups = false)
     {
-        return \SupplierCore::getSuppliers($get_nb_products, $id_lang, $active, $p, $n, $all_groups);
+        return Supplier::getSuppliers($get_nb_products, $id_lang, $active, $p, $n, $all_groups);
     }
 
     /**
@@ -58,7 +61,7 @@ class SupplierDataProvider
      */
     public function getProductSuppliers($id_product, $group_by_supplier = true)
     {
-        $suppliersCollection = \ProductSupplierCore::getSupplierCollection($id_product, $group_by_supplier);
+        $suppliersCollection = ProductSupplier::getSupplierCollection($id_product, $group_by_supplier);
         return $suppliersCollection->getResults();
     }
 
@@ -72,7 +75,7 @@ class SupplierDataProvider
      */
     public function getProductSupplierData($id_product, $id_product_attribute, $id_supplier)
     {
-        return \ProductSupplierCore::getProductSupplierData($id_product, $id_product_attribute, $id_supplier);
+        return ProductSupplier::getProductSupplierData($id_product, $id_product_attribute, $id_supplier);
     }
 
     /**
@@ -84,6 +87,6 @@ class SupplierDataProvider
      */
     public function getNameById($id_supplier)
     {
-        return \SupplierCore::getNameById($id_supplier);
+        return Supplier::getNameById($id_supplier);
     }
 }

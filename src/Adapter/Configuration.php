@@ -25,9 +25,11 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Core\Foundation\Exception;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Shop;
+use Combination;
+use Feature;
+use Configuration as ConfigurationLegacy;
 
 class Configuration implements ConfigurationInterface
 {
@@ -44,7 +46,7 @@ class Configuration implements ConfigurationInterface
         if (defined($key)) {
             return constant($key);
         } else {
-            return \Configuration::get($key);
+            return ConfigurationLegacy::get($key);
         }
     }
 
@@ -66,7 +68,7 @@ class Configuration implements ConfigurationInterface
             $shopId = $this->shop->id;
         }
 
-        $success = \Configuration::updateValue(
+        $success = ConfigurationLegacy::updateValue(
             $key,
             $value,
             false,
@@ -87,7 +89,7 @@ class Configuration implements ConfigurationInterface
      */
     public function featureIsActive()
     {
-        return \FeatureCore::isFeatureActive();
+        return Feature::isFeatureActive();
     }
 
     /**
@@ -96,7 +98,7 @@ class Configuration implements ConfigurationInterface
      */
     public function combinationIsActive()
     {
-        return  \CombinationCore::isFeatureActive();
+        return  Combination::isFeatureActive();
     }
 
     /**

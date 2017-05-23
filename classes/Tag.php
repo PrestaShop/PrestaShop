@@ -247,7 +247,7 @@ class TagCore extends ObjectModel
     public function getProducts($associated = true, \Context $context = null)
     {
         if (!$context) {
-            $context = \Context::getContext();
+            $context = Context::getContext();
         }
         $idLang = $this->id_lang ? $this->id_lang : $context->language->id;
 

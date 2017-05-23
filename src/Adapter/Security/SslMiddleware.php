@@ -26,6 +26,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Tools;
+use Configuration;
 
 /**
  * Middleware that is triggered during kernel.request event on Symfony routing process, to redirect to HTTPS in some cases.
@@ -46,12 +48,12 @@ class SslMiddleware
     public function onKernelRequest(GetResponseEvent $event)
     {
         // already SSL, do nothing more
-        if (\ToolsCore::usingSecureMode()) {
+        if (Tools::usingSecureMode()) {
             return;
         }
 
-        $enabled = (1 == \Configuration::get('PS_SSL_ENABLED'));
-        $forced = (1 == \Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
+        $enabled = (1 == Configuration::get('PS_SSL_ENABLED'));
+        $forced = (1 == Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
         $serverParams = $event->getRequest()->server;
         $refererSsl = ($serverParams->has('HTTP_REFERER') && strpos($serverParams->get('HTTP_REFERER'), 'https') === 0);
 

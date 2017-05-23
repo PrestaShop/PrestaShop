@@ -25,6 +25,9 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Product;
+use Context;
+
 class PriceCalculator
 {
     public function getProductPrice(
@@ -43,11 +46,11 @@ class PriceCalculator
         &$specific_price_output = null,
         $with_ecotax = true,
         $use_group_reduction = true,
-        \ContextCore $context = null,
+        Context $context = null,
         $use_customer_price = true,
         $id_customization = null
     ) {
-        return \Product::getPriceStatic(
+        return Product::getPriceStatic(
             $id_product,
             $usetax,
             $id_product_attribute,

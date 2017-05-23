@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
 
+use SplFileInfo;
+
 class FileSystem
 {
     /**
@@ -106,7 +108,7 @@ class FileSystem
             }
 
             $newPath = $this->joinPaths($path, $entry);
-            $info = new \SplFileInfo($newPath);
+            $info = new SplFileInfo($newPath);
 
             $entries[$newPath] = $info;
 

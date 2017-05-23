@@ -1129,7 +1129,7 @@ class LanguageCore extends ObjectModel
                 }
             }
 
-            $gz = new \Archive_Tar($filegz, true);
+            $gz = new Archive_Tar($filegz, true);
             if (!$gz) {
                 continue;
             }

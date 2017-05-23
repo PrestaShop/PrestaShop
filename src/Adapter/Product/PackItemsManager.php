@@ -25,6 +25,9 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Pack;
+use Product;
+
 class PackItemsManager
 {
     /**
@@ -32,7 +35,7 @@ class PackItemsManager
      *
      * @param \Pack $pack
      * @param integer $id_lang Optional
-     * @return Array[Product] The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
+     * @return array(Product) The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
      */
     public function getPackItems($pack, $id_lang = false)
     {
@@ -40,16 +43,16 @@ class PackItemsManager
             $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
-        return \PackCore::getItems($pack->id, $id_lang);
+        return Pack::getItems($pack->id, $id_lang);
     }
 
     /**
      * Get all Packs that contains the given item in the corresponding declination.
      *
-     * @param \ProductCore $item
+     * @param Product $item
      * @param integer $item_attribute_id
-     * @param integer $id_lang Optional
-     * @return Array[Pack] The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
+     * @param boolean|integer $id_lang Optional
+     * @return array(Pack) The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
      */
     public function getPacksContainingItem($item, $item_attribute_id, $id_lang = false)
     {
@@ -57,18 +60,18 @@ class PackItemsManager
             $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
-        return \PackCore::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
+        return Pack::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
     }
 
     /**
      * Is this product a pack?
      *
-     * @param \ProductCore $product
+     * @param Product $product
      * @return boolean
      */
     public function isPack($product)
     {
-        return \PackCore::isPack($product->id);
+        return Pack::isPack($product->id);
     }
 
     /**
@@ -76,12 +79,12 @@ class PackItemsManager
      * If $id_product_attribute specified, then will restrict search on the given combination,
      * else this method will match a product if at least one of all its combination is in a pack.
      *
-     * @param \ProductCore $product
+     * @param Product $product
      * @param integer $id_product_attribute Optional combination of the product
      * @return boolean
      */
     public function isPacked($product, $id_product_attribute = false)
     {
-        return \PackCore::isPacked($product->id, $id_product_attribute);
+        return Pack::isPacked($product->id, $id_product_attribute);
     }
 }

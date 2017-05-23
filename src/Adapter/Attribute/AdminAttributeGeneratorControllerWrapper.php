@@ -27,6 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
 use Context;
+use Validate;
+use Product;
+use SpecificPriceRule;
+use AdminAttributeGeneratorController;
+use Combination;
+use StockAvailable;
+use Tools;
+use Stock;
 
 /**
  * Admin controller wrapper for new Architecture, about Category admin controller.
@@ -49,10 +57,10 @@ class AdminAttributeGeneratorControllerWrapper
      */
     public function processGenerate($product, $options)
     {
-        \SpecificPriceRuleCore::disableAnyApplication();
+        SpecificPriceRule::disableAnyApplication();
 
         //add combination if not already exists
-        $combinations = array_values(\AdminAttributeGeneratorControllerCore::createCombinations(array_values($options)));
+        $combinations = array_values(AdminAttributeGeneratorController::createCombinations(array_values($options)));
         $combinationsValues = array_values(array_map(function () use ($product) {
             return array(
                 'id_product' => $product->id
@@ -61,9 +69,9 @@ class AdminAttributeGeneratorControllerWrapper
 
         $product->generateMultipleCombinations($combinationsValues, $combinations, false);
 
-        \ProductCore::updateDefaultAttribute($product->id);
-        \SpecificPriceRuleCore::enableAnyApplication();
-        \SpecificPriceRuleCore::applyAllRules(array((int)$product->id));
+        Product::updateDefaultAttribute($product->id);
+        SpecificPriceRule::enableAnyApplication();
+        SpecificPriceRule::applyAllRules(array((int)$product->id));
     }
 
     /**
@@ -76,12 +84,12 @@ class AdminAttributeGeneratorControllerWrapper
      */
     public function ajaxProcessDeleteProductAttribute($idAttribute, $idProduct)
     {
-        if (!\CombinationCore::isFeatureActive()) {
+        if (!Combination::isFeatureActive()) {
             return false;
         }
 
-        if ($idProduct && \ValidateCore::isUnsignedId($idProduct) && \ValidateCore::isLoadedObject($product = new \ProductCore($idProduct))) {
-            if (($depends_on_stock = \StockAvailableCore::dependsOnStock($idProduct)) && \StockAvailableCore::getQuantityAvailableByProduct($idProduct, $idAttribute)) {
+        if ($idProduct && Validate::isUnsignedId($idProduct) && Validate::isLoadedObject($product = new Product($idProduct))) {
+            if (($depends_on_stock = StockAvailable::dependsOnStock($idProduct)) && StockAvailable::getQuantityAvailableByProduct($idProduct, $idAttribute)) {
                 return array(
                     'status' => 'error',
                     'message'=> $this->translator->trans('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.', array(), 'Admin.Catalog.Notification'),
@@ -89,15 +97,15 @@ class AdminAttributeGeneratorControllerWrapper
             } else {
                 $product->deleteAttributeCombination((int)$idAttribute);
                 $product->checkDefaultAttributes();
-                \ToolsCore::clearColorListCache((int)$product->id);
+                Tools::clearColorListCache((int)$product->id);
                 if (!$product->hasAttributes()) {
                     $product->cache_default_attribute = 0;
                     $product->update();
                 } else {
-                    \ProductCore::updateDefaultAttribute($idProduct);
+                    Product::updateDefaultAttribute($idProduct);
                 }
 
-                if ($depends_on_stock && !\StockCore::deleteStockByIds($idProduct, $idAttribute)) {
+                if ($depends_on_stock && !Stock::deleteStockByIds($idProduct, $idAttribute)) {
                     return array(
                         'status' => 'error',
                         'message'=> $this->translator->trans('Error while deleting the stock', array(), 'Admin.Catalog.Notification'),

@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer;
 
 use Symfony\Component\Process\Exception\LogicException;
+use Customer;
 
 /**
  * This class will provide data from DB / ORM about Customer
@@ -47,7 +48,7 @@ class CustomerDataProvider
             throw new LogicException('You need to provide a customer id', null, 5002);
         }
 
-        $customer = new \CustomerCore($id);
+        $customer = new Customer($id);
         return $customer;
     }
 }

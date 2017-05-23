@@ -33,6 +33,8 @@ use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
+use Module;
+use Context;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -87,9 +89,9 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function getAllModules()
     {
-        return \Module::getModulesOnDisk(true,
+        return Module::getModulesOnDisk(true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
-            (int) \Context::getContext()->employee->id
+            (int) Context::getContext()->employee->id
         );
     }
 

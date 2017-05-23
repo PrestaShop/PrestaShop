@@ -25,12 +25,15 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use PrestaShopBundle\Service\DataProvider\StockInterface;
+use StockAvailable;
+
 /**
  * Data provider for new Architecture, about Product stocks.
  *
  * This class will provide data from DB / ORM about Product stocks.
  */
-class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterface
+class StockManager implements StockInterface
 {
     /**
      * Gets available stock for a given product / combination / shop.
@@ -42,7 +45,7 @@ class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterf
      */
     public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
     {
-        return new \StockAvailableCore(\StockAvailableCore::getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
+        return new StockAvailable(StockAvailable::getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
     }
 
     /**

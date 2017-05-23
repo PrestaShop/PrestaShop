@@ -37,6 +37,11 @@ use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use ProductDownload;
+use Attachment;
+use Configuration as ConfigurationLegacy;
+use Tools as ToolsLegacy;
+use Product;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -65,7 +70,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * Constructor
      * Set all adapters needed and get product
      *
-     * @param \ProductCore $product The product object
+     * @param Product $product The product object
      * @param LegacyContext $legacyContext
      * @param AdminProductWrapper $adminProductWrapper
      * @param Tools $toolsAdapter
@@ -78,7 +83,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param TaxRuleDataProvider $taxRuleDataProvider
      */
     public function __construct(
-        \ProductCore $product,
+        Product $product,
         LegacyContext $legacyContext,
         AdminProductWrapper $adminProductWrapper,
         Tools $toolsAdapter,
@@ -93,7 +98,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
         $this->adminProductWrapper = $adminProductWrapper;
-        $this->cldrRepository = \Tools::getCldr($this->contextShop);
+        $this->cldrRepository = ToolsLegacy::getCldr($this->contextShop);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
         $this->tools = $toolsAdapter;
@@ -534,7 +539,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             function ($a) {
                 return($a['id_attachment']);
             },
-            \AttachmentCore::getAttachments($this->locales[0]['id_lang'], $this->product->id, true)
+            Attachment::getAttachments($this->locales[0]['id_lang'], $this->product->id, true)
         );
     }
 
@@ -546,11 +551,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function getVirtualProductData()
     {
         //force virtual product feature
-        \ConfigurationCore::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
+        ConfigurationLegacy::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
 
-        $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$this->product->id, false);
+        $id_product_download = ProductDownload::getIdFromIdProduct((int)$this->product->id, false);
         if ($id_product_download) {
-            $download = new \ProductDownloadCore($id_product_download);
+            $download = new ProductDownload($id_product_download);
             $dateValue = $download->date_expiration == '0000-00-00 00:00:00' ? '' : date('Y-m-d', strtotime($download->date_expiration));
 
             $res = [

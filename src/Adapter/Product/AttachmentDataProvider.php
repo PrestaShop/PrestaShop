@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Db;
 /**
  * This class will provide data from DB / ORM about attachment
  */
@@ -40,7 +41,7 @@ class AttachmentDataProvider
      */
     public function getAllAttachments($id_lang)
     {
-        return \Db::getInstance()->executeS('
+        return Db::getInstance()->executeS('
 			SELECT *
 			FROM '._DB_PREFIX_.'attachment a
 			LEFT JOIN '._DB_PREFIX_.'attachment_lang al

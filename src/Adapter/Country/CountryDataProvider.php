@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Country;
 
-use \CountryCore;
+use Country;
+use Configuration;
 
 /**
  * This class will provide data from DB / ORM about Country
@@ -41,11 +42,11 @@ class CountryDataProvider
      * @param bool $contain_states return only country with states
      * @param bool $list_states Include the states list with the returned list
      *
-     * @return Array Countries and corresponding zones
+     * @return array Countries and corresponding zones
      */
     public function getCountries($id_lang, $active = false, $contain_states = false, $list_states = true)
     {
-        return CountryCore::getCountries($id_lang, $active = false, $contain_states = false, $list_states = true);
+        return Country::getCountries($id_lang, $active = false, $contain_states = false, $list_states = true);
     }
 
     /**
@@ -57,8 +58,8 @@ class CountryDataProvider
      */
      public function getIsoCodebyId($id = null)
      {
-         $countryId = (null === $id) ? \Configuration::get('PS_COUNTRY_DEFAULT') : $id;
+         $countryId = (null === $id) ? Configuration::get('PS_COUNTRY_DEFAULT') : $id;
 
-         return CountryCore::getIsoById($countryId);
+         return Country::getIsoById($countryId);
      }
 }

@@ -27,9 +27,6 @@
 
 namespace PrestaShopBundle\Install;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOException;
-use RandomLib;
 use PrestaShop\PrestaShop\Adapter\Entity\FileLogger;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
@@ -47,15 +44,15 @@ use PrestaShop\PrestaShop\Adapter\Entity\Employee;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Search;
-use InstallSession;
-use Composer\Script\Event;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use InstallSession;
+use Language as LanguageLegacy;
 use PrestashopInstallerException;
-
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Yaml\Yaml;
+use PhpEncryption;
 
 class Install extends AbstractInstall
 {
@@ -129,7 +126,7 @@ class Install extends AbstractInstall
             $database_host = implode(':', $splits);
         }
 
-        $key = \PhpEncryption::createNewRandomKey();
+        $key = PhpEncryption::createNewRandomKey();
 
         $parameters = array(
             'parameters' => array(
@@ -988,12 +985,11 @@ class Install extends AbstractInstall
         $this->xml_loader_ids = $xml_loader->getIds();
         unset($xml_loader);
 
-        // Index products in search tables
         Search::indexation(true);
 
         // Update fixtures lang
         foreach ($languages as $lang) {
-            \Language::updateMultilangTable($lang);
+            LanguageLegacy::updateMultilangTable($lang);
         }
 
         return true;

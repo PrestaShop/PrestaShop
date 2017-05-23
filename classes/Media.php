@@ -109,7 +109,7 @@ class MediaCore
     {
         if (!empty($jsContent)) {
             try {
-                $jsContent = \JSMin::minify($jsContent);
+                $jsContent = JSMin::minify($jsContent);
             } catch (Exception $e) {
                 if (_PS_MODE_DEV_) {
                     echo $e->getMessage();
@@ -136,7 +136,7 @@ class MediaCore
         Media::$current_css_file = $fileUri;
 
         if (strlen($cssContent) > 0) {
-            $cssContent = \Minify_CSSmin::minify($cssContent);
+            $cssContent = Minify_CSSmin::minify($cssContent);
             $limit  = Media::getBackTrackLimit();
             $cssContent = preg_replace_callback(Media::$pattern_callback, array('Media', 'replaceByAbsoluteURL'), $cssContent, $limit);
             $cssContent = str_replace('\'images_ie/', '\'images/', $cssContent);

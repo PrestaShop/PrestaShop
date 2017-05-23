@@ -28,8 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOException;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use Module;
 
 class ModuleDataUpdater
 {
@@ -69,21 +68,21 @@ class ModuleDataUpdater
     public function upgrade($name)
     {
         // Calling this function will init legacy module data
-        $module_list = \ModuleCore::getModulesOnDisk();
+        $module_list = Module::getModulesOnDisk();
 
         foreach ($module_list as $module) {
             if ($module->name != $name) {
                 continue;
             }
 
-            if (\ModuleCore::initUpgradeModule($module)) {
-                $legacy_instance = \ModuleCore::getInstanceByName($name);
+            if (Module::initUpgradeModule($module)) {
+                $legacy_instance = Module::getInstanceByName($name);
                 $legacy_instance->runUpgradeModule();
 
-                \ModuleCore::upgradeModuleVersion($name, $module->version);
+                Module::upgradeModuleVersion($name, $module->version);
 
                 return (!count($legacy_instance->getErrors()));
-            } elseif (\ModuleCore::getUpgradeStatus($name)) {
+            } elseif (Module::getUpgradeStatus($name)) {
                 return true;
             }
             return true;

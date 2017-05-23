@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Warehouse;
 
+use Warehouse;
+use WarehouseProductLocation;
+
 /**
  * This class will provide data from DB / ORM about Warehouse
  */
@@ -40,7 +43,7 @@ class WarehouseDataProvider
      */
     public function getWarehouseProductLocations($id_product)
     {
-        $collection = \WarehouseProductLocationCore::getCollection($id_product);
+        $collection = WarehouseProductLocation::getCollection($id_product);
         return $collection->getResults();
     }
 
@@ -53,7 +56,7 @@ class WarehouseDataProvider
      */
     public function getWarehouses($ignore_shop = false, $id_shop = null)
     {
-        return \WarehouseCore::getWarehouses($ignore_shop, $id_shop);
+        return Warehouse::getWarehouses($ignore_shop, $id_shop);
     }
 
     /**
@@ -66,7 +69,7 @@ class WarehouseDataProvider
      */
     public function getWarehouseProductLocationData($id_product, $id_product_attribute, $id_warehouse)
     {
-        $location = \WarehouseProductLocationCore::getProductLocation($id_product, $id_product_attribute, $id_warehouse);
+        $location = WarehouseProductLocation::getProductLocation($id_product, $id_product_attribute, $id_warehouse);
         // for 'activated', we test if $location is ===false or ==="", that's the only difference to know it...
         return ['location' => $location, 'activated' => ($location !== false), 'product_id' => $id_product];
     }

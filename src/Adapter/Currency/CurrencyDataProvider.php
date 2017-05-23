@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
+use Currency;
+
 /**
  * This class will provide data from DB / ORM about Currency
  */
@@ -38,6 +40,6 @@ class CurrencyDataProvider
      */
     public function getCurrencies($object = false, $active = true, $group_by = false)
     {
-        return \CurrencyCore::getCurrencies($object = false, $active = true, $group_by = false);
+        return Currency::getCurrencies($object = false, $active = true, $group_by = false);
     }
 }

@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Db;
+
 class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface
 {
     /**
@@ -36,7 +38,7 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
      */
     public function select($sqlString)
     {
-        return \Db::getInstance()->executeS($sqlString);
+        return Db::getInstance()->executeS($sqlString);
     }
 
     /**
@@ -47,9 +49,6 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
      */
     public function escape($unsafeData)
     {
-        // Prepare required params
-        $html_ok = true;
-        $bq_sql = true;
-        return \Db::getInstance()->escape($unsafeData, $html_ok, $bq_sql);
+        return Db::getInstance()->escape($unsafeData, true, true);
     }
 }

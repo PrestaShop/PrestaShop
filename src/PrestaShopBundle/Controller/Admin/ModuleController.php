@@ -39,6 +39,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use Module;
+use Profile;
 
 class ModuleController extends FrameworkBundleAdminController
 {
@@ -502,10 +504,10 @@ class ModuleController extends FrameworkBundleAdminController
             if (!isset($modulesSelectList) || in_array($module->get('name'), $modulesSelectList)) {
                 $perm = true;
                 if ($module->get('id')) {
-                    $perm &= \Module::getPermissionStatic($module->get('id'), 'configure', $this->getContext()->employee);
+                    $perm &= Module::getPermissionStatic($module->get('id'), 'configure', $this->getContext()->employee);
                 } else {
                     $id_admin_module = $tabRepository->findOneIdByClassName('AdminModules');
-                    $access = \Profile::getProfileAccess($this->getContext()->employee->id_profile, $id_admin_module);
+                    $access = Profile::getProfileAccess($this->getContext()->employee->id_profile, $id_admin_module);
                     if (!$access['edit']) {
                         $perm &= false;
                     }
