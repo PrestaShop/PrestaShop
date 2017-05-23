@@ -123,7 +123,7 @@ class StoresControllerCore extends FrontController
     /**
      * Display the Xml for showing the nodes in the google map
      */
-    protected function displayAjax()
+    public function displayAjax()
     {
         // StarterTheme: Remove method when google maps v3 is done
         $stores = $this->getStoresForXml();

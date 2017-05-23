@@ -689,6 +689,24 @@ class FrontControllerCore extends Controller
     }
 
     /**
+     * Display ajax outputs page content
+     *
+     * @return bool
+     * @throws Exception
+     * @throws SmartyException
+     */
+    public function displayAjax()
+    {
+        if ($this->json) {
+            $this->context->smarty->assign(array(
+                'json' => true,
+                'status' => $this->status,
+            ));
+        }
+        return $this->display();
+    }
+
+    /**
      * Displays maintenance page if shop is closed.
      */
     protected function displayMaintenancePage()
