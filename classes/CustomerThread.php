@@ -135,6 +135,8 @@ class CustomerThreadCore extends ObjectModel
             $sql .= ' AND ct.`id_order` = '.(int)$id_order;
         }
 
+        $sql .= ' ORDER BY cm.date_add DESC';
+
         return Db::getInstance()->executeS($sql);
     }
 
