@@ -65,8 +65,8 @@
         if (!this.product.qty) {
           this.isActive = false;
           this.isEnabled = false;
-          this.value = null;
-          this.product.qty = null;
+          this.value = 0;
+          this.product.qty = 0;
         }
         return this.product.qty;
       },
@@ -106,8 +106,8 @@
           });
           this.isActive = false;
           this.isEnabled = false;
-          this.value = null;
-          this.product.qty = null;
+          this.value = 0;
+          this.product.qty = 0;
         }
       },
     },

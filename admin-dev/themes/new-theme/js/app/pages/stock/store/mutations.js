@@ -75,10 +75,15 @@ export default {
       product_id: updatedProduct.product_id,
       combination_id: updatedProduct.combination_id,
     });
+    const updatedIndex = _.findIndex(state.productsToUpdate, {
+      product_id: updatedProduct.product_id,
+      combination_id: updatedProduct.combination_id,
+    });
     updatedProduct.qty = 0;
     state.products.splice(index, 1, updatedProduct);
+    state.productsToUpdate.splice(updatedIndex, 1);
   },
-  [types.UPDATE_PRODUCTS](state, updatedProducts) {
+  [types.UPDATE_PRODUCTS_QTY](state, updatedProducts) {
     state.productsToUpdate = [];
     _.forEach(updatedProducts, (product) => {
       const index = _.findIndex(state.products, {

@@ -157,9 +157,9 @@ export const updateQtyByProductId = ({ commit, state }, payload) => {
 export const updateQtyByProductsId = ({ commit, state }, payload) => {
   const url = state.editBulkUrl;
   const productsQty = state.productsToUpdate;
-
+  console.log(productsQty)
   Vue.http.post(url, productsQty).then((res) => {
-    commit(types.UPDATE_PRODUCTS, res.body);
+    commit(types.UPDATE_PRODUCTS_QTY, res.body);
     return showGrowl('notice', 'Stock successfully updated');
   }, (error) => {
     showGrowl('error', error.statusText);
