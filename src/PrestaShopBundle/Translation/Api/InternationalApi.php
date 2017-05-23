@@ -38,6 +38,7 @@ class InternationalApi extends AbstractApi
             'button_search' => $this->translator->trans('Search', array(), 'Admin.Actions'),
             'head_title' => $this->translator->trans('Translations', array(), 'Admin.Navigation.Menu'),
             'label_missing' => $this->translator->trans('%d missing', array(), 'Admin.International.Feature'),
+            'label_total_domain' => $this->translator->trans('%nb_translations% expressions', array(), 'Admin.International.Feature'),
             'sidebar_expand' => $this->translator->trans('Expand', array(), 'Admin.Actions'),
             'sidebar_collapse' => $this->translator->trans('Collapse', array(), 'Admin.Actions'),
             'search_label' => $this->translator->trans('Search translations', array(), 'Admin.International.Feature'),

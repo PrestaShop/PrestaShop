@@ -47,6 +47,7 @@
           if (this.domainsTree.length) {
             let domain = this.getFirstDomainToDisplay(this.domainsTree);
             this.$store.dispatch('getCatalog', {url: domain.dataValue});
+            this.$store.dispatch('updateCurrentDomain', domain);
             return domain.full_name;
           }
         }
@@ -67,7 +68,7 @@
     mounted () {
       this.$store.dispatch('getDomainsTree');
       EventBus.$on('lastTreeItemClick', (el) => {
-        this.$store.dispatch('updateCurrentDomain', el.item.full_name);
+        this.$store.dispatch('updateCurrentDomain', el.item);
         this.$store.dispatch('getCatalog', {url: el.item.dataValue});
         this.$store.dispatch('updatePageIndex', 1);
       })

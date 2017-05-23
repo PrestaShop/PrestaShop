@@ -25,6 +25,7 @@
 <template>
   <div class="col-xs-9">
     <div class="card p-a-1">
+      {{ currentDomain }} - {{ currentDomainTotalTranslations }} - {{ currentDomainTotalMissingTranslations }}
       <PSPagination
         pageNumber="3"
         activeMultiPagination="5"
@@ -81,6 +82,15 @@
       currentPagination() {
         return this.$store.getters.pageIndex;
       },
+      currentDomain() {
+        return this.$store.state.currentDomain;
+      },
+      currentDomainTotalTranslations() {
+        return this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations);
+      },
+      currentDomainTotalMissingTranslations() {
+        return this.trans('label_missing').replace('%d', this.$store.state.currentDomainTotalMissingTranslations);
+      },
     },
     methods: {
       onPageChanged(pageIndex) {
@@ -134,7 +144,7 @@
     data() {
       return {
         translations: [],
-        originalTranslations: []
+        originalTranslations: [],
       }
     },
     mounted () {

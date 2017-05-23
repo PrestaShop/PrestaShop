@@ -48,6 +48,8 @@ export default {
     state.pageIndex = pageIndex;
   },
   [types.SET_CURRENT_DOMAIN](state, currentDomain) {
-    state.currentDomain = currentDomain;
+    state.currentDomain = currentDomain.full_name;
+    state.currentDomainTotalTranslations = currentDomain.total_translations;
+    state.currentDomainTotalMissingTranslations = currentDomain.total_missing_translations;
   },
 };

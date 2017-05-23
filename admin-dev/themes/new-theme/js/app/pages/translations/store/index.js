@@ -48,6 +48,8 @@ const state = {
   domainsTree: [],
   total_missing_translations: 0,
   total_translations: 0,
+  currentDomainTotalTranslations: 0,
+  currentDomainTotalMissingTranslations: 0,
   isReady: false,
 };
 
