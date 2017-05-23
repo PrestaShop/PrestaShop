@@ -10,6 +10,7 @@
 	<taxes>
 		<tax id="1" name="IVA AR 21%" rate="21" />
         <tax id="2" name="IVA AR 10.5%" rate="10.5" />
+		<tax id="3" name="IVA AR 4%" rate="4" />
 		
 		<taxRulesGroup name="AR Standard rate (21%)">
             <taxRule iso_code_country="ar" id_tax="1" />
@@ -17,6 +18,10 @@
         
 		<taxRulesGroup name="AR Reduced rate (10.5%)">
             <taxRule iso_code_country="ar" id_tax="2" />
+        </taxRulesGroup>
+		
+		<taxRulesGroup name="AR Reduced rate (4%)">
+            <taxRule iso_code_country="ar" id_tax="3" />
         </taxRulesGroup>
 	</taxes>
 	<units>
