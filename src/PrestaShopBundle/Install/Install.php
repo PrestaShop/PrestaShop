@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Yaml\Yaml;
 use PhpEncryption;
+use PrestaShopBundle\Service\Database\Upgrade;
 
 class Install extends AbstractInstall
 {
@@ -270,7 +271,7 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $schemaUpgrade = new \PrestaShopBundle\Service\Database\Upgrade();
+        $schemaUpgrade = new Upgrade();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
 

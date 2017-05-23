@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Process\Exception\LogicException;
-use Symfony\Component\Routing\Route;
+use ReflectionClass;
 
 /**
  * This UrlGeneratorInterface implementation (in a Sf service) will provides Legacy URLs.
@@ -101,7 +101,7 @@ class UrlGenerator implements UrlGeneratorInterface
                 if ($route->hasDefault('_legacy_param_mapper_class') && $route->hasDefault('_legacy_param_mapper_method')) {
                     $class = $route->getDefault('_legacy_param_mapper_class');
                     $method = $route->getDefault('_legacy_param_mapper_method');
-                    $method = (new \ReflectionClass('\\'.$class))->getMethod($method);
+                    $method = (new ReflectionClass('\\'.$class))->getMethod($method);
                     $legacyParameters = $method->invoke(($method->isStatic())?null:$method->getDeclaringClass()->newInstance(), $parameters);
                 }
             }

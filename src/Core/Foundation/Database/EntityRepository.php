@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder;
+
 class EntityRepository
 {
     protected $entityManager;
@@ -42,7 +44,7 @@ class EntityRepository
         $this->db = $this->entityManager->getDatabase();
         $this->tablesPrefix = $tablesPrefix;
         $this->entityMetaData = $entityMetaData;
-        $this->queryBuilder = new \PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder($this->db);
+        $this->queryBuilder = new QueryBuilder($this->db);
     }
 
     public function __call($method, $arguments)

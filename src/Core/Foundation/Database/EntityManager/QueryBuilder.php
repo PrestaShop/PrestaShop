@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager;
 
+use PrestaShop\PrestaShop\Core\Foundation\Database\Exception;
+
 class QueryBuilder
 {
     private $db;
@@ -50,7 +52,7 @@ class QueryBuilder
         $operator = strtoupper($andOrOr);
 
         if ($operator !== 'AND' && $operator !== 'OR') {
-            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(sprintf('Invalid operator %s - must be "and" or "or".', $andOrOr));
+            throw new Exception(sprintf('Invalid operator %s - must be "and" or "or".', $andOrOr));
         }
 
         $parts = array();

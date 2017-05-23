@@ -25,11 +25,14 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityMetaData;
+use PrestaShop\PrestaShop\Adapter\CoreException;
+
 class EntityMetaDataRetriever
 {
     public function getEntityMetaData($className)
     {
-        $metaData = new \PrestaShop\PrestaShop\Core\Foundation\Database\EntityMetaData();
+        $metaData = new EntityMetaData();
 
         $metaData->setEntityClassName($className);
 
@@ -39,7 +42,7 @@ class EntityMetaDataRetriever
             $metaData->setTableName($classVars['definition']['table']);
             $metaData->setPrimaryKeyFieldNames(array($classVars['definition']['primary']));
         } else {
-            throw new \PrestaShop\PrestaShop\Adapter\CoreException(
+            throw new CoreException(
                 sprintf(
                     'Cannot get metadata for entity `%s`.',
                     $className

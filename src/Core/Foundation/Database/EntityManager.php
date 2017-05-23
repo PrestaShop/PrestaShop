@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
+use PrestaShop\PrestaShop\Adapter\EntityMetaDataRetriever;
+
 class EntityManager
 {
     private $db;
@@ -84,7 +86,7 @@ class EntityManager
     public function getEntityMetaData($className)
     {
         if (!array_key_exists($className, $this->entityMetaData)) {
-            $metaDataRetriever = new \PrestaShop\PrestaShop\Adapter\EntityMetaDataRetriever();
+            $metaDataRetriever = new EntityMetaDataRetriever();
             $this->entityMetaData[$className] = $metaDataRetriever->getEntityMetaData($className);
         }
 

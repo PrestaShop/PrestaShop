@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core;
 
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+
 class ContainerBuilder
 {
     /**
@@ -34,7 +36,7 @@ class ContainerBuilder
      */
     public function build()
     {
-        $container = new \PrestaShop\PrestaShop\Core\Foundation\IoC\Container();
+        $container = new Container();
 
         $container->bind('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
         $container->bind('PrestaShop\\PrestaShop\\Core\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);

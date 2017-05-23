@@ -40,6 +40,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use Module;
 use Profile;
+use stdClass;
+use DateTime;
 
 class ModuleController extends FrameworkBundleAdminController
 {
@@ -206,7 +208,7 @@ class ModuleController extends FrameworkBundleAdminController
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
 
-        $modules = new \stdClass();
+        $modules = new stdClass();
         foreach (array('native_modules', 'theme_bundle', 'modules') as $subpart) {
             $modules->{$subpart} = array();
         }
@@ -679,7 +681,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         $moduleHistory->setIdEmployee($currentEmployeeID);
         $moduleHistory->setIdModule($moduleAccessedID);
-        $moduleHistory->setDateUpd(new \DateTime(date('Y-m-d H:i:s')));
+        $moduleHistory->setDateUpd(new DateTime(date('Y-m-d H:i:s')));
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($moduleHistory);

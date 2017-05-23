@@ -142,7 +142,7 @@ class StockRepository extends StockManagementRepository
      */
     private function syncAllStock()
     {
-        (new \PrestaShop\PrestaShop\Adapter\StockManager())->updatePhysicalProductQuantity(
+        (new StockManager())->updatePhysicalProductQuantity(
             $this->contextAdapter->getContext()->shop->id,
             $this->orderStates['error'],
             $this->orderStates['cancellation']

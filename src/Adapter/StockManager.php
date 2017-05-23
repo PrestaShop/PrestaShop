@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use StockAvailable;
+use StockMvt;
 use Db;
 
 /**
@@ -135,30 +136,30 @@ class StockManager implements StockInterface
      * Instance a new StockMvt
      *
      * @param null $stockMvtId
-     * @return \StockMvt
+     * @return StockMvt
      */
     public function newStockMvt($stockMvtId = null)
     {
         if (is_integer($stockMvtId)) {
-            return new \StockMvt($stockMvtId);
+            return new StockMvt($stockMvtId);
         }
 
-        return new \StockMvt();
+        return new StockMvt();
     }
 
     /**
      * Instance a new StockAvailable
      *
      * @param null $stockAvailableId
-     * @return \StockAvailable
+     * @return StockAvailable
      */
     public function newStockAvailable($stockAvailableId = null)
     {
         if (is_integer($stockAvailableId)) {
-            return new \StockAvailable($stockAvailableId);
+            return new StockAvailable($stockAvailableId);
         }
 
-        return new \StockAvailable();
+        return new StockAvailable();
     }
 
     /**
@@ -171,6 +172,6 @@ class StockManager implements StockInterface
      */
     public function getStockAvailableIdByProductId($productId, $productAttributeId = null, $shopId = null)
     {
-        return \StockAvailable::getStockAvailableIdByProductId($productId, $productAttributeId, $shopId);
+        return StockAvailable::getStockAvailableIdByProductId($productId, $productAttributeId, $shopId);
     }
 }
