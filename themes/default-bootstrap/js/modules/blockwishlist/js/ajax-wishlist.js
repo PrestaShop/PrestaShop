@@ -45,7 +45,7 @@ $(document).ready(function(){
   	});
 
   	$('.wishlist').each(function() {
-  		current = $(this);
+  		var current = $(this);
   		$(this).children('.wishlist_button_list').popover({
   			html: true,
   			content: function () {
