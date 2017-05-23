@@ -103,6 +103,7 @@ class StockRepository extends StockManagementRepository
 
     /**
      * @param Movement $movement
+     * @param bool $syncStock
      * @return mixed
      */
     public function updateStock(Movement $movement, $syncStock = true)

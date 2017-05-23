@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
+
 /**
  * Represents quantities available
  * It is either synchronized with Stock or manualy set by the seller
@@ -478,68 +481,49 @@ class StockAvailableCore extends ObjectModel
     /**
      * For a given id_product and id_product_attribute sets the quantity available
      *
-     * @param int $id_product
-     * @param int $id_product_attribute Optional
-     * @param int $delta_quantity The delta quantity to update
-     * @param int $id_shop Optional
+     * @param $id_product
+     * @param $id_product_attribute
+     * @param $quantity
+     * @param null $id_shop
+     * @param bool $add_movement
+     * @return bool
      */
-    public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null)
+    public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null, $add_movement = true)
     {
         if (!Validate::isUnsignedId($id_product)) {
             return false;
         }
 
-        $context = Context::getContext();
+        $product = (new ProductDataProvider())->getProduct($id_product);
 
-        // if there is no $id_shop, gets the context one
-        if ($id_shop === null && Shop::getContext() != Shop::CONTEXT_GROUP) {
-            $id_shop = (int)$context->shop->id;
-        }
+        if ($product->id) {
 
-        $depends_on_stock = StockAvailable::dependsOnStock($id_product);
+            $context = Context::getContext();
 
-        //Try to set available quantity if product does not depend on physical stock
-        if (!$depends_on_stock) {
-            $id_stock_available = (int)StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
-            if ($id_stock_available) {
-                $stock_available = new StockAvailable($id_stock_available);
-                $stock_available->quantity = (int)$quantity;
-                $stock_available->update();
-            } else {
-                $out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
-                $stock_available = new StockAvailable();
-                $stock_available->out_of_stock = (int)$out_of_stock;
-                $stock_available->id_product = (int)$id_product;
-                $stock_available->id_product_attribute = (int)$id_product_attribute;
-                $stock_available->quantity = (int)$quantity;
-
-                if ($id_shop === null) {
-                    $shop_group = Shop::getContextShopGroup();
-                } else {
-                    $shop_group = new ShopGroup((int)Shop::getGroupFromShop((int)$id_shop));
-                }
-
-                // if quantities are shared between shops of the group
-                if ($shop_group->share_stock) {
-                    $stock_available->id_shop = 0;
-                    $stock_available->id_shop_group = (int)$shop_group->id;
-                } else {
-                    $stock_available->id_shop = (int)$id_shop;
-                    $stock_available->id_shop_group = 0;
-                }
-                $stock_available->add();
+            // if there is no $id_shop, gets the context one
+            if ($id_shop === null && Shop::getContext() != Shop::CONTEXT_GROUP) {
+                $id_shop = (int)$context->shop->id;
             }
 
-            Hook::exec('actionUpdateQuantity',
-                array(
-                    'id_product' => $id_product,
-                    'id_product_attribute' => $id_product_attribute,
-                    'quantity' => $stock_available->quantity
-                )
-            );
-        }
+            $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
+            $stockAvailable = (new StockManagerAdapter)->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
 
-        Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
+            $delta = -1 * ($stockAvailable->quantity - $quantity);
+            var_dump($delta);
+            if (0 !== $delta) {
+                $delta = $stockAvailable->quantity - $quantity;
+                $stockManager->updateQuantity(
+                    $product,
+                    $id_product_attribute,
+                    $delta,
+                    $id_shop,
+                    $add_movement,
+                    array(
+                        'id_stock_mvt_reason' => ($delta >= 1 ? Configuration::get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : Configuration::get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
+                    )
+                );
+            }
+        }
     }
 
     /**
