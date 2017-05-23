@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Pack;
+use Product;
 
 class PackItemsManager
 {
@@ -48,9 +49,9 @@ class PackItemsManager
     /**
      * Get all Packs that contains the given item in the corresponding declination.
      *
-     * @param \ProductCore $item
+     * @param Product $item
      * @param integer $item_attribute_id
-     * @param integer $id_lang Optional
+     * @param boolean|integer $id_lang Optional
      * @return array(Pack) The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
      */
     public function getPacksContainingItem($item, $item_attribute_id, $id_lang = false)
@@ -65,7 +66,7 @@ class PackItemsManager
     /**
      * Is this product a pack?
      *
-     * @param \ProductCore $product
+     * @param Product $product
      * @return boolean
      */
     public function isPack($product)
@@ -78,7 +79,7 @@ class PackItemsManager
      * If $id_product_attribute specified, then will restrict search on the given combination,
      * else this method will match a product if at least one of all its combination is in a pack.
      *
-     * @param \ProductCore $product
+     * @param Product $product
      * @param integer $id_product_attribute Optional combination of the product
      * @return boolean
      */

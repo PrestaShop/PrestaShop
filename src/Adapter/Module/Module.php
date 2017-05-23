@@ -189,7 +189,7 @@ class Module implements ModuleInterface
                 // ToDo: Send to log when PR merged
             }
         }
-        $this->disk->set('is_valid', ($this->instance instanceof \ModuleCore));
+        $this->disk->set('is_valid', ($this->instance instanceof ModuleLegacy));
 
         return $this->disk->get('is_valid');
     }

@@ -38,7 +38,7 @@ class AdminModelAdapterTest extends KernelTestCase
     private $container;
     protected static $kernel;
 
-    /* @var $product \ProductCore */
+    /* @var $product Product */
     private $product;
 
     private function fakeFormData()

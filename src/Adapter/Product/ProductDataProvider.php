@@ -55,7 +55,7 @@ class ProductDataProvider
      *
      * @throws \LogicException If the product id is not set
      *
-     * @return \ProductCore $product
+     * @return Product $product
      */
     public function getProduct($id_product, $full = false, $id_lang = null, $id_shop = null, $context = null)
     {

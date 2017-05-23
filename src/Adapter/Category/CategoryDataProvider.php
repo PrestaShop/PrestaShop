@@ -52,7 +52,7 @@ class CategoryDataProvider
      *
      * @throws \LogicException If the category id is not set
      *
-     * @return \CategoryCore
+     * @return Category
      */
     public function getCategory($idCategory = null, $idLang = null, $idShop = null)
     {

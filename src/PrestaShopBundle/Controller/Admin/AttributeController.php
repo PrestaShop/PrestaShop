@@ -27,7 +27,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
+use Product;
 
 /**
  * Admin controller for the attribute / attribute group
@@ -164,10 +164,10 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param \ProductCore $product
+     * @param Product $product
      * @param array $combinations
      */
-    public function ensureProductHasDefaultCombination(\ProductCore $product, array $combinations)
+    public function ensureProductHasDefaultCombination(Product $product, array $combinations)
     {
         if (count($combinations)) {
             $defaultProductAttributeId = $product->getDefaultIdProductAttribute();

@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Product;
+use Context;
 
 class PriceCalculator
 {
@@ -45,7 +46,7 @@ class PriceCalculator
         &$specific_price_output = null,
         $with_ecotax = true,
         $use_group_reduction = true,
-        \ContextCore $context = null,
+        Context $context = null,
         $use_customer_price = true,
         $id_customization = null
     ) {

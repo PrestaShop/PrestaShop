@@ -41,6 +41,7 @@ use ProductDownload;
 use Attachment;
 use Configuration as ConfigurationLegacy;
 use Tools as ToolsLegacy;
+use Product;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -69,7 +70,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * Constructor
      * Set all adapters needed and get product
      *
-     * @param \ProductCore $product The product object
+     * @param Product $product The product object
      * @param LegacyContext $legacyContext
      * @param AdminProductWrapper $adminProductWrapper
      * @param Tools $toolsAdapter
@@ -82,7 +83,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param TaxRuleDataProvider $taxRuleDataProvider
      */
     public function __construct(
-        \ProductCore $product,
+        Product $product,
         LegacyContext $legacyContext,
         AdminProductWrapper $adminProductWrapper,
         Tools $toolsAdapter,

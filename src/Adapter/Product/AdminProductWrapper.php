@@ -71,7 +71,7 @@ class AdminProductWrapper
      * getInstance
      * Get the legacy AdminProductsControllerCore instance
      *
-     * @return \AdminProductsControllerCore instance
+     * @return AdminProductsController instance
      */
     public function getInstance()
     {
@@ -85,7 +85,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $combinationValues the posted values
      *
-     * @return \AdminProductsControllerCore instance
+     * @return AdminProductsController instance
      */
     public function processProductAttribute($product, $combinationValues)
     {
@@ -164,11 +164,11 @@ class AdminProductWrapper
      *
      * Does not work in Advanced stock management.
      *
-     * @param \ProductCore $product
+     * @param Product $product
      * @param integer $quantity
      * @param integer $forAttributeId
      */
-    public function processQuantityUpdate(\ProductCore $product, $quantity, $forAttributeId = 0)
+    public function processQuantityUpdate(Product $product, $quantity, $forAttributeId = 0)
     {
         // Hook triggered by legacy code below: actionUpdateQuantity('id_product', 'id_product_attribute', 'quantity')
         StockAvailable::setQuantity((int)$product->id, $forAttributeId, $quantity);
@@ -178,10 +178,10 @@ class AdminProductWrapper
     /**
      * Update the out of stock strategy
      *
-     * @param \ProductCore $product
+     * @param Product $product
      * @param integer $out_of_stock
      */
-    public function processProductOutOfStock(\ProductCore $product, $out_of_stock)
+    public function processProductOutOfStock(Product $product, $out_of_stock)
     {
         StockAvailable::setProductOutOfStock((int)$product->id, (int)$out_of_stock);
     }
@@ -191,11 +191,11 @@ class AdminProductWrapper
      *
      * Does work only in Advanced stock management.
      *
-     * @param \ProductCore $product
+     * @param Product $product
      * @param boolean $dependsOnStock
      * @param integer $forAttributeId
      */
-    public function processDependsOnStock(\ProductCore $product, $dependsOnStock, $forAttributeId = 0)
+    public function processDependsOnStock(Product $product, $dependsOnStock, $forAttributeId = 0)
     {
         StockAvailable::setProductDependsOnStock((int)$product->id, $dependsOnStock, null, $forAttributeId);
     }
@@ -207,7 +207,7 @@ class AdminProductWrapper
      * @param int $id_product
      * @param array $specificPriceValues the posted values
      *
-     * @return \AdminProductsControllerCore instance
+     * @return AdminProductsController instance
      */
     public function processProductSpecificPrice($id_product, $specificPriceValues)
     {

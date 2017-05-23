@@ -36,7 +36,7 @@ class AdminCategoryControllerWrapper
     /**
      * Get instance of legacy class AdminCategoriesController
      *
-     * @return \AdminCategoriesControllerCore
+     * @return AdminCategoriesController
      */
     public function getInstance()
     {
