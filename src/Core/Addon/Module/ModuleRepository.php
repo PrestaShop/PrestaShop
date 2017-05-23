@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
@@ -414,7 +415,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 require_once $php_file_path;
 
                 // We load the main class of the module, and get its properties
-                $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
+                $tmp_module = ServiceLocator::get($name);
                 foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_uri',
                     'limited_countries', 'need_instance', ) as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {

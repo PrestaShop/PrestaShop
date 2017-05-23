@@ -440,10 +440,12 @@ class AdminControllerCore extends Controller
             $this->bo_css = 'admin-theme.css';
         }
 
-        $this->context->smarty->setTemplateDir(array(
-            _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template',
-            _PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'
-        ));
+        if (defined('_PS_BO_ALL_THEMES_DIR_')) {
+            $this->context->smarty->setTemplateDir(array(
+                _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template',
+                _PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'
+            ));
+        }
 
         $this->id = Tab::getIdFromClassName($this->controller_name);
         $this->token = Tools::getAdminToken($this->controller_name.(int)$this->id.(int)$this->context->employee->id);
@@ -518,8 +520,11 @@ class AdminControllerCore extends Controller
 
         $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
-        $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-        $this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
+        if (defined('_PS_ADMIN_DIR_')) {
+            $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
+            $this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
+        }
+
 
         // Check if logged on Addons
         $this->logged_on_addons = false;

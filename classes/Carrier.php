@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+
 class CarrierCore extends ObjectModel
 {
     /**
@@ -1296,7 +1299,7 @@ class CarrierCore extends ObjectModel
     public function getTaxCalculator(Address $address, $id_order = null, $use_average_tax_of_products = false)
     {
         if ($use_average_tax_of_products) {
-            return \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
+            return ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
         } else {
             $tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
 

@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Stock;
+
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Entity\ProductIdentity;
@@ -214,7 +215,7 @@ class StockManager
         ));
 
         $movement = new Movement($productIdentity, $deltaQuantity);
-        $product = (new ProductDataProvider)->getProduct($productId);
+        $product = (new ProductDataProvider)->getProductInstance($productId);
 
         if ($product->id) {
             $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
