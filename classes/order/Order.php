@@ -2282,13 +2282,8 @@ class OrderCore extends ObjectModel
                 $order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
             }
         }
-
-        $products_tax    = $this->total_products_wt - $this->total_products;
-        $discounts_tax    = $this->total_discounts_tax_incl - $this->total_discounts_tax_excl;
-
-        // We add $free_shipping_tax because when there is free shipping, the tax that would
-        // be paid if there wasn't is included in $discounts_tax.
-        $expected_total_tax = $products_tax - $discounts_tax + $free_shipping_tax;
+        
+        $expected_total_tax = $this->total_products_wt - $this->total_products;
         $actual_total_tax = 0;
         $actual_total_base = 0;
 
