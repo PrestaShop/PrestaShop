@@ -161,7 +161,7 @@ class StockManager
         }
 
         // Prepare movement and save it
-        if (true === $add_movement) {
+        if (true === $add_movement && 0 != $delta_quantity) {
             $this->saveMovement($product->id, $id_product_attribute, $delta_quantity, $params);
         }
 

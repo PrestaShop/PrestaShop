@@ -24,8 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
-use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 /**
  * Represents quantities available
@@ -447,7 +446,7 @@ class StockAvailableCore extends ObjectModel
 			AND id_product_attribute <> 0 '.
             StockAvailable::addSqlShopRestriction(null, $id_shop)
         );
-        $this->setQuantity($this->id_product, 0, $total_quantity, $id_shop);
+        $this->setQuantity($this->id_product, 0, $total_quantity, $id_shop, false);
 
         return true;
     }
@@ -473,7 +472,7 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
 
-        $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
+        $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
         $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop, $add_movement, $params);
         return true;
     }
@@ -493,37 +492,64 @@ class StockAvailableCore extends ObjectModel
         if (!Validate::isUnsignedId($id_product)) {
             return false;
         }
-
-        $product = (new ProductDataProvider())->getProduct($id_product);
-
-        if ($product->id) {
-
-            $context = Context::getContext();
-
-            // if there is no $id_shop, gets the context one
-            if ($id_shop === null && Shop::getContext() != Shop::CONTEXT_GROUP) {
-                $id_shop = (int)$context->shop->id;
-            }
-
-            $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
-            $stockAvailable = (new StockManagerAdapter)->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
-
-            $delta = -1 * ($stockAvailable->quantity - $quantity);
-            var_dump($delta);
-            if (0 !== $delta) {
-                $delta = $stockAvailable->quantity - $quantity;
-                $stockManager->updateQuantity(
-                    $product,
-                    $id_product_attribute,
-                    $delta,
-                    $id_shop,
-                    $add_movement,
-                    array(
-                        'id_stock_mvt_reason' => ($delta >= 1 ? Configuration::get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : Configuration::get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
-                    )
-                );
-            }
+        $context = Context::getContext();
+        // if there is no $id_shop, gets the context one
+        if ($id_shop === null && Shop::getContext() != Shop::CONTEXT_GROUP) {
+            $id_shop = (int)$context->shop->id;
         }
+        $depends_on_stock = StockAvailable::dependsOnStock($id_product);
+        //Try to set available quantity if product does not depend on physical stock
+        if (!$depends_on_stock) {
+            $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
+
+            $id_stock_available = (int)StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
+            if ($id_stock_available) {
+                $stock_available = new StockAvailable($id_stock_available);
+
+                $deltaQuantity = -1 * ((int)$stock_available->quantity - (int)$quantity);
+
+                $stock_available->quantity = (int)$quantity;
+                $stock_available->update();
+
+                if (true === $add_movement && 0 != $deltaQuantity) {
+                    $stockManager->saveMovement($id_product, $id_product_attribute, $deltaQuantity);
+                }
+            } else {
+                $out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
+                $stock_available = new StockAvailable();
+                $stock_available->out_of_stock = (int)$out_of_stock;
+                $stock_available->id_product = (int)$id_product;
+                $stock_available->id_product_attribute = (int)$id_product_attribute;
+                $stock_available->quantity = (int)$quantity;
+                if ($id_shop === null) {
+                    $shop_group = Shop::getContextShopGroup();
+                } else {
+                    $shop_group = new ShopGroup((int)Shop::getGroupFromShop((int)$id_shop));
+                }
+                // if quantities are shared between shops of the group
+                if ($shop_group->share_stock) {
+                    $stock_available->id_shop = 0;
+                    $stock_available->id_shop_group = (int)$shop_group->id;
+                } else {
+                    $stock_available->id_shop = (int)$id_shop;
+                    $stock_available->id_shop_group = 0;
+                }
+                $stock_available->add();
+
+                if (true === $add_movement && 0 != $quantity) {
+                    $stockManager->saveMovement($id_product, $id_product_attribute, (int)$quantity);
+                }
+            }
+
+            Hook::exec('actionUpdateQuantity',
+                array(
+                    'id_product' => $id_product,
+                    'id_product_attribute' => $id_product_attribute,
+                    'quantity' => $stock_available->quantity
+                )
+            );
+        }
+        Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
     }
 
     /**
