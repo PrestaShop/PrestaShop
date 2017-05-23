@@ -180,9 +180,9 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                     'allowed' => $this->isGiftAllowed(),
                     'isGift' => $this->getCheckoutSession()->getGift()['isGift'],
                     'label' => $this->getTranslator()->trans(
-                        'I would like my order to be gift wrapped'.$this->getGiftCostForLabel(),
-                        array(),
-                        'Checkout'
+                        'I would like my order to be gift wrapped %cost%',
+                        array('%cost%' => $this->getGiftCostForLabel()),
+                        'Shop.Theme.Checkout'
                     ),
                     'message' => $this->getCheckoutSession()->getGift()['message'],
                 ),
