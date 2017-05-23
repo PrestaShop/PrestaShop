@@ -30,12 +30,12 @@ import { showGrowl } from 'app/utils/growl';
 Vue.use(VueResource);
 
 export const getTranslations = ({ commit }) => {
-  let url = window.data.translationUrl;
-  Vue.http.get(url).then(function(response) {
+  const url = window.data.translationUrl;
+  Vue.http.get(url).then((response) => {
     commit(types.SET_TRANSLATIONS, response.body);
     commit(types.APP_IS_READY);
-  }, function(error) {
-    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }, (error) => {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
@@ -44,48 +44,48 @@ export const getCatalog = ({ commit }, payload) => {
     params: {
       page_size: payload.page_size,
       page_index: payload.page_index,
-    }
-  }).then(function(response) {
+    },
+  }).then((response) => {
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.SET_CATALOG, response.body);
-  }, function(error) {
-    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }, (error) => {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
 export const getDomainsTree = ({ commit }) => {
-  let url = window.data.domainsTreeUrl;
-  Vue.http.get(url).then(function(response) {
+  const url = window.data.domainsTreeUrl;
+  Vue.http.get(url).then((response) => {
     commit(types.SET_DOMAINS_TREE, response.body);
-  }, function(error) {
-    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }, (error) => {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
-export const saveTranslations =  ({ commit }, payload) => {
-  let url = payload.url,
-    translations = payload.translations;
+export const saveTranslations = ({ commit }, payload) => {
+  const url = payload.url;
+  const translations = payload.translations;
 
   Vue.http.post(url, {
-    translations
-  }).then((res) => {
+    translations,
+  }).then(() => {
     payload.store.dispatch('getDomainsTree');
     return showGrowl('notice', 'Translations successfully updated');
-  }, function(error) {
-    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  }, (error) => {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
-export const resetTranslation =  ({ commit }, payload) => {
-  let url = payload.url,
-    translations = payload.translations;
+export const resetTranslation = ({ commit }, payload) => {
+  const url = payload.url;
+  const translations = payload.translations;
 
   Vue.http.post(url, {
-    translations
-  }).then((res) => {
-    return showGrowl('notice', 'Translations successfully reset');
-  }, function(error) {
-    return showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+    translations,
+  }).then(() => {
+    showGrowl('notice', 'Translations successfully reset');
+  }, (error) => {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 

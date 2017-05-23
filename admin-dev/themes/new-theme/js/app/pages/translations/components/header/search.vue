@@ -42,24 +42,24 @@
 
   export default {
     components: {
-      PSTags
+      PSTags,
     },
     methods: {
       onSearch() {
         this.$emit('search', this.tags);
-      }
+      },
     },
     watch: {
-      '$route' () {
+      $route() {
         this.tags = [];
-      }
+      },
     },
     data() {
       return {
-        tags:[]
-      }
-    }
-  }
+        tags: [],
+      };
+    },
+  };
 </script>
 <style lang="sass?outputStyle=expanded">
   @import "~PrestaKit/scss/custom/_variables.scss";

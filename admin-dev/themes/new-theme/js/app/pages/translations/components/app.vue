@@ -53,7 +53,7 @@
     },
     methods: {
       onSearch(keywords) {
-        let desc = this.$route.name === 'overview' ? '' : ' desc';
+        const desc = this.$route.name === 'overview' ? '' : ' desc';
         this.$store.dispatch('updateKeywords', keywords);
         this.fetch(desc);
       },
@@ -62,9 +62,9 @@
       TranslationsHeader,
       Search,
       Sidebar,
-      Principal
+      Principal,
     },
-  }
+  };
 </script>
 
 <style lang="sass?outputStyle=expanded">

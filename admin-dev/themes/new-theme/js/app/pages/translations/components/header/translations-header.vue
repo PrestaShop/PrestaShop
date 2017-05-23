@@ -34,9 +34,9 @@
 
   export default {
     components: {
-      Breadcrumb
-    }
-  }
+      Breadcrumb,
+    },
+  };
 </script>
 
 <style lang="sass?outputStyle=expanded" scoped>

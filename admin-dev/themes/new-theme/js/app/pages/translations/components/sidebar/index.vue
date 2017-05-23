@@ -45,8 +45,8 @@
       currentItem() {
         if (this.$store.getters.currentDomain === '') {
           if (this.domainsTree.length) {
-            let domain = this.getFirstDomainToDisplay(this.domainsTree);
-            this.$store.dispatch('getCatalog', {url: domain.dataValue});
+            const domain = this.getFirstDomainToDisplay(this.domainsTree);
+            this.$store.dispatch('getCatalog', { url: domain.dataValue });
             this.$store.dispatch('updateCurrentDomain', domain);
             return domain.full_name;
           }
@@ -54,41 +54,41 @@
 
         return this.$store.getters.currentDomain;
       },
-      domainsTree () {
+      domainsTree() {
         return this.$store.getters.domainsTree;
       },
-      translations () {
+      translations() {
         return {
           expand: this.trans('sidebar_expand'),
           reduce: this.trans('sidebar_collapse'),
           extra: this.trans('label_missing'),
         };
-      }
+      },
     },
-    mounted () {
+    mounted() {
       this.$store.dispatch('getDomainsTree');
       EventBus.$on('lastTreeItemClick', (el) => {
         this.$store.dispatch('updateCurrentDomain', el.item);
-        this.$store.dispatch('getCatalog', {url: el.item.dataValue});
+        this.$store.dispatch('getCatalog', { url: el.item.dataValue });
         this.$store.dispatch('updatePageIndex', 1);
-      })
+      });
     },
     methods: {
-      getFirstDomainToDisplay: function getFirstDomainToDisplay (tree) {
-        let keys = Object.keys(tree);
-        let firstElement = tree[keys[0]];
+      getFirstDomainToDisplay: function getFirstDomainToDisplay(tree) {
+        const keys = Object.keys(tree);
+        const firstElement = tree[keys[0]];
 
         if (firstElement.children && firstElement.children.length > 0) {
           return getFirstDomainToDisplay(firstElement.children);
-        } else {
-          return firstElement;
         }
-      }
+
+        return firstElement;
+      },
     },
     components: {
-      PSTree
-    }
-  }
+      PSTree,
+    },
+  };
 </script>
 
 <style lang="sass">

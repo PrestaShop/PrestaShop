@@ -42,41 +42,42 @@
     props: {
       extraInfo: {
         type: String,
-        required: false
+        required: false,
       },
       label: {
         type: String,
-        required: true
+        required: true,
       },
       translated: {
-        required: true
-      }
+        required: true,
+      },
     },
     computed: {
       getTranslated: {
-        get: function() {
+        get() {
           return this.translated.database ? this.translated.database : this.translated.xliff;
         },
-        set: function(modifiedValue) {
-          let modifiedTranslated = this.translated;
-          modifiedTranslated.database = modifiedTranslated.edited = modifiedValue;
+        set(modifiedValue) {
+          const modifiedTranslated = this.translated;
+          modifiedTranslated.database = modifiedValue;
+          modifiedTranslated.edited = modifiedValue;
           this.$emit('input', modifiedTranslated);
-        }
+        },
       },
       isMissing() {
         return this.getTranslated === null;
-      }
+      },
     },
     methods: {
-      resetTranslation: function () {
+      resetTranslation() {
         this.getTranslated = '';
         EventBus.$emit('resetTranslation', this.translated);
       },
     },
     components: {
-      PSButton
-    }
-  }
+      PSButton,
+    },
+  };
 </script>
 
 <style lang="sass" scoped>

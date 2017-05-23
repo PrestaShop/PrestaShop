@@ -66,14 +66,14 @@
 
   export default {
     computed: {
-      translationsCatalog () {
+      translationsCatalog() {
         this.translations = this.$store.getters.catalog.data.data;
         return this.translations;
       },
-      saveAction () {
+      saveAction() {
         return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.edit_url : '';
       },
-      resetAction () {
+      resetAction() {
         return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.reset_url : '';
       },
       pagesCount() {
@@ -113,18 +113,18 @@
         return domain.slice(0, -3);
       },
       saveTranslations() {
-        let modifiedTranslations = this.getModifiedTranslations();
+        const modifiedTranslations = this.getModifiedTranslations();
 
         if (modifiedTranslations.length) {
           this.$store.dispatch('saveTranslations', {
             url: this.saveAction,
             translations: this.getModifiedTranslations(),
-            store: this.$store
+            store: this.$store,
           });
         }
       },
       getModifiedTranslations() {
-        let modifiedTranslations = [];
+        const modifiedTranslations = [];
 
         this.translations.forEach((translation) => {
           if (translation.edited) {
@@ -133,41 +133,41 @@
               edited: translation.edited,
               domain: translation.tree_domain.join(''),
               locale: window.data.locale,
-              theme: window.data.selected
+              theme: window.data.selected,
             });
           }
         });
 
         return modifiedTranslations;
-      }
+      },
     },
     data() {
       return {
         translations: [],
         originalTranslations: [],
-      }
+      };
     },
-    mounted () {
+    mounted() {
       EventBus.$on('resetTranslation', (el) => {
-        let translations = [];
+        const translations = [];
 
         translations.push({
           default: el.default,
           domain: el.tree_domain.join(''),
           locale: window.data.locale,
-          theme: window.data.selected
+          theme: window.data.selected,
         });
 
         this.$store.dispatch('resetTranslation', {
           url: this.resetAction,
-          translations: translations
+          translations: translations,
         });
-      })
+      });
     },
     components: {
       TranslationInput,
       PSButton,
       PSPagination,
-    }
-  }
+    },
+  };
 </script>

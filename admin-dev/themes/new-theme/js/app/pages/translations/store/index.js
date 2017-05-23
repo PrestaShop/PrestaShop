@@ -39,11 +39,11 @@ const state = {
   currentDomain: '',
   translations: {
     data: {},
-    info: {}
+    info: {},
   },
   catalog: {
     data: {},
-    info: {}
+    info: {},
   },
   domainsTree: [],
   total_missing_translations: 0,
@@ -55,24 +55,24 @@ const state = {
 
 // getters are functions
 const getters = {
-  totalPages(state) {
-    return state.totalPages;
+  totalPages(rootState) {
+    return rootState.totalPages;
   },
-  pageIndex(state) {
-    return state.pageIndex;
+  pageIndex(rootState) {
+    return rootState.pageIndex;
   },
-  currentDomain(state) {
-    return state.currentDomain;
+  currentDomain(rootState) {
+    return rootState.currentDomain;
   },
-  translations(state) {
-    return state.translations;
+  translations(rootState) {
+    return rootState.translations;
   },
-  catalog(state) {
-    return state.catalog;
+  catalog(rootState) {
+    return rootState.catalog;
   },
-  domainsTree(state) {
+  domainsTree() {
     function convert(domains) {
-      domains.forEach((domain)=>{
+      domains.forEach((domain) => {
         domain.children = _.values(domain.children);
         domain.extraLabel = domain.total_missing_translations;
         domain.dataValue = domain.domain_catalog_link;
@@ -85,9 +85,9 @@ const getters = {
 
     return convert(state.domainsTree);
   },
-  isReady(state) {
-    return state.isReady;
-  }
+  isReady(rootState) {
+    return rootState.isReady;
+  },
 };
 
 // A Vuex instance is created by combining the state, mutations, actions,

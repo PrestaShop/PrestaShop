@@ -35,7 +35,7 @@ export default new VueRouter({
     {
       path: '/',
       name: 'overview',
-      component: Overview
+      component: Overview,
     },
-  ]
+  ],
 });

@@ -38,5 +38,5 @@ new Vue({
   components: { app },
   beforeMount() {
     this.$store.dispatch('getTranslations');
-  }
+  },
 });
