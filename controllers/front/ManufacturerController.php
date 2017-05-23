@@ -115,8 +115,8 @@ class ManufacturerControllerCore extends FrontController
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
             $data = Manufacturer::getManufacturers(false, $this->context->language->id, true, false, false, false);
             $nbProducts = count($data);
-            $data = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
             $this->pagination($nbProducts);
+            $data = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
 
             foreach ($data as &$item) {
                 $item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.$item['id_manufacturer'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
