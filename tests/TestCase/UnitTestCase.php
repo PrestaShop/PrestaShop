@@ -32,12 +32,10 @@ use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
-use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Phake;
 use Symfony\Component\HttpKernel\Kernel;
-use PrestaShop\PrestaShop\Tests\TestCase\FakeEntityMapper;
-use PrestaShop\PrestaShop\Tests\TestCase\FakeConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase

@@ -25,8 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use PrestaShop\PrestaShop\Adapter\CoreException;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * @internal

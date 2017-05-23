@@ -25,10 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Admin;
 
-use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Phake;
 
 class UrlGeneratorTest extends UnitTestCase
