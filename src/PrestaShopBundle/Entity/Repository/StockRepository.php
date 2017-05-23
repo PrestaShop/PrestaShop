@@ -176,7 +176,7 @@ class StockRepository extends StockManagementRepository
             );
         }
 
-        $rows = $this->addImageThumbnailPaths($rows);
+        $rows = $this->addAdditionalData($rows);
 
         return $this->castNumericToInt($rows)[0];
     }
