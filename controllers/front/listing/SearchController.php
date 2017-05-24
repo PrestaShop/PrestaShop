@@ -27,7 +27,7 @@
  use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
  use PrestaShop\PrestaShop\Adapter\Search\SearchProductSearchProvider;
 
- class SearchControllerCore extends ProductListingFrontControllerCore
+ class SearchControllerCore extends ProductListingFrontController
  {
      public $php_self = 'search';
      public $instant_search;
