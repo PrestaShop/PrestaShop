@@ -432,6 +432,28 @@ class AdminCustomersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
+                    'label' => $this->trans('Newsletter', array(), 'Admin.Orderscustomers.Feature'),
+                    'name' => 'newsletter',
+                    'required' => false,
+                    'class' => 't',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'newsletter_on',
+                            'value' => 1,
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                        ),
+                        array(
+                            'id' => 'newsletter_off',
+                            'value' => 0,
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
+                        )
+                    ),
+                    'disabled' => (bool)!Configuration::get('PS_CUSTOMER_OPTIN'),
+                    'hint' => $this->trans('This customer will receive your newsletter via email.', array(), 'Admin.Orderscustomers.Help')
+                ),
+                array(
+                    'type' => 'switch',
                     'label' => $this->trans('Partner offers', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'optin',
                     'required' => false,
