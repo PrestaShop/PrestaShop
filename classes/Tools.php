@@ -271,15 +271,13 @@ class ToolsCore
      */
     public static function getShopDomain($http = false, $entities = false)
     {
-        if (!$domain = ShopUrl::getMainShopDomain()) {
-            $domain = Tools::getHttpHost();
-        }
-        if ($entities) {
+        $domain = ((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? ShopUrl::getMainShopDomainSSL() : ShopUrl::getMainShopDomain());
+        if (!$domain)
+        	$domain = Tools::getHttpHost();
+        if ($entities)
             $domain = htmlspecialchars($domain, ENT_COMPAT, 'UTF-8');
-        }
-        if ($http) {
-            $domain = 'http://'.$domain;
-        }
+        if ($http)
+            $domain = ((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 'https://' : 'http://').$domain;
         return $domain;
     }
 
