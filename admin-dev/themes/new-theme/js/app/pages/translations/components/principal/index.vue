@@ -23,20 +23,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="col-xs-9">
-    <div class="card p-a-1">
-      {{ currentDomain }} - {{ currentDomainTotalTranslations }} - {{ currentDomainTotalMissingTranslations }}
-      <PSPagination
-        pageNumber="3"
-        activeMultiPagination="5"
-        :current="currentPagination"
-        :pagesCount="pagesCount"
-        @pageChanged="onPageChanged"
-      />
-      <form :action="saveAction" method="post" @submit.prevent="saveTranslations">
-        <PSButton :primary="true" type="submit">
-          {{ trans('button_save') }}
-        </PSButton>
+  <div class="col-xs-9 card">
+    <div class="p-x-1 row">
+      <div class="col-xs-6 p-t-3">
+        <strong>{{ currentDomain }} - {{ currentDomainTotalTranslations }} - {{ currentDomainTotalMissingTranslations }}</strong>
+      </div>
+      <div class="col-xs-6">
+        <PSPagination
+          pageNumber="3"
+          activeMultiPagination="5"
+          :current="currentPagination"
+          :pagesCount="pagesCount"
+          class="pull-xs-right"
+          @pageChanged="onPageChanged"
+        />
+      </div>
+      <form class="col-xs-12" :action="saveAction" method="post" @submit.prevent="saveTranslations">
+        <div class="row">
+          <div class="col-xs-12">
+            <PSButton :primary="true" type="submit" class="pull-xs-right">
+              {{ trans('button_save') }}
+            </PSButton>
+          </div>
+        </div>
 
         <TranslationInput
           v-for="(translation, key) in translationsCatalog"
@@ -45,15 +54,17 @@
           :label="translation.default"
           :extraInfo="getDomain(translation.tree_domain)">
         </TranslationInput>
-        <PSButton :primary="true" type="submit">
+        <PSButton :primary="true" type="submit" class="pull-xs-right m-t-2">
           {{ trans('button_save') }}
         </PSButton>
       </form>
-      <PSPagination
-        :current="currentPagination"
-        :pagesCount="pagesCount"
-        @pageChanged="onPageChanged"
-      />
+      <div class="col-xs-12">
+        <PSPagination
+          :current="currentPagination"
+          :pagesCount="pagesCount"
+          @pageChanged="onPageChanged"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -109,7 +120,6 @@
         domains.forEach((d) => {
           domain += d + ' > ';
         });
-
         return domain.slice(0, -3);
       },
       saveTranslations() {
@@ -160,7 +170,7 @@
 
         this.$store.dispatch('resetTranslation', {
           url: this.resetAction,
-          translations: translations,
+          translations,
         });
       });
     },

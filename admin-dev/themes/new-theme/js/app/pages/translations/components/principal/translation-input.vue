@@ -23,13 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div>
+  <div class="form-group">
     <label>{{label}}</label>
-    <textarea v-model="getTranslated" :class="{ missing : isMissing }"></textarea>
-    <PSButton :primary="false" @click="resetTranslation">
+    <textarea class="form-control" v-model="getTranslated" :class="{ missing : isMissing }"></textarea>
+    <PSButton class="m-t-1 pull-xs-right" :primary="false" ghost @click="resetTranslation">
       Reset
     </PSButton>
-    {{extraInfo}}
+    <small class="m-t-1">{{extraInfo}}</small>
   </div>
 </template>
 

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <button type="button" class="btn" :class="buttonType" @click="onClick" >
+  <button type="button" class="btn" :class="classObject" @click="onClick" >
     <slot />
   </button>
 </template>
@@ -32,13 +32,15 @@
  export default {
    props: {
      primary: { type: Boolean, required: true },
+     ghost: { type: Boolean },
    },
    computed: {
-     buttonType() {
-       if (this.primary) {
-         return 'btn-primary';
-       }
-       return 'btn-secondary';
+     classObject() {
+       return {
+         'btn-primary': this.primary,
+         'btn-secondary': !this.primary,
+         ghost: this.ghost,
+       };
      },
    },
    methods: {
@@ -58,5 +60,18 @@
   .btn-secondary {
     background-color: $gray-medium;
     border: none;
+    &.ghost {
+      background-color: white;
+      border: $gray-medium 2px solid;
+      color: $gray-medium;
+      &:hover {
+        border: $gray-dark 2px solid;
+      }
+    }
+    &:hover {
+      background-color: $gray-dark;
+      color: white;
+    }
   }
+
 </style>
