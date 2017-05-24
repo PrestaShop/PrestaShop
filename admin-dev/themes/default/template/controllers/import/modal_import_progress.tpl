@@ -44,7 +44,6 @@
         '%size%' => '16MB',
         '[/1]' => '</span>'
         ] d="Admin.Advparameters.Notification"}
-      <span id="import_details_post_limit_value">16MB</span> at least, and try again.
     </div>
     <div class="alert alert-warning" id="import_details_warning" style="display:none;">
       {l s="Some errors were detected. Please check the details:" d="Admin.Advparameters.Notification"}<br/><ul></ul>
