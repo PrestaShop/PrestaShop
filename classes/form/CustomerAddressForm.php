@@ -73,7 +73,7 @@ class CustomerAddressFormCore extends AbstractForm
             return Tools::redirect('index.php?controller=404');
         }
 
-        if (!$context->customer->isLogged()) {
+        if (!$context->customer->isLogged() && !$context->customer->isGuest() ) {
             return Tools::redirect('/index.php?controller=authentication');
         }
 
