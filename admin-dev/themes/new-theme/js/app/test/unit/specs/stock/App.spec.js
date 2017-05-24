@@ -10,7 +10,7 @@ Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.mixin(Translation);
 
-let router = new VueRouter({abstract: true})
+let router = new VueRouter({path: 'overview'})
 const PAGE_COUNT_MOCK = 2;
 const PAGINATION_INDEX_MOCK = 1;
 
@@ -113,6 +113,6 @@ describe('app.vue', () => {
     vm.fetch();
     assert(spy.calledWith('isLoading'));
     assert(spy.calledWith('getMovements'));
+    spy.restore();
   });
-
 });
