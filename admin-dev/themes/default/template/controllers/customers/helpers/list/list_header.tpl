@@ -37,20 +37,20 @@
 	{if isset($delete_customer) && $delete_customer}
 		<form action="{$REQUEST_URI|escape:'html':'UTF-8'}" method="post">
 			<div class="alert alert-warning">
-				<h4>{l s='How do you want to delete the selected customers?'}</h4>
-				<p>{l s='There are two ways of deleting a customer. Please choose your preferred method.'}</p>
+				<h4>{l s='How do you want to delete the selected customers?' d='Admin.Orderscustomers.Notification'}</h4>
+				<p>{l s='There are two ways of deleting a customer. Please choose your preferred method.' d='Admin.Orderscustomers.Notification'}</p>
 				<br>
 				<ul class="listForm list-unstyled">
 					<li>
 						<label for="deleteMode_real" class="control-label">
 							<input type="radio" name="deleteMode" value="real" id="deleteMode_real" />
-							{l s='I want my customers to be able to register again with the same email address. All data will be removed from the database.'}
+							{l s='I want my customers to be able to register again with the same email address. All data will be removed from the database.' d='Admin.Orderscustomers.Notification'}
 						</label>
 					</li>
 					<li>
 						<label for="deleteMode_deleted" class="control-label">
 							<input type="radio" name="deleteMode" value="deleted" id="deleteMode_deleted" />
-							{l s='I do not want my customer(s) to register again with the same email address. All selected customer(s) will be removed from this list but their corresponding data will be kept in the database.'}
+							{l s='I do not want my customer(s) to register again with the same email address. All selected customer(s) will be removed from this list but their corresponding data will be kept in the database.' d='Admin.Orderscustomers.Notification'}
 						</label>
 					</li>
 				</ul>

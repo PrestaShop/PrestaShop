@@ -96,7 +96,7 @@
 
 	<div class="panel">
 		<h3>
-			<i class="icon-bar-chart"></i> {l s='Statistics'}
+			<i class="icon-bar-chart"></i> {l s='Statistics' d='Admin.Shopparameters.Feature'}
 		</h3>
 		<h2>{$referrer->name}</h2>
 		<table class="table">
@@ -109,10 +109,10 @@
 		</table>
 		<form id="product_referrers" name="product_referrers" class="form-horizontal">
 			<div class="form-group">
-				<label class="control-label col-lg-3">{l s='Filter by product:'}</label>
+				<label class="control-label col-lg-3">{l s='Filter by product:' d='Admin.Shopparameters.Feature'}</label>
 				<div class="col-lg-9">
 					<select id="selectProduct" class="fixed-width-xl" name="selectProduct" onfocus="fillProducts();" onchange="updateConversionRate(this.value);">
-						<option value="0" selected="selected">- {l s='All'} -</option>
+						<option value="0" selected="selected">- {l s='All' d='Admin.Global'} -</option>
 					</select>
 				</div>
 			</div>

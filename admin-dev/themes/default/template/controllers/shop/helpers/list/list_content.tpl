@@ -38,7 +38,7 @@
 		{if isset($tr.$key)}
 			<a href="{$tr.$key}" onmouseover="$(this).css('text-decoration', 'underline')" onmouseout="$(this).css('text-decoration', 'none')" class="_blank">{$tr.$key}</a>
 		{else}
-			<a href="{$link->getAdminLink('AdminShopUrl')|escape:'html':'UTF-8'}&amp;shop_id={$tr.$identifier|intval}&amp;addshop_url" class="multishop_warning">{l s='Click here to set a URL for this shop.'}</a>
+			<a href="{$link->getAdminLink('AdminShopUrl')|escape:'html':'UTF-8'}&amp;shop_id={$tr.$identifier|intval}&amp;addshop_url" class="multishop_warning">{l s='Click here to set a URL for this shop.' d='Admin.Shopparameters.Notification'}</a>
 		{/if}
 	{else}
 		{$smarty.block.parent}

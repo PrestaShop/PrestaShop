@@ -24,7 +24,7 @@
  *}
 		<script>var zones_nbr = {$zones|count +3} ; /*corresponds to the third input text (max, min and all)*/</script>
 		<div id="zone_ranges" style="overflow:auto">
-			<h4>{l s='Ranges'}</h4>
+			<h4>{l s='Ranges' d='Admin.Shipping.Feature'}</h4>
 			<table id="zones_table" class="table" style="max-width:100%">
 				<tbody>
 					<tr class="range_inf">
@@ -95,7 +95,7 @@
 					{foreach from=$zones key=i item=zone}
 					<tr class="fees" data-zoneid="{$zone.id_zone}">
 						<td>
-							<label for="zone_{$zone.id_zone}">{$zone.name}{if !$zone.active} <small>({l s='inactive'})</small>{/if}</label>
+							<label for="zone_{$zone.id_zone}">{$zone.name}{if !$zone.active} <small>({l s='inactive' d='Admin.Shipping.Feature'})</small>{/if}</label>
 						</td>
 						<td class="zone">
 							<input class="form-control input_zone" id="zone_{$zone.id_zone}" name="zone_{$zone.id_zone}" value="1" type="checkbox" {if isset($fields_value['zones'][$zone.id_zone]) && $fields_value['zones'][$zone.id_zone]} checked="checked"{/if}/>

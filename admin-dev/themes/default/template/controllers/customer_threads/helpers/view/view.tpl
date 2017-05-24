@@ -29,7 +29,7 @@
 <div class="panel">
 	<div class="panel-heading">
 		<i class="icon-comments"></i>
-		{l s="Thread"}: <span class="badge">#{$id_customer_thread|intval}</span>
+		{l s="Thread" d='Admin.OrdersCustomers.Feature'}: <span class="badge">#{$id_customer_thread|intval}</span>
 		{if isset($next_thread) && $next_thread}
 			<a class="btn btn-default pull-right" href="{$next_thread.href|escape:'html':'UTF-8'}">
 				{$next_thread.name} <i class="icon-forward"></i>
@@ -44,7 +44,7 @@
 				</button>
 			{/foreach}
 			<button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">
-				{l s="Forward this discussion to another employee"}
+				{l s="Forward this discussion to another employee" d='Admin.OrdersCustomers.Feature'}
 			</button>
 		</form>
 	</div>
@@ -64,19 +64,19 @@
 						<h2>{$thread->email|escape:'html':'UTF-8'}</h2>
 					{/if}
 					{if isset($contact) && trim($contact) != ''}
-						<span>{l s="To:"} </span><span class="badge">{$contact|escape:'html':'UTF-8'}</span>
+						<span>{l s="To:" d='Admin.OrdersCustomers.Feature'} </span><span class="badge">{$contact|escape:'html':'UTF-8'}</span>
 					{/if}
 					</div>
 					{if isset($customer->firstname)}
 						<div class="col-sm-6">
 							<p>
 							{if $count_ok}
-								{l s='[1]%count%[/1] order(s) validated for a total amount of [2]%total%[/2]' html=true sprintf=['%count%' => $count_ok, '%total%' => $total_ok, '[1]' => '<span class="badge">', '[/1]' => '</span>', '[2]' => '<span class="badge badge-success">', '[/2]' => '</span>']}
+								{l s='[1]%count%[/1] order(s) validated for a total amount of [2]%total%[/2]' html=true sprintf=['%count%' => $count_ok, '%total%' => $total_ok, '[1]' => '<span class="badge">', '[/1]' => '</span>', '[2]' => '<span class="badge badge-success">', '[/2]' => '</span>'] d='Admin.OrdersCustomers.Feature'}
 							{else}
-								{l s="No orders validated for the moment"}
+								{l s="No orders validated for the moment" d='Admin.OrdersCustomers.Feature'}
 							{/if}
 							</p>
-							<p class="text-muted">{l s="Customer since: %s" sprintf=[{dateFormat date=$customer->date_add full=0}]}</p>
+							<p class="text-muted">{l s="Customer since: %s" sprintf=[{dateFormat date=$customer->date_add full=0}] d='Admin.OrdersCustomers.Feature'}</p>
 						</div>
 					{/if}
 				</div>
@@ -98,7 +98,7 @@
 </div>
 <div class="panel">
 	<form action="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;id_customer_thread={$thread->id|intval}&amp;viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
-	<h3>{l s="Your answer to"} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
+	<h3>{l s="Your answer to" d='Admin.OrdersCustomers.Feature'} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<div class="row">
 		<div class="media">
 			<div class="pull-left">
@@ -127,7 +127,7 @@
 <div class="panel">
 	<h3>
 		<i class="icon-clock-o"></i>
-		{l s="Orders and messages timeline"}
+		{l s="Orders and messages timeline" d='Admin.OrdersCustomers.Feature'}
 	</h3>
 	<div class="timeline">
 		{foreach $timeline_items as $dates}

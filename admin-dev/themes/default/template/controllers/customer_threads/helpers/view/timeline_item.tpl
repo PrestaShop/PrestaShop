@@ -29,10 +29,10 @@
 				<i class="{$timeline_item.icon}"></i>
 			</span>
 			<span class="timeline-date"><i class="icon-calendar"></i> {dateFormat date=$timeline_item.date full=0} - <i class="icon-time"></i> {$timeline_item.date|substr:11:5}</span>
-			{if isset($timeline_item.id_order)}<a class="badge" href="#">{l s="Order #"}{$timeline_item.id_order|intval}</a><br/>{/if}
+			{if isset($timeline_item.id_order)}<a class="badge" href="#">{l s="Order #" d='Admin.OrdersCustomers.Feature'}{$timeline_item.id_order|intval}</a><br/>{/if}
 			<span>{$timeline_item.content|nl2br}</span>
 			{if isset($timeline_item.see_more_link)}
-				<br/><br/><a href="{$timeline_item.see_more_link|escape:'html':'UTF-8'}" class="btn btn-default _blank">{l s="See more"}</a>
+				<br/><br/><a href="{$timeline_item.see_more_link|escape:'html':'UTF-8'}" class="btn btn-default _blank">{l s="See more" d='Admin.OrdersCustomers.Feature'}</a>
 			{/if}
 		</div>
 	</div>

@@ -29,7 +29,7 @@
 			{assign var='PS_ACTIVE_CRONJOB_EXCHANGE_RATE' value=Configuration::get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE')}
 			<div id="currencyCronjobLiveExchangeRate" class="panel">
 				<div class="panel-heading">
-					{l s='Live exchange rates'}
+					{l s='Live exchange rates' d='Admin.International.Feature'}
 					<div class="pull-right checkbox titatoggle unchecked-red checkbox-slider--b-flat">
 						<label>
 							<input type="checkbox" {(0 != $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'checked="checked"':''}><span></span>
@@ -37,14 +37,14 @@
 					</div>
 					<div class="clearfix"></div>
 				</div>
-				<span class="status disabled {(0 == $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are not automatically updated"}</span>
-				<span class="status enabled {(0 != $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are automatically updated"}</span>
+				<span class="status disabled {(0 == $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are not automatically updated" d='Admin.International.Feature'}</span>
+				<span class="status enabled {(0 != $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are automatically updated" d='Admin.International.Feature'}</span>
 			</div>
 		{/if}
 		<div class="panel">
-			<div class="panel-heading">{l s='Update exchange rates'}</div>
+			<div class="panel-heading">{l s='Update exchange rates' d='Admin.International.Feature'}</div>
 			<form action="{$link->getAdminLink('AdminCurrencies')|escape:'html':'UTF-8'}" id="currency_form" method="post">
-				<button type="submit" class="btn btn-default col-lg-12 col-xs-4" name="SubmitExchangesRates">{l s="Update"}</button>
+				<button type="submit" class="btn btn-default col-lg-12 col-xs-4" name="SubmitExchangesRates">{l s="Update" d='Admin.Global'}</button>
 			</form>
 			<div class="clearfix"></div>
 		</div>

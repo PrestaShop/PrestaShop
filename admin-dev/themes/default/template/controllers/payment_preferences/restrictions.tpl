@@ -86,7 +86,7 @@
 					{if $list['name_id'] === 'currency'}
 						<tr>
 							<td>
-								<span>{l s='Customer currency'}</span>
+								<span>{l s='Customer currency' d='Admin.Payment.Feature'}</span>
 							</td>
 							{foreach $payment_modules as $module}
 								{if $module->active}
@@ -103,7 +103,7 @@
 						</tr>
 						<tr>
 							<td>
-								<span>{l s='Shop default currency'}</span>
+								<span>{l s='Shop default currency' d='Admin.Payment.Feature'}</span>
 							</td>
 							{foreach $payment_modules as $module}
 								{if $module->active}
@@ -126,7 +126,7 @@
 		</div>
 		<div class="panel-footer">
 			<button type="submit" class="btn btn-default pull-right" name="submitModule{$list['name_id']}">
-				<i class="process-icon-save"></i> {l s='Save restrictions'}
+				<i class="process-icon-save"></i> {l s='Save' d='Admin.Actions'}
 			</button>
 		</div>
 	</div>

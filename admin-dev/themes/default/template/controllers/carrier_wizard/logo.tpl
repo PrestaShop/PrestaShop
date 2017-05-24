@@ -25,7 +25,7 @@
 
 <div id="carrier_logo_block" class="panel">
 	<div class="panel-heading">
-		{l s='Logo'}
+		{l s='Logo' d='Admin.Global'}
 		<div class="panel-heading-action">
 			<a id="carrier_logo_remove" class="btn btn-default" {if !$carrier_logo}style="display:none"{/if} href="javascript:removeCarrierLogo();">
 				<i class="icon-trash"></i>
@@ -36,11 +36,11 @@
 </div>
 
 <script type="text/javascript">
-	var carrier_translation_undefined = '{l s='undefined' js=1}';
+	var carrier_translation_undefined = '{l s='undefined' js=1 d='Admin.Shipping.Help'}';
 
 	function removeCarrierLogo()
 	{
-		if (confirm('{l s='Are you sure you want to delete the logo?' js=1}'))
+		if (confirm('{l s='Are you sure you want to delete the logo?' js=1 d='Admin.Shipping.Notification'}'))
 		{
 			$('#carrier_logo_img').attr('src', '../img/admin/carrier-default.jpg');
 			$('#logo').val('null');

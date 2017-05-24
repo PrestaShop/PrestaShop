@@ -62,11 +62,11 @@
 				{elseif isset($params.position)}
 					{if $order_by == 'position' && $order_way != 'DESC'}
 						<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
-							<img src="../img/admin/{if $order_way == 'ASC'}down{else}up{/if}.gif" alt="{l s='Down'}" title="{l s='Down'}" />
+							<img src="../img/admin/{if $order_way == 'ASC'}down{else}up{/if}.gif" alt="{l s='Down' d='Admin.International.Feature'}" title="{l s='Down' d='Admin.International.Feature'}" />
 						</a>
 
 						<a href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}style="display: none;"{/if}>
-							<img src="../img/admin/{if $order_way == 'ASC'}up{else}down{/if}.gif" alt="{l s='Up'}" title="{l s='Up'}" />
+							<img src="../img/admin/{if $order_way == 'ASC'}up{else}down{/if}.gif" alt="{l s='Up' d='Admin.International.Feature'}" title="{l s='Up' d='Admin.International.Feature'}" />
 						</a>
 					{else}
 						{$tr.$key.position + 1}
@@ -88,11 +88,11 @@
 				{elseif isset($tr.$key)}
 					{if $key == 'behavior'}
 						{if $tr.$key == 0}
-							{l s='This tax only'}
+							{l s='This tax only' d='Admin.International.Feature'}
 						{elseif $tr.$key == 1}
-							{l s='Combine'}
+							{l s='Combine' d='Admin.International.Feature'}
 						{elseif $tr.$key == 2}
-							{l s='One after another'}
+							{l s='One after another' d='Admin.International.Feature'}
 						{/if}
 					{elseif $key == 'rate'}
 						{$tr.$key|string_format:"%.3f"}%

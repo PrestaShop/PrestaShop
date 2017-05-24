@@ -26,7 +26,7 @@
 	<div class="col-lg-12">
 		<div class="panel">
 			<div class="panel-heading">
-				{l s='Status'}
+				{l s='Status' d='Admin.Global'}
 				<div id="currencyStatus" class="pull-right checkbox titatoggle unchecked-red checkbox-slider--b-flat">
 					<label>
 						<input type="checkbox" {(1 == $status)?'checked="checked"':''}><span></span>
@@ -34,8 +34,8 @@
 				</div>
 				<div class="clearfix"></div>
 			</div>
-			<span class="status disabled {(0 == $status)?'':'hide'}">{l s="This currency is disabled"}</span>
-			<span class="status enabled {(1 == $status)?'':'hide'}">{l s="This currency is enabled"}</span>
+			<span class="status disabled {(0 == $status)?'':'hide'}">{l s="This currency is disabled" d='Admin.International.Feature'}</span>
+			<span class="status enabled {(1 == $status)?'':'hide'}">{l s="This currency is enabled" d='Admin.International.Feature'}</span>
 		</div>
 	</div>
 </div>

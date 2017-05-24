@@ -29,18 +29,18 @@
 	{if $input.type == 'text_customer'}
 		<span>{$customer->firstname} {$customer->lastname}</span>
 		<p>
-			<a class="text-muted" href="{$url_customer}">{l s='View details on the customer page'}</a>
+			<a class="text-muted" href="{$url_customer}">{l s='View details on the customer page' d='Admin.Orderscustomers.Help'}</a>
 		</p>
 	{elseif $input.type == 'text_order'}
 		<span>{$text_order}</span>
 		<p>
-			<a class="text-muted" href="{$url_order}">{l s='View details on the order page'}</a>
+			<a class="text-muted" href="{$url_order}">{l s='View details on the order page' d='Admin.Orderscustomers.Help'}</a>
 		</p>
 	{elseif $input.type == 'pdf_order_return'}
 		<p>
 			{if $state_order_return == 2}
 				<a class="btn" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$id_order_return|intval}&adtoken={Tools::getAdminTokenLite('AdminReturn')}&id_employee={$employee->id|intval}")|escape:'html':'UTF-8'}">
-					<i class="icon-file-text"></i> {l s='Print out'}
+					<i class="icon-file-text"></i> {l s='Print out'd='Admin.Actions'}
 				</a>
 			{else}
 				--
@@ -51,9 +51,9 @@
 			<thead>
 				<tr>
 					<th>{l s='Reference' d='Admin.Global'}</th>
-					<th>{l s='Product name'}</th>
-					<th class="text-center">{l s='Quantity'}</th>
-					<th class="text-center">{l s='Action'}</th>
+					<th>{l s='Product name' d='Admin.catalog.Feature'}</th>
+					<th class="text-center">{l s='Quantity' d='Admin.Global'}</th>
+					<th class="text-center">{l s='Action' d='Admin.Global'}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -89,7 +89,7 @@
 									{elseif $type == Product::CUSTOMIZE_TEXTFIELD}
 											{foreach from=$datas item='data'}
 												<div class="form-group">
-													<span class="control-label col-lg-3"><strong>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=[$smarty.foreach.data.iteration]}{/if}</strong></span>
+													<span class="control-label col-lg-3"><strong>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=[$smarty.foreach.data.iteration] d='Admin.Orderscustomers.Feature'}{/if}</strong></span>
 													<div class="col-lg-9">
 														<p class="form-control-static">
 															{$data['value']}

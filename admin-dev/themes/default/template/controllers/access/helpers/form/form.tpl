@@ -150,9 +150,9 @@
                {
                   try {
                      if (res == 'ok')
-                        showSuccessMessage("{l s='Update successful'}");
+                        showSuccessMessage("{l s='Update successful' d='Admin.Notifications.Success'}");
                      else
-                        showErrorMessage("{l s='Update error'}");
+                        showErrorMessage("{l s='Unable to update settings.' d='Admin.Notifications.Error'}");
                   } catch(e) {
                      jAlert('Technical error');
                   }
@@ -179,9 +179,9 @@
                try
                {
                   if (res == 'ok')
-                     showSuccessMessage("{l s='Update successful'}");
+                     showSuccessMessage("{l s='Update successful' d='Admin.Notifications.Success'}");
                   else
-                     showErrorMessage("{l s='Update error'}");
+                     showErrorMessage("{l s='Unable to update settings.' d='Admin.Notifications.Error'}");
                }
                catch(e)
                {
@@ -225,9 +225,9 @@
                try
                {
                   if (res == 'ok')
-                     showSuccessMessage("{l s='Update successful'}");
+                     showSuccessMessage("{l s='Update successful' d='Admin.Notifications.Success'}");
                   else
-                     showErrorMessage("{l s='Update error'}");
+                     showErrorMessage("{l s='Unable to update settings.' d='Admin.Notifications.Error'}");
                }
                catch(e)
                {
@@ -266,7 +266,7 @@
                {if $profile.id_profile != $admin_profile}
                   <div class="col-lg-6">
                      <div class="panel">
-                        <h3>{l s='Menu'}</h3>
+                        <h3>{l s='Menu' d='Admin.Advparameters.Feature'}</h3>
                         <table class="table" id="table_{$profile.id_profile}">
                            <thead>
                            <tr>
@@ -289,14 +289,14 @@
                               </th>
                               <th>
                                  <input type="checkbox" name="1" class="allall ajaxPower"{if $access_edit == 1} data-id="4" data-parent="0" data-type="all" data-rel="-1||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
-                                 {l s='All'}
+                                 {l s='All' d='Admin.Global'}
                               </th>
                            </tr>
                            </thead>
                            <tbody>
                            {if !count($tabs)}
                               <tr>
-                                 <td colspan="6">{l s='No menu'}</td>
+                                 <td colspan="6">{l s='No menu' d='Admin.Advparameters.Feature'}</td>
                               </tr>
                            {else}
                               {foreach $tabs AS $tab}
@@ -413,7 +413,7 @@
                   </div>
                   <div class="col-lg-6">
                      <div class="panel">
-                        <h3>{l s='Modules'}</h3>
+                        <h3>{l s='Modules' d='Admin.Global'}</h3>
                         <table class="table" id="table_module_{$profile.id_profile}">
                            <thead>
                            <tr>
@@ -425,14 +425,14 @@
                                  <input type="checkbox"{if $access_edit == 1} class="changeModuleAccess" data-rel="-1||configure||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='Configure' d='Admin.Actions'}
                               </th>
                               <th>
-                                 <input type="checkbox"{if $access_edit == 1} class="changeModuleAccess" data-rel="-1||uninstall||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='Uninstall'}
+                                 <input type="checkbox"{if $access_edit == 1} class="changeModuleAccess" data-rel="-1||uninstall||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='Uninstall' d='Admin.Actions'}
                               </th>
                            </tr>
                            </thead>
                            <tbody>
                            {if !count($modules)}
                               <tr>
-                                 <td colspan="3">{l s='No modules are installed'}</td>
+                                 <td colspan="3">{l s='No module has been installed.' d='Admin.Notifications.Warning'}</td>
                               </tr>
                            {else}
                               {foreach $modules[$profile.id_profile] AS $module}
@@ -457,7 +457,7 @@
                {else}
                   <div class="col-lg-12">
                      <div class="panel">
-                        {l s='Administrator permissions cannot be modified.'}
+                        {l s='Administrator permissions cannot be modified.' d='Admin.Advparameters.Notification'}
                      </div>
                   </div>
                {/if}

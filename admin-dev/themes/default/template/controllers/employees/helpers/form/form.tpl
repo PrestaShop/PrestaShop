@@ -28,13 +28,13 @@
 	{if $input.type == 'prestashop_addons'}
 		<div class="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if} {if !isset($input.label)}col-lg-offset-3{/if}">
 			{if isset($logged_on_addons) && $logged_on_addons}
-				<p><i class="icon-user"></i>{l s='You are currently connected as %s' sprintf=[$username_addons]}</p>
+				<p><i class="icon-user"></i>{l s='You are currently connected as %username%' sprintf=['%username%' => '$username_addons'] d='Admin.Advparameters.Feature'}</p>
 				<a class="btn btn-default" href="#" id="addons_logout_button">
-					<i class="icon-signout"></i> {l s='Sign out from PrestaShop Addons'}
+					<i class="icon-signout"></i> {l s='Sign out from PrestaShop Addons' d='Admin.Advparameters.Feature'}
 				</a>
 			{else}
 				<a class="btn btn-default" data-toggle="modal" href="#" data-target="#modal_addons_connect">
-					<i class="icon-signout"></i> {l s='Sign in'}
+					<i class="icon-signout"></i> {l s='Sign in' d='Admin.Advparameters.Feature'}
 				</a>
 			{/if}
 		</div>

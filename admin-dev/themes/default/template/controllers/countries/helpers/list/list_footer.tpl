@@ -34,12 +34,12 @@
 				<ul class="dropdown-menu">
 					<li>
 						<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', true);return false;">
-							<i class="icon-check-sign"></i>&nbsp;{l s='Select all'}
+							<i class="icon-check-sign"></i>&nbsp;{l s='Select all' d='Admin.Actions'}
 						</a>
 					</li>
 					<li>
 						<a href="#" onclick="javascript:checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', false);return false;">
-							<i class="icon-check-empty"></i>&nbsp;{l s='Unselect all'}
+							<i class="icon-check-empty"></i>&nbsp;{l s='Unselect all' d='Admin.Actions'}
 						</a>
 					</li>
 					<li class="divider"></li>
@@ -60,7 +60,7 @@
 		<div class="col-lg-6">
 			{* Choose number of results per page *}
 			<div class="pagination">
-				{l s='Display'}
+				{l s='Display' d='Admin.Actions'}
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 					{$selected_pagination}
 					<i class="icon-caret-down"></i>
@@ -72,7 +72,7 @@
 						</li>
 					{/foreach}
 				</ul>
-				/ {$list_total} {l s='result(s)'}
+				/ {$list_total} {l s='result(s)' d='Admin.Global'}
 				<input type="hidden" id="{$list_id}-pagination-items-page" name="{$list_id}_pagination" value="{$selected_pagination|intval}" />
 			</div>
 			<script type="text/javascript">
@@ -145,7 +145,7 @@
 				</select>
 			</div>
 			<div class="form-group col-lg-3">
-				<input type="submit" class="btn btn-default pull-right" name="submitBulkAffectZone{$table}" value="{l s='Assign to a new zone'}"  />
+				<input type="submit" class="btn btn-default pull-right" name="submitBulkAffectZone{$table}" value="{l s='Assign to a new zone' d='Admin.International.Feature'}"  />
 			</div>
 		</div>
 	</div>

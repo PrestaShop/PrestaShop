@@ -67,13 +67,13 @@
 								{if $shop_link_type == 'shop'}
 									{l s='Shop' d='Admin.Global'}
 								{else}
-									{l s='Shop group'}
+									{l s='Shop group' d='Admin.Global'}
 								{/if}
 							</th>
 						{/if}
 						{if $has_actions && $filters_has_value}
 							<th class="actions text-right"><button type="submit" name="submitReset{$list_id}" class="btn btn-warning">
-									<i class="icon-eraser"></i> {l s='Reset'}
+									<i class="icon-eraser"></i> {l s='Reset' d='Admin.Actions'}
 								</button>
 							</th>
 						{else}
