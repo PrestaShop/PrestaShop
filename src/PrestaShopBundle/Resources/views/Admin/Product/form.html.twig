@@ -212,6 +212,8 @@
                       </div>
                     </div>
 
+                    {{ renderhook('displayAdminProductsMainStepLeftColumnMiddle', { 'id_product': id_product }) }}
+
                     <div id="features" class="m-b-1 m-t-1">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
@@ -241,6 +243,8 @@
                     <div id="related-product" class="m-b-1">
                       {{ include('PrestaShopBundle:Admin/Product/Include:form_related_products.html.twig', { 'form':form.step1.related_products }) }}
                     </div>
+
+                    {{ renderhook('displayAdminProductsMainStepLeftColumnBottom', { 'id_product': id_product }) }}
 
                   </div>
 
@@ -354,6 +358,9 @@
                           <div class="form-group">
                             {{ include('PrestaShopBundle:Admin/Product/Include:form-categories.html.twig', { 'form': form.step1, 'productId': id_product }) }}
                           </div>
+
+                          {{ renderhook('displayAdminProductsMainStepRightColumnBottom', { 'id_product': id_product }) }}
+
                         </div>
                       </div>
                   </div>
@@ -496,6 +503,8 @@
                       </div>
                     {% endif %}
                     {{ include('PrestaShopBundle:Admin/Product/Include:form_combinations.html.twig', {'form': form.step3, 'form_combination_bulk': formCombinations}) }}
+
+                    {{ renderhook('displayAdminProductsQuantitiesStepBottom', { 'id_product': id_product }) }}
 
                   </div>
                 </div>
@@ -708,6 +717,8 @@
                     </div>
                   </div>
 
+                  {{ renderhook('displayAdminProductsPriceStepBottom', { 'id_product': id_product }) }}
+
                 </div>
               </div>
             </div>
@@ -737,6 +748,8 @@
                 <div class="row">
 
                   <div class="col-md-12">
+
+                    {{ renderhook('displayAdminProductsOptionsStepTop', { 'id_product': id_product }) }}
 
                     <div class="row">
                       <div class="col-md-12">
@@ -915,6 +928,8 @@
                         {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
                       </div>
                     </div>
+
+                    {{ renderhook('displayAdminProductsOptionsStepBottom', { 'id_product': id_product }) }}
 
                   </div>
                 </div>
