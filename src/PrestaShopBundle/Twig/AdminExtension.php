@@ -96,9 +96,8 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
                 // Get current route name to know when to put "current" class on HTML dom
                 $currentRouteName = $parameterBag->get('_route');
 
-                $context = (new LegacyContext())->getContext();
-                $translator = $context->getTranslator();
-                $locale = $context->language->locale;
+                $translator = $this->container->get('translator');
+                $locale = $translator->getLocale();
 
                 $tabMenu = (new ClassLang($locale))->getClassLang('TabLangCore');
 
