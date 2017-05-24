@@ -10251,6 +10251,7 @@ ul.category-tree {
     overflow-x: hidden; }
     #attributes-list .attribute-group .attributes .two-columns {
       -webkit-columns: 2;
+         -moz-columns: 2;
               columns: 2; }
     #attributes-list .attribute-group .attributes .attribute .js-attribute-checkbox {
       display: none; }
@@ -12441,3 +12442,6 @@ body {
 
 .bordered > .nav-item > .nav-link.active {
   border-bottom: 1px solid #FFFFFF; }
+
+#product_filter_column_active .select2 {
+  min-width: 4.375rem; }
