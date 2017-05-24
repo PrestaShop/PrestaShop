@@ -187,7 +187,7 @@ class AdminCarriersControllerCore extends AdminController
                     'name' => 'delay',
                     'lang' => true,
                     'required' => true,
-                    'maxlength' => 128,
+                    'maxlength' => 512,
                     'hint' => $this->trans('Estimated delivery time will be displayed during checkout.', array(), 'Admin.Shipping.Help')
                 ),
                 array(
