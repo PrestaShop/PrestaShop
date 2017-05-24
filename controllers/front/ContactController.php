@@ -290,7 +290,9 @@ class ContactControllerCore extends FrontController
     protected function getOrder()
     {
         $id_order = false;
-        if (!is_numeric($reference = Tools::getValue('id_order'))) {
+        if(is_numeric($reference = Tools::getValue('id_order')) {
+            return false;
+        } elseif (!is_numeric($reference = Tools::getValue('id_order'))) {
             $reference = ltrim($reference, '#');
             $orders = Order::getByReference($reference);
             if ($orders) {
@@ -299,8 +301,6 @@ class ContactControllerCore extends FrontController
                     break;
                 }
             }
-        } elseif (Order::getCartIdStatic((int)Tools::getValue('id_order'))) {
-            $id_order = (int)Tools::getValue('id_order');
         }
         return (int)$id_order;
     }
