@@ -215,4 +215,13 @@ class CmsControllerCore extends FrontController
 
         return $categoryCms;
     }
+    
+    /**
+	 * @return An array of IDs of CMS pages, which shouldn't be forwared to their canonical URLs in SSL environment.
+	 * Required for pages which are shown in iframes. 
+	 */
+	protected function getSSLCMSPageIds()
+	{
+		return array((int)Configuration::get('PS_CONDITIONS_CMS_ID'), (int)Configuration::get('LEGAL_CMS_ID_REVOCATION'));
+	}
 }
