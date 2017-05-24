@@ -67,7 +67,14 @@ class AdminFeaturesControllerCore extends AdminController
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'position' => 'position'
-            )
+            ),
+            'display' => array(
+                'title' => $this->trans('Displayed', array(), 'Admin.Global'),
+                'align' => 'center',
+                'type' => 'bool',
+                'callback' => 'printOptinIcon',
+                'orderby' => false
+            ),
         );
 
         $this->bulk_actions = array(
@@ -77,6 +84,11 @@ class AdminFeaturesControllerCore extends AdminController
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')
             )
         );
+    }
+
+    public static function printOptinIcon($value, $object)
+    {
+        return ($value ? '<span class="list-action-enable action-enabled"><i class="icon-check"></i></span>' : '<span class="list-action-enable action-disabled"><i class="icon-remove"></i></span>');
     }
 
     /**
@@ -169,7 +181,26 @@ class AdminFeaturesControllerCore extends AdminController
                     'size' => 33,
                     'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}',
                     'required' => true
-                )
+                ),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->trans('Displayed', array(), 'Admin.Global'),
+                    'name' => 'display',
+                    'required' => true,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'display_on',
+                            'value' => 1,
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                        ),
+                        array(
+                            'id' => 'display_off',
+                            'value' => 0,
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
+                        )
+                    )
+                ),
             )
         );
 

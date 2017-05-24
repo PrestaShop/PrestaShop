@@ -35,6 +35,9 @@ class FeatureCore extends ObjectModel
     /** @var int $position */
     public $position;
 
+    /** @var bool $display */
+    public $display;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -44,6 +47,7 @@ class FeatureCore extends ObjectModel
         'multilang' => true,
         'fields' => array(
             'position' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'display' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
@@ -62,17 +66,18 @@ class FeatureCore extends ObjectModel
      *
      * @param int $idLang    Language ID
      * @param int $idFeature Feature ID
+     * @param boolean $display Featue display
      *
      * @return array Array with feature's data
      */
-    public static function getFeature($idLang, $idFeature)
+    public static function getFeature($idLang, $idFeature, $display = true)
     {
         return Db::getInstance()->getRow('
 			SELECT *
 			FROM `'._DB_PREFIX_.'feature` f
 			LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl
 				ON ( f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int) $idLang.')
-			WHERE f.`id_feature` = '.(int) $idFeature
+			WHERE f.`display` = '.(int) $display.' AND f.`id_feature` = '.(int) $idFeature
         );
     }
 
@@ -80,13 +85,34 @@ class FeatureCore extends ObjectModel
      * Get all features for a given language
      *
      * @param int $idLang Language id
+     * @param boolean $withShop
+     * @param boolean $display Feature display
      *
      * @return array Multiple arrays with feature's data
      */
-    public static function getFeatures($idLang, $withShop = true)
+    public static function getFeatures($idLang, $withShop = true, $display = true)
     {
         return Db::getInstance()->executeS('
-		SELECT DISTINCT f.id_feature, f.*, fl.*
+		SELECT DISTINCT f.id_feature, f.display, f.*, fl.*
+		FROM `'._DB_PREFIX_.'feature` f
+		'.($withShop ? Shop::addSqlAssociation('feature', 'f') : '').'
+		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int) $idLang.')
+		WHERE f.`display` = '.(int) $display.'
+		ORDER BY f.`position` ASC');
+    }
+
+    /**
+     * Get all features for a given language
+     *
+     * @param int $idLang Language id
+     * @param boolean $withShop
+     *
+     * @return array Multiple arrays with feature's data
+     */
+    public static function getAllFeatures($idLang, $withShop = true)
+    {
+        return Db::getInstance()->executeS('
+		SELECT DISTINCT f.id_feature, f.display, f.*, fl.*
 		FROM `'._DB_PREFIX_.'feature` f
 		'.($withShop ? Shop::addSqlAssociation('feature', 'f') : '').'
 		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int) $idLang.')
