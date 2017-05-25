@@ -34,7 +34,7 @@
 					</label>
 				</div>
 				<div class="theme-container">
-					<img class="thumbnail" src="{$theme->get('preview')|escape:'html':'UTF-8'}" />
+					<img class="thumbnail" src="../{$theme->get('preview')|escape:'html':'UTF-8'}" />
 				</div>
 			</div>
 		{/foreach}
