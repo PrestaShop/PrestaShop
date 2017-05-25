@@ -217,16 +217,17 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         $modules = array();
-        foreach ($this->getListModules() as $module) {
-            $modules[$module] = array(
-                'name' => $module,
-                'urlToTranslate' => !$this->isUsingNewTranslationsSystem($module) ? $this->context->link->getAdminLink(
+        foreach ($this->getListModules(true) as $module) {
+            $modules[$module->name] = array(
+                'name' => $module->name,
+                'displayName' => $module->displayName,
+                'urlToTranslate' => !$this->isUsingNewTranslationsSystem($module->name) ? $this->context->link->getAdminLink(
                     'AdminTranslations',
                     true,
                     array(),
                     array(
                         'type' => 'modules',
-                        'module' => $module,
+                        'module' => $module->name,
                     )
                 ) : '',
             );
@@ -2161,7 +2162,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @return array List of modules
      * @throws PrestaShopException
      */
-    public function getListModules()
+    public function getListModules($withInstance = false)
     {
         if (!Tools::file_exists_cache($this->translations_informations['modules']['dir'])) {
             throw new PrestaShopException($this->trans('Fatal error: The module directory does not exist.', array(), 'Admin.Notifications.Error').'('.$this->translations_informations['modules']['dir'].')');
@@ -2173,6 +2174,18 @@ class AdminTranslationsControllerCore extends AdminController
         $modules = array();
         // Get all module which are installed for to have a minimum of POST
         $modules = Module::getModulesInstalled();
+        if ($withInstance) {
+            foreach ($modules as $module) {
+                if ($tmp_instance = Module::getInstanceById((int)$module['id_module'])) {
+                    // We want to be able to sort modules by display name
+                    $module_instances[$tmp_instance->displayName] = $tmp_instance;
+                }
+            }
+            ksort($module_instances);
+
+            return $module_instances;
+        }
+
         foreach ($modules as &$module) {
             $module = $module['name'];
         }
