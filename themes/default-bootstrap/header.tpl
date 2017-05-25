@@ -64,9 +64,23 @@
 		{/if}
 		{$HOOK_HEADER}
 		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,600&amp;subset=latin,latin-ext" type="text/css" media="all" />
+        {if !$content_only}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.14/iframeResizer.min.js"></script>
+        <script type="text/javascript">
+                setInterval(function() {
+                        var _$iframe = $('iframe');
+                        if (_$iframe.parent().css('overflow') !== 'hidden') {
+                                _$iframe.iFrameResize().parent().css('overflow', 'hidden');
+                        }
+                }, 700);
+        </script>
+        {/if}
 		<!--[if IE 8]>
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        {if !$content_only}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.14/ie8.polyfils.min.js"></script>
+        {/if}
 		<![endif]-->
 	</head>
 	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {implode value=$body_classes separator=' '}{/if}{if $hide_left_column} hide-left-column{else} show-left-column{/if}{if $hide_right_column} hide-right-column{else} show-right-column{/if}{if isset($content_only) && $content_only} content_only{/if} lang_{$lang_iso}">

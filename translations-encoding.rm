@@ -1,0 +1,26 @@
+sed -i s/Â//g lang/ag.php
+
+find . -name "ag\.php" -exec sed -i s/Ã¡/á/g {} \;
+find . -name "ag\.php" -exec sed -i s/Ã©/é/g {} \;
+find . -name "ag\.php" -exec sed -i s/Ã­/í/g {} \;
+find . -name "ag\.php" -exec sed -i s/Ã³/ó/g {} \;
+find . -name "ag\.php" -exec sed -i s/Ãº/ú/g {} \;
+find . -name "ag\.php" -exec sed -i s/Ã±/ñ/g {} \;
+find . -name "ag\.php" -exec sed -i s/Ã/Ú/g {} \;
+find . -name "ag\.php" -exec sed -i s/Â//g {} \;
+
+
+$('input').each(function() {
+    var _$this = $(this);
+    var _val = _$this.val();
+    _val = _val.replace(/\Ã\¡/g, 'á');
+    _val = _val.replace(/\Ã\©/g, 'é');
+    _val = _val.replace(/\Ã\­/g, 'í');
+    _val = _val.replace(/\Ã\³/g, 'ó');
+    _val = _val.replace(/\Ã\º/g, 'ú');
+    _val = _val.replace(/\Ã\±/g, 'ñ');
+    _val = _val.replace(/\�/g, 'á');
+    _val = _val.replace(/\Ã/g, 'Ú');
+    _val = _val.replace(/\Ú\š/g, 'Ú');
+    _$this.val(_val.replace(/\Â/g, ''));
+})

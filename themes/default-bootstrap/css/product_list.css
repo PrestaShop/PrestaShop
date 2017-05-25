@@ -32,7 +32,7 @@ ul.product_list .product-image-container {
   ul.product_list .product-image-container img {
     margin: 0 auto; }
   ul.product_list .product-image-container .quick-view-wrapper-mobile {
-    display: none; }
+    display: none !important; }
     ul.product_list .product-image-container .quick-view-wrapper-mobile .quick-view-mobile {
       display: none; }
       @media (max-width: 1199px) {

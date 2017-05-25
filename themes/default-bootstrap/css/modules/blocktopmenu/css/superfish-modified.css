@@ -146,6 +146,7 @@ ul.sf-menu li li li.sfHover ul {
       color: #515151; }
 
 .sf-menu > li > ul > li {
+  min-height: 79px;
   float: left;
   width: 20%;
   padding-right: 15px; }
