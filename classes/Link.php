@@ -719,17 +719,17 @@ class LinkCore
                         return $sfRouter->generate('admin_product_catalog_filters', $routeParams);
                     }
 
-                    return $sfRouter->generate('admin_product_catalog');
+                    return $sfRouter->generate('admin_product_catalog', $sfRouteParams);
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
                 break;
             case 'AdminModulesSf':
                 if (array_key_exists('route', $sfRouteParams)) {
-                    return $sfRouter->generate($sfRouteParams['route'], array(), UrlGeneratorInterface::ABSOLUTE_URL);
+                    return $sfRouter->generate($sfRouteParams['route'], $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
                 }
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                return $sfRouter->generate('admin_module_catalog', array(), UrlGeneratorInterface::ABSOLUTE_URL);
+                return $sfRouter->generate('admin_module_catalog', $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;

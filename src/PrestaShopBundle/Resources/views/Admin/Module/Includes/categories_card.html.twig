@@ -22,7 +22,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<div class="module-category-item col-lg-3 col-md-4 col-sm-6" data-category-ref="{{category.refMenu}}">
+<div class="module-category-item col-lg-3 col-md-4 col-sm-6"
+     {% if category.tab %}data-category-tab="{{category.tab}}"{% endif %}
+     data-category-ref="{{category.refMenu}}"
+>
     <div class="module-category-item-wrapper">
         {{ category.name }}
     </div>

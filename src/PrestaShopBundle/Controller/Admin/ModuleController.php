@@ -69,23 +69,23 @@ class ModuleController extends FrameworkBundleAdminController
 
         $translator = $this->container->get('translator');
         $errorMessage = $translator->trans(
-                'You do not have permission to add this.',
-                array(),
-                'Admin.Notifications.Error'
-            );
+            'You do not have permission to add this.',
+            array(),
+            'Admin.Notifications.Error'
+        );
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
-                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Module selection', array(), 'Admin.Navigation.Menu'),
-                'requireAddonsSearch' => true,
-                'requireBulkActions' => false,
-                'showContentHeader' => true,
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminModules'),
-                'requireFilterStatus' => false,
-                'level' => $this->authorizationLevel($this::controller_name),
-                'errorMessage' => $errorMessage,
-            ));
+            'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+            'layoutTitle' => $translator->trans('Module selection', array(), 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'requireBulkActions' => false,
+            'showContentHeader' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminModules'),
+            'requireFilterStatus' => false,
+            'level' => $this->authorizationLevel($this::controller_name),
+            'errorMessage' => $errorMessage,
+        ));
     }
 
     /**
@@ -119,7 +119,7 @@ class ModuleController extends FrameworkBundleAdminController
 
             $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
             shuffle($modules);
-            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categoriesMenu, $modules);
+            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categoriesMenu);
             $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse($modulesProvider, $modules);
             $responseArray['status'] = true;
         } catch (Exception $e) {
