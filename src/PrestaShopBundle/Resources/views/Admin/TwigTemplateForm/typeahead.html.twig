@@ -207,7 +207,7 @@
 {% block typeahead_customer_collection_widget %}
     {{ form_errors(form) }}
     <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12"></ul>
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list product-list nostyle col-xs-12"></ul>
     <script>
         $( document ).ready(function() {
             //remove collection item
@@ -271,7 +271,7 @@
                     value = value+','+suggestion.id_product_attribute;
                 }
 
-                var html = '<li>';
+                var html = '<li class="media">';
                 html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', suggestion.{{ mapping_name }});
                 html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                 html += '</li>';

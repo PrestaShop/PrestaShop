@@ -10251,7 +10251,6 @@ ul.category-tree {
     overflow-x: hidden; }
     #attributes-list .attribute-group .attributes .two-columns {
       -webkit-columns: 2;
-         -moz-columns: 2;
               columns: 2; }
     #attributes-list .attribute-group .attributes .attribute .js-attribute-checkbox {
       display: none; }
@@ -10409,19 +10408,6 @@ ul.category-tree {
 @media (min-width: 1300px) and (max-width: 1750px) {
   #bulk-combinations-container .custom-width {
     width: 33%; } }
-
-#form_step2_specific_price_sp_id_customer-data {
-  border: 0.0625rem solid #e5e5e5;
-  border-radius: 0.125rem;
-  margin: 0.3125rem 0rem;
-  padding: 0.625rem;
-  display: none; }
-  #form_step2_specific_price_sp_id_customer-data .title {
-    margin: inherit;
-    padding: inherit; }
-  #form_step2_specific_price_sp_id_customer-data .delete {
-    float: right;
-    cursor: pointer; }
 
 .products-catalog > .content {
   background: #FFFFFF;
