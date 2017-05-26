@@ -183,7 +183,7 @@ function ProductTabsManager(){
 					clearTimeout(tabs_running_timeout);
 					return false;
 				}
-				else if (!self.has_error_loading_tabs && (self.stack_done.length === self.tabs_to_preload.length)) {
+				else if (!self.has_error_loading_tabs) {
 						$('[name="submitAddproductAndStay"]').each(function() {
 							$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
 						});
