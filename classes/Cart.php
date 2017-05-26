@@ -3978,7 +3978,15 @@ class CartCore extends ObjectModel
             WHERE `id_customization` = '.(int)$cust_data['id_customization'].'
             AND `index` = '.(int)$index
         );
-        return $result;
+        
+        if (!$result) {
+            return false;
+        }
+
+        return Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'customization`
+             WHERE `id_customization` = '.(int)$cust_data['id_customization']
+            );
     }
 
     /**
