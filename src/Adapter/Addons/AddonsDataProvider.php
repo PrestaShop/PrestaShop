@@ -232,7 +232,7 @@ class AddonsDataProvider implements AddonsInterface
 
         foreach ($protocols as $protocol) {
             $content = Tools::file_get_contents($protocol.'://'.$end_point,
-                    false, $context);
+                    false, $context, 5, true);
             if (!$content) {
                 continue;
             }
