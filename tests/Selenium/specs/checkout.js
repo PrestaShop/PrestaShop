@@ -113,7 +113,8 @@ function runScenario (scenario) {
         describe('the addresses step', function () {
           it('should show the addresses step as reachable', function () {
             return browser.waitForVisible(
-              '#checkout-addresses-step.-reachable'
+              '#checkout-addresses-step.-reachable',
+              5000
             );
           });
 
