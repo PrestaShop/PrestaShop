@@ -94,7 +94,11 @@ function cldrLazyLoadCatalogs(catalogs, callback) {
 				return [].slice.apply( arguments, [ 0 ] ).map(function( result ) {
 					return result[ 0 ];
 				});
-		    }).then( Globalize.load ).then(function() {
+		    }).then(function (jsons) {
+          jsons.forEach(function (json) {
+		        Globalize.load(JSON.parse(json));
+          });
+        }).then(function() {
 		    	if (!cldrLoaderError) {
 		    		callback(new Globalize(culture));
 		    	} else {
