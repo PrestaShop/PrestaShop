@@ -415,8 +415,15 @@ class AdminAddressesControllerCore extends AdminController
             if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.bqSQL($address_type).'` = '.(int)$this->object->id.' WHERE `id_order` = '.(int)$id_order)) {
                 $this->errors[] = $this->trans('An error occurred while linking this address to its order.', array(), 'Admin.Orderscustomers.Notification');
             } else {
-                //update order shipping cost
+                //update all invoice of the order
                 $order = new Order($id_order);
+                $order_invoices = $order->getInvoicesCollection();
+                $addressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_'.strtoupper($address_type).'_ADDR_RULES'), true);
+                $formatted_address = AddressFormat::generateAddress($this->object, $addressPatternRules, '<br />', ' ');
+                foreach($order_invoices as $order_invoice) {
+                    $order_invoice->{$address_type.'_address'} = $formatted_address;
+                    $order_invoice->save();
+                }
                 $order->refreshShippingCost();
                 Tools::redirectAdmin(urldecode(Tools::getValue('back')).'&conf=4');
             }
