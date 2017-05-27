@@ -695,7 +695,8 @@ class ConfigurationCore extends ObjectModel
      */
     public static function showPrices()
     {
-        return Group::isFeatureActive() ? (bool) Group::getCurrent()->show_prices : true;
+        return !Configuration::get('PS_CATALOG_MODE')
+            && (Group::isFeatureActive() ? (bool) Group::getCurrent()->show_prices : true);
     }
 
     /**
