@@ -239,9 +239,8 @@ class ProductDownloadCore extends ObjectModel
     }
 
     /**
-     * Return html link
+     * Return text link
      *
-     * @param string $class CSS selector (optionnal)
      * @param bool $admin specific to backend (optionnal)
      * @param string $hash hash code in table order detail (optionnal)
      *
