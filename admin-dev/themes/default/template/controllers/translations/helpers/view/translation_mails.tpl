@@ -38,8 +38,8 @@
 			{if $limit_warning['error_type'] == 'suhosin'}
 				{l s='Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:' d='Admin.International.Notification'}
 
-      {l s='%limit% for suhosin.post.max_vars.' sprintf=['%limit%' => '<b>'|cat:$limit_warning['post.max_vars'|cat:'</b>'] d='Admin.International.Notification'}<br/>
-      {l s='%limit% for suhosin.request.max_vars.' sprintf=['%limit%' => '<b>'|cat:$limit_warning['request.max_vars'|cat:'</b>'] d='Admin.International.Notification'}<br/>
+      {l s='%limit% for suhosin.post.max_vars.' sprintf=['%limit%' => '<b>'|cat:$limit_warning['post.max_vars']|cat:'</b>'] d='Admin.International.Notification'}<br/>
+      {l s='%limit% for suhosin.request.max_vars.' sprintf=['%limit%' => '<b>'|cat:$limit_warning['request.max_vars']|cat:'</b>'] d='Admin.International.Notification'}<br/>
       {l s='Please ask your hosting provider to increase the Suhosin limit to' d='Admin.International.Notification'}
 			{else}
 				{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:' d='Admin.International.Notification'}<br/>
