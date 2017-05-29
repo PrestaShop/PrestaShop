@@ -175,6 +175,8 @@ class AdminImportControllerCore extends AdminController
                     'depends_on_stock' => 0,
                     'available_date' => date('Y-m-d')
                 );
+			
+		Hook::exec('displayAdminImportCombinations');
             break;
 
             case $this->entities[$this->l('Categories')]:
@@ -315,6 +317,8 @@ class AdminImportControllerCore extends AdminController
                     'advanced_stock_management' => 0,
                     'depends_on_stock' => 0,
                 );
+			
+		Hook::exec('displayAdminImportProducts');
             break;
 
             case $this->entities[$this->l('Customers')]:
@@ -1961,6 +1965,8 @@ class AdminImportControllerCore extends AdminController
                         StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$this->context->shop->id);
                     }
                 }
+		    
+		Hook::exec('actionProductImport', array('id_product' => (int)$product->id, 'product' => $product));
             }
         }
         $this->closeCsvFile($handle);
@@ -2315,6 +2321,8 @@ class AdminImportControllerCore extends AdminController
                                 $product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
                             }
                         }
+			    
+			Hook::exec('actionCombinationImport', array('id_product' => (int)$product->id, 'id_product_attribute' => (int)$id_product_attribute, 'product' => $product));
 
                         // fills our attributes array, in order to add the attributes to the product_attribute afterwards
                         if (isset($attributes[$group.'_'.$attribute])) {
