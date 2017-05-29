@@ -47,10 +47,10 @@
 {/block}
 {block name=toolbarBox}
 <script type="text/javascript">
-	var header_confirm_reset = '{l s='Confirm reset'}';
-	var body_confirm_reset = '{l s='Would you like to delete the content related to this module ?'}';
-	var left_button_confirm_reset = '{l s='No - reset only the parameters'}';
-	var right_button_confirm_reset = '{l s='Yes - reset everything'}';
+	var header_confirm_reset = '{l s='Confirm reset' d='Admin.Modules.Notification'}';
+	var body_confirm_reset = '{l s='Would you like to delete the content related to this module ?' d='Admin.Modules.Notification'}';
+	var left_button_confirm_reset = '{l s='No - reset only the parameters' d='Admin.Modules.Notification'}';
+	var right_button_confirm_reset = '{l s='Yes - reset everything' d='Admin.Modules.Notification'}';
 </script>
 <div class="page-bar toolbarBox">
 	<div class="btn-toolbar">
@@ -58,7 +58,7 @@
 			<li>
 				<a id="desc-module-back" class="toolbar_btn" href="{url entity='sf' route='admin_module_manage'}">
 					<i class="process-icon-back"></i>
-					<div>{l s='Back'}</div>
+					<div>{l s='Back' d='Admin.Global'}</div>
 				</a>
 			</li>
 			<!-- <li>
@@ -83,7 +83,7 @@
 			<li>
 				<a id="desc-module-translate" data-toggle="modal" data-target="#moduleTradLangSelect" class="toolbar_btn" href="#" title="{l s='Translate'}">
 					<i class="process-icon-flag"></i>
-					<div>{l s='Translate'}</div>
+					<div>{l s='Translate' d='Admin.Actions'}</div>
 				</a>
 			</li>
 			{/if}
@@ -91,14 +91,14 @@
 			<li>
 				<a id="desc-module-update" class="toolbar_btn" href="{$module_update_link}" title="{l s='Update'}">
 					<i class="process-icon-refresh"></i>
-					<div>{l s='Check update'}</div>
+					<div>{l s='Check update' d='Admin.Modules.Feature'}</div>
 				</a>
 			</li>
 			{/if}
 			<li>
 				<a id="desc-module-hook" class="toolbar_btn" href="{$module_hook_link}" title="{l s='Manage hooks'}">
 					<i class="process-icon-anchor"></i>
-					<div>{l s='Manage hooks'}</div>
+					<div>{l s='Manage hooks' d='Admin.Modules.Feature'}</div>
 				</a>
 			</li>
 		</ul>

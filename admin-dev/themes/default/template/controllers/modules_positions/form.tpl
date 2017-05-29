@@ -32,14 +32,14 @@
 	<div class="panel">
 		<h3>
 			<i class="icon-paste"></i>
-			{l s='Transplant a module'}
+			{l s='Transplant a module' d='Admin.Design.Feature'}
 		</h3>
 		<div class="form-group">
-			<label class="control-label col-lg-3 required"> {l s='Module'}</label>
+			<label class="control-label col-lg-3 required"> {l s='Module' d='Admin.Global'}</label>
 			<div class="col-lg-9">
 				<select class="chosen" name="id_module" {if $edit_graft} disabled="disabled"{/if}>
 					{if !$hooks}
-						<option value="0" selected disabled>{l s='Please select a module'}</option>
+						<option value="0" selected disabled>{l s='Please select a module' d='Admin.Design.Help'}</option>
 					{/if}
 					{foreach $modules as $module}
 						<option value="{$module->id|intval}"{if $id_module == $module->id || (!$id_module && $show_modules == $module->id)} selected="selected"{/if}>{$module->displayName|stripslashes}</option>
@@ -48,11 +48,11 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3 required"> {l s='Transplant to'}</label>
+			<label class="control-label col-lg-3 required"> {l s='Transplant to' d='Admin.Design.Feature'}</label>
 			<div class="col-lg-9">
 				<select name="id_hook"{if !$hooks|@count} disabled="disabled"{/if}>
 					{if !$hooks}
-						<option value="0">{l s='Select a module above before choosing from available hooks'}</option>
+						<option value="0">{l s='Select a module above before choosing from available hooks' d='Admin.Design.Help'}</option>
 					{else}
 						{foreach $hooks as $hook}
 							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
@@ -62,13 +62,13 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3">{l s='Exceptions'}</label>
+			<label class="control-label col-lg-3">{l s='Exceptions' d='Admin.Design.Feature'}</label>
 			<div class="col-lg-9">
 				<div class="well">
 					<div>
-						{l s='Please specify the files for which you do not want the module to be displayed.'}<br />
-						{l s='Please input each filename, separated by a comma (",").'}<br />
-						{l s='You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.'}<br />
+						{l s='Please specify the files for which you do not want the module to be displayed.' d='Admin.Design.Help'}<br />
+						{l s='Please input each filename, separated by a comma (",").' d='Admin.Design.Help'}<br />
+						{l s='You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.' d='Admin.Design.Help'}<br />
 						{if !$except_diff}
 							{$exception_list}
 						{else}
