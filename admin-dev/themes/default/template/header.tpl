@@ -225,7 +225,9 @@
 						<ul id="employee_links" class="dropdown-menu">
 							<li data-mobile="true" data-from="employee_links" data-target="menu">
 								<span class="employee_avatar">
+									{if isset($employee)}
 									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
+									{/if}
 								</span>
 							</li>
 							<li class="text-center text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{$employee->firstname} {$employee->lastname}</li>
