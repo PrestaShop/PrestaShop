@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShopBundle\Utils\ImmutableFloat;
 use ProductDownload;
 use Attachment;
 use Configuration as ConfigurationLegacy;
@@ -273,7 +274,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 $form_data['combinations'][$k]['attribute_unit_impact'] = -1;
             }
 
-            $form_data['combinations'][$k]['attribute_price'] = abs($combination['attribute_price']);
+            $form_data['combinations'][$k]['attribute_price'] = abs(ImmutableFloat::fromString($combination['attribute_price'])->getValue());
             $form_data['combinations'][$k]['attribute_weight'] = abs($combination['attribute_weight']);
             $form_data['combinations'][$k]['attribute_unity'] = abs($combination['attribute_unity']);
         }
