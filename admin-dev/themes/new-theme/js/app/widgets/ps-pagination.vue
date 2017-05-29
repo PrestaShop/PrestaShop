@@ -127,6 +127,12 @@
 
 <style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
+
+  .pagination {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
   .page-link, .page-item.active .page-link {
     background-color: transparent;
     text-decoration: none;

@@ -25,8 +25,12 @@
 <template>
   <div class="col-xs-9 card">
     <div class="p-x-1 row">
-      <div class="col-xs-6 p-t-3">
-        <strong>{{ currentDomain }} - {{ currentDomainTotalTranslations }} - {{ currentDomainTotalMissingTranslations }}</strong>
+      <div class="col-xs-6 p-t-1">
+        <h1 class="domain-info">
+          <span>{{ currentDomain }}</span>
+          <span>{{ currentDomainTotalTranslations }}</span>
+          <span v-show="currentDomainTotalMissingTranslations"> - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
+        </h1>
       </div>
       <div class="col-xs-6">
         <PSPagination
@@ -97,10 +101,13 @@
         return this.$store.state.currentDomain;
       },
       currentDomainTotalTranslations() {
-        return this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations);
+        return this.$store.state.currentDomainTotalTranslations ? `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}` : '';
       },
       currentDomainTotalMissingTranslations() {
-        return this.trans('label_missing').replace('%d', this.$store.state.currentDomainTotalMissingTranslations);
+        return this.$store.state.currentDomainTotalMissingTranslations;
+      },
+      currentDomainTotalMissingTranslationsString() {
+        return this.trans('label_missing').replace('%d', this.currentDomainTotalMissingTranslations);
       },
     },
     methods: {
@@ -181,3 +188,15 @@
     },
   };
 </script>
+
+<style lang="sass" scoped>
+  @import "~PrestaKit/scss/custom/_variables.scss";
+
+  .domain-info {
+    font-size: 1rem;
+  }
+
+  .missing {
+    color: $danger;
+  }
+</style>
