@@ -635,6 +635,7 @@ class AdminImagesControllerCore extends AdminController
         $this->start_time = time();
         ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
         $this->max_execution_time = (int)ini_get('max_execution_time');
+        ignore_user_abort(true); // Keep going, even after the PHP-FPM connection is lost
         $languages = Language::getLanguages(false);
 
         $process = array(
