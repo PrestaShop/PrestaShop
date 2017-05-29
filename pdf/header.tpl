@@ -25,6 +25,7 @@
 
 
 <table style="width: 100%">
+<thead>
 <tr>
 	<td style="width: 50%">
 		{if $logo_path}
@@ -45,5 +46,6 @@
 		</table>
 	</td>
 </tr>
+</thead>
 </table>
 
