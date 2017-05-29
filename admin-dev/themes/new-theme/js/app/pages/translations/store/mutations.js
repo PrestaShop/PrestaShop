@@ -34,8 +34,8 @@ export default {
     state.catalog = catalog;
   },
   [types.SET_DOMAINS_TREE](state, domainsTree) {
-    state.total_missing_translations = domainsTree.data.tree.total_missing_translations;
-    state.total_translations = domainsTree.data.tree.total_translations;
+    state.totalMissingTranslations = domainsTree.data.tree.total_missing_translations;
+    state.totalTranslations = domainsTree.data.tree.total_translations;
     state.domainsTree = domainsTree.data.tree.children;
   },
   [types.APP_IS_READY](state) {

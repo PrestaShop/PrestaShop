@@ -27,6 +27,10 @@
     <TranslationsHeader />
     <div class="container-fluid">
       <div class="row">
+        <div class="translations-summary pull-xs-right">
+          <span>{{ totalTranslations }}</span>
+          <span v-show="totalMissingTranslations"> - <span class="missing">{{ totalMissingTranslationsString }}</span></span>
+        </div>
         <Search @search="onSearch" />
       </div>
 
@@ -49,6 +53,15 @@
     computed: {
       isReady() {
         return this.$store.getters.isReady;
+      },
+      totalTranslations() {
+        return this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.totalTranslations);
+      },
+      totalMissingTranslations() {
+        return this.$store.state.totalMissingTranslations;
+      },
+      totalMissingTranslationsString() {
+        return this.trans('label_missing').replace('%d', this.totalMissingTranslations);
       },
     },
     methods: {
@@ -79,5 +92,14 @@
   .flex {
     display: flex;
     align-items: center;
+  }
+
+  .missing {
+    color: $danger;
+  }
+
+  .translations-summary {
+    font-weight: $font-weight-semibold;
+    font-size: 1rem;
   }
 </style>

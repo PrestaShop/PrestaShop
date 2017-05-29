@@ -195,8 +195,4 @@
   .domain-info {
     font-size: 1rem;
   }
-
-  .missing {
-    color: $danger;
-  }
 </style>
