@@ -7,7 +7,6 @@ namespace PrestaShopBundle\Utils;
  */
 class ImmutableFloat
 {
-
     /**
      * @var float
      */
