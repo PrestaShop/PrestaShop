@@ -736,5 +736,8 @@
       <title>Display new elements in back office product page, Shipping tab</title>
       <description>This hook launches modules when the back office product page is displayed</description>
     </hook>
+    <hook id="displayAfterProductThumbs">
+      <name>displayAfterProductThumbs</name><title>Display extra content below product thumbs</title><description>This hook displays new elements below product images ex. additonal media</description>
+    </hook>      
   </entities>
 </entity_hook>
