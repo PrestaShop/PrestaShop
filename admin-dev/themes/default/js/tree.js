@@ -5,6 +5,35 @@ var Tree = function (element, options)
 	this.init();
 };
 
+function getCategoryById(param) {
+	var elem = null;
+	$('input[name=id_parent]').each(function (index) {
+		if ($(this).val() === param + '') {
+			elem = $(this);
+		}
+	});
+	return elem;
+}
+
+function disableTreeItem(item) {
+	item.find('input[name=id_parent]').attr('disabled', 'disabled');
+	if (item.hasClass('tree-folder')) {
+		item.find('span.tree-folder-name').addClass('tree-folder-name-disable');
+		item.find('ul li').each(function (index) {
+			disableTreeItem($(this));
+		});
+	} else if (item.hasClass('tree-item')) {
+		item.addClass('tree-item-disable');
+	}
+
+}
+
+function organizeTree() {
+	var id = $('#id_category').val();
+	var item = getCategoryById(id).parent().parent();
+	disableTreeItem(item);
+}
+
 Tree.prototype =
 {
 	constructor: Tree,
@@ -163,6 +192,7 @@ Tree.prototype =
 				function(content)
 				{
 					$('#'+idTree).html(content);
+					organizeTree();
 					$('#'+idTree).tree('init');
 					that.$element.find("label.tree-toggler").each(
 						function()
