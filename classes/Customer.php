@@ -500,10 +500,6 @@ class CustomerCore extends ObjectModel
     public static function customerExists($email, $returnId = false, $ignoreGuest = true)
     {
         if (!Validate::isEmail($email)) {
-            if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-                die(Context::getContext()->getTranslator()->trans('Invalid email', array(), 'Admin.Orderscustomers.Notification'));
-            }
-
             return false;
         }
 
