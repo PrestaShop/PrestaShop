@@ -42,7 +42,7 @@ class CartRuleCore extends ObjectModel
      * and the same product is delivered in both addresses 
      */
     protected static $only_one_gift = array();
-    
+
     public $id;
     public $name;
     public $id_customer;
@@ -120,11 +120,11 @@ class CartRuleCore extends ObjectModel
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             /* Lang fields */
             'name' => array(
-                'type' => self::TYPE_STRING, 
-                'lang' => true, 
-                'validate' => 'isCleanHtml', 
+                'type' => self::TYPE_STRING,
+                'lang' => true,
+                'validate' => 'isCleanHtml',
                 'required' => true, 'size' => 254
-                ),
+            ),
         ),
     );
 
@@ -174,9 +174,8 @@ class CartRuleCore extends ObjectModel
         }
 
         Configuration::updateGlobalValue(
-            'PS_CART_RULE_FEATURE_ACTIVE', 
-            CartRule::isCurrentlyUsed($this->def['table'], true)
-            );
+            'PS_CART_RULE_FEATURE_ACTIVE', CartRule::isCurrentlyUsed($this->def['table'], true)
+        );
         return true;
     }
 
@@ -286,7 +285,7 @@ class CartRuleCore extends ObjectModel
             return false;
         }
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-               'SELECT `id_cart_rule` FROM `' . _DB_PREFIX_ . 'cart_rule` WHERE `code` = \'' . pSQL($code) . '\'');
+                'SELECT `id_cart_rule` FROM `' . _DB_PREFIX_ . 'cart_rule` WHERE `code` = \'' . pSQL($code) . '\'');
     }
 
     /**
@@ -304,13 +303,13 @@ class CartRuleCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      */
     public static function getCustomerCartRules(
-        $id_lang, 
-        $id_customer, 
-        $active = false, 
-        $includeGeneric = true, 
-        $inStock = false, 
-        Cart $cart = null, 
-        $free_shipping_only = false, 
+        $id_lang,
+        $id_customer,
+        $active = false,
+        $includeGeneric = true,
+        $inStock = false,
+        Cart $cart = null,
+        $free_shipping_only = false,
         $highlight_only = false
     )
     {
@@ -443,14 +442,14 @@ class CartRuleCore extends ObjectModel
     )
     {
         return self::getCustomerCartRules(
-            $languageId, 
-            $customerId, 
-            $active = true, 
-            $includeGeneric = true, 
-            $inStock = true, 
-            $cart, 
-            $freeShippingOnly = false, 
-            $highlightOnly = true
+           $languageId,
+           $customerId,
+           $active = true,
+           $includeGeneric = true,
+           $inStock = true,
+           $cart,
+           $freeShippingOnly = false,
+           $highlightOnly = true
         );
     }
 
@@ -799,7 +798,8 @@ class CartRuleCore extends ObjectModel
                             foreach ($cart_attributes as $cart_attribute) {
                                 if (in_array($cart_attribute['id_attribute'], $product_rule['values'])) {
                                     $count_matching_products += $cart_attribute['quantity'];
-                                    if ($already_in_cart && $this->gift_product == $cart_attribute['id_product']
+                                    if ($already_in_cart 
+                                        && $this->gift_product == $cart_attribute['id_product'] 
                                         && $this->gift_product_attribute == $cart_attribute['id_product_attribute']) {
                                         --$count_matching_products;
                                     }
@@ -1077,8 +1077,8 @@ class CartRuleCore extends ObjectModel
                 $selected_products = $this->checkProductRestrictions($context, true);
                 if (is_array($selected_products)) {
                     foreach ($package_products as $product) {
-                        if (in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products) 
-                            || in_array($product['id_product'] . '-0', $selected_products) 
+                        if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
+                            || in_array($product['id_product'].'-0', $selected_products)
                             && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                             $price = $product['price'];
                             if ($use_tax) {
@@ -1216,10 +1216,10 @@ class CartRuleCore extends ObjectModel
             foreach ($package_products as $product) {
                 if ($product['id_product'] == $this->gift_product && ($product['id_product_attribute'] == $this->gift_product_attribute || !(int) $this->gift_product_attribute)) {
                     // The free gift coupon must be applied to one product only (needed for multi-shipping which manage multiple product lists)
-                    if (!isset(CartRule::$only_one_gift[$this->id . '-' . $this->gift_product]) 
-                        || CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] == $id_address 
-                        || CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] == 0 
-                        || $id_address == 0 
+                    if (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product])
+                        || CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == $id_address
+                        || CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == 0
+                        || $id_address == 0
                         || !$use_cache) {
                         $reduction_value += ($use_tax ? $product['price_wt'] : $product['price']);
                         if ($use_cache && (!isset(CartRule::$only_one_gift[$this->id . '-' . $this->gift_product]) || CartRule::$only_one_gift[$this->id . '-' . $this->gift_product] == 0)) {
@@ -1527,8 +1527,8 @@ class CartRuleCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule` crpr
 		LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_product_rule_value` crprv ON crpr.`id_product_rule` = crprv.`id_product_rule`
 		WHERE crpr.`type` = "' . pSQL($type) . '"
-		AND crprv.`id_item` IN (' . $list . ')'); 
-        //// $list is checked a few lines above
+		AND crprv.`id_item` IN (' . $list . ')');
+        // $list is checked a few lines above
         // Delete the product rules that does not have any values
         if (Db::getInstance()->Affected_Rows() > 0) {
             Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule_value`
@@ -1590,7 +1590,6 @@ class CartRuleCore extends ObjectModel
         }
         $return = array();
         $array = 0;
-
         // Attribute id is not important for this filter in the global list
         // so the ids are replaced by 0
         if (in_array($type, array('products', 'categories', 'manufacturers', 'suppliers'))) {
