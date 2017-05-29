@@ -210,7 +210,7 @@ class OrderPresenter implements PresenterInterface
         if ($order->gift) {
             $giftWrapping = ($this->includeTaxes())
                 ? $order->total_wrapping_tax_incl
-                : $order->total_wrapping_tax_incl;
+                : $order->total_wrapping_tax_excl;
             $subtotals['gift_wrapping'] = array(
                 'type' => 'gift_wrapping',
                 'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
