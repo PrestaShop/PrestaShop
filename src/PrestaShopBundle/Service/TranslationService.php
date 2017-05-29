@@ -183,7 +183,7 @@ class TranslationService {
                 'tree_domain' => $treeDomain,
             );
 
-            if (!array_key_exists('xliff', $data) && !array_key_exists('database', $data)) {
+            if (empty($data['xliff'] && empty($data['database']))) {
                 array_unshift($domains['data'], $data);
             } else {
                 array_push($domains['data'], $data);
