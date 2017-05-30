@@ -53,9 +53,17 @@ export const getCatalog = ({ commit }, payload) => {
   });
 };
 
-export const getDomainsTree = ({ commit }) => {
+export const getDomainsTree = ({ commit }, payload) => {
   const url = window.data.domainsTreeUrl;
-  Vue.http.get(url).then((response) => {
+  const params = {};
+
+  if (payload && payload.search) {
+    params.search = payload.search;
+  }
+
+  Vue.http.get(url, {
+    params,
+  }).then((response) => {
     commit(types.SET_DOMAINS_TREE, response.body);
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);

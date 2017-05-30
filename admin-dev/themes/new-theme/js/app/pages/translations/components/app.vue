@@ -66,9 +66,9 @@
     },
     methods: {
       onSearch(keywords) {
-        const desc = this.$route.name === 'overview' ? '' : ' desc';
-        this.$store.dispatch('updateKeywords', keywords);
-        this.fetch(desc);
+        this.$store.dispatch('getDomainsTree', {
+          search: keywords,
+        });
       },
     },
     components: {
