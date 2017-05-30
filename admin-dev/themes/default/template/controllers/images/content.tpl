@@ -42,7 +42,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 pull-right">
-                    <button type="submit" name="submitMoveImages{$table}" class="btn btn-default pull-right" onclick="return confirm('{l s='Are you sure?' d=Admin.Notifications.Warning}');"><i class="process-icon-cogs"></i> {l s='Move images' d='Admin.Design.Feature'}</button>
+                    <button type="submit" name="submitMoveImages{$table}" class="btn btn-default pull-right" onclick="return confirm('{l s='Are you sure?' d='Admin.Notifications.Warning'}');"><i class="process-icon-cogs"></i> {l s='Move images' d='Admin.Design.Feature'}</button>
                 </div>
             </div>
         </div>
