@@ -98,8 +98,9 @@ Tree.prototype =
 			}
 			if (typeof(treeClickFunc) != 'undefined')
 			{
-				this.$element.find(":input[type=radio]").unbind('click');
-				this.$element.find(":input[type=radio]").click(treeClickFunc);
+				this.$element.find(':input[name="id-category"][type=radio]')
+				.unbind('click')
+				.click(treeClickFunc);
 			}
 		}
 
