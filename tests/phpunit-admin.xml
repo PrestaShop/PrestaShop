@@ -6,8 +6,6 @@
     <groups>
       <include>
         <group>admin</group>
-      </include>
-      <include>
         <group>demo</group>
       </include>
     </groups>
