@@ -26,9 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShopBundle\Translation\View\TreeBuilder;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -103,54 +101,6 @@ class TranslationsController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToTranslationApp($request);
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function messagesFragmentsAction(Request $request)
-    {
-        $theme = $this->getSelectedTheme($request);
-
-        $translationService = $this->get('prestashop.service.translation');
-        $catalogue = $translationService->getTranslationsCatalogue(
-            $request->get('lang'),
-            $request->get('type'),
-            $request->get('selected-theme')
-        );
-
-        $treeBuilder = new TreeBuilder($request->get('lang'), $theme);
-        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-
-        $translationsFormsView = $this->renderView(
-            'PrestaShopBundle:Admin/Translations/include:translations-forms.html.twig',
-            array(
-                'translationsTree' => $translationsTree,
-                'theme' => $theme,
-            )
-        );
-        $translationsTreeView = $this->renderView(
-            'PrestaShopBundle:Admin/Translations/include:translations-tree.html.twig',
-            array(
-                'translationsTree' => $translationsTree,
-                'theme' => $theme,
-            )
-        );
-
-        return new JsonResponse(array(
-            'translations_forms' => $translationsFormsView,
-            'translations_tree' => $translationsTreeView,
-        ));
-    }
-
-    private function getSelectedTheme(Request $request)
-    {
-        if ($request->get('type') === 'themes') {
-            return $request->get('selected-theme');
-        } else {
-            return null;
-        }
     }
 
     /**
