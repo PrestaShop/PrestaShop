@@ -24,6 +24,7 @@ var combinations = (function() {
             $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
           },
           success: function(response) {
+            refreshTotalCombinations(-1, 1);
             combinationElem.remove();
             showSuccessMessage(response.message);
             displayFieldsManager.refresh();
