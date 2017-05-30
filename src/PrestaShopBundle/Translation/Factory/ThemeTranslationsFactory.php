@@ -63,7 +63,7 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * {@inheritdoc}
      */
-    public function createTranslationsArray($themeName, $locale = 'en_US', $theme = null)
+    public function createTranslationsArray($themeName, $locale = 'en_US', $theme = null, $search = null)
     {
         $this->themeProvider
             ->setThemeName($themeName)
@@ -71,7 +71,7 @@ class ThemeTranslationsFactory extends TranslationsFactory
             ->synchronizeTheme();
         ;
 
-        $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale);
+        $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale, $search);
 
         ksort($translations);
 
@@ -91,10 +91,11 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * @param $themeName
      * @param $locale
-     * @return mixed
+     * @param null $search
+     * @return array
      */
-    protected function getFrontTranslationsForThemeAndLocale($themeName, $locale)
+    protected function getFrontTranslationsForThemeAndLocale($themeName, $locale, $search = null)
     {
-        return parent::createTranslationsArray('theme', $locale, $themeName);
+        return parent::createTranslationsArray('theme', $locale, $themeName, $search);
     }
 }

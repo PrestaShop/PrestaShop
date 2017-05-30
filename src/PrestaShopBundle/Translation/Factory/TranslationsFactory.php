@@ -74,12 +74,12 @@ class TranslationsFactory implements TranslationsFactoryInterface
      *
      * @throws ProviderNotFoundException
      */
-    public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null)
+    public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null)
     {
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
                 $treeBuilder = new TreeBuilder($locale, $theme);
-                return $treeBuilder->makeTranslationArray($provider);
+                return $treeBuilder->makeTranslationArray($provider, $search);
             }
         }
 

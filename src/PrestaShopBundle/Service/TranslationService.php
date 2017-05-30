@@ -98,10 +98,11 @@ class TranslationService {
      * @param $lang
      * @param $type
      * @param $selected
+     * @param null $search
      *
-     * @return mixed
+     * @return array|mixed
      */
-    public function getTranslationsCatalogue($lang, $type, $selected)
+    public function getTranslationsCatalogue($lang, $type, $selected, $search = null)
     {
         $factory = $this->container->get('ps.translations_factory');
 
@@ -119,7 +120,7 @@ class TranslationService {
             }
         }
 
-        return $factory->createTranslationsArray($type, $locale);
+        return $factory->createTranslationsArray($type, $locale, $selected, $search);
     }
 
     /**
@@ -139,9 +140,10 @@ class TranslationService {
      * @param $locale
      * @param $domain
      * @param null $theme
+     * @param null $search
      * @return array
      */
-    public function listDomainTranslation($locale, $domain, $theme = null){
+    public function listDomainTranslation($locale, $domain, $theme = null, $search = null){
         if (!empty($theme) && 'classic' !== $theme) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
@@ -151,6 +153,10 @@ class TranslationService {
 
         if ('Messages' === $domain){
             $domain = 'messages';
+        }
+
+        if (!empty($search)) {
+            $search = strtolower($search);
         }
 
         $translationProvider->setDomain($domain);
@@ -183,10 +189,19 @@ class TranslationService {
                 'tree_domain' => $treeDomain,
             );
 
-            if (empty($data['xliff'] && empty($data['database']))) {
-                array_unshift($domains['data'], $data);
-            } else {
-                array_push($domains['data'], $data);
+            // if search is empty or is in catalog default|xlf|database
+            if (empty($search) ||
+                (
+                    false !== strpos(strtolower($data['default']), $search) ||
+                    false !== strpos(strtolower($data['xliff']), $search) ||
+                    false !== strpos(strtolower($data['database']), $search)
+                )
+            ) {
+                if (empty($data['xliff'] && empty($data['database']))) {
+                    array_unshift($domains['data'], $data);
+                } else {
+                    array_push($domains['data'], $data);
+                }
             }
         }
 

@@ -45,9 +45,18 @@ class TreeBuilder
         $this->theme = $theme;
     }
 
-    public function makeTranslationArray(AbstractProvider $provider)
+    /**
+     * @param AbstractProvider $provider
+     * @param null $search
+     * @return array|mixed
+     */
+    public function makeTranslationArray(AbstractProvider $provider, $search = null)
     {
         $provider->setLocale($this->locale);
+
+        if (!empty($search)) {
+            $search = strtolower($search);
+        }
 
         if ('theme' === $provider->getIdentifier()) {
             $translations = $provider->getMessageCatalogue()->all();
@@ -72,13 +81,24 @@ class TreeBuilder
                         $databaseCatalogue[$domainDatabase][$translationKey] : null),
                 );
 
-                $translations[$domain][$translationKey] = $data;
-
-                if (
-                    empty($data['xlf']) &&
-                    empty($data['db'])
+                // if search is empty or is in catalog default|xlf|database
+                if (empty($search) ||
+                    (
+                        false !== strpos(strtolower($translationKey), $search) ||
+                        false !== strpos(strtolower($data['xlf']), $search) ||
+                        false !== strpos(strtolower($data['db']), $search)
+                    )
                 ) {
-                    $missingTranslations++;
+                    $translations[$domain][$translationKey] = $data;
+
+                    if (
+                        empty($data['xlf']) &&
+                        empty($data['db'])
+                    ) {
+                        $missingTranslations++;
+                    }
+                } else {
+                    unset($translations[$domain][$translationKey]);
                 }
             }
 
@@ -132,9 +152,11 @@ class TreeBuilder
      * @param $tree
      * @param Router $router
      * @param null $theme
+     * @param null $search
+     *
      * @return array
      */
-    public function cleanTreeToApi($tree, Router $router, $theme = null)
+    public function cleanTreeToApi($tree, Router $router, $theme = null, $search = null)
     {
         $rootTree = array(
             'tree' => array(
@@ -150,7 +172,7 @@ class TreeBuilder
         foreach ($tree as $k1 => $t1) {
             $index2 = 0;
             if (is_array($t1) && '__' !== substr($k1, 0, 2)) {
-                $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1, $theme);
+                $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1, $theme, $search);
 
                 if (array_key_exists('__messages', $t1)) {
                     $nbMessage = count(current($t1['__messages']));
@@ -171,7 +193,7 @@ class TreeBuilder
                 foreach ($t1 as $k2 => $t2) {
                     $index3 = 0;
                     if (is_array($t2) && '__' !== substr($k2, 0, 2)) {
-                        $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2, $theme);
+                        $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2, $theme, $search);
 
                         if (array_key_exists('__messages', $t2)) {
                             $nbMessage = count(current($t2['__messages']));
@@ -193,7 +215,7 @@ class TreeBuilder
 
                         foreach ($t2 as $k3 => $t3) {
                             if (is_array($t3) && '__' !== substr($k3, 0, 2)) {
-                                $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3, $theme);
+                                $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3, $theme, $search);
 
                                 if (array_key_exists('__messages', $t3)) {
                                     $nbMessage = count(current($t3['__messages']));
@@ -245,18 +267,25 @@ class TreeBuilder
      * @param $name
      * @param $fullName
      * @param bool $theme
+     * @param null $search
      * @return mixed
      */
-    private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName, $theme = false)
+    private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName, $theme = false, $search = null)
     {
         if (!isset($tree[$index])) {
-            $tree[$index]['name'] = $name;
-            $tree[$index]['full_name'] = $fullName;
-            $tree[$index]['domain_catalog_link'] = $router->generate('api_translation_domain_catalog', array(
+            $routeParams = array(
                 'locale' => $this->locale,
                 'domain' => $fullName,
                 'theme' => $theme,
-            ));
+            );
+
+            if (!empty($search)) {
+                $routeParams['search'] = $search;
+            }
+
+            $tree[$index]['name'] = $name;
+            $tree[$index]['full_name'] = $fullName;
+            $tree[$index]['domain_catalog_link'] = $router->generate('api_translation_domain_catalog', $routeParams);
             $tree[$index]['total_translations'] = 0;
             $tree[$index]['total_missing_translations'] = 0;
             $tree[$index]['children'] = array();

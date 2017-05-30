@@ -64,7 +64,9 @@ class TranslationController extends ApiController
             $domain = $request->attributes->get('domain');
             $theme = $request->attributes->get('theme');
 
-            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme);
+            $search = $request->query->get('search');
+
+            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search);
             $info = array(
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size'])
             );
@@ -116,14 +118,16 @@ class TranslationController extends ApiController
             $type = $request->attributes->get('type');
             $selected = $request->attributes->get('selected');
 
+            $search = $request->query->get('search');
+
             if (in_array($type, array('modules', 'themes')) && empty($selected)) {
                 throw new Exception('This \'selected\' param is not valid.');
             }
 
             if ('modules' === $type) {
-                $tree = $this->getModulesTree($lang, $type, $selected);
+                $tree = $this->getModulesTree($lang, $type, $selected, $search);
             } else {
-                $tree = $this->getNormalTree($lang, $type, $selected);
+                $tree = $this->getNormalTree($lang, $type, $selected, $search);
             }
 
             return $this->jsonResponse($tree, $request);
@@ -134,7 +138,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * Edit translations
+     * Route to edit translation
      *
      * @param Request $request
      * @return JsonResponse
@@ -285,33 +289,35 @@ class TranslationController extends ApiController
      * @param $lang
      * @param $type
      * @param $selected
+     * @param null $search
      *
      * @return array
      */
-    private function getNormalTree($lang, $type, $selected)
+    private function getNormalTree($lang, $type, $selected, $search = null)
     {
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
 
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $selected);
-        return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected);
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $selected, $search);
+        return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
     }
 
     /**
      * @param $lang
      * @param $type
      * @param $selected
+     * @param null $search
      *
      * @return array
      */
-    private function getModulesTree($lang, $type, $selected)
+    private function getModulesTree($lang, $type, $selected, $search = null)
     {
         $moduleProvider = $this->container->get('prestashop.translation.module_provider');
         $moduleProvider->setModuleName($selected);
 
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
 
-        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider);
-        return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected);
+        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
+        return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
     }
 
     /**
@@ -321,14 +327,16 @@ class TranslationController extends ApiController
      * @param $catalogue
      * @param $type
      * @param $selected
+     * @param null $search
+     *
      * @return array
      */
-    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected)
+    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null)
     {
         $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
 
         $theme = ('themes' === $type && 'classic' !== $selected ? $selected : false);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme);
+        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme, $search);
 
         return $translationsTree;
     }
