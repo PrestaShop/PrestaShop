@@ -706,18 +706,6 @@ function getStorageAvailable() {
 	}
 }
 
-function refreshTotalCombinations(sign, number) {
-  let currentnumber;
-  //checking if parseInt throws exception
-  try {
-    currentnumber = parseInt($('.js-bulk-combinations-total').text()) + (sign * number);
-  }
-  catch (error) {
-    currentnumber = 0;
-  }
-  $('.js-bulk-combinations-total').text(currentnumber);
-}
-
 $(document).ready(function()
 {
 	// Hide all elements with .hideOnSubmit class when parent form is submit
