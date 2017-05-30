@@ -954,7 +954,7 @@ class ValidateCore
     }
 
     /**
-     * Price display method validity
+     * Check if $data is a string
      *
      * @param string $data Data to validate
      * @return bool Validity is ok or not
@@ -1009,9 +1009,9 @@ class ValidateCore
     }
 
     /**
-     * Check for PHP serialized data
+     * Check if $string is a valid JSON string
      *
-     * @param string $data json data to validate
+     * @param string $string JSON string to validate
      * @return bool Validity is ok or not
      */
     public static function isJson($string)
