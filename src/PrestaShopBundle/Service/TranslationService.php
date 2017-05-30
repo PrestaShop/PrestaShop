@@ -155,10 +155,6 @@ class TranslationService {
             $domain = 'messages';
         }
 
-        if (!empty($search)) {
-            $search = strtolower($search);
-        }
-
         $translationProvider->setDomain($domain);
         $translationProvider->setLocale($locale);
 
@@ -190,14 +186,8 @@ class TranslationService {
             );
 
             // if search is empty or is in catalog default|xlf|database
-            if (empty($search) ||
-                (
-                    false !== strpos(strtolower($data['default']), $search) ||
-                    false !== strpos(strtolower($data['xliff']), $search) ||
-                    false !== strpos(strtolower($data['database']), $search)
-                )
-            ) {
-                if (empty($data['xliff'] && empty($data['database']))) {
+            if (empty($search) || $this->dataContainsSearchWord($search, $data)) {
+                if (empty($data['xliff']) && empty($data['database'])) {
                     array_unshift($domains['data'], $data);
                 } else {
                     array_push($domains['data'], $data);
@@ -207,6 +197,37 @@ class TranslationService {
 
         return $domains;
     }
+
+    /**
+     * Check if data contains search word
+     *
+     * @param $search
+     * @param $data
+     * @return bool
+     */
+    private function dataContainsSearchWord($search, $data) {
+        if (is_string($search)) {
+            $search = strtolower($search);
+            return false !== strpos(strtolower($data['default']), $search) ||
+                false !== strpos(strtolower($data['xliff']), $search) ||
+                false !== strpos(strtolower($data['database']), $search);
+        }
+
+        if (is_array($search)) {
+            $contains = true;
+            foreach ($search as $s) {
+                $s = strtolower($s);
+                $contains &= false !== strpos(strtolower($data['default']), $s) ||
+                    false !== strpos(strtolower($data['xliff']), $s) ||
+                    false !== strpos(strtolower($data['database']), $s);
+            }
+
+            return $contains;
+        }
+
+        return false;
+    }
+
 
     /**
      * Save a translation in database

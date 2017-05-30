@@ -54,10 +54,6 @@ class TreeBuilder
     {
         $provider->setLocale($this->locale);
 
-        if (!empty($search)) {
-            $search = strtolower($search);
-        }
-
         if ('theme' === $provider->getIdentifier()) {
             $translations = $provider->getMessageCatalogue()->all();
         } else {
@@ -82,13 +78,7 @@ class TreeBuilder
                 );
 
                 // if search is empty or is in catalog default|xlf|database
-                if (empty($search) ||
-                    (
-                        false !== strpos(strtolower($translationKey), $search) ||
-                        false !== strpos(strtolower($data['xlf']), $search) ||
-                        false !== strpos(strtolower($data['db']), $search)
-                    )
-                ) {
+                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(array('default' => $translationKey), $data))) {
                     $translations[$domain][$translationKey] = $data;
 
                     if (
@@ -108,6 +98,36 @@ class TreeBuilder
         ksort($translations);
 
         return $translations;
+    }
+
+    /**
+     * Check if data contains search word
+     *
+     * @param $search
+     * @param $data
+     * @return bool
+     */
+    private function dataContainsSearchWord($search, $data) {
+        if (is_string($search)) {
+            $search = strtolower($search);
+            return false !== strpos(strtolower($data['default']), $search) ||
+                false !== strpos(strtolower($data['xlf']), $search) ||
+                false !== strpos(strtolower($data['db']), $search);
+        }
+
+        if (is_array($search)) {
+            $contains = true;
+            foreach ($search as $s) {
+                $s = strtolower($s);
+                $contains &= false !== strpos(strtolower($data['default']), $s) ||
+                    false !== strpos(strtolower($data['xlf']), $s) ||
+                    false !== strpos(strtolower($data['db']), $s);
+            }
+
+            return $contains;
+        }
+
+        return false;
     }
 
     /**
