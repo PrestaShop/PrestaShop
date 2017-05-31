@@ -38,8 +38,11 @@ class CartRuleCore extends ObjectModel
     const FILTER_ACTION_ALL_NOCAP = 5;
     const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
 
-    /* This variable controls that a free gift is offered only once, even when multi-shippping is activated 
-     * and the same product is delivered in both addresses 
+    /**
+     * This variable controls that a free gift is offered only once, even when multi-shippping is activated 
+     * and the same product is delivered in both addresses
+     *
+     * @var array
      */
     protected static $only_one_gift = array();
 
@@ -192,7 +195,9 @@ class CartRuleCore extends ObjectModel
         }
 
         Configuration::updateGlobalValue(
-            'PS_CART_RULE_FEATURE_ACTIVE', CartRule::isCurrentlyUsed($this->def['table'], true));
+            'PS_CART_RULE_FEATURE_ACTIVE', 
+            CartRule::isCurrentlyUsed($this->def['table'], true)
+        );
 
         $r = Db::getInstance()->delete('cart_cart_rule', '`id_cart_rule` = ' . (int) $this->id);
         $r &= Db::getInstance()->delete('cart_rule_carrier', '`id_cart_rule` = ' . (int) $this->id);
@@ -285,7 +290,8 @@ class CartRuleCore extends ObjectModel
             return false;
         }
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-                'SELECT `id_cart_rule` FROM `' . _DB_PREFIX_ . 'cart_rule` WHERE `code` = \'' . pSQL($code) . '\'');
+            'SELECT `id_cart_rule` FROM `' . _DB_PREFIX_ . 'cart_rule` WHERE `code` = \'' . pSQL($code) . '\''
+        );
     }
 
     /**
@@ -814,7 +820,7 @@ class CartRuleCore extends ObjectModel
                                     break;
                                 }
                             }
-                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
+                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'products':
                             $cart_products = Db::getInstance()->executeS('
@@ -841,7 +847,7 @@ class CartRuleCore extends ObjectModel
                                     break;
                                 }
                             }
-                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
+                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'categories':
                             $cart_categories = Db::getInstance()->executeS('
@@ -876,7 +882,7 @@ class CartRuleCore extends ObjectModel
                             foreach ($matching_products_list as &$matching_product) {
                                 $matching_product = preg_replace('/^([0-9]+)-[0-9]+$/', '$1-0', $matching_product);
                             }
-                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
+                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'manufacturers':
                             $cart_manufacturers = Db::getInstance()->executeS('
@@ -901,7 +907,7 @@ class CartRuleCore extends ObjectModel
                                     break;
                                 }
                             }
-                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
+                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'suppliers':
                             $cart_suppliers = Db::getInstance()->executeS('
@@ -926,7 +932,7 @@ class CartRuleCore extends ObjectModel
                                     break;
                                 }
                             }
-                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
+                            $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                     }
                     if (!count($eligible_products_list)) {
@@ -1313,7 +1319,14 @@ class CartRuleCore extends ObjectModel
      * @return array|bool Array with DB rows of requested type
      * @throws PrestaShopDatabaseException
      */
-    public function getAssociatedRestrictions($type, $active_only, $i18n, $offset = null, $limit = null, $search_cart_rule_name = '')
+    public function getAssociatedRestrictions(
+        $type,
+        $active_only,
+        $i18n, 
+        $offset = null,
+        $limit = null,
+        $search_cart_rule_name = ''
+    )
     {
         $array = array('selected' => array(), 'unselected' => array());
 
@@ -1575,34 +1588,31 @@ class CartRuleCore extends ObjectModel
     /**
      * CartRules compare function to use the Product and the rules
      *
-     * @param array $arrayProduct List Products,
-     * @param array $arrayRules List Rules,
-     * @param string $type type voucher,
+     * @param array $products List of Products from the cart,
+     * @param array $eligibleProducts List of Product eligible for rules,
+     * @param string $ruleType name of the rule,
      *
-     * @return int 0 = same
-     *             1 = different
+     * @return array Product selected who are eligible
      */
-    public function cartRulesCompare($arrayProduct, $arrayRules, $type)
+    protected function filterProducts($products, $eligibleProducts, $ruleType)
     {
         //If the two same array, no verification todo.
-        if ($arrayProduct == $arrayRules) {
-            return $arrayProduct;
+        if ($products === $eligibleProducts) {
+            return $products;
         }
         $return = array();
-        $array = 0;
         // Attribute id is not important for this filter in the global list
         // so the ids are replaced by 0
-        if (in_array($type, array('products', 'categories', 'manufacturers', 'suppliers'))) {
-            $productList = explode(':', preg_replace("#\-[0-9]+#", "-0", implode(':', $arrayProduct)));
+        if (in_array($ruleType, array('products', 'categories', 'manufacturers', 'suppliers'))) {
+            $productsList = explode(':', preg_replace("#\-[0-9]+#", "-0", implode(':', $products)));
         } else {
-            $productList = $arrayProduct;
+            $productsList = $products;
         }
 
-        foreach ($productList as $product) {
-            if (in_array($product, $arrayRules) && isset($arrayProduct[$array])) {
-                $return[] = $arrayProduct[$array];
+        foreach ($productsList as $k => $product) {
+            if (in_array($product, $eligibleProducts)) {
+                $return[] = $products[$k];
             }
-            $array++;
         }
         return $return;
     }
