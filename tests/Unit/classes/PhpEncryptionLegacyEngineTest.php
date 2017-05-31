@@ -35,6 +35,10 @@ class PhpEncryptionLegacyEngineTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        if (version_compare(PHP_VERSION, '7.1', '>=')) {
+            $this->markTestSkipped('Legacy encryption with mcrypt is deprecated from PHP 7.1.');
+        }
+
         $key = \Defuse\Crypto\Key::createNewRandomKey();
         $this->engine = new PhpEncryptionLegacyEngine($key->saveToAsciiSafeString());
     }
