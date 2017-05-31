@@ -1841,7 +1841,7 @@ CREATE TABLE `PREFIX_store` (
   `postcode` varchar(12) NOT NULL,
   `latitude` decimal(13,8) DEFAULT NULL,
   `longitude` decimal(13,8) DEFAULT NULL,
-  `hours` varchar(254) DEFAULT NULL,
+  `hours` text,
   `phone` varchar(16) DEFAULT NULL,
   `fax` varchar(16) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
