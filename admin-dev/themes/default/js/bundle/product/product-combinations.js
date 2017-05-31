@@ -217,6 +217,14 @@ var combinations = (function() {
           number.text(countSelectedProducts() + '/' + allProductCombination);
         });
 
+        /** Add title on product's combination image */
+        $(function() {
+            $('#combination_form_' + contentElem.attr('data')).find("img").each(function() {
+                title = $(this).attr('src').split('/').pop();
+                $(this).attr('title',title);
+            });
+        });
+        
         $('#form-nav, #form_content').hide();
       });
 
