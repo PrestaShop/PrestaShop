@@ -161,7 +161,9 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
     {
         $content = '';
         $content .= json_encode($this->content);
-        $content = preg_replace("/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", $content);
+        $content = preg_replace_callback("/\\\\u([a-f0-9]{4})/", function ($matches) {
+            return iconv('UCS-4LE','UTF-8', pack('V', hexdec('U' . $matches[1])));
+        }, $content);
         return $content;
     }
 
