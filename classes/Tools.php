@@ -576,7 +576,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int)$cookie->id_currency);
         }
         if (!Validate::isLoadedObject($currency) || (bool)$currency->deleted || !(bool)$currency->active) {
-            $currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
+           $currency = (int)Configuration::get('PS_DISPLAY_DEFAULT_CURRENCY') && Currency::getCurrency( (int) Configuration::get('PS_DISPLAY_DEFAULT_CURRENCY')) ? Currency::getCurrencyInstance(Configuration::get('PS_DISPLAY_DEFAULT_CURRENCY')) : Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         $cookie->id_currency = (int)$currency->id;
