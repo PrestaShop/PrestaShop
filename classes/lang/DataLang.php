@@ -50,24 +50,30 @@ class DataLangCore
     {
         $this->locale = $locale;
 
-        $this->translator = new Translator(
-            $this->locale,
-            null,
-            _PS_CACHE_DIR_.'/translations/'.$this->locale,
-            false
-        );
+        $legacyTranslator = Context::getContext()->getTranslator();
+        $legacyLocale = $legacyTranslator->getLocale();
 
-        $this->translator->addLoader('xlf', new \Symfony\Component\Translation\Loader\XliffFileLoader());
+        if ($legacyLocale === $this->locale) {
+            $this->translator = $legacyTranslator;
+        } else {
+            $this->translator = new Translator(
+                $this->locale,
+                null,
+                _PS_CACHE_DIR_ . '/translations/' . $this->locale,
+                false
+            );
 
-        $finder = \Symfony\Component\Finder\Finder::create()
-            ->files()
-            ->name('*.'.$this->locale.'.xlf')
-            ->in((_PS_ROOT_DIR_ . '/app/Resources/translations'))
-        ;
+            $this->translator->addLoader('xlf', new \Symfony\Component\Translation\Loader\XliffFileLoader());
 
-        foreach ($finder as $file) {
-            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-            $this->translator->addResource($format, $file, $locale, $domain);
+            $finder = \Symfony\Component\Finder\Finder::create()
+                ->files()
+                ->name('*.' . $this->locale . '.xlf')
+                ->in((_PS_ROOT_DIR_ . '/app/Resources/translations'));
+
+            foreach ($finder as $file) {
+                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+                $this->translator->addResource($format, $file, $locale, $domain);
+            }
         }
 
         $this->init();

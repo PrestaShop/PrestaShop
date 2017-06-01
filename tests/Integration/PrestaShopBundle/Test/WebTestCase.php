@@ -56,9 +56,13 @@ class WebTestCase extends TestCase
         $employeeMock->id_profile = 1;
 
         $contextMock = $this->getMockBuilder('\Context')
+            ->setMethods(array('getTranslator'))
             ->disableAutoload()
             ->disableOriginalConstructor()
             ->getMock();
+
+        $contextMock->method('getTranslator')
+            ->will($this->returnValue($this->translator));
 
         $contextMock->employee = $employeeMock;
 

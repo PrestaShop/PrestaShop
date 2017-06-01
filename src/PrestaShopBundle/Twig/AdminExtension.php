@@ -26,6 +26,8 @@
  */
 namespace PrestaShopBundle\Twig;
 
+use PrestaShop\PrestaShop\Adapter\ClassLang;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -94,7 +96,20 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
                 // Get current route name to know when to put "current" class on HTML dom
                 $currentRouteName = $parameterBag->get('_route');
 
+                $translator = $this->container->get('translator');
+                $locale = $translator->getLocale();
+
+                $tabMenu = (new ClassLang($locale))->getClassLang('TabLangCore');
+
                 foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
+                    if (!empty($tabMenu)) {
+                        $untranslated = $translator->getSourceString($tabData['title'], $tabMenu->getDomain());
+                        $translatedField = $tabMenu->getFieldValue('name', $untranslated);
+                        if (!empty($translatedField) && $translatedField != $tabData['title']) {
+                            $tabData['title'] = $translatedField;
+                        }
+                    }
+
                     $tabData['isCurrent'] = false;
                     if ($currentRouteName === $tabData['route']) {
                         $tabData['isCurrent'] = true;
