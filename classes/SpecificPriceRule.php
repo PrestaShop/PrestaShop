@@ -238,6 +238,15 @@ class SpecificPriceRuleCore extends ObjectModel
                     } elseif ($condition['type'] == 'category') {
                         $query->leftJoin('category_product', 'cp'.(int)$id_condition, 'p.`id_product` = cp'.(int)$id_condition.'.`id_product`')
                             ->where('cp'.(int)$id_condition.'.id_category = '.(int)$condition['value']);
+                    } elseif ($condition['type'] == 'category-tree') {
+                        ppp('category-tree');
+                        $subQuery = new DbQuery();
+                        $subQuery->select('sub_ctg.`id_category`');
+                        $subQuery->from('category', 'sub_ctg');
+                        $subQuery->innerJoin('category', 'main_ctg', 'main_ctg.`id_category` = '.(int)$condition['value']);
+                        $query->leftJoin('category_product', 'cp'.(int)$id_condition, 'p.`id_product` = cp'.(int)$id_condition.'.`id_product`')
+                            ->leftJoin('category', 'ctg'.(int)$id_condition, 'ctg'.(int)$id_condition.'.`id_category` = cp'.(int)$id_condition.'.`id_category`')
+                            ->where('ctg'.(int)$id_condition.'.id_category IN ('.$subQuery->build().')');
                     } elseif ($condition['type'] == 'supplier') {
                         $query->where('EXISTS(
 							SELECT
