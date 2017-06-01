@@ -28,7 +28,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#PS_CURRENCY_DEFAULT').change(function(e) {
-			alert('Before changing the default currency, we strongly recommend that you enable maintenance mode because any change on default currency requires manual adjustment of the price of each product');
+			alert("{l s='Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.' d='Admin.International.Notification' js=1}");
 		});
 	});
 </script>

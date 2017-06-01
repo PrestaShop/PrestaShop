@@ -30,14 +30,14 @@
 	<div class="panel">
 		<h3>
 			<i class="icon-warning-sign"></i>
-			{l s='Severity levels'}
+			{l s='Severity levels' d='Admin.Advparameters.Help'}
 		</h3>
 		<p>{l s='Meaning of severity levels:'}</p>
 		<ol>
-			<li><span class="badge badge-success">{l s='Informative only'}</span></li>
-			<li><span class="badge badge-warning">{l s='Warning'}</span></li>
-			<li><span class="badge badge-danger">{l s='Error'}</span></li>
-			<li><span class="badge badge-critical">{l s='Major issue (crash)!'}</span></li>
+			<li><span class="badge badge-success">{l s='Informative only' d='Admin.Advparameters.Help'}</span></li>
+			<li><span class="badge badge-warning">{l s='Warning' d='Admin.Advparameters.Help'}</span></li>
+			<li><span class="badge badge-danger">{l s='Error' d='Admin.Advparameters.Help'}</span></li>
+			<li><span class="badge badge-critical">{l s='Major issue (crash)!' d='Admin.Advparameters.Help'}</span></li>
 		</ol>
 	</div>
 
