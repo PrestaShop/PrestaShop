@@ -223,6 +223,7 @@ class SpecificPriceCore extends ObjectModel
         if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
             return $query_extra;
         }
+        $used_value = null;
         $key_cache     = __FUNCTION__.'-'.$field_name.'-'.$threshold;
         $specific_list = array();
         if (!array_key_exists($key_cache, SpecificPrice::$_filterOutCache)) {
@@ -234,20 +235,30 @@ class SpecificPriceCore extends ObjectModel
                 return $query_extra;
             }
             if ($specific_count < $threshold) {
+                // We have less than $threshold specific prices, grab and cache them
+                $used_value = 0;
                 $query             = 'SELECT DISTINCT `'.$field_name.'` FROM `'._DB_PREFIX_.'specific_price` WHERE `'.$field_name.'` != 0';
                 $tmp_specific_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
                 foreach ($tmp_specific_list as $key => $value) {
                     $specific_list[] = $value[$field_name];
                 }
+                SpecificPrice::$_filterOutCache[$key_cache] = $specific_list;
+            } else {
+                // There are more than $threshold prices
+                $used_value = $field_value;
+                $query             = 'SELECT DISTINCT `'.$field_name.'` FROM `'._DB_PREFIX_.'specific_price` WHERE `'.$field_name.'` = '.$field_value;
+                $tmp_specific_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+                foreach ($tmp_specific_list as $key => $value) {
+                    $specific_list[] = $value[$field_name];
+                }
             }
-            SpecificPrice::$_filterOutCache[$key_cache] = $specific_list;
         } else {
             $specific_list = SpecificPrice::$_filterOutCache[$key_cache];
         }
 
         // $specific_list is empty if the threshold is reached
         if (empty($specific_list) || in_array($field_value, $specific_list)) {
-            $query_extra = 'AND `'.$field_name.'` '.self::formatIntInQuery(0, $field_value).' ';
+            $query_extra = 'AND `'.$field_name.'` '.self::formatIntInQuery($used_value, $field_value).' ';
         }
 
         return $query_extra;
