@@ -54,6 +54,7 @@ class ApiClient
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
             ->setVersion(_PS_VERSION_)
+            ->setSslVerification(!_PS_MODE_DEV_)
         ;
     }
 
@@ -235,5 +236,10 @@ class ApiClient
         $this->queryParameters['password'] = $password;
 
         return $this;
+    }
+
+    public function setSslVerification($verify)
+    {
+        return $this->addonsApiClient->setDefaultOption('verify', $verify);
     }
 }
