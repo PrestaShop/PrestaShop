@@ -142,7 +142,10 @@ class ProductOptions extends CommonAbstractType
         ))
         ->add('isbn', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('ISBN', [], 'Admin.Catalog.Feature')
+            'label' => $this->translator->trans('ISBN', [], 'Admin.Catalog.Feature'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9-]{0,32}$/"),
+            ),
         ))
         ->add('reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,

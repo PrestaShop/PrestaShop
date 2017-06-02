@@ -18,3 +18,9 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayContentWrapperBottom', 'Content wrapper section (bottom)', 'This hook displays new elements in the bottom of the content wrapper', '1');
 
 /* PHP:drop_column_from_product_lang_if_exists(); */;
+
+ALTER TABLE `PREFIX_product` ADD `isbn` VARCHAR(32) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_order_detail` ADD `product_isbn` VARCHAR(32) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_product_attribute` ADD `isbn` VARCHAR(32) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_stock` ADD `isbn` VARCHAR(32) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_supply_order_detail` ADD `isbn` VARCHAR(32) NULL DEFAULT NULL;
