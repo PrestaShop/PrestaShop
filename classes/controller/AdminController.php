@@ -2851,17 +2851,15 @@ class AdminControllerCore extends Controller
      */
     public function initNotifications()
     {
-        $this->context->smarty->assign(array(
+        $notificationsSettings = array(
             'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
             'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
             'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
-        ));
+        );
+        
+        $this->context->smarty->assign($notificationsSettings);
 
-        Media::addJsDef(array(
-            'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
-            'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
-            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
-        ));
+        Media::addJsDef($notificationsSettings);
     }
 
     /**
