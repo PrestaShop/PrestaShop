@@ -28,8 +28,8 @@
       {foreach from=$elements item=element}
         <li>
           <div class="block-reassurance-item">
-            <img src="{$element.image}" alt="{$element.text}">
-            <span class="h6">{$element.text}</span>
+            <img src="{$element.image}" alt="{$element.text nofilter}">
+            <span class="h6">{$element.text nofilter}</span>
           </div>
         </li>
       {/foreach}
