@@ -2847,11 +2847,17 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * Sets the smarty variables used to show / hide some notifications
+     * Sets the smarty variables and js defs used to show / hide some notifications
      */
     public function initNotifications()
     {
         $this->context->smarty->assign(array(
+            'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
+            'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
+            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
+        ));
+
+        Media::addJsDef(array(
             'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
             'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
             'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
