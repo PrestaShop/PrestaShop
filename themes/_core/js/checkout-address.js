@@ -31,4 +31,9 @@ export default function () {
     $('#checkout-addresses-step').trigger('click');
     prestashop.emit('editAddress');
   });
+
+  $('#delivery-addresses, #invoice-addresses input[type=radio]').on('click', function () {
+    $('.address-item').removeClass('selected');
+    $('.address-item:has(input[type=radio]:checked)').addClass('selected');
+  });
 }
