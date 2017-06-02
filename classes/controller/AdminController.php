@@ -915,7 +915,7 @@ class AdminControllerCore extends Controller
                 }
 
                 if (isset($_POST) && count($_POST) && (int)Tools::getValue('submitFilter'.$this->list_id) || Tools::isSubmit('submitReset'.$this->list_id)) {
-                    $this->setRedirectAfter(self::$currentIndex.'&token='.$this->token.(Tools::isSubmit('submitFilter'.$this->list_id) ? '&submitFilter'.$this->list_id.'='.(int)Tools::getValue('submitFilter'.$this->list_id) : ''));
+                    $this->setRedirectAfter(self::$currentIndex.'&token='.$this->token.(Tools::isSubmit('submitFilter'.$this->list_id) ? '&submitFilter'.$this->list_id.'='.(int)Tools::getValue('submitFilter'.$this->list_id) : '').(isset($_GET['id_'.$this->list_id]) ? '&id_'.$this->list_id.'='.(int)$_GET['id_'.$this->list_id] : ''));
                 }
 
                 // If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
@@ -933,7 +933,7 @@ class AdminControllerCore extends Controller
             }
         } catch (PrestaShopException $e) {
             $this->errors[] = $e->getMessage();
-        };
+        }
         return false;
     }
 
