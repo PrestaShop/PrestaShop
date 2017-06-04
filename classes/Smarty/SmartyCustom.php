@@ -91,8 +91,14 @@ class SmartyCustomCore extends Smarty
             @touch($this->getCompileDir().'last_flush', time());
         } elseif (defined('_DB_PREFIX_')) {
             if ($last_flush === null) {
-                $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'compile\'';
+                $sql = 'SELECT last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'compile\'';
                 $last_flush = Db::getInstance()->getValue($sql, false);
+                if($last_flush) {
+                    $last_flush = strtotime($last_flush);
+                }
+                else {
+                    $last_flush = 0;
+                }
             }
             if ((int)$last_flush && @filemtime($this->getCompileDir().'last_flush') < $last_flush) {
                 @touch($this->getCompileDir().'last_flush', time());
@@ -138,8 +144,13 @@ class SmartyCustomCore extends Smarty
             @touch($this->getCacheDir().'last_template_flush', time());
         } elseif (defined('_DB_PREFIX_')) {
             if ($last_flush === null) {
-                $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'template\'';
+                $sql = 'SELECT last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'template\'';
                 $last_flush = Db::getInstance()->getValue($sql, false);
+                if($last_flush) {
+                    $last_flush = strtotime($last_flush);
+                } else {
+                    $last_flush = 0;
+                }
             }
 
             if ((int)$last_flush && @filemtime($this->getCacheDir().'last_template_flush') < $last_flush) {
@@ -207,7 +218,7 @@ class SmartyCustomCore extends Smarty
         if (isset($is_in_lazy_cache[$key])) {
             return $is_in_lazy_cache[$key];
         } else {
-            $sql = 'SELECT UNIX_TIMESTAMP(last_update) as last_update, filepath FROM `'._DB_PREFIX_.'smarty_lazy_cache`
+            $sql = 'SELECT last_update, filepath FROM `'._DB_PREFIX_.'smarty_lazy_cache`
 							WHERE `template_hash`=\''.pSQL($template_md5).'\'';
             $sql .= ' AND cache_id="'.pSQL((string)$cache_id).'"';
             $sql .= ' AND compile_id="'.pSQL((string)$compile_id).'"';
@@ -218,6 +229,11 @@ class SmartyCustomCore extends Smarty
             if ($result !== false && $result['filepath'] == '') {
                 // If the cache update is stalled for more than 1min, something should be wrong,
                 // remove the entry from the lazy cache
+                if($result['last_update']) {
+                    $result['last_update'] = strtotime($result['last_update']);
+                } else {
+                    $result['last_update'] = 0;
+                }
                 if ($result['last_update'] < time() - 60) {
                     $this->delete_from_lazy_cache($template, $cache_id, $compile_id);
                 }
