@@ -28,8 +28,8 @@
       <div class="m-b-2">
         <form class="search-form" @submit.prevent>
           <label>{{trans('product_search')}}</label>
-          <PSTags :tags="tags" @tagChange="onSearch" />
-          <PSButton @click="onSearch" class="search-button" :primary="true">
+          <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" />
+          <PSButton @click="onClick" class="search-button" :primary="true">
             <i class="material-icons">search</i>
             {{trans('button_search')}}
           </PSButton>
@@ -52,6 +52,10 @@
       PSButton,
     },
     methods: {
+      onClick() {
+        const tag = this.$refs.psTags.tag;
+        this.$refs.psTags.add(tag);
+      },
       onSearch() {
         this.$emit('search', this.tags);
       },
