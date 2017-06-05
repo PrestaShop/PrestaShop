@@ -24,7 +24,36 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
-#   v1.6.1.12 - (2017-03-14)
+#   v1.6.1.14 - (2017-06-05)
+####################################
+
+	Fixed bugs:
+    BO: Pipes in product names in autocomplete
+    BO: Fix taxes in credit slip
+    BO: Fix the refresh button of the stats bloc in the products list
+    BO: Add API_KEY field to display the map
+    BO: Fix customer message order
+    BO: Set correct value on load to display the right tab
+    BO: Translation of return merchandise fields
+    BO: Fix html interpreted as text in carrier's wizard summary
+    BO: Fix non well formed numeric value
+    BO: Fix error in HelperOptions
+
+    FO: Fix popover with multiple wishlists
+    FO: Shipping cost indication wrong
+    FO: Fix 404 bug when query string contains a LF
+    FO: Fix manufacturer pagination
+    FO: Fix JS error "Uncaught ReferenceError"
+
+    CO: Increase carrier delay length
+    CO: Send Http 500 error code when we can't connect to the database instead of a 200 code
+    CO: make OrderInvoice overridable
+
+    LO: Replace EN (US) by EN (UK) in UK localization pack
+
+
+####################################
+#   v1.6.1.13 - (2017-04-10)
 ####################################
 
 	Fixed bugs:

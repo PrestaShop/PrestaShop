@@ -32,6 +32,7 @@ GitHub contributors:
 - antoniofr
 - AntonLejon
 - Arnaud Lemercier
+- Aurelien Pelletier
 - axi
 - Axome
 - Balestrino
@@ -107,6 +108,7 @@ GitHub contributors:
 - DOEO
 - DogSports
 - Dragan Skrbic
+- DRC
 - Dream me up
 - dreammeup
 - DrySs
@@ -125,6 +127,7 @@ GitHub contributors:
 - emilien-puget
 - emily-d
 - Eolia
+- Emmanuel Marichal
 - Eric Le Lay
 - Eric Rouvier
 - erickturcios
@@ -167,6 +170,7 @@ GitHub contributors:
 - ha99y
 - hadjedjvincent
 - harelguy
+- hibatallah.aouadni
 - hibatallahAouadni
 - hiousi
 - htrex
@@ -328,6 +332,7 @@ GitHub contributors:
 - proydsl
 - pxls
 - quadrateam
+- Quentin Briais
 - Quentin Leonetti
 - Quentin Montant
 - Quentin MONTANT - KIWIK
@@ -414,6 +419,7 @@ GitHub contributors:
 - tonyyb
 - tucoinfo
 - Tung Dao
+- Tuni-Soft
 - unlocomqx
 - Valerii Savchenko
 - vAugagneur
