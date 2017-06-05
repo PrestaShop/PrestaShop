@@ -269,12 +269,12 @@ class CartCore extends ObjectModel
         }
 
         Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'customized_data`
-			WHERE `id_customization` IN (
-				SELECT `id_customization`
-				FROM `'._DB_PREFIX_.'customization`
-				WHERE `id_cart`='.(int)$this->id.'
-			)'
+         		DELETE FROM `'._DB_PREFIX_.'customized_data` USING `'._DB_PREFIX_.'customized_data`
+         		INNER JOIN (
+         				SELECT `id_customization`
+         				FROM `'._DB_PREFIX_.'customization`
+         				WHERE `id_cart`='.(int)$this->id.'
+         		) AS cu ON `'._DB_PREFIX_.'customized_data`.`id_customization` = `cu`.`id_customization`'
         );
 
         Db::getInstance()->execute('
