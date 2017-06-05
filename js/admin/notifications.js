@@ -54,7 +54,9 @@ $(document).ready(function() {
   });
 
 	// call it once immediately, then use setTimeout
-	getPush();
+  if (parseInt(show_new_orders) || parseInt(show_new_customers) || parseInt(show_new_messages)) {
+	  getPush();
+  }
 
 });
 
