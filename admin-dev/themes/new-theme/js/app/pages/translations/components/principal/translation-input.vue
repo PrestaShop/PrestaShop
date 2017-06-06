@@ -27,7 +27,7 @@
     <label>{{label}}</label>
     <textarea class="form-control" v-model="getTranslated" :class="{ missing : isMissing }"></textarea>
     <PSButton class="m-t-1 pull-xs-right" :primary="false" ghost @click="resetTranslation">
-      Reset
+      {{ trans('button_reset') }}
     </PSButton>
     <small class="m-t-1">{{extraInfo}}</small>
   </div>

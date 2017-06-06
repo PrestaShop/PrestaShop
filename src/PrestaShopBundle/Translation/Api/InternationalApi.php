@@ -34,6 +34,7 @@ class InternationalApi extends AbstractApi
     public function getTranslations()
     {
         return array(
+            'button_reset' => $this->translator->trans('Reset', array(), 'Admin.Actions'),
             'button_save' => $this->translator->trans('Save', array(), 'Admin.Global'),
             'button_search' => $this->translator->trans('Search', array(), 'Admin.Actions'),
             'head_title' => $this->translator->trans('Translations', array(), 'Admin.Navigation.Menu'),
