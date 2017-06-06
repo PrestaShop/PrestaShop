@@ -25,7 +25,21 @@
 <template>
   <div class="m-b-1">
     <small>
-      TODO
+      <a :href="internationalLink">{{trans('link_international')}}</a> /
+      <a :href="translationLink">{{trans('link_translations')}}</a>
     </small>
   </div>
 </template>
+
+<script>
+  export default {
+    computed: {
+      internationalLink() {
+        return window.data.internationalUrl;
+      },
+      translationLink() {
+        return window.data.translationsUrl;
+      },
+    },
+  };
+</script>
