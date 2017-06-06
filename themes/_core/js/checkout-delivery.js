@@ -40,7 +40,11 @@ export default function () {
 
     $.post($deliveryMethodForm.data('url-update'), requestData).then((resp) => {
       $(summarySelector).replaceWith(resp.preview);
-      prestashop.emit('updatedDeliveryForm', {dataForm: $deliveryMethodForm.serializeArray(), deliveryOption: $newDeliveryOption});
+      prestashop.emit('updatedDeliveryForm', {
+        dataForm: $deliveryMethodForm.serializeArray(),
+        deliveryOption: $newDeliveryOption,
+        resp: resp
+      });
     }).fail((resp) => {
       prestashop.trigger('handleError', {eventType: 'updateDeliveryOptions', resp: resp})
     });
