@@ -300,7 +300,7 @@ class CartPresenter implements PresenterInterface
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
             'amount' => $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS),
-            'value' => $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
+            'value' => $this->priceFormatter->format(($cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS))),
         );
 
         if ($total_discount) {
@@ -364,6 +364,18 @@ class CartPresenter implements PresenterInterface
                 'value' => $this->priceFormatter->format(
                     $this->includeTaxes() ? $total_including_tax : $total_excluding_tax
                 ),
+            ),
+            'total_including_tax' => array(
+                'type' => 'total',
+                'label' => $this->translator->trans('Total (tax incl.)', array(), 'Shop.Theme.Checkout'),
+                'amount' => $total_including_tax,
+                'value' => $this->priceFormatter->format($total_including_tax),
+            ),
+            'total_excluding_tax' => array(
+                'type' => 'total',
+                'label' => $this->translator->trans('Total (tax excl.)', array(), 'Shop.Theme.Checkout'),
+                'amount' => $total_excluding_tax,
+                'value' => $this->priceFormatter->format($total_excluding_tax),
             ),
         );
 
