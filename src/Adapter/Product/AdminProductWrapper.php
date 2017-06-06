@@ -113,6 +113,9 @@ class AdminProductWrapper
         }
         if (!empty($combinationValues['id_image_attr'])) {
             $images = $combinationValues['id_image_attr'];
+        } else {
+            $combination = new Combination($id_product_attribute);
+            $combination->setImages(array());
         }
 
         $product->updateAttribute(
