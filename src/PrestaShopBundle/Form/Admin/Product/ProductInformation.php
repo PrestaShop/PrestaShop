@@ -77,7 +77,7 @@ class ProductInformation extends CommonAbstractType
         $this->locales = $this->context->getLanguages();
         $this->currency = $this->context->getContext()->currency;
 
-        $this->categories = $this->formatDataChoicesList(
+        $this->categories = $this->formatDataDuplicateChoicesList(
             $this->categoryDataProvider->getAllCategoriesName(
                 $root_category = null,
                 $id_lang = false,
