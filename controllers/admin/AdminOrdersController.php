@@ -2490,6 +2490,9 @@ class AdminOrdersControllerCore extends AdminController
 
             $order_detail->total_price_tax_incl += $diff_price_tax_incl;
             $order_detail->total_price_tax_excl += $diff_price_tax_excl;
+           
+            $order_detail->total_price_tax_incl = Tools::ps_round($order_detail->total_price_tax_incl, 9);
+            $order_detail->total_price_tax_excl = Tools::ps_round($order_detail->total_price_tax_excl, 9);
 
             if (isset($order_invoice)) {
                 // Apply changes on OrderInvoice

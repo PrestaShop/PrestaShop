@@ -503,7 +503,7 @@ function init()
 			go = false;
 		}
 
-		if ($('input#add_product_product_price_excl').val() == 0)
+		if ($('input#add_product_product_price_excl').val() < 0)
 		{
 			jAlert(txt_add_product_no_product_price);
 			go = false;
@@ -711,7 +711,7 @@ function init()
 			jAlert(txt_add_product_no_product_quantity);
 			return false;
 		}
-		if ($(this).closest('tr.product-line-row').find('td .edit_product_price').val() <= 0)
+		if ($(this).closest('tr.product-line-row').find('td .edit_product_price').val() < 0)
 		{
 			jAlert(txt_add_product_no_product_price);
 			return false;
