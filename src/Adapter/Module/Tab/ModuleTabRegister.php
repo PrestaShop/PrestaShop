@@ -135,6 +135,10 @@ class ModuleTabRegister
                 continue;
             }
 
+            if ($this->tabRepository->findOneIdByClassName($adminControllerName)) {
+                continue;
+            }
+
             $tabs[] = array(
                 'class_name' => $adminControllerName,
                 'visible' => false,
@@ -160,6 +164,10 @@ class ModuleTabRegister
         // Check controller exists
         if (!in_array($className.'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
             throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
+        }
+        // Deprecation check
+        if ($data->has('ParentClassName') && !$data->has('parent_class_name')) {
+            $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
         }
         return true;
     }
@@ -246,7 +254,7 @@ class ModuleTabRegister
         $tab->icon = $data->get('icon');
 
         // Handle parent menu
-        $parentClassName = $data->get('ParentClassName');
+        $parentClassName = $data->get('parent_class_name', $data->get('ParentClassName'));
         if (!empty($parentClassName)) {
             $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
         } elseif (true === $tab->active) {

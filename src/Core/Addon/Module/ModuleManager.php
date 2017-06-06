@@ -483,9 +483,11 @@ class ModuleManager implements AddonManagerInterface
         $module = $this->moduleRepository->getModule($name);
         try {
             if ((bool)$keep_data && method_exists($this, 'reset')) {
+                $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
                 $status = $module->onReset();
+                $this->dispatch(ModuleManagementEvent::INSTALL, $module);
             } else {
-                $status = ($module->onUninstall() && $module->onInstall());
+                $status = ($this->uninstall($name) && $this->install($name));
             }
         } catch (Exception $e) {
             throw new Exception(
@@ -498,7 +500,6 @@ class ModuleManager implements AddonManagerInterface
                 0, $e);
         }
 
-        $this->dispatch(ModuleManagementEvent::RESET, $module);
         return $status;
     }
 
