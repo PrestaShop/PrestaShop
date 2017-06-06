@@ -238,7 +238,7 @@ class SpecificPriceCore extends ObjectModel
             $specific_list = SpecificPrice::$_filterOutCache[$key_cache];
         }
 
-        if (in_array($field_value, $specific_list)) {
+        if (empty($specific_list) || in_array($field_value, $specific_list)) {
             $query_extra = 'AND `'.$name.'` '.self::formatIntInQuery(0, $field_value).' ';
         }
 
