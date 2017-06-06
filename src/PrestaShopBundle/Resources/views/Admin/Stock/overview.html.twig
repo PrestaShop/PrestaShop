@@ -31,15 +31,15 @@
     <script>
     var data = {
       baseUrl: '{{ app.request.getBasePath() }}',
-      catalogUrl: '{{url('admin_product_catalog')}}',
-      stockUrl: '{{url('admin_stock_overview')}}',
-      apiStockUrl: '{{ productId ? url('api_stock_list_product_combinations', {'productId' : productId}) : url('api_stock_list_products')}}',
-      apiMovementsUrl: '{{ productId ? url('api_stock_product_list_movements', {'productId' : productId}) : url('api_stock_list_movements')}}',
-      employeesUrl: '{{url('api_stock_list_movements_employees')}}',
-      suppliersUrl: '{{url('api_stock_list_suppliers')}}',
-      categoriesUrl: '{{url('api_stock_list_categories')}}',
-      movementsTypesUrl: '{{url('api_stock_list_movements_types')}}',
-      translationUrl: '{{url('api_i18n_translations_list', {'page' : 'stock'})}}'
+      catalogUrl: '{{ url('admin_product_catalog') }}',
+      stockUrl: '{{ url('admin_stock_overview') }}',
+      apiStockUrl: '{{ productId ? url('api_stock_list_product_combinations', {'productId' : productId}) : url('api_stock_list_products') }}',
+      apiMovementsUrl: '{{ productId ? url('api_stock_product_list_movements', {'productId' : productId}) : url('api_stock_list_movements') }}',
+      employeesUrl: '{{ url('api_stock_list_movements_employees') }}',
+      suppliersUrl: '{{ url('api_stock_list_suppliers') }}',
+      categoriesUrl: '{{ url('api_stock_list_categories') }}',
+      movementsTypesUrl: '{{ url('api_stock_list_movements_types') }}',
+      translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'stock'}) }}'
     }
     </script>
 
