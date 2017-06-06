@@ -249,9 +249,6 @@
 							required: ""
 						}
 					},
-					// override jquery validate plugin defaults for bootstrap 3
-					highlight: function(element) {
-						$(element).closest('.form-group').addClass('has-error');
 					},
 					unhighlight: function(element) {
 						$(element).closest('.form-group').removeClass('has-error');
