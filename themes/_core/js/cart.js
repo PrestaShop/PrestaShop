@@ -50,7 +50,7 @@ $(document).ready(() => {
         $input.attr('value', $input.val());
       });
 
-      prestashop.emit('updatedCart', resp);
+      prestashop.emit('updatedCart', {eventType: 'updateCart', resp: resp});
     }).fail((resp) => {
       prestashop.emit('handleError', {eventType: 'updateCart', resp: resp})
     });
@@ -137,7 +137,7 @@ $(document).ready(() => {
         // Refresh cart preview
         prestashop.emit('updateCart', {reason: event.target.dataset, resp: resp});
       }).fail((resp) => {
-        prestashop.emit('handleError', {eventType: 'addVoucher', resp: resp});
+        prestashop.emit('handleError', {eventType: 'updateCart', resp: resp});
       })
     }
   );
