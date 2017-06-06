@@ -43,7 +43,7 @@
   export default {
     computed: {
       currentItem() {
-        if (this.$store.getters.currentDomain === '') {
+        if (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined') {
           if (this.domainsTree.length) {
             const domain = this.getFirstDomainToDisplay(this.domainsTree);
             this.$store.dispatch('getCatalog', { url: domain.dataValue });
@@ -76,13 +76,20 @@
     methods: {
       getFirstDomainToDisplay: function getFirstDomainToDisplay(tree) {
         const keys = Object.keys(tree);
-        const firstElement = tree[keys[0]];
+        let toDisplay = '';
 
-        if (firstElement.children && firstElement.children.length > 0) {
-          return getFirstDomainToDisplay(firstElement.children);
+        for (let i = 0; i < tree.length; i++) {
+          if (!tree[keys[i]].disable) {
+            if (tree[keys[i]].children && tree[keys[i]].children.length > 0) {
+              return getFirstDomainToDisplay(tree[keys[i]].children);
+            }
+
+            toDisplay = tree[keys[i]];
+            break;
+          }
         }
 
-        return firstElement;
+        return toDisplay;
       },
     },
     components: {

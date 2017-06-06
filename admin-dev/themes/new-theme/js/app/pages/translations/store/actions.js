@@ -65,6 +65,7 @@ export const getDomainsTree = ({ commit }, payload) => {
     params,
   }).then((response) => {
     commit(types.SET_DOMAINS_TREE, response.body);
+    commit(types.RESET_CURRENT_DOMAIN);
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });

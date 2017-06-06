@@ -52,4 +52,9 @@ export default {
     state.currentDomainTotalTranslations = currentDomain.total_translations;
     state.currentDomainTotalMissingTranslations = currentDomain.total_missing_translations;
   },
+  [types.RESET_CURRENT_DOMAIN](state) {
+    state.currentDomain = '';
+    state.currentDomainTotalTranslations = 0;
+    state.currentDomainTotalMissingTranslations = 0;
+  },
 };

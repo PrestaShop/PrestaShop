@@ -77,6 +77,7 @@ const getters = {
         domain.extraLabel = domain.total_missing_translations;
         domain.dataValue = domain.domain_catalog_link;
         domain.warning = Boolean(domain.total_missing_translations);
+        domain.disable = !domain.total_translations;
         domain.id = domain.full_name;
         convert(domain.children);
       });

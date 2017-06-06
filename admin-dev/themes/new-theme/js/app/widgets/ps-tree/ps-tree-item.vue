@@ -24,7 +24,7 @@
  *-->
 <template>
   <div :class="{className}">
-    <div class="flex tree-name" :class="{active: current}" @click="clickElement">
+    <div class="flex tree-name" :class="{active: current, disable: model.disable}" @click="clickElement">
       <div class="flex" :class="chevron">
         <i class="material-icons" v-if="open">keyboard_arrow_down</i>
         <i class="material-icons" v-else>chevron_right</i>
@@ -34,7 +34,7 @@
       <span class="tree-extra-label" v-if="displayExtraLabel">{{getExtraLabel}}</span>
     </div>
     <ul v-show="open" v-if="isFolder" class="tree">
-      <li v-for="(element, index) in model.children" class="tree-item">
+      <li v-for="(element, index) in model.children" class="tree-item" :class="{disable: model.disable}">
         <PSTreeItem
           :ref="element.id"
           :class="className"
@@ -101,7 +101,7 @@
         }
       },
       clickElement() {
-        this.openTreeItemAction();
+        return !this.model.disable ? this.openTreeItemAction() : false;
       },
       openTreeItemAction() {
         this.setCurrentElement(this.model.full_name);
@@ -165,5 +165,9 @@
       margin: 5px 0;
       list-style-type: none;
     }
+  }
+  .disable {
+    color: $gray-light;
+    cursor: not-allowed;
   }
 </style>
