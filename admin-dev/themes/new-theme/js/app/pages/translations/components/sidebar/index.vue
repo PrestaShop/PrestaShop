@@ -48,6 +48,8 @@
             const domain = this.getFirstDomainToDisplay(this.domainsTree);
             this.$store.dispatch('getCatalog', { url: domain.dataValue });
             this.$store.dispatch('updateCurrentDomain', domain);
+            this.$refs.domainTree.reduce();
+            this.$refs.domainTree.setCurrentElement(domain.full_name);
             return domain.full_name;
           }
         }

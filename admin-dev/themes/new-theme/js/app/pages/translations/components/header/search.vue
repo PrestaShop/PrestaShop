@@ -27,8 +27,8 @@
     <div class="m-b-2">
       <form class="search-form" @submit.prevent>
         <label>{{trans('search_label')}}</label>
-        <PSTags :tags="tags" @tagChange="onSearch" :placeholder="trans('search_placeholder')" />
-        <button type="button" class="btn btn-primary search-button" @click="onSearch">
+        <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" :placeholder="trans('search_placeholder')" />
+        <button type="button" class="btn btn-primary search-button" @click="onClick">
           <i class="material-icons">search</i>
           {{trans('button_search')}}
         </button>
@@ -45,6 +45,10 @@
       PSTags,
     },
     methods: {
+      onClick() {
+        const tag = this.$refs.psTags.tag;
+        this.$refs.psTags.add(tag);
+      },
       onSearch() {
         this.$emit('search', this.tags);
       },

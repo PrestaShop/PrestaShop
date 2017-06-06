@@ -95,8 +95,8 @@
         }
       },
       parentElement(parent) {
-        if (parent.clickItem) {
-          parent.clickItem();
+        if (parent.clickElement) {
+          parent.clickElement();
           this.parentElement(parent.$parent);
         }
       },
@@ -127,6 +127,8 @@
         this.open = true;
       }).$on('reduce', () => {
         this.open = false;
+      }).$on('setCurrentElement', (el) => {
+        this.setCurrentElement(el);
       });
       this.setCurrentElement(this.currentItem);
     },
