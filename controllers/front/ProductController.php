@@ -293,7 +293,18 @@ class ProductControllerCore extends FrontController
                 'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
             ));
         }
-        $this->setTemplate(_PS_THEME_DIR_.'product.tpl');
+        
+        $categories = $this->category->getParentsCategories();
+        $setTemplate = false;
+        foreach($categories as $category){
+            if(!$setTemplate && $category['is_root_category'] != 1 && file_exists(_PS_THEME_DIR_.'product-'.$category['link_rewrite'].'.tpl')){
+                $setTemplate = true;
+                $this->setTemplate(_PS_THEME_DIR_.'product-'.$category['link_rewrite'].'.tpl');
+            }
+        }
+        if(!$setTemplate){
+            $this->setTemplate(_PS_THEME_DIR_.'product.tpl');
+        }
     }
 
     /**
