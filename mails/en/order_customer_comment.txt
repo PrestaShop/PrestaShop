@@ -8,6 +8,8 @@ You have received a new message regarding order with the reference
 
 CUSTOMER: {firstname} {lastname} ({email})
 
+PRODUCT: {product_name}
+
 {message} 		 
 
 {shop_name} [{shop_url}] powered by
