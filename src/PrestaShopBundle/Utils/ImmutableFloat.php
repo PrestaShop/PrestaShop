@@ -28,7 +28,18 @@ class ImmutableFloat
 
     /**
      * Constructs a new instance from a string value.
-     * It supports dot and comma-separated values.
+     *
+     * Note: This method supports arbitrary thousands and decimal separators.
+     *
+     * If the string is ambiguous (e.g. 123,456) the interpreter will take the last group of numbers
+     * as the decimal part.
+     *
+     * In order to prevent unexpected behavior, make sure that your value has a decimal part.
+     *
+     * Examples:
+     * - '123,456' --> 123.456
+     * - '123,456,00' --> 123456.00
+     * - '12,345,678 --> 12345.678
      *
      * @param string $value
      *
@@ -36,13 +47,25 @@ class ImmutableFloat
      */
     public static function fromString($value)
     {
-        $value = (string) $value;
+        $value = trim((string) $value);
         if ('' === $value) {
             return new static(0.0);
         }
 
-        // ensure decimals are dot-separated instead of comma-separated
-        $value = str_replace(',', '.', $value);
+        // remove all non-digit characters
+        $split = preg_split('/[^\dE-]/', $value);
+
+        if (1 === count($split)) {
+            // there's no decimal part
+            return new static((float) $value);
+        }
+
+        // use the last part as decimal
+        $decimal = array_pop($split);
+
+        // reconstruct the number using dot as decimal separator
+        $value = implode('', $split) . '.' . $decimal;
+
         return new static((float) $value);
     }
 
