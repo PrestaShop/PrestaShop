@@ -17,7 +17,7 @@ $(document).ready(function () {
         for (var x = 0, l = styles_old.length; x < l; x++) {
             s = styles_old[x].split(':');
             i = $.trim(s[0]);
-            styles[makeGeneralRTL(i)] = makeValueRTL(i, $.trim(s[1]));
+            if(s[0] !== '') styles[makeGeneralRTL(i)] = makeValueRTL(i, $.trim(s[1]));
         }
         $(this).removeAttr("style");
         $(this).css(styles);
