@@ -388,7 +388,6 @@ class CartRuleCore extends ObjectModel
                 }
             }
         }
-
         $result_bak = $result;
         $result = array();
         $country_restriction = false;
@@ -774,8 +773,9 @@ class CartRuleCore extends ObjectModel
                 if (!count($eligible_products_list)) {
                     return (!$display_error) ? false : $this->trans('You cannot use this voucher in an empty cart', array(), 'Shop.Notifications.Error');
                 }
-
                 $product_rules = $this->getProductRules($id_product_rule_group);
+                $countRulesProduct = count($product_rules);
+                $condition = 0;
                 foreach ($product_rules as $product_rule) {
                     switch ($product_rule['type']) {
                         case 'attributes':
@@ -799,9 +799,14 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
-                            $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'products':
                             $cart_products = Db::getInstance()->executeS('
@@ -821,9 +826,14 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
-                            $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'categories':
                             $cart_categories = Db::getInstance()->executeS('
@@ -847,13 +857,18 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
                             // Attribute id is not important for this filter in the global list, so the ids are replaced by 0
                             foreach ($matching_products_list as &$matching_product) {
                                 $matching_product = preg_replace('/^([0-9]+)-[0-9]+$/', '$1-0', $matching_product);
                             }
-                            $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'manufacturers':
                             $cart_manufacturers = Db::getInstance()->executeS('
@@ -871,9 +886,14 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
-                            $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                         case 'suppliers':
                             $cart_suppliers = Db::getInstance()->executeS('
@@ -891,48 +911,32 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                if( $countRulesProduct === 1) {
+                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                } else {
+                                    $condition++;
+                                    break;
+                                }
                             }
-                            $eligible_products_list = array_uintersect($eligible_products_list, $matching_products_list, array('self', 'cartRuleCompare'));
+                            $eligible_products_list = self::cartRulesCompare($eligible_products_list, $matching_products_list, $product_rule['type']);
                             break;
                     }
-
                     if (!count($eligible_products_list)) {
-                        return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                        if( $countRulesProduct === 1) {
+                            return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                        }
                     }
+                }
+                if ($countRulesProduct !== 1 && $condition == $countRulesProduct) {
+                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                 }
                 $selected_products = array_merge($selected_products, $eligible_products_list);
             }
         }
-
         if ($return_products) {
             return $selected_products;
         }
         return (!$display_error) ? true : false;
-    }
-
-    /**
-     * CartRule compare function to use for array_uintersect
-     *
-     * @param array $a List A
-     * @param array $b List B
-     *
-     * @return int 0 = same
-     *             1 = different
-     */
-    protected static function cartRuleCompare($a, $b)
-    {
-        if ($a == $b) {
-            return 0;
-        }
-
-        $asplit = explode('-', $a);
-        $bsplit = explode('-', $b);
-        if ($asplit[0] == $bsplit[0] && (!(int)$asplit[1] || !(int)$bsplit[1])) {
-            return 0;
-        }
-
-        return 1;
     }
 
     /**
@@ -1059,12 +1063,13 @@ class CartRuleCore extends ObjectModel
                 }
             }
 
-            // Discount (%) on the selection of products
+            // Discount (%) on the selection of products - SST
             if ($this->reduction_percent && $this->reduction_product == -2) {
                 $selected_products_reduction = 0;
                 $selected_products = $this->checkProductRestrictions($context, true);
                 if (is_array($selected_products)) {
                     foreach ($package_products as $product) {
+
                         if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
                             || in_array($product['id_product'].'-0', $selected_products)
                             && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
@@ -1560,5 +1565,45 @@ class CartRuleCore extends ObjectModel
         } else {
             return Db::getInstance()->executeS($sql_base.' WHERE code LIKE \'%'.pSQL($name).'%\'');
         }
+    }
+
+    /**
+     * CartRules compare function to use the Product and the rules
+     *
+     * @param array $arrayProduct List Products,
+     * @param array $arrayRules List Rules,
+     * @param string $type type voucher,
+     *
+     * @return int 0 = same
+     *             1 = different
+     */
+    public function cartRulesCompare($arrayProduct, $arrayRules, $type)
+    {
+        //If the two same array, no verification todo.
+        if ($arrayProduct == $arrayRules) {
+            return $arrayProduct;
+        }
+        $return = array();
+        $array  = -1;
+        
+        // Attribute id is not important for this filter in the global list
+        // so the ids are replaced by 0
+        if(in_array($type, array('products','categories','manufacturers','suppliers'))) {
+            $productList = explode(':', preg_replace("#\-[0-9]+#","-0",implode(':', $arrayProduct)));
+        } else {
+            $productList = $arrayProduct;
+        }
+        
+        foreach( $productList as $product )
+        {
+            $array++;
+            if( !in_array($product, $arrayRules)) {
+                continue;
+            } else {
+                if(isset($arrayProduct[$array]))
+                    $return[] = $arrayProduct[$array];
+            }
+        }
+        return $return;
     }
 }
