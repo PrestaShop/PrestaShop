@@ -334,6 +334,7 @@ class CustomizationCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'customization_field` cf
 			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = '.(int)$this->id_product.'
+			AND id_customization = '.(int)$this->id.'
 			AND cf.type = 1')) {
             return array();
         }
@@ -353,6 +354,7 @@ class CustomizationCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'customization_field` cf
 			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = '.(int)$this->id_product.'
+			AND id_customization = '.(int)$this->id.'
 			AND cf.type = 0')) {
             return array();
         }
