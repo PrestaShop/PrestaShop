@@ -24,6 +24,51 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.1.2 - (2017-06-07)
+####################################
+- Back Office:
+   - Bug fix:
+     - #7891: Set value for Short Desc
+     - #7860: Deny legacy module page view
+     - #7789: Message Customer on order details page
+     - #7801: Choose Theme on Mail Translation
+     - #7790: Add a scrollbar for TinyMCE
+     - #7783: Versions completions for the max value
+     - #7807: Partial revert of 0c42257 to fix profiling mode in BO
+
+ - Front Office:
+   - Bug fix:
+     - #7795: Fix allow order value
+     - #7773: Fix for CMS tree on sitemap
+     - #7785: Fix slide down of carrier extra content in order funnel
+     - #7797: Translate file upload button label
+     - #7805: Fix word break classic
+     - #7762: Allow image for categories when no description
+     - #7761: Refresh product line on quantity change in cart & Show discount to cart summary
+     - #7747: Fix the except_pages in theme.yml
+     - #7745: Fix radio buttons on faceted search
+     - #7759: Convert voucher value
+
+ - Core:
+   - Bug fix:
+     - #7901: Use composer cacert file by default
+     - #7826: Allowed redirect protocol with Tools::file_get_content (curl)
+     - #7800: Fix assets path when theme has the same name than PS
+     - #7770: Return array when it's wanted if the hook doesn't exist
+     - #7766: Fix displayError when string is using sprintf
+     - #7740: Fix missing {url entity=product id=X}
+     - #7752: Upgrade theme modules & disabling them in the same time that the theme
+
+ - Installer:
+   - Bug fix:
+     - #7846: Fix install/upgrade/upgrade.php for php-5.4 syntax
+
+ - Web Services:
+   - Bug fix:
+     - #7732: Change variable from string to array for php 7
+
+
+####################################
 #   v1.7.1.1 - (2017-04-19)
 ####################################
 - Back Office:
