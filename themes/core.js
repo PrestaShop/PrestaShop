@@ -1739,7 +1739,7 @@
 	        $input.attr('value', $input.val());
 	      });
 	
-	      _prestashop2['default'].emit('updatedCart');
+	      _prestashop2['default'].emit('updatedCart', { eventType: 'updateCart', resp: resp });
 	    }).fail(function (resp) {
 	      _prestashop2['default'].emit('handleError', { eventType: 'updateCart', resp: resp });
 	    });
@@ -1787,7 +1787,8 @@
 	          idProduct: resp.id_product,
 	          idProductAttribute: resp.id_product_attribute,
 	          linkAction: 'add-to-cart'
-	        }
+	        },
+	        resp: resp
 	      });
 	    }).fail(function (resp) {
 	      _prestashop2['default'].emit('handleError', { eventType: 'addProductToCart', resp: resp });
@@ -1815,9 +1816,9 @@
 	      }
 	
 	      // Refresh cart preview
-	      _prestashop2['default'].emit('updateCart', { reason: event.target.dataset });
+	      _prestashop2['default'].emit('updateCart', { reason: event.target.dataset, resp: resp });
 	    }).fail(function (resp) {
-	      _prestashop2['default'].emit('handleError', { eventType: 'addVoucher', resp: resp });
+	      _prestashop2['default'].emit('handleError', { eventType: 'updateCart', resp: resp });
 	    });
 	  });
 	});
@@ -2030,7 +2031,11 @@
 	
 	    _jquery2['default'].post($deliveryMethodForm.data('url-update'), requestData).then(function (resp) {
 	      (0, _jquery2['default'])(summarySelector).replaceWith(resp.preview);
-	      _prestashop2['default'].emit('updatedDeliveryForm', { dataForm: $deliveryMethodForm.serializeArray(), deliveryOption: $newDeliveryOption });
+	      _prestashop2['default'].emit('updatedDeliveryForm', {
+	        dataForm: $deliveryMethodForm.serializeArray(),
+	        deliveryOption: $newDeliveryOption,
+	        resp: resp
+	      });
 	    }).fail(function (resp) {
 	      _prestashop2['default'].trigger('handleError', { eventType: 'updateDeliveryOptions', resp: resp });
 	    });
@@ -2392,7 +2397,8 @@
 	          productUrl: resp.productUrl
 	        },
 	        refreshUrl: $productRefresh.data('url-update'),
-	        eventType: eventType
+	        eventType: eventType,
+	        resp: resp
 	      });
 	    });
 	  });
@@ -2519,7 +2525,7 @@
 	        (0, _jquery2['default'])(this).val(inputs[(0, _jquery2['default'])(this).prop('name')]);
 	      });
 	
-	      _prestashop2['default'].emit('updatedAddressForm', { target: (0, _jquery2['default'])(selectors.address) });
+	      _prestashop2['default'].emit('updatedAddressForm', { target: (0, _jquery2['default'])(selectors.address), resp: resp });
 	    }).fail(function (resp) {
 	      _prestashop2['default'].emit('handleError', { eventType: 'updateAddressForm', resp: resp });
 	    });
