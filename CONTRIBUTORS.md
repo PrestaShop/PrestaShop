@@ -175,7 +175,6 @@ GitHub contributors:
 - fram
 - Francois Gaillard
 - Francois-Marie de Jouvencel
-- Francois Gaillard
 - Frederic BENOIST
 - Gabriel Arama
 - Gabriel Schwardy
@@ -212,6 +211,7 @@ GitHub contributors:
 - ha99y
 - hadjedjvincent
 - harelguy
+- hibatallah.aouadni
 - hibatallahAouadni
 - hiousi
 - htrex
@@ -245,6 +245,7 @@ GitHub contributors:
 - joce
 - jocelyn fournier
 - Joe Siwiak
+- Joel Sanchez
 - joemartin247
 - Joep Hendrix
 - Jonadabe
@@ -509,7 +510,7 @@ GitHub contributors:
 - vAugagneur
 - venditdevs
 - Vincent Augagneur
-- vincent beudez
+- Vincent Beudez
 - Vincent HADJEDJ
 - Vincent Schoener
 - Vincent Terenti
@@ -517,6 +518,7 @@ GitHub contributors:
 - vinvin27
 - vinzter
 - vitekj
+- vmamykin
 - Wayann
 - web-plus
 - webbax
