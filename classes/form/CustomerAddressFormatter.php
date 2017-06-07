@@ -214,6 +214,8 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                 return $this->translator->trans('VAT number', [], 'Shop.Forms.Labels');
             case 'dni':
                 return $this->translator->trans('Identification number', [], 'Shop.Forms.Labels');
+            case 'other':
+                return $this->translator->trans('Other', [], 'Shop.Forms.Labels');
             default:
                 return $field;
         }
