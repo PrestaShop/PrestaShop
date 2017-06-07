@@ -27,6 +27,6 @@
 	<div class="module_name">
 		<a href="#" class="icon icon-chevron-left" onclick="openModulesList()"></a>
 			{$displayName}
-			<small class="text-muted">{l s='v'}{$version} - {l s='by'} {$author}</small>
+			<small class="text-muted">v{$version} - {l s='by'} {$author}</small>
 	</div>
 </h3>
