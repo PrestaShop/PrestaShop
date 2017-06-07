@@ -2253,8 +2253,6 @@ class CartCore extends ObjectModel
                 if (count($warehouse_list) == 0) {
                     $warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
                 }
-                // Does the product is in stock ?
-                // If yes, get only warehouse where the product is in stock
 
                 $warehouse_in_stock = array();
                 $manager = StockManagerFactory::getManager();
@@ -2273,7 +2271,6 @@ class CartCore extends ObjectModel
                 }
 
                 if (!empty($warehouse_in_stock)) {
-                    $warehouse_list = $warehouse_in_stock;
                     $product['in_stock'] = true;
                 } else {
                     $product['in_stock'] = false;
