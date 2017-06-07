@@ -25,7 +25,6 @@
  */
 namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module\Tab;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -64,6 +63,61 @@ class ModuleTabRegisterTest extends UnitTestCase
         'doge' => array('Wololo', 'AdminMissing', 'AdminMy'),
     );
 
+    protected  $languages = array(
+        array(
+            "id_lang" => 1,
+            "name" => "Français (French)",
+            "active" => "1",
+            "iso_code" => "fr",
+            "language_code" => "fr",
+            "locale" => "fr-FR",
+            "date_format_lite" => "d/m/Y",
+            "date_format_full" => "d/m/Y H:i:s",
+            "is_rtl" => "0",
+            "id_shop" => "1",
+            "shops" => array(),
+        ),
+        array(
+            "id_lang" => 2,
+            "name" => "English (English)",
+            "active" => "1",
+            "iso_code" => "en",
+            "language_code" => "en-us",
+            "locale" => "en-US",
+            "date_format_lite" => "m/d/Y",
+            "date_format_full" => "m/d/Y H:i:s",
+            "is_rtl" => "0",
+            "id_shop" => "1",
+            "shops" => array(),
+        ),
+        array(
+            "id_lang" => 3,
+            "name" => "English (English)",
+            "active" => "1",
+            "iso_code" => "en",
+            "language_code" => "en-us",
+            "locale" => "en-US",
+            "date_format_lite" => "m/d/Y",
+            "date_format_full" => "m/d/Y H:i:s",
+            "is_rtl" => "0",
+            "id_shop" => "1",
+            "shops" => array(),
+        ),
+        array (
+            "id_lang" => 3,
+            "name" => "Català (Catalan)",
+            "active" => "1",
+            "iso_code" => "ca",
+            "language_code" => "ca-es",
+            "locale" => "ca-ES",
+            "date_format_lite" => "d/m/Y",
+            "date_format_full" => "Y-m-d H:i:s",
+            "is_rtl" => "0",
+            "id_shop" => "1",
+            "shops" => array(),
+        )
+    );
+
     /**
      * @var ModuleTabRegister
      */
@@ -85,7 +139,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $this->sfKernel->getContainer()->get('translator'),
                 $this->sfKernel->getContainer()->get('finder'),
                 $this->sfKernel->getContainer()->get('filesystem'),
-                array(),
+                $this->languages,
             )
         );
         $this->tabRegister
@@ -150,6 +204,24 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $this->fail('ModuleAdminController '.$moduleAdminController.' is expected but not found in the list to register!');
             }
         }
+    }
+
+    public function testTabNameWithOnlyClassName()
+    {
+        $names = 'doge';
+        $expectedResult = array(1 => $names, 2 => $names, 3 => $names);
+        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
+    }
+
+    public function testTabNames()
+    {
+        $names = array(
+            'en' => 'random name',
+            'fr' => 'nom généré',
+            'de' => 'eine Name',
+        );
+        $expectedResult = array(1 => $names['fr'], 2 => $names['en'], 3 => $names['en']);
+        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
     }
 
     /**

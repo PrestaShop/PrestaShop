@@ -224,8 +224,10 @@ class ModuleTabRegister
                 $translatedNames[$lang['id_lang']] = $names[$lang['locale']];
             } elseif (array_key_exists($lang['language_code'], $names)) {
                 $translatedNames[$lang['id_lang']] = $names[$lang['language_code']];
+            } elseif (array_key_exists($lang['iso_code'], $names)) {
+                $translatedNames[$lang['id_lang']] = $names[$lang['iso_code']];
             } else {
-                $translatedNames[$lang['id_lang']] = $names[0];
+                $translatedNames[$lang['id_lang']] = reset($names); // Get the first name available in the array
             }
         }
         return $translatedNames;
