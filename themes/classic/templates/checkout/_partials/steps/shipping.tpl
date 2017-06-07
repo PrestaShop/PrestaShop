@@ -79,32 +79,32 @@
             </div>
           {/block}
           <div class="order-options">
+            <div id="delivery">
+              <label for="delivery_message">{l s='If you would like to add a comment about your order, please write it in the field below.' d='Shop.Theme.Checkout'}</label>
+              <textarea rows="2" cols="120" id="delivery_message" name="delivery_message">{$delivery_message}</textarea>
+            </div>
+
             {if $recyclablePackAllowed}
               <span class="custom-checkbox">
-                <input type="checkbox" name="recyclable" value="1" {if $recyclable} checked {/if}>
+                <input type="checkbox" id="input_recyclable" name="recyclable" value="1" {if $recyclable} checked {/if}>
                 <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
-                <label>{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</label>
+                <label for="input_recyclable">{l s='I would like to receive my order in recycled packaging.' d='Shop.Theme.Checkout'}</label>
               </span>
             {/if}
+
             {if $gift.allowed}
               <span class="custom-checkbox">
-                <input
-                  class="js-gift-checkbox"
-                  name="gift"
-                  type="checkbox"
-                  value="1"
-                  {if $gift.isGift}checked="checked"{/if}
-                >
+                <input class="js-gift-checkbox" id="input_gift" name="gift" type="checkbox" value="1" {if $gift.isGift}checked="checked"{/if}>
                 <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
-                <label>{$gift.label}</label >
+                <label for="input_gift">{$gift.label}</label >
               </span>
 
               <div id="gift" class="collapse{if $gift.isGift} in{/if}">
                 <label for="gift_message">{l s='If you\'d like, you can add a note to the gift:' d='Shop.Theme.Checkout'}</label>
                 <textarea rows="2" cols="120" id="gift_message" name="gift_message">{$gift.message}</textarea>
               </div>
-
             {/if}
+
           </div>
         </div>
         <button type="submit" class="continue btn btn-primary float-xs-right" name="confirmDeliveryOption" value="1">
