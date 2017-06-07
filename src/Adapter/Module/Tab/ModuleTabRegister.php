@@ -225,7 +225,7 @@ class ModuleTabRegister
             } elseif (array_key_exists($lang['language_code'], $names)) {
                 $translatedNames[$lang['id_lang']] = $names[$lang['language_code']];
             } else {
-                $translatedNames[$lang['id_lang']] = $names[$lang[0]];
+                $translatedNames[$lang['id_lang']] = $names[0];
             }
         }
         return $translatedNames;
