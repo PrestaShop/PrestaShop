@@ -31,25 +31,31 @@
         className="translationTree"
         :translations="translations"
         :currentItem="currentItem"
+        v-if="treeReady"
       />
+      <PSSpinner v-else />
     </div>
   </div>
 </template>
 
 <script>
   import PSTree from 'app/widgets/ps-tree/ps-tree';
+  import PSSpinner from 'app/widgets/ps-spinner';
   import { EventBus } from 'app/utils/event-bus';
 
   export default {
     computed: {
+      treeReady() {
+        return !this.$store.state.sidebarLoading;
+      },
       currentItem() {
         if (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined') {
           if (this.domainsTree.length) {
             const domain = this.getFirstDomainToDisplay(this.domainsTree);
             this.$store.dispatch('getCatalog', { url: domain.dataValue });
             this.$store.dispatch('updateCurrentDomain', domain);
-            this.$refs.domainTree.reduce();
-            this.$refs.domainTree.setCurrentElement(domain.full_name);
+            EventBus.$emit('reduce');
+            EventBus.$emit('setCurrentElement', domain.full_name);
             return domain.full_name;
           }
         }
@@ -96,6 +102,7 @@
     },
     components: {
       PSTree,
+      PSSpinner,
     },
   };
 </script>
@@ -135,6 +142,42 @@
     .tree-label {
       &:hover {
         color: $primary;
+      }
+    }
+  }
+  .ps-loader {
+    $loader-white-height: 20px;
+    $loader-line-height: 16px;
+    .animated-background {
+      height: 144px!important;
+      animation-duration: 2s!important;
+    }
+    .background-masker {
+      &.header-left {
+        left: 0;
+        top: $loader-line-height;
+        height: 108px;
+        width: 20px;
+      }
+      &.content-top {
+        left: 0;
+        top: $loader-line-height;
+        height: $loader-white-height;
+      }
+      &.content-first-end {
+        left: 0;
+        top: $loader-line-height*2+$loader-white-height;
+        height: $loader-white-height;
+      }
+      &.content-second-end {
+        left: 0;
+        top: $loader-line-height*3+$loader-white-height*2;
+        height: $loader-white-height;
+      }
+      &.content-third-end {
+        left: 0;
+        top: $loader-line-height*4+$loader-white-height*3;
+        height: $loader-white-height;
       }
     }
   }

@@ -57,4 +57,10 @@ export default {
     state.currentDomainTotalTranslations = 0;
     state.currentDomainTotalMissingTranslations = 0;
   },
+  [types.SIDEBAR_LOADING](state, isLoading) {
+    state.sidebarLoading = isLoading;
+  },
+  [types.PRINCIPAL_LOADING](state, isLoading) {
+    state.principalLoading = isLoading;
+  },
 };

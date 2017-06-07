@@ -51,6 +51,8 @@ const state = {
   currentDomainTotalTranslations: 0,
   currentDomainTotalMissingTranslations: 0,
   isReady: false,
+  sidebarLoading: true,
+  principalLoading: true,
 };
 
 // getters are functions

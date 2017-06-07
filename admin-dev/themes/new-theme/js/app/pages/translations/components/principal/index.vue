@@ -24,51 +24,55 @@
  *-->
 <template>
   <div class="col-xs-9 card">
-    <div class="p-x-1 row">
-      <div class="col-xs-6 p-t-1">
-        <h1 class="domain-info">
-          <span>{{ currentDomain }}</span>
-          <span>{{ currentDomainTotalTranslations }}</span>
-          <span v-show="currentDomainTotalMissingTranslations"> - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
-        </h1>
-      </div>
-      <div class="col-xs-6">
-        <PSPagination
-          pageNumber="3"
-          activeMultiPagination="5"
-          :current="currentPagination"
-          :pagesCount="pagesCount"
-          class="pull-xs-right"
-          @pageChanged="onPageChanged"
-        />
-      </div>
-      <form class="col-xs-12" :action="saveAction" method="post" @submit.prevent="saveTranslations">
-        <div class="row">
-          <div class="col-xs-12">
-            <PSButton :primary="true" type="submit" class="pull-xs-right">
+    <div class="p-x-1 row translations-wrapper">
+      <transition name="fade">
+        <div v-if="principalReady">
+          <div class="col-xs-6 p-t-1" >
+            <h1 class="domain-info">
+              <span>{{ currentDomain }}</span>
+              <span>{{ currentDomainTotalTranslations }}</span>
+              <span v-show="currentDomainTotalMissingTranslations"> - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
+            </h1>
+          </div>
+          <div class="col-xs-6">
+            <PSPagination
+              pageNumber="3"
+              activeMultiPagination="5"
+              :current="currentPagination"
+              :pagesCount="pagesCount"
+              class="pull-xs-right"
+              @pageChanged="onPageChanged"
+            />
+          </div>
+          <form class="col-xs-12" :action="saveAction" method="post" @submit.prevent="saveTranslations">
+            <div class="row">
+              <div class="col-xs-12">
+                <PSButton :primary="true" type="submit" class="pull-xs-right">
+                  {{ trans('button_save') }}
+                </PSButton>
+              </div>
+            </div>
+
+            <TranslationInput
+              v-for="(translation, key) in translationsCatalog"
+              :key="key"
+              :translated="translation"
+              :label="translation.default"
+              :extraInfo="getDomain(translation.tree_domain)">
+            </TranslationInput>
+            <PSButton :primary="true" type="submit" class="pull-xs-right m-t-2">
               {{ trans('button_save') }}
             </PSButton>
+          </form>
+          <div class="col-xs-12">
+            <PSPagination
+              :current="currentPagination"
+              :pagesCount="pagesCount"
+              @pageChanged="onPageChanged"
+            />
           </div>
         </div>
-
-        <TranslationInput
-          v-for="(translation, key) in translationsCatalog"
-          :key="key"
-          :translated="translation"
-          :label="translation.default"
-          :extraInfo="getDomain(translation.tree_domain)">
-        </TranslationInput>
-        <PSButton :primary="true" type="submit" class="pull-xs-right m-t-2">
-          {{ trans('button_save') }}
-        </PSButton>
-      </form>
-      <div class="col-xs-12">
-        <PSPagination
-          :current="currentPagination"
-          :pagesCount="pagesCount"
-          @pageChanged="onPageChanged"
-        />
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -81,6 +85,9 @@
 
   export default {
     computed: {
+      principalReady() {
+        return !this.$store.state.principalLoading;
+      },
       translationsCatalog() {
         this.translations = this.$store.getters.catalog.data.data;
         return this.translations;
@@ -194,5 +201,14 @@
 
   .domain-info {
     font-size: 1rem;
+  }
+  .translations-wrapper {
+    min-height: 300px;
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0
   }
 </style>

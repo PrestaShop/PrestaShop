@@ -1,4 +1,4 @@
-/**
+<!--**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,14 +21,24 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-export const SET_TRANSLATIONS = 'SET_TRANSLATIONS';
-export const SET_CATALOG = 'SET_CATALOG';
-export const SET_DOMAINS_TREE = 'SET_DOMAINS_TREE';
-export const APP_IS_READY = 'APP_IS_READY';
-export const SET_TOTAL_PAGES = 'SET_TOTAL_PAGES';
-export const SET_PAGE_INDEX = 'SET_PAGE_INDEX';
-export const SET_CURRENT_DOMAIN = 'SET_CURRENT_DOMAIN';
-export const RESET_CURRENT_DOMAIN = 'RESET_CURRENT_DOMAIN';
-export const SIDEBAR_LOADING = 'SIDEBAR_LOADING';
-export const PRINCIPAL_LOADING = 'PRINCIPAL_LOADING';
+ *-->
+<template>
+  <div class="ps-spinner"></div>
+</template>
+
+<style lang="sass" scoped>
+  @import "~PrestaKit/scss/custom/_variables.scss";
+  .ps-spinner {
+    color: $white;
+    background-color: $white;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    font-size: 0;
+    outline: none;
+    border: 3px solid $gray-light;
+    border-left-color: $primary;
+    animation: rotating 2s linear infinite;
+    margin: 50px auto;
+  }
+</style>

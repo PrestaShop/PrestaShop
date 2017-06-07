@@ -40,6 +40,7 @@ export const getTranslations = ({ commit }) => {
 };
 
 export const getCatalog = ({ commit }, payload) => {
+  commit(types.PRINCIPAL_LOADING, true);
   Vue.http.get(payload.url, {
     params: {
       page_size: payload.page_size,
@@ -48,6 +49,7 @@ export const getCatalog = ({ commit }, payload) => {
   }).then((response) => {
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
     commit(types.SET_CATALOG, response.body);
+    commit(types.PRINCIPAL_LOADING, false);
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
@@ -57,6 +59,9 @@ export const getDomainsTree = ({ commit }, payload) => {
   const url = window.data.domainsTreeUrl;
   const params = {};
 
+  commit(types.SIDEBAR_LOADING, true);
+  commit(types.PRINCIPAL_LOADING, true);
+
   if (payload && payload.search) {
     params.search = payload.search;
   }
@@ -65,6 +70,7 @@ export const getDomainsTree = ({ commit }, payload) => {
     params,
   }).then((response) => {
     commit(types.SET_DOMAINS_TREE, response.body);
+    commit(types.SIDEBAR_LOADING, false);
     commit(types.RESET_CURRENT_DOMAIN);
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
