@@ -73,7 +73,7 @@
     {/foreach}
   </div>
 
-  {if $conditions_to_approve|count}
+  {if $conditions_to_approve|count && $ps_conditions}
     <p class="ps-hidden-by-js">
       {* At the moment, we're not showing the checkboxes when JS is disabled
          because it makes ensuring they were checked very tricky and overcomplicates
@@ -120,18 +120,28 @@
       </button>
       {if $show_final_summary}
         <article class="alert alert-danger m-t-2 js-alert-payment-conditions" role="alert" data-alert="danger">
-          {l
-            s='Please make sure you\'ve chosen a [1]payment method[/1] and accepted the [2]terms and conditions[/2].'
-            sprintf=[
-              '[1]' => '<a href="#checkout-payment-step">',
-              '[/1]' => '</a>',
-              '[2]' => '<a href="#conditions-to-approve">',
-              '[/2]' => '</a>'
-            ]
-            d='Shop.Theme.Checkout'
-          }
-        </article>
-      {/if}
+          {if !$ps_conditions}
+            {l
+              s='Please make sure you\'ve chosen a [1]payment method[/1].'
+              sprintf=[
+                '[1]' => '<a href="#checkout-payment-step">',
+                '[/1]' => '</a>'
+              ]
+              d='Shop.Theme.Checkout'
+            }
+          {else}
+            {l
+              s='Please make sure you\'ve chosen a [1]payment method[/1] and accepted the [2]terms and conditions[/2].'
+              sprintf=[
+                '[1]' => '<a href="#checkout-payment-step">',
+                '[/1]' => '</a>',
+                '[2]' => '<a href="#conditions-to-approve">',
+                '[/2]' => '</a>'
+              ]
+              d='Shop.Theme.Checkout'
+            }
+          {/if}
+        {/if}
     </div>
     <div class="ps-hidden-by-js">
       {if $selected_payment_option and $all_conditions_approved}
