@@ -1308,6 +1308,9 @@ class FrontControllerCore extends Controller
     public function getLayout()
     {
         $entity = $this->php_self;
+        if (empty($entity)) {
+            $entity = $this->getPageName();
+        }
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
 
