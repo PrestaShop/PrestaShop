@@ -20,7 +20,7 @@ class ImmutableFloat
     public function __construct($value)
     {
         if (!is_float($value)) {
-            throw new \InvalidArgumentException('Invalid argument: "%s" is not a valid float', $value);
+            throw new \InvalidArgumentException(sprintf('Invalid argument: "%s" is not a valid float', $value));
         }
 
         $this->value = $value;
@@ -37,13 +37,13 @@ class ImmutableFloat
     public static function fromString($value)
     {
         $value = (string) $value;
-        if ($value === '') {
-            return new self(0.0);
-        } else {
-            // ensure decimals are dot-separated instead of comma-separated
-            $value = str_replace(',', '.', $value);
-            return new self((float) $value);
+        if ('' === $value) {
+            return new static(0.0);
         }
+
+        // ensure decimals are dot-separated instead of comma-separated
+        $value = str_replace(',', '.', $value);
+        return new static((float) $value);
     }
 
     /**
