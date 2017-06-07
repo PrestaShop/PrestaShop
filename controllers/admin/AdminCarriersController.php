@@ -143,8 +143,13 @@ class AdminCarriersControllerCore extends AdminController
         unset($this->page_header_toolbar_btn['modules-list']);
 
         // test if need to show header alert.
-        $sql = 'SELECT COUNT(1) FROM `'._DB_PREFIX_.'carrier` WHERE deleted = 0 AND id_reference > 2';
-        $showHeaderAlert = (Db::getInstance()->query($sql)->fetchColumn(0) == 0);
+        $sql = new DbQuery();
+        $sql->select('COUNT(*)');
+        $sql->from('carrier', 'c');
+        $sql->where('c.`deleted` = 0');
+        $sql->where('c.`id_reference` > 2');
+        $result = Db::getInstance()->executeS($sql);
+        $showHeaderAlert = ($result[0] == 0);
 
         // Assign them in two steps! Because renderModulesList needs it before to be called.
         $this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', array(), 'Admin.Shipping.Feature'));
