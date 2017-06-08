@@ -161,11 +161,10 @@ class LinkCore
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
         $product_attribute_ean = null;
-        if ($ipa) {
+        if ($ipa && is_numeric($ipa)) {
             // get ean from product attribute
-            $id_product_attribute = (int) $ipa;
-            $product_attribute_eans = Db::getInstance()->executeS('SELECT `ean13` FROM `'._DB_PREFIX_.'product_attribute` pa WHERE pa.id_product_attribute='.$id_product_attribute);
-            $product_attribute_ean = (empty($product_attribute_eans) ? null : (int) $product_attribute_eans[0]['ean13']);
+            $product_attribute_eans = Db::getInstance()->executeS('SELECT `ean13` FROM `'._DB_PREFIX_.'product_attribute` pa WHERE pa.id_product_attribute='.$ipa);
+            $product_attribute_ean = ((empty($product_attribute_eans) || !is_numeric($product_attribute_eans[0]['ean13'])) ? null : $product_attribute_eans[0]['ean13']);
         }
         $params['ean13'] = (!$ean13) ? (!$product_attribute_ean) ? $product->ean13 : $product_attribute_ean: $ean13;
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'meta_keywords', $idShop)) {
