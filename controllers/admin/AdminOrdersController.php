@@ -522,7 +522,7 @@ class AdminOrdersControllerCore extends AdminController
                     $this->errors[] = Tools::displayError('The new order status is invalid.');
                 } else {
                     $current_order_state = $order->getCurrentOrderState();
-                    if ($current_order_state->id != $order_state->id) {
+                    if ($current_order_state === null || $current_order_state->id != $order_state->id) {
                         // Create new OrderHistory
                         $history = new OrderHistory();
                         $history->id_order = $order->id;
