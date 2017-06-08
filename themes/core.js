@@ -1972,13 +1972,28 @@
 	    (0, _jquery2['default'])('#checkout-addresses-step').trigger('click');
 	    _prestashop2['default'].emit('editAddress');
 	  });
-	
-	  (0, _jquery2['default'])('#delivery-addresses, #invoice-addresses input[type=radio]').on('click', function () {
-	    (0, _jquery2['default'])('.address-item').removeClass('selected');
-	    (0, _jquery2['default'])('.address-item:has(input[type=radio]:checked)').addClass('selected');
+	  (0, _jquery2['default'])('.js-address-selector input[type=radio]:not(:checked)').on('click', function () {
+	    (0, _jquery2['default'])('button[name=confirm-addresses]').prop("disabled", "");
+	    if (0 < (0, _jquery2['default'])('.js-address-error').length) {
+	      (0, _jquery2['default'])('.js-address-error').hide();
+	      var idFailureAddress = (0, _jquery2['default'])(".js-address-error").prop('id').split('-').pop();
+	      (0, _jquery2['default'])('#id-address-delivery-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #7a7a7a !important');
+	      (0, _jquery2['default'])('#id-address-invoice-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #7a7a7a !important');
+	    }
 	  });
 	};
 	
+	(0, _jquery2['default'])(document).ready(function () {
+	  if (0 < (0, _jquery2['default'])('.js-address-error').length) {
+	    var idFailureAddress = (0, _jquery2['default'])(".js-address-error").prop('id').split('-').pop();
+	    if ((0, _jquery2['default'])(".js-address-error").attr('name').split('-').pop() == "delivery") {
+	      (0, _jquery2['default'])('#id-address-delivery-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #2fb5d2 !important');
+	    } else {
+	      (0, _jquery2['default'])('#id-address-invoice-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #2fb5d2 !important');
+	    }
+	    (0, _jquery2['default'])('button[name=confirm-addresses]').prop('disabled', 'disabled');
+	  }
+	});
 	module.exports = exports['default'];
 
 /***/ }),
