@@ -38,7 +38,7 @@ class AdminAddressesControllerCore extends AdminController
         $this->required_database = true;
         $this->required_fields = array('company','address2', 'postcode', 'other', 'phone', 'phone_mobile', 'vat_number', 'dni');
         $this->table = 'address';
-        $this->className = 'Address';
+        $this->className = 'CustomerAddress';
         $this->lang = false;
         $this->addressType = 'customer';
         $this->explicitSelect = true;
