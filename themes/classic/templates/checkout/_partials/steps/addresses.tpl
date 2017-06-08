@@ -66,6 +66,10 @@
           }
         </div>
 
+        {if isset($delivery_address_error)}
+          <p class="alert alert-danger js-address-error" name="alert-delivery" id="id-failure-address-{$delivery_address_error.id_address}">{$delivery_address_error.exception}</p>
+        {/if}
+
         <p class="add-address">
           <a href="{$new_address_delivery_url}"><i class="material-icons">&#xE145;</i>{l s='add new address' d='Shop.Theme.Actions'}</a>
         </p>
@@ -103,6 +107,10 @@
                       interactive = !$show_delivery_address_form and !$show_invoice_address_form
             }
           </div>
+
+          {if isset($invoice_address_error)}
+            <p class="alert alert-danger js-address-error" name="alert-invoice" id="id-failure-address-{$invoice_address_error.id_address}">{$invoice_address_error.exception}</p>
+          {/if}
 
           <p class="add-address">
             <a href="{$new_address_invoice_url}"><i class="material-icons">&#xE145;</i>{l s='add new address' d='Shop.Theme.Actions'}</a>

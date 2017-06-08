@@ -31,9 +31,26 @@ export default function () {
     $('#checkout-addresses-step').trigger('click');
     prestashop.emit('editAddress');
   });
-
-  $('#delivery-addresses, #invoice-addresses input[type=radio]').on('click', function () {
-    $('.address-item').removeClass('selected');
-    $('.address-item:has(input[type=radio]:checked)').addClass('selected');
+  $('.js-address-selector input[type=radio]:not(:checked)').on('click', function () {
+    $('button[name=confirm-addresses]').prop("disabled", "");
+    if (0 < $('.js-address-error').length) {
+      $('.js-address-error').hide();
+      var idFailureAddress = $(".js-address-error").prop('id').split('-').pop();
+      $('#id-address-delivery-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #7a7a7a !important');
+      $('#id-address-invoice-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #7a7a7a !important');
+    }
   });
 }
+
+$(document).ready(() => {
+  if (0 < $('.js-address-error').length) {
+    var idFailureAddress = $(".js-address-error").prop('id').split('-').pop();
+    if ($(".js-address-error").attr('name').split('-').pop() == "delivery") {
+      $('#id-address-delivery-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #2fb5d2 !important');
+    } else {
+      $('#id-address-invoice-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #2fb5d2 !important');
+    }
+    $('button[name=confirm-addresses]').prop('disabled', 'disabled');
+  }
+})
+;
