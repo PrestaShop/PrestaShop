@@ -354,7 +354,7 @@ var formCategory = (function() {
     },
     'hideBlock': function() {
       $('#form_step1_new_category_name').val('');
-      $('#add-category-button').css('display', 'block');
+      $('#add-category-button').show();
       $('#add-categories-content').addClass('hide');
     }
   };
