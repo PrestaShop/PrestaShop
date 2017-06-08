@@ -756,6 +756,12 @@ class CartCore extends ObjectModel
                 $row['is_gift'] = false;
             }
 
+            $additionalRow = Product::getProductProperties((int)$this->id_lang, $row);
+            $row['reduction'] = $additionalRow['reduction'];
+            $row['price_without_reduction'] = $additionalRow['price_without_reduction'];
+            $row['specific_prices'] = $additionalRow['specific_prices'];
+            unset($additionalRow);
+
             $givenAwayQuantity = 0;
             $giftIndex = $row['id_product'].'-'.$row['id_product_attribute'];
             if ($row['is_gift'] && array_key_exists($giftIndex, $givenAwayProductsIds)) {
