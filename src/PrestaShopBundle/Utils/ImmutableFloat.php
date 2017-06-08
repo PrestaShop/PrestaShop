@@ -43,21 +43,36 @@ class ImmutableFloat
      *
      * @param string $value
      *
+     * @throws \InvalidArgumentException If the provided value is not a string
+     * or if it cannot be interpreted as a number.
+     *
      * @return ImmutableFloat
      */
     public static function fromString($value)
     {
-        $value = trim((string) $value);
+        if (!is_string($value)) {
+            throw new \InvalidArgumentException(sprintf('Invalid argument: string expected, got %s', gettype($value)));
+        }
+
+        $value = trim($value);
         if ('' === $value) {
             return new static(0.0);
         }
 
         // remove all non-digit characters
-        $split = preg_split('/[^\dE-]/', $value);
+        $split = preg_split('/[^\dE-]+/', $value);
 
         if (1 === count($split)) {
             // there's no decimal part
             return new static((float) $value);
+        }
+
+        foreach ($split as $part) {
+            if ('' === $part) {
+                throw new \InvalidArgumentException(
+                    sprintf('Invalid argument: "%s" cannot be interpreted as a number', $value)
+                );
+            }
         }
 
         // use the last part as decimal
