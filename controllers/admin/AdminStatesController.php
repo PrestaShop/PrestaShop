@@ -146,7 +146,7 @@ class AdminStatesControllerCore extends AdminController
                     'name' => 'name',
                     'maxlength' => 32,
                     'required' => true,
-                    'hint' => $this->trans('Provide the State name to be display in addresses and on invoices.', array(), 'Admin.International.Help')
+                    'hint' => $this->trans('Provide the state name to be displayed in addresses and on invoices.', array(), 'Admin.International.Help')
                 ),
                 array(
                     'type' => 'text',

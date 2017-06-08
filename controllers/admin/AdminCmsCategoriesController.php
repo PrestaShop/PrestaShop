@@ -246,7 +246,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
                 // custom template
                 array(
                     'type' => 'select_category',
-                    'label' => $this->trans('Parent CMS Category', array(), 'Admin.Design.Feature'),
+                    'label' => $this->trans('Parent category', array(), 'Admin.Design.Feature'),
                     'name' => 'id_parent',
                     'options' => array(
                         'html' => $html_categories,

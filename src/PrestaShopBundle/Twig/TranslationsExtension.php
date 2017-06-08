@@ -218,7 +218,7 @@ class TranslationsExtension extends \Twig_Extension
             'label_reset' => $this->translator->trans('Reset', array(), 'Admin.Actions'),
             'notification_success' => $this->translator->trans('Translation successfully updated', array(),
                 'Admin.International.Notification'),
-            'notification_error' => $this->translator->trans('Translation unsuccessfully updated', array(),
+            'notification_error' => $this->translator->trans('Failed to update translation', array(),
                 'Admin.International.Notification'),
         );
     }
