@@ -418,9 +418,10 @@ class ToolsCore
             return false;
         }
 
-        if (getenv('kernel.environment') === 'test' && self::$request instanceof Request) {
-            $value = self::$request->request->get($key, self::$request->query->get($key, $default_value));
-        } else {
+        if (self::$request instanceof Request) {
+            $value = self::$request->request->get($key);
+        }
+        if (null === $value) {
             $value = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default_value));
         }
 
