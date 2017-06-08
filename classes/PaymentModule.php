@@ -555,7 +555,10 @@ abstract class PaymentModuleCore extends Module
                         );
 
                         // If the reduction is not applicable to this order, then continue with the next one
+                        // We set $values to 0, because if in a cart there is only a gift without reduction the $order->addCartRule() do not save data inside order_cart_rule
                         if (!$values['tax_excl']) {
+                            $values['tax_excl'] = 0;
+                            $values['tax_incl'] = 0;
                             continue;
                         }
 
