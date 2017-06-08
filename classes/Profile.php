@@ -153,7 +153,7 @@ class ProfileCore extends ObjectModel
                     $idProfile,
                     $type,
                     array(
-                        'id_profile' => _PS_ADMIN_PROFILE_,
+                        'id_profile' => $idProfile,
                         'view' => '0',
                         'add' => '0',
                         'edit' => '0',
@@ -172,7 +172,11 @@ class ProfileCore extends ObjectModel
 				WHERE j.`id_profile` = '.(int) $idProfile);
 
                 foreach ($result as $row) {
-                    $idTab = self::findIdTabByAuthSlug($row['slug']);
+                    if ($type == 'class_name') {
+                        $idTab = self::findClassNameByAuthSlug($row['slug']);
+                    } else {
+                        $idTab = self::findIdTabByAuthSlug($row['slug']);
+                    }
 
                     self::$_cache_accesses[$idProfile][$type][$idTab][array_search('1', $row)] = '1';
                 }
@@ -225,5 +229,27 @@ class ProfileCore extends ObjectModel
         ');
 
         return $result['id_tab'];
+    }
+    
+    /**
+     *
+     * @param string $authSlug
+     * @return string
+     */
+    private static function findClassNameByAuthSlug($authSlug)
+    {
+        preg_match(
+            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z]+)_(?P<auth>[A-Z]+)/',
+            $authSlug,
+            $matches
+        );
+
+        $result = Db::getInstance()->getRow('
+            SELECT `class_name`
+            FROM `'._DB_PREFIX_.'tab` t
+            WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
+        ');
+
+        return $result['class_name'];
     }
 }
