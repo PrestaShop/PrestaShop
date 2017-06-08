@@ -48,10 +48,23 @@ class CartChecksumCore implements ChecksumInterface
         $uniq_id .= $this->separator;
         $uniq_id .= $cart->id_lang;
         $uniq_id .= $this->separator;
-
-        $uniq_id .= $this->addressChecksum->generateChecksum(new Address($cart->id_address_delivery));
+        try {
+            $uniq_id .= $this->addressChecksum->generateChecksum(new Address($cart->id_address_delivery));
+        } catch (Exception $e) {
+            return array(
+                'id_address' => $cart->id_address_delivery,
+                'exception' => $e->getMessage(),
+            );
+        }
         $uniq_id .= $this->separator;
-        $uniq_id .= $this->addressChecksum->generateChecksum(new Address($cart->id_address_invoice));
+        try {
+            $uniq_id .= $this->addressChecksum->generateChecksum(new Address($cart->id_address_invoice));
+        } catch (Exception $e) {
+            return array(
+                'id_address' => $cart->id_address_invoice,
+                'exception' => $e->getMessage(),
+            );
+        }
         $uniq_id .= $this->separator;
 
         $products = $cart->getProducts($refresh = true);

@@ -37,6 +37,7 @@ class AddressChecksumCore implements ChecksumInterface
      * @param Address $address
      *
      * @return string SHA1 checksum for the Address
+     * @throws Exception
      */
     public function generateChecksum($address)
     {
@@ -45,7 +46,11 @@ class AddressChecksumCore implements ChecksumInterface
         }
 
         $uniqId = '';
-        $fields = $address->getFields();
+        try {
+            $fields = $address->getFields();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
         foreach ($fields as $name => $value) {
             $uniqId .= $value.self::SEPARATOR;
         }
