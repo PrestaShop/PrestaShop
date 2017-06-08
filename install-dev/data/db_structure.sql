@@ -726,7 +726,9 @@ CREATE TABLE `PREFIX_employee_shop` (
 CREATE TABLE `PREFIX_feature` (
   `id_feature` int(10) unsigned NOT NULL auto_increment,
   `position` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_feature`)
+  `display` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id_feature`),
+  KEY `display` (`display`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_feature_lang` (
