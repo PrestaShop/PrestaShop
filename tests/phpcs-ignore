@@ -1,3 +1,4 @@
 app/SymfonyRequirements.php
 vendor/*
 tools/*
+modules/*
