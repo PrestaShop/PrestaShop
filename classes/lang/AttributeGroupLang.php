@@ -38,7 +38,7 @@ class AttributeGroupLangCore extends DataLangCore
         $this->fieldNames = array(
             'name' => array(
                 md5('Size') => $this->translator->trans('Size', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Shoes Size') => $this->translator->trans('Shoes Size', array(), 'Shop.Demo.Catalog', $this->locale),
+                md5('Shoes Size') => $this->translator->trans('Shoe size', array(), 'Shop.Demo.Catalog', $this->locale),
                 md5('Color') => $this->translator->trans('Color', array(), 'Shop.Demo.Catalog', $this->locale),
             ),
             'public_name' => array(
