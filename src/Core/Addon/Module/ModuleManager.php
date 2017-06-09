@@ -204,7 +204,7 @@ class ModuleManager implements AddonManagerInterface
     /**
      * Add new module from zipball. This will unzip the file and move the content
      * to the right locations.
-     * A theme can bundle modules, resources, docuementation, email templates and so on.
+     * A theme can bundle modules, resources, documentation, email templates and so on.
      *
      * @param string $source The source can be a module name (installed from either local disk or addons.prestashop.com).
      * or a location (url or path to the zip file)
