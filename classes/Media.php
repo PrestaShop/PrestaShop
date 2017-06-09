@@ -66,6 +66,29 @@ class MediaCore
         'effects.transfer' => array('fileName' => 'jquery.effects.transfer.min.js', 'dependencies' => array('effects.core'), 'theme' => false)
     );
 
+    private static $jquery_ui_datepicker_iso_code = array(
+        'bn' => 'en',
+        'bz' => 'en',
+        'dh' => 'de',
+        'gb' => 'en-GB',
+        'ag' => 'es',
+        'cb' => 'es',
+        'mx' => 'es',
+        'pe' => 'es',
+        've' => 'es',
+        'qc' => 'fr-CA',
+        'ga' => 'en',
+        'lo' => 'en',
+        'br' => 'pt-BR',
+        'sh' => 'en',
+        'si' => 'sl',
+        'ug' => 'en',
+        'ur' => 'en',
+        'vn' => 'vi',
+        'zh' => 'zh-CN',
+        'tw' => 'zh-TW',
+    );
+
     /**
      * @var array list of javascript definitions
      */
@@ -375,7 +398,11 @@ class MediaCore
                 $uiPath['js'] = array($uiPath['js']);
             }
 
-            $uiPath['js'][] = Media::getJSPath($folder.'i18n/jquery.ui.datepicker-'.Context::getContext()->language->iso_code.'.js');
+            $datePickerIsoCode = Context::getContext()->language->iso_code;
+            if (array_key_exists($datePickerIsoCode, self::$jquery_ui_datepicker_iso_code)) {
+                $datePickerIsoCode = self::$jquery_ui_datepicker_iso_code[$datePickerIsoCode];
+            }
+            $uiPath['js'][] = Media::getJSPath($folder.'i18n/jquery.ui.datepicker-'.$datePickerIsoCode.'.js');
         }
 
         return $uiPath;
