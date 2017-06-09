@@ -2415,19 +2415,19 @@ class AdminImportControllerCore extends AdminController
                         !$validateOnly &&
                         $image->add()) {
                         $image->associateTo($id_shop_list);
-// FIXME: 2s/image !
+                        // FIXME: 2s/image !
                         if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate)) {
                             $this->warnings[] = sprintf($this->trans('Error copying image: %s', array(), 'Admin.Advparameters.Notification'), $url);
                             $image->delete();
                         } else {
                             $id_image[] = (int)$image->id;
                         }
-// until here
+                        // until here
                     } else {
                         if (!$validateOnly) {
                             $this->warnings[] = $this->trans('%data% cannot be saved',
                                 array(
-                                '%data%' => (isset($image->id_product) ? ' ('.$image->id_product.')' : '')
+                                    '%data%' => (isset($image->id_product) ? ' ('.$image->id_product.')' : '')
                                 ),
                                 'Admin.Advparameters.Notification');
                         }
@@ -3145,8 +3145,10 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%s cannot be saved',
                             array(
-                                '%data%' => $state->name),
-                            'Admin.Advparameters.Notification');
+                                '%data%' => $state->name
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
