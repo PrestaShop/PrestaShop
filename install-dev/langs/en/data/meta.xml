@@ -25,10 +25,10 @@
     <url_rewrite/>
   </meta>
   <meta id="manufacturer" id_shop="1">
-    <title>Manufacturers</title>
-    <description>Manufacturers list</description>
+    <title>Brands</title>
+    <description>Brands list</description>
     <keywords/>
-    <url_rewrite>manufacturers</url_rewrite>
+    <url_rewrite>brands</url_rewrite>
   </meta>
   <meta id="new-products" id_shop="1">
     <title>New products</title>
