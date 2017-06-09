@@ -88,6 +88,13 @@ $(document).ready(function () {
         targetSelector: productAvailabilitySelector
       });
 
+      const productAvailabilityMessageSelector = '#product-availability';
+      replaceAddToCartSection({
+        $addToCartSnippet: $addToCartSnippet,
+        $targetParent: $addProductToCart,
+        targetSelector: productAvailabilityMessageSelector
+      });
+
       const productMinimalQuantitySelector = '.product-minimal-quantity';
       replaceAddToCartSection({
         $addToCartSnippet: $addToCartSnippet,
