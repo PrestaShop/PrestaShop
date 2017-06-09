@@ -43,7 +43,7 @@
     }
     </script>
 
-    {% if app.environment == 'dev' %}
+    {% if webpack_server %}
         <script src="http://localhost:8080/stock.bundle.js"></script>
     {% else %}
         <script src="{{ asset('themes/new-theme/public/stock.bundle.js') }}"></script>
