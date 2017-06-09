@@ -28,11 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -169,10 +169,10 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param $installedProduct
+     * @param Module $installedProduct
      * @return bool
      */
-    protected function shouldRecommendConfigurationForModule($installedProduct)
+    protected function shouldRecommendConfigurationForModule(Module $installedProduct)
     {
         $warnings = $this->getModuleInstallationWarnings($installedProduct);
 
@@ -180,25 +180,15 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param $installedProduct
+     * @param Module $installedProduct
      * @return array
      */
-    protected function getModuleInstallationWarnings($installedProduct)
+    protected function getModuleInstallationWarnings(Module $installedProduct)
     {
-        $warnings = array();
-        $moduleName = $installedProduct->attributes->get('name');
-
-        if ($this->moduleProvider->isModuleMainClassValid($moduleName)) {
-            $moduleMainClassFilepath = _PS_MODULE_DIR_ . $moduleName . '/' . $moduleName . '.php';
-            if (file_exists($moduleMainClassFilepath)) {
-                require_once $moduleMainClassFilepath;
-            }
-
-            $module = ServiceLocator::get($moduleName);
-            $warnings = $module->warning;
+        if ($installedProduct->hasValidInstance()) {
+            return $installedProduct->getInstance()->warning;
         }
-
-        return $warnings;
+        return array();
     }
 
     /**
