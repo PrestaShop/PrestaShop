@@ -38,9 +38,13 @@ class CategoryControllerCore extends ProductListingFrontController
 
     protected $category;
 
-    public function canonicalRedirection($url = '')
+    public function canonicalRedirection($canonicalURL = '')
     {
-        // FIXME
+        if (Validate::isLoadedObject($this->category)) {
+            parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
+        } elseif ($canonicalURL) {
+            parent::canonicalRedirection($canonicalURL);
+        }
     }
 
     public function getCanonicalURL()
@@ -57,8 +61,6 @@ class CategoryControllerCore extends ProductListingFrontController
      */
     public function init()
     {
-        parent::init();
-
         $id_category = (int) Tools::getValue('id_category');
         $this->category = new Category(
             $id_category,
@@ -68,6 +70,8 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
             Tools::redirect('index.php?controller=404');
         }
+
+        parent::init();
 
         if (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
