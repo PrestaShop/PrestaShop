@@ -142,6 +142,7 @@ var AdminModuleController = function() {
 
   this.initBOEventRegistering = function() {
     BOEvent.on('Module Disabled', this.onModuleDisabled, this);
+    BOEvent.on('Module Uninstalled', this.updateTotalResults, "Back office");
   };
 
   this.onModuleDisabled = function() {
