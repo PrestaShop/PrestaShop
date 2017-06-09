@@ -145,9 +145,13 @@ class Module implements ModuleInterface
         $this->disk->add($disk);
         $this->database->add($database);
 
-        $version = is_null($this->attributes->get('version')) && $this->disk->get('is_valid') ?
-            $this->disk->get('version') :
-            $this->attributes->get('version');
+        if ($this->database->get('installed')) {
+            $version = $this->database->get('version');
+        } elseif (is_null($this->attributes->get('version')) && $this->disk->get('is_valid')) {
+            $version = $this->disk->get('version');
+        } else {
+            $version = $this->attributes->get('version');
+        }
 
         $img = $this->attributes->get('img');
         if (empty($img)) {
@@ -329,8 +333,8 @@ class Module implements ModuleInterface
     {
         return
             $this->database->get('installed') == 1
-            && $this->database->get('version')
-            !== 0 && version_compare($this->database->get('version'), $this->attributes->get('version'), '<')
+            && $this->attributes->get('version_available')
+            !== 0 && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<')
         ;
     }
 }
