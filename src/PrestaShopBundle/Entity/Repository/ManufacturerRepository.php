@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use RuntimeException;
+use Shop;
 
 class ManufacturerRepository
 {
@@ -44,17 +47,37 @@ class ManufacturerRepository
     private $tablePrefix;
 
     /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
      * @param Connection $connection
+     * @param ContextAdapter $contextAdapter
      * @param $tablePrefix
      * @throws NotImplementedException
      */
     public function __construct(
         Connection $connection,
+        ContextAdapter $contextAdapter,
         $tablePrefix
     )
     {
         $this->connection = $connection;
         $this->tablePrefix = $tablePrefix;
+
+        $context = $contextAdapter->getContext();
+
+        if (!$context->shop instanceof Shop) {
+            throw new RuntimeException('Determining the active shop requires a contextual shop instance.');
+        }
+
+        $shop = $context->shop;
+        if ($shop->getContextType() !== $shop::CONTEXT_SHOP) {
+            throw new NotImplementedException('Shop context types other than "single shop" are not supported');
+        }
+
+        $this->shopId = $shop->getContextualShopId();
     }
 
     /**
@@ -66,13 +89,19 @@ class ManufacturerRepository
             '{table_prefix}',
             $this->tablePrefix,
             'SELECT
-            id_manufacturer AS manufacturer_id,
-            name
-            FROM {table_prefix}manufacturer
-            '
+            m.id_manufacturer AS manufacturer_id,
+            m.name
+            FROM {table_prefix}manufacturer m
+            INNER JOIN {table_prefix}manufacturer_shop ms ON (
+                ms.id_shop = :shop_id AND
+                ms.id_manufacturer = m.id_manufacturer
+            )'
         );
 
         $statement = $this->connection->prepare($query);
+
+        $statement->bindValue('shop_id', $this->shopId);
+
         $statement->execute();
 
         $rows = $statement->fetchAll();

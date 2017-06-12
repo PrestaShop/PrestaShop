@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use RuntimeException;
+use Shop;
 
 class SupplierRepository
 {
@@ -45,16 +48,31 @@ class SupplierRepository
 
     /**
      * @param Connection $connection
+     * @param ContextAdapter $contextAdapter
      * @param $tablePrefix
      * @throws NotImplementedException
      */
     public function __construct(
         Connection $connection,
+        ContextAdapter $contextAdapter,
         $tablePrefix
     )
     {
         $this->connection = $connection;
         $this->tablePrefix = $tablePrefix;
+
+        $context = $contextAdapter->getContext();
+
+        if (!$context->shop instanceof Shop) {
+            throw new RuntimeException('Determining the active shop requires a contextual shop instance.');
+        }
+
+        $shop = $context->shop;
+        if ($shop->getContextType() !== $shop::CONTEXT_SHOP) {
+            throw new NotImplementedException('Shop context types other than "single shop" are not supported');
+        }
+
+        $this->shopId = $shop->getContextualShopId();
     }
 
     /**
@@ -66,13 +84,19 @@ class SupplierRepository
             '{table_prefix}',
             $this->tablePrefix,
             'SELECT
-            id_supplier AS supplier_id,
-            name
-            FROM {table_prefix}supplier
-            '
+            s.id_supplier AS supplier_id,
+            s.name
+            FROM {table_prefix}supplier s
+            INNER JOIN {table_prefix}supplier_shop ss ON (
+                ss.id_shop = :shop_id AND
+                ss.id_supplier = s.id_supplier
+            )'
         );
 
         $statement = $this->connection->prepare($query);
+
+        $statement->bindValue('shop_id', $this->shopId);
+
         $statement->execute();
 
         $rows = $statement->fetchAll();

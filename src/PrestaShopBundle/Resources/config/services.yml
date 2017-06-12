@@ -349,13 +349,15 @@ services:
         class: PrestaShopBundle\Entity\Repository\SupplierRepository
         arguments:
             - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
             - "%database_prefix%"
 
     prestashop.core.api.manufacturer.repository:
-            class: PrestaShopBundle\Entity\Repository\ManufacturerRepository
-            arguments:
-                - "@doctrine.dbal.default_connection"
-                - "%database_prefix%"
+        class: PrestaShopBundle\Entity\Repository\ManufacturerRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
 
     prestashop.core.api.category.repository:
         class: PrestaShopBundle\Entity\Repository\CategoryRepository
