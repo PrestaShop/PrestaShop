@@ -2,9 +2,9 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle\Utils;
 
-use PrestaShopBundle\Utils\ImmutableFloat;
+use PrestaShopBundle\Utils\FloatParser;
 
-class ImmutableFloatTest extends \PHPUnit_Framework_TestCase
+class FloatParserTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -17,10 +17,9 @@ class ImmutableFloatTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideValidStrings
      */
-    public function testItConvertsNumbersFromString($string, $expected)
+    public function testItParsesNumbersFromString($string, $expected)
     {
-        $instance = ImmutableFloat::fromString($string);
-        $this->assertSame($expected, $instance->getValue());
+        $this->assertSame($expected, (new FloatParser())->fromString($string));
     }
 
     /**
@@ -34,7 +33,7 @@ class ImmutableFloatTest extends \PHPUnit_Framework_TestCase
      */
     public function testItThrowsExceptionIfNotValid($value)
     {
-        ImmutableFloat::fromString($value);
+        (new FloatParser())->fromString($value);
     }
 
     public function provideValidStrings()

@@ -3,35 +3,15 @@
 namespace PrestaShopBundle\Utils;
 
 /**
- * Immutable value-object that contains a float value.
+ * Converts strings into floats
  */
-class ImmutableFloat
+class FloatParser
 {
     /**
-     * @var float
-     */
-    private $value;
-
-    /**
-     * @param float $value
+     * Constructs a float value from an arbitrarily-formatted string.
      *
-     * @throws \InvalidArgumentException if the passed value is not a valid float
-     */
-    public function __construct($value)
-    {
-        if (!is_float($value)) {
-            throw new \InvalidArgumentException(sprintf('Invalid argument: "%s" is not a valid float', $value));
-        }
-
-        $this->value = $value;
-    }
-
-    /**
-     * Constructs a new instance from a string value.
-     *
-     * Note: This method supports arbitrary thousands and decimal separators.
-     *
-     * If the string is ambiguous (e.g. 123,456) the interpreter will take the last group of numbers
+     * This method supports any thousand and decimal separator.
+     * If the string is ambiguous (e.g. 123,456) the interpreter will interpret the last group of numbers
      * as the decimal part.
      *
      * In order to prevent unexpected behavior, make sure that your value has a decimal part.
@@ -46,9 +26,9 @@ class ImmutableFloat
      * @throws \InvalidArgumentException If the provided value is not a string
      * or if it cannot be interpreted as a number.
      *
-     * @return ImmutableFloat
+     * @return float
      */
-    public static function fromString($value)
+    public function fromString($value)
     {
         if (!is_string($value)) {
             throw new \InvalidArgumentException(sprintf('Invalid argument: string expected, got %s', gettype($value)));
@@ -56,7 +36,7 @@ class ImmutableFloat
 
         $value = trim($value);
         if ('' === $value) {
-            return new static(0.0);
+            return 0.0;
         }
 
         // remove all non-digit characters
@@ -64,7 +44,7 @@ class ImmutableFloat
 
         if (1 === count($split)) {
             // there's no decimal part
-            return new static((float) $value);
+            return (float) $value;
         }
 
         foreach ($split as $part) {
@@ -81,16 +61,6 @@ class ImmutableFloat
         // reconstruct the number using dot as decimal separator
         $value = implode('', $split) . '.' . $decimal;
 
-        return new static((float) $value);
-    }
-
-    /**
-     * Returns the value as a float primitive.
-     *
-     * @return float
-     */
-    public function getValue()
-    {
-        return $this->value;
+        return (float) $value;
     }
 }
