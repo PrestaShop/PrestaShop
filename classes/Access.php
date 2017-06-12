@@ -347,13 +347,13 @@ class AccessCore extends ObjectModel
         }
 
         if ($addFromParent == 1) {
-           foreach (self::findSlugByIdParentTab($idTab) as $child) {
-               $child = self::sluggifyTab($child);
-               foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
+            foreach (self::findSlugByIdParentTab($idTab) as $child) {
+                $child = self::sluggifyTab($child);
+                foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
                     $slugLike = Db::getInstance()->escape($child.$auth);
                     $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
-               }
-           }
+                }
+            }
         }
 
         $roles = Db::getInstance()->executeS('

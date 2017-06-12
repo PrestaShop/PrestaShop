@@ -368,7 +368,7 @@ class DbPDOCore extends Db
 
         if (!$result) {
             $value = 'MyISAM';
-        }else {
+        } else {
             $row = $result->fetch();
             if (!$row || strtolower($row['Value']) != 'yes') {
                 $value = 'MyISAM';

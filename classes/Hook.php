@@ -280,7 +280,7 @@ class HookCore extends ObjectModel
             }
 
             $retroName = array_keys(array_filter($aliasesList, function ($elem) use ($hookName) {
-               return in_array($hookName, $elem) ;
+                return in_array($hookName, $elem);
             }));
 
             if (empty($retroName)) {
@@ -591,9 +591,8 @@ class HookCore extends ObjectModel
             $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
             if ($hook_name != 'paymentOptions') {
                 $sql->where('h.`name` != "paymentOptions"');
-            }
-            // For payment modules, we check that they are available in the contextual country
-            elseif ($frontend) {
+            } elseif ($frontend) {
+                // For payment modules, we check that they are available in the contextual country
                 if (Validate::isLoadedObject($context->country)) {
                     $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions")AND (SELECT `id_country` FROM `'._DB_PREFIX_.'module_country` mc WHERE mc.`id_module` = m.`id_module` AND `id_country` = '.(int)$context->country->id.' AND `id_shop` = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
                 }
@@ -701,8 +700,7 @@ class HookCore extends ObjectModel
         $use_push = false,
         $id_shop = null,
         $chain = false
-    )
-    {
+    ) {
         if (defined('PS_INSTALLATION_IN_PROGRESS')) {
             return;
         }

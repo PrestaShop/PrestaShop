@@ -473,9 +473,8 @@ class ConfigurationCore extends ObjectModel
                                 .')';
                     $result &= Db::getInstance()->execute($sql);
                 }
-            }
-            // If key does not exists, create it
-            else {
+            } else {
+                // If key does not exists, create it
                 if (!$configID = Configuration::getIdByName($key, $idShopGroup, $idShop)) {
                     $now = date('Y-m-d H:i:s');
                     $data = array(

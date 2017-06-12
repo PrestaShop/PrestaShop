@@ -1220,9 +1220,16 @@ class ProductCore extends ObjectModel
     * @param string $order_way Way for ordering (ASC or DESC)
     * @return array Products details
     */
-    public static function getProducts($id_lang, $start, $limit, $order_by, $order_way, $id_category = false,
-        $only_active = false, Context $context = null)
-    {
+    public static function getProducts(
+        $id_lang,
+        $start,
+        $limit,
+        $order_by,
+        $order_way,
+        $id_category = false,
+        $only_active = false,
+        Context $context = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
@@ -1371,9 +1378,22 @@ class ProductCore extends ObjectModel
      *
      * @deprecated since 1.5.0
      */
-    public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference,
-        $id_supplier = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1, $isbn)
-    {
+    public function addProductAttribute(
+        $price,
+        $weight,
+        $unit_impact,
+        $ecotax,
+        $quantity,
+        $id_images,
+        $reference,
+        $id_supplier,
+        $ean13,
+        $default,
+        $location,
+        $upc,
+        $minimal_quantity,
+        $isbn
+    ) {
         Tools::displayAsDeprecated();
 
         $id_product_attribute = $this->addAttribute(
@@ -1449,9 +1469,25 @@ class ProductCore extends ObjectModel
     * @param int $quantity DEPRECATED
     * @param string $supplier_reference DEPRECATED
     */
-    public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity,
-        $id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null, $isbn = '')
-    {
+    public function addCombinationEntity(
+        $wholesale_price,
+        $price,
+        $weight,
+        $unit_impact,
+        $ecotax,
+        $quantity,
+        $id_images,
+        $reference,
+        $id_supplier,
+        $ean13,
+        $default,
+        $location = null,
+        $upc = null,
+        $minimal_quantity = 1,
+        array $id_shop_list = array(),
+        $available_date = null,
+        $isbn = ''
+    ) {
         $id_product_attribute = $this->addAttribute(
             $price, $weight, $unit_impact, $ecotax, $id_images,
             $reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list, $available_date, 0, $isbn);
@@ -1555,9 +1591,24 @@ class ProductCore extends ObjectModel
     * @see ProductSupplier for manage supplier reference(s)
     *
     */
-    public function updateProductAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
-        $id_images, $reference, $id_supplier = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date, $isbn = '')
-    {
+    public function updateProductAttribute(
+        $id_product_attribute,
+        $wholesale_price,
+        $price,
+        $weight,
+        $unit,
+        $ecotax,
+        $id_images,
+        $reference,
+        $id_supplier,
+        $ean13,
+        $default,
+        $location,
+        $upc,
+        $minimal_quantity,
+        $available_date,
+        $isbn = ''
+    ) {
         Tools::displayAsDeprecated('Use updateAttribute() instead');
 
         $return = $this->updateAttribute(
@@ -1622,9 +1673,25 @@ class ProductCore extends ObjectModel
     * @param string $isbn ISBN reference
     * @return array Update result
     */
-    public function updateAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
-        $id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity = null, $available_date = null, $update_all_fields = true, array $id_shop_list = array(), $isbn = '')
-    {
+    public function updateAttribute(
+        $id_product_attribute,
+        $wholesale_price,
+        $price,
+        $weight,
+        $unit,
+        $ecotax,
+        $id_images,
+        $reference,
+        $ean13,
+        $default,
+        $location = null,
+        $upc = null,
+        $minimal_quantity = null,
+        $available_date = null,
+        $update_all_fields = true,
+        array $id_shop_list = array(),
+        $isbn = ''
+    ) {
         $combination = new Combination($id_product_attribute);
 
         if (!$update_all_fields) {
@@ -1704,9 +1771,23 @@ class ProductCore extends ObjectModel
      * @param string $isbn ISBN reference
      * @return mixed $id_product_attribute or false
      */
-    public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13,
-                                 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null, $quantity = 0, $isbn = '')
-    {
+    public function addAttribute(
+        $price,
+        $weight,
+        $unit_impact,
+        $ecotax,
+        $id_images,
+        $reference,
+        $ean13,
+        $default,
+        $location = null,
+        $upc = null,
+        $minimal_quantity = 1,
+        array $id_shop_list = array(),
+        $available_date = null,
+        $quantity = 0,
+        $isbn = ''
+    ) {
         if (!$this->id) {
             return;
         }
@@ -2537,9 +2618,17 @@ class ProductCore extends ObjectModel
     * @param bool $count Only in order to get total number (optional)
     * @return array Prices drop
     */
-    public static function getPricesDrop($id_lang, $page_number = 0, $nb_products = 10, $count = false,
-        $order_by = null, $order_way = null, $beginning = false, $ending = false, Context $context = null)
-    {
+    public static function getPricesDrop(
+        $id_lang,
+        $page_number = 0,
+        $nb_products = 10,
+        $count = false,
+        $order_by = null,
+        $order_way = null,
+        $beginning = false,
+        $ending = false,
+        Context $context = null
+    ) {
         if (!Validate::isBool($count)) {
             die(Tools::displayError());
         }
@@ -2833,11 +2922,26 @@ class ProductCore extends ObjectModel
      * @param bool     $use_customer_price
      * @return float                          Product price
      */
-    public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = null, $decimals = 6, $divisor = null,
-        $only_reduc = false, $usereduc = true, $quantity = 1, $force_associated_tax = false, $id_customer = null, $id_cart = null,
-        $id_address = null, &$specific_price_output = null, $with_ecotax = true, $use_group_reduction = true, Context $context = null,
-        $use_customer_price = true, $id_customization = null)
-    {
+    public static function getPriceStatic(
+        $id_product,
+        $usetax = true,
+        $id_product_attribute = null,
+        $decimals = 6,
+        $divisor = null,
+        $only_reduc = false,
+        $usereduc = true,
+        $quantity = 1,
+        $force_associated_tax = false,
+        $id_customer = null,
+        $id_cart = null,
+        $id_address = null,
+        &$specific_price_output = null,
+        $with_ecotax = true,
+        $use_group_reduction = true,
+        Context $context = null,
+        $use_customer_price = true,
+        $id_customization = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
@@ -2973,10 +3077,29 @@ class ProductCore extends ObjectModel
      * @param int    $real_quantity
      * @return float Product price
      **/
-    public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $zipcode, $id_currency,
-        $id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction,
-        $id_customer = 0, $use_customer_price = true, $id_cart = 0, $real_quantity = 0, $id_customization = 0)
-    {
+    public static function priceCalculation(
+        $id_shop,
+        $id_product,
+        $id_product_attribute,
+        $id_country,
+        $id_state,
+        $zipcode,
+        $id_currency,
+        $id_group,
+        $quantity,
+        $use_tax,
+        $decimals,
+        $only_reduc,
+        $use_reduc,
+        $with_ecotax,
+        &$specific_price,
+        $use_group_reduction,
+        $id_customer = 0,
+        $use_customer_price = true,
+        $id_cart = 0,
+        $real_quantity = 0,
+        $id_customization = 0
+    ) {
         static $address = null;
         static $context = null;
 
@@ -3142,11 +3265,11 @@ class ProductCore extends ObjectModel
 
                 $specific_price_reduction = $reduction_amount;
 
-                    // Adjust taxes if required
+                // Adjust taxes if required
 
-                    if (!$use_tax && $specific_price['reduction_tax']) {
-                        $specific_price_reduction = $product_tax_calculator->removeTaxes($specific_price_reduction);
-                    }
+                if (!$use_tax && $specific_price['reduction_tax']) {
+                    $specific_price_reduction = $product_tax_calculator->removeTaxes($specific_price_reduction);
+                }
                 if ($use_tax && !$specific_price['reduction_tax']) {
                     $specific_price_reduction = $product_tax_calculator->addTaxes($specific_price_reduction);
                 }
@@ -3226,18 +3349,48 @@ class ProductCore extends ObjectModel
     * @param int $divisor Util when paying many time without fees (optional)
     * @return float Product price in euros
     */
-    public function getPrice($tax = true, $id_product_attribute = null, $decimals = 6,
-        $divisor = null, $only_reduc = false, $usereduc = true, $quantity = 1)
-    {
-        return Product::getPriceStatic((int)$this->id, $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity);
+    public function getPrice(
+        $tax = true,
+        $id_product_attribute = null,
+        $decimals = 6,
+        $divisor = null,
+        $only_reduc = false,
+        $usereduc = true,
+        $quantity = 1
+    ) {
+        return Product::getPriceStatic((int) $this->id, $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity);
     }
 
-    public function getPublicPrice($tax = true, $id_product_attribute = null, $decimals = 6,
-            $divisor = null, $only_reduc = false, $usereduc = true, $quantity = 1)
-    {
+    public function getPublicPrice(
+        $tax = true,
+        $id_product_attribute = null,
+        $decimals = 6,
+        $divisor = null,
+        $only_reduc = false,
+        $usereduc = true,
+        $quantity = 1
+    ) {
         $specific_price_output = null;
-        return Product::getPriceStatic((int)$this->id, $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity,
-            false, null, null, null, $specific_price_output, true, true, null, false);
+
+        return Product::getPriceStatic(
+            (int) $this->id,
+            $tax,
+            $id_product_attribute,
+            $decimals,
+            $divisor,
+            $only_reduc,
+            $usereduc,
+            $quantity,
+            false,
+            null,
+            null,
+            null,
+            $specific_price_output,
+            true,
+            true,
+            null,
+            false
+        );
     }
 
     public function getIdProductAttributeMostExpensive()
@@ -6308,9 +6461,10 @@ class ProductCore extends ObjectModel
      *
      * @return bool|string
      */
-    public function getRedirectType() {
+    public function getRedirectType()
+    {
 
-        switch($this->redirect_type) {
+        switch ($this->redirect_type) {
             case '301-category':
             case '302-category':
                 return 'category';

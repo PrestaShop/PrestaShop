@@ -39,7 +39,7 @@ class CartRuleCore extends ObjectModel
     const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
 
     /**
-     * This variable controls that a free gift is offered only once, even when multi-shippping is activated 
+     * This variable controls that a free gift is offered only once, even when multi-shippping is activated
      * and the same product is delivered in both addresses
      *
      * @var array
@@ -195,7 +195,7 @@ class CartRuleCore extends ObjectModel
         }
 
         Configuration::updateGlobalValue(
-            'PS_CART_RULE_FEATURE_ACTIVE', 
+            'PS_CART_RULE_FEATURE_ACTIVE',
             CartRule::isCurrentlyUsed($this->def['table'], true)
         );
 
@@ -317,8 +317,8 @@ class CartRuleCore extends ObjectModel
         Cart $cart = null,
         $free_shipping_only = false,
         $highlight_only = false
-    )
-    {
+    ) {
+
         if (!CartRule::isFeatureActive()) {
             return array();
         }
@@ -445,8 +445,8 @@ class CartRuleCore extends ObjectModel
         $languageId,
         $customerId,
         Cart $cart
-    )
-    {
+    ) {
+
         return self::getCustomerCartRules(
            $languageId,
            $customerId,
@@ -750,9 +750,8 @@ class CartRuleCore extends ObjectModel
                         // The cart rules are not combinable and the cart rule currently in the cart has priority over the one tested
                         if ($cart_rule->priority <= $this->priority) {
                             return (!$display_error) ? false : $this->trans('This voucher is not combinable with an other voucher already in your cart: %s', array($cart_rule->name), 'Shop.Notifications.Error');
-                        }
+                        } else {
                         // But if the cart rule that is tested has priority over the one in the cart, we remove the one in the cart and keep this new one
-                        else {
                             $context->cart->removeCartRule($cart_rule->id);
                         }
                     }
@@ -804,8 +803,9 @@ class CartRuleCore extends ObjectModel
                             foreach ($cart_attributes as $cart_attribute) {
                                 if (in_array($cart_attribute['id_attribute'], $product_rule['values'])) {
                                     $count_matching_products += $cart_attribute['quantity'];
-                                    if ($already_in_cart 
-                                        && $this->gift_product == $cart_attribute['id_product'] 
+                                    if (
+                                        $already_in_cart
+                                        && $this->gift_product == $cart_attribute['id_product']
                                         && $this->gift_product_attribute == $cart_attribute['id_product_attribute']) {
                                         --$count_matching_products;
                                     }
@@ -864,7 +864,7 @@ class CartRuleCore extends ObjectModel
                                     /**
                                      * We also check that the product is not already in the matching product list,
                                      * because there are doubles in the query results (when the product is in multiple categories)
-                                     */ 
+                                     */
                                     && !in_array($cart_category['id_product'] . '-' . $cart_category['id_product_attribute'], $matching_products_list)) {
                                     $count_matching_products += $cart_category['quantity'];
                                     $matching_products_list[] = $cart_category['id_product'] . '-' . $cart_category['id_product_attribute'];
@@ -1156,9 +1156,8 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                         }
-                    }
-                    // Discount (¤) on the whole order
-                    elseif ($this->reduction_product == 0) {
+                    } elseif ($this->reduction_product == 0) {
+                        // Discount (¤) on the whole order
                         $cart_amount_te = null;
                         $cart_amount_ti = null;
                         $cart_average_vat_rate = $context->cart->getAverageProductsTaxRate($cart_amount_te, $cart_amount_ti);
@@ -1322,12 +1321,12 @@ class CartRuleCore extends ObjectModel
     public function getAssociatedRestrictions(
         $type,
         $active_only,
-        $i18n, 
+        $i18n,
         $offset = null,
         $limit = null,
         $search_cart_rule_name = ''
-    )
-    {
+    ) {
+
         $array = array('selected' => array(), 'unselected' => array());
 
         if (!in_array($type, array('country', 'carrier', 'group', 'cart_rule', 'shop'))) {
@@ -1375,7 +1374,7 @@ class CartRuleCore extends ObjectModel
                     . (in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '') .
                     (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '') .
                     (in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
-                    $sql_limit, 
+                    $sql_limit,
                     false);
                 while ($row = Db::getInstance()->nextRow($resource)) {
                     $array[($row['selected'] || $this->{$type . '_restriction'} == 0) ? 'selected' : 'unselected'][] = $row;
