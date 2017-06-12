@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ruleset name="PrestaShopLegacy">
+    <description>Coding standard for legacy files.</description>
+    <rule ref="PSR2">
+        <!-- allow non-namespaced files -->
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
+        <!-- allow newlines after `if(` -->
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/>
+        <!-- allow blank lines at the start of a control structure -->
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen"/>
+        <!-- allow lower-case constants -->
+        <exclude name="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase"/>
+        <!-- allow method names not in camel case -->
+        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
+        <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps"/>
+    </rule>
+</ruleset>
