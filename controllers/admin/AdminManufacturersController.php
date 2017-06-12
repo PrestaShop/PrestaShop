@@ -240,9 +240,9 @@ class AdminManufacturersControllerCore extends AdminController
         $this->fields_list = $this->getAddressFieldsList();
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->trans('Delete selected', array(),'Admin.Actions' ),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions' ),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(),'Admin.Notifications.Warning' )
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning' )
             )
         );
 
@@ -277,7 +277,7 @@ class AdminManufacturersControllerCore extends AdminController
      * @param int $id the identifier to add to the link
      * @return string
      */
-    public function displayEditaddressesLink($token = null, $id)
+    public function displayEditaddressesLink($token, $id)
     {
         if (!array_key_exists('editaddresses', self::$cache_lang)) {
             self::$cache_lang['editaddresses'] = $this->trans('Edit', array(), 'Admin.Actions');
@@ -666,7 +666,7 @@ class AdminManufacturersControllerCore extends AdminController
                         'desc' => $this->trans('Cancel', array(), 'Admin.Actions')
                     );
                 }
-            break;
+                break;
 
             default:
                 parent::initToolbar();

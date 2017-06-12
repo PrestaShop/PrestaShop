@@ -652,9 +652,8 @@ class AdminShopControllerCore extends AdminController
             if (!$object->add()) {
                 $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error').
                     ' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-            }
-            /* voluntary do affectation here */
-            elseif (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect) {
+            } elseif (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect) {
+                // voluntary do affectation here
                 $parent_id = (int)Tools::getValue('id_parent', 1);
                 $this->afterAdd($object);
                 $this->updateAssoShop($object->id);
@@ -691,7 +690,7 @@ class AdminShopControllerCore extends AdminController
         return $object;
     }
 
-    public function displayEditLink($token = null, $id, $name = null)
+    public function displayEditLink($token, $id, $name = null)
     {
         if ($this->access('edit')) {
             $tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
