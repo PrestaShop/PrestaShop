@@ -199,6 +199,11 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
+        /* Skip the required fields */
+        if ($this->isUsed()) {
+            self::$fieldsRequiredDatabase['Address'] = array();
+        }
+
         return parent::update($null_values);
     }
 
