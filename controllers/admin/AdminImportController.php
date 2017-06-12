@@ -1787,7 +1787,13 @@ class AdminImportControllerCore extends AdminController
                     if ($category['id_category']) {
                         $product->id_category[] = (int)$category['id_category'];
                     } else {
-                        $this->errors[] = $this->trans('%s cannot be saved', array(trim($value)), 'Admin.Advparameters.Notification');
+                        $this->errors[] = $this->trans(
+                            '%s cannot be saved',
+                            array(
+                                trim($value),
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                 }
             }
@@ -2427,7 +2433,7 @@ class AdminImportControllerCore extends AdminController
                         if (!$validateOnly) {
                             $this->warnings[] = $this->trans('%data% cannot be saved',
                                 array(
-                                    '%data%' => (isset($image->id_product) ? ' ('.$image->id_product.')' : '')
+                                    '%data%' => (isset($image->id_product) ? ' ('.$image->id_product.')' : ''),
                                 ),
                                 'Admin.Advparameters.Notification');
                         }
@@ -3107,7 +3113,7 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%data% cannot be saved',
                             array(
-                                '%data%' => $country->name[$default_language_id]
+                                '%data%' => $country->name[$default_language_id],
                             ),
                             'Admin.Advparameters.Notification'
                         );
@@ -3145,7 +3151,7 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%s cannot be saved',
                             array(
-                                '%data%' => $state->name
+                                '%data%' => $state->name,
                             ),
                             'Admin.Advparameters.Notification'
                         );

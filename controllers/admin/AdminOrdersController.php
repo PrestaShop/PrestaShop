@@ -419,7 +419,13 @@ class AdminOrdersControllerCore extends AdminController
                                         }
                                     }
                                 } else {
-                                    $this->errors[] = $this->trans('An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');
+                                    $this->errors[] = $this->trans(
+                                        'An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.',
+                                        array(
+                                            '#%d' => $id_order,
+                                        ),
+                                        'Admin.Orderscustomers.Notification'
+                                    );
                                 }
                             }
                         }
