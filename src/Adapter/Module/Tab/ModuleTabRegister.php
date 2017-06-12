@@ -103,7 +103,6 @@ class ModuleTabRegister
                 $this->logger->error($e->getMessage());
             }
         }
-
     }
 
     /**
@@ -117,7 +116,7 @@ class ModuleTabRegister
     protected function addUndeclaredTabs($moduleName, array $tabs)
     {
         // Function to get only class name from tabs already declared
-        $tabsNames = array_map(function($tab) {
+        $tabsNames = array_map(function ($tab) {
             if (array_key_exists('class_name', $tab)) {
                 return $tab['class_name'];
             }
@@ -201,7 +200,7 @@ class ModuleTabRegister
      */
     protected function getModuleAdminControllersFilename($moduleName)
     {
-        return array_map(function(SplFileInfo $file) {
+        return array_map(function (SplFileInfo $file) {
             return $file->getFilename();
         }, $this->getModuleAdminControllers($moduleName));
     }
@@ -210,7 +209,7 @@ class ModuleTabRegister
     {
         $translatedNames = array();
 
-        foreach($this->languages as $lang) {
+        foreach ($this->languages as $lang) {
             // In case we just receive a string, we apply it to all languages
             if (!is_array($names)) {
                 $translatedNames[$lang['id_lang']] = $names;

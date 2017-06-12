@@ -104,17 +104,17 @@ class HookRepository
      * Saves hook settings for a list of hooks.
      * The $hooks array should have this format:
      * [
-     * 		"hookName" => [
-     * 			"module1",
-     * 			"module2",
-     * 			"module3" => [
-     * 				"except_pages" => [
-     * 					"page1",
-     * 					"page2",
-     * 					"page3"
-     * 				]
-     * 			]
-     * 		]
+     *     "hookName" => [
+     *         "module1",
+     *         "module2",
+     *         "module3" => [
+     *             "except_pages" => [
+     *                 "page1",
+     *                 "page2",
+     *                 "page3"
+     *             ]
+     *         ]
+     *     ]
      * ]
      * Only hooks present as keys in the $hooks array are affected and all changes
      * are only done for the shop this Repository belongs to.

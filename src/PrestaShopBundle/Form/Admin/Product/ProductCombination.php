@@ -150,15 +150,19 @@ class ProductCombination extends CommonAbstractType
             'required' => false,
             'attr' => array('class' => 'attribute_default_checkbox'),
         ));
-        if ($is_stock_management){
-           $builder->add('attribute_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-                'required' => true,
-                'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
-                'constraints' => array(
-                    new Assert\NotBlank(),
-                    new Assert\Type(array('type' => 'numeric')),
+        if ($is_stock_management) {
+            $builder->add(
+                'attribute_quantity',
+                'Symfony\Component\Form\Extension\Core\Type\NumberType',
+                array(
+                    'required'    => true,
+                    'label'       => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
+                    'constraints' => array(
+                        new Assert\NotBlank(),
+                        new Assert\Type(array('type' => 'numeric')),
+                    )
                 )
-            ));
+            );
         }
         $builder->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(),

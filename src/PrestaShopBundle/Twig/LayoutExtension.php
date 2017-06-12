@@ -144,8 +144,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $headerTabContent = '',
         $enableSidebar = false,
         $helpLink = ''
-    )
-    {
+    ) {
         if ($this->environment == 'test') {
             return <<<EOF
 <html>

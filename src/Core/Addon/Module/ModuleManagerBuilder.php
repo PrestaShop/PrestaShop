@@ -69,7 +69,8 @@ class ModuleManagerBuilder
     /**
      * @return null|ModuleManagerBuilder
      */
-    static public function getInstance() {
+    public static function getInstance()
+    {
         if (self::$instance == null) {
             self::$instance = new self();
         }
@@ -168,7 +169,7 @@ class ModuleManagerBuilder
                 $marketPlaceClient->setSslVerification($parameters['parameters']['addons.api_client.verify_ssl']);
             }
         }
-        
+
         self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator);
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 

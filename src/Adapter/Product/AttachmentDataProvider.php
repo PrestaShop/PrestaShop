@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Db;
+
 /**
  * This class will provide data from DB / ORM about attachment
  */

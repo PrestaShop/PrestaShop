@@ -38,14 +38,29 @@ class Tools
     /**
      * Return the friendly url from the provided string.
      *
+     * @deprecated use linkRewrite.
+     *
      * @param string $str
-     * @param bool   $utf8_decode (deprecated)
+     * @param bool   $utf8Decode (deprecated)
      *
      * @return string
      */
-    public function link_rewrite($str, $utf8_decode = null)
+    public function link_rewrite($str, $utf8Decode = null)
     {
-        if ($utf8_decode !== null) {
+        return $this->linkRewrite($str, $utf8Decode);
+    }
+
+    /**
+     * Return the friendly url from the provided string.
+     *
+     * @param string $str
+     * @param bool   $utf8Decode (deprecated)
+     *
+     * @return string
+     */
+    public function linkRewrite($str, $utf8Decode = null)
+    {
+        if ($utf8Decode !== null) {
             LegacyTools::displayParameterAsDeprecated('utf8_decode');
         }
 
@@ -95,7 +110,7 @@ class Tools
         $Num2 = str_pad($Num2, $MLen, '0');
 
         // process each digit, keep the ones, carry the tens (remainders)
-        for ($i = 0;$i < $MLen;++$i) {
+        for ($i = 0; $i < $MLen; ++$i) {
             $Sum = ((int) $Num1{$i} + (int) $Num2{$i});
             if (isset($Output[$i])) {
                 $Sum += $Output[$i];

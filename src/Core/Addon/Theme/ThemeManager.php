@@ -62,8 +62,8 @@ class ThemeManager implements AddonManagerInterface
         Finder $finder,
         HookConfigurator $hookConfigurator,
         ThemeRepository $themeRepository,
-        ImageTypeRepository $imageTypeRepository)
-    {
+        ImageTypeRepository $imageTypeRepository
+    ) {
         $this->shop = $shop;
         $this->appConfiguration = $configuration;
         $this->themeValidator = $themeValidator;

@@ -129,7 +129,7 @@ class CategoryDataProvider
 
         $results = [];
         foreach ($allCategories as $category) {
-            foreach($productCategories as $productCategory) {
+            foreach ($productCategories as $productCategory) {
                 if ($productCategory == $category['id_category']) {
                     $results[] = [
                         'id' => $category['id_category'],
@@ -139,7 +139,6 @@ class CategoryDataProvider
                 }
                 $productCategories[$category['name']] = $category['id_category'];
             }
-
         }
 
         return $results;
@@ -179,7 +178,7 @@ class CategoryDataProvider
         $categories = array_reverse($categories, true);
         $breadCrumb = '';
 
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             $breadCrumb .= ' > '.$category['name'];
         }
 

@@ -159,10 +159,9 @@ class AdminProductWrapper
             }
         }
 
-        if(isset($combinationValues['attribute_quantity'])){
+        if (isset($combinationValues['attribute_quantity'])) {
             $this->processQuantityUpdate($product, $combinationValues['attribute_quantity'], $id_product_attribute);
         }
-
     }
 
     /**
@@ -529,9 +528,15 @@ class AdminProductWrapper
 					SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int)$customization['type'] . '
 					WHERE `id_customization_field` = '.$id_customization_field);
                 } else {
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
-                    	VALUES ('.(int)$product->id.', '.(int)$customization['type'].', '.($customization['require'] ? 1 : 0).')');
-			$id_customization_field = (int)Db::getInstance()->Insert_ID();
+                    Db::getInstance()->execute(
+                        'INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
+                    	VALUES ('
+                            .(int) $product->id.', '
+                            .(int) $customization['type'].', '
+                            .($customization['require'] ? 1 : 0)
+                        .')'
+                    );
+                    $id_customization_field = (int) Db::getInstance()->Insert_ID();
                 }
 
                 $new_customization_fields_ids[$key] = $id_customization_field;
@@ -541,10 +546,21 @@ class AdminProductWrapper
                 foreach (Language::getLanguages() as $language) {
                     $name = $customization['label'][$language['id_lang']];
                     foreach ($shopList as $id_shop) {
-                        $langValues .= '('.(int)$id_customization_field.', '.(int)$language['id_lang'].', '.(int)$id_shop .',\''.pSQL($name).'\'), ';
+                        $langValues .= '('
+                            .(int) $id_customization_field.', '
+                            .(int) $language['id_lang'].', '
+                            .(int) $id_shop.',\''
+                            .pSQL($name)
+                            .'\'), ';
                     }
                 }
-                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '.rtrim($langValues, ', '));
+                Db::getInstance()->execute(
+                    'INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '
+                    .rtrim(
+                        $langValues,
+                        ', '
+                    )
+                );
 
                 if ($customization['type'] == 0) {
                     $countFieldFile++;
@@ -742,7 +758,7 @@ class AdminProductWrapper
      *
      * @return string preview url
      */
-    public function getPreviewUrl($product, $preview=true)
+    public function getPreviewUrl($product, $preview = true)
     {
         $context = Context::getContext();
         $id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, $context->shop->id);

@@ -118,7 +118,6 @@ class ProductFeature extends CommonAbstractType
             );
 
             $this->updateValueField($form, $choices);
-
         });
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

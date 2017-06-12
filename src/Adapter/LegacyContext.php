@@ -142,8 +142,16 @@ class LegacyContext
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar, $helpLink = '')
-    {
+    public function getLegacyLayout(
+        $controllerName,
+        $title,
+        $headerToolbarBtn,
+        $displayType,
+        $showContentHeader,
+        $headerTabContent,
+        $enableSidebar,
+        $helpLink = ''
+    ) {
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
             $title,
@@ -201,7 +209,7 @@ class LegacyContext
     {
         static $employeeCurrency;
 
-        if(null === $employeeCurrency) {
+        if (null === $employeeCurrency) {
             $employeeCurrency = $this->getContext()->currency->sign;
         }
         return $employeeCurrency;
