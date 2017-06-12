@@ -62,11 +62,8 @@
     },
     computed: {
       qty() {
-        if (!this.product.qty) {
-          this.isActive = false;
-          this.isEnabled = false;
-          this.value = 0;
-          this.product.qty = 0;
+        if (parseInt(this.product.qty, 10) === 0) {
+          this.deActivate();
         }
         return this.product.qty;
       },
@@ -81,8 +78,16 @@
       },
     },
     methods: {
+      deActivate() {
+        this.isActive = false;
+        this.isEnabled = false;
+        this.value = null;
+        this.product.qty = null;
+      },
       onKeyup(val) {
-        if (!isNaN(parseInt(val, 10))) {
+        if (isNaN(parseInt(val, 10))) {
+          this.deActivate();
+        } else {
           this.isActive = true;
           this.isEnabled = true;
           this.value = val;
@@ -99,15 +104,12 @@
       },
       sendQty() {
         const postUrl = this.product.edit_url;
-        if (this.product.qty && !isNaN(parseInt(this.value, 10))) {
+        if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
             delta: this.value,
           });
-          this.isActive = false;
-          this.isEnabled = false;
-          this.value = 0;
-          this.product.qty = 0;
+          this.deActivate();
         }
       },
     },

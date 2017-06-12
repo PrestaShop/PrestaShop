@@ -27,6 +27,8 @@ export default {
     thumbnail() {
       if (this.product.combination_thumbnail !== 'N/A') {
         return `${window.data.baseUrl}/${this.product.combination_thumbnail}`;
+      } else if (this.product.product_thumbnail !== 'N/A') {
+        return `${window.data.baseUrl}/${this.product.product_thumbnail}`;
       }
       return null;
     },

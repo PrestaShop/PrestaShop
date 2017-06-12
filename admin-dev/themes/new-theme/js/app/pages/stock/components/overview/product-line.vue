@@ -38,7 +38,7 @@
       </PSMedia>
     </td>
     <td>
-      {{ product.product_reference }}
+      {{ reference }}
     </td>
     <td>
       {{ product.supplier_name }}
@@ -76,6 +76,12 @@
     props: ['product'],
     mixins: [ProductDesc],
     computed: {
+      reference() {
+        if (this.product.combination_reference !== 'N/A') {
+          return this.product.combination_reference;
+        }
+        return this.product.product_reference;
+      },
       updatedQty() {
         return !!this.product.qty;
       },
