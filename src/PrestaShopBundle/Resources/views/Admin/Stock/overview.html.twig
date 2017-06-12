@@ -24,33 +24,47 @@
  *#}
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
+{% block content %}
 
-    {% set productId = app.request.query.get('productId') ? app.request.query.get('productId') : false %}
-    <script>
-    var data = {
-      baseUrl: '{{ app.request.getBasePath() }}',
-      catalogUrl: '{{ url('admin_product_catalog') }}',
-      stockUrl: '{{ url('admin_stock_overview') }}',
-      apiStockUrl: '{{ productId ? url('api_stock_list_product_combinations', {'productId' : productId}) : url('api_stock_list_products') }}',
-      apiMovementsUrl: '{{ productId ? url('api_stock_product_list_movements', {'productId' : productId}) : url('api_stock_list_movements') }}',
-      employeesUrl: '{{ url('api_stock_list_movements_employees') }}',
-      suppliersUrl: '{{ url('api_stock_list_suppliers') }}',
-      categoriesUrl: '{{ url('api_stock_list_categories') }}',
-      movementsTypesUrl: '{{ url('api_stock_list_movements_types') }}',
-      translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'stock'}) }}'
-    }
-    </script>
+    {% if is_shop_context %}
+        <div id="stock-app"></div>
 
-    {% if webpack_server %}
-        <script src="http://localhost:8080/stock.bundle.js"></script>
     {% else %}
-        <script src="{{ asset('themes/new-theme/public/stock.bundle.js') }}"></script>
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <i class="material-icons">info_outline</i><p class="alert-text">{{ 'You can\'t manager your stock in this shop context: select a shop instead of a group of shops.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+            </div>
+        </div>
     {% endif %}
 
 {% endblock %}
 
-{% block content %}
-  <div id="stock-app"></div>
+{% block javascripts %}
+
+    {% if is_shop_context %}
+        {{ parent() }}
+
+        {% set productId = app.request.query.get('productId') ? app.request.query.get('productId') : false %}
+        <script>
+            var data = {
+                baseUrl: '{{ app.request.getBasePath() }}',
+                catalogUrl: '{{ url('admin_product_catalog') }}',
+                stockUrl: '{{ url('admin_stock_overview') }}',
+                apiStockUrl: '{{ productId ? url('api_stock_list_product_combinations', {'productId' : productId}) : url('api_stock_list_products') }}',
+                apiMovementsUrl: '{{ productId ? url('api_stock_product_list_movements', {'productId' : productId}) : url('api_stock_list_movements') }}',
+                employeesUrl: '{{ url('api_stock_list_movements_employees') }}',
+                suppliersUrl: '{{ url('api_stock_list_suppliers') }}',
+                categoriesUrl: '{{ url('api_stock_list_categories') }}',
+                movementsTypesUrl: '{{ url('api_stock_list_movements_types') }}',
+                translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'stock'}) }}'
+            }
+        </script>
+
+        {% if webpack_server %}
+            <script src="http://localhost:8080/stock.bundle.js"></script>
+        {% else %}
+            <script src="{{ asset('themes/new-theme/public/stock.bundle.js') }}"></script>
+        {% endif %}
+    {% endif %}
+
 {% endblock %}

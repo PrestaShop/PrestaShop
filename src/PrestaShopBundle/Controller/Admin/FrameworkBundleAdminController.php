@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -54,7 +55,9 @@ class FrameworkBundleAdminController extends Controller
      */
     public function overviewAction()
     {
-        return [];
+        return array(
+            'is_shop_context' => (new Context())->isShopContext(),
+        );
     }
 
     public function hashUpdateJsAction($hash)
