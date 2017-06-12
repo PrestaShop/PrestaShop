@@ -226,7 +226,8 @@ class StockMovementRepository extends StockManagementRepository
                 product_features.id_product = p.id_product
             )
             WHERE
-            sa.id_shop = :shop_id AND
+            sa.id_shop = :stock_shop_id AND
+            sa.id_shop_group = :stock_group_id AND
             sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0)
             {and_where}
             GROUP BY sm.id_stock_mvt

@@ -276,7 +276,8 @@ class StockRepository extends StockManagementRepository
             )
             LEFT JOIN {table_prefix}stock_available sa ON (
               p.id_product = sa.id_product AND
-              sa.id_shop = :shop_id AND
+              sa.id_shop = :stock_shop_id AND
+              sa.id_shop_group = :stock_group_id AND
               sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0)
             )
             LEFT JOIN {table_prefix}image ic ON (

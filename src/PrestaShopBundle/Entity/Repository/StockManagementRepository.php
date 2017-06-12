@@ -316,6 +316,20 @@ abstract class StockManagementRepository
         $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
         $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
 
+        // if quantities are shared between shops of the group
+        $shop = $this->context->shop;
+        $shopGroup = $shop->getGroup();
+        if ($shopGroup->share_stock) {
+            $stockShopId = 0;
+            $stockGroupId = $shopGroup->id;
+        } else {
+            $stockShopId = $shop->getContextualShopId();
+            $stockGroupId = 0;
+        }
+
+        $statement->bindValue('stock_shop_id', $stockShopId, PDO::PARAM_INT);
+        $statement->bindValue('stock_group_id', $stockGroupId, PDO::PARAM_INT);
+
         if ($queryParams) {
             $this->bindValuesInStatement($statement, $queryParams);
         }
