@@ -237,10 +237,15 @@ class StockRepository extends StockManagementRepository
               total_combinations
             ) as total_combinations,
             IF (
-                LENGTH(COALESCE(pa.reference, "")) = 0,
-                IF (LENGTH(TRIM(p.reference)) > 0, p.reference, "N/A"),
-                CONCAT(p.reference, " ", pa.reference)
-            ) AS product_reference,
+              COALESCE(p.reference, "") = "",
+              "N/A",
+              p.reference
+            ) as product_reference,
+            IF (
+              COALESCE(pa.reference, "") = "",
+              "N/A",
+              pa.reference
+            ) as combination_reference,
             pl.name AS product_name,
             IF (
                 COALESCE(pa.id_product_attribute, 0) > 0,
@@ -415,7 +420,7 @@ class StockRepository extends StockManagementRepository
      */
     private function orderByProductIds()
     {
-        return 'ORDER BY p.id_product DESC, COALESCE(pa.id_product_attribute, 0)';
+        return 'ORDER BY p.id_product DESC, COALESCE(pa.id_product_attribute, 0) DESC';
     }
 
     /**

@@ -274,7 +274,7 @@ abstract class StockManagementRepository
 
         $productColumns = 'product_id, combination_id';
         if ($descendingOrder) {
-            $productColumns = 'product_id DESC, combination_id ASC';
+            $productColumns = 'product_id DESC, combination_id DESC';
         }
 
         return strtr($orderByClause, array(
