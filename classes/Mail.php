@@ -87,7 +87,7 @@ class MailCore extends ObjectModel
      *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
-    public static function Send(
+    public static function send(
         $idLang,
         $template,
         $subject,
@@ -103,8 +103,8 @@ class MailCore extends ObjectModel
         $idShop = null,
         $bcc = null,
         $replyTo = null,
-        $replyToName = null)
-    {
+        $replyToName = null
+    ) {
         if (!$idShop) {
             $idShop = Context::getContext()->shop->id;
         }
@@ -135,7 +135,7 @@ class MailCore extends ObjectModel
         }, true);
 
         if (!$skip) {
-	        return true;
+            return true;
         }
 
         if (is_numeric($idShop) && $idShop) {
@@ -552,7 +552,7 @@ class MailCore extends ObjectModel
         $from,
         $smtpLogin,
         $smtpPassword,
-        $smtpPort = 25,
+        $smtpPort,
         $smtpEncryption
     ) {
         $result = false;

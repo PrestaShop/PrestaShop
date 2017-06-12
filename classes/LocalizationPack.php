@@ -406,7 +406,7 @@ class LocalizationPackCore
     /**
      * Install/Uninstall a module from a localization file
      * <modules>
-     *	<module name="module_name" [install="0|1"] />
+     *     <module name="module_name" [install="0|1"] />
      *
      * @param SimpleXMLElement $xml
      * @return bool

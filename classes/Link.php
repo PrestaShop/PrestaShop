@@ -637,7 +637,8 @@ class LinkCore
      *
      * @return string
      */
-    public function getModuleLink($module,
+    public function getModuleLink(
+        $module,
         $controller = 'default',
         array $params = array(),
         $ssl = null,

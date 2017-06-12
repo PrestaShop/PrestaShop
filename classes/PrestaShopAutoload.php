@@ -175,7 +175,7 @@ class PrestaShopAutoload
 
         $contentNamespacedStub = '<?php '."\n".'namespace PrestaShop\\PrestaShop\\Adapter\\Entity;'."\n\n";
 
-        foreach($coreClasses as $coreClassName => $coreClass) {
+        foreach ($coreClasses as $coreClassName => $coreClass) {
             if (substr($coreClassName, -4) == 'Core') {
                 $coreClassName = substr($coreClassName, 0, -4);
                 if ($coreClass['type'] != 'interface') {
@@ -199,7 +199,7 @@ class PrestaShopAutoload
 
         $contentStub = '<?php'."\n\n";
 
-        foreach($coreClassesWOOverrides as $coreClassName => $coreClass) {
+        foreach ($coreClassesWOOverrides as $coreClassName => $coreClass) {
             if (substr($coreClassName, -4) == 'Core') {
                 $coreClassNameNoCore = substr($coreClassName, 0, -4);
                 if ($coreClass['type'] != 'interface') {

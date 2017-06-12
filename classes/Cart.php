@@ -734,8 +734,8 @@ class CartCore extends ObjectModel
                     }
 
                     if (
-                        $row['id_product'] == $gift['gift_product'] &&
-                        $row['id_product_attribute'] == $gift['gift_product_attribute']
+                        $row['id_product'] == $gift['gift_product']
+                        && $row['id_product_attribute'] == $gift['gift_product_attribute']
                     ) {
                         $row['is_gift'] = true;
                         $result[$rowIndex] = $row;
@@ -1632,8 +1632,8 @@ class CartCore extends ObjectModel
 
         foreach ($gifts as $gift) {
             if (
-                (int) $gift['id_product_attribute'] === $id_product_attribute &&
-                (int) $gift['id_product'] === $id_product
+                (int) $gift['id_product_attribute'] === $id_product_attribute
+                && (int) $gift['id_product'] === $id_product
             ) {
                 $preservedGifts[$id_product.'-'.$id_product_attribute]++;
             }
