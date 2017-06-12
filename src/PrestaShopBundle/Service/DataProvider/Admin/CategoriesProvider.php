@@ -34,8 +34,8 @@ class CategoriesProvider
 {
     private $apiClient;
 
-    static $categories;
-    static $categoriesFromApi;
+    public static $categories;
+    public static $categoriesFromApi;
 
     public function __construct(ApiClient $apiClient)
     {

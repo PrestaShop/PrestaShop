@@ -133,7 +133,7 @@ class Employee implements UserInterface, EquatableInterface
      * @param array $roles
      * @return Employee
      */
-    function setRoles(array $roles)
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
         return $this;

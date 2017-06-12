@@ -56,10 +56,10 @@ class CountryDataProvider
      *
      * @return string the related iso code
      */
-     public function getIsoCodebyId($id = null)
-     {
-         $countryId = (null === $id) ? Configuration::get('PS_COUNTRY_DEFAULT') : $id;
+    public function getIsoCodebyId($id = null)
+    {
+        $countryId = (null === $id) ? Configuration::get('PS_COUNTRY_DEFAULT') : $id;
 
-         return Country::getIsoById($countryId);
-     }
+        return Country::getIsoById($countryId);
+    }
 }

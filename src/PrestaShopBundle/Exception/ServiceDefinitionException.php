@@ -44,7 +44,7 @@ class ServiceDefinitionException extends Exception
      * @param integer $code
      * @param Exception $previous
      */
-    public function __construct($message = "", $serviceId, $code = 0, Exception $previous = null)
+    public function __construct($message, $serviceId, $code = 0, Exception $previous = null)
     {
         $this->serviceId = $serviceId;
 

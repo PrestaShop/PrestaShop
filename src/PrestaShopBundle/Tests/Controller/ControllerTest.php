@@ -65,7 +65,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      * @param $controllerClass
      * @return mixed
      */
-    public function it_should_run_the_tested_controller($controllerClass)
+    public function itShouldRunTheTestedController($controllerClass)
     {
         /**
          * @var Controller $testedController

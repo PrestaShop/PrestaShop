@@ -62,8 +62,8 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
             $messages = array_keys($messages);
 
             // We compare strings from the same array, so we have two for() loops
-            for ($i = 0 ; $i < $nbOfMessages ; ++$i) {
-                for ($j = ($i +1) ; $j < $nbOfMessages ; ++$j) {
+            for ($i = 0; $i < $nbOfMessages; ++$i) {
+                for ($j = ($i +1); $j < $nbOfMessages; ++$j) {
                     if ($this->check($messages[$i], $messages[$j])) {
                         $duplicates[$domain][] = array($i => $messages[$i], $j => $messages[$j]);
                     }

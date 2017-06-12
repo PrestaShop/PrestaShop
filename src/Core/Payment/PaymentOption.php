@@ -73,10 +73,10 @@ class PaymentOption implements HookContentClassInterface
      * An associative array of additional parameters to use when sending
      * the request to $action,
      * e.g. if  $action is "http://payment-provider.example.com/process",
-     * 			$method is "GET"
-     *      	and $inputs is ['customerName' => 'bob']
+     *          $method is "GET"
+     *      and $inputs is ['customerName' => 'bob']
      *      then the request will be made to:
-     *      	"http://payment-provider.example.com/process?customerName=bob"
+     *          "http://payment-provider.example.com/process?customerName=bob"
      *
      * @var array
      */
@@ -294,9 +294,9 @@ class PaymentOption implements HookContentClassInterface
 
     /**
      * Legacy options were specified this way:
-     * - either an array with a top level property 'cta_text'
-     * 	and then the other properties
+     * - either an array with a top level property 'cta_text' and then the other properties
      * - or a numerically indexed array or arrays as described above
+     *
      * Since this was a mess, this method is provided to convert them.
      * It takes as input a legacy option (in either form) and always
      * returns an array of instances of PrestaShop\PrestaShop\Core\Payment\PaymentOption

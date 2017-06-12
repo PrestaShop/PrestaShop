@@ -102,8 +102,7 @@ class ModuleManager implements AddonManagerInterface
         TranslatorInterface $translator,
         EventDispatcherInterface $dispatcher,
         Employee $employee = null
-        )
-    {
+    ) {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->moduleProvider = $modulesProvider;
         $this->moduleUpdater = $modulesUpdater;
@@ -224,8 +223,7 @@ class ModuleManager implements AddonManagerInterface
 
         if (!empty($source)) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        }
-        else if (! $this->moduleProvider->isOnDisk($name)) {
+        } elseif (! $this->moduleProvider->isOnDisk($name)) {
             $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
@@ -296,9 +294,8 @@ class ModuleManager implements AddonManagerInterface
         // 1- From source
         if ($source != null) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        }
-        // 2- From Addons
-        else {
+        } else {
+            // 2- From Addons
             // This step is not mandatory (in case of local module),
             // we do not check the result
             $this->moduleUpdater->setModuleOnDiskFromAddons($name);
@@ -388,10 +385,23 @@ class ModuleManager implements AddonManagerInterface
      * Not written in camel case because the route and the displayed action in the template
      * are related to this function name.
      *
+     * @deprecated use disableMobile()
+     *
      * @param  string $name The module name to disable
      * @return bool         True for success
      */
     public function disable_mobile($name)
+    {
+        return $this->disableMobile($name);
+    }
+
+    /**
+     * Disable a module specifically on mobile.
+     *
+     * @param  string $name The module name to disable
+     * @return bool         True for success
+     */
+    public function disableMobile($name)
     {
         if (!$this->allowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
@@ -423,10 +433,23 @@ class ModuleManager implements AddonManagerInterface
      * Not written in camel case because the route and the displayed action in the template
      * are related to this function name.
      *
+     * @deprecated use enableMobile.
+     *
      * @param  string $name The module name to enable
      * @return bool         True for success
      */
     public function enable_mobile($name)
+    {
+        return $this->enableMobile($name);
+    }
+
+    /**
+     * Enable a module previously disabled on mobile.
+     *
+     * @param string $name The module name to enable
+     * @return bool True for success
+     */
+    public function enableMobile($name)
     {
         if (!$this->allowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
@@ -573,7 +596,7 @@ class ModuleManager implements AddonManagerInterface
 
     /**
      * Check the permissions of the current context (CLI or employee) for a specified action
-     * 
+     *
      * @param string $action The action called in ModuleManager
      * @param string $name (Optionnal for 'install') The module name to check
      * @return boolean

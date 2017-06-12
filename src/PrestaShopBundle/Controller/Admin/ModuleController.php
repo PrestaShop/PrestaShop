@@ -45,7 +45,12 @@ use DateTime;
 
 class ModuleController extends FrameworkBundleAdminController
 {
-    const controller_name = 'ADMINMODULESSF';
+    const CONTROLLER_NAME = 'ADMINMODULESSF';
+
+    /**
+     * @deprecated
+     */
+    const controller_name = self::CONTROLLER_NAME;
 
     /**
      * Controller responsible for displaying "Catalog" section of Module management pages.
@@ -56,7 +61,7 @@ class ModuleController extends FrameworkBundleAdminController
     {
         if (
             !in_array(
-                $this->authorizationLevel($this::controller_name),
+                $this->authorizationLevel($this::CONTROLLER_NAME),
                 array(
                     PageVoter::LEVEL_READ,
                     PageVoter::LEVEL_UPDATE,
@@ -84,7 +89,7 @@ class ModuleController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminModules'),
             'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel($this::controller_name),
+            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'errorMessage' => $errorMessage,
         ));
     }
@@ -161,7 +166,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'modules' => $this->getPresentedProducts($modules),
                 'requireAddonsSearch' => true,
                 'id' => 'all',
-                'level' => $this->authorizationLevel($this::controller_name),
+                'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
                 'errorMessage' => $errorMessage,
             )
         )->getContent();
@@ -257,7 +262,7 @@ class ModuleController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminModules'),
             'requireFilterStatus' => true,
-            'level' => $this->authorizationLevel($this::controller_name),
+            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'errorMessage' => $errorMessage,
         ));
     }
@@ -266,7 +271,7 @@ class ModuleController extends FrameworkBundleAdminController
     {
         if (
             !in_array(
-                $this->authorizationLevel($this::controller_name),
+                $this->authorizationLevel($this::CONTROLLER_NAME),
                 array(
                     PageVoter::LEVEL_CREATE,
                     PageVoter::LEVEL_UPDATE,
@@ -356,8 +361,8 @@ class ModuleController extends FrameworkBundleAdminController
                 $moduleInstance = $moduleRepository->getModule($module);
                 $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
                 $response[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
-                        'module' => $this->getPresentedProducts($moduleInstanceWithUrl)[0],
-                        'level' => $this->authorizationLevel($this::controller_name),
+                    'module' => $this->getPresentedProducts($moduleInstanceWithUrl)[0],
+                    'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
                     ))->getContent();
             }
 
@@ -428,7 +433,7 @@ class ModuleController extends FrameworkBundleAdminController
             'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel($this::controller_name),
+            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'errorMessage' => $errorMessage,
         ));
     }
@@ -476,7 +481,7 @@ class ModuleController extends FrameworkBundleAdminController
         $twigParams = array(
             'currentIndex' => '',
             'modulesList' => $moduleListSorted,
-            'level' => $this->authorizationLevel($this::controller_name),
+            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
         );
 
         if ($request->request->has('admin_list_from_source')) {
@@ -555,13 +560,13 @@ class ModuleController extends FrameworkBundleAdminController
         try {
             if (
                 !in_array(
-                        $this->authorizationLevel($this::controller_name),
-                        array(
-                            PageVoter::LEVEL_CREATE,
-                            PageVoter::LEVEL_DELETE
-                        )
+                    $this->authorizationLevel($this::CONTROLLER_NAME),
+                    array(
+                        PageVoter::LEVEL_CREATE,
+                        PageVoter::LEVEL_DELETE
+                    )
                 )
-            ){
+            ) {
                 return new JsonResponse(
                     array(
                         'status' => false,
@@ -578,15 +583,19 @@ class ModuleController extends FrameworkBundleAdminController
             $file_uploaded = $request->files->get('file_uploaded');
             $constraints = array(
                 new Assert\NotNull(),
-                new Assert\File(array(
-                    'maxSize' => ini_get('upload_max_filesize'),
-                    'mimeTypes' => array(
-                        'application/zip',
-                        'application/x-gzip',
-                        'application/gzip',
-                        'application/x-gtar',
-                        'application/x-tgz',
-            ), )), );
+                new Assert\File(
+                    array(
+                        'maxSize'   => ini_get('upload_max_filesize'),
+                        'mimeTypes' => array(
+                            'application/zip',
+                            'application/x-gzip',
+                            'application/gzip',
+                            'application/x-gtar',
+                            'application/x-tgz',
+                        ),
+                    )
+                ),
+            );
 
             $violations = $this->get('validator')->validateValue($file_uploaded, $constraints);
             if (0 !== count($violations)) {
@@ -789,7 +798,7 @@ class ModuleController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Module/Includes/modal_read_more_content.html.twig',
             array(
                 'module' => $moduleToPresent,
-                'level' => $this->authorizationLevel($this::controller_name),
+                'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             )
         );
     }

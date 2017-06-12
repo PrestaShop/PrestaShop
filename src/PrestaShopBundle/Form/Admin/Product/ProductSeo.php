@@ -120,8 +120,8 @@ class ProductSeo extends CommonAbstractType
                 $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => '301-category',
                 $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => '302-category',
             ),
-            'choice_attr' => function($val, $key, $index) use ($remoteUrls) {
-                if(array_key_exists($index, $remoteUrls)) {
+            'choice_attr' => function ($val, $key, $index) use ($remoteUrls) {
+                if (array_key_exists($index, $remoteUrls)) {
                     return ['data-remoteurl' => $remoteUrls[$index]];
                 }
                 return [];
