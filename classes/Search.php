@@ -199,7 +199,7 @@ class SearchCore
                 $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
                 $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
 
-                $intersect_array[] = 'SELECT si.id_product
+                $intersect_array[] = 'SELECT DISTINCT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
 					LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
 					WHERE sw.id_lang = '.(int)$id_lang.'
@@ -242,7 +242,7 @@ class SearchCore
         }
 
         $results = $db->executeS('
-		SELECT cp.`id_product`
+		SELECT DISTINCT cp.`id_product`
 		FROM `'._DB_PREFIX_.'category_product` cp
 		'.(Group::isFeatureActive() ? 'INNER JOIN `'._DB_PREFIX_.'category_group` cg ON cp.`id_category` = cg.`id_category`' : '').'
 		INNER JOIN `'._DB_PREFIX_.'category` c ON cp.`id_category` = c.`id_category`
@@ -258,19 +258,17 @@ class SearchCore
         foreach ($results as $row) {
             $eligible_products[] = $row['id_product'];
         }
+
+        $eligible_products2 = array();
         foreach ($intersect_array as $query) {
-            $eligible_products2 = array();
             foreach ($db->executeS($query, true, false) as $row) {
                 $eligible_products2[] = $row['id_product'];
             }
-
-            $eligible_products = array_intersect($eligible_products, $eligible_products2);
-            if (!count($eligible_products)) {
-                return ($ajax ? array() : array('total' => 0, 'result' => array()));
-            }
         }
-
-        $eligible_products = array_unique($eligible_products);
+        $eligible_products = array_unique(array_intersect($eligible_products, array_unique($eligible_products2)));
+        if (!count($eligible_products)) {
+            return ($ajax ? array() : array('total' => 0, 'result' => array()));
+        }
 
         $product_pool = '';
         foreach ($eligible_products as $id_product) {
