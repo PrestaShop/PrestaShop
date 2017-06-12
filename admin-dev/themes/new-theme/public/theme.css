@@ -9528,9 +9528,13 @@ ul.category-tree {
   ul.category-tree .more::before {
     content: "\E5CC"; }
   ul.category-tree .category-label {
-    display: block; }
+    display: block;
+    padding-left: 0; }
     ul.category-tree .category-label .category {
-      cursor: pointer; }
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      right: -9px; }
   ul.category-tree ul {
     padding-left: 1.563rem; }
   ul.category-tree li {
