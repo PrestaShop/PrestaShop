@@ -137,7 +137,7 @@ class AdminTaxesControllerCore extends AdminController
      * @throws Exception
      * @throws SmartyException
      */
-    public function displayDeleteLink($token = null, $id)
+    public function displayDeleteLink($token, $id)
     {
         if (!array_key_exists('Delete', self::$cache_lang)) {
             self::$cache_lang['Delete'] = $this->trans('Delete', array(), 'Admin.Actions');
@@ -262,10 +262,8 @@ class AdminTaxesControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
                     }
-                }
-
-                /* Object creation */
-                else {
+                } else {
+                    // Object creation
                     /** @var Tax $object */
                     $object = new $this->className();
                     $this->copyFromPost($object, $this->table);

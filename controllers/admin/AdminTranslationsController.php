@@ -1223,7 +1223,6 @@ class AdminTranslationsControllerCore extends AdminController
                 $directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_.'classes/', array(), 'php'));
                 $directories['php'] = array_merge($directories['php'], $this->getModulesHasMails());
                 break;
-
         }
 
         return $directories;
@@ -2576,7 +2575,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string
      */
-    protected function displayMailBlockTxt($content = false, $lang, $mail_name, $group_name, $name_for_module = false)
+    protected function displayMailBlockTxt($content, $lang, $mail_name, $group_name, $name_for_module = false)
     {
         if (!empty($content)) {
             $text_content = Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang])));
@@ -2604,7 +2603,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string
      */
-    protected function displayMailBlockHtml($content = false, $lang, $url, $mail_name, $group_name, $name_for_module = false)
+    protected function displayMailBlockHtml($content, $lang, $url, $mail_name, $group_name, $name_for_module = false)
     {
         $title = array();
 
@@ -2621,7 +2620,7 @@ class AdminTranslationsControllerCore extends AdminController
                 </div>';
     }
 
-    protected function displayMailEditor($content = false, $lang, $mail_name, $group_name, $name_for_module = false)
+    protected function displayMailEditor($content, $lang, $mail_name, $group_name, $name_for_module = false)
     {
         $title = array();
 
@@ -2908,9 +2907,8 @@ class AdminTranslationsControllerCore extends AdminController
                     }
                 }
             }
-        }
-        // Or if is folder, we scan folder for check if found in folder and subfolder
-        elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file)) {
+        } elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file)) {
+            // Or if is folder, we scan folder for check if found in folder and subfolder
             foreach (scandir($dir.'/'.$file) as $temp) {
                 if ($temp[0] != '.') {
                     $subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
@@ -2996,7 +2994,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return array
      */
-    protected function getAllModuleFiles($modules, $root_dir = null, $lang, $is_default = false)
+    protected function getAllModuleFiles($modules, $root_dir, $lang, $is_default = false)
     {
         $array_files = array();
         $initial_root_dir = $root_dir;
