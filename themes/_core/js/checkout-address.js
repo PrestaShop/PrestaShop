@@ -24,6 +24,10 @@
  */
 import $ from 'jquery'
 import prestashop from 'prestashop'
+import {psGetRequestParameter} from './common';
+
+let editAddress = psGetRequestParameter('editAddress');
+let useSameAddress = psGetRequestParameter('use_same_address');
 
 export default function () {
   $('.js-edit-addresses').on('click', (event) => {
@@ -31,26 +35,75 @@ export default function () {
     $('#checkout-addresses-step').trigger('click');
     prestashop.emit('editAddress');
   });
-  $('.js-address-selector input[type=radio]:not(:checked)').on('click', function () {
-    $('button[name=confirm-addresses]').prop("disabled", "");
-    if (0 < $('.js-address-error').length) {
-      $('.js-address-error').hide();
-      var idFailureAddress = $(".js-address-error").prop('id').split('-').pop();
-      $('#id-address-delivery-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #7a7a7a !important');
-      $('#id-address-invoice-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #7a7a7a !important');
+
+  $('#delivery-addresses input[type=radio], #invoice-addresses input[type=radio]').on('click', function () {
+    $('.address-item').removeClass('selected');
+    $('.address-item:has(input[type=radio]:checked)').addClass('selected');
+
+    let idFailureAddress = $(".js-address-error").prop('id').split('-').pop();
+    let notValidAddresses = $('#not-valid-addresses').val();
+    let addressType = this.name.split('_').pop();
+    let $addressError = $('.js-address-error[name=alert-' + addressType + ']');
+    switchEditAddressButtonColor(false, idFailureAddress, addressType);
+
+    if (notValidAddresses !== "" && editAddress === null) {
+      if (notValidAddresses.split(',').indexOf(this.value) >= 0) {
+        $addressError.show();
+        switchEditAddressButtonColor(true, this.value, addressType);
+        $(".js-address-error").prop('id', "id-failure-address-" + this.value);
+      } else {
+        $addressError.hide();
+      }
+    } else {
+      $addressError.hide();
     }
+
+    switchConfirmAddresssesButtonState();
   });
 }
 
-$(document).ready(() => {
-  if (0 < $('.js-address-error').length) {
-    var idFailureAddress = $(".js-address-error").prop('id').split('-').pop();
-    if ($(".js-address-error").attr('name').split('-').pop() == "delivery") {
-      $('#id-address-delivery-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #2fb5d2 !important');
-    } else {
-      $('#id-address-invoice-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #2fb5d2 !important');
-    }
-    $('button[name=confirm-addresses]').prop('disabled', 'disabled');
+$(window).load(() => {
+  if (parseInt(useSameAddress) === 0) {
+    $('#invoice-addresses input[type=radio]:checked').trigger('click');
   }
-})
-;
+  if (editAddress !== null || $('.js-address-form:visible').length > 1) {
+    $('.js-address-error:visible').hide();
+  }
+
+  if ($('.js-address-error:visible').length > 0) {
+    let idFailureAddress = $(".js-address-error").prop('id').split('-').pop();
+
+    $(".js-address-error:visible").each(function () {
+      switchEditAddressButtonColor(true, idFailureAddress, $(this).attr('name').split('-').pop());
+    });
+  }
+  switchConfirmAddresssesButtonState();
+});
+
+/**
+ * Change the color of the edit button for the wrong address
+ * @param enabled
+ * @param id
+ * @param type
+ */
+const switchEditAddressButtonColor = function switchEditAddressButtonColor(enabled, id, type) {
+  let color = "#7a7a7a";
+
+  if (enabled) {
+    $('#' + type + '-addresses a.edit-address').prop('style', 'color: #7a7a7a !important');
+    color = "#2fb5d2";
+  }
+
+  $('#id-address-' + type + '-address-' + id + ' a.edit-address').prop('style', 'color: ' + color + ' !important');
+}
+
+/**
+ * Enable/disable the continue address button
+ */
+const switchConfirmAddresssesButtonState = function switchConfirmAddresssesButtonState() {
+  if ($(".js-address-error:visible").length > 0) {
+    $('button[name=confirm-addresses]').prop("disabled", "disabled");
+  } else {
+    $('button[name=confirm-addresses]').prop("disabled", "");
+  }
+}

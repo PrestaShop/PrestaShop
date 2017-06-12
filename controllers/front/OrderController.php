@@ -151,7 +151,10 @@ class OrderControllerCore extends FrontController
     protected function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
-        $data['checksum'] = is_array($checksum = $this->cartChecksum->generateChecksum($this->context->cart)) ? null : $checksum;
+        $cartValidator = new CartValidator($this->context);
+        $customer = $this->context->customer;
+
+        $data['checksum'] = (is_array($cartValidator->hasValidAddresses()) && !$customer->isGuest()) ? null : $this->cartChecksum->generateChecksum($this->context->cart);
 
         Db::getInstance()->execute(
             'UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'"
@@ -169,13 +172,22 @@ class OrderControllerCore extends FrontController
             $data = [];
         }
 
-        if (is_array($checksum = $this->cartChecksum->generateChecksum($this->context->cart))) {
+        $cartValidator = new CartValidator($this->context);
+        $customer = $this->context->customer;
+        $address = $cartValidator->hasValidAddresses();
+
+        if (is_array($address) && !$customer->isGuest()) {
             $this->checkoutWarning['address'] = array(
-                'id_address' => $checksum['id_address'],
-                'exception' => $checksum['exception'],
+                'id_address' => (int)reset($address),
+                'exception' => $this->trans('Your address is incomplete, please update it.', array(), 'Shop.Notifications.Error'),
             );
             $checksum = null;
+        } else {
+            $checksum = $this->cartChecksum->generateChecksum($this->context->cart);
         }
+
+        $invalidAddresses = $cartValidator->getInvalidAdressesIds();
+        $this->checkoutWarning['invalid_addresses'] = is_array($invalidAddresses) ? $invalidAddresses : array();
 
         if (isset($data['checksum']) && $data['checksum'] === $checksum) {
             $process->restorePersistedData($data);
