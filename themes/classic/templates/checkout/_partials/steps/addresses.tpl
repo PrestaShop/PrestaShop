@@ -68,6 +68,8 @@
 
         {if isset($delivery_address_error)}
           <p class="alert alert-danger js-address-error" name="alert-delivery" id="id-failure-address-{$delivery_address_error.id_address}">{$delivery_address_error.exception}</p>
+        {else}
+          <p class="alert alert-danger js-address-error hide" name="alert-delivery">{l s="Your address is incomplete, please update it." d="Shop.Notifications.Error"}</p>
         {/if}
 
         <p class="add-address">
@@ -110,6 +112,8 @@
 
           {if isset($invoice_address_error)}
             <p class="alert alert-danger js-address-error" name="alert-invoice" id="id-failure-address-{$invoice_address_error.id_address}">{$invoice_address_error.exception}</p>
+          {else}
+            <p class="alert alert-danger js-address-error hide" name="alert-invoice" >{l s="Your address is incomplete, please update it." d="Shop.Notifications.Error"}</p>
           {/if}
 
           <p class="add-address">
@@ -124,6 +128,7 @@
           <button type="submit" class="btn btn-primary continue float-xs-right" name="confirm-addresses" value="1">
               {l s='Continue' d='Shop.Theme.Actions'}
           </button>
+          <input type="hidden" id="not-valid-addresses" value="{$not_valid_addesses}">
         </div>
       {/if}
 
