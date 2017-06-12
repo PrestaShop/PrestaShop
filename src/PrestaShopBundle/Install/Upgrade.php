@@ -202,7 +202,9 @@ namespace PrestaShopBundle\Install {
         private function defineConst()
         {
             // retrocompatibility (is present in some upgrade scripts)
-            define('INSTALL_PATH', $this->installDir);
+            if (!defined('INSTALL_PATH')) {
+                define('INSTALL_PATH', $this->installDir);
+            }
             require_once(INSTALL_PATH . 'install_version.php');
             // needed for upgrade before 1.5
             if (!defined('__PS_BASE_URI__')) {
