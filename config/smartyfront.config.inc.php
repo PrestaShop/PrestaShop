@@ -67,12 +67,13 @@ function withWidget($params, callable $cb)
     $moduleInstance = Module::getInstanceByName($moduleName);
 
     if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
-        throw new Exception(sprintf(
-            'Module `%1$s` is not a WidgetInterface.',
-            $moduleName
-        ));
+       return;
     }
 
+    if (!$moduleInstance->active) {
+       return;
+    }
+    
     return $cb($moduleInstance, $params);
 }
 
