@@ -113,10 +113,8 @@ class CategoryRepository
             'SELECT
             c.id_category, c.id_parent, c.active, c.position, cl.name
             FROM {table_prefix}category c
-            LEFT JOIN {table_prefix}category_lang cl ON (cl.id_category = c.id_category)
-            LEFT JOIN {table_prefix}category_shop cs ON (cs.id_category = c.id_category)
-            WHERE cl.id_lang = :language_id
-            AND cs.id_shop = :shop_id
+            INNER JOIN {table_prefix}category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = :language_id AND cl.id_shop = :shop_id)
+            INNER JOIN {table_prefix}category_shop cs ON (cs.id_category = c.id_category AND cs.id_shop = :shop_id)
         ');
 
         $statement = $this->connection->prepare($query);

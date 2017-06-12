@@ -24,23 +24,27 @@
  *#}
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
+{% block content %}
+    <div id="translations-app"></div>
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
 
     <script>
-      var data = {
-        baseUrl: '{{ app.request.getBasePath() }}',
-        locale: '{{ app.request.query.get('locale') }}',
-        selected: '{{ app.request.query.get('selected') }}',
-        domainsTreeUrl: '{{ url('api_translation_domains_tree', {
-          'lang' : app.request.query.get('lang'),
-          'type' : app.request.query.get('type'),
-          'selected': app.request.query.get('selected')
-        }) }}',
-        translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'international'}) }}',
-        internationalUrl: '{{ getAdminLink("AdminLocalization")|raw }}',
-        translationsUrl: '{{ getAdminLink("AdminTranslations")|raw }}'
-      }
+        var data = {
+            baseUrl: '{{ app.request.getBasePath() }}',
+            locale: '{{ app.request.query.get('locale') }}',
+            selected: '{{ app.request.query.get('selected') }}',
+            domainsTreeUrl: '{{ url('api_translation_domains_tree', {
+              'lang' : app.request.query.get('lang'),
+              'type' : app.request.query.get('type'),
+              'selected': app.request.query.get('selected')
+            }) }}',
+            translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'international'}) }}',
+            internationalUrl: '{{ getAdminLink("AdminLocalization")|raw }}',
+            translationsUrl: '{{ getAdminLink("AdminTranslations")|raw }}'
+        }
     </script>
 
     {% if webpack_server %}
@@ -49,8 +53,4 @@
         <script src="{{ asset('themes/new-theme/public/translations.bundle.js') }}"></script>
     {% endif %}
 
-{% endblock %}
-
-{% block content %}
-  <div id="translations-app"></div>
 {% endblock %}
