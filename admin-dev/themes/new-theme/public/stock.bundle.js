@@ -59,7 +59,7 @@
 /******/
 /******/
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d3dab616f9bfd3e3d5b3"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c9d66fb5890a4b5d1f7c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -38963,6 +38963,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     thumbnail() {
       if (this.product.combination_thumbnail !== 'N/A') {
         return `${window.data.baseUrl}/${this.product.combination_thumbnail}`;
+      } else if (this.product.product_thumbnail !== 'N/A') {
+        return `${window.data.baseUrl}/${this.product.product_thumbnail}`;
       }
       return null;
     },
@@ -41371,7 +41373,6 @@ const updateQtyByProductId = ({ commit, state }, payload) => {
 const updateQtyByProductsId = ({ commit, state }, payload) => {
   const url = state.editBulkUrl;
   const productsQty = state.productsToUpdate;
-  console.log(productsQty)
   __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.post(url, productsQty).then((res) => {
     commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["o" /* UPDATE_PRODUCTS_QTY */], res.body);
     return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_app_utils_growl__["a" /* showGrowl */])('notice', 'Stock successfully updated');
@@ -43161,6 +43162,12 @@ exports.default = {
   props: ['product'],
   mixins: [_productDesc2.default],
   computed: {
+    reference: function reference() {
+      if (this.product.combination_reference !== 'N/A') {
+        return this.product.combination_reference;
+      }
+      return this.product.product_reference;
+    },
     updatedQty: function updatedQty() {
       return !!this.product.qty;
     },
@@ -43452,11 +43459,8 @@ exports.default = {
 
   computed: {
     qty: function qty() {
-      if (!this.product.qty) {
-        this.isActive = false;
-        this.isEnabled = false;
-        this.value = 0;
-        this.product.qty = 0;
+      if (parseInt(this.product.qty, 10) === 0) {
+        this.deActivate();
       }
       return this.product.qty;
     },
@@ -43471,8 +43475,16 @@ exports.default = {
     }
   },
   methods: {
+    deActivate: function deActivate() {
+      this.isActive = false;
+      this.isEnabled = false;
+      this.value = null;
+      this.product.qty = null;
+    },
     onKeyup: function onKeyup(val) {
-      if (!isNaN(parseInt(val, 10))) {
+      if (isNaN(parseInt(val, 10))) {
+        this.deActivate();
+      } else {
         this.isActive = true;
         this.isEnabled = true;
         this.value = val;
@@ -43489,15 +43501,12 @@ exports.default = {
     },
     sendQty: function sendQty() {
       var postUrl = this.product.edit_url;
-      if (this.product.qty && !isNaN(parseInt(this.value, 10))) {
+      if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
         this.$store.dispatch('updateQtyByProductId', {
           url: postUrl,
           delta: this.value
         });
-        this.isActive = false;
-        this.isEnabled = false;
-        this.value = 0;
-        this.product.qty = 0;
+        this.deActivate();
       }
     }
   },
@@ -50290,7 +50299,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "thumbnail": _vm.thumbnail
     }
-  }, [_c('p', [_vm._v("\n        " + _vm._s(_vm.product.product_name) + "\n        "), (_vm.hasCombination) ? _c('small', [_c('br'), _vm._v("\n          " + _vm._s(_vm.combinationName) + "\n        ")]) : _vm._e()])])], 1), _vm._v(" "), _c('td', [_vm._v("\n    " + _vm._s(_vm.product.product_reference) + "\n  ")]), _vm._v(" "), _c('td', [_vm._v("\n    " + _vm._s(_vm.product.supplier_name) + "\n  ")]), _vm._v(" "), _c('td', {
+  }, [_c('p', [_vm._v("\n        " + _vm._s(_vm.product.product_name) + "\n        "), (_vm.hasCombination) ? _c('small', [_c('br'), _vm._v("\n          " + _vm._s(_vm.combinationName) + "\n        ")]) : _vm._e()])])], 1), _vm._v(" "), _c('td', [_vm._v("\n    " + _vm._s(_vm.reference) + "\n  ")]), _vm._v(" "), _c('td', [_vm._v("\n    " + _vm._s(_vm.product.supplier_name) + "\n  ")]), _vm._v(" "), _c('td', {
     staticClass: "text-xs-center"
   }, [_vm._v("\n    " + _vm._s(_vm.physical) + "\n    "), (_vm.updatedQty) ? _c('span', {
     staticClass: "qty-update"
