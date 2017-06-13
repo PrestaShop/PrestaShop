@@ -274,11 +274,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 $form_data['combinations'][$k]['attribute_unit_impact'] = -1;
             }
 
+            $floatParser = new FloatParser();
+
             $form_data['combinations'][$k]['attribute_price'] = abs(
-                (new FloatParser())->fromString($combination['attribute_price'])
+                $floatParser->fromString($combination['attribute_price'])
             );
-            $form_data['combinations'][$k]['attribute_weight'] = abs($combination['attribute_weight']);
-            $form_data['combinations'][$k]['attribute_unity'] = abs($combination['attribute_unity']);
+            $form_data['combinations'][$k]['attribute_weight'] = abs(
+                $floatParser->fromString($combination['attribute_weight'])
+            );
+            $form_data['combinations'][$k]['attribute_unity'] = abs(
+                $floatParser->fromString($combination['attribute_unity'])
+            );
         }
 
         //map suppliers
