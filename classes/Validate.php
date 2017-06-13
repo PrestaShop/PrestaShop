@@ -615,7 +615,7 @@ class ValidateCore
      */
     public static function isIsbn($isbn)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;={}]*$/u'), $isbn);
+        return !$isbn || preg_match('/^[0-9-]{0,32}$/', $isbn);
     }
 
     /**

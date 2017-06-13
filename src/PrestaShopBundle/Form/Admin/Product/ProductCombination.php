@@ -82,7 +82,10 @@ class ProductCombination extends CommonAbstractType
         ))
         ->add('attribute_isbn', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('ISBN code', [], 'Admin.Catalog.Feature')
+            'label' => $this->translator->trans('ISBN code', [], 'Admin.Catalog.Feature'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9-]{0,32}$/"),
+            ),
         ))
         ->add('attribute_upc', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
