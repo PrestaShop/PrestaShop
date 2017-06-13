@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\StockManager;
 abstract class PaymentModuleCore extends Module
 {
     /** @var int Current order's id */
@@ -855,7 +856,7 @@ abstract class PaymentModuleCore extends Module
                     $order->updateOrderDetailTax();
 
                     // sync all stock
-                    (new \PrestaShop\PrestaShop\Adapter\StockManager())->updatePhysicalProductQuantity(
+                    (new StockManager())->updatePhysicalProductQuantity(
                         $order->id_shop,
                         (int)Configuration::get('PS_OS_ERROR'),
                         (int)Configuration::get('PS_OS_CANCELED')

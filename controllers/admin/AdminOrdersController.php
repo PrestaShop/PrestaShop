@@ -35,6 +35,8 @@ class BoOrder extends PaymentModule
     }
 }
 
+use PrestaShop\PrestaShop\Adapter\StockManager;
+
 /**
  * @property Order $object
  */
@@ -2928,7 +2930,7 @@ class AdminOrdersControllerCore extends AdminController
             );
 
             // sync all stock
-            (new \PrestaShop\PrestaShop\Adapter\StockManager())->updatePhysicalProductQuantity(
+            (new StockManager())->updatePhysicalProductQuantity(
                 $order_detail->id_shop,
                 (int)Configuration::get('PS_OS_ERROR'),
                 (int)Configuration::get('PS_OS_CANCELED')
