@@ -444,7 +444,7 @@ var supplier = (function() {
 
   var supplierInputManage = function(input) {
     var supplierDefaultInput = $('#form_step6_suppliers input[name="form[step6][default_supplier]"][value=' + $(input).val() +']');
-    if($(input).is(':checked')) {
+    if ($(input).is(':checked')) {
       supplierDefaultInput.prop('disabled', false).show();
     } else {
       supplierDefaultInput.prop('disabled', true).hide();
@@ -1741,26 +1741,26 @@ var priceCalculation = (function() {
 
   /**
    * Add taxes to a price
-   * @param {float} Price without tax
-   * @param {array} Rates rates to apply
-   * @param {int} computation_method The computation calculate method
+   * @param {Number} price -Price without tax
+   * @param {Number[]} rates - Rates to apply
+   * @param {Number} computationMethod The computation calculate method
    */
-  function addTaxes(price, rates, computation_method) {
+  function addTaxes(price, rates, computationMethod) {
     var price_with_taxes = price;
 
     var i = 0;
-    if (computation_method === '0') {
+    if (computationMethod === '0') {
       for (i in rates) {
         price_with_taxes *= (1.00 + parseFloat(rates[i]) / 100.00);
         break;
       }
-    } else if (computation_method === '1') {
+    } else if (computationMethod === '1') {
       var rate = 0;
       for (i in rates) {
         rate += rates[i];
       }
       price_with_taxes *= (1.00 + parseFloat(rate) / 100.00);
-    } else if (computation_method === '2') {
+    } else if (computationMethod === '2') {
       for (i in rates) {
         price_with_taxes *= (1.00 + parseFloat(rates[i]) / 100.00);
       }
@@ -1771,24 +1771,24 @@ var priceCalculation = (function() {
 
   /**
    * Remove taxes from a price
-   * @param {float} Price with tax
-   * @param {array} Rates rates to apply
-   * @param {int} computation_method The computation calculate method
+   * @param {Number} price - Price with tax
+   * @param {Number[]} rates - Rates to apply
+   * @param {Number} computationMethod - The computation method
    */
-  function removeTaxes(price, rates, computation_method) {
+  function removeTaxes(price, rates, computationMethod) {
     var i = 0;
-    if (computation_method === '0') {
+    if (computationMethod === '0') {
       for (i in rates) {
         price /= (1 + rates[i] / 100);
         break;
       }
-    } else if (computation_method === '1') {
+    } else if (computationMethod === '1') {
       var rate = 0;
       for (i in rates) {
         rate += rates[i];
       }
       price /= (1 + rate / 100);
-    } else if (computation_method === '2') {
+    } else if (computationMethod === '2') {
       for (i in rates) {
         price /= (1 + rates[i] / 100);
       }
@@ -1797,18 +1797,28 @@ var priceCalculation = (function() {
     return price;
   }
 
+  /**
+   *
+   * @return {Number}
+   */
   function getEcotaxTaxIncluded() {
     var displayPrecision = 6;
-    if ( ecoTaxElem.val() == 0) {
-      return ecoTaxElem.val();
-    }
-    var ecotax_tax_excl = ecoTaxElem.val().replace(/,/g, '.') / (1 + ecoTaxRate);
+    var ecoTax = Tools.parseFloatFromString(ecoTaxElem.val());
 
-    return ps_round(ecotax_tax_excl * (1 + ecoTaxRate), displayPrecision);
+    if (isNaN(ecoTax)) {
+      ecoTax = 0;
+    }
+
+    if (ecoTax === 0) {
+      return ecoTax;
+    }
+    var ecotaxTaxExcl = ecoTax / (1 + ecoTaxRate);
+
+    return ps_round(ecotaxTaxExcl * (1 + ecoTaxRate), displayPrecision);
   }
 
   function getEcotaxTaxExcluded() {
-    return ecoTaxElem.val().replace(/,/g, '.') / (1 + ecoTaxRate);
+    return Tools.parseFloatFromString(ecoTaxElem.val()) / (1 + ecoTaxRate);
   }
 
   return {
@@ -1858,10 +1868,10 @@ var priceCalculation = (function() {
         var taxExcludedPrice = priceCalculation.normalizePrice($('#form_step2_price').val());
         var taxIncludedPrice = priceCalculation.normalizePrice($('#form_step2_price_ttc').val());
 
-        formatCurrencyCldr(parseFloat(taxExcludedPrice), function(result) {
+        formatCurrencyCldr(taxExcludedPrice, function(result) {
           $('#final_retail_price_te').text(result);
         });
-        formatCurrencyCldr(parseFloat(taxIncludedPrice), function(result) {
+        formatCurrencyCldr(taxIncludedPrice, function(result) {
           $('#final_retail_price_ti').text(result);
         });
       });
@@ -1890,19 +1900,13 @@ var priceCalculation = (function() {
       $('#form_step2_price, #form_step2_price_ttc').change();
     },
     'normalizePrice': function (price) {
-      price = parseFloat(price.replace(/,/g, '.'));
-
-      if (isNaN(price) || price === '') {
-        price = 0;
-      }
-
-      return price;
+      return Tools.parseFloatFromString(price, true);
     },
     'addCurrentTax': function (price) {
-      var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+      var rates = this.getRates();
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
-      var priceWithTaxes = new Number(ps_round(addTaxes(price, rates, computation_method), displayPricePrecision));
-      var ecotaxIncluded = new Number(getEcotaxTaxIncluded());
+      var priceWithTaxes = Number(ps_round(addTaxes(price, rates, computation_method), displayPricePrecision));
+      var ecotaxIncluded = Number(getEcotaxTaxIncluded());
 
       return priceWithTaxes + ecotaxIncluded;
     },
@@ -1913,7 +1917,7 @@ var priceCalculation = (function() {
       priceTTCShorcutElem.val(newPrice).change();
     },
     'removeCurrentTax': function (price) {
-      var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+      var rates = this.getRates();
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
 
       return ps_round(removeTaxes(ps_round(price - getEcotaxTaxIncluded(), displayPricePrecision), rates, computation_method), displayPricePrecision);
@@ -1925,13 +1929,13 @@ var priceCalculation = (function() {
       priceHTShortcutElem.val(newPrice).change();
     },
     'impactTaxInclude': function(obj) {
-      var price = this.normalizePrice(obj.val());
+      var price = Tools.parseFloatFromString(obj.val());
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
       if (isNaN(price)) {
         targetInput.val(0);
         return;
       }
-      var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+      var rates = this.getRates();
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
       var newPrice = ps_round(addTaxes(price, rates, computation_method), 6);
       newPrice = truncateDecimals(newPrice, 6);
@@ -1942,24 +1946,38 @@ var priceCalculation = (function() {
       var price = this.normalizePrice(obj.val());
       var finalPrice = obj.closest('div[id^="combination_form_"]').find('.final-price');
       var defaultFinalPrice = finalPrice.attr('data-price');
-      var priceToBeChanged = new Number(price) + new Number(defaultFinalPrice);
+      var priceToBeChanged = Number(price) + Number(defaultFinalPrice);
       priceToBeChanged = truncateDecimals(priceToBeChanged, 6);
 
       finalPrice.html(priceToBeChanged);
     },
     'impactTaxExclude': function(obj) {
-      var price = this.normalizePrice(obj.val());
+      var price = Tools.parseFloatFromString(obj.val());
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
       if (isNaN(price)) {
         targetInput.val(0);
         return;
       }
-      var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+      var rates = this.getRates();
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
       var newPrice = removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method);
       newPrice = truncateDecimals(newPrice, 6);
 
       targetInput.val(newPrice);
+    },
+
+    /**
+     *
+     * @return {Number[]}
+     */
+    getRates: function() {
+      return taxElem
+        .find('option:selected')
+        .attr('data-rates')
+        .split(',')
+        .map(function(rate) {
+          return Tools.parseFloatFromString(rate, true);
+        });
     }
   };
 })();

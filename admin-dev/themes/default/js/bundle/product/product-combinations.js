@@ -45,19 +45,22 @@ var combinations = (function() {
 
   /**
    * Update final price, regarding the impact on price in combinations table
-   * @param {object} elem - The tableau row parent
+   * @param {jQuery} tableRow - Table row that contains the combination
    */
   function updateFinalPrice(tableRow) {
       if (!tableRow.is('tr')) {
-          throw new Error('Structure of table has changed, this function need to be updated.');
+          throw new Error('Structure of table has changed, this function needs to be updated.');
       }
-      var priceImpactInput = tableRow.find('.attribute_priceTE');
-      var impactOnPrice = priceImpactInput.val() - priceImpactInput.attr('value');
-      var actualFinalPriceInput = tableRow.find('.attribute-finalprice span');
-      var actualFinalPrice = actualFinalPriceInput.data('price');
+      var priceImpactInput = tableRow.find('.attribute_priceTE').first();
+      var finalPriceLabel = tableRow.find('.attribute-finalprice span');
 
-      var finalPrice = new Number(actualFinalPrice) + new Number(impactOnPrice);
-      actualFinalPriceInput.html(ps_round(finalPrice, 6));
+      var impactOnPrice = Tools.parseFloatFromString(priceImpactInput.val());
+      var previousImpactOnPrice = Tools.parseFloatFromString(priceImpactInput.attr('value'));
+
+      var currentFinalPrice = Tools.parseFloatFromString(finalPriceLabel.data('price'), true);
+      var finalPrice = currentFinalPrice - previousImpactOnPrice + impactOnPrice;
+
+      finalPriceLabel.html(Number(ps_round(finalPrice, 6)).toFixed(6));
   }
 
   return {
@@ -130,7 +133,7 @@ var combinations = (function() {
       $(document).on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function() {
         var id_attribute = $(this).closest('.combination-form').attr('data');
         var attributePrice = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price-display');
-        formatCurrencyCldr(parseFloat($(this).val()), function(result) {
+        formatCurrencyCldr(Tools.parseFloatFromString($(this).val(), true), function(result) {
           attributePrice.html(result);
         });
       });
@@ -158,7 +161,7 @@ var combinations = (function() {
                   },
                   error: function(response) {
                     showErrorMessage(jQuery.parseJSON(response.responseText).message);
-                  },
+                  }
                 });
                 // enable the top header selector
                 // we want to use a "Simple product" without any combinations
