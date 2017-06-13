@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -123,13 +123,26 @@ class AdminModulesPositionsControllerCore extends AdminController
                 $id_module = (int)Tools::getValue('id_module');
                 $module = Module::getInstanceById($id_module);
                 $id_hook = (int)Tools::getValue('id_hook');
-                $hook = new Hook($id_hook);
+                $new_hook = (int)Tools::getValue('new_hook');
+                $hook = new Hook($new_hook);
 
                 if (!$id_module || !Validate::isLoadedObject($module)) {
                     $this->errors[] = $this->trans('This module cannot be loaded.', array(), 'Admin.Modules.Notification');
                 } elseif (!$id_hook || !Validate::isLoadedObject($hook)) {
                     $this->errors[] = $this->trans('Hook cannot be loaded.', array(), 'Admin.Modules.Notification');
                 } else {
+                    if ($new_hook !== $id_hook) {
+                        /** Connect module to a newer hook */
+                        if (!$module->registerHook($hook->name, Shop::getContextListShopID())) {
+                            $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', array(), 'Admin.Modules.Notification');
+                        }
+                        /** Unregister module from hook & exceptions linked to module */
+                        if (!$module->unregisterHook($id_hook, Shop::getContextListShopID())
+                            || !$module->unregisterExceptions($id_hook, Shop::getContextListShopID())) {
+                            $this->errors[] = $this->trans('An error occurred while deleting the module from its hook.', array(), 'Admin.Modules.Notification');
+                        }
+                        $id_hook = $new_hook;
+                    }
                     $exceptions = Tools::getValue('exceptions');
                     if (is_array($exceptions)) {
                         foreach ($exceptions as $id => $exception) {

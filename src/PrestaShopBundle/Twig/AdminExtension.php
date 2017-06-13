@@ -8,7 +8,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -21,11 +21,13 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Twig;
 
+use PrestaShop\PrestaShop\Adapter\ClassLang;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -94,7 +96,20 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
                 // Get current route name to know when to put "current" class on HTML dom
                 $currentRouteName = $parameterBag->get('_route');
 
+                $translator = $this->container->get('translator');
+                $locale = $translator->getLocale();
+
+                $tabMenu = (new ClassLang($locale))->getClassLang('TabLangCore');
+
                 foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
+                    if (!empty($tabMenu)) {
+                        $untranslated = $translator->getSourceString($tabData['title'], $tabMenu->getDomain());
+                        $translatedField = $tabMenu->getFieldValue('name', $untranslated);
+                        if (!empty($translatedField) && $translatedField != $tabData['title']) {
+                            $tabData['title'] = $translatedField;
+                        }
+                    }
+
                     $tabData['isCurrent'] = false;
                     if ($currentRouteName === $tabData['route']) {
                         $tabData['isCurrent'] = true;

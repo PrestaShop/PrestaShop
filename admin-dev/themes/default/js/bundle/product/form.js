@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -272,7 +272,7 @@ var formCategory = (function() {
   var elem = $('#form_step1_new_category');
 
   /** Send category form and it to nested categories */
-  function send() {
+  function send(form) {
     $.ajax({
       type: 'POST',
       url: elem.attr('data-action'),
@@ -319,6 +319,9 @@ var formCategory = (function() {
           'breadcrumb': ''
         };
         productCategoriesTags.createTag(tag);
+
+        //hide the form
+        form.hideBlock();
       },
       error: function(response) {
         $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
@@ -343,10 +346,7 @@ var formCategory = (function() {
       var that = this;
       /** remove all categories from selector, except pre defined */
       $('#add-categories button.save').click(function(){
-        send();
-        if($('#form_step1_new_category_name').val().length > 2){
-          that.hideBlock();
-        }
+        send(that);
       });
       $('#add-categories button[type="reset"]').click(function(){
         that.hideBlock();
@@ -354,7 +354,7 @@ var formCategory = (function() {
     },
     'hideBlock': function() {
       $('#form_step1_new_category_name').val('');
-      $('#add-category-button').css('display', 'block');
+      $('#add-category-button').show();
       $('#add-categories-content').addClass('hide');
     }
   };
@@ -1040,7 +1040,7 @@ var form = (function() {
         send($(this).attr('data-redirect'), $(this).attr('target'));
       });
 
-      $('.js-btn-save').on('click', function () {
+      $('.js-btn-save').on('click', function (event) {
         event.preventDefault();
         $('.js-spinner').show();
         send($(this).attr('href'));
@@ -1645,6 +1645,9 @@ var formImagesProduct = (function() {
     'form': function(id) {
       dropZoneElem.find(".dz-preview.active").removeClass("active");
       dropZoneElem.find(".dz-preview[data-id='"+id+"']").addClass("active");
+      if(imagesProduct.shouldDisplayExpander() == false){
+        dropZoneElem.css('height','auto');
+      }
       $.ajax({
         url: dropZoneElem.find(".dz-preview[data-id='"+id+"']").attr('url-update'),
         success: function(response) {
@@ -1713,6 +1716,7 @@ var formImagesProduct = (function() {
     },
     'close': function() {
       toggleColDropzone(true);
+      dropZoneElem.css('height','');
       formZoneElem.find('#product-images-form').html('');
       formZoneElem.hide();
       dropZoneElem.find(".dz-preview.active").removeClass("active");

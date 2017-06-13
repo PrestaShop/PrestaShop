@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Algeria" version="1.0">
+	<currencies>
+		<currency name="Algerian dinar" iso_code="DZD" iso_code_num="012" sign="DZD" blank="1" conversion_rate="1.0000" format="2" decimals="1" />
+	</currencies>
+	<languages>
+		<language iso_code="ar" />
+		<language iso_code="fr" />
+	</languages>
+	<taxes>
+		<tax id="1" name="TVA DZ 19%" rate="19" />
+		<tax id="2" name="TVA DZ 14%" rate="14" />
+		<tax id="3" name="TVA DZ 9%" rate="9" />
+    <tax id="4" name="TVA DZ 0%" rate="0" />
+
+		<taxRulesGroup name="DZ Standard Rate (19%)">
+			<taxRule iso_code_country="dz" id_tax="1" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="DZ Reduced Rate (14%)">
+			<taxRule iso_code_country="dz" id_tax="2" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="DZ Reduced Rate (9%)">
+			<taxRule iso_code_country="dz" id_tax="3" />
+		</taxRulesGroup>
+
+    <taxRulesGroup name="DZ Zero Rate (0%)">
+      <taxRule iso_code_country="dz" id_tax="4" />
+    </taxRulesGroup>
+  </taxes>
+  <units>
+    <unit type="weight" value="kg"/>
+    <unit type="volume" value="L"/>
+    <unit type="short_distance" value="cm"/>
+    <unit type="base_distance" value="m"/>
+    <unit type="long_distance" value="km"/>
+  </units>
+</localizationPack>

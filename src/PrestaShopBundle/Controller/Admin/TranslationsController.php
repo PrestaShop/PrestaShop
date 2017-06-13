@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Doctrine\Common\Util\Inflector;
 use PrestashopBundle\Entity\Translation;
+use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use PrestaShopBundle\Translation\Provider\ModuleProvider;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -36,6 +37,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Admin controller for the International pages.
@@ -247,6 +249,7 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         $requestParams = $request->request->all();
         $entityManager = $this->getDoctrine()->getManager();
+        $logger = $this->container->get('logger');
 
         $lang = $this->findLanguageByLocale($requestParams['locale']);
 
@@ -278,6 +281,15 @@ class TranslationsController extends FrameworkBundleAdminController
             $translation->setTranslation($requestParams['translation_value']);
         }
 
+        $validator = Validation::createValidator();
+        $violations = $validator->validate($translation, new PassVsprintf);
+        if (0 !== count($violations)) {
+            foreach ($violations as $violation) {
+                $logger->error($violation->getMessage());
+            }
+            return false;
+        }
+
         $updatedTranslationSuccessfully = false;
 
         try {
@@ -286,7 +298,7 @@ class TranslationsController extends FrameworkBundleAdminController
 
             $updatedTranslationSuccessfully = true;
         } catch (\Exception $exception) {
-            $this->container->get('logger')->error($exception->getMessage());
+            $logger->error($exception->getMessage());
         }
 
         return $updatedTranslationSuccessfully;

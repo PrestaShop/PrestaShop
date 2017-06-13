@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {if $cart.vouchers.allowed}
@@ -33,7 +33,7 @@
                 <li class="cart-summary-line">
                   <span class="label">{$voucher.name}</span>
                   <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
-                  <div class="pull-xs-right">
+                  <div class="float-xs-right">
                     {$voucher.reduction_formatted}
                   </div>
                 </li>
@@ -60,7 +60,7 @@
 
           {block name='cart_voucher_notifications'}
             <div class="alert alert-danger js-error" role="alert">
-              <i class="material-icons">&#xE001;</i><span class="m-l-1 js-error-text"></span>
+              <i class="material-icons">&#xE001;</i><span class="ml-1 js-error-text"></span>
             </div>
           {/block}
         </div>

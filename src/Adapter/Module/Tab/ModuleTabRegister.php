@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -135,6 +135,10 @@ class ModuleTabRegister
                 continue;
             }
 
+            if ($this->tabRepository->findOneIdByClassName($adminControllerName)) {
+                continue;
+            }
+
             $tabs[] = array(
                 'class_name' => $adminControllerName,
                 'visible' => false,
@@ -160,6 +164,10 @@ class ModuleTabRegister
         // Check controller exists
         if (!in_array($className.'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
             throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
+        }
+        // Deprecation check
+        if ($data->has('ParentClassName') && !$data->has('parent_class_name')) {
+            $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
         }
         return true;
     }
@@ -216,8 +224,10 @@ class ModuleTabRegister
                 $translatedNames[$lang['id_lang']] = $names[$lang['locale']];
             } elseif (array_key_exists($lang['language_code'], $names)) {
                 $translatedNames[$lang['id_lang']] = $names[$lang['language_code']];
+            } elseif (array_key_exists($lang['iso_code'], $names)) {
+                $translatedNames[$lang['id_lang']] = $names[$lang['iso_code']];
             } else {
-                $translatedNames[$lang['id_lang']] = $names[$lang[0]];
+                $translatedNames[$lang['id_lang']] = reset($names); // Get the first name available in the array
             }
         }
         return $translatedNames;
@@ -246,7 +256,7 @@ class ModuleTabRegister
         $tab->icon = $data->get('icon');
 
         // Handle parent menu
-        $parentClassName = $data->get('ParentClassName');
+        $parentClassName = $data->get('parent_class_name', $data->get('ParentClassName'));
         if (!empty($parentClassName)) {
             $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
         } elseif (true === $tab->active) {

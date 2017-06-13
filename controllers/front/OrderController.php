@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
@@ -70,7 +70,7 @@ class OrderControllerCore extends FrontController
         $this->bootstrap();
     }
 
-    private function getCheckoutSession()
+    protected function getCheckoutSession()
     {
         $deliveryOptionsFinder = new DeliveryOptionsFinder(
             $this->context,
@@ -87,7 +87,7 @@ class OrderControllerCore extends FrontController
         return $session;
     }
 
-    private function bootstrap()
+    protected function bootstrap()
     {
         $translator = $this->getTranslator();
 
@@ -147,7 +147,7 @@ class OrderControllerCore extends FrontController
         ;
     }
 
-    private function saveDataToPersist(CheckoutProcess $process)
+    protected function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
         $data['checksum'] = $this->cartChecksum->generateChecksum($this->context->cart);
@@ -158,7 +158,7 @@ class OrderControllerCore extends FrontController
         );
     }
 
-    private function restorePersistedData(CheckoutProcess $process)
+    protected function restorePersistedData(CheckoutProcess $process)
     {
         $rawData = Db::getInstance()->getValue(
             'SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int) $this->context->cart->id

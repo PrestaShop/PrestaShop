@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,14 +19,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6 " lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie7" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie8" lang="en"> <![endif]-->
-<!--[if gt IE 8]> <html lang="fr" class="no-js ie9" lang="en"> <![endif]-->
+<!--[if lt IE 7]> <html lang="{$iso}" class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6"> <![endif]-->
+<!--[if IE 7]>    <html lang="{$iso}" class="no-js lt-ie9 lt-ie8 ie7"> <![endif]-->
+<!--[if IE 8]>    <html lang="{$iso}" class="no-js lt-ie9 ie8"> <![endif]-->
+<!--[if gt IE 8]> <html lang="{$iso}" class="no-js ie9"> <![endif]-->
 <html lang="{$iso}">
 <head>
 	<meta charset="utf-8">
@@ -280,8 +280,7 @@
                     {if $show_new_orders}
                       <div class="tab-pane {$active} empty" id="orders-notifications" role="tabpanel">
                         <p class="no-notification">
-                          {l s='No new order for now :('}<br>
-                          {l s='Have you checked your [1][2]abandonned carts[/2][/1]?' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a href="'|cat:$abandoned_cart_url|cat:'">', '[/2]' => '</a>']}<br>
+                          {l s='No new order for now :(' d='Admin.Navigation.Notification'}<br>
                           {$no_order_tip}
                         </p>
                         <div class="notification-elements"></div>
@@ -291,7 +290,7 @@
                     {if $show_new_customers}
                       <div class="tab-pane {$active} empty" id="customers-notifications" role="tabpanel">
                         <p class="no-notification">
-                          {l s='No new customer for now :('}<br>
+                          {l s='No new customer for now :(' d='Admin.Navigation.Notification'}<br>
                           {$no_customer_tip}
                         </p>
                         <div class="notification-elements"></div>
@@ -301,7 +300,7 @@
                     {if $show_new_messages}
                       <div class="tab-pane {$active} empty" id="messages-notifications" role="tabpanel">
                         <p class="no-notification">
-                          {l s='No new message for now.'}<br>
+                          {l s='No new message for now.' d='Admin.Navigation.Notification'}<br>
                           {$no_customer_message_tip}
                         </p>
                         <div class="notification-elements"></div>
@@ -330,7 +329,7 @@
                 <span class="shop-state" id="maintenance-mode">
                   <i class="material-icons">build</i>
                     <a class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">{l s='Maintenance mode'}
+                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">{l s='Maintenance mode'}
                     </a>
                 </span>
               {/if}

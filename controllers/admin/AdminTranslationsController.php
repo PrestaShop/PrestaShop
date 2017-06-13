@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -217,16 +217,17 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         $modules = array();
-        foreach ($this->getListModules() as $module) {
-            $modules[$module] = array(
-                'name' => $module,
-                'urlToTranslate' => !$this->isUsingNewTranslationsSystem($module) ? $this->context->link->getAdminLink(
+        foreach ($this->getListModules(true) as $module) {
+            $modules[$module->name] = array(
+                'name' => $module->name,
+                'displayName' => $module->displayName,
+                'urlToTranslate' => !$this->isUsingNewTranslationsSystem($module->name) ? $this->context->link->getAdminLink(
                     'AdminTranslations',
                     true,
                     array(),
                     array(
                         'type' => 'modules',
-                        'module' => $module,
+                        'module' => $module->name,
                     )
                 ) : '',
             );
@@ -536,7 +537,7 @@ class AdminTranslationsControllerCore extends AdminController
             $this->exportTabs();
             $items = array_flip(Language::getFilesList($this->lang_selected->iso_code, $this->theme_selected, false, false, false, false, true));
             $file_name = _PS_TRANSLATIONS_DIR_.'/export/'.$this->lang_selected->iso_code.'.gzip';
-            $gz = new \Archive_Tar($file_name, true);
+            $gz = new Archive_Tar($file_name, true);
             if ($gz->createModify($items, null, _PS_ROOT_DIR_)) {
                 ob_start();
                 header('Pragma: public');
@@ -772,7 +773,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (!isset($_FILES['file']['tmp_name']) || !$_FILES['file']['tmp_name']) {
             $this->errors[] = $this->trans('No file has been selected.', array(), 'Admin.Notifications.Error');
         } else {
-            $gz = new \Archive_Tar($_FILES['file']['tmp_name'], true);
+            $gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
             $filename = $_FILES['file']['name'];
             $iso_code = str_replace(array('.tar.gz', '.gzip'), '', $filename);
 
@@ -1157,9 +1158,9 @@ class AdminTranslationsControllerCore extends AdminController
                         _PS_CLASS_DIR_ => array('PaymentModule.php'),
                     ),
                     'php-sf2' => array(
-                        _PS_ROOT_DIR_.'/src/' => \Tools::scandir(_PS_ROOT_DIR_.'/src/', 'php', '', true),
+                        _PS_ROOT_DIR_.'/src/' => Tools::scandir(_PS_ROOT_DIR_.'/src/', 'php', '', true),
                     ),
-                    'tpl-sf2' => \Tools::scandir(_PS_ROOT_DIR_.'/src/PrestaShopBundle/Resources/views/', 'twig', '', true),
+                    'tpl-sf2' => Tools::scandir(_PS_ROOT_DIR_.'/src/PrestaShopBundle/Resources/views/', 'twig', '', true),
                     'tpl' => $this->listFiles(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes/'),
                     'specific' => array(
                         _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => array()
@@ -2161,7 +2162,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @return array List of modules
      * @throws PrestaShopException
      */
-    public function getListModules()
+    public function getListModules($withInstance = false)
     {
         if (!Tools::file_exists_cache($this->translations_informations['modules']['dir'])) {
             throw new PrestaShopException($this->trans('Fatal error: The module directory does not exist.', array(), 'Admin.Notifications.Error').'('.$this->translations_informations['modules']['dir'].')');
@@ -2173,6 +2174,18 @@ class AdminTranslationsControllerCore extends AdminController
         $modules = array();
         // Get all module which are installed for to have a minimum of POST
         $modules = Module::getModulesInstalled();
+        if ($withInstance) {
+            foreach ($modules as $module) {
+                if ($tmp_instance = Module::getInstanceById((int)$module['id_module'])) {
+                    // We want to be able to sort modules by display name
+                    $module_instances[$tmp_instance->displayName] = $tmp_instance;
+                }
+            }
+            ksort($module_instances);
+
+            return $module_instances;
+        }
+
         foreach ($modules as &$module) {
             $module = $module['name'];
         }

@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -34,11 +34,11 @@
 					<input type="submit" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev" value="{$translations.Month}-1" />
 					<input type="submit" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev" value="{$translations.Year}-1" />
 					<p>
-						<span>{if isset($translations.From)}{$translations.From}{else}{l s='From:'}{/if}</span>
+						<span>{if isset($translations.From)}{$translations.From}{else}{l s='From:' d='Admin.Global'}{/if}</span>
 						<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="datepicker" />
 					</p>
 					<p>
-						<span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='To:'}</span>{/if}</span>
+						<span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='To:' d='Admin.Global'}</span>{/if}</span>
 						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="datepicker" />
 					</p>
 					<button type="submit" name="submitDatePicker" id="submitDatePicker" class="btn btn-default">

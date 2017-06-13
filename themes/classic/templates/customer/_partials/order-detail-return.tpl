@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='order_products_table'}
@@ -132,21 +132,21 @@
                 <div class="clearfix"></div>
               {/if}
             </td>
-            <td class="text-xs-right">{$product.qty_returned}</td>
-            <td class="text-xs-right">{$product.price}</td>
-            <td class="text-xs-right">{$product.total}</td>
+            <td class="text-xsright">{$product.qty_returned}</td>
+            <td class="text-xsright">{$product.price}</td>
+            <td class="text-xsright">{$product.total}</td>
           </tr>
         {/foreach}
         <tfoot>
           {foreach $order.subtotals as $line}
             {if $line.value}
-              <tr class="text-xs-right line-{$line.type}">
+              <tr class="text-xsright line-{$line.type}">
                 <td colspan="5">{$line.label}</td>
                 <td colspan="2">{$line.value}</td>
               </tr>
             {/if}
           {/foreach}
-          <tr class="text-xs-right line-{$order.totals.total.type}">
+          <tr class="text-xsright line-{$order.totals.total.type}">
             <td colspan="5">{$order.totals.total.label}</td>
             <td colspan="2">{$order.totals.total.value}</td>
           </tr>
@@ -186,7 +186,7 @@
                 </div>
                 <div class="col-sm-7 qty">
                   <div class="row">
-                    <div class="col-xs-4 text-sm-left text-xs-left">
+                    <div class="col-xs-4 text-smleft text-xsleft">
                       {$product.price}
                     </div>
                     <div class="col-xs-4">
@@ -205,7 +205,7 @@
                         <div>{l s='Returned' d='Shop.Theme.Customeraccount'}: {$product.qty_returned}</div>
                       {/if}
                     </div>
-                    <div class="col-xs-4 text-xs-right">
+                    <div class="col-xs-4 text-xsright">
                       {$product.total}
                     </div>
                   </div>
@@ -221,13 +221,13 @@
         {if $line.value}
           <div class="order-total row">
             <div class="col-xs-8"><strong>{$line.label}</strong></div>
-            <div class="col-xs-4 text-xs-right">{$line.value}</div>
+            <div class="col-xs-4 text-xsright">{$line.value}</div>
           </div>
         {/if}
       {/foreach}
       <div class="order-total row">
         <div class="col-xs-8"><strong>{$order.totals.total.label}</strong></div>
-        <div class="col-xs-4 text-xs-right">{$order.totals.total.value}</div>
+        <div class="col-xs-4 text-xsright">{$order.totals.total.value}</div>
       </div>
     </div>
 

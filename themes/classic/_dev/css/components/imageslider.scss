@@ -1,6 +1,6 @@
 .carousel {
   box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
-  margin-bottom: rem(24px);
+  margin-bottom: 1.5rem;
   .direction {
     z-index: auto;
   }
@@ -32,7 +32,7 @@
         content: "";
       }
       i {
-        font-size: rem(50px);
+        font-size: 3.125rem;
         color: white;
       }
       &:hover {
@@ -42,10 +42,10 @@
       }
     }
     .icon-prev {
-      left: rem(16px);
+      left: 1rem;
     }
     .icon-next {
-      right: rem(32px);
+      right: 2rem;
     }
     &.left,
     &.right {

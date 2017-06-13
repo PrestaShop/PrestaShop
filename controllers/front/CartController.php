@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -286,6 +286,15 @@ class CartControllerCore extends FrontController
             return;
         }
 
+        if (!$this->id_product_attribute && $product->hasAttributes()) {
+            $minimum_quantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
+            $this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimum_quantity);
+            // @todo do something better than a redirect admin !!
+            if (!$this->id_product_attribute) {
+                Tools::redirectAdmin($this->context->link->getProductLink($product));
+            }
+        }
+        
         $qty_to_check = $this->qty;
         $cart_products = $this->context->cart->getProducts();
 
@@ -308,15 +317,6 @@ class CartControllerCore extends FrontController
         // Check product quantity availability
         if ($this->id_product_attribute) {
             if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
-                $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
-            }
-        } elseif ($product->hasAttributes()) {
-            $minimumQuantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
-            $this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimumQuantity);
-            // @todo do something better than a redirect admin !!
-            if (!$this->id_product_attribute) {
-                Tools::redirectAdmin($this->context->link->getProductLink($product));
-            } elseif (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
                 $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
             }
         } elseif (!$product->checkQty($qty_to_check)) {

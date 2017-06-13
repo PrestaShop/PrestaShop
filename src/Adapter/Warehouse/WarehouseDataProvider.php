@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,11 +20,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Warehouse;
+
+use Warehouse;
+use WarehouseProductLocation;
 
 /**
  * This class will provide data from DB / ORM about Warehouse
@@ -40,7 +43,7 @@ class WarehouseDataProvider
      */
     public function getWarehouseProductLocations($id_product)
     {
-        $collection = \WarehouseProductLocationCore::getCollection($id_product);
+        $collection = WarehouseProductLocation::getCollection($id_product);
         return $collection->getResults();
     }
 
@@ -53,7 +56,7 @@ class WarehouseDataProvider
      */
     public function getWarehouses($ignore_shop = false, $id_shop = null)
     {
-        return \WarehouseCore::getWarehouses($ignore_shop, $id_shop);
+        return Warehouse::getWarehouses($ignore_shop, $id_shop);
     }
 
     /**
@@ -66,7 +69,7 @@ class WarehouseDataProvider
      */
     public function getWarehouseProductLocationData($id_product, $id_product_attribute, $id_warehouse)
     {
-        $location = \WarehouseProductLocationCore::getProductLocation($id_product, $id_product_attribute, $id_warehouse);
+        $location = WarehouseProductLocation::getProductLocation($id_product, $id_product_attribute, $id_warehouse);
         // for 'activated', we test if $location is ===false or ==="", that's the only difference to know it...
         return ['location' => $location, 'activated' => ($location !== false), 'product_id' => $id_product];
     }

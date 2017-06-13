@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -30,19 +30,19 @@
 	var labelPrevious = '{$labels.previous|addslashes}';
 	var	labelFinish = '{$labels.finish|addslashes}';
 	var	labelDelete = '{l s='Delete' d='Admin.Actions' js=1}';
-	var	labelValidate = '{l s='Validate' js=1}';
+	var	labelValidate = '{l s='Validate' js=1 d='Admin.Actions'}';
 	var validate_url = '{$validate_url|addslashes}';
 	var carrierlist_url = '{$carrierlist_url|addslashes}';
 	var nbr_steps = {$wizard_steps.steps|count};
 	var enableAllSteps = {if $enableAllSteps|intval == 1}true{else}false{/if};
-	var need_to_validate = '{l s='Please validate the last range before create a new one.' js=1}';
-	var delete_range_confirm = '{l s='Are you sure to delete this range ?' js=1}';
+	var need_to_validate = '{l s='Please validate the last range before creating a new one.' js=1 d='Admin.Shipping.Notification'}';
+	var delete_range_confirm = '{l s='Are you sure to delete this range ?' js=1 d='Admin.Shipping.Notification'}';
 	var currency_sign = '{$currency_sign}';
 	var PS_WEIGHT_UNIT = '{$PS_WEIGHT_UNIT}';
-	var invalid_range = '{l s='This range is not valid' js=1}';
-	var overlapping_range = '{l s='Ranges are overlapping' js=1}';
-	var range_is_overlapping = '{l s='Ranges are overlapping' js=1}';
-	var select_at_least_one_zone = '{l s='Please select at least one zone' js=1}';
+	var invalid_range = '{l s='This range is not valid' js=1 d='Admin.Shipping.Notification'}';
+	var overlapping_range = '{l s='Ranges are overlapping' js=1 d='Admin.Shipping.Notification'}';
+	var range_is_overlapping = '{l s='Ranges are overlapping' js=1 d='Admin.Shipping.Notification'}';
+	var select_at_least_one_zone = '{l s='Please select at least one zone' js=1 d='Admin.Shipping.Notification'}';
 	var multistore_enable = '{$multistore_enable}';
 </script>
 

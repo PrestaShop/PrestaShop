@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -76,6 +76,7 @@ namespace PrestaShopBundle\Install {
     use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+    use FileLogger;
 
     class Upgrade
     {
@@ -167,7 +168,7 @@ namespace PrestaShopBundle\Install {
 
         public function __construct($cacheDir, $installDir)
         {
-            $this->logger = new \FileLogger();
+            $this->logger = new FileLogger();
             $this->logger->setFilename($cacheDir.@date('Ymd').'_upgrade.log');
             $this->installDir = $installDir;
             $this->db = Db::getInstance();
@@ -201,7 +202,9 @@ namespace PrestaShopBundle\Install {
         private function defineConst()
         {
             // retrocompatibility (is present in some upgrade scripts)
-            define('INSTALL_PATH', $this->installDir);
+            if (!defined('INSTALL_PATH')) {
+                define('INSTALL_PATH', $this->installDir);
+            }
             require_once(INSTALL_PATH . 'install_version.php');
             // needed for upgrade before 1.5
             if (!defined('__PS_BASE_URI__')) {
@@ -792,7 +795,7 @@ namespace PrestaShopBundle\Install {
 
         public function run()
         {
-            \Tools::clearAllCache();
+            Tools::clearAllCache();
 
             $this->defineConst();
             $this->initContext();
@@ -830,7 +833,7 @@ namespace PrestaShopBundle\Install {
 
         public function doUpgradeDb()
         {
-            \Tools::clearAllCache();
+            Tools::clearAllCache();
 
             $this->defineConst();
             $this->initContext();
@@ -862,7 +865,7 @@ namespace PrestaShopBundle\Install {
 
             $this->next = 'EnableModules';
             $this->nextDesc = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
             $this->nextQuickInfo[] = $this->getTranslator()->trans('Enabling modules now...', array(), 'Install');
         }
 

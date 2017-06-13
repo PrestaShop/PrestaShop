@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='product_miniature_item'}
@@ -29,7 +29,7 @@
         <a href="{$product.url}" class="thumbnail product-thumbnail">
           <img
             src = "{$product.cover.bySize.home_default.url}"
-            alt = "{$product.cover.legend}"
+            alt = "{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
             data-full-size-image-url = "{$product.cover.large.url}"
           >
         </a>
@@ -46,6 +46,7 @@
               {if $product.has_discount}
                 {hook h='displayProductPriceBlock' product=$product type="old_price"}
 
+                <span class="sr-only">{l s='Regular price' d='Shop.Theme.Catalog'}</span>
                 <span class="regular-price">{$product.regular_price}</span>
                 {if $product.discount_type === 'percentage'}
                   <span class="discount-percentage">{$product.discount_percentage}</span>
@@ -54,6 +55,7 @@
 
               {hook h='displayProductPriceBlock' product=$product type="before_price"}
 
+              <span class="sr-only">{l s='Price' d='Shop.Theme.Catalog'}</span>
               <span itemprop="price" class="price">{$product.price}</span>
 
               {hook h='displayProductPriceBlock' product=$product type='unit_price'}

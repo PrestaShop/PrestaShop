@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,24 +19,24 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file="helpers/form/form.tpl"}
 
 {block name="input"}
 	{if $input.type == 'resources'}
-		<div class="alert alert-info">{l s='Set the resource permissions for this key:'}</div>
+		<div class="alert alert-info">{l s='Set the resource permissions for this key:' d='Admin.Advparameters.Feature'}</div>
 		<table class="table accesses">
 			<thead>
 				<tr>
 					<th><span class="title_box">{l s='Resource'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='All'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='View (GET)'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='Modify (PUT)'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='Add (POST)'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='Delete (DELETE)'}</span></th>
-					<th class="center fixed-width-xs"><span class="title_box">{l s='Fast view (HEAD)'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='All' d='Admin.Global'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='View (GET)' d='Admin.Advparameters.Feature'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Modify (PUT)' d='Admin.Advparameters.Feature'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Add (POST)' d='Admin.Advparameters.Feature'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Delete (DELETE)' d='Admin.Advparameters.Feature'}</span></th>
+					<th class="center fixed-width-xs"><span class="title_box">{l s='Fast view (HEAD)' d='Admin.Advparameters.Feature'}</span></th>
 				</tr>
 			</thead>
 			<tbody>

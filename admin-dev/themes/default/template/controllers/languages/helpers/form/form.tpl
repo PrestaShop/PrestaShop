@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file="helpers/form/form.tpl"}
@@ -36,11 +36,11 @@
 {/block}
 
 {block name=script}
-		var langPackOk = "<img src=\"{$smarty.const._PS_IMG_}admin/information.png\" alt=\"\" /> {l s='A language pack is available for this ISO.'}";
-		var langPackVersion = "{l s='The Prestashop version compatible with this language and your system is:'}";
-		var langPackInfo = "{l s='After creating the language, you can import the content of the language pack, which you can download under "Localization -- Translations."'}";
-		var noLangPack = "<img src=\"{$smarty.const._PS_IMG_}admin/information.png\" alt=\"\" /> {l s='No language pack is available on prestashop.com for this ISO code'}";
-		var download = "{l s='Download'}";
+		var langPackOk = "<img src=\"{$smarty.const._PS_IMG_}admin/information.png\" alt=\"\" /> {l s='A language pack is available for this ISO.' d='Admin.International.Notification'}";
+		var langPackVersion = "{l s='The Prestashop version compatible with this language and your system is:' d='Admin.International.Notification'}";
+		var langPackInfo = "{l s='After creating the language, you can import the content of the language pack, which you can download under "International -- Translations."' d='Admin.International.Notification'}";
+		var noLangPack = "<img src=\"{$smarty.const._PS_IMG_}admin/information.png\" alt=\"\" /> {l s='No language pack is available on prestashop.com for this ISO code' d='Admin.International.Notification'}";
+		var download = "{l s='Download' d='Admin.Actions'}";
 
 	$(document).ready(function() {
 		$('#iso_code').keyup(function(e) {
@@ -61,7 +61,7 @@
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title}" />{/if}
 						{$field.title}
 					</legend>
-					<p>{l s='This language pack is NOT complete and cannot be used in the front or back office because some files are missing.'}</p>
+					<p>{l s='This language pack is NOT complete and cannot be used in the front or back office because some files are missing.' d='Admin.International.Notification'}</p>
 					<br />
 				{elseif $key == 'list_files'}
 					{foreach $field as $list}
@@ -83,7 +83,7 @@
 				{/if}
 			{/foreach}
 			<br />
-			<div class="small">{l s='Missing files are marked in red'}</div>
+			<div class="small">{l s='Missing files are marked in red' d='Admin.International.Help'}</div>
 		</div>
 	{/if}
 {/block}

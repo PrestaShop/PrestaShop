@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -36,15 +36,15 @@
 	<td>
 		<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product['product_id']|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
 			<span class="productName">{$product['product_name']}</span><br />
-			{if $product.product_reference}{l s='Reference number:'} {$product.product_reference}<br />{/if}
-			{if $product.product_supplier_reference}{l s='Supplier reference:'} {$product.product_supplier_reference}{/if}
+			{if $product.product_reference}{l s='Reference number:' d='Admin.Orderscustomers.Feature'} {$product.product_reference}<br />{/if}
+			{if $product.product_supplier_reference}{l s='Supplier reference:' d='Admin.Orderscustomers.Feature'} {$product.product_supplier_reference}{/if}
 		</a>
         {if isset($product.pack_items) && $product.pack_items|@count > 0}<br>
-            <button name="package" class="btn btn-default" type="button" onclick="TogglePackage('{$product['id_order_detail']}'); return false;" value="{$product['id_order_detail']}">{l s='Package content'}</button>
+            <button name="package" class="btn btn-default" type="button" onclick="TogglePackage('{$product['id_order_detail']}'); return false;" value="{$product['id_order_detail']}">{l s='Package content' d='Admin.Orderscustomers.Feature'}</button>
         {/if}
 		<div class="row-editing-warning" style="display:none;">
 			<div class="alert alert-warning">
-				<strong>{l s='Editing this product line will remove the reduction and base price.'}</strong>
+				<strong>{l s='Editing this product line will remove the reduction and base price.' d='Admin.Orderscustomers.Notification'}</strong>
 			</div>
 		</div>
 	</td>
@@ -56,17 +56,17 @@
 			<div class="form-group">
 				<div class="fixed-width-xl">
 					<div class="input-group">
-						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
+						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
 						<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}"/>
-						{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
+						{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
 					</div>
 				</div>
 				<br/>
 				<div class="fixed-width-xl">
 					<div class="input-group">
-						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
+						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
 						<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}"/>
-						{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
+						{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
 					</div>
 				</div>
 			</div>
@@ -85,14 +85,14 @@
 		<td>
 			{$product.warehouse_name|escape:'html':'UTF-8'}
 			{if $product.warehouse_location}
-				<br>{l s='Location'}: <strong>{$product.warehouse_location|escape:'html':'UTF-8'}</strong>
+				<br>{l s='Location' d='Admin.Orderscustomers.Feature'}: <strong>{$product.warehouse_location|escape:'html':'UTF-8'}</strong>
 			{/if}
 		</td>
 	{/if}
 	{if ($order->hasBeenPaid())}
 		<td class="productQuantity text-center">
 			{if !empty($product['amount_refund'])}
-				{l s='%s (%s refund)' sprintf=[$product['product_quantity_refunded'], $product['amount_refund']]}
+				{l s='%quantity_refunded% (%amount_refunded% refund)' sprintf=['%quantity_refunded%' => $product['product_quantity_refunded'], '%amount_refunded%' => $product['amount_refund']] d='Admin.Orderscustomers.Feature'}
 			{/if}
 			<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
 			<input type="hidden" value="{(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']))}" class="partialRefundProductAmount" />
@@ -100,9 +100,9 @@
 				<span class="tooltip">
 					<span class="tooltip_label tooltip_button">+</span>
 					<span class="tooltip_content">
-					<span class="title">{l s='Refund history'}</span>
+					<span class="title">{l s='Refund history' d='Admin.Orderscustomers.Feature'}</span>
 					{foreach $product['refund_history'] as $refund}
-						{l s='%1s - %2s' sprintf=[{dateFormat date=$refund.date_add}, {displayPrice price=$refund.amount_tax_incl}]}<br />
+						{l s='%refund_date% - %refund_amount%' sprintf=['%refund_date%' => {dateFormat date=$refund.date_add}, '%refund_amount%' => {displayPrice price=$refund.amount_tax_incl}] d='Admin.Orderscustomers.Feature'}<br />
 					{/foreach}
 					</span>
 				</span>
@@ -116,9 +116,9 @@
 				<span class="tooltip">
 					<span class="tooltip_label tooltip_button">+</span>
 					<span class="tooltip_content">
-					<span class="title">{l s='Return history'}</span>
+					<span class="title">{l s='Return history' d='Admin.Orderscustomers.Feature'}</span>
 					{foreach $product['return_history'] as $return}
-						{l s='%1s - %2s - %3s' sprintf=[{dateFormat date=$return.date_add}, $return.product_quantity, $return.state]}<br />
+						{l s='%return_date% - %return_quantity% - %return_state%' sprintf=['%return_date%' =>{dateFormat date=$return.date_add}, '%return_quantity%' => $return.product_quantity, '3return_state%' => $return.state] d='Admin.Orderscustomers.Feature'}<br />
 					{/foreach}
 					</span>
 				</span>
@@ -180,7 +180,7 @@
 			</div>
 			<div class="{if $product['quantity_refundable'] > 0}col-lg-8{else}col-lg-12{/if}">
 				<label class="control-label">
-					<span class="title_box ">{l s='Amount:'}</span>
+					<span class="title_box ">{l s='Amount' d='Admin.Global'}</span>
 					<small class="text-muted">({$smarty.capture.TaxMethod})</small>
 				</label>
 				<div class="input-group">
@@ -188,7 +188,7 @@
 					<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
 					{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign}</div>{/if}
 				</div>
-				<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($amount_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]}</p>
+        <p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %amount_refundable% %tax_method%)' sprintf=[ '%amount_refundable%' => Tools::displayPrice(Tools::ps_round($amount_refundable, 2), $currency->id), '%tax_method%' => $smarty.capture.TaxMethod] d='Admin.Orderscustomers.Help'}</p>
 			</div>
 		</div>
 		{/if}
@@ -229,7 +229,7 @@
 		{* Update controls *}
 		<button type="button" class="btn btn-default submitProductChange" style="display: none;">
 			<i class="icon-ok"></i>
-			{l s='Update'}
+			{l s='Update' d='Admin.Actions'}
 		</button>
 		<button type="button" class="btn btn-default cancel_product_change_link" style="display: none;">
 			<i class="icon-remove"></i>
@@ -245,22 +245,22 @@
             <thead>
                 <th style="width:15%;">&nbsp;</th>
                 <th style="width:15%;">&nbsp;</th>
-                <th style="width:50%;"><span class="title_box ">{l s='Product'}</span></th>
-                <th style="width:10%;"><span class="title_box ">{l s='Qty'}</th>
-                {if $stock_management}<th><span class="title_box ">{l s='Available quantity'}</span></th>{/if}
+                <th style="width:50%;"><span class="title_box ">{l s='Product' d='Admin.Global'}</span></th>
+                <th style="width:10%;"><span class="title_box ">{l s='Qty' d='Admin.Orderscustomers.Feature'}</th>
+                {if $stock_management}<th><span class="title_box ">{l s='Available quantity' d='Admin.Orderscustomers.Feature'}</span></th>{/if}
                 <th>&nbsp;</th>
             </thead>
             <tbody>
             {foreach from=$product.pack_items item=pack_item}
                 {if !empty($pack_item.active)}
                     <tr class="product-line-row" {if isset($pack_item.image) && $pack_item.image->id && isset($pack_item.image_size)} height="{$pack_item['image_size'][1] + 7}"{/if}>
-                        <td>{l s='Package item'}</td>
+                        <td>{l s='Package item' d='Admin.Orderscustomers.Feature'}</td>
                         <td>{if isset($pack_item.image) && $pack_item.image->id}{$pack_item.image_tag}{/if}</td>
                         <td>
                             <a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $pack_item.id_product, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
                                 <span class="productName">{$pack_item.name}</span><br />
-                                {if $pack_item.reference}{l s='Ref:'} {$pack_item.reference}<br />{/if}
-                                {if $pack_item.supplier_reference}{l s='Ref Supplier:'} {$pack_item.supplier_reference}{/if}
+                                {if $pack_item.reference}{l s='Ref:' d='Admin.Orderscustomers.Feature'} {$pack_item.reference}<br />{/if}
+                                {if $pack_item.supplier_reference}{l s='Ref Supplier:' d='Admin.Orderscustomers.Feature'} {$pack_item.supplier_reference}{/if}
                             </a>
                         </td>
                         <td class="productQuantity">

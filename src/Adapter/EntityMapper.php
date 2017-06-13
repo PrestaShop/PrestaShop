@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,10 +20,15 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter;
+
+use DbQuery;
+use Db;
+use Shop;
+use Cache;
 
 class EntityMapper
 {
@@ -42,7 +47,7 @@ class EntityMapper
         // Load object from database if object id is present
         $cache_id = 'objectmodel_' . $entity_defs['classname'] . '_' . (int)$id . '_' . (int)$id_shop . '_' . (int)$id_lang;
         if (!$should_cache_objects || !\Cache::isStored($cache_id)) {
-            $sql = new \DbQuery();
+            $sql = new DbQuery();
             $sql->from($entity_defs['table'], 'a');
             $sql->where('a.`' . bqSQL($entity_defs['primary']) . '` = ' . (int)$id);
 
@@ -55,18 +60,18 @@ class EntityMapper
             }
 
             // Get shop informations
-            if (\ShopCore::isTableAssociated($entity_defs['table'])) {
+            if (Shop::isTableAssociated($entity_defs['table'])) {
                 $sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.`' . bqSQL($entity_defs['primary']) . '` = c.`' . bqSQL($entity_defs['primary']) . '` AND c.`id_shop` = ' . (int)$id_shop);
             }
 
-            if ($object_datas = \Db::getInstance()->getRow($sql)) {
+            if ($object_datas = Db::getInstance()->getRow($sql)) {
                 if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
                     $sql = 'SELECT *
 							FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
 							WHERE `' . bqSQL($entity_defs['primary']) . '` = ' . (int)$id
                             .(($id_shop && $entity->isLangMultishop()) ? ' AND `id_shop` = ' . (int)$id_shop : '');
 
-                    if ($object_datas_lang = \Db::getInstance()->executeS($sql)) {
+                    if ($object_datas_lang = Db::getInstance()->executeS($sql)) {
                         foreach ($object_datas_lang as $row) {
                             foreach ($row as $key => $value) {
                                 if ($key != $entity_defs['primary'] && array_key_exists($key, $entity)) {
@@ -89,11 +94,11 @@ class EntityMapper
                     }
                 }
                 if ($should_cache_objects) {
-                    \Cache::store($cache_id, $object_datas);
+                    Cache::store($cache_id, $object_datas);
                 }
             }
         } else {
-            $object_datas = \Cache::retrieve($cache_id);
+            $object_datas = Cache::retrieve($cache_id);
             if ($object_datas) {
                 $entity->id = (int)$id;
                 foreach ($object_datas as $key => $value) {

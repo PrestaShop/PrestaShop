@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery'
@@ -40,7 +40,11 @@ export default function () {
 
     $.post($deliveryMethodForm.data('url-update'), requestData).then((resp) => {
       $(summarySelector).replaceWith(resp.preview);
-      prestashop.emit('updatedDeliveryForm', {dataForm: $deliveryMethodForm.serializeArray(), deliveryOption: $newDeliveryOption});
+      prestashop.emit('updatedDeliveryForm', {
+        dataForm: $deliveryMethodForm.serializeArray(),
+        deliveryOption: $newDeliveryOption,
+        resp: resp
+      });
     }).fail((resp) => {
       prestashop.trigger('handleError', {eventType: 'updateDeliveryOptions', resp: resp})
     });

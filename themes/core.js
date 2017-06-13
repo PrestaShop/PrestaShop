@@ -42,14 +42,14 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(1);
 
 
-/***/ }),
+/***/ },
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -95,9 +95,9 @@
 	  (0, _common.psShowHide)();
 	});
 
-/***/ }),
+/***/ },
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	 * jQuery JavaScript Library v2.2.4
@@ -1674,9 +1674,9 @@
 	// and CommonJS for browser emulators (#13566)
 	if(!noGlobal){window.jQuery = window.$ = jQuery;}return jQuery;}); // Otherwise append directly
 
-/***/ }),
+/***/ },
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1686,7 +1686,7 @@
 	 * This source file is subject to the Open Software License (OSL 3.0)
 	 * that is bundled with this package in the file LICENSE.txt.
 	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
+	 * https://opensource.org/licenses/OSL-3.0
 	 * If you did not receive a copy of the license and are unable to
 	 * obtain it through the world-wide-web, please send an email
 	 * to license@prestashop.com so we can send you a copy immediately.
@@ -1699,7 +1699,7 @@
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
 	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
 	'use strict';
@@ -1739,7 +1739,7 @@
 	        $input.attr('value', $input.val());
 	      });
 	
-	      _prestashop2['default'].emit('updatedCart');
+	      _prestashop2['default'].emit('updatedCart', { eventType: 'updateCart', resp: resp });
 	    }).fail(function (resp) {
 	      _prestashop2['default'].emit('handleError', { eventType: 'updateCart', resp: resp });
 	    });
@@ -1787,7 +1787,8 @@
 	          idProduct: resp.id_product,
 	          idProductAttribute: resp.id_product_attribute,
 	          linkAction: 'add-to-cart'
-	        }
+	        },
+	        resp: resp
 	      });
 	    }).fail(function (resp) {
 	      _prestashop2['default'].emit('handleError', { eventType: 'addProductToCart', resp: resp });
@@ -1815,22 +1816,22 @@
 	      }
 	
 	      // Refresh cart preview
-	      _prestashop2['default'].emit('updateCart', { reason: event.target.dataset });
+	      _prestashop2['default'].emit('updateCart', { reason: event.target.dataset, resp: resp });
 	    }).fail(function (resp) {
-	      _prestashop2['default'].emit('handleError', { eventType: 'addVoucher', resp: resp });
+	      _prestashop2['default'].emit('handleError', { eventType: 'updateCart', resp: resp });
 	    });
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 4 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	module.exports = prestashop;
 
-/***/ }),
+/***/ },
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1840,7 +1841,7 @@
 	 * This source file is subject to the Open Software License (OSL 3.0)
 	 * that is bundled with this package in the file LICENSE.txt.
 	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
+	 * https://opensource.org/licenses/OSL-3.0
 	 * If you did not receive a copy of the license and are unable to
 	 * obtain it through the world-wide-web, please send an email
 	 * to license@prestashop.com so we can send you a copy immediately.
@@ -1853,7 +1854,7 @@
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
 	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
 	'use strict';
@@ -1917,9 +1918,9 @@
 	  }
 	});
 
-/***/ }),
+/***/ },
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1929,7 +1930,7 @@
 	 * This source file is subject to the Open Software License (OSL 3.0)
 	 * that is bundled with this package in the file LICENSE.txt.
 	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
+	 * https://opensource.org/licenses/OSL-3.0
 	 * If you did not receive a copy of the license and are unable to
 	 * obtain it through the world-wide-web, please send an email
 	 * to license@prestashop.com so we can send you a copy immediately.
@@ -1942,7 +1943,7 @@
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
 	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
 	'use strict';
@@ -1971,9 +1972,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ }),
+/***/ },
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1983,7 +1984,7 @@
 	 * This source file is subject to the Open Software License (OSL 3.0)
 	 * that is bundled with this package in the file LICENSE.txt.
 	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
+	 * https://opensource.org/licenses/OSL-3.0
 	 * If you did not receive a copy of the license and are unable to
 	 * obtain it through the world-wide-web, please send an email
 	 * to license@prestashop.com so we can send you a copy immediately.
@@ -1996,7 +1997,7 @@
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
 	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
 	'use strict';
@@ -2030,7 +2031,11 @@
 	
 	    _jquery2['default'].post($deliveryMethodForm.data('url-update'), requestData).then(function (resp) {
 	      (0, _jquery2['default'])(summarySelector).replaceWith(resp.preview);
-	      _prestashop2['default'].emit('updatedDeliveryForm', { dataForm: $deliveryMethodForm.serializeArray(), deliveryOption: $newDeliveryOption });
+	      _prestashop2['default'].emit('updatedDeliveryForm', {
+	        dataForm: $deliveryMethodForm.serializeArray(),
+	        deliveryOption: $newDeliveryOption,
+	        resp: resp
+	      });
 	    }).fail(function (resp) {
 	      _prestashop2['default'].trigger('handleError', { eventType: 'updateDeliveryOptions', resp: resp });
 	    });
@@ -2047,9 +2052,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ }),
+/***/ },
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2059,7 +2064,7 @@
 	 * This source file is subject to the Open Software License (OSL 3.0)
 	 * that is bundled with this package in the file LICENSE.txt.
 	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
+	 * https://opensource.org/licenses/OSL-3.0
 	 * If you did not receive a copy of the license and are unable to
 	 * obtain it through the world-wide-web, please send an email
 	 * to license@prestashop.com so we can send you a copy immediately.
@@ -2072,7 +2077,7 @@
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
 	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
 	'use strict';
@@ -2207,9 +2212,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ }),
+/***/ },
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2219,7 +2224,7 @@
 	 * This source file is subject to the Open Software License (OSL 3.0)
 	 * that is bundled with this package in the file LICENSE.txt.
 	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
+	 * https://opensource.org/licenses/OSL-3.0
 	 * If you did not receive a copy of the license and are unable to
 	 * obtain it through the world-wide-web, please send an email
 	 * to license@prestashop.com so we can send you a copy immediately.
@@ -2232,7 +2237,7 @@
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
 	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
 	'use strict';
@@ -2280,9 +2285,9 @@
 	    });
 	});
 
-/***/ }),
+/***/ },
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2292,7 +2297,7 @@
 	 * This source file is subject to the Open Software License (OSL 3.0)
 	 * that is bundled with this package in the file LICENSE.txt.
 	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
+	 * https://opensource.org/licenses/OSL-3.0
 	 * If you did not receive a copy of the license and are unable to
 	 * obtain it through the world-wide-web, please send an email
 	 * to license@prestashop.com so we can send you a copy immediately.
@@ -2305,7 +2310,7 @@
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
 	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
 	'use strict';
@@ -2329,9 +2334,9 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2341,7 +2346,7 @@
 	 * This source file is subject to the Open Software License (OSL 3.0)
 	 * that is bundled with this package in the file LICENSE.txt.
 	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
+	 * https://opensource.org/licenses/OSL-3.0
 	 * If you did not receive a copy of the license and are unable to
 	 * obtain it through the world-wide-web, please send an email
 	 * to license@prestashop.com so we can send you a copy immediately.
@@ -2354,7 +2359,7 @@
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
 	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
 	'use strict';
@@ -2392,7 +2397,8 @@
 	          productUrl: resp.productUrl
 	        },
 	        refreshUrl: $productRefresh.data('url-update'),
-	        eventType: eventType
+	        eventType: eventType,
+	        resp: resp
 	      });
 	    });
 	  });
@@ -2425,6 +2431,13 @@
 	        $addToCartSnippet: $addToCartSnippet,
 	        $targetParent: $addProductToCart,
 	        targetSelector: productAvailabilitySelector
+	      });
+	
+	      var productAvailabilityMessageSelector = '#product-availability';
+	      replaceAddToCartSection({
+	        $addToCartSnippet: $addToCartSnippet,
+	        $targetParent: $addProductToCart,
+	        targetSelector: productAvailabilityMessageSelector
 	      });
 	
 	      var productMinimalQuantitySelector = '.product-minimal-quantity';
@@ -2473,9 +2486,9 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -2519,7 +2532,7 @@
 	        (0, _jquery2['default'])(this).val(inputs[(0, _jquery2['default'])(this).prop('name')]);
 	      });
 	
-	      _prestashop2['default'].emit('updatedAddressForm', { target: (0, _jquery2['default'])(selectors.address) });
+	      _prestashop2['default'].emit('updatedAddressForm', { target: (0, _jquery2['default'])(selectors.address), resp: resp });
 	    }).fail(function (resp) {
 	      _prestashop2['default'].emit('handleError', { eventType: 'updateAddressForm', resp: resp });
 	    });
@@ -2533,9 +2546,9 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 13 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
 	//
@@ -2805,9 +2818,9 @@
 	  return arg === void 0;
 	}
 
-/***/ }),
+/***/ },
 /* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2817,7 +2830,7 @@
 	 * This source file is subject to the Open Software License (OSL 3.0)
 	 * that is bundled with this package in the file LICENSE.txt.
 	 * It is also available through the world-wide-web at this URL:
-	 * http://opensource.org/licenses/osl-3.0.php
+	 * https://opensource.org/licenses/OSL-3.0
 	 * If you did not receive a copy of the license and are unable to
 	 * obtain it through the world-wide-web, please send an email
 	 * to license@prestashop.com so we can send you a copy immediately.
@@ -2830,7 +2843,7 @@
 	 *
 	 * @author    PrestaShop SA <contact@prestashop.com>
 	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 	 * International Registered Trademark & Property of PrestaShop SA
 	 */
 	'use strict';
@@ -2851,6 +2864,6 @@
 	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
 	}
 
-/***/ })
+/***/ }
 /******/ ]);
 //# sourceMappingURL=core.js.map

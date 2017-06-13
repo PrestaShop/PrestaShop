@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -31,7 +31,7 @@
 
 {if !$can_move}
 					<p class="alert alert-warning">
-						{l s='If you want to order/move the following data, please select a shop from the shop list.'}
+						{l s='If you want to order/move the following data, please select a shop from the shop list.' d='Admin.Design.Notification'}
 					</p>
 {/if}
 
@@ -41,10 +41,10 @@
 			<form class="well form-horizontal" id="position_filer">
 				<div class="row">
 					<div class="form-group col-lg-6 col-sm-12">
-						<label class="control-label col-lg-4" style="text-align: left">{l s='Show'}</label>
+						<label class="control-label col-lg-4" style="text-align: left">{l s='Show' d='Admin.Actions'}</label>
 						<div class="col-lg-7">
 							<select id="show_modules" class="filter" style="width: 100%;">
-								<option value="all">{l s='All modules'}&nbsp;</option>
+								<option value="all">{l s='All modules' d='Admin.Design.Feature'}&nbsp;</option>
 								{foreach $modules as $module}
 									<option value="{$module->id|intval}"{if $display_key == $module->id} selected="selected"{/if}>{$module->displayName|escape:'html':'UTF-8'}</option>
 								{/foreach}
@@ -52,7 +52,7 @@
 						</div>
 					</div>
 					<div class="form-group col-lg-6 col-sm-12">
-						<label class="control-label col-lg-offset-1 col-lg-4" style="text-align: left">{l s='Search for a hook'}</label>
+						<label class="control-label col-lg-offset-1 col-lg-4" style="text-align: left">{l s='Search for a hook' d='Admin.Design.Feature'}</label>
 						<div class="col-lg-7">
 							<div class="input-group">
 								<div class="input-group-addon"><i class="icon icon-search"></i></div>
@@ -66,7 +66,7 @@
 							<p class="checkbox">
 								<label class="control-label" for="hook_position">
 									<input type="checkbox" id="hook_position"/>
-									{l s='Display non-positionable hooks'}
+									{l s='Display non-positionable hooks' d='Admin.Design.Feature'}
 								</label>
 							</p>
 					</div>
@@ -84,7 +84,7 @@
 								{if $hook['module_count'] && $can_move}
 								<input type="checkbox" id="Ghook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
 								{/if}
-								{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if}
+								{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules' d='Admin.Global'}{else}{l s='Module' d='Admin.Global'}{/if}
 							</span>
 
 							{if !empty($hook['description'])}
@@ -142,7 +142,7 @@
 											<li>
 												<a href="{$current|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;deleteGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
 													<i class="icon-minus-sign-alt"></i>
-													{l s='Unhook'}
+													{l s='Unhook' d='Admin.Design.Feature'}
 												</a>
 											</li>
 										</ul>
@@ -161,7 +161,7 @@
 					<div id="unhook_button_position_bottom">
 						<button type="submit" class="btn btn-default" name="unhookform">
 							<i class="icon-minus-sign-alt"></i>
-							{l s='Unhook the selection'}
+							{l s='Unhook the selection' d='Admin.Design.Feature'}
 						</button>
 					</div>
 				</form>
@@ -170,15 +170,15 @@
 	</div>
 	<div class="col-lg-3">
 		<div class="panel" id="modules-position-selection-panel">
-			<h3><i class="icon-check"></i> {l s='Selection'}</h3>
+			<h3><i class="icon-check"></i> {l s='Selection' d='Admin.Global'}</h3>
 			<p>
-				<span id="modules-position-single-selection">{l s='1 module selected'}</span>
+				<span id="modules-position-single-selection">{l s='1 module selected' d='Admin.Design.Feature'}</span>
 				<span id="modules-position-multiple-selection">
-					<span id="modules-position-selection-count"></span> {l s='modules selected'}
+					<span id="modules-position-selection-count"></span> {l s='modules selected' d='Admin.Design.Feature'}
 				</span>
 			</p>
 			<div class="text-center">
-				<button class="btn btn-default"><i class="icon-remove"></i> {l s='Unhook the selection'}</button>
+				<button class="btn btn-default"><i class="icon-remove"></i> {l s='Unhook the selection' d='Admin.Design.Feature'}</button>
 			</div>
 		</div>
 	</div>

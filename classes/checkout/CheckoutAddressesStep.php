@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -195,13 +195,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             }
         }
 
-        $this->setTitle(
-            $this->getTranslator()->trans(
-                'Addresses',
-                array(),
-                'Shop.Theme.Checkout'
-            )
-        );
+        $this->setTitle($this->getTranslator()->trans('Addresses', array(), 'Shop.Theme.Checkout'));
 
         return $this;
     }
@@ -215,12 +209,8 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             'use_different_address_url' => $this->context->link->getPageLink('order', true, null, array('use_same_address' => 0)),
             'new_address_delivery_url' => $this->context->link->getPageLink('order', true, null, array('newAddress' => 'delivery')),
             'new_address_invoice_url' => $this->context->link->getPageLink('order', true, null, array('newAddress' => 'invoice')),
-            'id_address_delivery' => $this
-                                        ->getCheckoutSession()
-                                        ->getIdAddressDelivery(),
-            'id_address_invoice' => $this
-                                        ->getCheckoutSession()
-                                        ->getIdAddressInvoice(),
+            'id_address_delivery' => $this->getCheckoutSession()->getIdAddressDelivery(),
+            'id_address_invoice' => $this->getCheckoutSession()->getIdAddressInvoice(),
             'show_delivery_address_form' => $this->show_delivery_address_form,
             'show_invoice_address_form' => $this->show_invoice_address_form,
             'form_has_continue_button' => $this->form_has_continue_button,

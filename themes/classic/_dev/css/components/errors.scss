@@ -2,24 +2,24 @@
 #pagenotfound {
   #main {
     .page-header {
-      margin: rem(32px) 0 rem(48px);
+      margin: 2rem 0 3rem;
     }
     .page-content {
-      margin-bottom: rem(160px);
+      margin-bottom: 10rem;
     }
   }
   .page-not-found {
     @include box-shadow;
     background: white;
-    padding: rem(16px);
+    padding: 1rem;
     font-size: $font-size-sm;
-    color: $gray-dark;
+    color: $gray;
     max-width: 570px;
     margin: 0 auto;
     h4 {
       font-size: $base-font-size;
       font-weight: 700;
-      margin: rem(8px) 0 rem(16px);
+      margin: 0.5rem 0 1rem;
     }
     .search-widget {
       float: none;

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,10 +20,12 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter;
+
+use Address;
 
 class AddressFactory
 {
@@ -33,12 +35,12 @@ class AddressFactory
      *
      * @param null $id_address
      * @param bool $with_geoloc
-     * @return \AddressCore
+     * @return Address
      */
     public function findOrCreate($id_address = null, $with_geoloc = false)
     {
         $func_args = func_get_args();
-        return call_user_func_array(array('\\AddressCore', 'initialize'), $func_args);
+        return call_user_func_array(array('\\Address', 'initialize'), $func_args);
     }
 
     /**
@@ -49,6 +51,6 @@ class AddressFactory
      */
     public function addressExists($id_address)
     {
-        return \AddressCore::addressExists($id_address);
+        return Address::addressExists($id_address);
     }
 }

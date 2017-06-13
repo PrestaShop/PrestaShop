@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -29,7 +29,7 @@
 <div class="row">
 	<div class="col-lg-3">
 		<div class="panel">
-			<h3><i class="icon-list"></i> {l s='List of MySQL Tables'}</h3>
+			<h3><i class="icon-list"></i> {l s='List of MySQL Tables' d='Admin.Advparameters.Feature'}</h3>
 			<div class="form-group" id="selectTables">
 				<select id="table" size="10">
 					{foreach $tables as $table}
@@ -38,15 +38,15 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<button type="button" id="add_table" class="btn btn-default"><i class="icon-plus-sign"></i> {l s='Add table name to SQL query'}</button>
+				<button type="button" id="add_table" class="btn btn-default"><i class="icon-plus-sign"></i> {l s='Add table name to SQL query' d='Admin.Advparameters.Feature'}</button>
 			</div>
 		</div>
 	</div>
 	<div class="col-lg-9">
 		<div class="panel">
-			<h3><i class="icon-list"></i> {l s='List of attributes for this MySQL table'}</h3>
+			<h3><i class="icon-list"></i> {l s='List of attributes for this MySQL table' d='Admin.Advparameters.Feature'}</h3>
 			<div id="listAttributes">
-				<div class="alert alert-warning">{l s='Please choose a MySQL table'}</div>
+				<div class="alert alert-warning">{l s='Please choose a MySQL table' d='Admin.Advparameters.Notification'}</div>
 			</div>
 		</div>
 	</div>
@@ -77,8 +77,8 @@
 						html += "<thead>";
 							html += "<tr>";
 								html += "<th><span class=\"title_box\">{l s='Attribute'}</span></th>";
-								html += "<th class=\"fixed-width-md\"><span class=\"title_box\">{l s='Type'}</span></th>";
-								html += "<th class=\"fixed-width-md\"><span class=\"title_box\">{l s='Action'}</span></th>";
+								html += "<th class=\"fixed-width-md\"><span class=\"title_box\">{l s='Type' d='Admin.Global'}</span></th>";
+								html += "<th class=\"fixed-width-md\"><span class=\"title_box\">{l s='Action' d='Admin.Advparameters.Feature'}</span></th>";
 							html += "</tr>";
 						html += "</thead>";
 						html += "<tbody>";
@@ -87,7 +87,7 @@
 							html += "<tr>";
 								html += "<td>"+data[i].Field+"</td>";
 								html += "<td>"+data[i].Type+"</td>";
-								html += "<td><button type=\"button\" class=\"btn btn-default\" onclick=\"javascript:AddRequestSql('"+data[i].Field+"');\">{l s='Add attribute to SQL query'}</button></td>";
+								html += "<td><button type=\"button\" class=\"btn btn-default\" onclick=\"javascript:AddRequestSql('"+data[i].Field+"');\">{l s='Add attribute to SQL query' d='Admin.Advparameters.Feature'}</button></td>";
 							html += "</tr>";
 						}
 						html += "</tbody>";
@@ -101,7 +101,7 @@
 			var table = $('#selectTables select').val();
 
 			if (!table)
-				jAlert("{l s='Please choose a table.' js=1}");
+				jAlert("{l s='Please choose a table.' js=1 d='Admin.Advparameters.Feature'}");
 			else
 				AddRequestSql(table);
 		});

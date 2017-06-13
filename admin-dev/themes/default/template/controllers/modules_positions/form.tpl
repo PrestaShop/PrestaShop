@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -32,14 +32,14 @@
 	<div class="panel">
 		<h3>
 			<i class="icon-paste"></i>
-			{l s='Transplant a module'}
+			{l s='Transplant a module' d='Admin.Design.Feature'}
 		</h3>
 		<div class="form-group">
-			<label class="control-label col-lg-3 required"> {l s='Module'}</label>
+			<label class="control-label col-lg-3 required"> {l s='Module' d='Admin.Global'}</label>
 			<div class="col-lg-9">
 				<select class="chosen" name="id_module" {if $edit_graft} disabled="disabled"{/if}>
 					{if !$hooks}
-						<option value="0" selected disabled>{l s='Please select a module'}</option>
+						<option value="0" selected disabled>{l s='Please select a module' d='Admin.Design.Help'}</option>
 					{/if}
 					{foreach $modules as $module}
 						<option value="{$module->id|intval}"{if $id_module == $module->id || (!$id_module && $show_modules == $module->id)} selected="selected"{/if}>{$module->displayName|stripslashes}</option>
@@ -48,11 +48,11 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3 required"> {l s='Transplant to'}</label>
+			<label class="control-label col-lg-3 required"> {l s='Transplant to' d='Admin.Design.Feature'}</label>
 			<div class="col-lg-9">
 				<select name="id_hook"{if !$hooks|@count} disabled="disabled"{/if}>
 					{if !$hooks}
-						<option value="0">{l s='Select a module above before choosing from available hooks'}</option>
+						<option value="0">{l s='Select a module above before choosing from available hooks' d='Admin.Design.Help'}</option>
 					{else}
 						{foreach $hooks as $hook}
 							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
@@ -62,13 +62,13 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3">{l s='Exceptions'}</label>
+			<label class="control-label col-lg-3">{l s='Exceptions' d='Admin.Design.Feature'}</label>
 			<div class="col-lg-9">
 				<div class="well">
 					<div>
-						{l s='Please specify the files for which you do not want the module to be displayed.'}<br />
-						{l s='Please input each filename, separated by a comma (",").'}<br />
-						{l s='You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.'}<br />
+						{l s='Please specify the files for which you do not want the module to be displayed.' d='Admin.Design.Help'}<br />
+						{l s='Please input each filename, separated by a comma (",").' d='Admin.Design.Help'}<br />
+						{l s='You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.' d='Admin.Design.Help'}<br />
 						{if !$except_diff}
 							{$exception_list}
 						{else}
@@ -84,6 +84,7 @@
 			{if $edit_graft}
 				<input type="hidden" name="id_module" value="{$id_module}" />
 				<input type="hidden" name="id_hook" value="{$id_hook}" />
+				<input type="hidden" name="new_hook" id="new_hook" value="{$id_hook}" />
 			{/if}
 			<button type="submit" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save' d='Admin.Actions'}</button>
 		</div>
@@ -118,6 +119,9 @@
 		});
 		$('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){
 			$(this).change(position_exception_listchange);
+		});
+		$('select[name=id_hook]').on('change', function() {
+			$('#new_hook').attr('value', $(this).val());
 		});
 	});
 	//]]>

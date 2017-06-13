@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -3652,7 +3652,7 @@ class ProductCore extends ObjectModel
 				GROUP BY product_shop.id_product';
 
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
-            return false;
+            return array();
         }
 
         foreach ($result as $k => &$row) {
@@ -5329,25 +5329,31 @@ class ProductCore extends ObjectModel
     {
         $ids = array();
         foreach ($category_ids as $value) {
-            $ids[] = $value['id'];
-        }
-        if ($this->deleteCategories()) {
-            if ($ids) {
-                $sql_values = [];
-                $ids = array_map('intval', $ids);
-                foreach ($ids as $position => $id) {
-                    $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.(int)$position.')';
-                }
-                $result = Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
-					VALUES '.implode(',', $sql_values)
-                );
-                Hook::exec('updateProduct', array('id_product' => (int)$this->id));
-                return $result;
+            if ($value instanceof Category) {
+                $ids[] = (int)$value->id;
+            } else if (is_array($value) && array_key_exists('id', $value)) {
+                $ids[] = (int)$value['id'];
+            } else {
+                $ids[] = (int)$value;
             }
         }
+        $ids = array_unique($ids);
+
+        $return = true;
+        if ($this->deleteCategories() && !empty($ids)) {
+            $sql_values = array();
+            foreach ($ids as $position => $id) {
+                $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.(int)$position.')';
+            }
+
+            $return = Db::getInstance()->execute('
+                INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
+                VALUES '.implode(',', $sql_values)
+            );
+        }
+
         Hook::exec('updateProduct', array('id_product' => (int)$this->id));
-        return true;
+        return $return;
     }
 
     /**
@@ -5874,6 +5880,9 @@ class ProductCore extends ObjectModel
 
     public function updateWs($null_values = false)
     {
+        $this->price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
+        $this->unit_price = ($this->unit_price_ratio != 0  ? $this->price / $this->unit_price_ratio : 0);
+        
         $success = parent::update($null_values);
         if ($success && Configuration::get('PS_SEARCH_INDEXATION')) {
             Search::indexation(false, $this->id);

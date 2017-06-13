@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,11 +20,18 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Tax;
+
+use TaxRulesGroup;
+use Context;
+use TaxManagerFactory;
+use Tax;
+use Product;
+use Address;
 
 /**
  * This class will provide data from DB / ORM about tax rules
@@ -40,7 +47,17 @@ class TaxRuleDataProvider
      */
     public function getTaxRulesGroups($only_active = true)
     {
-        return \TaxRulesGroupCore::getTaxRulesGroups($only_active);
+        return TaxRulesGroup::getTaxRulesGroups($only_active);
+    }
+
+    /**
+     * Get most used Tax
+     *
+     * @return int
+     */
+    public function getIdTaxRulesGroupMostUsed()
+    {
+        return Product::getIdTaxRulesGroupMostUsed();
     }
 
     /**
@@ -50,8 +67,8 @@ class TaxRuleDataProvider
      */
     public function getTaxRulesGroupWithRates()
     {
-        $address = new \Address();
-        $address->id_country = (int)\ContextCore::getContext()->country->id;
+        $address = new Address();
+        $address->id_country = (int)Context::getContext()->country->id;
         $tax_rules_groups = $this->getTaxRulesGroups();
         $tax_rates = array(
             0 => array(
@@ -63,7 +80,7 @@ class TaxRuleDataProvider
 
         foreach ($tax_rules_groups as $tax_rules_group) {
             $id_tax_rules_group = (int)$tax_rules_group['id_tax_rules_group'];
-            $tax_calculator = \TaxManagerFactoryCore::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+            $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
             $tax_rates[$id_tax_rules_group] = array(
                 'id_tax_rules_group' => $id_tax_rules_group,
                 'rates' => array(),
@@ -89,6 +106,6 @@ class TaxRuleDataProvider
      */
     public function getProductEcotaxRate()
     {
-        return \TaxCore::getProductEcotaxRate();
+        return Tax::getProductEcotaxRate();
     }
 }

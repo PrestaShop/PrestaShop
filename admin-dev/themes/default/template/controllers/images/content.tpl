@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {if isset($content)}
@@ -31,18 +31,18 @@
         <div class="panel">
             <h3>
                 <i class="icon-picture"></i>
-                {l s='Move images'}
+                {l s='Move images' d='Admin.Design.Feature'}
             </h3>
             <div class="alert alert-warning">
-                <p>{l s='You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.'}</p>
-                <p>{l s='You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.'}</p>
+                <p>{l s='You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.' d='Admin.Design.Notification'}</p>
+                <p>{l s='You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.' d='Admin.Design.Notification'}</p>
             </div>
             <div class="alert alert-info">&nbsp;
-                {l s='After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.'}
+                {l s='After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.' d='Admin.Design.Notification'}
             </div>
             <div class="row">
                 <div class="col-lg-12 pull-right">
-                    <button type="submit" name="submitMoveImages{$table}" class="btn btn-default pull-right" onclick="return confirm('{l s='Are you sure?'}');"><i class="process-icon-cogs"></i> {l s='Move images'}</button>
+                    <button type="submit" name="submitMoveImages{$table}" class="btn btn-default pull-right" onclick="return confirm('{l s='Are you sure?' d='Admin.Notifications.Warning'}');"><i class="process-icon-cogs"></i> {l s='Move images' d='Admin.Design.Feature'}</button>
                 </div>
             </div>
         </div>
@@ -55,20 +55,20 @@
 		<div class="panel">
 			<h3>
                 <i class="icon-picture"></i>
-                {l s='Regenerate thumbnails'}
+                {l s='Regenerate thumbnails' d='Admin.Design.Feature'}
             </h3>
 
 			<div class="alert alert-info">
-				{l s='Regenerates thumbnails for all existing images'}<br />
-				{l s='Please be patient. This can take several minutes.'}<br />
-				{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.'}
+				{l s='Regenerates thumbnails for all existing images' d='Admin.Design.Help'}<br />
+				{l s='Please be patient. This can take several minutes.' d='Admin.Design.Help'}<br />
+				{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.' d='Admin.Design.Help'}
 			</div>
 
 			<div class="form-group">
-				<label class="control-label col-lg-3">{l s='Select an image'}</label>
+				<label class="control-label col-lg-3">{l s='Select an image' d='Admin.Design.Feature'}</label>
 				<div class="col-lg-9">
 					<select name="type" onchange="changeFormat(this)">
-						<option value="all">{l s='All'}</option>
+						<option value="all">{l s='All' d='Admin.Global'}</option>
 						{foreach $types AS $k => $type}
 							<option value="{$k}">{$type}</option>
 						{/foreach}
@@ -78,10 +78,10 @@
 
 			{foreach $types AS $k => $type}
 			<div class="form-group second-select format_{$k}" style="display:none;">
-				<label class="control-label col-lg-3">{l s='Select a format'}</label>
+				<label class="control-label col-lg-3">{l s='Select a format' d='Admin.Design.Feature'}</label>
 				<div class="col-lg-9 margin-form">
 					<select name="format_{$k}">
-						<option value="all">{l s='All'}</option>
+						<option value="all">{l s='All' d='Admin.Global'}</option>
 						{foreach $formats[$k] AS $format}
 							<option value="{$format['id_image_type']}">{$format['name']}</option>
 						{/foreach}
@@ -99,7 +99,7 @@
 
 			<div class="form-group">
 				<label class="control-label col-lg-3">
-					{l s='Erase previous images'}
+					{l s='Erase previous images' d='Admin.Design.Feature'}
 				</label>
 				<div class="col-lg-9">
 					<span class="switch prestashop-switch fixed-width-lg">
@@ -114,13 +114,13 @@
 						<a class="slide-button btn"></a>
 					</span>
 					<p class="help-block">
-						{l s='Select "No" only if your server timed out and you need to resume the regeneration.' html=1}
+						{l s='Select "No" only if your server timed out and you need to resume the regeneration.' html=1 d='Admin.Design.Help'}
 					</p>
 				</div>
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitRegenerate{$table}" class="btn btn-default pull-right" onclick="return confirm('{l s='Are you sure?'}');">
-					<i class="process-icon-cogs"></i> {l s='Regenerate thumbnails'}
+				<button type="submit" name="submitRegenerate{$table}" class="btn btn-default pull-right" onclick="return confirm('{l s='Are you sure?' d='Admin.Notifications.Warning'}');">
+					<i class="process-icon-cogs"></i> {l s='Regenerate thumbnails' d='Admin.Design.Feature'}
 				</button>
 			</div>
 		</div>

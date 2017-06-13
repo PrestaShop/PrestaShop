@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <tbody>
@@ -62,11 +62,11 @@
 				{elseif isset($params.position)}
 					{if $order_by == 'position' && $order_way != 'DESC'}
 						<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
-							<img src="../img/admin/{if $order_way == 'ASC'}down{else}up{/if}.gif" alt="{l s='Down'}" title="{l s='Down'}" />
+							<img src="../img/admin/{if $order_way == 'ASC'}down{else}up{/if}.gif" alt="{l s='Down' d='Admin.International.Feature'}" title="{l s='Down' d='Admin.International.Feature'}" />
 						</a>
 
 						<a href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}style="display: none;"{/if}>
-							<img src="../img/admin/{if $order_way == 'ASC'}up{else}down{/if}.gif" alt="{l s='Up'}" title="{l s='Up'}" />
+							<img src="../img/admin/{if $order_way == 'ASC'}up{else}down{/if}.gif" alt="{l s='Up' d='Admin.International.Feature'}" title="{l s='Up' d='Admin.International.Feature'}" />
 						</a>
 					{else}
 						{$tr.$key.position + 1}
@@ -88,11 +88,11 @@
 				{elseif isset($tr.$key)}
 					{if $key == 'behavior'}
 						{if $tr.$key == 0}
-							{l s='This tax only'}
+							{l s='This tax only' d='Admin.International.Feature'}
 						{elseif $tr.$key == 1}
-							{l s='Combine'}
+							{l s='Combine' d='Admin.International.Feature'}
 						{elseif $tr.$key == 2}
-							{l s='One after another'}
+							{l s='One after another' d='Admin.International.Feature'}
 						{/if}
 					{elseif $key == 'rate'}
 						{$tr.$key|string_format:"%.3f"}%

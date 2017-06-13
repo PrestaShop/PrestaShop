@@ -114,6 +114,14 @@ services:
             - "@prestashop.adapter.legacy.context"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            
+    prestashop.multishop_command_listener:
+        class: PrestaShopBundle\EventListener\MultishopCommandListener
+        arguments:
+            - "@prestashop.adapter.shop.context"
+            - "@=service('kernel').getRootDir()"
+        tags:
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
     prestashop.router:
         class: PrestaShopBundle\Service\Routing\Router
@@ -187,6 +195,8 @@ services:
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
         arguments: ["@prestashop.adapter.legacy.logger", "@translator", "@doctrine.orm.entity_manager"]
+        calls:
+                - [ "setEmployeeId", ["@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0"]]
 
     prestashop.categories_provider:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
@@ -257,7 +267,6 @@ services:
             - "@prestashop.core.module.updater"
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
-            - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
             - "@doctrine.cache.provider"
 
     prestashop.core.addon.theme.repository:
@@ -332,8 +341,7 @@ services:
         class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
         arguments:
             - "@csa_guzzle.client.addons_api"
-            - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
-            - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+            - "@=service('translator').getLocale()"
             - "@prestashop.adapter.tools"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Controller\Admin;
@@ -40,14 +40,14 @@ use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterf
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopBundle\Service\Csv;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Product;
+use Tools;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -349,11 +349,12 @@ class ProductController extends FrameworkBundleAdminController
         $context = $contextAdapter->getContext();
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
-        /** @var \Product $product */
+        /** @var Product $product */
         $product = $productAdapter->getProductInstance();
-        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
         $product->id_category_default = $context->shop->id_category;
-        $product->state = \Product::STATE_TEMP;
+        $product->id_tax_rules_group = 0;
+        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
+        $product->state = Product::STATE_TEMP;
 
         //set name and link_rewrite in each lang
         foreach ($contextAdapter->getLanguages() as $lang) {
@@ -416,7 +417,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
 
@@ -483,7 +485,7 @@ class ProductController extends FrameworkBundleAdminController
 
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
-                $_POST['state'] = \Product::STATE_SAVED;
+                $_POST['state'] = Product::STATE_SAVED;
 
                 $adminProductController = $adminProductWrapper->getInstance();
                 $adminProductController->setIdObject($formData['id_product']);
@@ -589,7 +591,7 @@ class ProductController extends FrameworkBundleAdminController
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
             'attribute_groups' => $attributeGroups,
-            'max_upload_size' => \Tools::formatBytes(UploadedFile::getMaxFilesize()),
+            'max_upload_size' => Tools::formatBytes(UploadedFile::getMaxFilesize()),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
             'editable' => $this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_'),
             'drawerModules' => $drawerModules,
@@ -970,7 +972,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
 
         $form = $this->createFormBuilder($modelMapper->getFormData());

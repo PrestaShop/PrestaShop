@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -28,7 +28,7 @@
 {block name="label"}
 	{if $input['type'] == 'modules'}
 		<div {if !$form_id}class="hide"{/if}>
-			<label class="control-label col-lg-3">{l s='Authorized modules:'}</label>
+			<label class="control-label col-lg-3">{l s='Authorized modules:' d='Admin.Shopparameters.Feature'}</label>
 		</div>
 	{elseif $input['type'] == 'group_discount_category'}
 		<div {if !$form_id}class="hide"{/if}>
@@ -72,7 +72,7 @@
 				if ($(this).attr('name') == 'category_reduction['+$('[name="id_category"]:checked').val()+']')
 				{
 					exist = true;
-					jAlert('{l s='This category already exists for this group.' js=1}');
+					jAlert('{l s='This category already exists for this group.' js=1 d='Admin.Shopparameters.Feature'}');
 					return false;
 				}
 			});
@@ -104,7 +104,7 @@
 					}
 					else
 					{
-						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount:'}' + ' ' + jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');" class="btn btn-default"><i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>');
+						$('#group_discount_category_table').append('<tr class="alt_row" id="'+jsonData.id_category+'"><td>'+jsonData.catPath+'</td><td>{l s='Discount' d='Admin.Global'}' + ' ' + jsonData.discount+'{l s='%'}</td><td><a href="#" onclick="deleteCategoryReduction('+jsonData.id_category+');" class="btn btn-default"><i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>');
 						var input_hidden = document.createElement("input");
 						input_hidden.setAttribute('type', 'hidden');
 						input_hidden.setAttribute('value', jsonData.discount);
@@ -128,12 +128,12 @@
 		</script>
 
 		<div class="col-lg-9">
-			<a class="btn btn-default" href="#group_discount_category_fancybox" id="group_discount_category">{l s='Add a category discount'}</a>
+			<a class="btn btn-default" href="#group_discount_category_fancybox" id="group_discount_category">{l s='Add a category discount' d='Admin.Shopparameters.Feature'}</a>
 			<table class="table" id="group_discount_category_table">
 				{foreach $input['values'] key=key item=category }
 					<tr class="alt_row" id="{$category.id_category}">
 						<td>{$category.path}</td>
-						<td>{l s='Discount: %.2f%%' sprintf=[$category.reduction]}</td>
+						<td>{l s='Discount: %.2f%%' sprintf=[$category.reduction] d='Admin.Shopparameters.Feature'}</td>
 						<td>
 							<a href="#" onclick="deleteCategoryReduction({$category.id_category});"class="btn btn-default">
 								<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}
@@ -147,21 +147,21 @@
 		<div id="group_discount_category_fancybox" class="bootstrap" style="display:none" >
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-group"></i> {l s='New group category discount'}
+					<i class="icon-group"></i> {l s='New group category discount' d='Admin.Shopparameters.Feature'}
 				</div>
 				{$categoryTreeView}
 				<div class="form-horizontal">
-				<div class="alert alert-info">{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.'}</div>
-				<div class="alert alert-warning">{l s='Only products that have this category as the default category will be affected.'}</div>
+				<div class="alert alert-info">{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.' d='Admin.Shopparameters.Notification'}</div>
+				<div class="alert alert-warning">{l s='Only products that have this category as the default category will be affected.' d='Admin.Shopparameters.Notification'}</div>
 				<div class="form-group">
-					<label class="control-label col-lg-3" for="category_reduction_fancybox">{l s='Discount (%):'}</label>
+					<label class="control-label col-lg-3" for="category_reduction_fancybox">{l s='Discount (%):' d='Admin.Shopparameters.Feature'}</label>
 					<div class="col-lg-9">
 						<input type="text" name="category_reduction_fancybox" id="category_reduction_fancybox" value="0.00" class="form-control" />
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-lg-12">
-						<button type="button" onclick="addCategoryReduction();" class="btn btn-default pull-right">{l s='add' d='Admin.Actions'}</button>
+						<button type="button" onclick="addCategoryReduction();" class="btn btn-default pull-right">{l s='Add' d='Admin.Actions'}</button>
 					</div>
 				</div>
 			</div>
