@@ -235,6 +235,6 @@ class CategoryDataProvider
 
     public function getRootCategory($idLang = null, Shop $shop = null)
     {
-        return \Category::getRootCategory($idLang, $shop);
+        return Category::getRootCategory($idLang, $shop);
     }
 }
