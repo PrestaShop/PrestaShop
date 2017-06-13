@@ -149,10 +149,13 @@ class AdminProductWrapper
                 $product->cache_default_attribute = (int)$id_product_attribute;
             }
 
+            // We need to reload the product because some other calls have modified the database
+            // It's done just for the setAvailableDate to avoid side effects
+            $consistentProduct = new Product($product->id);
             if ($available_date = $combinationValues['available_date_attribute']) {
-                $product->setAvailableDate($available_date);
+                $consistentProduct->setAvailableDate($available_date);
             } else {
-                $product->setAvailableDate();
+                $consistentProduct->setAvailableDate();
             }
         }
 
