@@ -148,7 +148,7 @@ export const updateQtyByProductId = ({ commit, state }, payload) => {
     delta,
   }).then((res) => {
     commit(types.UPDATE_PRODUCT, res.body);
-    return showGrowl('notice', 'Stock successfully updated');
+    return showGrowl('notice', state.translations.notification_stock_updated);
   }, (error) => {
     showGrowl('error', error.statusText);
   });
@@ -159,7 +159,7 @@ export const updateQtyByProductsId = ({ commit, state }, payload) => {
   const productsQty = state.productsToUpdate;
   Vue.http.post(url, productsQty).then((res) => {
     commit(types.UPDATE_PRODUCTS_QTY, res.body);
-    return showGrowl('notice', 'Stock successfully updated');
+    return showGrowl('notice', state.translations.notification_stock_updated);
   }, (error) => {
     showGrowl('error', error.statusText);
   });
