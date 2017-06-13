@@ -8,7 +8,7 @@ By default, it's in production. It means, these are the compiled JS files, locat
 
 It you need to work on it to add some features or to debug, you need to follow these steps:
 - Edit your `/app/config/parameters.php` to set `webpack_server` to `true`
-- Clean you Symfony cache
+- Clean your Symfony cache (`app:console cache:clear` in the project root folder)
 - Go to `/admin-dev/themes/new-theme/`
 - Run `npm install`
 - Run `npm run start-dev-server`
