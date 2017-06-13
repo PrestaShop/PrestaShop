@@ -323,10 +323,9 @@ class ProductControllerCore extends FrontController
         $ecotax_rate = (float)Tax::getProductEcotaxRate($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         if (Product::$_taxCalculationMethod == PS_TAX_INC && (int)Configuration::get('PS_TAX')) {
             $ecotax_tax_amount = Tools::ps_round($this->product->ecotax * (1 + $ecotax_rate / 100), 2);
+        } else {
+            $ecotax_tax_amount = Tools::ps_round($this->product->ecotax, 2);
         }
-	else {
-	    $ecotax_tax_amount = Tools::ps_round($this->product->ecotax, 2);
-	}
 
         $id_currency = (int)$this->context->cookie->id_currency;
         $id_product = (int)$this->product->id;
@@ -334,13 +333,14 @@ class ProductControllerCore extends FrontController
 
         $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
         foreach ($quantity_discounts as &$quantity_discount) {
+            $quantity_discount['base_price'] = $this->product->getPriceWithoutReduct(Product::$_taxCalculationMethod == PS_TAX_INC ? false : true);
             if ($quantity_discount['id_product_attribute']) {
-                $quantity_discount['base_price'] = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $quantity_discount['id_product_attribute']);
+                $quantity_discount['base_price'] = $this->product->getPriceWithoutReduct(Product::$_taxCalculationMethod == PS_TAX_INC ? false : true, $quantity_discount['id_product_attribute']);
 
                 $combination = new Combination((int)$quantity_discount['id_product_attribute']);
                 $attributes = $combination->getAttributesName((int)$this->context->language->id);
                 foreach ($attributes as $attribute) {
-                    $quantity_discount['attributes'] = $attribute['name'].' - ';
+                    $quantity_discount['attributes'] = $attribute['name'] . ' - ';
                 }
                 $quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
             }
@@ -717,30 +717,20 @@ class ProductControllerCore extends FrontController
             $row['quantity'] = &$row['from_quantity'];
             if ($row['price'] >= 0) {
                 // The price may be directly set
-
-                $cur_price = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
-
-                if ($row['reduction_type'] == 'amount') {
-                    $cur_price -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
-                    $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
-                } else {
-                    $cur_price *= 1 - $row['reduction'];
-                }
-
-                $row['real_value'] = $row['base_price'] > 0 ? $row['base_price'] - $cur_price : $cur_price;
-            } else {
-                if ($row['reduction_type'] == 'amount') {
-					if (Product::$_taxCalculationMethod == PS_TAX_INC) {
-						$row['real_value'] = $row['reduction_tax'] == 1 ? $row['reduction'] : $row['reduction'] * (1 + $tax_rate / 100);
-					} else {
-						$row['real_value'] = $row['reduction_tax'] == 0 ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
-					}
-                    $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] +  ($row['reduction'] *$tax_rate) / 100;
-                } else {
-                    $row['real_value'] = $row['reduction'] * 100;
-                }
+                $cur_price = (Product::$_taxCalculationMethod == PS_TAX_INC ? $row['price'] * (1 + $tax_rate / 100) : $row['price']) + (float)$ecotax_amount;
+                $row['base_price'] = $cur_price;
             }
-            $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : - 1);
+            if ($row['reduction_type'] == 'amount') {
+                if (Product::$_taxCalculationMethod == PS_TAX_INC) {
+                    $row['real_value'] = $row['reduction_tax'] == 1 ? $row['reduction'] : $row['reduction'] * (1 + $tax_rate / 100);
+                } else {
+                    $row['real_value'] = $row['reduction_tax'] == 0 ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
+                }
+                $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] + ($row['reduction'] * $tax_rate) / 100;
+            } else {
+                $row['real_value'] = $row['reduction'] * 100;
+            }
+            $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : -1);
         }
         return $specific_prices;
     }
