@@ -175,9 +175,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getContext()
     {
-        $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
-
-        return $legacyContextProvider->getContext();
+        return $this->get('prestashop.adapter.legacy.context')->getContext();
     }
 
     /**
@@ -186,9 +184,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function langToLocale($lang)
     {
-        $translationService = $this->get('prestashop.service.translation');
-
-        return $translationService->langToLocale($lang);
+        return $this->get('prestashop.service.translation')->langToLocale($lang);
     }
 
     /**
@@ -196,9 +192,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function isDemoModeEnabled()
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
-
-        return $configuration->get('_PS_MODE_DEMO_');
+        return $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEMO_');
     }
 
     /**

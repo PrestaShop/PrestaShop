@@ -132,6 +132,7 @@ class StockManager
      */
     public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
     {
+        // @TODO need to call this with Sf dependency injection
         $serviceLocator = new ServiceLocator();
         $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
         $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
