@@ -30,6 +30,8 @@ use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -374,7 +376,7 @@ class ProductController extends FrameworkBundleAdminController
      * @Template
      * @param int $id The product ID
      * @param Request $request
-     * @return array Template vars
+     * @return array|Response Template vars
      */
     public function formAction($id, Request $request)
     {
@@ -437,16 +439,26 @@ class ProductController extends FrameworkBundleAdminController
         $combinations = $modelMapper->getAttributesResume();
         if (is_array($combinations)) {
             foreach ($combinations as $combination) {
-                $form->add('combination_'.$combination['id_product_attribute'], 'PrestaShopBundle\Form\Admin\Product\ProductCombination');
+                $form->add(
+                    'combination_'.$combination['id_product_attribute'],
+                    'PrestaShopBundle\Form\Admin\Product\ProductCombination'
+                );
             }
         }
 
         $form = $form->getForm();
 
-        $formBulkCombinations = $this->createForm('PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk', null, array(
-            'iso_code' => $this->get('prestashop.adapter.legacy.context')->getContext()->currency->iso_code,
-            'price_display_precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_'),
-        ));
+        $formBulkCombinations = $this->createForm(
+            'PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk',
+            null,
+            array(
+                'iso_code' => $this
+                    ->get('prestashop.adapter.legacy.context')
+                    ->getContext()->currency->iso_code,
+                'price_display_precision' => $this->configuration
+                    ->get('_PS_PRICE_DISPLAY_PRECISION_'),
+            )
+        );
 
         // Legacy code. To fix when Object model will change. But report Hooks.
         $postData = $request->request->all();
@@ -470,6 +482,7 @@ class ProductController extends FrameworkBundleAdminController
             );
         }
 
+        /* @var $form Form */
         $form->handleRequest($request);
         $formData = $form->getData();
         $formData['step3']['combinations'] = $combinationsList;
@@ -496,34 +509,40 @@ class ProductController extends FrameworkBundleAdminController
                 // actionProductAdd or actionProductUpdate (from processSave() -> processAdd() or processUpdate())
                 // actionAdminSaveAfter; actionAdminProductsControllerSaveAfter
                 if ($product = $adminProductController->postCoreProcess()) {
+                    /* @var $product Product */
                     $adminProductController->processSuppliers($product->id);
                     $adminProductController->processFeatures($product->id);
                     $adminProductController->processSpecificPricePriorities();
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
                         // For now, each attribute set the same value.
-                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'), $combinationValues['id_product_attribute']);
+                        $adminProductWrapper->processDependsOnStock(
+                            $product,
+                            ($_POST['depends_on_stock'] == '1'),
+                            $combinationValues['id_product_attribute']
+                        );
                     }
                     $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'));
 
                     // If there is no combination, then quantity is managed for the whole product (as combination ID 0)
                     // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
-                    if (count($_POST['combinations']) === 0) {
-                        if (isset($_POST['qty_0'])){
-                            $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
-                        }
+                    if (count($_POST['combinations']) === 0 && isset($_POST['qty_0'])) {
+                        $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
                     }
                     // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
-                    $customization_fields_ids = $adminProductWrapper->processProductCustomization($product, $_POST['custom_fields']);
+
+                    $customizationFieldsIds = $adminProductWrapper
+                        ->processProductCustomization($product, $_POST['custom_fields']);
+
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
 
                     $adminProductController->processWarehouses();
 
                     $response->setData([
                         'product' => $product,
-                        'customization_fields_ids' => $customization_fields_ids
+                        'customization_fields_ids' => $customizationFieldsIds
                     ]);
                 }
 

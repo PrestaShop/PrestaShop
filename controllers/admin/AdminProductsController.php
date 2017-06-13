@@ -1243,7 +1243,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * postProcess for new form archi (need object return)
      *
-     * @return void
+     * @return ObjectModel|false
      */
     public function postCoreProcess()
     {
