@@ -216,10 +216,16 @@ class TranslationsExtension extends \Twig_Extension
             'action' => $this->router->generate('admin_international_translations_edit'),
             'label_edit' => $this->translator->trans('Save', array(), 'Admin.Actions'),
             'label_reset' => $this->translator->trans('Reset', array(), 'Admin.Actions'),
-            'notification_success' => $this->translator->trans('Translation successfully updated', array(),
-                'Admin.International.Notification'),
-            'notification_error' => $this->translator->trans('Translation unsuccessfully updated', array(),
-                'Admin.International.Notification'),
+            'notification_success' => $this->translator->trans(
+                'Translation successfully updated',
+                array(),
+                'Admin.International.Notification'
+            ),
+            'notification_error' => $this->translator->trans(
+                'Failed to update translation',
+                array(),
+                'Admin.International.Notification'
+            ),
         );
     }
 

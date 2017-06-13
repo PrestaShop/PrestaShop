@@ -520,7 +520,7 @@ class AdminRequestSqlControllerCore extends AdminController
                 break;
 
                 case 'testedUnauthorized':
-                    $this->errors[] = sprintf($this->trans('Is an unauthorized keyword.', array(), 'Admin.Advparameters.Notification'), $e[$key]);
+                    $this->errors[] = sprintf($this->trans('"%s" is an unauthorized keyword.', array(), 'Admin.Advparameters.Notification'), $e[$key]);
                 break;
             }
         }

@@ -73,8 +73,8 @@ class AdminCustomerPreferencesControllerCore extends AdminController
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_BIRTHDATE' => array(
-                        'title' => $this->trans('Ask for birthdate', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Display or not the birthdate field.', array(), 'Admin.Shopparameters.Help'),
+                        'title' => $this->trans('Ask for birth date', array(), 'Admin.Shopparameters.Feature'),
+                        'hint' => $this->trans('Display or not the birth date field.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'

@@ -38,7 +38,7 @@
 			<form id="addons_login_form" method="post" >
 				<div>
 					<a href="{$addons_register_link|escape:'html':'UTF-8'}"><img class="img-responsive center-block" src="{$img_base_path}themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/></a>
-					<h3 class="text-center">{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</h3>
+					<h3 class="text-center">{l s="Connect your shop to PrestaShop's marketplace in order to automatically import all your Addons purchases."}</h3>
 					<hr />
 				</div>
 				<div class="row">

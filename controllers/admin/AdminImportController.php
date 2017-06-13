@@ -1787,7 +1787,13 @@ class AdminImportControllerCore extends AdminController
                     if ($category['id_category']) {
                         $product->id_category[] = (int)$category['id_category'];
                     } else {
-                        $this->errors[] = sprintf($this->trans('%1$s cannot be saved', array(), 'Admin.Advparameters.Notification'), trim($value));
+                        $this->errors[] = $this->trans(
+                            '%s cannot be saved',
+                            array(
+                                trim($value),
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                 }
             }
@@ -2415,20 +2421,21 @@ class AdminImportControllerCore extends AdminController
                         !$validateOnly &&
                         $image->add()) {
                         $image->associateTo($id_shop_list);
-// FIXME: 2s/image !
+                        // FIXME: 2s/image !
                         if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate)) {
                             $this->warnings[] = sprintf($this->trans('Error copying image: %s', array(), 'Admin.Advparameters.Notification'), $url);
                             $image->delete();
                         } else {
                             $id_image[] = (int)$image->id;
                         }
-// until here
+                        // until here
                     } else {
                         if (!$validateOnly) {
-                            $this->warnings[] = sprintf(
-                                $this->trans('%s cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                                (isset($image->id_product) ? ' ('.$image->id_product.')' : '')
-                            );
+                            $this->warnings[] = $this->trans('%data% cannot be saved',
+                                array(
+                                    '%data%' => (isset($image->id_product) ? ' ('.$image->id_product.')' : ''),
+                                ),
+                                'Admin.Advparameters.Notification');
                         }
                         if ($field_error !== true || $lang_field_error !== true) {
                             $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').mysql_error();
@@ -3103,7 +3110,13 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     if (!$validateOnly) {
                         $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
-                        $this->errors[] = sprintf($this->trans('%s cannot be saved', array(), 'Admin.Advparameters.Notification'), $country->name[$default_language_id]);
+                        $this->errors[] = $this->trans(
+                            '%data% cannot be saved',
+                            array(
+                                '%data%' => $country->name[$default_language_id],
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
@@ -3135,7 +3148,13 @@ class AdminImportControllerCore extends AdminController
                     $address->id_state = (int)$state->id;
                 } else {
                     if (!$validateOnly) {
-                        $this->errors[] = sprintf($this->trans('%s cannot be saved', array(), 'Admin.Advparameters.Notification'), $state->name);
+                        $this->errors[] = $this->trans(
+                            '%s cannot be saved',
+                            array(
+                                '%data%' => $state->name,
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').

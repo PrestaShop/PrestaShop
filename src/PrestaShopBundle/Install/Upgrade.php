@@ -865,7 +865,7 @@ namespace PrestaShopBundle\Install {
 
             $this->next = 'EnableModules';
             $this->nextDesc = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
             $this->nextQuickInfo[] = $this->getTranslator()->trans('Enabling modules now...', array(), 'Install');
         }
 

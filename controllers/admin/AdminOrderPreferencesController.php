@@ -80,7 +80,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
                         'type' => 'price'
                     ),
                     'PS_ORDER_RECALCULATE_SHIPPING' => array(
-                        'title' => $this->trans('Recalculate shipping cost after order edition', array(), 'Admin.Shopparameters.Feature'),
+                        'title' => $this->trans('Recalculate shipping costs after editing the order', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('Automatically updates the shipping costs when you edit an order.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
