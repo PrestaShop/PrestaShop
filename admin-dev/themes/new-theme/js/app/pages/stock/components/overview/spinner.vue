@@ -35,10 +35,11 @@
       class="edit-qty"
       type="number"
       placeholder="0"
-      pattern= "[-+]?[0-9]*[.,]?[0-9]+"
+      pattern="\d*"
+      step="1"
       :id="id"
       v-model="qty"
-      @keyup="onKeyup($event.target.value)"
+      @keyup="onKeyup($event)"
       @focus="focusIn"
       @blur="focusOut($event)"
     >
@@ -84,8 +85,9 @@
         this.value = null;
         this.product.qty = null;
       },
-      onKeyup(val) {
-        if (isNaN(parseInt(val, 10))) {
+      onKeyup(event) {
+        const val = event.target.value;
+        if (val === 0) {
           this.deActivate();
         } else {
           this.isActive = true;
