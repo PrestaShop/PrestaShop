@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Statement;
+use Doctrine\ORM\EntityManager;
 use Employee;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
@@ -53,6 +54,11 @@ abstract class StockManagementRepository
      * @var Connection
      */
     protected $connection;
+
+    /**
+     * @var EntityManager
+     */
+    protected $em;
 
     /**
      * @var ContextAdapter
@@ -96,6 +102,7 @@ abstract class StockManagementRepository
     public function __construct(
         ContainerInterface $container,
         Connection $connection,
+        EntityManager $entityManager,
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
         $tablePrefix
@@ -103,6 +110,7 @@ abstract class StockManagementRepository
     {
         $this->container = $container;
         $this->connection = $connection;
+        $this->em = $entityManager;
         $this->contextAdapter = $contextAdapter;
         $this->imageManager = $imageManager;
         $this->tablePrefix = $tablePrefix;

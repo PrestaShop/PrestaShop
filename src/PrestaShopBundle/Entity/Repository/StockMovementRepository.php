@@ -27,26 +27,28 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
+use Doctrine\ORM\EntityManager;
 use PDO;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
-use PrestaShopBundle\Api\QueryStockParamsCollection;
-use PrestaShopBundle\Exception\NotImplementedException;
+use PrestaShopBundle\Entity\StockMvt;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StockMovementRepository extends StockManagementRepository
 {
     /**
+     * StockMovementRepository constructor.
      * @param ContainerInterface $container
      * @param Connection $connection
+     * @param EntityManager $entityManager
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
      * @param $tablePrefix
-     * @throws NotImplementedException
      */
     public function __construct(
         ContainerInterface $container,
         Connection $connection,
+        EntityManager $entityManager,
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
         $tablePrefix
@@ -55,6 +57,7 @@ class StockMovementRepository extends StockManagementRepository
         parent::__construct(
             $container,
             $connection,
+            $entityManager,
             $contextAdapter,
             $imageManager,
             $tablePrefix
@@ -273,6 +276,10 @@ class StockMovementRepository extends StockManagementRepository
         return $rows;
     }
 
+    /**
+     * Get movements from employees
+     * @return mixed
+     */
     public function getEmployees()
     {
         $query = str_replace('{table_prefix}', $this->tablePrefix,
@@ -294,6 +301,10 @@ class StockMovementRepository extends StockManagementRepository
         return $employees;
     }
 
+    /**
+     * Get type of movements from employees
+     * @return mixed
+     */
     public function getTypes()
     {
         $query = str_replace('{table_prefix}', $this->tablePrefix,
@@ -318,5 +329,18 @@ class StockMovementRepository extends StockManagementRepository
         $types = $this->castNumericToInt($rows);
 
         return $types;
+    }
+
+    /**
+     * @param StockMvt $stockMvt
+     * @return int
+     */
+    public function saveStockMvt(StockMvt $stockMvt)
+    {
+        $this->em->persist($stockMvt);
+        $this->em->flush();
+
+        return $stockMvt->getIdStockMvt();
+
     }
 }

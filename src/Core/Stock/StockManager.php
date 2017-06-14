@@ -25,12 +25,11 @@
  */
 namespace PrestaShop\PrestaShop\Core\Stock;
 
+use DateTime;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
-use PrestaShopBundle\Api\Stock\Movement;
-use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShopBundle\Entity\StockMvt;
 
 /**
  * Class StockManager Refactored features about product stocks.
@@ -49,6 +48,7 @@ class StockManager
      */
     public function updatePackQuantity($product, $stock_available, $delta_quantity, $id_shop = null)
     {
+        // @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
         $serviceLocator = new ServiceLocator();
 
         $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
@@ -87,6 +87,7 @@ class StockManager
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
     {
+        // @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
         $serviceLocator = new ServiceLocator();
 
         $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
@@ -132,7 +133,7 @@ class StockManager
      */
     public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
     {
-        // @TODO need to call this with Sf dependency injection
+        /// @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
         $serviceLocator = new ServiceLocator();
         $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
         $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
@@ -189,10 +190,14 @@ class StockManager
     public function saveMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
     {
         if ($deltaQuantity != 0) {
-            $movement = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
+            $stockMvt = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
 
-            if ($movement) {
-                return $this->registerMovement($movement);
+            if ($stockMvt) {
+                global $kernel;
+                if (!is_null($kernel) && $kernel instanceof \Symfony\Component\HttpKernel\HttpKernelInterface) {
+                    $stockMvtRepository = $kernel->getContainer()->get('prestashop.core.api.stockMovement.repository');
+                    return $stockMvtRepository->saveStockMvt($stockMvt);
+                }
             }
         }
 
@@ -206,81 +211,51 @@ class StockManager
      * @param $productAttributeId
      * @param $deltaQuantity
      * @param array $params
-     * @return bool|Movement
+     * @return bool|StockMvt
      */
     private function prepareMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
     {
-        $productIdentity = ProductIdentity::fromArray(array(
-            'product_id' => (int) $productId,
-            'combination_id' => (int) $productAttributeId
-        ));
-
-        $movement = new Movement($productIdentity, $deltaQuantity);
         $product = (new ProductDataProvider)->getProductInstance($productId);
 
         if ($product->id) {
+
             $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
             $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId);
 
             if ($stockAvailable->id) {
-                $movement->setIdStock((int)$stockAvailable->id);
+
+                $stockMvt = new StockMvt();
+
+                $stockMvt->setIdStock((int)$stockAvailable->id);
 
                 if (!empty($params['id_order'])) {
-                    $movement->setIdOrder((int)$params['id_order']);
+                    $stockMvt->setIdOrder((int)$params['id_order']);
                 }
 
                 if (!empty($params['id_stock_mvt_reason'])) {
-                    $movement->setIdStockMvtReason((int)$params['id_stock_mvt_reason']);
+                    $stockMvt->setIdStockMvtReason((int)$params['id_stock_mvt_reason']);
                 }
 
-                return $movement;
+                if (!empty($params['id_supply_order'])) {
+                    $stockMvt->setIdSupplyOrder((int)$params['id_supply_order']);
+                }
+
+                $stockMvt->setSign($deltaQuantity >= 1 ? 1 : -1);
+                $stockMvt->setPhysicalQuantity(abs($deltaQuantity));
+
+                $stockMvt->setDateAdd(new DateTime());
+
+                $employee = (new ContextAdapter)->getContext()->employee;
+                if (!empty($employee)) {
+                    $stockMvt->setIdEmployee($employee->id);
+                    $stockMvt->setEmployeeFirstname($employee->firstname);
+                    $stockMvt->setEmployeeLastname($employee->lastname);
+                }
+
+                return $stockMvt;
             }
         }
 
         return false;
-    }
-
-    /**
-     * Register a movement
-     *
-     * @param Movement $movement
-     * @return bool
-     */
-    private function registerMovement(Movement $movement)
-    {
-        $delta = $movement->getDelta();
-
-        $employee_params = array();
-        $employee = (new ContextAdapter)->getContext()->employee;
-        if (!empty($employee)) {
-            $employee_params = array(
-                'id_employee' => (int) $employee->id,
-                'employee_firstname' => $employee->firstname,
-                'employee_lastname' => $employee->lastname,
-            );
-        }
-
-        $mvt_params = array_merge(
-            array(
-                'id_stock' => $movement->getIdStock(),
-                'id_order' => $movement->getIdOrder(),
-                'id_supply_order' => $movement->getIdSupplyOrder(),
-                'id_stock_mvt_reason' => $movement->getIdStockMvtReason(),
-                'physical_quantity' => abs($delta),
-                'sign' => $delta >= 1 ? 1 : -1,
-                'date_add' => date('Y-m-d H:i:s'),
-                'price_te' => 0,
-                'last_wa' => 0,
-                'current_wa' => 0,
-                'referer' => null,
-                'id_employee' => 0,
-                'employee_firstname' => null,
-                'employee_lastname' => null,
-            ), $employee_params);
-
-        $stock_mvt = (new StockManagerAdapter)->newStockMvt();
-        $stock_mvt->hydrate($mvt_params);
-
-        return $stock_mvt->add();
     }
 }

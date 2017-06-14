@@ -331,6 +331,7 @@ services:
         arguments:
             - "@service_container"
             - "@doctrine.dbal.default_connection"
+            - "@doctrine.orm.default_entity_manager"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.image_manager"
             - "@prestashop.adapter.stock_manager"
@@ -341,6 +342,7 @@ services:
         arguments:
             - "@service_container"
             - "@doctrine.dbal.default_connection"
+            - "@doctrine.orm.default_entity_manager"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.image_manager"
             - "%database_prefix%"

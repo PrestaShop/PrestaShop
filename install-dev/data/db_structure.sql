@@ -2083,27 +2083,6 @@ PRIMARY KEY (`id_webservice_account` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_stock_mvt` (
-  `id_stock_mvt` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_stock` INT(11) UNSIGNED NOT NULL,
-  `id_order` INT(11) UNSIGNED DEFAULT NULL,
-  `id_supply_order` INT(11) UNSIGNED DEFAULT NULL,
-  `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL,
-  `id_employee` INT(11) UNSIGNED NOT NULL,
-  `employee_lastname` varchar(32) DEFAULT '',
-  `employee_firstname` varchar(32) DEFAULT '',
-  `physical_quantity` INT(11) UNSIGNED NOT NULL,
-  `date_add` DATETIME NOT NULL,
-  `sign` tinyint(1) NOT NULL DEFAULT 1,
-  `price_te` DECIMAL(20,6) DEFAULT '0.000000',
-  `last_wa` DECIMAL(20,6) DEFAULT '0.000000',
-  `current_wa` DECIMAL(20,6) DEFAULT '0.000000',
-  `referer` bigint UNSIGNED DEFAULT NULL,
-  PRIMARY KEY (`id_stock_mvt`),
-  KEY `id_stock` (`id_stock`),
-  KEY `id_stock_mvt_reason` (`id_stock_mvt_reason`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_stock_mvt_reason` (
   `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `sign` tinyint(1) NOT NULL DEFAULT 1,

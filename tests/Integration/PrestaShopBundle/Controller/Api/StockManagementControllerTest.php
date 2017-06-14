@@ -507,9 +507,6 @@ class StockManagementControllerTest extends ApiTestCase
 
     /**
      * @test
-     *
-     * @param $params
-     * @param $expectedTotalPages
      */
     public function it_should_return_ok_response_when_requesting_movements_types()
     {
@@ -518,9 +515,6 @@ class StockManagementControllerTest extends ApiTestCase
 
     /**
      * @test
-     *
-     * @param $params
-     * @param $expectedTotalPages
      */
     public function it_should_return_ok_response_when_requesting_movements_employees()
     {

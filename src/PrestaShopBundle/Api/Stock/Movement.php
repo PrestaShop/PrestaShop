@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Api\Stock;
 
 use PrestaShopBundle\Entity\ProductIdentity;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 
 class Movement
 {
@@ -40,27 +39,6 @@ class Movement
      * @var int
      */
     private $delta;
-
-    /**
-     * @var int
-     */
-    private $idStock = 0;
-
-    /**
-     * @var int
-     */
-    private $idOrder = 0;
-
-    /**
-     * @var int
-     */
-    private $idSupplyOrder = 0;
-
-    /**
-     * @var int
-     */
-    private $idStockMvtReason = 0;
-
 
     public function __construct(ProductIdentity $productIdentity, $delta)
     {
@@ -82,78 +60,5 @@ class Movement
     public function getDelta()
     {
         return $this->delta;
-    }
-
-    /**
-     * Set idStock
-     * @param $idStock
-     */
-    public function setIdStock($idStock)
-    {
-        $this->idStock = (int)$idStock;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdStock()
-    {
-        return $this->idStock;
-    }
-
-    /**
-     * Set idOrder
-     * @param $idOrder
-     */
-    public function setIdOrder($idOrder)
-    {
-        $this->idOrder = (int)$idOrder;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdOrder()
-    {
-        return $this->idOrder;
-    }
-
-    /**
-     * Set idSupplyOrder
-     * @param $idSupplyOrder
-     */
-    public function setIdSupplyOrder($idSupplyOrder)
-    {
-        $this->idSupplyOrder = (int)$idSupplyOrder;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdSupplyOrder()
-    {
-        return $this->idSupplyOrder;
-    }
-
-    /**
-     * Set idStockMvtReason
-     * @param $idStockMvtReason
-     */
-    public function setIdStockMvtReason($idStockMvtReason)
-    {
-        $this->idStockMvtReason = (int)$idStockMvtReason;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdStockMvtReason()
-    {
-        if (0 === $this->idStockMvtReason) {
-            $configuration = new Configuration();
-            $this->setIdStockMvtReason($this->delta >= 1 ? $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION'));
-        }
-
-        return $this->idStockMvtReason;
     }
 }

@@ -26,10 +26,9 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShopBundle\Service\DataProvider\StockInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use StockAvailable;
-use StockMvt;
 use Db;
-use Configuration;
 
 /**
  * Data provider for new Architecture, about Product stocks.
@@ -58,7 +57,7 @@ class StockManager implements StockInterface
      */
     public function isAsmGloballyActivated()
     {
-        return (bool)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
+        return (bool)(new ConfigurationAdapter())->get('PS_ADVANCED_STOCK_MANAGEMENT');
     }
 
     /**
@@ -131,21 +130,6 @@ class StockManager implements StockInterface
         );
 
         return Db::getInstance()->execute($updateReservedQuantityQuery);
-    }
-
-    /**
-     * Instance a new StockMvt
-     *
-     * @param null $stockMvtId
-     * @return StockMvt
-     */
-    public function newStockMvt($stockMvtId = null)
-    {
-        if (is_integer($stockMvtId)) {
-            return new StockMvt($stockMvtId);
-        }
-
-        return new StockMvt();
     }
 
     /**

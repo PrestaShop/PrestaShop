@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
+use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
@@ -36,7 +37,6 @@ use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Api\Stock\MovementsCollection;
 use PrestaShopBundle\Entity\ProductIdentity;
-use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -54,17 +54,19 @@ class StockRepository extends StockManagementRepository
     private $orderStates = array();
 
     /**
+     * StockRepository constructor.
      * @param ContainerInterface $container
      * @param Connection $connection
+     * @param EntityManager $entityManager
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
      * @param StockManager $stockManager
      * @param $tablePrefix
-     * @throws NotImplementedException
      */
     public function __construct(
         ContainerInterface $container,
         Connection $connection,
+        EntityManager $entityManager,
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
         StockManager $stockManager,
@@ -74,6 +76,7 @@ class StockRepository extends StockManagementRepository
         parent::__construct(
             $container,
             $connection,
+            $entityManager,
             $contextAdapter,
             $imageManager,
             $tablePrefix
