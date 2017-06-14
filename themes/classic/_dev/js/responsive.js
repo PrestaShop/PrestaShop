@@ -27,7 +27,7 @@ import prestashop from 'prestashop';
 
 prestashop.responsive = prestashop.responsive || {};
 
-prestashop.responsive.current_width = $(window).width();
+prestashop.responsive.current_width = window.innerWidth;
 prestashop.responsive.min_width = 768;
 prestashop.responsive.mobile = prestashop.responsive.current_width < prestashop.responsive.min_width;
 
@@ -63,7 +63,7 @@ function toggleMobileStyles()
 $(window).on('resize', function() {
 	var _cw = prestashop.responsive.current_width;
 	var _mw = prestashop.responsive.min_width;
-	var _w = $(window).width();
+	var _w = window.innerWidth;
 	var _toggle = (_cw >= _mw && _w < _mw) || (_cw < _mw && _w >= _mw);
 	prestashop.responsive.current_width = _w;
   prestashop.responsive.mobile = prestashop.responsive.current_width < prestashop.responsive.min_width;
@@ -77,4 +77,3 @@ $(document).ready(function() {
 		toggleMobileStyles();
 	}
 });
-
