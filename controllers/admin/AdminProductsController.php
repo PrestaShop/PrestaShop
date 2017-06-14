@@ -358,7 +358,7 @@ class AdminProductsControllerCore extends AdminController
     public function ajaxProcessAddAttachment()
     {
         if (!$this->access('edit')) {
-            return die(json_encode(array('error' => $this->l('You do not have the right permission'))));
+            return die(json_encode(array('error' => 'You do not have the right permission')));
         }
         if (isset($_FILES['attachment_file'])) {
             if ((int)$_FILES['attachment_file']['error'] === 1) {
@@ -368,7 +368,7 @@ class AdminProductsControllerCore extends AdminController
                 $max_post = (int)ini_get('post_max_size');
                 $upload_mb = min($max_upload, $max_post);
                 $_FILES['attachment_file']['error'][] = sprintf(
-                    $this->l('File %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.'),
+                    'File %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.',
                     '<b>'.$_FILES['attachment_file']['name'].'</b> ',
                     '<b>'.$upload_mb.'</b>'
                 );
@@ -418,7 +418,7 @@ class AdminProductsControllerCore extends AdminController
                 if (is_uploaded_file($_FILES['attachment_file']['tmp_name'])) {
                     if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
                         $_FILES['attachment_file']['error'][] = sprintf(
-                            $this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
+                            'The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.',
                             (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
                             number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '')
                         );
@@ -427,7 +427,7 @@ class AdminProductsControllerCore extends AdminController
                             $uniqid = sha1(microtime());
                         } while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
                         if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid)) {
-                            $_FILES['attachment_file']['error'][] = $this->l('File copy failed');
+                            $_FILES['attachment_file']['error'][] = 'File copy failed';
                         }
                         @unlink($_FILES['attachment_file']['tmp_name']);
                     }
@@ -574,7 +574,7 @@ class AdminProductsControllerCore extends AdminController
                     if ($object->delete()) {
                         $id_category = (int)Tools::getValue('id_category');
                         $category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
-                        PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
+                        PrestaShopLogger::addLog(sprintf('%s deletion', $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
                         $this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
                     } else {
                         $this->errors[] = $this->trans('An error occurred during deletion.', array(), 'Admin.Notifications.Error');
@@ -661,7 +661,7 @@ class AdminProductsControllerCore extends AdminController
                             }
                             if (!count($this->errors)) {
                                 if ($product->delete()) {
-                                    PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$product->id, true, (int)$this->context->employee->id);
+                                    PrestaShopLogger::addLog(sprintf('%s deletion', $this->className), 1, null, $this->className, (int)$product->id, true, (int)$this->context->employee->id);
                                 } else {
                                     $success = false;
                                 }
@@ -1014,7 +1014,7 @@ class AdminProductsControllerCore extends AdminController
             if (!SpecificPrice::setPriorities($priorities)) {
                 $this->errors[] = $this->trans('An error occurred while updating priorities.', array(), 'Admin.Catalog.Notification');
             } else {
-                $this->confirmations[] = $this->l('The price rule has successfully updated');
+                $this->confirmations[] = 'The price rule has successfully updated';
             }
         } elseif (!SpecificPrice::setSpecificPriority((int)$obj->id, $priorities)) {
             $this->errors[] = $this->trans('An error occurred while setting priorities.', array(), 'Admin.Catalog.Notification');
@@ -1062,7 +1062,7 @@ class AdminProductsControllerCore extends AdminController
                 $this->errors[] = $this->trans('An error occurred while updating customization fields.', array(), 'Admin.Catalog.Notification');
             }
             if (empty($this->errors)) {
-                $this->confirmations[] = $this->l('Update successful');
+                $this->confirmations[] = 'Update successful';
             }
         } else {
             $this->errors[] = $this->trans('A product must be created before adding customization.', array(), 'Admin.Catalog.Notification');
@@ -1313,7 +1313,7 @@ class AdminProductsControllerCore extends AdminController
                 if (($depends_on_stock = StockAvailable::dependsOnStock($id_product)) && StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute)) {
                     $json = array(
                         'status' => 'error',
-                        'message'=> $this->l('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.')
+                        'message'=> 'It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.'
                     );
                 } else {
                     $product->deleteAttributeCombination((int)$id_product_attribute);
@@ -1329,7 +1329,7 @@ class AdminProductsControllerCore extends AdminController
                     if ($depends_on_stock && !Stock::deleteStockByIds($id_product, $id_product_attribute)) {
                         $json = array(
                             'status' => 'error',
-                            'message'=> $this->l('Error while deleting the stock')
+                            'message'=> 'Error while deleting the stock'
                         );
                     } else {
                         $json = array(
@@ -1342,13 +1342,13 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 $json = array(
                     'status' => 'error',
-                    'message'=> $this->l('You cannot delete this attribute.')
+                    'message'=> 'You cannot delete this attribute.'
                 );
             }
         } else {
             $json = array(
                 'status' => 'error',
-                'message'=> $this->l('You do not have permission to delete this.')
+                'message'=> 'You do not have permission to delete this.'
             );
         }
 
@@ -1372,7 +1372,7 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 $json = array(
                     'status' => 'error',
-                    'message'=> $this->l('You cannot make this the default attribute.')
+                    'message'=> 'You cannot make this the default attribute.'
                 );
             }
 
@@ -1452,7 +1452,7 @@ class AdminProductsControllerCore extends AdminController
     public function ajaxProcessUpdateImagePosition()
     {
         if (!$this->access('edit')) {
-            return die(json_encode(array('error' => $this->l('You do not have the right permission'))));
+            return die(json_encode(array('error' => 'You do not have the right permission')));
         }
         $res = false;
         if ($json = Tools::getValue('json')) {
@@ -1475,7 +1475,7 @@ class AdminProductsControllerCore extends AdminController
     public function ajaxProcessUpdateCover()
     {
         if (!$this->access('edit')) {
-            return die(json_encode(array('error' => $this->l('You do not have the right permission'))));
+            return die(json_encode(array('error' => 'You do not have the right permission')));
         }
         Image::deleteCover((int)Tools::getValue('id_product'));
         $img = new Image((int)Tools::getValue('id_image'));
@@ -1690,7 +1690,7 @@ class AdminProductsControllerCore extends AdminController
         $this->_removeTaxFromEcotax();
         $this->copyFromPost($this->object, $this->table);
         if ($this->object->add()) {
-            PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+            PrestaShopLogger::addLog(sprintf('%s addition', $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
             $this->addCarriers($this->object);
             $this->updateAccessories($this->object);
             $this->updatePackItems($this->object);
@@ -1865,7 +1865,7 @@ class AdminProductsControllerCore extends AdminController
                         StockAvailable::setProductDependsOnStock((int)$this->object->id, $depends_on_stock, $this->context->shop->id);
                     }
 
-                    PrestaShopLogger::addLog(sprintf($this->l('%s modification', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+                    PrestaShopLogger::addLog(sprintf('%s modification', $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
                     if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL))) {
                         if ($this->isTabSubmitted('Shipping')) {
                             $this->addCarriers();
@@ -1930,7 +1930,7 @@ class AdminProductsControllerCore extends AdminController
                             $page = (int)Tools::getValue('page');
                             // Save and stay on same form
                             if ($this->display == 'edit') {
-                                $this->confirmations[] = $this->l('Update successful');
+                                $this->confirmations[] = 'Update successful';
                                 $this->redirect_after = self::$currentIndex.'&id_product='.(int)$this->object->id
                                     .(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
                                     .'&updateproduct&conf=4&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).($page > 1 ? '&page='.(int)$page : '').'&token='.$this->token;
@@ -2106,11 +2106,11 @@ class AdminProductsControllerCore extends AdminController
 
         // Categories
         if ($this->isProductFieldUpdated('id_category_default') && (!Tools::isSubmit('categoryBox') || !count(Tools::getValue('categoryBox')))) {
-            $this->errors[] = $this->l('Products must be in at least one category.');
+            $this->errors[] = 'Products must be in at least one category.';
         }
 
         if ($this->isProductFieldUpdated('id_category_default') && (!is_array(Tools::getValue('categoryBox')) || !in_array(Tools::getValue('id_category_default'), Tools::getValue('categoryBox')))) {
-            $this->errors[] = $this->l('This product must be in the default category.');
+            $this->errors[] = 'This product must be in the default category.';
         }
 
         // Tags
@@ -2939,17 +2939,17 @@ class AdminProductsControllerCore extends AdminController
             case 'pack_stock_type':
                 $value = Tools::getValue('value');
                 if ($value === false) {
-                    die(json_encode(array('error' =>  $this->l('Undefined value'))));
+                    die(json_encode(array('error' =>  'Undefined value')));
                 }
                 if ((int)$value != 0 && (int)$value != 1
                     && (int)$value != 2 && (int)$value != 3) {
-                    die(json_encode(array('error' =>  $this->l('Incorrect value'))));
+                    die(json_encode(array('error' =>  'Incorrect value')));
                 }
                 if ($product->depends_on_stock && !Pack::allUsesAdvancedStockManagement($product->id) && ((int)$value == 1
                     || (int)$value == 2 || ((int)$value == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 1 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))) {
-                    die(json_encode(array('error' => $this->l('You cannot use this stock management option because:').'<br />'.
-                        $this->l('- advanced stock management is not enabled for these products').'<br />'.
-                        $this->l('- advanced stock management is enabled for the pack'))));
+                    die(json_encode(array('error' => 'You cannot use this stock management option because:'.'<br />'.
+                        '- advanced stock management is not enabled for these products'.'<br />'.
+                        '- advanced stock management is enabled for the pack')));
                 }
 
                 Product::setPackStockType($product->id, $value);
@@ -2957,10 +2957,10 @@ class AdminProductsControllerCore extends AdminController
 
             case 'out_of_stock':
                 if (Tools::getValue('value') === false) {
-                    die(json_encode(array('error' =>  $this->l('Undefined value'))));
+                    die(json_encode(array('error' =>  'Undefined value')));
                 }
                 if (!in_array((int)Tools::getValue('value'), array(0, 1, 2))) {
-                    die(json_encode(array('error' =>  $this->l('Incorrect value'))));
+                    die(json_encode(array('error' =>  'Incorrect value')));
                 }
 
                 StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
@@ -2968,10 +2968,10 @@ class AdminProductsControllerCore extends AdminController
 
             case 'set_qty':
                 if (Tools::getValue('value') === false || (!is_numeric(trim(Tools::getValue('value'))))) {
-                    die(json_encode(array('error' =>  $this->l('Undefined value'))));
+                    die(json_encode(array('error' =>  'Undefined value')));
                 }
                 if (Tools::getValue('id_product_attribute') === false) {
-                    die(json_encode(array('error' =>  $this->l('Undefined id product attribute'))));
+                    die(json_encode(array('error' =>  'Undefined id product attribute')));
                 }
 
                 StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
@@ -2987,13 +2987,13 @@ class AdminProductsControllerCore extends AdminController
                 break;
             case 'advanced_stock_management' :
                 if (Tools::getValue('value') === false) {
-                    die(json_encode(array('error' =>  $this->l('Undefined value'))));
+                    die(json_encode(array('error' =>  'Undefined value')));
                 }
                 if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0) {
-                    die(json_encode(array('error' =>  $this->l('Incorrect value'))));
+                    die(json_encode(array('error' =>  'Incorrect value')));
                 }
                 if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1) {
-                    die(json_encode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
+                    die(json_encode(array('error' =>  'Not possible if advanced stock management is disabled. ')));
                 }
 
                 $product->setAdvancedStockManagement((int)Tools::getValue('value'));
