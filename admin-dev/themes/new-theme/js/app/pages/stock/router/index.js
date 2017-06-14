@@ -31,7 +31,10 @@ Vue.use(VueRouter);
 
 export default new VueRouter({
   mode: 'history',
-  base: `${window.data.baseUrl}/stock`,
+  base: (() => {
+    const hasIndex = /(index\.php)/.exec(window.location.href);
+    return `${window.data.baseUrl}${hasIndex ? '/index.php' : ''}/stock`;
+  })(),
   routes: [
     {
       path: '/',
