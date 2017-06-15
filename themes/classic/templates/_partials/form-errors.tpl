@@ -27,7 +27,7 @@
     {block name='form_errors'}
       <ul>
         {foreach $errors as $error}
-          <li>{$error}</li>
+          <li class="alert alert-danger">{$error}</li>
         {/foreach}
       </ul>
     {/block}
