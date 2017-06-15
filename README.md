@@ -121,6 +121,9 @@ Getting support
 
 If you need help using PrestaShop 1.7, ask on the forums: https://www.prestashop.com/forums/forum/273-170x-in-development/
 
+License
+--------
+OSL-3.0
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
