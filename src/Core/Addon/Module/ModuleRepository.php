@@ -416,7 +416,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 // We load the main class of the module, and get its properties
                 $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
                 foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_uri',
-                    'limited_countries', 'need_instance', ) as $data_to_get) {
+                    'limited_countries', 'need_instance', 'confirmUninstall', ) as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {
                         $main_class_attributes[$data_to_get] = $tmp_module->{$data_to_get};
                     }

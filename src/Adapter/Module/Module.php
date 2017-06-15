@@ -101,6 +101,7 @@ class Module implements ModuleInterface
         'avgRate' => 0,
         'nbRates' => 0,
         'fullDescription' => '',
+        'confirmUninstall' => '',
     );
 
     /**

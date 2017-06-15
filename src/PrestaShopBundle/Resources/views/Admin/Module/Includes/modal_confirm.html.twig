@@ -55,6 +55,8 @@
                   {% if module_action == 'uninstall' %}
                     {{ "You are about to uninstall %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
                     <br>
+                    {{ module.attributes.confirmUninstall }}
+                    <br>
                     <br>
                     {{ "This will disable the module and delete all its files. For good."|trans({}, 'Admin.Modules.Notification') }}
                     <br>
