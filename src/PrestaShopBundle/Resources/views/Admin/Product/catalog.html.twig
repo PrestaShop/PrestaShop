@@ -144,19 +144,17 @@
           }
           ] %}
 
-          {# Only duplicate if shop or group is selected #}
-          {% if is_shop_context %}
-            {% set buttons_action = buttons_action|merge([
-            {
-            "divider": true
-            },
-            {
-            "onclick": "bulkProductAction(this, 'duplicate_all');",
-            "icon": "content_copy",
-            "label": "Duplicate selection"|trans({}, 'Admin.Actions')
-            }
-            ]) %}
-          {% endif %}
+          {% set buttons_action = buttons_action|merge([
+          {
+          "divider": true
+          },
+          {
+          "onclick": "bulkProductAction(this, 'duplicate_all');",
+          "icon": "content_copy",
+          "label": "Duplicate selection"|trans({}, 'Admin.Actions')
+          }
+          ]) %}
+
 
           {% set buttons_action = buttons_action|merge([
           {
