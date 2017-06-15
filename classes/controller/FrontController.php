@@ -1765,6 +1765,7 @@ class FrontControllerCore extends Controller
         );
 
         $scope->assign($params);
+        $scope->assign('link', $this->context->link);
 
         try {
             $tpl = $this->context->smarty->createTemplate(
