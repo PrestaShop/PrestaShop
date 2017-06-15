@@ -1244,7 +1244,8 @@ product_tabs['Pack'] = new function() {
 				dataType: 'json',
 				data: function (term) {
 					return {
-						q: term
+						q: term,
+						packItself: $('input[name=\'id_product\']').val()
 					};
 				},
 				results: function (data) {

@@ -5022,7 +5022,7 @@ class AdminProductsControllerCore extends AdminController
                         $item_id_attribute = 0;
                         count($array = explode('x', $line)) == 3 ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
                         if ($qty > 0 && isset($item_id)) {
-                            if (Pack::isPack((int)$item_id)) {
+                            if (Pack::isPack((int)$item_id || $product->id == (int)$item_id)) {
                                 $this->errors[] = Tools::displayError('You can\'t add product packs into a pack');
                             } elseif (!Pack::addItem((int)$product->id, (int)$item_id, (int)$qty, (int)$item_id_attribute)) {
                                 $this->errors[] = Tools::displayError('An error occurred while attempting to add products to the pack.');
