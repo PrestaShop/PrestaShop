@@ -197,17 +197,24 @@
                   {{ "Images"|trans({}, 'Admin.Catalog.Feature') }}
                 </h2>
                 <div class="row">
-                  <div class="col-md-12">
-                      <fieldset class="form-group js-combination-images">
-                          <label>
-                              <small class="form-control-label">{{ form.id_image_attr.vars.label }}</small>
-                              <small class="form-control-label number-of-images"></small>
-                          </label>
-                          {{ form_errors(form.id_image_attr) }}
-                          {{ form_widget(form.id_image_attr) }}
-                      </fieldset>
-                  </div>
+                    <div class="col-md-12">
+                        <fieldset class="form-group js-combination-images">
+                            <label>
+                                <small class="form-control-label">{{ form.id_image_attr.vars.label }}</small>
+                                <small class="form-control-label number-of-images"></small>
+                            </label>
+                            {{ form_errors(form.id_image_attr) }}
+                            {{ form_widget(form.id_image_attr) }}
+                        </fieldset>
+                    </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ renderhook('displayAdminProductsCombinationBottom', { 'id_product': form.vars.value.id_product, 'id_product_attribute': form.vars.value.id_product_attribute }) }}
+                    </div>
+                </div>
+
                 {{ form_widget(form.id_product_attribute) }}
             </div>
         </div>

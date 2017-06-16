@@ -736,5 +736,10 @@
       <title>Display new elements in back office product page, Shipping tab</title>
       <description>This hook launches modules when the back office product page is displayed</description>
     </hook>
+    <hook id="displayAdminProductsCombinationBottom">
+      <name>displayAdminProductsCombinationBottom</name>
+      <title>Display new elements in back office product page, Combination tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
   </entities>
 </entity_hook>
