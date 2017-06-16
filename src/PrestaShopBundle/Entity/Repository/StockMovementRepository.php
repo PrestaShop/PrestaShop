@@ -341,6 +341,5 @@ class StockMovementRepository extends StockManagementRepository
         $this->em->flush();
 
         return $stockMvt->getIdStockMvt();
-
     }
 }
