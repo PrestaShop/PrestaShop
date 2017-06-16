@@ -1138,10 +1138,10 @@ class OrderCore extends ObjectModel
 
 	public static function getLastInvoiceNumber()
 	{
-		return Db::getInstance()->getValue('
-			SELECT MAX(`number`)
-			FROM `'._DB_PREFIX_.'order_invoice`
-		');
+		$sql = 'SELECT MAX(`number`) FROM `'._DB_PREFIX_.'order_invoice`';
+		if (Configuration::get('PS_INVOICE_RESET'))
+			$sql .= ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y');
+		return Db::getInstance()->getValue($sql);
 	}
 
 	public static function setLastInvoiceNumber($order_invoice_id, $id_shop)
@@ -1160,7 +1160,7 @@ class OrderCore extends ObjectModel
 			$sql .= (int)$number;
 		else
 			$sql .= '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
-			FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+			FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ? ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y') : '').') AS result)';
 
 		$sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
 
