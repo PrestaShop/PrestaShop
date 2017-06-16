@@ -155,7 +155,7 @@ class HookExtension extends \Twig_Extension
             throw new \Exception('Hook name missing');
         }
         $hookRenders = $this->hookDispatcher->renderForParameters($hookName, $hookParameters)->getContent();
-        return implode('<br class="hook-separator" />', $hookRenders);
+        return empty($hookRenders) ? '' : implode('<br class="hook-separator" />', $hookRenders);
     }
 
     /**
