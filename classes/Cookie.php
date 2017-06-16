@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use \Defuse\Crypto\Key;
+use Defuse\Crypto\Key;
 
 class CookieCore
 {

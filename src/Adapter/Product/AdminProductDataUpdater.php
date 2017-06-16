@@ -38,6 +38,7 @@ use Pack;
 use Search;
 use Db;
 use Configuration;
+use Image;
 
 /**
  * This class will update/insert/delete data from DB / ORM about Product, for both Front and Admin interfaces.
@@ -203,7 +204,7 @@ class AdminProductDataUpdater implements ProductInterface
                 Product::updateDefaultAttribute($product->id);
             }
 
-            if (!\Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
+            if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
                 $this->hookDispatcher->dispatchForParameters('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));

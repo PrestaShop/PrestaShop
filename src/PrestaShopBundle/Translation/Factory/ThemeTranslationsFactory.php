@@ -63,7 +63,7 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * {@inheritdoc}
      */
-    public function createTranslationsArray($themeName, $locale = 'en_US')
+    public function createTranslationsArray($themeName, $locale = 'en_US', $theme = null, $search = null)
     {
         $this->themeProvider
             ->setThemeName($themeName)
@@ -71,68 +71,12 @@ class ThemeTranslationsFactory extends TranslationsFactory
             ->synchronizeTheme();
         ;
 
-        $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale);
-        $translations = $this->pushThemeTranslations($translations, $locale);
+        $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale, $search);
 
         ksort($translations);
 
         return $translations;
     }
-
-    /**
-     * @param $translations
-     * @param $locale
-     * @return mixed
-     */
-    protected function pushThemeTranslations($translations, $locale)
-    {
-        $themeTranslations = $this->themeProvider->getXliffCatalogue()->all();
-        $databaseCatalogue = $this->themeProvider->getDatabaseCatalogue()->all();
-
-        foreach ($themeTranslations as $domain => $messages) {
-            $databaseDomain = $this->removeLocaleFromDomain($locale, $domain);
-
-            $missingTranslations = 0;
-
-            foreach ($messages as $translationKey => $translationValue) {
-                $keyExists = array_key_exists($databaseDomain, $databaseCatalogue) &&
-                    array_key_exists($translationKey, $databaseCatalogue[$databaseDomain])
-                ;
-
-                $themeTranslations[$domain][$translationKey] = array(
-                    'xlf' => $translationKey != $translationValue ? $themeTranslations[$domain][$translationKey] : '',
-                    'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
-                );
-
-                if (
-                    empty($themeTranslations[$domain][$translationKey]['xlf']) &&
-                    empty($themeTranslations[$domain][$translationKey]['db'])
-                ) {
-                    $missingTranslations++;
-                }
-            }
-
-            $translations[$domain]['__metadata'] = array('missing_translations' => $missingTranslations);
-        }
-
-        foreach ($translations as $domain => $messages) {
-            if (!array_key_exists($domain, $themeTranslations)) {
-                $themeTranslations[$domain] = $messages;
-
-                continue;
-            }
-
-            foreach ($messages as $translationKey => $translationValues) {
-                if (!array_key_exists($translationKey, $themeTranslations[$domain])) {
-                    $themeTranslations[$domain][$translationKey] = $translationValues;
-                }
-
-            }
-        }
-
-        return $themeTranslations;
-    }
-
 
     /**
      * @param $locale
@@ -147,10 +91,11 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * @param $themeName
      * @param $locale
-     * @return mixed
+     * @param null $search
+     * @return array
      */
-    protected function getFrontTranslationsForThemeAndLocale($themeName, $locale)
+    protected function getFrontTranslationsForThemeAndLocale($themeName, $locale, $search = null)
     {
-        return parent::createTranslationsArray('front', $locale, $themeName);
+        return parent::createTranslationsArray('theme', $locale, $themeName, $search);
     }
 }

@@ -35,6 +35,8 @@ class BoOrder extends PaymentModule
     }
 }
 
+use PrestaShop\PrestaShop\Adapter\StockManager;
+
 /**
  * @property Order $object
  */
@@ -2916,11 +2918,23 @@ class AdminOrdersControllerCore extends AdminController
             StockAvailable::synchronize($id_product);
         } elseif ($order_detail->id_warehouse == 0) {
             StockAvailable::updateQuantity(
-                    $order_detail->product_id,
-                    $order_detail->product_attribute_id,
-                    $quantity_to_reinject,
-                    $order_detail->id_shop
-                );
+                $order_detail->product_id,
+                $order_detail->product_attribute_id,
+                $quantity_to_reinject,
+                $order_detail->id_shop,
+                true,
+                array(
+                    'id_order' => $order_detail->id_order,
+                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON')
+                )
+            );
+
+            // sync all stock
+            (new StockManager())->updatePhysicalProductQuantity(
+                $order_detail->id_shop,
+                (int)Configuration::get('PS_OS_ERROR'),
+                (int)Configuration::get('PS_OS_CANCELED')
+            );
 
             if ($delete) {
                 $order_detail->delete();

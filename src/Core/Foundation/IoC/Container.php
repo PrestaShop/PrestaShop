@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\IoC;
 
+use ReflectionClass;
+
 class Container
 {
     private $bindings = array();
@@ -91,7 +93,7 @@ class Container
         $className = $this->resolveClassName($className);
 
         try {
-            $refl = new \ReflectionClass($className);
+            $refl = new ReflectionClass($className);
         } catch (\ReflectionException $re) {
             throw new Exception(sprintf('This doesn\'t seem to be a class name: `%s`.', $className));
         }

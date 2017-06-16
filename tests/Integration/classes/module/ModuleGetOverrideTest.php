@@ -29,10 +29,7 @@ namespace PrestaShop\PrestaShop\Tests\Integration;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 
 use Module;
-use Context;
-use Employee;
-use PrestaShopAutoload;
-use \PrestaShop\PrestaShop\Tests\TestCase\Module as HelperModule;
+use PrestaShop\PrestaShop\Tests\TestCase\Module as HelperModule;
 
 class ModulesGetOverrideTest extends IntegrationTestCase
 {

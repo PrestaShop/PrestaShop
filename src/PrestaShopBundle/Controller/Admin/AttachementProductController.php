@@ -26,7 +26,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

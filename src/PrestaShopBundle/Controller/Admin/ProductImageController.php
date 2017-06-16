@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * Admin controller for product images
@@ -93,7 +92,7 @@ class ProductImageController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Reponse
+     * @return JsonResponse
      */
     public function updateImagePositionAction(Request $request)
     {
@@ -111,11 +110,9 @@ class ProductImageController extends FrameworkBundleAdminController
     /**
      * Manage form image
      *
-     * @Template
-     * @param int $idImage
+     * @param $idImage
      * @param Request $request
-     *
-     * @return array
+     * @return array|JsonResponse|Response
      */
     public function formAction($idImage, Request $request)
     {
@@ -177,7 +174,7 @@ class ProductImageController extends FrameworkBundleAdminController
      * @param int $idImage
      * @param Request $request
      *
-     * @return Reponse
+     * @return JsonResponse
      */
     public function deleteAction($idImage, Request $request)
     {

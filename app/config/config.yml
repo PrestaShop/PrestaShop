@@ -55,6 +55,8 @@ twig:
     strict_variables: "%kernel.debug%"
     form_themes:
         - 'PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_3_horizontal_layout.html.twig'
+    globals:
+        webpack_server:   "%webpack_server%"
 
 # Doctrine Configuration
 doctrine:
@@ -79,6 +81,9 @@ doctrine:
                 #     path:     "%database_path%"
                 mapping_types:
                     enum: string
+
+                options:
+                    1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

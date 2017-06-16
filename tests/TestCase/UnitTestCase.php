@@ -32,7 +32,7 @@ use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
-use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Phake;
 use Symfony\Component\HttpKernel\Kernel;

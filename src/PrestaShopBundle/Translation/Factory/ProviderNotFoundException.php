@@ -27,7 +27,7 @@
 
 namespace PrestaShopBundle\Translation\Factory;
 
-use \Exception;
+use Exception;
 
 class ProviderNotFoundException extends Exception
 {

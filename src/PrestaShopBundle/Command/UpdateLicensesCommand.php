@@ -33,6 +33,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use PhpParser\ParserFactory;
 
 class UpdateLicensesCommand extends Command
 {
@@ -87,6 +88,7 @@ class UpdateLicensesCommand extends Command
             'tpl',
             'html.twig',
             'json',
+            'vue',
         );
 
         foreach ($extensions as $extension) {
@@ -119,7 +121,7 @@ class UpdateLicensesCommand extends Command
                 'admin-dev/themes/new-theme/public/',
             ))
             ->ignoreDotFiles(false);
-        $parser = (new \PhpParser\ParserFactory)->create(\PhpParser\ParserFactory::PREFER_PHP7);
+        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
 
         $output->writeln('Updating license in '. strtoupper($ext).' files ...');
         $progress = new ProgressBar($output, count($finder));
@@ -154,6 +156,9 @@ class UpdateLicensesCommand extends Command
                     break;
                 case 'json':
                     $this->addLicenseToJsonFile($file);
+                    break;
+                case 'vue':
+                    $this->addLicenseToHtmlFile($file);
                     break;
             }
             $progress->advance();
@@ -286,6 +291,14 @@ class UpdateLicensesCommand extends Command
         if (strrpos($file->getRelativePathName(), 'html.twig') !== false) {
             $this->addLicenseToFile($file, '{#', '#}');
         }
+    }
+
+    /**
+     * @param SplFileInfo $file
+     */
+    private function addLicenseToHtmlFile(SplFileInfo $file)
+    {
+        $this->addLicenseToFile($file, '<!--', '-->');
     }
 
     /**

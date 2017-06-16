@@ -964,6 +964,14 @@ class ShopCore extends ObjectModel
     }
 
     /**
+     * @return int
+     */
+    public function getContextType()
+    {
+        return self::getContext();
+    }
+
+    /**
      * Get current ID of shop if context is CONTEXT_SHOP
      *
      * @return int
@@ -974,6 +982,18 @@ class ShopCore extends ObjectModel
             return null;
         }
         return self::$context_id_shop;
+    }
+
+    /**
+     * @return int
+     */
+    public function getContextualShopId()
+    {
+        if ($this->getContextType() !== self::CONTEXT_SHOP) {
+            throw new LogicException('The retrieval of the contextual shop id is only possible in "single shop mode".');
+        }
+
+        return (int) self::$context_id_shop;
     }
 
     /**

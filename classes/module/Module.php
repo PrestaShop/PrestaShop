@@ -27,6 +27,7 @@
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 abstract class ModuleCore
 {
@@ -1077,12 +1078,12 @@ abstract class ModuleCore
             $override = $module_name.'Override';
 
             if (class_exists($override, false)) {
-                $r = self::$_INSTANCE[$module_name] = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($override);
+                $r = self::$_INSTANCE[$module_name] = ServiceLocator::get($override);
             }
         }
 
         if (!$r && class_exists($module_name, false)) {
-            $r = self::$_INSTANCE[$module_name] = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module_name);
+            $r = self::$_INSTANCE[$module_name] = ServiceLocator::get($module_name);
         }
 
         return $r;
@@ -1251,7 +1252,7 @@ abstract class ModuleCore
                         }
                     }
 
-                    $item = new stdClass();
+                    $item = new \stdClass();
                     $item->id = 0;
                     $item->warning = '';
 
@@ -1306,9 +1307,9 @@ abstract class ModuleCore
                 // If class exists, we just instanciate it
                 if (class_exists($module, false)) {
                     try {
-                        $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module);
+                        $tmp_module = ServiceLocator::get($module);
 
-                        $item = new stdClass();
+                        $item = new \stdClass();
 
                         $item->id = (int)$tmp_module->id;
                         $item->warning = $tmp_module->warning;
@@ -1415,7 +1416,7 @@ abstract class ModuleCore
                         }
 
                         if ($flag_found == 0) {
-                            $item = new stdClass();
+                            $item = new \stdClass();
                             $item->id = 0;
                             $item->warning = '';
                             $item->type = strip_tags((string)$f['type']);

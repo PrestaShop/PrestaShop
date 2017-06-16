@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Hook;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class HookManager
 {
@@ -67,7 +68,7 @@ class HookManager
             try {
                 return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
             } catch (\Exception $e) {
-                $logger = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger');
+                $logger = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger');
                 $logger->error(sprintf('Exception on hook %s for module %s. %s', $hook_name, $id_module, $e->getMessage()));
             }
         }

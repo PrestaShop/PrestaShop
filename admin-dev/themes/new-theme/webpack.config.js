@@ -48,6 +48,12 @@ let config = {
       'bootstrap-slider/dist/bootstrap-slider.js',
       'sprintf-js/src/sprintf.js',
       './js/theme.js',
+    ],
+    stock: [
+      './js/app/pages/stock',
+    ],
+    translations: [
+      './js/app/pages/translations',
     ]
   },
   output: {
@@ -62,7 +68,8 @@ let config = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      vue$: 'vue/dist/vue.common.js'
+      vue$: 'vue/dist/vue.common.js',
+      app: path.resolve(__dirname, 'js/app')
     }
   },
   module: {
@@ -115,9 +122,9 @@ let config = {
         loader: 'vue-loader',
         options: {
           loaders: {
-            js: 'babel-loader?presets[]=es2015&presets[]=stage-2'
+            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
+            css: 'postcss-loader'
           },
-          postcss: [require('postcss-cssnext')()]
         }
       },
       {
@@ -163,6 +170,9 @@ if (process.env.NODE_ENV === 'production') {
       }
     })
   );
+} else {
+  config.entry.stock.push('webpack/hot/only-dev-server');
+  config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
 }
 
 module.exports = config;

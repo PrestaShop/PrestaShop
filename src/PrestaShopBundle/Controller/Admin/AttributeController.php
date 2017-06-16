@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Product;
 
+
 /**
  * Admin controller for the attribute / attribute group
  */
@@ -194,6 +195,8 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
+        $legacyResponse = false;
+
         if ($request->request->has('attribute-ids')) {
             $attributeIds = $request->request->get('attribute-ids');
             foreach ($attributeIds as $attributeId) {
@@ -207,7 +210,6 @@ class AttributeController extends FrameworkBundleAdminController
 
             $response->setData(['message' => $legacyResponse['message']]);
         }
-
 
         return $response;
     }
@@ -231,6 +233,8 @@ class AttributeController extends FrameworkBundleAdminController
         if (!$combinations || !$request->isXmlHttpRequest()) {
             return $response;
         }
+
+        $res = false;
 
         foreach ($combinations as $combination) {
             $res = $this->container->get('prestashop.adapter.admin.controller.attribute_generator')

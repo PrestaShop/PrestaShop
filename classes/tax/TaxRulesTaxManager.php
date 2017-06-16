@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+
 /**
  * @since 1.5.0.1
  */
@@ -46,7 +48,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
     public function __construct(Address $address, $type, \PrestaShop\PrestaShop\Core\ConfigurationInterface $configurationManager = null)
     {
         if ($configurationManager === null) {
-            $this->configurationManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+            $this->configurationManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
         } else {
             $this->configurationManager = $configurationManager;
         }

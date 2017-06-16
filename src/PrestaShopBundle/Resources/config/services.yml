@@ -61,12 +61,16 @@ services:
         arguments:
             - "@prestashop.adapter.data_provider.product"
 
+    prestashop.service.translation:
+        class: PrestaShopBundle\Service\TranslationService
+        properties:
+            container: "@service_container"
+
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
         class: PrestaShopBundle\Service\DataProvider\StockInterface
 
     # DISPATCHERS
-
     prestashop.hook.dispatcher:
         class: PrestaShopBundle\Service\Hook\HookDispatcher
         calls:
@@ -83,7 +87,6 @@ services:
             - "@service_container"
 
     # ADAPTERS (prestashop.adapter.*)
-
     # Legacy context service, transitional
     prestashop.adapter.legacy.configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration
@@ -114,7 +117,7 @@ services:
             - "@prestashop.adapter.legacy.context"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-            
+
     prestashop.multishop_command_listener:
         class: PrestaShopBundle\EventListener\MultishopCommandListener
         arguments:
@@ -257,7 +260,6 @@ services:
             - "@prestashop.core.admin.data_provider.addons_interface"
             - "@prestashop.adapter.admin.data_provider.module"
 
-
     # Repositories
     prestashop.core.admin.module.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
@@ -302,6 +304,155 @@ services:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
             - PrestaShopBundle\Entity\Lang
+
+    # Api
+    prestashop.core.api.query_params_collection:
+        abstract: true
+        class: PrestaShopBundle\Api\QueryParamsCollection
+
+    prestashop.core.api.query_stock_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryStockParamsCollection
+
+    prestashop.core.api.query_stock_movement_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryStockMovementParamsCollection
+
+    prestashop.core.api.query_translation_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryTranslationParamsCollection
+
+    prestashop.core.api.stock.movements_collection:
+        class: PrestaShopBundle\Api\Stock\MovementsCollection
+
+    # Api - Repositories
+    prestashop.core.api.stock.repository:
+        class: PrestaShopBundle\Entity\Repository\StockRepository
+        arguments:
+            - "@service_container"
+            - "@doctrine.dbal.default_connection"
+            - "@doctrine.orm.default_entity_manager"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.image_manager"
+            - "@prestashop.adapter.stock_manager"
+            - "%database_prefix%"
+
+    prestashop.core.api.stockMovement.repository:
+        class: PrestaShopBundle\Entity\Repository\StockMovementRepository
+        arguments:
+            - "@service_container"
+            - "@doctrine.dbal.default_connection"
+            - "@doctrine.orm.default_entity_manager"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.image_manager"
+            - "%database_prefix%"
+
+    prestashop.core.api.supplier.repository:
+        class: PrestaShopBundle\Entity\Repository\SupplierRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.api.manufacturer.repository:
+        class: PrestaShopBundle\Entity\Repository\ManufacturerRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.api.category.repository:
+        class: PrestaShopBundle\Entity\Repository\CategoryRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.api.feature_attribute.repository:
+        class: PrestaShopBundle\Entity\Repository\FeatureAttributeRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    # Api - Controllers
+    prestashop.core.api.controller:
+        abstract: true
+        class: PrestaShopBundle\Controller\Api\ApiController
+        calls:
+            - [setLogger, ['@logger']]
+            - [setContainer, ['@service_container']]
+
+    prestashop.core.api.stock.controller:
+        class: PrestaShopBundle\Controller\Api\StockController
+        parent: prestashop.core.api.controller
+        properties:
+            movements: "@prestashop.core.api.stock.movements_collection"
+            stockRepository: "@prestashop.core.api.stock.repository"
+            queryParams: "@prestashop.core.api.query_stock_params_collection"
+
+    prestashop.core.api.stockMovement.controller:
+        class: PrestaShopBundle\Controller\Api\StockMovementController
+        parent: prestashop.core.api.controller
+        properties:
+            stockMovementRepository: "@prestashop.core.api.stockMovement.repository"
+            queryParams: "@prestashop.core.api.query_stock_movement_params_collection"
+
+    prestashop.core.api.supplier.controller:
+        class: PrestaShopBundle\Controller\Api\SupplierController
+        parent: prestashop.core.api.controller
+        properties:
+            supplierRepository: "@prestashop.core.api.supplier.repository"
+
+    prestashop.core.api.manufacturer.controller:
+        class: PrestaShopBundle\Controller\Api\ManufacturerController
+        parent: prestashop.core.api.controller
+        properties:
+            manufacturerRepository: "@prestashop.core.api.manufacturer.repository"
+
+    prestashop.core.api.category.controller:
+        class: PrestaShopBundle\Controller\Api\CategoryController
+        parent: prestashop.core.api.controller
+        properties:
+            categoryRepository: "@prestashop.core.api.category.repository"
+
+    prestashop.core.api.attribute.controller:
+        class: PrestaShopBundle\Controller\Api\AttributeController
+        parent: prestashop.core.api.controller
+        properties:
+            featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
+
+    prestashop.core.api.feature.controller:
+        class: PrestaShopBundle\Controller\Api\FeatureController
+        parent: prestashop.core.api.controller
+        properties:
+            featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
+
+    prestashop.core.api.i18n.controller:
+        class: PrestaShopBundle\Controller\Api\I18nController
+        parent: prestashop.core.api.controller
+
+    prestashop.core.api.translation.controller:
+        class: PrestaShopBundle\Controller\Api\TranslationController
+        parent: prestashop.core.api.controller
+        properties:
+            translationService: "@prestashop.service.translation"
+            queryParams: "@prestashop.core.api.query_translation_params_collection"
+
+    # Api - i18n
+    prestashop.translation.api:
+        abstract: true
+        class: PrestaShopBundle\Translation\Api\AbstractApi
+        calls:
+            - [setTranslator, ['@translator']]
+
+    prestashop.translation.api.stock:
+        class: PrestaShopBundle\Translation\Api\StockApi
+        parent: prestashop.translation.api
+
+    prestashop.translation.api.international:
+        class: PrestaShopBundle\Translation\Api\InternationalApi
+        parent: prestashop.translation.api
 
     # Managers
     prestashop.adapter.image_manager:

@@ -53,6 +53,10 @@ class TranslationsFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn(new MessageCatalogue('en-US'))
         ;
 
+        $this->providerMock->method('getDefaultCatalogue')
+            ->willReturn(new MessageCatalogue('en-US'))
+        ;
+
         $this->providerMock->method('getDatabaseCatalogue')
             ->willReturn(new MessageCatalogue('en-US'))
         ;

@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use Phake;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityMetaData;
-use \PrestaShop\PrestaShop\Core\Foundation\Database\Exception;
 
 class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
 {

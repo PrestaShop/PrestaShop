@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Stock\StockManager;
+use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
+
 class OrderHistoryCore extends ObjectModel
 {
     /** @var int Order id */
@@ -312,6 +315,25 @@ class OrderHistoryCore extends ObjectModel
                         }
                     }
                 }
+
+                // Save movement if :
+                // not Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+                // new_os->shipped != old_os->shipped
+                if (Validate::isLoadedObject($old_os) && Validate::isLoadedObject($new_os) && $new_os->shipped != $old_os->shipped && !Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                    $product_quantity = (int) ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']);
+
+                    if ($product_quantity > 0) {
+                        (new StockManager)->saveMovement(
+                            (int)$product['product_id'],
+                            (int)$product['product_attribute_id'],
+                            (int)$product_quantity * ($new_os->shipped == 1 ? -1 : 1),
+                            array(
+                                'id_order' => $order->id,
+                                'id_stock_mvt_reason' => ($new_os->shipped == 1 ? Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON') : Configuration::get('PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON'))
+                            )
+                        );
+                    }
+                }
             }
         }
 
@@ -379,6 +401,13 @@ class OrderHistoryCore extends ObjectModel
 
         // executes hook
         Hook::exec('actionOrderStatusPostUpdate', array('newOrderStatus' => $new_os, 'id_order' => (int)$order->id, ), null, false, true, false, $order->id_shop);
+
+        // sync all stock
+        (new StockManagerAdapter())->updatePhysicalProductQuantity(
+            $order->id_shop,
+            (int)Configuration::get('PS_OS_ERROR'),
+            (int)Configuration::get('PS_OS_CANCELED')
+        );
 
         ShopUrl::resetMainDomainCache();
     }

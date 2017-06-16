@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
@@ -41,6 +40,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use Module;
 use Profile;
+use stdClass;
+use DateTime;
 
 class ModuleController extends FrameworkBundleAdminController
 {
@@ -207,7 +208,7 @@ class ModuleController extends FrameworkBundleAdminController
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
 
-        $modules = new \stdClass();
+        $modules = new stdClass();
         foreach (array('native_modules', 'theme_bundle', 'modules') as $subpart) {
             $modules->{$subpart} = array();
         }
@@ -247,18 +248,18 @@ class ModuleController extends FrameworkBundleAdminController
         );
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
-                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Manage installed modules', array(), 'Admin.Modules.Feature'),
-                'modules' => $modules,
-                'topMenuData' => $this->getTopMenuData($categoriesMenu),
-                'requireAddonsSearch' => false,
-                'requireBulkActions' => true,
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminModules'),
-                'requireFilterStatus' => true,
-                'level' => $this->authorizationLevel($this::controller_name),
-                'errorMessage' => $errorMessage,
-            ));
+            'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+            'layoutTitle' => $translator->trans('Manage installed modules', array(), 'Admin.Modules.Feature'),
+            'modules' => $modules,
+            'topMenuData' => $this->getTopMenuData($categoriesMenu),
+            'requireAddonsSearch' => false,
+            'requireBulkActions' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminModules'),
+            'requireFilterStatus' => true,
+            'level' => $this->authorizationLevel($this::controller_name),
+            'errorMessage' => $errorMessage,
+        ));
     }
 
     public function moduleAction(Request $request)
@@ -307,7 +308,7 @@ class ModuleController extends FrameworkBundleAdminController
                             '%module%' => $module,
                             '%action%' => $action, ),
                         'Admin.Modules.Notification'
-                        );
+                    );
                 } elseif ($response[$module]['status'] === false) {
                     $error = $moduleManager->getError($module);
                     $response[$module]['msg'] = $translator->trans(
@@ -332,9 +333,9 @@ class ModuleController extends FrameworkBundleAdminController
                 $response[$module]['msg'] = $translator->trans(
                     'Exception thrown by module %module% on %action%. %error_details%',
                     array(
-                            '%action%' => str_replace('_', ' ', $action),
-                            '%module%' => $module,
-                            '%error_details%' => $e->getMessage(), ),
+                        '%action%' => str_replace('_', ' ', $action),
+                        '%module%' => $module,
+                        '%error_details%' => $e->getMessage(), ),
                     'Admin.Modules.Notification'
                 );
 
@@ -567,7 +568,8 @@ class ModuleController extends FrameworkBundleAdminController
                         'msg' => $translator->trans(
                             'You do not have permission to add this.',
                             array(),
-                            'Admin.Notifications.Error'),
+                            'Admin.Notifications.Error'
+                        ),
                     ),
                     200,
                     array('Content-Type' => 'application/json')
@@ -609,12 +611,14 @@ class ModuleController extends FrameworkBundleAdminController
                 $installation_response['msg'] = $translator->trans(
                     '%module% did not return a valid response on installation.',
                     array('%module%' => $module_name),
-                    'Admin.Modules.Notification');
+                    'Admin.Modules.Notification'
+                );
             } elseif ($installation_response['status'] === true) {
                 $installation_response['msg'] = $translator->trans(
                     'Installation of module %module% was successful.',
                     array('%module%' => $module_name),
-                    'Admin.Modules.Notification');
+                    'Admin.Modules.Notification'
+                );
                 $installation_response['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
             } else {
                 $error = $moduleManager->getError($module_name);
@@ -622,8 +626,10 @@ class ModuleController extends FrameworkBundleAdminController
                     'Installation of module %module% failed. %error%',
                     array(
                         '%module%' => $module_name,
-                        '%error%' => $error, ),
-                    'Admin.Modules.Notification');
+                        '%error%' => $error,
+                    ),
+                    'Admin.Modules.Notification'
+                );
             }
 
             return new JsonResponse(
@@ -675,7 +681,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         $moduleHistory->setIdEmployee($currentEmployeeID);
         $moduleHistory->setIdModule($moduleAccessedID);
-        $moduleHistory->setDateUpd(new \DateTime(date('Y-m-d H:i:s')));
+        $moduleHistory->setDateUpd(new DateTime(date('Y-m-d H:i:s')));
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($moduleHistory);

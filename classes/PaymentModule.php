@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\StockManager;
 abstract class PaymentModuleCore extends Module
 {
     /** @var int Current order's id */
@@ -853,6 +854,13 @@ abstract class PaymentModuleCore extends Module
                     }
 
                     $order->updateOrderDetailTax();
+
+                    // sync all stock
+                    (new StockManager())->updatePhysicalProductQuantity(
+                        $order->id_shop,
+                        (int)Configuration::get('PS_OS_ERROR'),
+                        (int)Configuration::get('PS_OS_CANCELED')
+                    );
                 } else {
                     $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));

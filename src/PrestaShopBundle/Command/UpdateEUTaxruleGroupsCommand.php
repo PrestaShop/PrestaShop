@@ -72,7 +72,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('prestashop:update-eu-tax-rule-groups')
+            ->setName('prestashop:taxes:update-eu-tax-rule-groups')
             ->setDescription('Update EU Tax rule groups');
     }
 

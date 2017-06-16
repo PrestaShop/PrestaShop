@@ -26,7 +26,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -37,10 +36,9 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax Form to create/update virtual product
      *
-     * @param int $idProduct
+     * @param $idProduct
      * @param Request $request
-     *
-     * @return string
+     * @return JsonResponse
      */
     public function saveAction($idProduct, Request $request)
     {
@@ -83,10 +81,9 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax Form to remove attached file
      *
-     * @param int $idProduct
+     * @param $idProduct
      * @param Request $request
-     *
-     * @return string
+     * @return JsonResponse
      */
     public function removeFileAction($idProduct, Request $request)
     {
@@ -109,10 +106,9 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax remove action
      *
-     * @param int $idProduct
+     * @param $idProduct
      * @param Request $request
-     *
-     * @return string
+     * @return JsonResponse
      */
     public function removeAction($idProduct, Request $request)
     {

@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\FileSystem;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
-use \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception;
 
 class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 {

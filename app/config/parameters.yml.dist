@@ -23,3 +23,4 @@ parameters:
     ps_cache_enable: false
     ps_creation_date: ~
     locale: en-US
+    webpack_server: false

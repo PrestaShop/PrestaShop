@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * @internal
@@ -49,12 +49,12 @@ class ServiceLocator
      * Get a service depending on its given $serviceName
      * @param $serviceName
      * @return mixed|object
-     * @throws \PrestaShop\PrestaShop\Adapter\CoreException
+     * @throws CoreException
      */
     public static function get($serviceName)
     {
         if (empty(self::$service_container) || is_null(self::$service_container)) {
-            throw new \PrestaShop\PrestaShop\Adapter\CoreException('Service container is not set.');
+            throw new CoreException('Service container is not set.');
         }
 
         return self::$service_container->make($serviceName);

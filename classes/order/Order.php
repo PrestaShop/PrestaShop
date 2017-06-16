@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+
 class OrderCore extends ObjectModel
 {
     const ROUND_ITEM = 1;
@@ -1349,7 +1351,7 @@ class OrderCore extends ObjectModel
 
         $address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $carrier = new Carrier((int)$this->id_carrier);
-        $tax_calculator = (Configuration::get('PS_ATCP_SHIPWRAP')) ? \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id) : $carrier->getTaxCalculator($address);
+        $tax_calculator = (Configuration::get('PS_ATCP_SHIPWRAP')) ? ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id) : $carrier->getTaxCalculator($address);
         $order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
         $order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
         $order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
@@ -1364,7 +1366,7 @@ class OrderCore extends ObjectModel
         $order_invoice->save();
 
         if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-            $wrapping_tax_calculator = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
+            $wrapping_tax_calculator = ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
         } else {
             $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
             $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();

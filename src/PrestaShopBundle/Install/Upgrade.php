@@ -76,7 +76,10 @@ namespace PrestaShopBundle\Install {
     use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+    use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+    use PrestaShop\PrestaShop\Core\Cldr\Update;
     use FileLogger;
+    use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 
     class Upgrade
     {
@@ -348,7 +351,7 @@ namespace PrestaShopBundle\Install {
             $context = Context::getContext();
             $context->employee = new Employee((int) $idEmployee);
 
-            return (new \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder($context, Db::getInstance()))->build();
+            return (new ThemeManagerBuilder($context, Db::getInstance()))->build();
         }
 
         private function checkVersion()
@@ -426,7 +429,7 @@ namespace PrestaShopBundle\Install {
 
         private function upgradeDoctrineSchema()
         {
-            $schemaUpgrade = new \PrestaShopBundle\Service\Database\Upgrade();
+            $schemaUpgrade = new UpgradeDatabase();
             $schemaUpgrade->addDoctrineSchemaUpdate();
             $output = $schemaUpgrade->execute();
             if (0 !== $output['prestashop:schema:update-without-foreign']['exitCode']) {
@@ -756,7 +759,7 @@ namespace PrestaShopBundle\Install {
                         if (empty($errorsLanguage)) {
                             Language::loadLanguages();
 
-                            $cldrUpdate = new \PrestaShop\PrestaShop\Core\Cldr\Update(_PS_TRANSLATIONS_DIR_);
+                            $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
                             $cldrUpdate->fetchLocale(Language::getLocaleByIso($isoCode));
                         } else {
                             $this->logError('Error updating translations', 44);

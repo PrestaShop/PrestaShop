@@ -37,10 +37,15 @@ class ProductDataProvider
     /**
      * Get a new ProductCore instance
      *
-     * @return object product
+     * @param null $idProduct
+     * @return Product
      */
-    public function getProductInstance()
+    public function getProductInstance($idProduct = null)
     {
+        if ($idProduct) {
+            return new Product($idProduct);
+        }
+
         return new Product();
     }
 

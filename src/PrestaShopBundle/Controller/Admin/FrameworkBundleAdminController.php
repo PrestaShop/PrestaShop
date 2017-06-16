@@ -25,8 +25,11 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Security\Voter\PageVoter;
 
@@ -43,6 +46,32 @@ class FrameworkBundleAdminController extends Controller
     public function __construct()
     {
         $this->configuration = new Configuration();
+    }
+
+    /**
+     * @Template
+     *
+     * @return array Template vars
+     */
+    public function overviewAction()
+    {
+        return array(
+            'is_shop_context' => (new Context())->isShopContext(),
+        );
+    }
+
+    public function hashUpdateJsAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
+
+        return new Response($contents);
+    }
+
+    public function hashUpdateJsonAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
+
+        return new Response($contents);
     }
 
     /**
@@ -146,9 +175,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getContext()
     {
-        $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
-
-        return $legacyContextProvider->getContext();
+        return $this->get('prestashop.adapter.legacy.context')->getContext();
     }
 
     /**
@@ -157,36 +184,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function langToLocale($lang)
     {
-        $legacyToStandardLocales = $this->getLangToLocalesMapping();
-
-        return $legacyToStandardLocales[$lang];
-    }
-
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    protected function getLangToLocalesMapping()
-    {
-        $translationsDirectory = $this->getResourcesDirectory();
-
-        $legacyToStandardLocalesJson = file_get_contents($translationsDirectory . '/legacy-to-standard-locales.json');
-        $legacyToStandardLocales = json_decode($legacyToStandardLocalesJson, true);
-
-        $jsonLastErrorCode = json_last_error();
-        if (JSON_ERROR_NONE !== $jsonLastErrorCode) {
-            throw new \Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
-        }
-
-        return $legacyToStandardLocales;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getResourcesDirectory()
-    {
-        return $this->container->getParameter('kernel.root_dir') . '/Resources';
+        return $this->get('prestashop.service.translation')->langToLocale($lang);
     }
 
     /**
@@ -194,9 +192,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function isDemoModeEnabled()
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
-
-        return $configuration->get('_PS_MODE_DEMO_');
+        return $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEMO_');
     }
 
     /**
@@ -204,11 +200,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getDemoModeErrorMessage()
     {
-        return $this->get('translator')->trans(
-            'This functionality has been disabled.',
-            array(),
-            'Admin.Notifications.Error'
-        );
+        return $this->get('translator')->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
     }
 
     /**

@@ -85,12 +85,24 @@ class ImageManagerCore
                 ImageManager::resize($image, _PS_TMP_IMG_DIR_.$cacheImage, $ratioX, $size, $imageType);
             }
         }
-        // Relative link will always work, whatever the base uri set in the admin
+
+        return '<img src="'.self::getThumbnailPath($cacheImage, $disableCache).'" alt="" class="imgm img-thumbnail" />';
+    }
+
+    /**
+     * @param $cacheImage
+     * @param $disableCache
+     * @return string
+     */
+    public static function getThumbnailPath($cacheImage, $disableCache)
+    {
+        $cacheParam = $disableCache ? '?time='.time() : '';
+
         if (Context::getContext()->controller->controller_type == 'admin') {
-            return '<img src="../img/tmp/'.$cacheImage.($disableCache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
-        } else {
-            return '<img src="'._PS_TMP_IMG_.$cacheImage.($disableCache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
+            return '../img/tmp/'.$cacheImage.$cacheParam;
         }
+
+        return _PS_TMP_IMG_.$cacheImage.$cacheParam;
     }
 
     /**
