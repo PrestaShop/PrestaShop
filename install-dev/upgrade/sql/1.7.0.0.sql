@@ -119,7 +119,9 @@ CREATE TABLE `PREFIX_authorization_role` (
   UNIQUE KEY (`slug`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-RENAME TABLE `PREFIX_access` TO `PREFIX_access_old`;
+/* Create a copy without indexes to make ID updates without conflict. */
+CREATE TABLE `PREFIX_access_old` AS SELECT * FROM `PREFIX_access`;
+DROP TABLE `PREFIX_access`;
 RENAME TABLE `PREFIX_module_access` TO `PREFIX_module_access_old`;
 
 CREATE TABLE `PREFIX_tab_transit` (
@@ -216,6 +218,12 @@ UPDATE `PREFIX_employee` e SET `default_tab` = (
     /* If the tab does not exist anymore, fallback to the dashboard. */
     (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` = 'AdminDashboard' AND `module` IS NULL)
   ) FROM `PREFIX_tab_transit` WHERE `id_old_tab` = e.`default_tab`
+);
+
+/* Update access tab IDs */
+UPDATE `PREFIX_access_old` ao SET `id_tab` = (
+  /* Update tab ID if possible, leave as is if the tab does not exist anymore */
+  SELECT IFNULL(`id_new_tab`, ao.`id_tab`) FROM `PREFIX_tab_transit` WHERE `id_old_tab` = ao.`id_tab`
 );
 
 /* Properly migrate the rights associated with each tabs */
