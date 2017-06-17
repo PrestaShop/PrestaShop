@@ -3,17 +3,17 @@
     position: relative;
     input[type=text] {
       &:focus {
-        outline: 3px $brand-primary solid;
-        color: $gray-darker;
+        outline: 3px theme-color('primary') solid;
+        color: gray('900');
         background: white;
         + button .search {
-          color: $brand-primary;
+          color: theme-color('primary');
         }
       }
       border: none;
       padding: 10px;
       min-width: 255px;
-      color: $gray;
+      color: gray('600');
       border: $input-btn-border-width solid $input-border-color;
     }
     button[type=submit] {
@@ -22,9 +22,9 @@
       border: none;
       bottom: 0.3125rem;
       right: 0.125rem;
-      color: $gray;
+      color: gray('600');
       .search:hover {
-        color: $brand-primary;
+        color: theme-color('primary');
       }
     }
   }

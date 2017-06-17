@@ -1,5 +1,5 @@
 body#checkout {
-  color: $gray-darker;
+  color: gray('900');
   #header .header-nav {
     max-height: none;
     padding: 5rem 0 0.9375rem;
@@ -89,7 +89,7 @@ body#checkout {
           display: block;
           float: right;
           margin-right: 0.125rem;
-          color: $gray;
+          color: gray('600');
         }
       }
       .content {
@@ -97,7 +97,7 @@ body#checkout {
       }
     }
     small {
-      color: $gray;
+      color: gray('600');
     }
     .default-input {
       min-width: 40%;
@@ -119,7 +119,7 @@ body#checkout {
       margin-top: 0;
     }
     .select-field div {
-      background: $gray-lighter;
+      background: gray('100');
       padding: 0.625rem 3.125rem;
     }
     .form-footer {
@@ -150,13 +150,13 @@ body#checkout {
       flex-wrap: wrap;
     }
     .address-item {
-      background: $gray-lighter;
+      background: gray('100');
       flex: 0 0 49%;
       margin-bottom: $small-space;
       border: 3px solid transparent;
       &.selected {
         background: white;
-        border: $brand-primary 3px solid;
+        border: theme-color('primary') 3px solid;
       }
     }
     .address-alias {
@@ -182,7 +182,7 @@ body#checkout {
     }
     .delete-address,
     .edit-address {
-      color: $gray;
+      color: gray('600');
       display: inline-block;
       margin: 0 0.3125rem;
       .delete,
@@ -204,14 +204,14 @@ body#checkout {
     .add-address {
       margin-top: 1.25rem;
       a {
-        color: $gray-darker;
+        color: gray('900');
         i {
           font-size: $font-size-lg;
         }
       }
     }
     .delivery-option {
-      background: $gray-lighter;
+      background: gray('100');
       padding: 0.9375rem 0;
       margin-bottom: 0.9375rem;
       label {
@@ -259,17 +259,17 @@ body#checkout {
   .cancel-address {
     margin: 0.625rem;
     display: block;
-    color: $gray;
+    color: gray('600');
     text-decoration: underline;
   }
   .modal-content {
     padding: $medium-space;
-    background-color: $gray-light;
+    background-color: gray('200');
   }
   #cart-summary-product-list {
     font-size: $font-size-sm;
     img {
-      border: $gray-light 1px solid;
+      border: gray('200') 1px solid;
       width: 3.125rem;
     }
     .media-body {
@@ -281,7 +281,7 @@ body#checkout {
     h4.h4 {
       margin-top: 0.625rem;
       margin-bottom: 1.25rem;
-      color: $gray-darker;
+      color: gray('900');
     }
     h4.black {
       color: #000000;
@@ -295,7 +295,7 @@ body#checkout {
     #order-items {
       border-right: 0;
       h3.h3 {
-        color: $gray-darker;
+        color: gray('900');
         margin-top: 1.25rem;
       }
       table {
@@ -324,20 +324,20 @@ body#checkout {
     }
     .step-edit {
       display: inline;
-      color: $gray;
+      color: gray('600');
     }
     .step-edit:hover {
       cursor: pointer;
     }
     a {
       .step-edit {
-        color: $gray;
+        color: gray('600');
       }
     }
   }
   #gift_message, #delivery{
     max-width: 100%;
-    border-color: $gray-darker;
+    border-color: gray('900');
     textarea {
       max-width: 100%;
       margin-bottom: 10px;
@@ -347,7 +347,7 @@ body#checkout {
     @include box-shadow;
     padding: 0.9375rem;
     background: white;
-    color: $gray;
+    color: gray('600');
   }
 }
 /**** ORDER CONFIRMATION *****/
@@ -364,9 +364,9 @@ body#checkout {
   }
 }
 #order-items {
-  border-right: $gray-light 1px solid;
+  border-right: gray('200') 1px solid;
   hr {
-    border-top-color: $gray-darker;
+    border-top-color: gray('900');
   }
   table {
     width: 100%;
@@ -459,12 +459,12 @@ body#checkout {
     border-right: 0;
     margin-bottom: 2.5rem;
     .card-title {
-      border-bottom: 1px solid $gray-light;
+      border-bottom: 1px solid gray('200');
       margin-bottom: 1rem;
       padding-bottom: 1rem;
     }
     hr {
-      border-top-color: $gray-light;
+      border-top-color: gray('200');
     }
   }
   .bold {
@@ -473,7 +473,7 @@ body#checkout {
   #order-details {
     padding-left: 0.9375rem;
     .card-title {
-      border-bottom: 1px solid $gray-light;
+      border-bottom: 1px solid gray('200');
       margin-bottom: 1rem;
       padding-bottom: 1rem;
     }

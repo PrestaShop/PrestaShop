@@ -6,16 +6,16 @@
   text-align: center;
   h3 {
     text-transform: uppercase;
-    color: $gray-darker;
+    color: gray('900');
     font-size: 1.563rem;
     font-weight: 700;
   }
   p {
-    color: $gray-darker;
+    color: gray('900');
     font-weight: 400;
     font-size: 1.1em;
     .dark {
-      color: $gray;
+      color: gray('600');
       font-weight: 400;
     }
   }

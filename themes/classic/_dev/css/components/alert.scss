@@ -6,17 +6,17 @@
 .ps-alert-success {
   .item {
     align-items: center;
-    border: 2px $brand-danger solid;
+    border: 2px theme-color('danger') solid;
     display: flex;
-    background-color: $brand-danger;
+    background-color: theme-color('danger');
     margin-bottom: 1rem;
 
     i {
-      border: 15px $brand-danger solid;
+      border: 15px theme-color('danger') solid;
       display: flex;
 
       svg {
-        background-color: $brand-danger;
+        background-color: theme-color('danger');
         width: 24px;
         height: 24px;
       }
@@ -35,14 +35,14 @@
   padding: 0.25rem 0.25rem 2.75rem 0.25rem;
 
   .item {
-    border-color: $brand-success;
-    background-color: $brand-success;
+    border-color: theme-color('success');
+    background-color: theme-color('success');
 
     i {
-      border-color: $brand-success;
+      border-color: theme-color('success');
 
       svg {
-        background-color: $brand-success;
+        background-color: theme-color('success');
       }
     }
   }

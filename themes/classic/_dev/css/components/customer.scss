@@ -7,7 +7,7 @@
 @mixin customer-area-box {
   @include customer-area-base-box;
   font-size: $font-size-sm;
-  color: $gray;
+  color: gray('600');
 }
 .table-labeled {
   th {
@@ -104,7 +104,7 @@
     background: white;
     margin-bottom: 1.875rem;
     font-size: $font-size-sm;
-    color: $gray-darker;
+    color: gray('900');
     .address-body {
       padding: 1rem;
       h4 {
@@ -116,13 +116,13 @@
       }
     }
     .address-footer {
-      border-top: 1px solid $gray;
+      border-top: 1px solid gray('600');
       padding: 0.5rem 1rem;
       a {
-        color: $gray;
+        color: gray('600');
         margin-right: 0.5rem;
         &:hover {
-          color: $gray-darker;
+          color: gray('900');
         }
         i {
           font-size: $base-font-size;
@@ -137,9 +137,9 @@
   .addresses-footer {
     margin: 0 0.9375rem;
     a {
-      color: $gray-darker;
+      color: gray('900');
       &:hover {
-        color: $gray-darker;
+        color: gray('900');
       }
       i {
         font-size: $base-font-size;
@@ -155,7 +155,7 @@
 /*** Order details page ***/
 .page-order-detail {
   font-size: 0.875rem;
-  color: $gray;
+  color: gray('600');
   .box {
     @include customer-area-base-box;
     margin-bottom: 1rem;
@@ -164,7 +164,7 @@
     font-size: $base-font-size;
     font-weight: 700;
     text-transform: uppercase;
-    color: $gray-darker;
+    color: gray('900');
     margin-bottom: 1rem;
   }
   #order-infos {
@@ -176,7 +176,7 @@
     .history-lines {
       .history-line {
         padding: 0.5rem 0;
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: 1px solid gray('100');
         &:last-child {
           border-bottom: 0;
         }
@@ -232,7 +232,7 @@
     padding: 0 !important;
     .order-item {
       padding: 1rem 1rem 0;
-      border-bottom: 1px solid $gray-lighter;
+      border-bottom: 1px solid gray('100');
       .checkbox {
         width: 30px;
         float: left;
@@ -263,7 +263,7 @@
   .messages {
     .message {
       margin-top: 0.5rem;
-      border-bottom: 1px solid $gray-lighter;
+      border-bottom: 1px solid gray('100');
       &:last-child {
         border-bottom: 0;
       }
@@ -279,7 +279,7 @@
 /*** Order return page ***/
 #order-return-infos {
   .thead-default th {
-    color: $gray-darker;
+    color: gray('900');
   }
   .customization {
     margin-top: 0.75rem;
@@ -298,7 +298,7 @@
         font-size: $base-font-size;
         font-weight: 700;
         text-transform: uppercase;
-        color: $gray;
+        color: gray('600');
         padding: 0 0.9375rem;
         margin-bottom: 1.875rem;
         span.link-item {
@@ -310,13 +310,13 @@
           display: block;
           font-size: 2.6rem;
           width: 100%;
-          color: $gray-darker;
+          color: gray('900');
           padding-bottom: 3.4rem;
         }
         &:hover {
-          color: $gray-darker;
+          color: gray('900');
           i {
-            color: $brand-primary;
+            color: theme-color('primary');
           }
         }
       }
@@ -330,11 +330,11 @@
     .order {
       a {
         h3 {
-          color: $gray;
+          color: gray('600');
         }
       }
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid $gray-lighter;
+      border-bottom: 1px solid gray('100');
       .label {
         display: inline-block;
         margin: 0.25rem 0;

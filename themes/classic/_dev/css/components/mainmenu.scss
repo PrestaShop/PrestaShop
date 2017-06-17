@@ -5,11 +5,11 @@
   a:not([data-depth="0"]) {
     display: block;
     padding: 0.625rem;
-    color: $gray;
+    color: gray('600');
     font-weight: 400;
   }
   a.dropdown-submenu {
-    color: $gray-darker;
+    color: gray('900');
     text-transform: uppercase;
     font-weight: 600;
   }
@@ -18,7 +18,7 @@
     padding: 0.1875rem $small-space 0.375rem;
     &:hover {
       #header & {
-        color: $brand-primary;
+        color: theme-color('primary');
         text-decoration: none;
       }
     }
@@ -46,7 +46,7 @@
       margin: 0 1.25rem;
     }
     a:hover {
-      color: $brand-primary;
+      color: theme-color('primary');
     }
   }
   .popover {
@@ -66,7 +66,7 @@
     margin-bottom: 0.625rem;
   }
   .top-menu {
-    color: $gray-darker;
+    color: gray('900');
     .collapse-icons[aria-expanded="true"] {
       .add {
         display: none;
@@ -84,18 +84,18 @@
     }
     a[data-depth="0"] {
       padding: 0.625rem;
-      border-bottom: 1px solid $gray-lighter;
+      border-bottom: 1px solid gray('100');
     }
     .collapse {
       display: none;
-      &.in {
+      &.show {
         display: block;
       }
     }
     .sub-menu {
       &.collapse {
         display: none;
-        &.in {
+        &.show {
           display: block;
         }
       }
@@ -107,9 +107,9 @@
       margin-left: 0;
       width: 100%;
       min-width: 100%;
-      background: $gray-lighter;
+      background: gray('100');
       ul[data-depth="0"] > li {
-        border-bottom: 1px solid $gray;
+        border-bottom: 1px solid gray('600');
       }
       ul[data-depth="1"] {
         margin: 0;
@@ -142,7 +142,7 @@
   }
   .js-top-menu-bottom {
     a {
-      color: $gray;
+      color: gray('600');
     }
     .language-selector-wrapper {
       padding: 0.625rem;

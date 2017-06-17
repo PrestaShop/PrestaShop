@@ -4,7 +4,7 @@
     max-width: 64rem;
   }
   .modal-content {
-    background: $gray-light;
+    background: gray('200');
     min-height: 28.13rem;
   }
   .modal-header {
@@ -15,7 +15,7 @@
     min-height: 23.75rem;
   }
   .modal-footer {
-    border-top: 1px solid rgba($gray,.3);
+    border-top: 1px solid rgba(gray('600'),.3);
   }
   .layer {
     display: none;
