@@ -48,12 +48,14 @@ class AdminSlipControllerCore extends AdminController
             'id_order' => array(
                 'title' => $this->l('Order ID'),
                 'align' => 'left',
-                'class' => 'fixed-width-md'
+                'class' => 'fixed-width-md',
+                'havingFilter' => true
             ),
             'date_add' => array(
                 'title' => $this->l('Date issued'),
                 'type' => 'date',
-                'align' => 'right'
+                'align' => 'right',
+                'filter_key' => 'a!date_add'
             ),
             'id_pdf' => array(
                 'title' => $this->l('PDF'),
@@ -185,7 +187,7 @@ class AdminSlipControllerCore extends AdminController
             'desc' => $this->l('Generate PDF file')
         );
     }
-    
+
     public function printPDFIcons($id_order_slip, $tr)
     {
         $order_slip = new OrderSlip((int)$id_order_slip);
