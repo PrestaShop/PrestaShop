@@ -33,16 +33,3 @@ ALTER TABLE `PREFIX_stock_mvt` CHANGE `id_stock` `id_stock` INT(11) UNSIGNED NOT
 
 UPDATE `PREFIX_configuration` SET `value` = 0 WHERE `name` = "PS_ADVANCED_STOCK_MANAGEMENT";
 /* PHP:add_new_status_stock(); */;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
-  `id_store` int(11) unsigned NOT NULL,
-  `id_lang` int(11) unsigned NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `address1` varchar(128) NOT NULL,
-  `address2` varchar(128) DEFAULT NULL,
-  `hours` text,
-  `note` text,
-  PRIMARY KEY (`id_store`, `id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-/* PHP:migrate_data_from_store_to_store_lang_and_clean_store(); */;

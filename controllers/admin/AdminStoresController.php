@@ -116,13 +116,16 @@ class AdminStoresControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        $this->_select = 'cl.`name` country, st.`name` state';
+        $this->_select = 'cl.`name` country, st.`name` state, sl.*';
         $this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
 				ON (cl.`id_country` = a.`id_country`
 				AND cl.`id_lang` = '.(int)$this->context->language->id.')
 			LEFT JOIN `'._DB_PREFIX_.'state` st
-				ON (st.`id_state` = a.`id_state`)';
+				ON (st.`id_state` = a.`id_state`)
+            LEFT JOIN `' . _DB_PREFIX_ . 'store_lang` sl
+                ON (sl.`id_store` = a.`id_store`
+                AND sl.`id_lang` = ' . (int)$this->context->language->id . ') ';
 
         return parent::renderList();
     }
@@ -155,6 +158,7 @@ class AdminStoresControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
+                    'lang' => true,
                     'required' => false,
                     'hint' => array(
                         $this->trans('Store name (e.g. City Center Mall Store).', array(), 'Admin.Shopparameters.Feature'),
@@ -165,12 +169,14 @@ class AdminStoresControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Address', array(), 'Admin.Global'),
                     'name' => 'address1',
+                    'lang' => true,
                     'required' => true
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Address (2)', array(), 'Admin.Global'),
-                    'name' => 'address2'
+                    'name' => 'address2',
+                    'lang' => true,
                 ),
                 array(
                     'type' => 'text',
@@ -234,6 +240,7 @@ class AdminStoresControllerCore extends AdminController
                     'type' => 'textarea',
                     'label' => $this->trans('Note', array(), 'Admin.Global'),
                     'name' => 'note',
+                    'lang' => true,
                     'cols' => 42,
                     'rows' => 4
                 ),
@@ -293,10 +300,19 @@ class AdminStoresControllerCore extends AdminController
 
         $hours = array();
 
-        $hours_temp = json_decode($this->getFieldValue($obj, 'hours'));
-        if (!empty($hours_temp)) {
-            foreach ($hours_temp as $h) {
-                $hours[] = implode(' | ', $h);
+        $hours_temp = ($this->getFieldValue($obj, 'hours'));
+        if (is_array($hours_temp) && !empty($hours_temp)) {
+            foreach ($hours_temp as $key => $hour) {
+                $hour_tmp = json_decode($hour);
+                if (!empty($hour_tmp)) {
+                    foreach ($hour_tmp as $h) {
+                        if (1 < count(Language::getLanguages())) {
+                            $hours[$key][] = implode(' | ', $h);
+                        } else {
+                            $hours[] = implode(' | ', $h);
+                        }
+                    }
+                }
             }
         }
 
@@ -313,6 +329,7 @@ class AdminStoresControllerCore extends AdminController
     public function postProcess()
     {
         if (isset($_POST['submitAdd'.$this->table])) {
+            $langs = Language::getLanguages();
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
                 if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store'))) {
@@ -356,11 +373,20 @@ class AdminStoresControllerCore extends AdminController
             }
             /* Store hours */
             $_POST['hours'] = array();
-            $hours = [];
-            for ($i = 1; $i < 8; $i++) {
-                $hours[] = explode(' | ', Tools::getValue('hours_'.(int)$i));
+            foreach ($langs as $lang) {
+                $hours = [];
+                $idLang = '';
+                if (1 < count($langs)) {
+                    $_POST['hours_' . $lang['id_lang']] = array();
+                    $idLang = "_" . $lang['id_lang'];
+                }
+
+                for ($i = 1; $i < 8; $i++) {
+                    $hours[] = explode(' | ', Tools::getValue('hours_' . (int)$i . $idLang));
+                    unset($_POST['hours_' . (int)$i . $idLang]);
+                }
+                $_POST['hours_' . $lang['id_lang']] = json_encode($hours);
             }
-            $_POST['hours'] = json_encode($hours);
         }
 
         if (!count($this->errors)) {

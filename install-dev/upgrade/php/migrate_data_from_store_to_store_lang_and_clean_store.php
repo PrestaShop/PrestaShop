@@ -26,17 +26,10 @@
 
 function migrate_data_from_store_to_store_lang_and_clean_store()
 {
-    $res = TRUE;
-    $stores = Db::getInstance()
-        ->executeS("SELECT `id_store`, `name`, `address1`, `address2`, `hours`, `note` FROM `" . _DB_PREFIX_ . "store` ");
-    $langs = Db::getInstance()
-        ->executeS("SELECT `id_lang` FROM `" . _DB_PREFIX_ . "lang` ");
-
-    foreach ($stores as $store) {
-        foreach ($langs as $lang) {
-            $values = "(" . $store['id_store'] . "," . $lang['id_lang'] . ",'" . $store['name'] . "','" . $store['address1'] . "','" . $store['address2'] . "','" . $store['hours'] . "','" . $store['note'] . "')";
-            $res &= Db::getInstance()->execute("INSERT INTO `" . _DB_PREFIX_ . "store_lang` (`id_store`, `id_lang`, `name`, `address1`, `address2`, `hours`, `note`) VALUES" . $values);
-        }
+    $res = true;
+    $langs = Language::getLanguages();
+    foreach ($langs as $lang) {
+        $res &= Db::getInstance()->execute("INSERT INTO `" . _DB_PREFIX_ . "store_lang` SELECT `id_store`, " . $lang['id_lang'] . " as id_lang , `name`, `address1`, `address2`, `hours`, `note` FROM `" . _DB_PREFIX_ . "store` ");
     }
 
     /** clean store */
