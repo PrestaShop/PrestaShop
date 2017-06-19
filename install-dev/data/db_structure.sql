@@ -1988,23 +1988,29 @@ CREATE TABLE `PREFIX_store` (
   `id_store` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_country` int(10) unsigned NOT NULL,
   `id_state` int(10) unsigned DEFAULT NULL,
-  `name` varchar(128) NOT NULL,
-  `address1` varchar(128) NOT NULL,
-  `address2` varchar(128) DEFAULT NULL,
   `city` varchar(64) NOT NULL,
   `postcode` varchar(12) NOT NULL,
   `latitude` decimal(13,8) DEFAULT NULL,
   `longitude` decimal(13,8) DEFAULT NULL,
-  `hours` text,
   `phone` varchar(16) DEFAULT NULL,
   `fax` varchar(16) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
-  `note` text,
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_store`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
+  `id_store` int(11) unsigned NOT NULL,
+  `id_lang` int(11) unsigned NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `address1` varchar(128) NOT NULL,
+  `address2` varchar(128) DEFAULT NULL,
+  `hours` text,
+  `note` text,
+  PRIMARY KEY (`id_store`, `id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 /* webservice account infos */
 CREATE TABLE `PREFIX_webservice_account` (
