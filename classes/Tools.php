@@ -960,7 +960,7 @@ class ToolsCore
     */
     public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
     {
-        if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
+        if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $string == 'Fatal error') {
             throw new PrestaShopException($string);
         } else if ('Fatal error' !== $string) {
             return $string;
