@@ -84,6 +84,25 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
+     * Unset configuration value
+     * @param $key
+     * @return $this
+     * @throws \Exception
+     */
+    public function delete($key)
+    {
+        $success = \Configuration::deleteByName(
+            $key
+        );
+
+        if (!$success) {
+            throw new \Exception("Could not update configuration");
+        }
+
+        return $this;
+    }
+
+    /**
      * Return if Feature feature is active or not
      * @return bool
      */

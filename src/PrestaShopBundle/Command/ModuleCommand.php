@@ -27,6 +27,7 @@
 
 namespace PrestaShopBundle\Command;
 
+use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,7 +44,28 @@ class ModuleCommand extends ContainerAwareCommand
         'disable_mobile',
         'reset',
         'upgrade',
+        'configure',
     );
+
+    /**
+     * @var \Symfony\Component\Console\Helper\FormatterHelper
+     */
+    protected $formatter;
+
+    /**
+     * @var \PrestaShopBundle\Translation\Translator
+     */
+    protected $translator;
+
+    /**
+     * @var \Symfony\Component\Console\Input\Input
+     */
+    protected $input;
+
+    /**
+     * @var \Symfony\Component\Console\Output\Output
+     */
+    protected $output;
 
     protected function configure()
     {
@@ -51,51 +73,111 @@ class ModuleCommand extends ContainerAwareCommand
             ->setName('prestashop:module')
             ->setDescription('Manage your modules via command line')
             ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
-            ->addArgument('module name', InputArgument::REQUIRED, 'Module on which the action will be executed');
+            ->addArgument('module name', InputArgument::REQUIRED, 'Module on which the action will be executed')
+            ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration');
+    }
+
+    protected function init(InputInterface $input, OutputInterface $output)
+    {
+        $this->formatter = $this->getHelper('formatter');
+        $this->translator = $this->getContainer()->get('translator');
+        $this->input = $input;
+        $this->output = $output;
+        require($this->getContainer()->get('kernel')->getRootDir().'/../config/config.inc.php');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        require($this->getContainer()->get('kernel')->getRootDir().'/../config/config.inc.php');
+        $this->init($input, $output);
 
         $moduleName = $input->getArgument('module name');
         $action = $input->getArgument('action');
-
-        $formatter = $this->getHelper('formatter');
-        $translator = $this->getContainer()->get('translator');
+        $file = $input->getArgument('file path');
 
         if (!in_array($action, $this->allowedActions)) {
-            $msg = $translator->trans('Unknown module action. It must be one of these values: %actions%', array('%actions%' => implode(' / ', $this->allowedActions)), 'Admin.Modules.Notification');
-            $formattedBlock = $formatter->formatBlock($msg, 'error', true);
-            $output->writeln($formattedBlock);
+            $this->displayMessage(
+                $this->translator->trans(
+                    'Unknown module action. It must be one of these values: %actions%',
+                    array('%actions%' => implode(' / ', $this->allowedActions)),
+                    'Admin.Modules.Notification'),
+                'error');
+
             return;
         }
 
+        if ($action === 'configure') {
+            $this->executeConfigureModuleAction($moduleName, $file);
+        } else {
+            $this->executeGenericModuleAction($action, $moduleName);
+        }
+    }
+
+    protected function executeConfigureModuleAction($moduleName, $file = null)
+    {
+        $moduleSelfConfigurator = $this->getContainer()->get('prestashop.adapter.module.self_configurator');
+        $moduleSelfConfigurator->module($moduleName);
+        if ($file) {
+            $moduleSelfConfigurator->file($file);
+        }
+
+        // Check if validation passed and exit in case of errors
+        $errors = $moduleSelfConfigurator->validate();
+        if (!empty($errors)) {
+            // Display errors as a list
+            $errors = array_map(function($val) { return '- '.$val; }, $errors);
+            // And add a default message at the top
+            array_unshift($errors, $this->translator->trans(
+                'Validation of configuration details failed:',
+                array(),
+                'Admin.Modules.Notification'
+            ));
+            $this->displayMessage($errors, 'error');
+            return;
+        }
+
+        // Actual configuration
+        $moduleSelfConfigurator->configure();
+        $this->displayMessage(
+            $this->translator->trans('Configuration successfully applied.', array(), 'Admin.Modules.Notification'),
+            'info');
+    }
+
+    protected function executeGenericModuleAction($action, $moduleName)
+    {
         /**
          * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
          */
         $moduleManager = $this->getContainer()->get('prestashop.module.manager');
         if ($moduleManager->{$action}($moduleName)) {
-            $msg = $translator->trans('%action% action on module %module% succeeded.',
-                        array(
-                            '%action%' => ucfirst(str_replace('_', ' ', $action)),
-                            '%module%' => $moduleName, ),
-                        'Admin.Modules.Notification');
-            $formattedBlock = $formatter->formatBlock($msg, 'info', true);
-            $output->writeln($formattedBlock);
+            $this->displayMessage(
+                $this->translator->trans(
+                    '%action% action on module %module% succeeded.',
+                    array(
+                        '%action%' => ucfirst(str_replace('_', ' ', $action)),
+                        '%module%' => $moduleName, ),
+                    'Admin.Modules.Notification')
+            );
             return;
         }
 
         $error = $moduleManager->getError($moduleName);
-        $msg = $translator->trans(
-            'Cannot %action% module %module%. %error_details%',
-            array(
-                '%action%' => str_replace('_', ' ', $action),
-                '%module%' => $moduleName,
-                '%error_details%' => $error, ),
-            'Admin.Modules.Notification'
+        $this->displayMessage(
+            $this->translator->trans(
+                'Cannot %action% module %module%. %error_details%',
+                array(
+                    '%action%' => str_replace('_', ' ', $action),
+                    '%module%' => $moduleName,
+                    '%error_details%' => $error, ),
+                'Admin.Modules.Notification'
+            ), 'error'
         );
-        $formattedBlock = $formatter->formatBlock($msg, 'error', true);
-        $output->writeln($formattedBlock);
+
+    }
+
+    protected function displayMessage($message, $type = 'info')
+    {
+        $this->output->writeln(
+            $this->formatter->formatBlock($message, $type, true)
+        );
     }
 }

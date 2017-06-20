@@ -86,6 +86,13 @@ services:
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
+        
+    prestashop.adapter.module.self_configurator:
+        class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator
+        arguments:
+            - "@prestashop.core.admin.module.repository"
+            - "@prestashop.adapter.legacy.configuration"
+            - "@doctrine.dbal.default_connection"
 
     # MODULE TAB MANAGEMENT
     prestashop.adapter.module.tab.register:
