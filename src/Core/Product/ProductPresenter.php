@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -170,7 +170,7 @@ class ProductPresenter
         $presentedProduct['regular_price_amount'] = $regular_price;
         $presentedProduct['regular_price'] = $this->priceFormatter->format($regular_price);
 
-        if ($product['reduction'] < $product['price_without_reduction'] ){
+        if ($product['reduction'] < $product['price_without_reduction']) {
             $presentedProduct['discount_to_display'] = $presentedProduct['discount_amount'];
         } else {
             $presentedProduct['discount_to_display'] = $presentedProduct['regular_price'];
@@ -210,30 +210,31 @@ class ProductPresenter
         return $presentedProduct;
     }
 
-    protected function shouldEnableAddToCartButton(array $product)
+    protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
-            $shouldShowButton = false;
+            $shouldEnable = false;
 
             if (isset($product['customizations'])) {
-                $shouldShowButton = true;
+                $shouldEnable = true;
                 foreach ($product['customizations']['fields'] as $field) {
                     if ($field['required'] && !$field['is_customized']) {
-                        $shouldShowButton = false;
+                        $shouldEnable = false;
                     }
                 }
             }
         } else {
-            $shouldShowButton = true;
+            $shouldEnable = true;
         }
 
-        $shouldShowButton = $shouldShowButton && $this->shouldShowAddToCartButton($product);
+        $shouldEnable = $shouldEnable && $this->shouldShowAddToCartButton($product);
 
-        if ($product['quantity'] <= 0 && !$product['allow_oosp']) {
-            $shouldShowButton = false;
+        if ($settings->stock_management_enabled && !$product['allow_oosp'] && isset($product['quantity_wanted']) &&
+            ($product['quantity'] <= 0 || $product['quantity'] < $product['quantity_wanted'])) {
+            $shouldEnable = false;
         }
 
-        return $shouldShowButton;
+        return $shouldEnable;
     }
 
     private function getAddToCartURL(array $product)
@@ -491,11 +492,15 @@ class ProductPresenter
      */
     public function addReferenceToDisplay(array $product, array $presentedProduct)
     {
-        foreach ($product['attributes'] as $attribute) {
-            if (isset($attribute['reference']) && $attribute['reference'] != null) {
-                $presentedProduct['reference_to_display'] = $attribute['reference'];
-            } else {
-                $presentedProduct['reference_to_display'] = $product['reference'];
+        if ('' !== $product['reference']) {
+            $presentedProduct['reference_to_display'] = $product['reference'];
+        }
+
+        if (isset($product['attributes'])) {
+            foreach ($product['attributes'] as $attribute) {
+                if (isset($attribute['reference']) && $attribute['reference'] != null) {
+                    $presentedProduct['reference_to_display'] = $attribute['reference'];
+                }
             }
         }
 
@@ -572,7 +577,7 @@ class ProductPresenter
             $language
         );
 
-        if ($this->shouldEnableAddToCartButton($product)) {
+        if ($this->shouldEnableAddToCartButton($product, $settings)) {
             $presentedProduct['add_to_cart_url'] = $this->getAddToCartURL($product);
         } else {
             $presentedProduct['add_to_cart_url'] = null;
@@ -626,13 +631,13 @@ class ProductPresenter
             $product
         );
 
+        $presentedProduct = $this->addReferenceToDisplay(
+            $product,
+            $presentedProduct
+        );
+
         // If product has attributes and it's no added to card
         if (isset($product['attributes']) && !isset($product['cart_quantity'])) {
-            $presentedProduct = $this->addReferenceToDisplay(
-                $product,
-                $presentedProduct
-            );
-
             $presentedProduct = $this->addAttributesSpecificReferences(
                 $product,
                 $presentedProduct
@@ -694,7 +699,7 @@ class ProductPresenter
             "text_fields",
             "uploadable_files",
             "redirect_type",
-            "id_product_redirected",
+            "id_type_redirected",
             "available_for_order",
             "available_date",
             "show_condition",

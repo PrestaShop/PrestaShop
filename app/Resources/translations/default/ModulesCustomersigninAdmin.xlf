@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_customersignin/ps_customersignin.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5f3209b28ac0403f72c912ce1392c870">
+        <source>Customer "Sign in" link</source>
+        <target>Customer "Sign in" link</target>
+        <note>Context:
+File: modules/ps_customersignin/ps_customersignin.php:46</note>
+      </trans-unit>
+      <trans-unit id="970a31aa19d205f92ccfd1913ca04dc0">
+        <source>Adds a block that displays information about the customer.</source>
+        <target>Adds a block that displays information about the customer.</target>
+        <note>Context:
+File: modules/ps_customersignin/ps_customersignin.php:47</note>
+      </trans-unit>
+      <trans-unit id="c131c3e08e3f4780e204fcbd8d0eb6e6">
+        <source>%firstname% %lastname%</source>
+        <target>%firstname% %lastname%</target>
+        <note>Context:
+File: modules/ps_customersignin/ps_customersignin.php:59</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

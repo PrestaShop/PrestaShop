@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,19 +19,22 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
-use Symfony\Component\Config\ConfigCacheFactory;
-use Symfony\Component\Filesystem\Exception\IOException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\TranslatorInterface;
+use Module;
+use Context;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -41,47 +44,60 @@ use Symfony\Component\Routing\Router;
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
-    const _CACHEFILE_MODULES_ = '_addons_modules.json';
+    const _CACHEKEY_MODULES_ = '_addons_modules';
 
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     private $languageISO;
-    private $router;
+    private $logger;
+    private $router = null;
     private $addonsDataProvider;
     private $categoriesProvider;
-    private $cache_dir = _PS_CACHE_DIR_;
+    private $cacheProvider;
+
     protected $catalog_modules = array();
     protected $catalog_modules_names;
+    public $failed = false;
 
     public function __construct(
-        $languageISO,
-        Router $router = null,
+        TranslatorInterface $translator,
+        LoggerInterface $logger,
         AddonsInterface $addonsDataProvider,
-        CategoriesProvider $categoriesProvider
+        CategoriesProvider $categoriesProvider,
+        CacheProvider $cacheProvider = null
     ) {
-        $this->languageISO = $languageISO;
-        $this->router = $router;
+        list($this->languageISO) = explode('-', $translator->getLocale());
+
+        $this->logger = $logger;
         $this->addonsDataProvider = $addonsDataProvider;
         $this->categoriesProvider = $categoriesProvider;
+        $this->cacheProvider = $cacheProvider;
+    }
+
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
     }
 
     public function clearCatalogCache()
     {
-        $this->clearCache(array($this->languageISO.self::_CACHEFILE_MODULES_));
+        if ($this->cacheProvider) {
+            $this->cacheProvider->delete($this->languageISO.self::_CACHEKEY_MODULES_);
+        }
         $this->catalog_modules = array();
     }
 
     public function getAllModules()
     {
-        return \Module::getModulesOnDisk(true,
+        return Module::getModulesOnDisk(true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
-            (int) \Context::getContext()->employee->id
+            (int) Context::getContext()->employee->id
         );
     }
 
     public function getCatalogModules(array $filters = array())
     {
-        if (count($this->catalog_modules) === 0) {
+        if (count($this->catalog_modules) === 0 && !$this->failed) {
             $this->loadCatalogData();
         }
 
@@ -95,7 +111,7 @@ class AdminModuleDataProvider implements ModuleInterface
         return array_keys($this->getCatalogModules($filter));
     }
 
-    public function generateAddonsUrls(array $addons)
+    public function generateAddonsUrls(array $addons, $specific_action = null)
     {
         foreach ($addons as &$addon) {
             $urls = array();
@@ -174,7 +190,11 @@ class AdminModuleDataProvider implements ModuleInterface
             if (count($urls)) {
                 $addon->attributes->set('urls', $urls);
             }
-            $addon->attributes->set('url_active', $url_active);
+            if ($specific_action && array_key_exists($specific_action, $urls)) {
+                $addon->attributes->set('url_active', $specific_action);
+            } else {
+                $addon->attributes->set('url_active', $url_active);
+            }
 
             $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
             $addon->attributes->set('categoryParent', $categoryParent);
@@ -234,19 +254,11 @@ class AdminModuleDataProvider implements ModuleInterface
         return $modules;
     }
 
-    protected function clearCache(array $files)
-    {
-        foreach ($files as $file) {
-            $path = $this->cache_dir.$file;
-            if (file_exists($path)) {
-                unlink($path);
-            }
-        }
-    }
-
     protected function loadCatalogData()
     {
-        $this->catalog_modules = $this->getModuleCache($this->languageISO.self::_CACHEFILE_MODULES_);
+        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO.self::_CACHEKEY_MODULES_)) {
+            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO.self::_CACHEKEY_MODULES_);
+        }
 
         if (!$this->catalog_modules) {
             $params = array('format' => 'json');
@@ -277,6 +289,9 @@ class AdminModuleDataProvider implements ModuleInterface
                         $addon->categoryParent = $this->categoriesProvider
                             ->getParentCategory($addon->categoryName)
                         ;
+                        if (isset($addon->version)) {
+                            $addon->version_available = $addon->version;
+                        }
                         if (! isset($addon->product_type)) {
                             $addon->productType = isset($addonsType)?rtrim($addonsType, 's'):'module';
                         } else {
@@ -287,11 +302,14 @@ class AdminModuleDataProvider implements ModuleInterface
                 }
 
                 $this->catalog_modules = $listAddons;
-                $this->registerModuleCache($this->languageISO.self::_CACHEFILE_MODULES_, $this->catalog_modules);
+                if ($this->cacheProvider) {
+                    $this->cacheProvider->save($this->languageISO.self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                }
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
                     $this->catalog_modules = array();
-                    throw new \Exception('Data from PrestaShop Addons is invalid, and cannot fallback on cache', 0, $e);
+                    $this->failed = true;
+                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', array('exception' => $e->getMessage()));
                 }
             }
         }
@@ -300,53 +318,10 @@ class AdminModuleDataProvider implements ModuleInterface
     protected function fallbackOnCatalogCache()
     {
         // Fallback on data from cache if exists
-        $this->catalog_modules = $this->getModuleCache(self::_CACHEFILE_MODULES_, false);
+        if ($this->cacheProvider) {
+            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO.self::_CACHEKEY_MODULES_);
+        }
 
         return $this->catalog_modules;
-    }
-
-    private function getModuleCache($file, $checkFreshness = true)
-    {
-        $cacheFile = $this->cache_dir.$file;
-
-        if (!file_exists($cacheFile)) {
-            return false;
-        }
-
-        try {
-            if ($checkFreshness && (filemtime($cacheFile) + self::_DAY_IN_SECONDS_) <= time()) {
-                return false;
-            }
-
-            $fh = fopen($cacheFile, 'r');
-            $cache = trim(fgets($fh));
-
-            if (!$cache) {
-                return false;
-            }
-
-            $labeledCache = array();
-            // We need to loop in the array to replace the current key, which is an integer, with the module name
-            foreach (json_decode($cache) as $element) {
-                $labeledCache[$element->name] = $element;
-            }
-
-            return $labeledCache;
-        } catch (\Exception $e) {
-            throw new \Exception('Cannot read from the cache file '.$file);
-        }
-    }
-
-    private function registerModuleCache($file, $data)
-    {
-        try {
-            $cache = (new ConfigCacheFactory(true))->cache($this->cache_dir.$file, function () {
-            });
-            $cache->write(json_encode($data));
-
-            return $cache->getPath();
-        } catch (IOException $e) {
-            throw new \Exception('Cannot write in the cache file '.$file, $e->getCode(), $e);
-        }
     }
 }

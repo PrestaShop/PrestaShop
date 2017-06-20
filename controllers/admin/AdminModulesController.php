@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,12 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminModulesControllerCore extends AdminController
@@ -78,6 +77,8 @@ class AdminModulesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
+        // Rely on new module controller for right management
+        $this->id = Tab::getIdFromClassName('AdminModulesSf');
         $this->template = 'content-legacy.tpl';
 
         register_shutdown_function('displayFatalError');
@@ -413,7 +414,7 @@ class AdminModulesControllerCore extends AdminController
                 }
             }
         } else {
-            $archive = new \Archive_Tar($file);
+            $archive = new Archive_Tar($file);
             if ($archive->extract($tmp_folder)) {
                 $zip_folders = scandir($tmp_folder);
                 if ($archive->extract(_PS_MODULE_DIR_)) {
@@ -423,12 +424,12 @@ class AdminModulesControllerCore extends AdminController
         }
 
         if (!$success) {
-            $this->errors[] = Tools::displayError('There was an error while extracting the module (file may be corrupted).');
+            $this->errors[] = $this->trans('There was an error while extracting the module (file may be corrupted).', array(), 'Admin.Modules.Notification');
         } else {
             //check if it's a real module
             foreach ($zip_folders as $folder) {
                 if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder)) {
-                    $this->errors[] = sprintf(Tools::displayError('The module %1$s that you uploaded is not a valid module.'), $folder);
+                    $this->errors[] = $this->trans('The module %1$s that you uploaded is not a valid module.', array($folder), 'Admin.Modules.Notification');
                     $this->recursiveDeleteOnDisk(_PS_MODULE_DIR_.$folder);
                 }
             }
@@ -529,35 +530,35 @@ class AdminModulesControllerCore extends AdminController
             $module = Module::getInstanceByName(Tools::getValue('module_name'));
             if (Validate::isLoadedObject($module)) {
                 if (!$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+                    $this->errors[] = $this->trans('You do not have the permission to use this module.', array(), 'Admin.Modules.Notification');
                 } else {
                     if (Tools::getValue('keep_data') == '1' && method_exists($module, 'reset')) {
                         if ($module->reset()) {
                             Tools::redirectAdmin(self::$currentIndex.'&conf=21&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name));
                         } else {
-                            $this->errors[] = Tools::displayError('Cannot reset this module.');
+                            $this->errors[] = $this->trans('Cannot reset this module.', array(), 'Admin.Modules.Notification');
                         }
                     } else {
                         if ($module->uninstall()) {
                             if ($module->install()) {
                                 Tools::redirectAdmin(self::$currentIndex.'&conf=21&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name));
                             } else {
-                                $this->errors[] = Tools::displayError('Cannot install this module.');
+                                $this->errors[] = $this->trans('Cannot install this module.', array(), 'Admin.Modules.Notification');
                             }
                         } else {
-                            $this->errors[] = Tools::displayError('Cannot uninstall this module.');
+                            $this->errors[] = $this->trans('Cannot uninstall this module.', array(), 'Admin.Modules.Notification');
                         }
                     }
                 }
             } else {
-                $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+                $this->errors[] = $this->trans('Cannot load the module\'s object.', array(), 'Admin.Modules.Notification');
             }
 
             if (($errors = $module->getErrors()) && is_array($errors)) {
                 $this->errors = array_merge($this->errors, $errors);
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
         }
     }
 
@@ -565,7 +566,7 @@ class AdminModulesControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_ || ($this->context->mode == Context::MODE_HOST)) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
 
@@ -583,30 +584,30 @@ class AdminModulesControllerCore extends AdminController
                 switch ($_FILES['file']['error']) {
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
-                        $this->errors[] = sprintf($this->l('File too large (limit of %s bytes).'), Tools::getMaxUploadSize());
+                        $this->errors[] = $this->trans('File too large (limit of %s bytes).', array(Tools::getMaxUploadSize()), 'Admin.Notifications.Error');
                     break;
                     case UPLOAD_ERR_PARTIAL:
-                        $this->errors[] = $this->l('File upload was not completed.');
+                        $this->errors[] = $this->trans('File upload was not completed.', array(), 'Admin.Notifications.Error');
                     break;
                     case UPLOAD_ERR_NO_FILE:
-                        $this->errors[] = $this->l('No file was uploaded.');
+                        $this->errors[] = $this->trans('No file was uploaded.', array(), 'Admin.Notifications.Error');
                     break;
                     default:
-                        $this->errors[] = sprintf($this->l('Internal error #%s'), $_FILES['newfile']['error']);
+                        $this->errors[] = $this->trans('Internal error #%s', array($_FILES['newfile']['error']), 'Admin.Notifications.Error');
                     break;
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
-                $this->errors[] = $this->l('No file has been selected');
+                $this->errors[] = $this->trans('No file has been selected', array(), 'Admin.Notifications.Error');
             } elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'
                 && substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz') {
-                $this->errors[] = Tools::displayError('Unknown archive type.');
+                $this->errors[] = $this->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
             } elseif (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name'])) {
-                $this->errors[] = Tools::displayError('An error occurred while copying the archive to the module directory.');
+                $this->errors[] = $this->trans('An error occurred while copying the archive to the module directory.', array(), 'Admin.Modules.Notification');
             } else {
                 $this->extractArchive(_PS_MODULE_DIR_.$_FILES['file']['name']);
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
         }
     }
 
@@ -616,7 +617,7 @@ class AdminModulesControllerCore extends AdminController
             $module = Module::getInstanceByName(Tools::getValue('module_name'));
             if (Validate::isLoadedObject($module)) {
                 if (!$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+                    $this->errors[] = $this->trans('You do not have the permission to use this module.', array(), 'Admin.Modules.Notification');
                 } else {
                     if (Tools::getValue('enable')) {
                         $module->enable();
@@ -626,10 +627,10 @@ class AdminModulesControllerCore extends AdminController
                     Tools::redirectAdmin($this->getCurrentUrl('enable'));
                 }
             } else {
-                $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+                $this->errors[] = $this->trans('Cannot load the module\'s object.', array(), 'Admin.Modules.Notification');
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
         }
     }
 
@@ -639,16 +640,16 @@ class AdminModulesControllerCore extends AdminController
             $module = Module::getInstanceByName(Tools::getValue('module_name'));
             if (Validate::isLoadedObject($module)) {
                 if (!$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+                    $this->errors[] = $this->trans('You do not have the permission to use this module.', array(), 'Admin.Modules.Notification');
                 } else {
                     $module->enableDevice((int)Tools::getValue('enable_device'));
                     Tools::redirectAdmin($this->getCurrentUrl('enable_device'));
                 }
             } else {
-                $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+                $this->errors[] = $this->trans('Cannot load the module\'s object.', array(), 'Admin.Modules.Notification');
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
         }
     }
 
@@ -658,16 +659,16 @@ class AdminModulesControllerCore extends AdminController
             $module = Module::getInstanceByName(Tools::getValue('module_name'));
             if (Validate::isLoadedObject($module)) {
                 if (!$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+                    $this->errors[] = $this->trans('You do not have the permission to use this module.', array(), 'Admin.Modules.Notification');
                 } else {
                     $module->disableDevice((int)Tools::getValue('disable_device'));
                     Tools::redirectAdmin($this->getCurrentUrl('disable_device'));
                 }
             } else {
-                $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+                $this->errors[] = $this->trans('Cannot load the module\'s object.', array(), 'Admin.Modules.Notification');
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
         }
     }
 
@@ -675,7 +676,7 @@ class AdminModulesControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
 
@@ -683,7 +684,7 @@ class AdminModulesControllerCore extends AdminController
             if (Tools::getValue('module_name') != '') {
                 $module = Module::getInstanceByName(Tools::getValue('module_name'));
                 if (Validate::isLoadedObject($module) && !$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+                    $this->errors[] = $this->trans('You do not have the permission to use this module.', array(), 'Admin.Modules.Notification');
                 } else {
                     // Uninstall the module before deleting the files, but do not block the process if uninstall returns false
                     $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
@@ -697,12 +698,12 @@ class AdminModulesControllerCore extends AdminController
                     if (!file_exists($moduleDir)) {
                         Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
                     } else {
-                        $this->errors[] = Tools::displayError('Sorry, the module cannot be deleted. Please check if you have the right permissions on this folder.');
+                        $this->errors[] = $this->trans('Sorry, the module cannot be deleted. Please check if you have the right permissions on this folder.', array(), 'Admin.Modules.Notification');
                     }
                 }
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+            $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
         }
     }
 
@@ -718,7 +719,7 @@ class AdminModulesControllerCore extends AdminController
 
             /* PrestaShop demo mode */
             if (_PS_MODE_DEMO_) {
-                $this->errors[] = Tools::displayError('This functionality has been disabled.');
+                $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
                 return;
             }
 
@@ -801,7 +802,16 @@ class AdminModulesControllerCore extends AdminController
 
                         foreach ($module_to_update as $name => $attr) {
                             if ((is_null($attr) && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0)) {
-                                $this->errors[] = sprintf(Tools::displayError('You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s'), '<strong>'.$name.'</strong>', '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.$this->l('Click here to log in.').'</a>');
+                                $this->errors[] = $this->trans(
+                                    'You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s',
+                                    array(
+                                        '<strong>'.htmlspecialchars($name).'</strong>',
+                                        '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.
+                                            $this->trans('Click here to log in.', array(), 'Admin.Modules.Help').
+                                        '</a>'
+                                    ),
+                                    'Admin.Modules.Notification'
+                                );
                             } elseif (!is_null($attr['id'])) {
                                 $download_ok = false;
                                 if ($attr['need_loggedOnAddons'] == 0
@@ -820,14 +830,18 @@ class AdminModulesControllerCore extends AdminController
                                 }
 
                                 if (!$download_ok) {
-                                    $this->errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded: Error while downloading the latest version.'), '<strong>'.$attr['displayName'].'</strong>');
+                                    $this->errors[] = $this->trans('Module %s cannot be upgraded: Error while downloading the latest version.', array('<strong>'.$attr['displayName'].'</strong>'), 'Admin.Modules.Notification');
                                 } elseif (!$this->extractArchive(_PS_MODULE_DIR_.$name.'.zip', false)) {
-                                    $this->errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded: Error while extracting the latest version.'), '<strong>'.$attr['displayName'].'</strong>');
+                                    $this->errors[] = $this->trans('Module %s cannot be upgraded: Error while extracting the latest version.', array('<strong>'.$attr['displayName'].'</strong>'), 'Admin.Modules.Notification');
                                 } else {
                                     $module_upgraded[] = $name;
                                 }
                             } else {
-                                $this->errors[] = sprintf(Tools::displayError('You do not have the rights to update the %s module. Please make sure you are logged in to the PrestaShop Addons account that purchased the module.'), '<strong>'.$name.'</strong>');
+                                $this->errors[] = $this->trans(
+                                    'You do not have the rights to update the %s module. Please make sure you are logged in to the PrestaShop Addons account that purchased the module.',
+                                    array('<strong>'.$name.'</strong>'),
+                                    'Admin.Modules.Notification'
+                                );
                             }
                         }
                     }
@@ -844,21 +858,21 @@ class AdminModulesControllerCore extends AdminController
                     if (!($module = Module::getInstanceByName(urldecode($name)))) {
                         $this->errors[] = $this->l('Module not found');
                     } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist)) {
-                        $this->errors[] = Tools::displayError('You do not have permission to access this module.');
+                        $this->errors[] = $this->trans('You do not have permission to access this module.', array(), 'Admin.Modules.Notification');
                     } elseif ($key == 'install' && !$this->access('add')) {
-                        $this->errors[] = Tools::displayError('You do not have permission to install this module.');
+                        $this->errors[] = $this->trans('You do not have permission to install this module.', array(), 'Admin.Modules.Notification');
                     } elseif ($key == 'install' && ($this->context->mode == Context::MODE_HOST) && !Module::isModuleTrusted($module->name)) {
-                        $this->errors[] = Tools::displayError('You do not have permission to install this module.');
+                        $this->errors[] = $this->trans('You do not have permission to install this module.', array(), 'Admin.Modules.Notification');
                     } elseif ($key == 'delete' && (!$this->access('delete') || !$module->getPermission('configure'))) {
-                        $this->errors[] = Tools::displayError('You do not have permission to delete this module.');
+                        $this->errors[] = $this->trans('You do not have permission to delete this module.', array(), 'Admin.Modules.Notification');
                     } elseif ($key == 'configure' && (!$this->access('edit') || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
-                        $this->errors[] = Tools::displayError('You do not have permission to configure this module.');
+                        $this->errors[] = $this->trans('You do not have permission to configure this module.', array(), 'Admin.Modules.Notification');
                     } elseif ($key == 'install' && $moduleManager->isInstalled($module->name)) {
-                        $this->errors[] = sprintf(Tools::displayError('This module is already installed: %s.'), $module->name);
+                        $this->errors[] = $this->trans('This module is already installed: %s.', array($module->name), 'Admin.Modules.Notification');
                     } elseif ($key == 'uninstall' && !$moduleManager->isInstalled($module->name)) {
-                        $this->errors[] = sprintf(Tools::displayError('This module has already been uninstalled: %s.'), $module->name);
+                        $this->errors[] = $this->trans('This module has already been uninstalled: %s.', array($module->name), 'Admin.Modules.Notification');
                     } elseif ($key == 'update' && !$moduleManager->isInstalled($module->name)) {
-                        $this->errors[] = sprintf(Tools::displayError('This module needs to be installed in order to be updated: %s.'), $module->name);
+                        $this->errors[] = $this->trans('This module needs to be installed in order to be updated: %s.', array($module->name), 'Admin.Modules.Notification');
                     } else {
                         // If we install a module, force temporary global context for multishop
                         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $method != 'getContent') {
@@ -882,7 +896,7 @@ class AdminModulesControllerCore extends AdminController
                             }
 
                             if ($key == 'uninstall' && !Module::getPermissionStatic($module->id, 'uninstall')) {
-                                $this->errors[] = Tools::displayError('You do not have permission to uninstall this module.');
+                                $this->errors[] = $this->trans('You do not have permission to uninstall this module.', array(), 'Admin.Modules.Notification');
                             }
 
                             if (count($this->errors)) {
@@ -1019,9 +1033,9 @@ class AdminModulesControllerCore extends AdminController
                 // If error during module installation, no redirection
                 $html_error = $this->generateHtmlMessage($module_errors);
                 if ($key == 'uninstall') {
-                    $this->errors[] = sprintf(Tools::displayError('The following module(s) could not be uninstalled properly: %s.'), $html_error);
+                    $this->errors[] = $this->trans('The following module(s) could not be uninstalled properly: %s.', array($html_error), 'Admin.Modules.Notification');
                 } else {
-                    $this->errors[] = sprintf(Tools::displayError('The following module(s) could not be installed properly: %s.'), $html_error);
+                    $this->errors[] = $this->trans('The following module(s) could not be installed properly: %s.', array($html_error), 'Admin.Modules.Notification');
                 }
                 $this->context->smarty->assign('error_module', 'true');
             }
@@ -1420,245 +1434,16 @@ class AdminModulesControllerCore extends AdminController
             return parent::initContent();
         }
 
-        $this->meta_title = 'Modules';
-
         // If we are on a module configuration, no need to load all modules
         if (Tools::getValue('configure') != '') {
             $this->context->smarty->assign(array('maintenance_mode' => !(bool)Configuration::Get('PS_SHOP_ENABLE')));
-
             return true;
         }
 
-        // Init
-        $smarty = $this->context->smarty;
-        $autocomplete_list = 'var moduleList = [';
-        $category_filtered = array();
-        $filter_categories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
-        if (count($filter_categories) > 0) {
-            foreach ($filter_categories as $fc) {
-                if (!empty($fc)) {
-                    $category_filtered[$fc] = 1;
-                }
-            }
-        }
-
-        if (empty($category_filtered) && Tools::getValue('tab_module')) {
-            $category_filtered[Tools::getValue('tab_module')] = 1;
-        }
-
-        foreach ($this->list_modules_categories as $k => $v) {
-            $this->list_modules_categories[$k]['nb'] = 0;
-        }
-
-        // Retrieve Modules Preferences
-        $modules_preferences = '';
-        $tab_modules_preferences = array();
-        $modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
-        $tab_modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'tab_module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
-
-        foreach ($tab_modules_preferences_tmp as $i => $j) {
-            $tab_modules_preferences[$j['module']][] = $j['id_tab'];
-        }
-
-        foreach ($modules_preferences_tmp as $k => $v) {
-            if ($v['interest'] == null) {
-                unset($v['interest']);
-            }
-            if ($v['favorite'] == null) {
-                unset($v['favorite']);
-            }
-            $modules_preferences[$v['module']] = $v;
-        }
-
-        // Retrieve Modules List
-        $modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
-        $this->initModulesList($modules);
-        $this->nb_modules_total = count($modules);
-        $module_errors = array();
-        $module_success = array();
-        $upgrade_available = array();
-        $dont_filter = false;
-
-        //Add succes message for one module update
-        if (Tools::getValue('updated') && Tools::getValue('module_name')) {
-            $module_names = (string)Tools::getValue('module_name');
-            if (strpos($module_names, '|')) {
-                $module_names = explode('|', $module_names);
-                $dont_filter = true;
-            }
-
-            if (!is_array($module_names)) {
-                $module_names = (array)$module_names;
-            }
-
-            foreach ($modules as $km => $module) {
-                if (in_array($module->name, $module_names)) {
-                    $module_success[] = array('name' => $module->displayName, 'message' => array(
-                        0 => sprintf($this->l('Current version: %s'), $module->version)));
-                }
-            }
-        }
-
-        if (Tools::getValue('allUpdated')) {
-            $this->confirmations[] = $this->l('All modules updated successfully.');
-        }
-
-        // Browse modules list
-        foreach ($modules as $km => $module) {
-            //if we are in favorites view we only display installed modules
-            if (Tools::getValue('select') == 'favorites' && !$module->id) {
-                unset($modules[$km]);
-                continue;
-            }
-
-            // Upgrade Module process, init check if a module could be upgraded
-            if (Module::initUpgradeModule($module)) {
-                // When the XML cache file is up-to-date, the module may not be loaded yet
-                if (!class_exists($module->name)) {
-                    if (!file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php')) {
-                        continue;
-                    }
-                    require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
-                }
-
-                if ($object = ServiceLocator::get($module->name)) {
-                    /** @var Module $object */
-                    $object->runUpgradeModule();
-                    if ((count($errors_module_list = $object->getErrors()))) {
-                        $module_errors[] = array('name' => $module->displayName, 'message' => $errors_module_list);
-                    } elseif ((count($conf_module_list = $object->getConfirmations()))) {
-                        $module_success[] = array('name' => $module->displayName, 'message' => $conf_module_list);
-                    }
-                    unset($object);
-                }
-            }
-            // Module can't be upgraded if not file exist but can change the database version...
-            // User has to be prevented
-            elseif (Module::getUpgradeStatus($module->name)) {
-                // When the XML cache file is up-to-date, the module may not be loaded yet
-                if (!class_exists($module->name)) {
-                    if (file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php')) {
-                        require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
-                        $object = ServiceLocator::get($module->name);
-                        $module_success[] = array('name' => $module->name, 'message' => array(
-                            0 => sprintf($this->l('Current version: %s'), $object->version),
-                            1 => $this->l('No file upgrades applied (none exist).'))
-                        );
-                    } else {
-                        continue;
-                    }
-                }
-                unset($object);
-            }
-
-            // Make modules stats
-            $this->makeModulesStats($module);
-
-            // Assign warnings
-            if ($module->active && isset($module->warning) && !empty($module->warning) && !$this->ajax) {
-                $href = Context::getContext()->link->getAdminLink('AdminModules', true).'&module_name='.$module->name.'&tab_module='.$module->tab.'&configure='.$module->name;
-                $this->context->smarty->assign('text', sprintf($this->l('%1$s: %2$s'), $module->displayName, $module->warning));
-                $this->context->smarty->assign('module_link', $href);
-                $this->displayWarning($this->context->smarty->fetch('controllers/modules/warning_module.tpl'));
-            }
-
-            // AutoComplete array
-            $autocomplete_list .= json_encode(array(
-                'displayName' => (string)$module->displayName,
-                'desc' => (string)$module->description,
-                'name' => (string)$module->name,
-                'author' => (string)$module->author,
-                'image' => (isset($module->image) ? (string)$module->image : ''),
-                'option' => '',
-            )).', ';
-
-            // Apply filter
-            if ($this->isModuleFiltered($module) && Tools::getValue('select') != 'favorites') {
-                unset($modules[$km]);
-            } else {
-                if (isset($modules_preferences[$modules[$km]->name])) {
-                    $modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
-                }
-
-                $this->fillModuleData($module, 'array', null, 'back-office,AdminModules,index');
-                $module->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
-            }
-            unset($object);
-            if ($module->installed && isset($module->version_addons) && $module->version_addons) {
-                $upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->name, 'displayName' => $module->displayName);
-            }
-
-            if (in_array($module->name, $this->list_partners_modules)) {
-                $module->type = 'addonsPartner';
-            }
-
-            if (isset($module->description_full) && trim($module->description_full) != '') {
-                $module->show_quick_view = true;
-            }
-        }
-
-        // Don't display categories without modules
-        $cleaned_list = array();
-        foreach ($this->list_modules_categories as $k => $list) {
-            if ($list['nb'] > 0) {
-                $cleaned_list[$k] = $list;
-            }
-        }
-
-        // Actually used for the report of the upgraded errors
-        if (count($module_errors)) {
-            $html = $this->generateHtmlMessage($module_errors);
-            $this->errors[] = sprintf(Tools::displayError('The following module(s) were not upgraded successfully: %s.'), $html);
-        }
-        if (count($module_success)) {
-            $html = $this->generateHtmlMessage($module_success);
-            $this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully: %s.'), $html);
-        }
-
-        ConfigurationKPI::updateValue('UPDATE_MODULES', count($upgrade_available));
-
-        if (count($upgrade_available) == 0 && (int)Tools::getValue('check') == 1) {
-            $this->confirmations[] = $this->l('Everything is up-to-date');
-        }
-
-        // Init tpl vars for smarty
-        $tpl_vars = array(
-            'token' => $this->token,
-            'upgrade_available' => $upgrade_available,
-            'currentIndex' => self::$currentIndex,
-            'dirNameCurrentIndex' => dirname(self::$currentIndex),
-            'ajaxCurrentIndex' => str_replace('index', 'ajax-tab', self::$currentIndex),
-            'autocompleteList' => rtrim($autocomplete_list, ' ,').'];',
-            'showTypeModules' => $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee],
-            'showCountryModules' => $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee],
-            'showInstalledModules' => $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee],
-            'showEnabledModules' => $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee],
-            'nameCountryDefault' => Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT')),
-            'isoCountryDefault' => $this->iso_default_country,
-            'categoryFiltered' => $category_filtered,
-            'modules' => $modules,
-            'nb_modules' => $this->nb_modules_total,
-            'nb_modules_favorites' => count($this->context->employee->favoriteModulesList()),
-            'nb_modules_installed' => $this->nb_modules_installed,
-            'nb_modules_uninstalled' => $this->nb_modules_total - $this->nb_modules_installed,
-            'nb_modules_activated' => $this->nb_modules_activated,
-            'nb_modules_unactivated' => $this->nb_modules_installed - $this->nb_modules_activated,
-            'list_modules_categories' => $cleaned_list,
-            'list_modules_authors' => $this->modules_authors,
-            'add_permission' => $this->access('add'),
-            'tab_modules_preferences' => $tab_modules_preferences,
-            'kpis' => $this->renderKpis(),
-            'module_name' => Tools::getValue('module_name'),
-            'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
-            'dont_filter' => $dont_filter,
-            'is_contributor' => (int)$this->context->cookie->is_contributor,
-        );
-
-        if ($this->logged_on_addons) {
-            $tpl_vars['logged_on_addons'] = 1;
-            $tpl_vars['username_addons'] = $this->context->cookie->username_addons;
-        }
-        $smarty->assign($tpl_vars);
+        // Since 1.7, legacy modules page does not have to be show
+        // Redirect to the new page, can not do this into __construct because
+        // some install module, configuration are done with this controller...
+        Tools::redirectAdmin($this->getAdminModulesUrl());
     }
 
     public function assignReadMoreSmartyVar()

@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use Symfony\Component\Translation\TranslatorInterface;
 use Search;
+use Hook;
 use Tools;
 
 class SearchProductSearchProvider implements ProductSearchProviderInterface
@@ -57,9 +58,11 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         $count    = 0;
 
         if (($string = $query->getSearchString())) {
+            $queryString = Tools::replaceAccentedChars(urldecode($string));
+
             $result = Search::find(
                 $context->getIdLang(),
-                Tools::replaceAccentedChars(urldecode($string)),
+                $queryString,
                 $query->getPage(),
                 $query->getResultsPerPage(),
                 $query->getSortOrder()->toLegacyOrderBy(),
@@ -70,10 +73,20 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
             );
             $products = $result['result'];
             $count    = $result['total'];
+
+            Hook::exec('actionSearch', array(
+                'searched_query' => $queryString,
+                'total' => $count,
+
+                // deprecated since 1.7.x
+                'expr' => $queryString,
+            ));
         } elseif (($tag = $query->getSearchTag())) {
+            $queryString = urldecode($tag);
+
             $products = Search::searchTag(
                 $context->getIdLang(),
-                urldecode($tag),
+                $queryString,
                 false,
                 $query->getPage(),
                 $query->getResultsPerPage(),
@@ -85,7 +98,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
 
             $count = Search::searchTag(
                 $context->getIdLang(),
-                urldecode($tag),
+                $queryString,
                 true,
                 $query->getPage(),
                 $query->getResultsPerPage(),
@@ -94,17 +107,27 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 false,
                 null
             );
+
+            Hook::exec('actionSearch', array(
+                'searched_query' => $queryString,
+                'total' => $count,
+
+                // deprecated since 1.7.x
+                'expr' => $queryString,
+            ));
         }
 
         $result = new ProductSearchResult();
-        $result
-            ->setProducts($products)
-            ->setTotalProductsCount($count)
-        ;
 
-        $result->setAvailableSortOrders(
-            $this->sortOrderFactory->getDefaultSortOrders()
-        );
+        if (!empty($products)) {
+            $result
+                ->setProducts($products)
+                ->setTotalProductsCount($count);
+
+            $result->setAvailableSortOrders(
+                $this->sortOrderFactory->getDefaultSortOrders()
+            );
+        }
 
         return $result;
     }

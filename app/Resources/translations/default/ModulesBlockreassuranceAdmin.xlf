@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/blockreassurance/blockreassurance.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="659e8e7501bea2ab8c35659fc321525d">
+        <source>Customer reassurance</source>
+        <target>Customer reassurance</target>
+        <note>Context:
+File: modules/blockreassurance/blockreassurance.php:49</note>
+      </trans-unit>
+      <trans-unit id="7e7f70db3c75e428db8e2d0a1765c4e9">
+        <source>Adds an information block aimed at offering helpful information to reassure customers that your store is trustworthy.</source>
+        <target>Adds an information block aimed at offering helpful information to reassure customers that your store is trustworthy.</target>
+        <note>Context:
+File: modules/blockreassurance/blockreassurance.php:50</note>
+      </trans-unit>
+      <trans-unit id="0366c7b2ea1bb228cd44aec7e3e26a3e">
+        <source>The block configuration has been updated.</source>
+        <target>The block configuration has been updated.</target>
+        <note>Context:
+File: modules/blockreassurance/blockreassurance.php:224</note>
+      </trans-unit>
+      <trans-unit id="8363eee01f4da190a4cef9d26a36750c">
+        <source>New reassurance block</source>
+        <target>New reassurance block</target>
+        <note>Context:
+File: modules/blockreassurance/blockreassurance.php:246</note>
+      </trans-unit>
+      <trans-unit id="23498d91b6017e5d7f4ddde70daba286">
+        <source>ID Shop</source>
+        <target>ID Shop</target>
+        <note>Context:
+File: modules/blockreassurance/blockreassurance.php:326</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

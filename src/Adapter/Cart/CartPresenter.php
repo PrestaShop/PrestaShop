@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -73,6 +73,7 @@ class CartPresenter implements PresenterInterface
         $settings->include_taxes = $this->includeTaxes();
         $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
         $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
+        $settings->showPrices = Configuration::showPrices();
 
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
             // return an array of attributes
@@ -106,14 +107,21 @@ class CartPresenter implements PresenterInterface
             $rawProduct['id_product_attribute']
         );
 
-        $rawProduct['ecotax_rate'] = '';
-        $rawProduct['specific_prices'] = '';
-        $rawProduct['customizable'] = '';
-        $rawProduct['online_only'] = '';
-        $rawProduct['reduction'] = '';
-        $rawProduct['new'] = '';
-        $rawProduct['condition'] = '';
-        $rawProduct['pack'] = '';
+        $resetFields = array(
+            'ecotax_rate',
+            'specific_prices',
+            'customizable',
+            'online_only',
+            'reduction',
+            'new',
+            'condition',
+            'pack',
+        );
+        foreach ($resetFields as $field) {
+            if (!array_key_exists($field, $rawProduct)) {
+                $rawProduct[$field] = '';
+            }
+        }
 
         if ($this->includeTaxes()) {
             $rawProduct['price_amount'] = $rawProduct['price_wt'];
@@ -287,12 +295,13 @@ class CartPresenter implements PresenterInterface
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
         $total_discount = $cart->getDiscountSubtotalWithoutGifts();
+        $totalCartAmount = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
 
         $subtotals['products'] = array(
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
-            'amount' => $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS),
-            'value' => $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
+            'amount' => $totalCartAmount,
+            'value' => $this->priceFormatter->format($totalCartAmount),
         );
 
         if ($total_discount) {
@@ -316,7 +325,7 @@ class CartPresenter implements PresenterInterface
                 'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
                 'amount' => $giftWrappingPrice,
                 'value' => ($giftWrappingPrice > 0)
-                    ? $this->priceFormatter->format($giftWrappingPrice)
+                    ? $this->priceFormatter->convertAndFormat($giftWrappingPrice)
                     : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
             );
         }
@@ -356,6 +365,18 @@ class CartPresenter implements PresenterInterface
                 'value' => $this->priceFormatter->format(
                     $this->includeTaxes() ? $total_including_tax : $total_excluding_tax
                 ),
+            ),
+            'total_including_tax' => array(
+                'type' => 'total',
+                'label' => $this->translator->trans('Total (tax incl.)', array(), 'Shop.Theme.Checkout'),
+                'amount' => $total_including_tax,
+                'value' => $this->priceFormatter->format($total_including_tax),
+            ),
+            'total_excluding_tax' => array(
+                'type' => 'total',
+                'label' => $this->translator->trans('Total (tax excl.)', array(), 'Shop.Theme.Checkout'),
+                'amount' => $total_excluding_tax,
+                'value' => $this->priceFormatter->format($total_excluding_tax),
             ),
         );
 
@@ -454,7 +475,7 @@ class CartPresenter implements PresenterInterface
             if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'].'%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
-                $cartVoucher['reduction_formatted'] = $this->priceFormatter->format($cartVoucher['reduction_amount']);
+                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-'.$cartVoucher['reduction_formatted'];

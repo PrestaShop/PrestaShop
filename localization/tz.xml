@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Tanzania" version="1.0">
+	<currencies>
+		<currency name="Tanzanian shilling" iso_code="TZS" iso_code_num="834" sign="TSh" blank="1" conversion_rate="2339.14" format="2" decimals="1" />
+	</currencies>
+	<languages>
+		<language iso_code="sw" />
+		<language iso_code="en" />
+	</languages>
+	<taxes>
+		<tax id="1" name="VAT TZ 18%" rate="18" />
+		<tax id="2" name="VAT TZ 0%" rate="0" />
+
+		<taxRulesGroup name="TZ Standard Rate (18%)">
+			<taxRule iso_code_country="tz" id_tax="1" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="TZ Export Rate (0%)">
+			<taxRule iso_code_country="tz" id_tax="2" />
+		</taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="kg" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="cm" />
+		<unit type="base_distance" value="m" />
+		<unit type="long_distance" value="km" />
+	</units>
+</localizationPack>

@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,10 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class OrderCore extends ObjectModel
 {
@@ -754,26 +756,26 @@ class OrderCore extends ObjectModel
         if (count($products) < 1) {
             return false;
         }
+
         $virtual = true;
+
         foreach ($products as $product) {
-            $pd = ProductDownload::getIdFromIdProduct((int)$product['product_id']);
-            if ($pd && Validate::isUnsignedInt($pd) && $product['download_hash'] && $product['display_filename'] != '') {
-                if ($strict === false) {
-                    return true;
-                }
-            } else {
-                $virtual &= false;
+            if ($strict === false && (bool)$product['is_virtual']) {
+                return true;
             }
+
+            $virtual &= (bool)$product['is_virtual'];
         }
+
         return $virtual;
     }
 
     /**
-     * @deprecated 1.5.0.1
+     * @deprecated 1.5.0.1 use Order::getCartRules() instead
      */
     public function getDiscounts($details = false)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Order::getCartRules() instead');
         return Order::getCartRules();
     }
 
@@ -1080,20 +1082,47 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Get an order by its cart id
+     * Get an order id by its cart id
      *
      * @param int $id_cart Cart id
-     * @return array Order details
+     * @return int Order id
+     *
+     * @deprecated since 1.7.1.0 Use getIdByCartId() instead
      */
     public static function getOrderByCartId($id_cart)
     {
-        $sql = 'SELECT `id_order`
-                FROM `'._DB_PREFIX_.'orders`
-                WHERE `id_cart` = '.(int)$id_cart
-                    .Shop::addSqlRestriction();
-        $result = Db::getInstance()->getRow($sql);
+        return self::getIdByCartId($id_cart);
+    }
 
-        return isset($result['id_order']) ? $result['id_order'] : false;
+    /**
+     * Get an order object by its cart id
+     *
+     * @param int $id_cart Cart id
+     * @return OrderCore
+     */
+    public static function getByCartId($id_cart)
+    {
+        $id_order = (int) self::getIdByCartId((int) $id_cart);
+
+        return ($id_order > 0) ? new self($id_order) : null;
+    }
+
+    /**
+     * Get the order id by its cart id
+     *
+     * @param int $id_cart Cart id
+     * @return int $id_order
+     */
+    public static function getIdByCartId($id_cart)
+    {
+        $sql = 'SELECT `id_order` 
+            FROM `'._DB_PREFIX_.'orders`
+            WHERE `id_cart` = '.(int) $id_cart.
+            Shop::addSqlRestriction();
+
+        $result = Db::getInstance()->getValue($sql);
+
+        return !empty($result) ? (int) $result : false;
     }
 
     /**
@@ -1106,7 +1135,7 @@ class OrderCore extends ObjectModel
      */
     public function addDiscount($id_cart_rule, $name, $value)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Order::addCartRule($id_cart_rule, $name, array(\'tax_incl\' => $value, \'tax_excl\' => \'0.00\')) instead');
         return Order::addCartRule($id_cart_rule, $name, array('tax_incl' => $value, 'tax_excl' => '0.00'));
     }
 
@@ -1322,7 +1351,7 @@ class OrderCore extends ObjectModel
 
         $address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $carrier = new Carrier((int)$this->id_carrier);
-        $tax_calculator = (Configuration::get('PS_ATCP_SHIPWRAP')) ? \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id) : $carrier->getTaxCalculator($address);
+        $tax_calculator = (Configuration::get('PS_ATCP_SHIPWRAP')) ? ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id) : $carrier->getTaxCalculator($address);
         $order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
         $order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
         $order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
@@ -1337,7 +1366,7 @@ class OrderCore extends ObjectModel
         $order_invoice->save();
 
         if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-            $wrapping_tax_calculator = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
+            $wrapping_tax_calculator = ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
         } else {
             $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
             $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
@@ -2145,6 +2174,7 @@ class OrderCore extends ObjectModel
     {
         $collection = new PrestaShopCollection('order');
         $collection->where('reference', '=', $this->reference);
+        $collection->where('id_cart', '=', $this->id_cart);
         $collection->where('id_order', '<>', $this->id);
         return $collection;
     }

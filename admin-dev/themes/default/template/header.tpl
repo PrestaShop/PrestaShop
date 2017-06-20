@@ -1,12 +1,12 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,15 +18,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6 " lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie7" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie8" lang="en"> <![endif]-->
-<!--[if gt IE 8]> <html lang="fr" class="no-js ie9" lang="en"> <![endif]-->
+<!--[if lt IE 7]> <html lang="{$iso}" class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6"> <![endif]-->
+<!--[if IE 7]>    <html lang="{$iso}" class="no-js lt-ie9 lt-ie8 ie7"> <![endif]-->
+<!--[if IE 8]>    <html lang="{$iso}" class="no-js lt-ie9 ie8"> <![endif]-->
+<!--[if gt IE 8]> <html lang="{$iso}" class="no-js ie9"> <![endif]-->
 <html lang="{$iso}">
 <head>
 	<meta charset="utf-8">
@@ -144,19 +144,20 @@
 											{l s='Remove from QuickAccess'}
 										</a>
 									</li>
-								{/if}
-								<li {if isset($matchQuickLink)}class="hide"{/if}>
-									<a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
-										<i class="icon-plus-circle"></i>
-										{l s='Add current page to QuickAccess'}
-									</a>
-								</li>
+								{else}
                   <li>
-                    <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
-                      <i class="icon-cog"></i>
-                      {l s='Manage quick accesses'}
+                    <a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+                      <i class="icon-plus-circle"></i>
+                      {l s='Add current page to QuickAccess'}
                     </a>
                   </li>
+                {/if}
+                <li>
+                  <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+                    <i class="icon-cog"></i>
+                    {l s='Manage quick accesses'}
+                  </a>
+                </li>
 							</ul>
 						</li>
 					</ul>
@@ -215,28 +216,26 @@
 
 				{* Employee *}
 				<ul id="header_employee_box">
-					<li id="employee_infos" class="dropdown">
+					<li id="employee_infos" class="dropdown hidden-xs">
 						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
 							<span class="employee_avatar_small">
-								{if isset($employee)}
-									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
-								{/if}
+                <img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
 							</span>
 						</a>
 						<ul id="employee_links" class="dropdown-menu">
-							<li>
+							<li data-mobile="true" data-from="employee_links" data-target="menu">
 								<span class="employee_avatar">
 									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
 								</span>
 							</li>
-							<li class="text-center text-nowrap">{$employee->firstname} {$employee->lastname}</li>
+							<li class="text-center text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
-							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
+							<li><a class="admin-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
 							{if $host_mode}
 							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
 							{/if}
 							<li class="divider"></li>
-							<li><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
+							<li class="signout" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -257,13 +256,13 @@
                     {$active = "active"}
                     {if $show_new_orders}
                       <li class="nav-item {$active}">
-                        <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders'}<span id="orders_notif_value"></span></a>
+                        <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Latest orders'}<span id="orders_notif_value"></span></a>
                       </li>
                       {$active = ""}
                     {/if}
                     {if $show_new_customers}
                       <li class="nav-item {$active}">
-                        <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers'}<span id="customers_notif_value"></span></a>
+                        <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='New customers'}<span id="customers_notif_value"></span></a>
                       </li>
                       {$active = ""}
                     {/if}
@@ -281,8 +280,7 @@
                     {if $show_new_orders}
                       <div class="tab-pane {$active} empty" id="orders-notifications" role="tabpanel">
                         <p class="no-notification">
-                          {l s='No new order for now :('}<br>
-                          {l s='Have you checked your [1][2]abandonned carts[/2][/1]?' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a href="'|cat:$abandoned_cart_url|cat:'">', '[/2]' => '</a>']}<br>
+                          {l s='No new order for now :(' d='Admin.Navigation.Notification'}<br>
                           {$no_order_tip}
                         </p>
                         <div class="notification-elements"></div>
@@ -292,7 +290,7 @@
                     {if $show_new_customers}
                       <div class="tab-pane {$active} empty" id="customers-notifications" role="tabpanel">
                         <p class="no-notification">
-                          {l s='No new customer for now :('}<br>
+                          {l s='No new customer for now :(' d='Admin.Navigation.Notification'}<br>
                           {$no_customer_tip}
                         </p>
                         <div class="notification-elements"></div>
@@ -302,7 +300,7 @@
                     {if $show_new_messages}
                       <div class="tab-pane {$active} empty" id="messages-notifications" role="tabpanel">
                         <p class="no-notification">
-                          {l s='No new message for now.'}<br>
+                          {l s='No new message for now.' d='Admin.Navigation.Notification'}<br>
                           {$no_customer_message_tip}
                         </p>
                         <div class="notification-elements"></div>
@@ -318,10 +316,10 @@
 
 				{* Shop name *}
 				{if {$base_url}}
-					<ul class="header-list navbar-right">
-						<li>
+					<ul id="header-list" class="header-list navbar-right">
+						<li class="shopname" data-mobile="true" data-from="header-list" data-target="menu">
               {if isset($debug_mode) && $debug_mode == true}
-                <span class="shop-state" id="debug-mode">
+                <span class="shop-state hidden-xs" id="debug-mode">
                   <i class="material-icons">bug_report</i>
                   <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
                     title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>']}</p>">{l s='Debug mode'}</span>
@@ -331,7 +329,7 @@
                 <span class="shop-state" id="maintenance-mode">
                   <i class="material-icons">build</i>
                     <a class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">{l s='Maintenance mode'}
+                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">{l s='Maintenance mode'}
                     </a>
                 </span>
               {/if}
@@ -354,7 +352,7 @@
 				{/if}
 
 				{* Ajax running *}
-				<span id="ajax_running">
+				<span id="ajax_running" class="hidden-xs">
 					<i class="icon-refresh icon-spin icon-fw"></i>
 				</span>
 

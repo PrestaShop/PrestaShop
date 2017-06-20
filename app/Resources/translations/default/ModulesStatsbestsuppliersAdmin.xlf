@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statsbestsuppliers/statsbestsuppliers.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
+        <source>Total paid</source>
+        <target>Total paid</target>
+        <note>Context:
+File: modules/statsbestsuppliers/statsbestsuppliers.php:71</note>
+      </trans-unit>
+      <trans-unit id="cc3eb9ba7d0e236f33023a4744d0693a">
+        <source>Best suppliers</source>
+        <target>Best suppliers</target>
+        <note>Context:
+File: modules/statsbestsuppliers/statsbestsuppliers.php:77</note>
+      </trans-unit>
+      <trans-unit id="37607fc64452028f4d484aa014071934">
+        <source>Adds a list of the best suppliers to the Stats dashboard.</source>
+        <target>Adds a list of the best suppliers to the Stats dashboard.</target>
+        <note>Context:
+File: modules/statsbestsuppliers/statsbestsuppliers.php:78</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

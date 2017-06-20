@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<entity_quick_access>
-  <quick_access id="Home" name="Forside"/>
-  <quick_access id="My_Shop" name="Min butik"/>
-  <quick_access id="New_category" name="Ny kategori"/>
-  <quick_access id="New_product" name="Ny vare"/>
-  <quick_access id="New_voucher" name="Ny rabatkupon"/>
-  <quick_access id="Orders" name="Ordrer"/>
-</entity_quick_access>

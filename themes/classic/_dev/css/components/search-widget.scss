@@ -26,12 +26,20 @@
   }
 }
 
+.page-not-found {
+  .search-widget {
+    form {
+      display: inline-block;
+    }
+  }
+}
+
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {
   .header-top {
     .search-widget {
       float: none;
-      padding: 0 rem(15px);
+      padding: 0 0.9375rem;
       form {
         margin: 0 auto;
         input[type="text"] {

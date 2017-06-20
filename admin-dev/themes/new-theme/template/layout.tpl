@@ -20,29 +20,30 @@
     *}
 
     {* Logo *}
+    <i class="material-icons pull-left p-x-1 js-mobile-menu hidden-md-up">menu</i>
     <a class="logo pull-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
 
-    <div class="component pull-left">{include file="components/layout/quick_access.tpl"}</div>
-    <div class="component">{include file="components/layout/search_form.tpl"}</div>
+    <div class="component pull-left hidden-md-down">{include file="components/layout/quick_access.tpl"}</div>
+    <div class="component hidden-md-down">{include file="components/layout/search_form.tpl"}</div>
 
 
-    <div class="component pull-md-right -norightmargin">{include file="components/layout/employee_dropdown.tpl"}</div>
+    <div class="component pull-md-right -norightmargin hidden-md-down">{include file="components/layout/employee_dropdown.tpl"}</div>
     {if $show_new_orders || $show_new_customers || $show_new_messages}
-      <div class="component pull-md-right">{include file="components/layout/notifications_center.tpl"}</div>
+      <div class="component pull-xs-right">{include file="components/layout/notifications_center.tpl"}</div>
     {/if}
-    <div class="component pull-md-right">{include file="components/layout/shop_list.tpl"}</div>
+    <div class="component pull-md-right hidden-md-down">{include file="components/layout/shop_list.tpl"}</div>
     {if isset($maintenance_mode) && $maintenance_mode == true}
-      <div class="component pull-right">
+      <div class="component pull-right hidden-md-down">
         <div class="shop-state" id="maintenance-mode">
           <i class="material-icons">build</i>
-          <a class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">
+          <a class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">
               {l s='Maintenance mode'}
           </a>
         </div>
       </div>
     {/if}
     {if isset($debug_mode) && $debug_mode == true}
-      <div class="component pull-right">
+      <div class="component pull-right hidden-md-down">
         <div class="shop-state" id="debug-mode">
           <i class="material-icons">bug_report</i>
           <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
@@ -59,7 +60,7 @@
           data-toggle="tooltip"
           data-placement="bottom"
           data-html="true"r
-          title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf=['<br />']}</p>">{l s='Maintenance mode'}</span>
+          title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />']}</p>">{l s='Maintenance mode'}</span>
         </span>
     {/if}
     *}
@@ -126,6 +127,8 @@
   {/if}
 
 </div>
+
+{include file='components/layout/non-responsive.tpl'}
 
 {* TODO: THIS FOOTER WILL BE REMOVED *}
 {if $display_footer}

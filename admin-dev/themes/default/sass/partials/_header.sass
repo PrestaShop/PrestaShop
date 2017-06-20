@@ -10,8 +10,12 @@ $header-height: 36px
 	@extend .navbar-inverse
 	@extend .navbar-fixed-top
 	height: $header-height
+	@media (max-width: $screen-sm)
+		height: auto
 	.navbar-header
 		width: 100%
+		@media (max-width: $screen-sm)
+			padding: 10px 0
 
 #header_logo
 	@extend .navbar-brand
@@ -24,8 +28,8 @@ $header-height: 36px
 	@include margin(0, 5px, 0, 0)
 	#shop_version
 		font-size: 10px
-	@media (max-width: $screen-xs)
-		display: none
+	@media (max-width: $screen-sm)
+		margin-left: 25px
 #header_shopname
 	@extend .navbar-brand
 	text-decoration: none
@@ -152,11 +156,6 @@ $header-height: 36px
 	i
 		font-size: $icon-size-base
 	@media (max-width: $screen-sm)
-		position: fixed !important
-		top: 36px !important
-		width: 100% !important
-		height: 100% !important
-		background-color: #383F50 !important
 		@include ltr
 			left: 0 !important
 		@include rtl
@@ -180,6 +179,7 @@ $header-height: 36px
 	float: left
 	width: 250px
 	margin: 4px 0 0 0
+	@extend .hidden-xs
 	#bo_query
 		@include border-radius(0, 55px, 55px, 0)
 		color:       $main-color
@@ -232,7 +232,6 @@ $header-height: 36px
 		@extend .navbar-left
 	@include rtl
 		@extend .navbar-right
-	@extend .hidden-xs
 	@extend .hidden-sm
 	height:     $header-height
 	box-sizing: border-box
@@ -252,7 +251,6 @@ $header-height: 36px
 	@extend .nav
 	@extend .navbar-nav
 	@include ltr
-		@extend .navbar-left
 	@include rtl
 		@extend .navbar-right
 
@@ -365,4 +363,3 @@ $header-height: 36px
 						text-decoration: none
 						strong
 							color: #fff
-

@@ -1,0 +1,26 @@
+api_stock_list_movements:
+     path: /movements
+     methods: [GET]
+     defaults:
+         _controller: prestashop.core.api.stockMovement.controller:listMovementsAction
+
+api_stock_product_list_movements:
+     path: /movements/product/{productId}
+     methods: [GET]
+     defaults:
+         _controller: prestashop.core.api.stockMovement.controller:listMovementsAction
+     requirements:
+         productId: \d+
+
+api_stock_list_movements_employees:
+     path: /movements/employees
+     methods: [GET]
+     defaults:
+         _controller: prestashop.core.api.stockMovement.controller:listMovementsEmployeesAction
+
+
+api_stock_list_movements_types:
+     path: /movements/types
+     methods: [GET]
+     defaults:
+         _controller: prestashop.core.api.stockMovement.controller:listMovementsTypesAction

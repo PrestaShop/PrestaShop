@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statssales/statssales.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="45c4b3e103155326596d6ccd2fea0f25">
+        <source>Sales and orders</source>
+        <target>Sales and orders</target>
+        <note>Context:
+File: modules/statssales/statssales.php:49</note>
+      </trans-unit>
+      <trans-unit id="d2fb07753354576172a2b144c373a610">
+        <source>Adds graphics presenting the evolution of sales and orders to the Stats dashboard.</source>
+        <target>Adds graphics presenting the evolution of sales and orders to the Stats dashboard.</target>
+        <note>Context:
+File: modules/statssales/statssales.php:50</note>
+      </trans-unit>
+      <trans-unit id="bdaa0cab56c2880f8f60e6a2cef40e63">
+        <source>About order statuses</source>
+        <target>About order statuses</target>
+        <note>Context:
+File: modules/statssales/statssales.php:88</note>
+      </trans-unit>
+      <trans-unit id="fdfa8599f3887bef99e9572f3611260f">
+        <source>In your Back Office, you can modify the following order statuses: Awaiting Check Payment, Payment Accepted, Preparation in Progress, Shipping, Delivered, Canceled, Refund, Payment Error, Out of Stock, and Awaiting Bank Wire Payment.</source>
+        <target>In your Back Office, you can modify the following order statuses: Awaiting Check Payment, Payment Accepted, Preparation in Progress, Shipping, Delivered, Canceled, Refund, Payment Error, Out of Stock, and Awaiting Bank Wire Payment.</target>
+        <note>Context:
+File: modules/statssales/statssales.php:90</note>
+      </trans-unit>
+      <trans-unit id="4b75384caa4e6830c22f15e06e0bfac0">
+        <source>These order statuses cannot be removed from the Back Office; however you have the option to add more.</source>
+        <target>These order statuses cannot be removed from the Back Office; however you have the option to add more.</target>
+        <note>Context:
+File: modules/statssales/statssales.php:91</note>
+      </trans-unit>
+      <trans-unit id="85fa6dbe688e6187550abf46fb592e5b">
+        <source>The following graphs represent the evolution of your shop's orders and sales turnover for a selected period.</source>
+        <target>The following graphs represent the evolution of your shop's orders and sales turnover for a selected period.</target>
+        <note>Context:
+File: modules/statssales/statssales.php:96</note>
+      </trans-unit>
+      <trans-unit id="631b6ed00d320b89b25e017586b918b8">
+        <source>You should often consult this screen, as it allows you to quickly monitor your shop's sustainability. It also allows you to monitor multiple time periods.</source>
+        <target>You should often consult this screen, as it allows you to quickly monitor your shop's sustainability. It also allows you to monitor multiple time periods.</target>
+        <note>Context:
+File: modules/statssales/statssales.php:97</note>
+      </trans-unit>
+      <trans-unit id="5cc6f5194e3ef633bcab4869d79eeefa">
+        <source>Only valid orders are graphically represented.</source>
+        <target>Only valid orders are graphically represented.</target>
+        <note>Context:
+File: modules/statssales/statssales.php:98</note>
+      </trans-unit>
+      <trans-unit id="9ccb8353e945f1389a9585e7f21b5a0d">
+        <source>Orders placed:</source>
+        <target>Orders placed:</target>
+        <note>Context:
+File: modules/statssales/statssales.php:127</note>
+      </trans-unit>
+      <trans-unit id="998e4c5c80f27dec552e99dfed34889a">
+        <source>CSV Export</source>
+        <target>CSV Export</target>
+        <note>Context:
+File: modules/statssales/statssales.php:169</note>
+      </trans-unit>
+      <trans-unit id="ec3e48bb9aa902ba2ad608547fdcbfdc">
+        <source>Sales:</source>
+        <target>Sales:</target>
+        <note>Context:
+File: modules/statssales/statssales.php:147</note>
+      </trans-unit>
+      <trans-unit id="f6825178a5fef0a97dacf963409829f0">
+        <source>You can view the distribution of order statuses below.</source>
+        <target>You can view the distribution of order statuses below.</target>
+        <note>Context:
+File: modules/statssales/statssales.php:157</note>
+      </trans-unit>
+      <trans-unit id="da80af4de99df74dd59e665adf1fac8f">
+        <source>No orders for this period.</source>
+        <target>No orders for this period.</target>
+        <note>Context:
+File: modules/statssales/statssales.php:165</note>
+      </trans-unit>
+      <trans-unit id="c58114720bcd52bfe96fd801cee77e93">
+        <source>Orders placed</source>
+        <target>Orders placed</target>
+        <note>Context:
+File: modules/statssales/statssales.php:207</note>
+      </trans-unit>
+      <trans-unit id="c8be451a5698956a0e78b5c2caab4821">
+        <source>Products bought</source>
+        <target>Products bought</target>
+        <note>Context:
+File: modules/statssales/statssales.php:208</note>
+      </trans-unit>
+      <trans-unit id="b52b44c9d23e141b067d7e83b44bb556">
+        <source>Products:</source>
+        <target>Products:</target>
+        <note>Context:
+File: modules/statssales/statssales.php:209</note>
+      </trans-unit>
+      <trans-unit id="497a2a4cf0a780ff5b60a7a6e43ea533">
+        <source>Sales currency: %s</source>
+        <target>Sales currency: %s</target>
+        <note>Context:
+File: modules/statssales/statssales.php:213</note>
+      </trans-unit>
+      <trans-unit id="17833fb3783b26e0a9bc8b21ee85302a">
+        <source>Percentage of orders per status.</source>
+        <target>Percentage of orders per status.</target>
+        <note>Context:
+File: modules/statssales/statssales.php:216</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

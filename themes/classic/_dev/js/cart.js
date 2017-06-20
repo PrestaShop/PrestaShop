@@ -34,6 +34,10 @@ $(document).ready(() => {
     $('.quickview').modal('hide');
   });
 
+  prestashop.on('updatedCart', () => {
+    createSpin();
+  });
+
   createSpin();
 
   let $body = $('body');
@@ -120,6 +124,7 @@ $(document).ready(() => {
     event.preventDefault();
 
     let $target = $(event.currentTarget);
+    let dataset = event.currentTarget.dataset;
 
     let cartAction = parseCartAction($target, event.namespace);
     let requestData = {
@@ -146,7 +151,7 @@ $(document).ready(() => {
 
       // Refresh cart preview
       prestashop.emit('updateCart', {
-        reason: $target.dataset
+        reason: dataset
       });
     }).fail((resp) => {
       prestashop.emit('handleError', {
@@ -163,8 +168,8 @@ $(document).ready(() => {
     handleCartAction
   );
 
-  $(spinnerSelector).on('touchspin.on.startdownspin', handleCartAction);
-  $(spinnerSelector).on('touchspin.on.startupspin', handleCartAction);
+  $body.on('touchspin.on.startdownspin', spinnerSelector, handleCartAction);
+  $body.on('touchspin.on.startupspin', spinnerSelector, handleCartAction);
 
   function sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target) {
     abortPreviousRequests();

@@ -101,6 +101,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+            - "@router"
         tags:
             - { name: form.type }
 
@@ -157,6 +158,7 @@ services:
         class: PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType
         arguments:
             - "@prestashop.adapter.data_provider.product"
+            - "@prestashop.adapter.data_provider.category"
         tags:
             - { name: form.type }
 
@@ -190,7 +192,7 @@ services:
         class: PrestaShopBundle\Form\Admin\Type\TextEmptyType
         tags:
             - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
-    
+
     form.type.extension.money:
         class: PrestaShopBundle\Form\Admin\Type\CustomMoneyType
         tags:

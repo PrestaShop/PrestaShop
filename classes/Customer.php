@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -186,7 +186,7 @@ class CustomerCore extends ObjectModel
             'optin' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'website' => array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
             'company' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'siret' => array('type' => self::TYPE_STRING, 'validate' => 'isSiret'),
+            'siret' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'ape' => array('type' => self::TYPE_STRING, 'validate' => 'isApe'),
             'outstanding_allow_amount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'copy_post' => false),
             'show_public_prices' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
@@ -293,7 +293,14 @@ class CustomerCore extends ObjectModel
             }
         }
 
-        return parent::update(true);
+        try {
+            return parent::update(true);
+        } catch (\PrestaShopException $exception) {
+            $message = $exception->getMessage();
+            error_log($message);
+
+            return false;
+        }
     }
 
     /**
@@ -426,7 +433,7 @@ class CustomerCore extends ObjectModel
                 $this->{$key} = $value;
             }
         }
-        
+
         if ($shouldCheckPassword && !$crypto->isFirstHash($plaintextPassword, $passwordHash)) {
             $this->passwd = $crypto->hash($plaintextPassword);
             $this->update();
@@ -493,10 +500,6 @@ class CustomerCore extends ObjectModel
     public static function customerExists($email, $returnId = false, $ignoreGuest = true)
     {
         if (!Validate::isEmail($email)) {
-            if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-                die(Tools::displayError('Invalid email'));
-            }
-
             return false;
         }
 
@@ -761,16 +764,27 @@ class CustomerCore extends ObjectModel
      */
     public static function searchByName($query, $limit = null)
     {
-        $sqlBase = 'SELECT *
-                FROM `'._DB_PREFIX_.'customer`';
-        $sql = '('.$sqlBase.' WHERE `email` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sqlBase.' WHERE `id_customer` = '.(int) $query.' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sqlBase.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-        $sql .= ' UNION ('.$sqlBase.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
-
+        $sql = 'SELECT *
+                FROM `'._DB_PREFIX_.'customer`
+                WHERE 1';
+        $search_items = explode(' ', $query);
+        $research_fields = array('id_customer', 'firstname', 'lastname', 'email');
         if (Configuration::get('PS_B2B_ENABLE')) {
-            $sql .= ' UNION ('.$sqlBase.' WHERE `company` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+            $research_fields[] = 'company';
         }
+
+        $items = array();
+        foreach ($research_fields as $field) {
+            foreach ($search_items as $item) {
+                $items[$item][] = $field.' LIKE \'%'.pSQL($item).'%\' ';
+            }
+        }
+
+        foreach ($items as $likes) {
+            $sql .= ' AND ('.implode(' OR ', $likes).') ';
+        }
+
+        $sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
 
         if ($limit) {
             $sql .= ' LIMIT 0, '.(int) $limit;

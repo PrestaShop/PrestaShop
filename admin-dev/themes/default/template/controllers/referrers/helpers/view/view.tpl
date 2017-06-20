@@ -1,12 +1,12 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,8 +18,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -67,7 +67,7 @@
 				}
 			)
 		}
-	
+
 		function fillProducts(filter)
 		{
 			var form = document.layers ? document.forms.product_referrers : document.product_referrers;
@@ -82,7 +82,7 @@
 					filter:filter
 				},
 				function(j) {
-	
+
 					form.selectProduct.length = j.length + 1;
 					for (var i = 0; i < j.length; i++)
 					{
@@ -96,7 +96,7 @@
 
 	<div class="panel">
 		<h3>
-			<i class="icon-bar-chart"></i> {l s='Statistics'}
+			<i class="icon-bar-chart"></i> {l s='Statistics' d='Admin.Shopparameters.Feature'}
 		</h3>
 		<h2>{$referrer->name}</h2>
 		<table class="table">
@@ -109,10 +109,10 @@
 		</table>
 		<form id="product_referrers" name="product_referrers" class="form-horizontal">
 			<div class="form-group">
-				<label class="control-label col-lg-3">{l s='Filter by product:'}</label>
+				<label class="control-label col-lg-3">{l s='Filter by product:' d='Admin.Shopparameters.Feature'}</label>
 				<div class="col-lg-9">
 					<select id="selectProduct" class="fixed-width-xl" name="selectProduct" onfocus="fillProducts();" onchange="updateConversionRate(this.value);">
-						<option value="0" selected="selected">- {l s='All'} -</option>
+						<option value="0" selected="selected">- {l s='All' d='Admin.Global'} -</option>
 					</select>
 				</div>
 			</div>

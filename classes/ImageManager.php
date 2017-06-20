@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -85,12 +85,24 @@ class ImageManagerCore
                 ImageManager::resize($image, _PS_TMP_IMG_DIR_.$cacheImage, $ratioX, $size, $imageType);
             }
         }
-        // Relative link will always work, whatever the base uri set in the admin
+
+        return '<img src="'.self::getThumbnailPath($cacheImage, $disableCache).'" alt="" class="imgm img-thumbnail" />';
+    }
+
+    /**
+     * @param $cacheImage
+     * @param $disableCache
+     * @return string
+     */
+    public static function getThumbnailPath($cacheImage, $disableCache)
+    {
+        $cacheParam = $disableCache ? '?time='.time() : '';
+
         if (Context::getContext()->controller->controller_type == 'admin') {
-            return '<img src="../img/tmp/'.$cacheImage.($disableCache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
-        } else {
-            return '<img src="'._PS_TMP_IMG_.$cacheImage.($disableCache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
+            return '../img/tmp/'.$cacheImage.$cacheParam;
         }
+
+        return _PS_TMP_IMG_.$cacheImage.$cacheParam;
     }
 
     /**
@@ -430,13 +442,13 @@ class ImageManagerCore
     public static function validateUpload($file, $maxFileSize = 0, $types = null)
     {
         if ((int) $maxFileSize > 0 && $file['size'] > (int) $maxFileSize) {
-            return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $maxFileSize / 1024);
+            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1024, $maxFileSize / 1024), 'Admin.Notifications.Error');
         }
         if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
-            return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', array(), 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', array($file['error']), 'Admin.Notifications.Error');
         }
 
         return false;
@@ -453,17 +465,13 @@ class ImageManagerCore
     public static function validateIconUpload($file, $maxFileSize = 0)
     {
         if ((int) $maxFileSize > 0 && $file['size'] > $maxFileSize) {
-            return sprintf(
-                Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'),
-                $file['size'] / 1000,
-                $maxFileSize / 1000
-            );
+            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1000, $maxFileSize / 1000), 'Admin.Notifications.Error');
         }
         if (substr($file['name'], -4) != '.ico') {
-            return Tools::displayError('Image format not recognized, allowed formats are: .ico');
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .ico', array(), 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return Tools::displayError('Error while uploading image; please change your server\'s settings.');
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings.', array(), 'Admin.Notifications.Error');
         }
 
         return false;

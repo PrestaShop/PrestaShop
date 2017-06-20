@@ -1,14 +1,14 @@
 <?php
 
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,12 +20,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Twig;
 
+use PrestaShop\PrestaShop\Adapter\ClassLang;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -47,12 +50,21 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
      */
     private $environment;
 
+
     /**
-     * @param RequestStack $requestStack
+     * @var \Symfony\Component\DependencyInjection\Container
      */
-    public function __construct(RequestStack $requestStack = null)
+    private $container;
+
+    /**
+     * AdminExtension constructor.
+     * @param RequestStack|null $requestStack
+     * @param ContainerInterface $container
+     */
+    public function __construct(RequestStack $requestStack = null, ContainerInterface $container)
     {
         $this->requestStack = $requestStack;
+        $this->container = $container;
     }
 
     /**
@@ -76,16 +88,35 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
             $controllerNameIndex = count($explodedControllerName) - 1;
             $controllerName = $explodedControllerName[$controllerNameIndex];
 
+            $moduleManager = $this->container->get('prestashop.module.manager');
+
             if (isset($tabConfiguration[$controllerName])) {
                 // Construct tabs and inject into twig tpl
                 $tabDataContent = array();
                 // Get current route name to know when to put "current" class on HTML dom
                 $currentRouteName = $parameterBag->get('_route');
 
+                $translator = $this->container->get('translator');
+                $locale = $translator->getLocale();
+
+                $tabMenu = (new ClassLang($locale))->getClassLang('TabLangCore');
+
                 foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
+                    if (!empty($tabMenu)) {
+                        $untranslated = $translator->getSourceString($tabData['title'], $tabMenu->getDomain());
+                        $translatedField = $tabMenu->getFieldValue('name', $untranslated);
+                        if (!empty($translatedField) && $translatedField != $tabData['title']) {
+                            $tabData['title'] = $translatedField;
+                        }
+                    }
+
                     $tabData['isCurrent'] = false;
                     if ($currentRouteName === $tabData['route']) {
                         $tabData['isCurrent'] = true;
+                    }
+
+                    if ($tabName === 'module_tab_notifications') {
+                        $tabData['notificationsCounter'] = $moduleManager->countModulesWithNotifications();
                     }
 
                     $tabDataContent[] = $this->environment->render(

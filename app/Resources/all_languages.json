@@ -548,6 +548,15 @@
     "language_code": "zh-tw",
     "locale": "zh-TW"
   },
+  "ud": {
+    "name": "English (upside down)",
+    "iso_code": "ud",
+    "date_format_lite": "m/d/Y",
+    "date_format_full": "m/d/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "en-ud",
+    "locale": "en-UD"
+  },
   "ug": {
     "name": "ئۇيغۇر (Uyghur)",
     "iso_code": "ug",

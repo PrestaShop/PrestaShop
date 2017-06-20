@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_dataprivacy/ps_dataprivacy.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0118514e865ea573cdfb66091d29381b">
+        <source>Customer data privacy[1][2]%message%[/2]</source>
+        <target>Customer data privacy[1][2]%message%[/2]</target>
+        <note>Context:
+File: modules/ps_dataprivacy/ps_dataprivacy.php:109</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

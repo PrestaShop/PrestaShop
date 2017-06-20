@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 class CmsControllerCore extends FrontController
@@ -68,16 +68,16 @@ class CmsControllerCore extends FrontController
         if (Validate::isLoadedObject($this->cms)) {
             $adtoken = Tools::getAdminToken('AdminCmsContent'.(int) Tab::getIdFromClassName('AdminCmsContent').(int) Tools::getValue('id_employee'));
             if (!$this->cms->isAssociatedToShop() || !$this->cms->active && Tools::getValue('adtoken') != $adtoken) {
-              $this->redirect_after = '404';
-              $this->redirect();
+                $this->redirect_after = '404';
+                $this->redirect();
             } else {
                 $this->assignCase = 1;
             }
         } elseif (Validate::isLoadedObject($this->cms_category) && $this->cms_category->active) {
             $this->assignCase = 2;
         } else {
-          $this->redirect_after = '404';
-          $this->redirect();
+            $this->redirect_after = '404';
+            $this->redirect();
         }
     }
 
@@ -88,11 +88,25 @@ class CmsControllerCore extends FrontController
      */
     public function initContent()
     {
-        parent::initContent();
-
         if ($this->assignCase == 1) {
+            $cmsVar = $this->objectPresenter->present($this->cms);
+
+            $filteredCmsContent = Hook::exec(
+                'filterCmsContent',
+                array('object' => $cmsVar),
+                $id_module = null,
+                $array_return = false,
+                $check_exceptions = true,
+                $use_push = false,
+                $id_shop = null,
+                $chain = true
+            );
+            if (!empty($filteredCmsContent['object'])) {
+                $cmsVar = $filteredCmsContent['object'];
+            }
+
             $this->context->smarty->assign(array(
-                'cms' => $this->objectPresenter->present($this->cms),
+                'cms' => $cmsVar,
             ));
 
             if ($this->cms->indexation == 0) {
@@ -104,9 +118,26 @@ class CmsControllerCore extends FrontController
                 array('entity' => 'cms', 'id' => $this->cms->id)
             );
         } elseif ($this->assignCase == 2) {
-            $this->context->smarty->assign($this->getTemplateVarCategoryCms());
+            $cmsCategoryVar = $this->getTemplateVarCategoryCms();
+
+            $filteredCmsCategoryContent = Hook::exec(
+                'filterCmsCategoryContent',
+                array('object' => $cmsCategoryVar),
+                $id_module = null,
+                $array_return = false,
+                $check_exceptions = true,
+                $use_push = false,
+                $id_shop = null,
+                $chain = true
+            );
+            if (!empty($filteredCmsCategoryContent['object'])) {
+                $cmsCategoryVar = $filteredCmsCategoryContent['object'];
+            }
+
+            $this->context->smarty->assign($cmsCategoryVar);
             $this->setTemplate('cms/category');
         }
+        parent::initContent();
     }
 
     /**

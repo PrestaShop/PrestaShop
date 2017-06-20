@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/blockreassurance/lang/ReassuranceLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4191d7614fb4c4f3e05f0de1b72c1999">
+        <source>Security policy (edit with module Customer reassurance)</source>
+        <target>Security policy (edit with module Customer reassurance)</target>
+        <note>Context:
+File: modules/blockreassurance/lang/ReassuranceLang.php:41</note>
+      </trans-unit>
+      <trans-unit id="d1baa0f09b2ab8b277ae13a6ecd53210">
+        <source>Delivery policy (edit with module Customer reassurance)</source>
+        <target>Delivery policy (edit with module Customer reassurance)</target>
+        <note>Context:
+File: modules/blockreassurance/lang/ReassuranceLang.php:44</note>
+      </trans-unit>
+      <trans-unit id="d7e0a9edd201447c5422b6c0ff5d686e">
+        <source>Return policy (edit with module Customer reassurance)</source>
+        <target>Return policy (edit with module Customer reassurance)</target>
+        <note>Context:
+File: modules/blockreassurance/lang/ReassuranceLang.php:47</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

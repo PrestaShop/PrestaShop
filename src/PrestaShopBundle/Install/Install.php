@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,17 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 
 namespace PrestaShopBundle\Install;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOException;
-use RandomLib;
 use PrestaShop\PrestaShop\Adapter\Entity\FileLogger;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
@@ -47,15 +44,16 @@ use PrestaShop\PrestaShop\Adapter\Entity\Employee;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Search;
-use InstallSession;
-use Composer\Script\Event;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use InstallSession;
+use Language as LanguageLegacy;
 use PrestashopInstallerException;
-
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Yaml\Yaml;
+use PhpEncryption;
+use PrestaShopBundle\Service\Database\Upgrade;
 
 class Install extends AbstractInstall
 {
@@ -129,7 +127,7 @@ class Install extends AbstractInstall
             $database_host = implode(':', $splits);
         }
 
-        $key = \PhpEncryption::createNewRandomKey();
+        $key = PhpEncryption::createNewRandomKey();
 
         $parameters = array(
             'parameters' => array(
@@ -207,18 +205,14 @@ class Install extends AbstractInstall
 
     protected function clearCache()
     {
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh('prod');
-        $sf2Refresh->addCacheClear();
-        $output = $sf2Refresh->execute();
+        $output = Tools::clearSf2Cache('prod');
 
         if (0 !== $output['cache:clear']['exitCode']) {
             $this->setError(explode("\n", $output['cache:clear']['output']));
             return false;
         }
 
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-        $sf2Refresh->addCacheClear();
-        $output = $sf2Refresh->execute();
+        $output = Tools::clearSf2Cache();
 
         if (0 !== $output['cache:clear']['exitCode']) {
             $this->setError(explode("\n", $output['cache:clear']['output']));
@@ -277,12 +271,12 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-        $sf2Refresh->addDoctrineSchemaUpdate();
-        $output = $sf2Refresh->execute();
+        $schemaUpgrade = new Upgrade();
+        $schemaUpgrade->addDoctrineSchemaUpdate();
+        $output = $schemaUpgrade->execute();
 
-        if (0 !== $output['doctrine:schema:update']['exitCode']) {
-            $this->setError(explode("\n", $output['doctrine:schema:update']['output']));
+        if (0 !== $output['prestashop:schema:update-without-foreign']['exitCode']) {
+            $this->setError(explode("\n", $output['prestashop:schema:update-without-foreign']['output']));
             return false;
         }
 
@@ -371,6 +365,7 @@ class Install extends AbstractInstall
 
         // Install XML data (data/xml/ folder)
         $xml_loader = new XmlLoader();
+        $xml_loader->setTranslator($this->translator);
         $xml_loader->setLanguages($languages);
 
         if (isset($this->xml_loader_ids) && $this->xml_loader_ids) {
@@ -519,7 +514,7 @@ class Install extends AbstractInstall
             // Copy language flag
             if (is_writable(_PS_IMG_DIR_.'l/')) {
                 if (!copy(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg', _PS_IMG_DIR_.'l/'.$id_lang.'.jpg')) {
-                    throw new PrestashopInstallerException($this->translator->trans('Cannot copy flag language "%flag%"', array('%flag%' => _PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg => '._PS_IMG_DIR_.'l/'.$id_lang.'.jpg')));
+                    throw new PrestashopInstallerException($this->translator->trans('Cannot copy flag language "%flag%"', array('%flag%' => _PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg => '._PS_IMG_DIR_.'l/'.$id_lang.'.jpg'), 'Install'));
                 }
             }
         }
@@ -535,12 +530,12 @@ class Install extends AbstractInstall
         }
 
         $list = array(
-            'products' =>        _PS_PROD_IMG_DIR_,
-            'categories' =>        _PS_CAT_IMG_DIR_,
-            'manufacturers' =>    _PS_MANU_IMG_DIR_,
-            'suppliers' =>        _PS_SUPP_IMG_DIR_,
-            'stores' =>            _PS_STORE_IMG_DIR_,
-            null =>                _PS_IMG_DIR_.'l/', // Little trick to copy images in img/l/ path with all types
+            'products' => _PS_PROD_IMG_DIR_,
+            'categories' => _PS_CAT_IMG_DIR_,
+            'manufacturers' => _PS_MANU_IMG_DIR_,
+            'suppliers' => _PS_SUPP_IMG_DIR_,
+            'stores' => _PS_STORE_IMG_DIR_,
+            null => _PS_IMG_DIR_.'l/', // Little trick to copy images in img/l/ path with all types
         );
 
         foreach ($list as $cat => $dst_path) {
@@ -612,21 +607,21 @@ class Install extends AbstractInstall
         $id_country = (int)Country::getByIso($data['shop_country']);
 
         // Set default configuration
-        Configuration::updateGlobalValue('PS_SHOP_DOMAIN',                Tools::getHttpHost());
-        Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL',            Tools::getHttpHost());
-        Configuration::updateGlobalValue('PS_INSTALL_VERSION',            _PS_INSTALL_VERSION_);
-        Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE',            $this->language->getLanguageIso());
-        Configuration::updateGlobalValue('PS_SHOP_NAME',                $data['shop_name']);
-        Configuration::updateGlobalValue('PS_SHOP_ACTIVITY',                $data['shop_activity']);
-        Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT',            $id_country);
-        Configuration::updateGlobalValue('PS_LOCALE_COUNTRY',            $data['shop_country']);
-        Configuration::updateGlobalValue('PS_TIMEZONE',                $data['shop_timezone']);
-        Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT',        (int)$data['configuration_agrement']);
+        Configuration::updateGlobalValue('PS_SHOP_DOMAIN', Tools::getHttpHost());
+        Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL', Tools::getHttpHost());
+        Configuration::updateGlobalValue('PS_INSTALL_VERSION', _PS_INSTALL_VERSION_);
+        Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE', $this->language->getLanguageIso());
+        Configuration::updateGlobalValue('PS_SHOP_NAME', $data['shop_name']);
+        Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', $data['shop_activity']);
+        Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT', $id_country);
+        Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', $data['shop_country']);
+        Configuration::updateGlobalValue('PS_TIMEZONE', $data['shop_timezone']);
+        Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT', (int)$data['configuration_agrement']);
 
         // Set mails configuration
-        Configuration::updateGlobalValue('PS_MAIL_METHOD',            ($data['use_smtp']) ? 2 : 1);
-        Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION',    $data['smtp_encryption']);
-        Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT',        $data['smtp_port']);
+        Configuration::updateGlobalValue('PS_MAIL_METHOD', ($data['use_smtp']) ? 2 : 1);
+        Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', $data['smtp_encryption']);
+        Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', $data['smtp_port']);
 
         // Set default rewriting settings
         Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', $data['rewrite_engine']);
@@ -727,6 +722,8 @@ class Install extends AbstractInstall
         if (!@Tools::generateHtaccess(null, $data['rewrite_engine'])) {
             Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', 0);
         }
+
+        Tools::generateRobotsFile();
 
         return true;
     }
@@ -957,6 +954,7 @@ class Install extends AbstractInstall
             }
         } else {
             $xml_loader = new XmlLoader();
+            $xml_loader->setTranslator($this->translator);
         }
 
         // Install XML data (data/xml/ folder)
@@ -988,8 +986,12 @@ class Install extends AbstractInstall
         $this->xml_loader_ids = $xml_loader->getIds();
         unset($xml_loader);
 
-        // Index products in search tables
         Search::indexation(true);
+
+        // Update fixtures lang
+        foreach ($languages as $lang) {
+            LanguageLegacy::updateMultilangTable($lang);
+        }
 
         return true;
     }

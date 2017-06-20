@@ -28,7 +28,7 @@ File: controllers/front/AddressController.php:64</note>
         <source>No addresses are available. %s</source>
         <target>No addresses are available. %s</target>
         <note>Context:
-File: controllers/front/AddressesController.php:57</note>
+File: controllers/front/AddressesController.php:55</note>
       </trans-unit>
     </body>
   </file>
@@ -48,7 +48,7 @@ File: controllers/front/GuestTrackingController.php:102</note>
         <source>Information successfully updated.</source>
         <target>Information successfully updated.</target>
         <note>Context:
-File: controllers/front/IdentityController.php:55</note>
+File: controllers/front/IdentityController.php:54</note>
       </trans-unit>
     </body>
   </file>
@@ -58,7 +58,7 @@ File: controllers/front/IdentityController.php:55</note>
         <source>Message successfully sent</source>
         <target>Message successfully sent</target>
         <note>Context:
-File: controllers/front/OrderDetailController.php:182</note>
+File: controllers/front/OrderDetailController.php:187</note>
       </trans-unit>
     </body>
   </file>
@@ -68,7 +68,7 @@ File: controllers/front/OrderDetailController.php:182</note>
         <source>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</source>
         <target>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</target>
         <note>Context:
-File: controllers/front/PasswordController.php:93</note>
+File: controllers/front/PasswordController.php:100</note>
       </trans-unit>
       <trans-unit id="19b1f74d6e96f3db9805e8d5c9301b7a">
         <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>

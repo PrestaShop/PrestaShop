@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -719,17 +719,21 @@ class LinkCore
                         return $sfRouter->generate('admin_product_catalog_filters', $routeParams);
                     }
 
-                    return $sfRouter->generate('admin_product_catalog');
+                    return $sfRouter->generate('admin_product_catalog', $sfRouteParams);
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
                 break;
+
             case 'AdminModulesSf':
-                if (array_key_exists('route', $sfRouteParams)) {
-                    return $sfRouter->generate($sfRouteParams['route'], array(), UrlGeneratorInterface::ABSOLUTE_URL);
-                }
-                // New architecture modification: temporary behavior to switch between old and new controllers.
-                return $sfRouter->generate('admin_module_catalog', array(), UrlGeneratorInterface::ABSOLUTE_URL);
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_module_catalog';
+
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            case 'AdminStockManagement':
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_stock_overview';
+
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;
@@ -762,7 +766,10 @@ class LinkCore
         }
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
-        if ($watermarkLogged && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
+        if (!empty($type) && $watermarkLogged &&
+            ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) &&
+            isset(Context::getContext()->customer->id)
+        ) {
             $type .= '-'.$watermarkHash;
         }
 
@@ -807,7 +814,7 @@ class LinkCore
             $uriPath = _THEME_SUP_DIR_.$idSupplier.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
         } elseif (!empty($type) && file_exists(_PS_SUPP_IMG_DIR_.$idSupplier.'.jpg')) { // !empty($type) because if is empty, is already tested
             $uriPath = _THEME_SUP_DIR_.$idSupplier.'.jpg';
-        } elseif (file_exists(_PS_SUPP_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+        } elseif (file_exists(_PS_SUPP_IMG_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
             $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
         } else {
             $uriPath = _THEME_SUP_DIR_.Context::getContext()->language->iso_code.'.jpg';
@@ -832,10 +839,35 @@ class LinkCore
             $uriPath = _THEME_MANU_DIR_.$idManufacturer.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
         } elseif (!empty($type) && file_exists(_PS_MANU_IMG_DIR_.$idManufacturer.'.jpg')) { // !empty($type) because if is empty, is already tested
             $uriPath = _THEME_MANU_DIR_.$idManufacturer.'.jpg';
-        } elseif (file_exists(_PS_MANU_IMG_DIR_.'fr'.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
+        } elseif (file_exists(_PS_MANU_IMG_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg'))) {
             $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : '-default-'.$type.'.jpg');
         } else {
             $uriPath = _THEME_MANU_DIR_.Context::getContext()->language->iso_code.'.jpg';
+        }
+
+        return $this->protocol_content.Tools::getMediaServer($uriPath).$uriPath;
+    }
+
+    /**
+     * Returns a link to a store image for display
+     *
+     * @param $idStore
+     * @param null $type    image type (small_default, medium_default, large_default, etc.)
+     *
+     * @return string
+     */
+    public function getStoreImageLink($name, $idStore, $type = null)
+    {
+        $idStore = (int)$idStore;
+
+        if (file_exists(_PS_STORE_IMG_DIR_.$idStore.(empty($type) ? '.jpg' : '-'.$type.'.jpg'))) {
+            $uriPath = _THEME_STORE_DIR_.$idStore.(empty($type) ? '.jpg' : '-'.$type.'.jpg');
+        } elseif (!empty($type) && file_exists(_PS_STORE_IMG_DIR_.$idStore.'.jpg')) { // !empty($type) because if is empty, is already tested
+            $uriPath = _THEME_STORE_DIR_.$idStore.'.jpg';
+        } elseif (file_exists(_PS_STORE_IMG_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : $type.'.jpg'))) {
+            $uriPath = _THEME_STORE_DIR_.Context::getContext()->language->iso_code.(empty($type) ? '.jpg' : $type.'.jpg');
+        } else {
+            $uriPath = _THEME_STORE_DIR_.Context::getContext()->language->iso_code.'.jpg';
         }
 
         return $this->protocol_content.Tools::getMediaServer($uriPath).$uriPath;
@@ -1149,11 +1181,15 @@ class LinkCore
 
         $patterns = array(
             '#'.Context::getContext()->link->getBaseLink().'#',
-            '#'.__PS_BASE_URI__.'#',
             '#'.basename(_PS_ADMIN_DIR_).'#',
             '/index.php/',
             '/_?token=[a-zA-Z0-9\_]+/'
         );
+
+        // If __PS_BASE_URI__ = '/', it destroys urls when is 'product/new' or 'modules/manage' (vhost for example)
+        if ('/' !== __PS_BASE_URI__) {
+            $patterns[] = '#'.__PS_BASE_URI__.'#';
+        }
 
         $url = preg_replace($patterns, '', $url);
         $url = trim($url, "?&/");
@@ -1197,7 +1233,7 @@ class LinkCore
             'id_shop' => null,
             'alias' => null,
             'ssl' => null,
-            'relative_protocol' => false,
+            'relative_protocol' => true,
         );
         $params = array_merge($default, $params);
 
@@ -1206,6 +1242,19 @@ class LinkCore
         switch ($params['entity']) {
             case 'language':
                 $link = $context->link->getLanguageLink($params['id']);
+                break;
+            case 'product':
+                $link = $context->link->getProductLink(
+                    $params['id'],
+                    $params['alias'],
+                    (isset($params['category']) ? $params['category'] : null),
+                    (isset($params['ean13']) ? $params['ean13'] : null),
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    (isset($params['ipa']) ? (int)$params['ipa'] : 0),
+                    false,
+                    $params['relative_protocol']
+                );
                 break;
             case 'category':
                 $params = array_merge(array('selected_filters' => null), $params);

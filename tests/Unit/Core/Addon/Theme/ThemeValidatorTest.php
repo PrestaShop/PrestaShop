@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,14 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Tests\Core\Addon;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
+use PrestaShop\PrestaShop\Tests\TestCase\FakeConfiguration;
 use Symfony\Component\Yaml\Parser;
 use Phake;
 
@@ -41,7 +42,11 @@ class ThemeValidatorTest extends \PHPUnit_Framework_TestCase
         $translator = Phake::mock('Symfony\Component\Translation\TranslatorInterface');
 
         /* @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator */
-        $this->validator = new ThemeValidator($translator);
+        $this->validator = new ThemeValidator($translator, new FakeConfiguration(
+            array(
+                '_PS_ALL_THEMES_DIR_' => '/themes/',
+            )
+        ));
     }
 
     protected function tearDown()
@@ -79,7 +84,7 @@ class ThemeValidatorTest extends \PHPUnit_Framework_TestCase
 
         $config = (new Parser())->parse(file_get_contents($themeConfigFile));
         $config['directory'] = $themeDir;
-        $config['physical_uri'] = '/prestashop.unit.test';
+        $config['physical_uri'] = '/';
 
         $theme = new Theme($config);
 

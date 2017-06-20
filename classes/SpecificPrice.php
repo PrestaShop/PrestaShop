@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -93,12 +93,22 @@ class SpecificPriceCore extends ObjectModel
     protected static $_cache_priorities = array();
     protected static $_no_specific_values = array();
 
+    /**
+     * Flush local cache
+     */
+    protected function flushCache() {
+        SpecificPrice::$_specificPriceCache = array();
+        SpecificPrice::$_filterOutCache = array();
+        SpecificPrice::$_cache_priorities = array();
+        SpecificPrice::$_no_specific_values = array();
+        Product::flushPriceCache();
+    }
+
     public function add($autodate = true, $nullValues = false)
     {
         if (parent::add($autodate, $nullValues)) {
             // Flush cache when we adding a new specific price
-            SpecificPrice::$_specificPriceCache = array();
-            Product::flushPriceCache();
+            $this->flushCache();
             // Set cache of feature detachable to true
             Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', '1');
             return true;
@@ -110,8 +120,7 @@ class SpecificPriceCore extends ObjectModel
     {
         if (parent::update($null_values)) {
             // Flush cache when we updating a new specific price
-            SpecificPrice::$_specificPriceCache = array();
-            Product::flushPriceCache();
+            $this->flushCache();
             return true;
         }
         return false;
@@ -121,8 +130,7 @@ class SpecificPriceCore extends ObjectModel
     {
         if (parent::delete()) {
             // Flush cache when we deletind a new specific price
-            SpecificPrice::$_specificPriceCache = array();
-            Product::flushPriceCache();
+            $this->flushCache();
             // Refresh cache of feature detachable
             Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', SpecificPrice::isCurrentlyUsed($this->def['table']));
             return true;
@@ -238,7 +246,8 @@ class SpecificPriceCore extends ObjectModel
             $specific_list = SpecificPrice::$_filterOutCache[$key_cache];
         }
 
-        if (in_array($field_value, $specific_list)) {
+        // $specific_list is empty if the threshold is reached
+        if (empty($specific_list) || in_array($field_value, $specific_list)) {
             $query_extra = 'AND `'.$name.'` '.self::formatIntInQuery(0, $field_value).' ';
         }
 
@@ -357,7 +366,7 @@ class SpecificPriceCore extends ObjectModel
 				AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
 
             $query .= ($psQtyDiscountOnCombination || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);
-            $query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
+            $query .= ' ORDER BY `id_product_attribute` DESC, `id_cart` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
 
             SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
         }

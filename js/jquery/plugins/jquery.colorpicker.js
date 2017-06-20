@@ -78,7 +78,7 @@
   };
 
   $.fn.mColorPicker.defaults = {
-    imageFolder: baseDir + 'img/admin/',
+    imageFolder: '../../../img/admin/',
     swatches: [
       "#ffffff",
       "#ffff00",

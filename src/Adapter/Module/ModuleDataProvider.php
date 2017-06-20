@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,18 +19,22 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Doctrine\ORM\EntityManager;
+use PhpParser;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Translation\TranslatorInterface;
+use Tools;
+use Db;
+use Validate;
+use Module;
 
 class ModuleDataProvider
 {
@@ -52,11 +56,22 @@ class ModuleDataProvider
      */
     private $entityManager;
 
+    /**
+     * @var integer
+     */
+    private $employeeID;
+
     public function __construct(LoggerInterface $logger, TranslatorInterface $translator, EntityManager $entityManager = null)
     {
         $this->logger = $logger;
         $this->translator = $translator;
         $this->entityManager = $entityManager;
+        $this->employeeID = 0;
+    }
+
+    public function setEmployeeId($employeeID)
+    {
+        $this->employeeID = (int)$employeeID;
     }
 
     /**
@@ -66,24 +81,21 @@ class ModuleDataProvider
      */
     public function findByName($name)
     {
-        $result = \Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
+        $result = Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
         if ($result) {
             $result['installed'] = 1;
             $result['active'] = $this->isEnabled($name);
             $result['active_on_mobile'] = (bool)($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
             $lastAccessDate = '0000-00-00 00:00:00';
 
-            if (!is_null($this->entityManager)) {
+            if (!Tools::isPHPCLI() && !is_null($this->entityManager) && $this->employeeID) {
                 $moduleID = (int)$result['id'];
-                $legacyContext = new LegacyContext();
-                $legacyContext = $legacyContext->getContext();
-                $employeeID = (int)$legacyContext->employee->id;
 
                 $qb = $this->entityManager->createQueryBuilder();
                 $qb->select('mh')
                     ->from('PrestaShopBundle:ModuleHistory', 'mh', 'mh.idModule')
                     ->where('mh.idEmployee = ?1')
-                    ->setParameter(1, $employeeID);
+                    ->setParameter(1, $this->employeeID);
                 $query = $qb->getQuery();
                 $query->useResultCache(true);
                 $modulesHistory = $query->getResult();
@@ -108,7 +120,7 @@ class ModuleDataProvider
      */
     public function getModuleName($module)
     {
-        return \Module::getModuleName($module);
+        return Module::getModuleName($module);
     }
 
     /**
@@ -119,8 +131,8 @@ class ModuleDataProvider
      */
     public function can($action, $name)
     {
-        return \Module::getPermissionStatic(
-            \Module::getModuleIdByName($name),
+        return Module::getPermissionStatic(
+            Module::getModuleIdByName($name),
             $action
         );
     }
@@ -135,7 +147,7 @@ class ModuleDataProvider
         $id_shops = (new Context())->getContextListShopID();
         // ToDo: Load list of all installed modules ?
 
-        $result = \Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
+        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
         FROM `'._DB_PREFIX_.'module` m
         LEFT JOIN `'._DB_PREFIX_.'module_shop` ms ON m.`id_module` = ms.`id_module`
         WHERE `name` = "'. pSQL($name) .'"
@@ -151,7 +163,7 @@ class ModuleDataProvider
     public function isInstalled($name)
     {
         // ToDo: Load list of all installed modules ?
-        return (bool)\Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
+        return (bool)Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
     }
 
 
@@ -163,7 +175,7 @@ class ModuleDataProvider
      */
     public function isModuleMainClassValid($name)
     {
-        if (!\Validate::isModuleName($name)) {
+        if (!Validate::isModuleName($name)) {
             return false;
         }
 
@@ -173,24 +185,10 @@ class ModuleDataProvider
             return false;
         }
 
-
-        $file = trim(file_get_contents($file_path));
-
-        if (substr($file, 0, 5) == '<?php') {
-            $file = substr($file, 5);
-        }
-
-        if (substr($file, -2) == '?>') {
-            $file = substr($file, 0, -2);
-        }
-
-        // We check any parse error before including the file.
-        // If (false) is a trick to not load the class with "eval".
-        // This way require_once will works correctly
-        // But namespace and use statements need to be removed
-        $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
-        $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
-        if (eval('if (false){	'.$content.' }') === false) {
+        $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7);
+        try {
+            $parser->parse(file_get_contents($file_path));
+        } catch (PhpParser\Error $exception) {
             $this->logger->critical(
                 $this->translator->trans(
                     'Parse error detected in main class of module %module%!',
@@ -246,7 +244,7 @@ class ModuleDataProvider
         $id_shops = (new Context())->getContextListShopID();
         // ToDo: Load list of all installed modules ?
 
-        $result = \Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
+        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
             FROM `'._DB_PREFIX_.'module` m
             LEFT JOIN `'._DB_PREFIX_.'module_shop` ms ON m.`id_module` = ms.`id_module`
             WHERE `name` = "'. pSQL($name) .'"

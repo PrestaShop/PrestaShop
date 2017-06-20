@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
@@ -38,9 +38,13 @@ class CategoryControllerCore extends ProductListingFrontController
 
     protected $category;
 
-    public function canonicalRedirection($url = '')
+    public function canonicalRedirection($canonicalURL = '')
     {
-        // FIXME
+        if (Validate::isLoadedObject($this->category)) {
+            parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
+        } elseif ($canonicalURL) {
+            parent::canonicalRedirection($canonicalURL);
+        }
     }
 
     public function getCanonicalURL()
@@ -57,8 +61,6 @@ class CategoryControllerCore extends ProductListingFrontController
      */
     public function init()
     {
-        parent::init();
-
         $id_category = (int) Tools::getValue('id_category');
         $this->category = new Category(
             $id_category,
@@ -69,6 +71,8 @@ class CategoryControllerCore extends ProductListingFrontController
             Tools::redirect('index.php?controller=404');
         }
 
+        parent::init();
+
         if (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
@@ -78,8 +82,24 @@ class CategoryControllerCore extends ProductListingFrontController
             return;
         }
 
+        $categoryVar = $this->getTemplateVarCategory();
+
+        $filteredCategory= Hook::exec(
+            'filterCategoryContent',
+            array('object' => $categoryVar),
+            $id_module = null,
+            $array_return = false,
+            $check_exceptions = true,
+            $use_push = false,
+            $id_shop = null,
+            $chain = true
+        );
+        if (!empty($filteredCategory['object'])) {
+            $categoryVar = $filteredCategory['object'];
+        }
+
         $this->context->smarty->assign(array(
-            'category' => $this->getTemplateVarCategory(),
+            'category' => $categoryVar,
             'subcategories' => $this->getTemplateVarSubCategories(),
         ));
 

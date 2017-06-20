@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,13 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
@@ -84,7 +85,7 @@ class ModuleRepositoryTest extends UnitTestCase
             ->willReturn(true);
 
         $this->setupSfKernel();
-        $this->sfRouter = $this->sfKernel->getContainer()->get('router');
+        $this->logger = $this->sfKernel->getContainer()->get('logger');
 
         $this->apiClientS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient')
             ->disableOriginalConstructor()
@@ -101,15 +102,6 @@ class ModuleRepositoryTest extends UnitTestCase
             ->getmock()
         ;
 
-        $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
-            array('getCatalogModulesNames'),
-            array('en', $this->sfRouter, $this->addonsDataProviderS, $this->categoriesProviderS)
-        );
-
-        $this->adminModuleDataProviderStub
-            ->method('getCatalogModulesNames')
-            ->willReturn(array());
-
         $this->translatorStub = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
             ->getMock();
@@ -117,20 +109,32 @@ class ModuleRepositoryTest extends UnitTestCase
             ->method('trans')
             ->will($this->returnArgument(0));
 
+        $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
+            array('getCatalogModulesNames'),
+            array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS)
+        );
+
+        $this->adminModuleDataProviderStub
+            ->method('getCatalogModulesNames')
+            ->willReturn(array());
+
         $this->moduleRepositoryStub = $this->getMock(
             'PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository',
             array('readCacheFile', 'generateCacheFile'),
             array(
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
-                new ModuleDataUpdater(new AddonsDataProvider($this->apiClientS), new AdminModuleDataProvider(
-                    'en',
-                    $this->sfRouter,
+                new ModuleDataUpdater(
                     $this->addonsDataProviderS,
-                    $this->categoriesProviderS
-                )),
+                    new AdminModuleDataProvider(
+                        $this->translatorStub,
+                        $this->logger,
+                        $this->addonsDataProviderS,
+                        $this->categoriesProviderS
+                    )
+                ),
                 new FakeLogger(),
-                $this->translatorStub,
+                $this->translatorStub
             )
         );
 
@@ -345,7 +349,5 @@ class ModuleRepositoryTest extends UnitTestCase
         if ($this->http_host_not_found) {
             unset($_SERVER['HTTP_HOST']);
         }
-
-        $this->moduleRepositoryStub->clearCache();
     }
 }

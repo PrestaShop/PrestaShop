@@ -3,12 +3,105 @@
   z-index: 502;
   background: $gray-dark;
   width: $size-navbar-width;
-  padding-top: rem(10px) + $size-header-height;
+  padding-top: 0.625rem + $size-header-height;
   height: 100%;
-
+  @include media-breakpoint-down(sm) {
+    visibility: hidden;
+  }
   .material-icons {
-    font-size: rem(20px);
-    line-height: rem(28px);
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  &.mobile-nav {
+    margin-left: -100%;
+    width: 90%;
+    transition: all .5s ease-in;
+    &.expanded {
+      visibility: visible;
+      margin-left: 0;
+      overflow-y: scroll;
+    }
+    .onboarding-navbar {
+      display: none;
+    }
+    .panel-collapse {
+      padding-left: 0;
+      .link-leveltwo .link {
+        padding-left: 3.125rem;
+        background: $gray-dark-hover;
+      }
+    }
+    #header_logout::before {
+      font-family: 'Material Icons';
+      content: "\E8AC";
+    }
+    .employee_avatar {
+      span {
+        color: white;
+        display: block;
+        margin-bottom: 0.625rem;
+      }
+      img{
+        width: 3.75rem;
+        height: 3.75rem;
+      }
+    }
+    .shop-list {
+      text-align: center;
+      font-weight: bold;
+    }
+    .main-menu {
+      margin-top: 0.625rem;
+    }
+    .shop-list-title {
+      color: $brand-primary;
+      text-transform: uppercase;
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 0.9375rem;
+      &::after {
+        font-family: 'Material Icons';
+        content: "\E313";
+        font-size: 1.25rem;
+        line-height: 1.375rem;
+        margin-left: 0.625rem;
+        vertical-align: bottom;
+      }
+    }
+    .items-list {
+      padding-left: 0;
+      a:focus {
+          background-color: transparent;
+      }
+      li {
+        background-color: white;
+        border-bottom: $gray-light 1px solid;
+        &.group a{
+          padding: 0.9375rem 2.5rem;
+          font-weight: bold;
+        }
+        &.shop {
+          padding: 0.9375rem 0.9375rem 0.9375rem 2.5rem;
+          a {
+              display: inline-block;
+              width: auto;
+              &.link-shop {
+                  float: right;
+                  .material-icons {
+                      font-size: 1.25rem;
+                      color: $gray-medium;
+                  }
+              }
+          }
+        }
+      }
+      li:first-child a {
+        color: $brand-primary;
+        text-transform: uppercase;
+        font-size: 0.9375rem;
+        padding: 0.9375rem 1.25rem;
+      }
+    }
   }
 }
 
@@ -22,26 +115,38 @@
 }
 
 .link-levelone {
-  $padding-size: rem(20px);
+  $padding-size: 1.25rem;
   display: block;
   > .link {
     @include single-line-block($size-navbar-link-height);
-    font-size: rem(12px);
+    font-size: 0.75rem;
     display:block;
     color: $gray-dark-text;
     text-decoration: none;
-    padding: 0 rem(5px) 0 $padding-size;
+    padding: 0 0.3125rem 0 $padding-size;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    @include media-breakpoint-down(sm) {
+      font-size: 1rem;
+      height: 3.125rem;
+      border-bottom: 1px solid $gray-medium;
+      padding-top: 0.625rem;
+    }
   }
   &.-active {
-    border-right: rem(3px) solid $gray-dark-text-hover;
+    border-right: 0.1875rem solid $gray-dark-text-hover;
+    @include media-breakpoint-down(sm) {
+      border-right: none;
+    }
   }
   &.-active > .link,
   &.-hover > .link {
     background: $gray-dark-hover;
     color: $gray-dark-text-hover;
+    @include media-breakpoint-down(sm) {
+      background: $gray-dark;
+    }
   }
   > .link > .material-icons {
     display: none;
@@ -67,6 +172,9 @@
       position: inherit;
       display: block;
       padding-left: $padding-size;
+      @include media-breakpoint-down(sm) {
+        padding-left: 0;
+      }
     }
   }
 }
@@ -77,7 +185,10 @@
     border: none;
   }
   > .link {
-    padding: 0 20px;
+    padding: 0 1.25rem;
+    @include media-breakpoint-down(sm) {
+      padding-top: 0.625rem;
+    }
   }
   > .link:hover {
     color: $gray-dark-text-hover;
@@ -87,7 +198,7 @@
 .category-title {
   color: $gray-dark-title;
   font-weight: bold;
-  font-size: rem(12px);
+  font-size: 0.75rem;
   padding-left: 10px;
   padding-right: 10px;
   margin: 10px 0;
@@ -125,7 +236,7 @@
   }
 
   .menu-collapse {
-    @include transform(rotate(90deg));
+    transform: rotate(90deg);
   }
 
   .category-title > .title,
@@ -144,7 +255,7 @@
 
         > span {
           display: inline-block;
-          margin-left: rem(45px);
+          margin-left: 2.813rem;
           float: left;
         }
       }
@@ -167,7 +278,7 @@
     }
 
     > .link {
-      padding: 0 rem(5px);
+      padding: 0 0.3125rem;
       text-align: center;
 
       > .material-icons {
@@ -180,6 +291,25 @@
     > .link {
       padding: 0 20px;
       text-align: left;
+    }
+  }
+}
+
+.mobile-layer {
+  @include media-breakpoint-down(sm) {
+    transition: all 0.2s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    background: rgba(0,0,0,.7);
+    width: 100%;
+    height: 100%;
+    z-index: 501;
+    top: 0;
+    left: 0;
+    &.expanded {
+      opacity: 1;
+      visibility: visible;
     }
   }
 }

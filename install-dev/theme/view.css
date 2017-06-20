@@ -256,12 +256,11 @@ div.field {
 }
 
 .errorTxt {
-	background: url(img/pict_error.png) no-repeat scroll 15px center transparent;
-	color: #FF0000;
-	display: block;
-	float: left;
-	padding: 1px 0 1px 38px;
-	width: 150px;
+  background: url(img/pict_error.png) no-repeat scroll 194px 4px transparent;
+  color: #FF0000;
+  clear: both;
+  display: block;
+  padding: 3px 0 1px 217px;
 }
 
 .infosBlock {

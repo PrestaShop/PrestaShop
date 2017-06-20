@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
@@ -73,8 +73,6 @@ class SupplierControllerCore extends ProductListingFrontController
     public function initContent()
     {
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
-            parent::initContent();
-
             if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
                 $this->assignSupplier();
                 $this->label = $this->trans(
@@ -91,6 +89,7 @@ class SupplierControllerCore extends ProductListingFrontController
                 );
                 $this->setTemplate('catalog/suppliers', array('entity' => 'suppliers'));
             }
+            parent::initContent();
         } else {
             $this->redirect_after = '404';
             $this->redirect();
@@ -121,8 +120,24 @@ class SupplierControllerCore extends ProductListingFrontController
      */
     protected function assignSupplier()
     {
+        $supplierVar = $this->objectPresenter->present($this->supplier);
+
+        $filteredSupplier = Hook::exec(
+            'filterSupplierContent',
+            array('object' => $supplierVar),
+            $id_module = null,
+            $array_return = false,
+            $check_exceptions = true,
+            $use_push = false,
+            $id_shop = null,
+            $chain = true
+        );
+        if (!empty($filteredSupplier['object'])) {
+            $supplierVar = $filteredSupplier['object'];
+        }
+
         $this->context->smarty->assign(array(
-            'supplier' => $this->objectPresenter->present($this->supplier),
+            'supplier' => $supplierVar,
         ));
     }
 
@@ -131,8 +146,28 @@ class SupplierControllerCore extends ProductListingFrontController
      */
     protected function assignAll()
     {
+        $suppliersVar = $this->getTemplateVarSuppliers();
+
+        if (!empty($suppliersVar)) {
+            foreach ($suppliersVar as $k => $supplier) {
+                $filteredSupplier = Hook::exec(
+                    'filterSupplierContent',
+                    array('object' => $supplier),
+                    $id_module = null,
+                    $array_return = false,
+                    $check_exceptions = true,
+                    $use_push = false,
+                    $id_shop = null,
+                    $chain = true
+                );
+                if (!empty($filteredSupplier['object'])) {
+                    $suppliersVar[$k] = $filteredSupplier['object'];
+                }
+            }
+        }
+
         $this->context->smarty->assign(array(
-            'brands' => $this->getTemplateVarSuppliers(),
+            'brands' => $suppliersVar,
         ));
     }
 

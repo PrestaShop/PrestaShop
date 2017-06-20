@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,15 +19,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -42,6 +46,32 @@ class FrameworkBundleAdminController extends Controller
     public function __construct()
     {
         $this->configuration = new Configuration();
+    }
+
+    /**
+     * @Template
+     *
+     * @return array Template vars
+     */
+    public function overviewAction()
+    {
+        return array(
+            'is_shop_context' => (new Context())->isShopContext(),
+        );
+    }
+
+    public function hashUpdateJsAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
+
+        return new Response($contents);
+    }
+
+    public function hashUpdateJsonAction($hash)
+    {
+        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
+
+        return new Response($contents);
     }
 
     /**
@@ -145,9 +175,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getContext()
     {
-        $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
-
-        return $legacyContextProvider->getContext();
+        return $this->get('prestashop.adapter.legacy.context')->getContext();
     }
 
     /**
@@ -156,36 +184,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function langToLocale($lang)
     {
-        $legacyToStandardLocales = $this->getLangToLocalesMapping();
-
-        return $legacyToStandardLocales[$lang];
-    }
-
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    protected function getLangToLocalesMapping()
-    {
-        $translationsDirectory = $this->getResourcesDirectory();
-
-        $legacyToStandardLocalesJson = file_get_contents($translationsDirectory . '/legacy-to-standard-locales.json');
-        $legacyToStandardLocales = json_decode($legacyToStandardLocalesJson, true);
-
-        $jsonLastErrorCode = json_last_error();
-        if (JSON_ERROR_NONE !== $jsonLastErrorCode) {
-            throw new \Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
-        }
-
-        return $legacyToStandardLocales;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getResourcesDirectory()
-    {
-        return $this->container->getParameter('kernel.root_dir') . '/Resources';
+        return $this->get('prestashop.service.translation')->langToLocale($lang);
     }
 
     /**
@@ -193,9 +192,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function isDemoModeEnabled()
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
-
-        return $configuration->get('_PS_MODE_DEMO_');
+        return $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEMO_');
     }
 
     /**
@@ -203,10 +200,29 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getDemoModeErrorMessage()
     {
-        return $this->get('translator')->trans(
-            'This functionality has been disabled.',
-            array(),
-            'Admin.Notifications.Error'
-        );
+        return $this->get('translator')->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
+    }
+
+    /**
+     * Checks if the attributes are granted against the current authentication token and optionally supplied object.
+     *
+     * @param mixed $controller name of the controller to valide access
+     *
+     * @return int
+     */
+    protected function authorizationLevel($controller)
+    {
+        if (
+            $this->isGranted(PageVoter::DELETE, $controller.'_')) {
+            return PageVoter::LEVEL_DELETE;
+        } elseif ($this->isGranted(PageVoter::CREATE, $controller.'_')) {
+            return PageVoter::LEVEL_CREATE;
+        } elseif ($this->isGranted(PageVoter::UPDATE, $controller.'_')) {
+            return PageVoter::LEVEL_UPDATE;
+        } elseif ($this->isGranted(PageVoter::READ, $controller.'_')) {
+            return PageVoter::LEVEL_READ;
+        } else {
+            return 0;
+        }
     }
 }

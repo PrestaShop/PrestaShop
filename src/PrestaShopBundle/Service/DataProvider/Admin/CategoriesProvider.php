@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Service\DataProvider\Admin;
@@ -60,12 +60,12 @@ class CategoriesProvider
      */
     public function getCategoriesMenu(array $modules)
     {
-
         if (null === self::$categories) {
             // The Root category is "Categories"
             $categories['categories'] = $this->createMenuObject('categories', 'Categories');
 
             foreach ($this->getCategories() as $category) {
+                $categoryTab = isset($category->tab) ? $category->tab : null;
                 $categoryName = $category->name;
                 $moduleIds = array();
 
@@ -78,10 +78,14 @@ class CategoriesProvider
                     }
                 }
 
-                $categories['categories']->subMenu[$categoryName] = $this->createMenuObject($categoryName,
-                    $categoryName,
-                    $moduleIds
-                );
+                if (count($moduleIds)) {
+                    $categories['categories']->subMenu[$categoryName] = $this->createMenuObject(
+                        $categoryName,
+                        $categoryName,
+                        $moduleIds,
+                        $categoryTab
+                    );
+                }
             }
 
             usort($categories['categories']->subMenu, function ($a, $b) {
@@ -104,24 +108,28 @@ class CategoriesProvider
     public function getParentCategory($categoryName)
     {
         foreach ($this->getCategories() as $parentCategory) {
-            if ($parentCategory->name === $categoryName) {
-                return $categoryName;
-            }
-
             foreach ($parentCategory->categories as $childCategory) {
                 if ($childCategory->name === $categoryName) {
                     return $parentCategory->name;
                 }
             }
         }
+        return $categoryName;
     }
 
     /**
      * Re-organize category data into a Menu item.
+     *
+     * @param $menu
+     * @param $name
+     * @param array $moduleIds
+     * @param null $tab
+     * @return object
      */
-    private function createMenuObject($menu, $name, $moduleIds = array())
+    private function createMenuObject($menu, $name, $moduleIds = array(), $tab = null)
     {
         return (object) array(
+            'tab' => $tab,
             'name' => $name,
             'refMenu' => $menu,
             'modules' => $moduleIds,

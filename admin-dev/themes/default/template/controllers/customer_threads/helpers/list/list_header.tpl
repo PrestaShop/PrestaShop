@@ -1,12 +1,12 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,8 +18,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -48,11 +48,11 @@
 						<p>{$val.description}</p>
 					{/if}
 					{if $total_thread == 0}
-						<span class="message-mail">{l s='No new messages'}</span>
+						<span class="message-mail">{l s='No new messages' d='Admin.OrdersCustomers.Feature'}</span>
 					{else}
 						<a href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_customer_thread={$id_customer_thread}&amp;viewcustomer_thread" class="button">
-							{$total_thread} 
-							{if $total_thread > 1}{l s='New messages'}{else}{l s='New message'}{/if}
+							{$total_thread}
+							{if $total_thread > 1}{l s='New messages' d='Admin.OrdersCustomers.Feature'}{else}{l s='New message' d='Admin.OrdersCustomers.Feature'}{/if}
 						</a>
 					{/if}
 				</div>
@@ -61,20 +61,20 @@
 		<div class="col-lg-3">
 			<div id="MeaningStatus" class="panel">
 				<div class="panel-heading">
-					{l s='Meaning of status'}
+					{l s='Meaning of status' d='Admin.OrdersCustomers.Feature'}
 				</div>
 				<ul class="list-unstyled">
-					<li class="text-success"><i class="icon-circle"></i> {l s='Open'}</li>
-					<li class="text-danger"><i class="icon-circle"></i> {l s='Closed'}</li>
-					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 1'}</li>
-					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 2'}</li>
+					<li class="text-success"><i class="icon-circle"></i> {l s='Open' d='Admin.OrdersCustomers.Feature'}</li>
+					<li class="text-danger"><i class="icon-circle"></i> {l s='Closed' d='Admin.OrdersCustomers.Feature'}</li>
+					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 1' d='Admin.OrdersCustomers.Feature'}</li>
+					<li class="text-warning"><i class="icon-circle"></i> {l s='Pending 2' d='Admin.OrdersCustomers.Feature'}</li>
 				</ul>
 			</div>
 		</div>
 		<div class="col-lg-3">
 			<div id="CustomerService" class="panel">
 				<div class="panel-heading">
-					{l s='Statistics'}
+					{l s='Statistics' d='Admin.OrdersCustomers.Feature'}
 				</div>
 				<ul class="list-unstyled">
 					{assign var=count value=0}

@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -60,15 +60,15 @@ class ValidateCore
     public static function isModuleUrl($url, &$errors)
     {
         if (!$url || $url == 'http://') {
-            $errors[] = Tools::displayError('Please specify module URL');
+            $errors[] = Context::getContext()->getTranslator()->trans('Please specify module URL', array(), 'Admin.Modules.Notification');
         } elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz') {
-            $errors[] = Tools::displayError('Unknown archive type');
+            $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
         } else {
             if ((strpos($url, 'http')) === false) {
                 $url = 'http://'.$url;
             }
             if (!is_array(@get_headers($url))) {
-                $errors[] = Tools::displayError('Invalid URL');
+                $errors[] = Context::getContext()->getTranslator()->trans('Invalid URL', array(), 'Admin.Notifications.Error');
             }
         }
         if (!count($errors)) {
@@ -615,7 +615,7 @@ class ValidateCore
      */
     public static function isIsbn($isbn)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;={}]*$/u'), $isbn);
+        return !$isbn || preg_match('/^[0-9-]{0,32}$/', $isbn);
     }
 
     /**
@@ -954,7 +954,7 @@ class ValidateCore
     }
 
     /**
-     * Price display method validity
+     * Check if $data is a string
      *
      * @param string $data Data to validate
      * @return bool Validity is ok or not
@@ -1009,9 +1009,9 @@ class ValidateCore
     }
 
     /**
-     * Check for PHP serialized data
+     * Check if $string is a valid JSON string
      *
-     * @param string $data json data to validate
+     * @param string $string JSON string to validate
      * @return bool Validity is ok or not
      */
     public static function isJson($string)

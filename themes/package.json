@@ -1,17 +1,17 @@
 {
-  "name": "prestashop-core-theme-js",
-  "version": "0.0.1",
-  "description": "Tools to manage minimal assets for themes",
-  "main": "index.js",
-  "scripts": {
-    "build": "webpack",
-    "watch": "webpack -w"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "jquery": "^2.1.4",
-    "babel-loader": "^5.3.2",
-    "webpack": "^1.12.2"
-  }
+    "name": "prestashop-core-theme-js",
+    "version": "0.0.1",
+    "description": "Tools to manage minimal assets for themes",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack",
+        "watch": "webpack -w"
+    },
+    "author": "PrestaShop",
+    "license": "OSL-3.0",
+    "devDependencies": {
+        "jquery": "^2.1.4",
+        "babel-loader": "^5.3.2",
+        "webpack": "^1.12.2"
+    }
 }

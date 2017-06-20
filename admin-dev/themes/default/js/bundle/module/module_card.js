@@ -13,15 +13,15 @@ $(document).ready(function () {
  */
 var AdminModuleCard = function () {
     /* Selectors for module action links (uninstall, reset, etc...) to add a confirm popin */
-    this.moduleActionMenuLinkSelector = 'a.module_action_menu_';
-    this.moduleActionMenuInstallLinkSelector = 'a.module_action_menu_install';
-    this.moduleActionMenuEnableLinkSelector = 'a.module_action_menu_enable';
-    this.moduleActionMenuUninstallLinkSelector = 'a.module_action_menu_uninstall';
-    this.moduleActionMenuDisableLinkSelector = 'a.module_action_menu_disable';
-    this.moduleActionMenuEnableMobileLinkSelector = 'a.module_action_menu_enable_mobile';
-    this.moduleActionMenuDisableMobileLinkSelector = 'a.module_action_menu_disable_mobile';
-    this.moduleActionMenuResetLinkSelector = 'a.module_action_menu_reset';
-    this.moduleActionMenuUpdateLinkSelector = 'a.module_action_menu_upgrade';
+    this.moduleActionMenuLinkSelector = 'button.module_action_menu_';
+    this.moduleActionMenuInstallLinkSelector = 'button.module_action_menu_install';
+    this.moduleActionMenuEnableLinkSelector = 'button.module_action_menu_enable';
+    this.moduleActionMenuUninstallLinkSelector = 'button.module_action_menu_uninstall';
+    this.moduleActionMenuDisableLinkSelector = 'button.module_action_menu_disable';
+    this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enable_mobile';
+    this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disable_mobile';
+    this.moduleActionMenuResetLinkSelector = 'button.module_action_menu_reset';
+    this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
     this.moduleItemListSelector = '.module-item-list';
     this.moduleItemGridSelector = '.module-item-grid';
 
@@ -116,9 +116,10 @@ var AdminModuleCard = function () {
 
     this.requestToController = function (action, element, forceDeletion) {
         var _this = this;
-        var jqElementObj = element.closest(".btn-group");
+        var jqElementObj = element.closest("div.btn-group");
+        var form = element.closest("form");
         var spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind pull-right\"></button>");
-        var url = "//" + window.location.host + element.attr("href");
+        var url = "//" + window.location.host + form.attr("action");
 
         if (forceDeletion === "true" || forceDeletion === true) {
           url +="&deletion=true";

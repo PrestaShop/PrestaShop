@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,10 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Core\Stock\StockManager;
+use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
 
 class OrderHistoryCore extends ObjectModel
 {
@@ -137,10 +140,10 @@ class OrderHistoryCore extends ObjectModel
                     $links .= '<li>';
                     $links .= '<a href="'.$product['link'].'">'.Tools::htmlentitiesUTF8($product['name']).'</a>';
                     if (isset($product['deadline'])) {
-                        $links .= '&nbsp;'.Tools::htmlentitiesUTF8(Tools::displayError('expires on', false)).'&nbsp;'.$product['deadline'];
+                        $links .= '&nbsp;'.$this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
                     }
                     if (isset($product['downloadable'])) {
-                        $links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)', false), (int)$product['downloadable']));
+                        $links .= '&nbsp;'.$this->trans('downloadable %d time(s)', array((int)$product['downloadable']), 'Admin.Orderscustomers.Notification');
                     }
                     $links .= '</li>';
                 }
@@ -312,6 +315,25 @@ class OrderHistoryCore extends ObjectModel
                         }
                     }
                 }
+
+                // Save movement if :
+                // not Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+                // new_os->shipped != old_os->shipped
+                if (Validate::isLoadedObject($old_os) && Validate::isLoadedObject($new_os) && $new_os->shipped != $old_os->shipped && !Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                    $product_quantity = (int) ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']);
+
+                    if ($product_quantity > 0) {
+                        (new StockManager)->saveMovement(
+                            (int)$product['product_id'],
+                            (int)$product['product_attribute_id'],
+                            (int)$product_quantity * ($new_os->shipped == 1 ? -1 : 1),
+                            array(
+                                'id_order' => $order->id,
+                                'id_stock_mvt_reason' => ($new_os->shipped == 1 ? Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON') : Configuration::get('PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON'))
+                            )
+                        );
+                    }
+                }
             }
         }
 
@@ -319,7 +341,7 @@ class OrderHistoryCore extends ObjectModel
 
         // changes invoice number of order ?
         if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order)) {
-            die(Tools::displayError('Invalid new order status'));
+            die($this->trans('Invalid new order status', array(), 'Admin.Orderscustomers.Notification'));
         }
 
         // the order is valid if and only if the invoice is available and the order is not cancelled
@@ -379,6 +401,13 @@ class OrderHistoryCore extends ObjectModel
 
         // executes hook
         Hook::exec('actionOrderStatusPostUpdate', array('newOrderStatus' => $new_os, 'id_order' => (int)$order->id, ), null, false, true, false, $order->id_shop);
+
+        // sync all stock
+        (new StockManagerAdapter())->updatePhysicalProductQuantity(
+            $order->id_shop,
+            (int)Configuration::get('PS_OS_ERROR'),
+            (int)Configuration::get('PS_OS_CANCELED')
+        );
 
         ShopUrl::resetMainDomainCache();
     }

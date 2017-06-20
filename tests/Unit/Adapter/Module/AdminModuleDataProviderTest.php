@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module;
@@ -43,7 +43,6 @@ class AdminModuleDataProviderTest extends UnitTestCase
     {
         parent::setup();
 
-        $this->languageISOCode = 'en';
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
 
@@ -53,7 +52,9 @@ class AdminModuleDataProviderTest extends UnitTestCase
         }
 
         $this->setupSfKernel();
-        $this->sfRouter = $this->sfKernel->getContainer()->get('router');
+        $this->translator = $this->sfKernel->getContainer()->get('translator');
+        list($this->languageISOCode) = explode('-', $this->translator->getLocale());
+        $this->logger = $this->sfKernel->getContainer()->get('logger');
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()
@@ -97,15 +98,16 @@ class AdminModuleDataProviderTest extends UnitTestCase
             ),
         );
 
-        /* we need to fake cache wih fake catalog */
-        $this->clearModuleCache();
-        file_put_contents(_PS_CACHE_DIR_.'en_addons_modules.json', json_encode($fakeModules, true));
+        $this->cacheProviderS = Phake::partialMock('Doctrine\Common\Cache\CacheProvider');
+        Phake::when($this->cacheProviderS)->contains($this->languageISOCode.'_addons_modules')->thenReturn(true);
+        Phake::when($this->cacheProviderS)->fetch($this->languageISOCode.'_addons_modules')->thenReturn($fakeModules);
 
         $this->adminModuleDataProvider = new AdminModuleDataProvider(
-            $this->languageISOCode,
-            $this->sfRouter,
+            $this->translator,
+            $this->logger,
             $this->addonsDataProviderS,
-            $this->categoriesProviderS
+            $this->categoriesProviderS,
+            $this->cacheProviderS
         );
     }
 
@@ -155,10 +157,11 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
             array('convertJsonForNewCatalog'),
             array(
-                'languageISO' => $this->languageISOCode,
-                'router' => $this->sfRouter,
+                'languageISO' => $this->translator,
+                'logger' => $this->logger,
                 'addonsDataProvider' => $this->addonsDataProviderS,
                 'categoriesProvider' => $this->categoriesProviderS,
+                'cacheProvider' => $this->cacheProviderS,
             )
         );
 
@@ -177,8 +180,6 @@ class AdminModuleDataProviderTest extends UnitTestCase
         if ($this->httpHostNotFound) {
             unset($_SERVER['HTTP_HOST']);
         }
-
-        $this->clearModuleCache();
     }
 
     private function fakeModule($id, $name, $displayName, $categoryName, $description)
@@ -191,12 +192,5 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $fakeModule->description = $description;
 
         return $fakeModule;
-    }
-
-    private function clearModuleCache()
-    {
-        if (file_exists(_PS_CACHE_DIR_.'en_catalog_modules.json')) {
-            unlink(_PS_CACHE_DIR_.'en_catalog_modules.json');
-        }
     }
 }

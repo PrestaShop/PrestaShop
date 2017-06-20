@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -41,8 +41,6 @@ class DiscountControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        parent::initContent();
-
         $cart_rules = $this->getTemplateVarCartRules();
 
         if (count($cart_rules) <= 0) {
@@ -53,6 +51,7 @@ class DiscountControllerCore extends FrontController
             'cart_rules' => $cart_rules,
         ]);
 
+        parent::initContent();
         $this->setTemplate('customer/discount');
     }
 
@@ -71,7 +70,8 @@ class DiscountControllerCore extends FrontController
             $cart_rules[$key] = $voucher;
             $cart_rules[$key]['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
             $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int)$voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme');
-            $cart_rules[$key]['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);;
+            $cart_rules[$key]['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
+            ;
 
             $cartRuleValue = $this->accumulateCartRuleValue($voucher);
 

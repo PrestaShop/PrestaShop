@@ -1,12 +1,12 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,14 +18,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {strip}
 <ul class="items-list">
     <li{if !isset($current_shop_value) || $current_shop_value == ''} class="active"{/if}>
-    <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}">{l s='All shops'}</a></li>
+      <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}">{l s='All shops'}</a>
+    </li>
     {foreach key=group_id item=group_data from=$tree}
         {if !isset($multishop_context) || $is_group_context}
             <li class="group{if $current_shop_value == 'g-'|cat:$group_id} active{/if}">
@@ -44,22 +45,19 @@
                         <a class="dropdown-item {if $shop_data['uri'] == NULL} disabled{/if}" href="{if $shop_data['uri'] == NULL}#{else}{$url|escape:'html':'UTF-8'}s-{$shop_id}{/if}">
                             {$shop_data['name']}
                         </a>
-
                         {if $shop_data['uri'] == NULL}
                             <a class="link-shop" href="{$link->getAdminLink('AdminShop', true)|escape:'html':'UTF-8'}" target="_blank">
-                                <i class="material-icons">&#xE869;</i>
+                              <i class="material-icons">&#xE869;</i>
                             </a>
                         {else}
                             <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
-                                <i class="material-icons">&#xE8F4;</i>
-                              </a>
+                              <i class="material-icons">&#xE8F4;</i>
+                            </a>
                         {/if}
-
                     </li>
                 {/if}
             {/foreach}
         {/if}
-
         {if !(!isset($multishop_context) || $is_group_context)}
             </ul>
         {/if}

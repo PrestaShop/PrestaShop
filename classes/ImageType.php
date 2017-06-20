@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -168,6 +168,21 @@ class ImageTypeCore extends ObjectModel
     /**
      * Get formatted name
      *
+     * @deprecated 1.7.0.0 Use ImageType::getFormattedName($name) instead
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function getFormatedName($name)
+    {
+        Tools::displayAsDeprecated('Please use ImageType::getFormattedName($name) instead');
+        return self::getFormattedName($name);
+    }
+
+    /**
+     * Get formatted name
+     *
      * @param string $name
      *
      * @return string
@@ -192,13 +207,14 @@ class ImageTypeCore extends ObjectModel
     /**
      * Get all image types
      *
-     * @return array|mixed|null
+     * @return array
      */
     public static function getAll()
     {
         $context = Context::getContext();
         if (isset($context->shop->theme)) {
-            return $context->shop->theme->get('image_types');
+            $imagesTypes = $context->shop->theme->get('image_types');
+            return is_array($imagesTypes) ? $imagesTypes : array();
         }
 
         return array();

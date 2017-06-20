@@ -36,7 +36,7 @@ while ($cycle && $i < $max_cycles) {
     $path = fix_dirname($path).'/';
 }
 
-if (!empty($_FILES)) {
+if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
     $info = pathinfo($_FILES['file']['name']);
     if (isset($info['extension']) && in_array(fix_strtolower($info['extension']), $ext)) {
         $tempFile = $_FILES['file']['tmp_name'];

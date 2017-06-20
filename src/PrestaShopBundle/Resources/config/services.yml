@@ -10,15 +10,15 @@ services:
         class: Symfony\Component\Finder\Finder
         shared: false
 
-    guzzle.cache.provider:
+    doctrine.cache.provider:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:
-            - "%kernel.cache_dir%/guzzle"
+            - "%kernel.cache_dir%/doctrine"
 
     guzzle.cache:
         class: Csa\Bundle\GuzzleBundle\GuzzleHttp\Cache\DoctrineAdapter
         arguments:
-            - "@guzzle.cache.provider"
+            - "@doctrine.cache.provider"
             - "%prestashop.addons.api_client.ttl%"
         shared: false
 
@@ -61,12 +61,16 @@ services:
         arguments:
             - "@prestashop.adapter.data_provider.product"
 
+    prestashop.service.translation:
+        class: PrestaShopBundle\Service\TranslationService
+        properties:
+            container: "@service_container"
+
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
         class: PrestaShopBundle\Service\DataProvider\StockInterface
 
     # DISPATCHERS
-
     prestashop.hook.dispatcher:
         class: PrestaShopBundle\Service\Hook\HookDispatcher
         calls:
@@ -83,11 +87,9 @@ services:
             - "@service_container"
 
     # ADAPTERS (prestashop.adapter.*)
-
     # Legacy context service, transitional
     prestashop.adapter.legacy.configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration
-        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().shop"]
 
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
@@ -112,9 +114,17 @@ services:
             - "@security.csrf.token_manager"
             - "@router"
             - "@=service('prestashop.user_provider').getUsername()"
-            - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+            - "@prestashop.adapter.legacy.context"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    prestashop.multishop_command_listener:
+        class: PrestaShopBundle\EventListener\MultishopCommandListener
+        arguments:
+            - "@prestashop.adapter.shop.context"
+            - "@=service('kernel').getRootDir()"
+        tags:
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
     prestashop.router:
         class: PrestaShopBundle\Service\Routing\Router
@@ -188,6 +198,8 @@ services:
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
         arguments: ["@prestashop.adapter.legacy.logger", "@translator", "@doctrine.orm.entity_manager"]
+        calls:
+                - [ "setEmployeeId", ["@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0"]]
 
     prestashop.categories_provider:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
@@ -207,12 +219,6 @@ services:
 
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
-
-    prestashop.twig.extension.hook:
-        class: PrestaShopBundle\Twig\HookExtension
-        arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module"]
-        tags:
-            - { name: twig.extension }
 
     prestashop.twig.extension.stringloader:
         class: Twig_Extension_StringLoader
@@ -243,6 +249,7 @@ services:
        class: PrestaShopBundle\Twig\AdminExtension
        arguments:
             - "@request_stack"
+            - "@service_container"
        tags:
             - { name: twig.extension }
 
@@ -262,6 +269,7 @@ services:
             - "@prestashop.core.module.updater"
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
+            - "@doctrine.cache.provider"
 
     prestashop.core.addon.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
@@ -279,6 +287,12 @@ services:
           - "@prestashop.core.admin.lang.repository"
           - "@prestashop.translation.theme.exporter"
 
+    prestashop.core.admin.tab.repository:
+        class: PrestaShopBundle\Entity\Repository\TabRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\Tab
+
     prestashop.core.admin.translation.repository:
         class: PrestaShopBundle\Entity\Repository\TranslationRepository
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
@@ -290,6 +304,155 @@ services:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
             - PrestaShopBundle\Entity\Lang
+
+    # Api
+    prestashop.core.api.query_params_collection:
+        abstract: true
+        class: PrestaShopBundle\Api\QueryParamsCollection
+
+    prestashop.core.api.query_stock_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryStockParamsCollection
+
+    prestashop.core.api.query_stock_movement_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryStockMovementParamsCollection
+
+    prestashop.core.api.query_translation_params_collection:
+        parent: prestashop.core.api.query_params_collection
+        class: PrestaShopBundle\Api\QueryTranslationParamsCollection
+
+    prestashop.core.api.stock.movements_collection:
+        class: PrestaShopBundle\Api\Stock\MovementsCollection
+
+    # Api - Repositories
+    prestashop.core.api.stock.repository:
+        class: PrestaShopBundle\Entity\Repository\StockRepository
+        arguments:
+            - "@service_container"
+            - "@doctrine.dbal.default_connection"
+            - "@doctrine.orm.default_entity_manager"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.image_manager"
+            - "@prestashop.adapter.stock_manager"
+            - "%database_prefix%"
+
+    prestashop.core.api.stockMovement.repository:
+        class: PrestaShopBundle\Entity\Repository\StockMovementRepository
+        arguments:
+            - "@service_container"
+            - "@doctrine.dbal.default_connection"
+            - "@doctrine.orm.default_entity_manager"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.image_manager"
+            - "%database_prefix%"
+
+    prestashop.core.api.supplier.repository:
+        class: PrestaShopBundle\Entity\Repository\SupplierRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.api.manufacturer.repository:
+        class: PrestaShopBundle\Entity\Repository\ManufacturerRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.api.category.repository:
+        class: PrestaShopBundle\Entity\Repository\CategoryRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.api.feature_attribute.repository:
+        class: PrestaShopBundle\Entity\Repository\FeatureAttributeRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    # Api - Controllers
+    prestashop.core.api.controller:
+        abstract: true
+        class: PrestaShopBundle\Controller\Api\ApiController
+        calls:
+            - [setLogger, ['@logger']]
+            - [setContainer, ['@service_container']]
+
+    prestashop.core.api.stock.controller:
+        class: PrestaShopBundle\Controller\Api\StockController
+        parent: prestashop.core.api.controller
+        properties:
+            movements: "@prestashop.core.api.stock.movements_collection"
+            stockRepository: "@prestashop.core.api.stock.repository"
+            queryParams: "@prestashop.core.api.query_stock_params_collection"
+
+    prestashop.core.api.stockMovement.controller:
+        class: PrestaShopBundle\Controller\Api\StockMovementController
+        parent: prestashop.core.api.controller
+        properties:
+            stockMovementRepository: "@prestashop.core.api.stockMovement.repository"
+            queryParams: "@prestashop.core.api.query_stock_movement_params_collection"
+
+    prestashop.core.api.supplier.controller:
+        class: PrestaShopBundle\Controller\Api\SupplierController
+        parent: prestashop.core.api.controller
+        properties:
+            supplierRepository: "@prestashop.core.api.supplier.repository"
+
+    prestashop.core.api.manufacturer.controller:
+        class: PrestaShopBundle\Controller\Api\ManufacturerController
+        parent: prestashop.core.api.controller
+        properties:
+            manufacturerRepository: "@prestashop.core.api.manufacturer.repository"
+
+    prestashop.core.api.category.controller:
+        class: PrestaShopBundle\Controller\Api\CategoryController
+        parent: prestashop.core.api.controller
+        properties:
+            categoryRepository: "@prestashop.core.api.category.repository"
+
+    prestashop.core.api.attribute.controller:
+        class: PrestaShopBundle\Controller\Api\AttributeController
+        parent: prestashop.core.api.controller
+        properties:
+            featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
+
+    prestashop.core.api.feature.controller:
+        class: PrestaShopBundle\Controller\Api\FeatureController
+        parent: prestashop.core.api.controller
+        properties:
+            featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
+
+    prestashop.core.api.i18n.controller:
+        class: PrestaShopBundle\Controller\Api\I18nController
+        parent: prestashop.core.api.controller
+
+    prestashop.core.api.translation.controller:
+        class: PrestaShopBundle\Controller\Api\TranslationController
+        parent: prestashop.core.api.controller
+        properties:
+            translationService: "@prestashop.service.translation"
+            queryParams: "@prestashop.core.api.query_translation_params_collection"
+
+    # Api - i18n
+    prestashop.translation.api:
+        abstract: true
+        class: PrestaShopBundle\Translation\Api\AbstractApi
+        calls:
+            - [setTranslator, ['@translator']]
+
+    prestashop.translation.api.stock:
+        class: PrestaShopBundle\Translation\Api\StockApi
+        parent: prestashop.translation.api
+
+    prestashop.translation.api.international:
+        class: PrestaShopBundle\Translation\Api\InternationalApi
+        parent: prestashop.translation.api
 
     # Managers
     prestashop.adapter.image_manager:
@@ -305,6 +468,7 @@ services:
             - "@prestashop.core.admin.module.repository"
             - "@prestashop.module.zip.manager"
             - "@translator"
+            - "@event_dispatcher"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
 
     prestashop.module.zip.manager:
@@ -314,13 +478,21 @@ services:
             - "@finder"
             - "@translator"
 
+    prestashop.twig.extension.hook:
+        class: PrestaShopBundle\Twig\HookExtension
+        arguments:
+            - "@prestashop.hook.dispatcher"
+            - "@prestashop.adapter.data_provider.module"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.core.admin.module.repository'):null"
+        tags:
+            - { name: twig.extension }
+
 # Addons API Client
     prestashop.addons.client_api:
         class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
         arguments:
             - "@csa_guzzle.client.addons_api"
-            - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
-            - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+            - "@=service('translator').getLocale()"
+            - "@prestashop.adapter.tools"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
-

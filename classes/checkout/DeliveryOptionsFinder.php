@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -94,7 +94,7 @@ class DeliveryOptionsFinderCore
                                 );
                             } else {
                                 if ($include_taxes) {
-                                    $carrier['price'] = $this->priceFormatter->convertAndFormat($carriers_list['total_price_with_tax']);
+                                    $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_with_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf(
                                             $this->translator->trans(
@@ -104,7 +104,7 @@ class DeliveryOptionsFinderCore
                                         );
                                     }
                                 } else {
-                                    $carrier['price'] = $this->priceFormatter->convertAndFormat($carriers_list['total_price_without_tax']);
+                                    $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_without_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf(
                                             $this->translator->trans(
@@ -121,7 +121,7 @@ class DeliveryOptionsFinderCore
                             } else {
                                 $carrier['label'] = $carrier['name'].' - '.$carrier['delay'].' - '.$carrier['price'];
                             }
-                            
+
                             // If carrier related to a module, check for additionnal data to display
                             $carrier['extraContent'] = '';
                             if ($carrier['is_module']) {

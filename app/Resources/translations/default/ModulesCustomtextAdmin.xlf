@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_customtext/ps_customtext.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="da8afa303fe717440d352e7dd7081680">
+        <source>Custom text blocks</source>
+        <target>Custom text blocks</target>
+        <note>Context:
+File: modules/ps_customtext/ps_customtext.php:50</note>
+      </trans-unit>
+      <trans-unit id="9b5d9c91c9e2cc8d6d3fe78113824ac1">
+        <source>Integrates custom text blocks anywhere in your store front</source>
+        <target>Integrates custom text blocks anywhere in your store front</target>
+        <note>Context:
+File: modules/ps_customtext/ps_customtext.php:51</note>
+      </trans-unit>
+      <trans-unit id="ca3e06233b736d289df9f4580a4ab19a">
+        <source>CMS block</source>
+        <target>CMS block</target>
+        <note>Context:
+File: modules/ps_customtext/ps_customtext.php:160</note>
+      </trans-unit>
+      <trans-unit id="7ef25f7b93adc8bf024ed532d722f697">
+        <source>Text block</source>
+        <target>Text block</target>
+        <note>Context:
+File: modules/ps_customtext/ps_customtext.php:169</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

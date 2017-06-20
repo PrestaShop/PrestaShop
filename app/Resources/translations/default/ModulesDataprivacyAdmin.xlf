@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_dataprivacy/ps_dataprivacy.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e0de5a06213f21c55ca3283c009e0907">
+        <source>Customer data privacy block</source>
+        <target>Customer data privacy block</target>
+        <note>Context:
+File: modules/ps_dataprivacy/ps_dataprivacy.php:45</note>
+      </trans-unit>
+      <trans-unit id="c57ce0a4286570b210ee2d3d475cdd6b">
+        <source>Adds a block displaying a message about a customer's privacy data.</source>
+        <target>Adds a block displaying a message about a customer's privacy data.</target>
+        <note>Context:
+File: modules/ps_dataprivacy/ps_dataprivacy.php:47</note>
+      </trans-unit>
+      <trans-unit id="c9feeeafca864c811737aad664ca87b6">
+        <source>Customer data privacy message for customer form:</source>
+        <target>Customer data privacy message for customer form:</target>
+        <note>Context:
+File: modules/ps_dataprivacy/ps_dataprivacy.php:142</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

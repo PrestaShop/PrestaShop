@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -139,25 +139,24 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             );
         }
 
+        if (isset($requestParams['delivery_message'])) {
+            $this->getCheckoutSession()->setMessage($requestParams['delivery_message']);
+        }
+
         if ($this->step_is_reachable && isset($requestParams['confirmDeliveryOption'])) {
             // we're done if
             // - the step was reached (= all previous steps complete)
             // - user has clicked on "continue"
             // - there are delivery options
             // - the is a selected delivery option
+            // - the module associated to the delivery option confirms
             $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
             $this->step_is_complete =
-                !empty($deliveryOptions) && $this->getCheckoutSession()->getSelectedDeliveryOption()
+                !empty($deliveryOptions) && $this->getCheckoutSession()->getSelectedDeliveryOption() && $this->isModuleComplete($requestParams)
             ;
         }
 
-        $this->setTitle(
-            $this->getTranslator()->trans(
-                'Shipping Method',
-                array(),
-                'Shop.Theme.Checkout'
-            )
-        );
+        $this->setTitle($this->getTranslator()->trans('Shipping Method', array(), 'Shop.Theme.Checkout'));
 
         Hook::exec('actionCarrierProcess', array('cart' => $this->getCheckoutSession()->getCart()));
     }
@@ -175,17 +174,38 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 'delivery_option' => $this->getCheckoutSession()->getSelectedDeliveryOption(),
                 'recyclable' => $this->getCheckoutSession()->isRecyclable(),
                 'recyclablePackAllowed' => $this->isRecyclablePackAllowed(),
+                'delivery_message' => $this->getCheckoutSession()->getMessage(),
                 'gift' => array(
                     'allowed' => $this->isGiftAllowed(),
                     'isGift' => $this->getCheckoutSession()->getGift()['isGift'],
                     'label' => $this->getTranslator()->trans(
-                        'I would like my order to be gift wrapped'.$this->getGiftCostForLabel(),
-                        array(),
-                        'Checkout'
+                        'I would like my order to be gift wrapped %cost%',
+                        array('%cost%' => $this->getGiftCostForLabel()),
+                        'Shop.Theme.Checkout'
                     ),
                     'message' => $this->getCheckoutSession()->getGift()['message'],
                 ),
             )
         );
+    }
+
+    protected function isModuleComplete($requestParams)
+    {
+        $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
+        $currentDeliveryOption = $deliveryOptions[$this->getCheckoutSession()->getSelectedDeliveryOption()];
+        if (!$currentDeliveryOption['is_module']) {
+            return true;
+        }
+
+        $isComplete = true;
+        Hook::exec(
+            'actionValidateStepComplete',
+            array(
+                'step_name' => 'delivery',
+                'request_params' => $requestParams,
+                'completed' => &$isComplete,
+            ),
+            Module::getModuleIdByName($currentDeliveryOption['external_module_name']));
+        return $isComplete;
     }
 }

@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<entity_risk>
-  <risk id="None" name="Ingen"/>
-  <risk id="Low" name="Lav"/>
-  <risk id="Medium" name="Mellem"/>
-  <risk id="High" name="Høj"/>
-</entity_risk>

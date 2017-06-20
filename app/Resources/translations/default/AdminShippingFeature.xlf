@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/CarrierLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a8bbb000124c9697aa5d63e7e758b64d">
+        <source>Pick up in-store</source>
+        <target>Pick up in-store</target>
+        <note>Context:
+File: classes/lang/CarrierLang.php:40</note>
+      </trans-unit>
+      <trans-unit id="5d671531babe55fff4ae63b94c80ea38">
+        <source>Delivery next day!</source>
+        <target>Delivery next day!</target>
+        <note>Context:
+File: classes/lang/CarrierLang.php:41</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
@@ -13,12 +29,6 @@ File: controllers/admin/AdminCarriersController.php:84</note>
         <target>Free Shipping</target>
         <note>Context:
 File: controllers/admin/AdminCarriersController.php:96</note>
-      </trans-unit>
-      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
-        <source>Carriers</source>
-        <target>Carriers</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:163</note>
       </trans-unit>
       <trans-unit id="c26732c157d7b353c1be9f7ba8962e57">
         <source>Add new carrier</source>
@@ -92,6 +102,16 @@ File: controllers/admin/AdminCarriersController.php:368</note>
         <target>Name:</target>
         <note>Context:
 File: controllers/admin/AdminCarriersController.php:728</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
+        <source>Carriers</source>
+        <target>Carriers</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:528</note>
       </trans-unit>
     </body>
   </file>
@@ -226,6 +246,52 @@ File: controllers/admin/AdminCarrierWizardController.php:417</note>
         <target>Carrier</target>
         <note>Context:
 File: controllers/admin/AdminCartsController.php:86</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShippingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2605fbb693837be42d0cd0e701cb5aa3">
+        <source>Handling</source>
+        <target>Handling</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:56</note>
+      </trans-unit>
+      <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
+        <source>Handling charges</source>
+        <target>Handling charges</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:60</note>
+      </trans-unit>
+      <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
+        <source>Free shipping starts at</source>
+        <target>Free shipping starts at</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:72</note>
+      </trans-unit>
+      <trans-unit id="8430a7b1b81635e3df949c2845303303">
+        <source>Carrier options</source>
+        <target>Carrier options</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:86</note>
+      </trans-unit>
+      <trans-unit id="bff13ed1cd5b83b03f024f1eb6524337">
+        <source>Default carrier</source>
+        <target>Default carrier</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:89</note>
+      </trans-unit>
+      <trans-unit id="2d8ee3c32fffdf39872b844a50f08ad9">
+        <source>Best price</source>
+        <target>Best price</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:96</note>
+      </trans-unit>
+      <trans-unit id="156fbbe269edc91f43e240587a21c48b">
+        <source>Best grade</source>
+        <target>Best grade</target>
+        <note>Context:
+File: controllers/admin/AdminShippingController.php:97</note>
       </trans-unit>
     </body>
   </file>

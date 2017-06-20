@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_legalcompliance/ps_legalcompliance.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="de2cd9f1dfad85516edd95679af377fd">
+        <source>Legal Compliance</source>
+        <target>Legal Compliance</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:79</note>
+      </trans-unit>
+      <trans-unit id="3abc778d1eb09576ba6b26848520bbdd">
+        <source>This module helps merchants comply with applicable e-commerce laws.</source>
+        <target>This module helps merchants comply with applicable e-commerce laws.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:80</note>
+      </trans-unit>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:81</note>
+      </trans-unit>
+      <trans-unit id="3b528a3fe35bcd29ad2ab0e77fe01d4d">
+        <source>Could not install new hook</source>
+        <target>Could not install new hook</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:212</note>
+      </trans-unit>
+      <trans-unit id="23e162ba6bf36c7560ebbc868d9e2552">
+        <source>Legal notice</source>
+        <target>Legal notice</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1318</note>
+      </trans-unit>
+      <trans-unit id="626682a1bbf1426b7bbd9834e9201e0c">
+        <source>Please add your legal information to this site.</source>
+        <target>Please add your legal information to this site.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:264</note>
+      </trans-unit>
+      <trans-unit id="98664ee75f74254b622a52d86a798ae3">
+        <source>Terms of Service (ToS)</source>
+        <target>Terms of Service (ToS)</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1319</note>
+      </trans-unit>
+      <trans-unit id="4090d0a6d74c4be967a71d0d6f115bbe">
+        <source>Please add your Terms of Service (ToS) to this site.</source>
+        <target>Please add your Terms of Service (ToS) to this site.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:267</note>
+      </trans-unit>
+      <trans-unit id="93fb7e4d4616f108db46461360b7a6ae">
+        <source>Revocation terms</source>
+        <target>Revocation terms</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1320</note>
+      </trans-unit>
+      <trans-unit id="179c72212692decde8373a216e3452f4">
+        <source>Please add your Revocation terms to this site.</source>
+        <target>Please add your Revocation terms to this site.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:270</note>
+      </trans-unit>
+      <trans-unit id="c5f29bb36f9158d2e00f5d4dc213a0ff">
+        <source>Privacy</source>
+        <target>Privacy</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1322</note>
+      </trans-unit>
+      <trans-unit id="0629e092ce60c75222213895157a3799">
+        <source>Please insert here your content about privacy. If you have activated Social Media modules, please provide a notice about third-party access to data.</source>
+        <target>Please insert here your content about privacy. If you have activated Social Media modules, please provide a notice about third-party access to data.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:273</note>
+      </trans-unit>
+      <trans-unit id="5fb4f05f62f9967052977077d783fc2d">
+        <source>Shipping and payment</source>
+        <target>Shipping and payment</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1324</note>
+      </trans-unit>
+      <trans-unit id="27f540f8da86e60ba0375cdfbd123edf">
+        <source>Please add your Shipping and payment information to this site.</source>
+        <target>Please add your Shipping and payment information to this site.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:276</note>
+      </trans-unit>
+      <trans-unit id="b305968eb47e25015e2cebf313f70842">
+        <source>Environmental notice</source>
+        <target>Environmental notice</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1323</note>
+      </trans-unit>
+      <trans-unit id="d5b976245a30b64d97c68cb7a8f439f4">
+        <source>Please add your Environmental information to this site.</source>
+        <target>Please add your Environmental information to this site.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:279</note>
+      </trans-unit>
+      <trans-unit id="f9227a2ab59639e217bd44ec47f35fcc">
+        <source>This module helps European merchants to comply with legal requirements. Learn how to configure the module and other shop parameters so that you're in compliance with the law.[1][2]PrestaShop 1.7 legal compliance documentation[/2]</source>
+        <target>This module helps European merchants to comply with legal requirements. Learn how to configure the module and other shop parameters so that you're in compliance with the law.[1][2]PrestaShop 1.7 legal compliance documentation[/2]</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1044</note>
+      </trans-unit>
+      <trans-unit id="2ad348b570305efbdb00791eab07ccea">
+        <source>Failed to associate legal content with an email template.</source>
+        <target>Failed to associate legal content with an email template.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1204</note>
+      </trans-unit>
+      <trans-unit id="348ecf8192ea7ec5ec0620e8e4c93176">
+        <source>'Revocation Terms within ToS' label cannot be activated unless you associate "%s" role with a Page.</source>
+        <target>'Revocation Terms within ToS' label cannot be activated unless you associate "%s" role with a Page.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1220</note>
+      </trans-unit>
+      <trans-unit id="59d41c30eac4f63d7f2adceb05a6687e">
+        <source>Shipping fees label cannot be activated unless you associate "%s" role with a Page.</source>
+        <target>Shipping fees label cannot be activated unless you associate "%s" role with a Page.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1255</note>
+      </trans-unit>
+      <trans-unit id="01ed64f3ede93b663b4d78d2a0693f0a">
+        <source>Revocation form</source>
+        <target>Revocation form</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1321</note>
+      </trans-unit>
+      <trans-unit id="3ad6cb6100190c8f81e99fd52debf7ef">
+        <source>Labels</source>
+        <target>Labels</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1363</note>
+      </trans-unit>
+      <trans-unit id="ced60ffb6a3defc5c43703074e87e489">
+        <source>Delivery time label (available products)</source>
+        <target>Delivery time label (available products)</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1368</note>
+      </trans-unit>
+      <trans-unit id="dfdc0162f8b4ad4d93222d3d8ac2bc0e">
+        <source>It is displayed on the product page and in the footer of other pages. Leave the field empty to disable.</source>
+        <target>It is displayed on the product page and in the footer of other pages. Leave the field empty to disable.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1377</note>
+      </trans-unit>
+      <trans-unit id="86186040a5e8dcd5eb960dcdc00f1a39">
+        <source>Indicate the delivery time for your in-stock products.</source>
+        <target>Indicate the delivery time for your in-stock products.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1371</note>
+      </trans-unit>
+      <trans-unit id="60ae8d3d6fd44148d5c30f3baba19828">
+        <source>Delivery time label (out-of-stock products)</source>
+        <target>Delivery time label (out-of-stock products)</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1375</note>
+      </trans-unit>
+      <trans-unit id="7f6c6269fc9a764717e745d7709c5b03">
+        <source>Indicate the delivery time for your out-of-stock products.</source>
+        <target>Indicate the delivery time for your out-of-stock products.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1378</note>
+      </trans-unit>
+      <trans-unit id="bdd4f0a0fbdc23d1d20e027c2f3050ee">
+        <source>Additional information about delivery time</source>
+        <target>Additional information about delivery time</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1382</note>
+      </trans-unit>
+      <trans-unit id="b0c2a88bea1ad0728e3901bce50f1d69">
+        <source><![CDATA[If you specified a delivery time, this additional information is displayed in the footer of product pages with a link to the "Shipping & Payment" Page. Leave the field empty to disable.]]></source>
+        <target><![CDATA[If you specified a delivery time, this additional information is displayed in the footer of product pages with a link to the "Shipping & Payment" Page. Leave the field empty to disable.]]></target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1384</note>
+      </trans-unit>
+      <trans-unit id="d01f8eb7dc644036a1ead2b82aaed055">
+        <source>Indicate for which countries your delivery time applies.</source>
+        <target>Indicate for which countries your delivery time applies.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1385</note>
+      </trans-unit>
+      <trans-unit id="472b0d002b98940cdd7a36062ef1d457">
+        <source> 'Our previous price' label</source>
+        <target>'Our previous price' label</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1388</note>
+      </trans-unit>
+      <trans-unit id="cf4e7929f6a8cafcba348d0889f7a452">
+        <source>When a product is on sale, displays a 'Our previous price' label before the original price crossed out, next to the price on the product page.</source>
+        <target>When a product is on sale, displays a 'Our previous price' label before the original price crossed out, next to the price on the product page.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1391</note>
+      </trans-unit>
+      <trans-unit id="91f7c813a787f39521bcf07a2421935d">
+        <source>Tax 'inc./excl.' label</source>
+        <target>Tax 'inc./excl.' label</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1403</note>
+      </trans-unit>
+      <trans-unit id="3acf85f0ce1d57facc75620d5b536c68">
+        <source>Displays whether the tax is included on the product page ('Tax incl./excl.' label) and adds a short mention in the footer of other pages.</source>
+        <target>Displays whether the tax is included on the product page ('Tax incl./excl.' label) and adds a short mention in the footer of other pages.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1406</note>
+      </trans-unit>
+      <trans-unit id="2baeb2d4d90e1cdb9182f4e229508b3b">
+        <source>Price per unit label</source>
+        <target>Price per unit label</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1418</note>
+      </trans-unit>
+      <trans-unit id="3f9e6407d82977ad20a7815fcaa65e47">
+        <source>If available, displays the price per unit everywhere the product price is listed.</source>
+        <target>If available, displays the price per unit everywhere the product price is listed.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1421</note>
+      </trans-unit>
+      <trans-unit id="68efcb6dada7227cc184a87a6405532e">
+        <source>'Shipping fees excl.' label</source>
+        <target>'Shipping fees excl.' label</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1433</note>
+      </trans-unit>
+      <trans-unit id="979516139081495e903a48ed1489415c">
+        <source>Displays a label next to the product price ('Shipping excluded') and adds a short mention in the footer of other pages.</source>
+        <target>Displays a label next to the product price ('Shipping excluded') and adds a short mention in the footer of other pages.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1436</note>
+      </trans-unit>
+      <trans-unit id="f3b604ff05c70406fc2f1b68c1a9c658">
+        <source>If enabled, make sure the Shipping terms are associated with a page below (Legal Content Management). The label will link to this content.</source>
+        <target>If enabled, make sure the Shipping terms are associated with a page below (Legal Content Management). The label will link to this content.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1437</note>
+      </trans-unit>
+      <trans-unit id="36351ad1d80323e91bdc6f69caee6775">
+        <source>Revocation Terms within ToS</source>
+        <target>Revocation Terms within ToS</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1453</note>
+      </trans-unit>
+      <trans-unit id="bdf4cbf3cdbf8a0e03aad7f4910c1b57">
+        <source>Includes content from the Revocation Terms page within the Terms of Services (ToS).</source>
+        <target>Includes content from the Revocation Terms page within the Terms of Services (ToS).</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1456</note>
+      </trans-unit>
+      <trans-unit id="e3630cb2cd5786b78824ebc3fd818597">
+        <source>If enabled, make sure the Revocation Terms are associated with a page below (Legal Content Management).</source>
+        <target>If enabled, make sure the Revocation Terms are associated with a page below (Legal Content Management).</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1457</note>
+      </trans-unit>
+      <trans-unit id="f4ced086e850fc06ff4267366382f5d6">
+        <source>Revocation for virtual products</source>
+        <target>Revocation for virtual products</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1474</note>
+      </trans-unit>
+      <trans-unit id="4a45c80a18900618e6c2f690f08b58ec">
+        <source>Adds a mandatory checkbox when the cart contains a virtual product. Use it to ensure customers are aware that a virtual product cannot be returned.</source>
+        <target>Adds a mandatory checkbox when the cart contains a virtual product. Use it to ensure customers are aware that a virtual product cannot be returned.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1477</note>
+      </trans-unit>
+      <trans-unit id="776f2e85270c935a226d11cd45c4487a">
+        <source>Require customers to renounce their revocation right when purchasing virtual products (digital goods or services).</source>
+        <target>Require customers to renounce their revocation right when purchasing virtual products (digital goods or services).</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1478</note>
+      </trans-unit>
+      <trans-unit id="1c37d3c4d123c1b8332711a1c14ac232">
+        <source>'From' price label (when combinations)</source>
+        <target>'From' price label (when combinations)</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1495</note>
+      </trans-unit>
+      <trans-unit id="f6f7eb6f0c585ab51533c31dd4b1f488">
+        <source>Displays a 'From' label before the price on products with combinations.</source>
+        <target>Displays a 'From' label before the price on products with combinations.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1498</note>
+      </trans-unit>
+      <trans-unit id="2c5d047df77f799f0140d5e1881edd04">
+        <source>As prices can vary from a combination to another, this label indicates that the final price may be higher.</source>
+        <target>As prices can vary from a combination to another, this label indicates that the final price may be higher.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1499</note>
+      </trans-unit>
+      <trans-unit id="ccefb967cfedec2f7395fd015acd3727">
+        <source>Custom text in shopping cart page</source>
+        <target>Custom text in shopping cart page</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1516</note>
+      </trans-unit>
+      <trans-unit id="bee423c6b151e76995ed05befc861409">
+        <source>This text will be displayed on the shopping cart page. Leave empty to disable.</source>
+        <target>This text will be displayed on the shopping cart page. Leave empty to disable.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1518</note>
+      </trans-unit>
+      <trans-unit id="428bb092722a6c1c41d308ec4e9f15aa">
+        <source>Please inform your customers about how the order is legally confirmed.</source>
+        <target>Please inform your customers about how the order is legally confirmed.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1519</note>
+      </trans-unit>
+      <trans-unit id="98f770b0af18ca763421bac22b4b6805">
+        <source>Features</source>
+        <target>Features</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1600</note>
+      </trans-unit>
+      <trans-unit id="b08100205abea27ec0fdb7cd9369f028">
+        <source>Enable 'Reordering' feature</source>
+        <target>Enable 'Reordering' feature</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1606</note>
+      </trans-unit>
+      <trans-unit id="05c86a70075dc39057403169ef0007cc">
+        <source>If enabled, the 'Reorder' option allows customers to reorder in one click from their Order History page.</source>
+        <target>If enabled, the 'Reorder' option allows customers to reorder in one click from their Order History page.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1607</note>
+      </trans-unit>
+      <trans-unit id="1fa508d743a9f464f8b4510257ca492a">
+        <source>Make sure you comply with your local legislation before enabling: it can be considered as unsolicited goods.</source>
+        <target>Make sure you comply with your local legislation before enabling: it can be considered as unsolicited goods.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1610</note>
+      </trans-unit>
+      <trans-unit id="cadebe42ec37a2654161a876bc11d52c">
+        <source>Proportionate tax for shipping and wrapping</source>
+        <target>Proportionate tax for shipping and wrapping</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1626</note>
+      </trans-unit>
+      <trans-unit id="a2bfc699a0a4b724be41740c97c6b27b">
+        <source>When enabled, tax for shipping and wrapping costs will be calculated proportionate to taxes applying to the products in the cart.</source>
+        <target>When enabled, tax for shipping and wrapping costs will be calculated proportionate to taxes applying to the products in the cart.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1629</note>
+      </trans-unit>
+      <trans-unit id="6d9e1b60acc3cc4397af901c111bb9a1">
+        <source>If active, your carriers' shipping fees must be tax included! Make sure it is the case in the Shipping section.</source>
+        <target>If active, your carriers' shipping fees must be tax included! Make sure it is the case in the Shipping section.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1630</note>
+      </trans-unit>
+      <trans-unit id="9896806b3fb40a73bdda4781f61052bf">
+        <source>-- Select associated page --</source>
+        <target>-- Select associated page --</target>
+        <note>Context:
+File: modules/ps_legalcompliance/ps_legalcompliance.php:1693</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/admin/email_attachments_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c49b8914d58716ebb70e35e5a08db6dd">
+        <source>Email content inclusion</source>
+        <target>Email content inclusion</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/admin/email_attachments_form.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="124c44c55082e763c52819653560e925">
+        <source>This section allows you to include information from the "Legal Content Management" section above at the bottom of your shop's emails.</source>
+        <target>This section allows you to include information from the "Legal Content Management" section above at the bottom of your shop's emails.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/admin/email_attachments_form.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="96103eb82bd7f00ef55fac85c2f0a410">
+        <source>For each type of email, you can define which content you would like to include.</source>
+        <target>For each type of email, you can define which content you would like to include.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/admin/email_attachments_form.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="e29252902fd4eaee6279ea5b60bc9092">
+        <source>Email templates</source>
+        <target>Email templates</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/admin/email_attachments_form.tpl:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/admin/legal_cms_manager_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c47ab33401eaded8f1cb361a05f20e14">
+        <source>Legal content management</source>
+        <target>Legal content management</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/admin/legal_cms_manager_form.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="d7045651974bcdbcec6b44c6d7e7ffd4">
+        <source>Your country's legislation may require you to communicate some specific legal information to your customers.</source>
+        <target>Your country's legislation may require you to communicate some specific legal information to your customers.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/admin/legal_cms_manager_form.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="56a98e3806ba49b60a534872eb19d01a">
+        <source>The Legal Compliance module provides the means to indicate legally required informations to your customer, using static pages (some created on purpose by the module). It is your responsibility to fill in the corresponding pages with the required content.</source>
+        <target>The Legal Compliance module provides the means to indicate legally required informations to your customer, using static pages (some created on purpose by the module). It is your responsibility to fill in the corresponding pages with the required content.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/admin/legal_cms_manager_form.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="e087a70de5566015c0b9d3f54318a606">
+        <source>For each of the topics below, first indicate which of your Pages contains the required information:</source>
+        <target>For each of the topics below, first indicate which of your Pages contains the required information:</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/admin/legal_cms_manager_form.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="dc4cd8f87379d05d6a67eb1fe4ae162d">
+        <source>Add new Page</source>
+        <target>Add new Page</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/admin/legal_cms_manager_form.tpl:68</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

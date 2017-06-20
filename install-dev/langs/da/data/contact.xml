@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<entity_contact>
-  <contact id="Webmaster" name="Webmaster">
-    <description>Hvis et teknisk problem opstår på denne hjemmeside</description>
-  </contact>
-  <contact id="Customer_service" name="Kundeservice">
-    <description>Spørgsmål vedrørende et produkt eller en ordre</description>
-  </contact>
-</entity_contact>

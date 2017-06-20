@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Twig;
@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Twig;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template
@@ -40,15 +41,29 @@ class HookExtension extends \Twig_Extension
     private $hookDispatcher;
 
     /**
+     * @var ModuleDataProvider
+     */
+    private $moduleDataProvider;
+
+    /**
+     * @var ModuleRepository
+     */
+    private $moduleRepository;
+
+    /**
      * Constructor.
      *
      * @param HookDispatcher $hookDispatcher
      * @param ModuleDataProvider $moduleDataProvider
      */
-    public function __construct(HookDispatcher $hookDispatcher, ModuleDataProvider $moduleDataProvider)
-    {
+    public function __construct(
+      HookDispatcher $hookDispatcher,
+      ModuleDataProvider $moduleDataProvider,
+      ModuleRepository $moduleRepository = null
+    ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->moduleDataProvider = $moduleDataProvider;
+        $this->moduleRepository = $moduleRepository;
     }
 
     /**
@@ -112,10 +127,12 @@ class HookExtension extends \Twig_Extension
 
         $render = [];
         foreach ($hookRenders as $module => $hookRender) {
+            $moduleAttributes = $this->moduleRepository->getModuleAttributes($module);
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),
                 'content' => $hookRender,
+                'attributes' => $moduleAttributes->all(),
             ];
         }
 
@@ -138,7 +155,7 @@ class HookExtension extends \Twig_Extension
             throw new \Exception('Hook name missing');
         }
         $hookRenders = $this->hookDispatcher->renderForParameters($hookName, $hookParameters)->getContent();
-        return implode('<br class="hook-separator" />', $hookRenders);
+        return empty($hookRenders) ? '' : implode('<br class="hook-separator" />', $hookRenders);
     }
 
     /**

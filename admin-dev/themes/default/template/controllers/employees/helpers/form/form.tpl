@@ -1,12 +1,12 @@
 {**
- * 2007-2016 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,8 +18,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file="helpers/form/form.tpl"}
@@ -28,13 +28,13 @@
 	{if $input.type == 'prestashop_addons'}
 		<div class="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if} {if !isset($input.label)}col-lg-offset-3{/if}">
 			{if isset($logged_on_addons) && $logged_on_addons}
-				<p><i class="icon-user"></i>{l s='You are currently connected as %s' sprintf=[$username_addons]}</p>
+				<p><i class="icon-user"></i>{l s='You are currently connected as %username%' sprintf=['%username%' => '$username_addons'] d='Admin.Advparameters.Feature'}</p>
 				<a class="btn btn-default" href="#" id="addons_logout_button">
-					<i class="icon-signout"></i> {l s='Sign out from PrestaShop Addons'}
+					<i class="icon-signout"></i> {l s='Sign out from PrestaShop Addons' d='Admin.Advparameters.Feature'}
 				</a>
 			{else}
 				<a class="btn btn-default" data-toggle="modal" href="#" data-target="#modal_addons_connect">
-					<i class="icon-signout"></i> {l s='Sign in'}
+					<i class="icon-signout"></i> {l s='Sign in' d='Admin.Advparameters.Feature'}
 				</a>
 			{/if}
 		</div>
