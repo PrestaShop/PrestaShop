@@ -194,7 +194,7 @@ class ModuleTabRegister
                     ->depth('== 0')
                     ->name('*.php')
                     ->exclude(['index.php'])
-                    ->contains('/extends\s+ModuleAdminController/i');
+                    ->contains('/Controller\s+extends\s+/i');
 
         return iterator_to_array($moduleFolder);
     }
