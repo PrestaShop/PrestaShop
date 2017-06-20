@@ -16,6 +16,8 @@ cache:
 sudo: required
 dist: trusty
 
+group: edge
+
 php:
   - 5.4
   - 5.6
@@ -32,7 +34,7 @@ before_install:
   - bash travis-scripts/setup-apache.sh
 
   # PrestaShop configuration
-  - cp -Rf .composer/* ~/.composer/ & composer global install;
+  - cp -Rf .composer/* ~/.composer/ && composer global install;
   - cp tests/parameters.yml.travis app/config/parameters.yml
 
 notifications:
