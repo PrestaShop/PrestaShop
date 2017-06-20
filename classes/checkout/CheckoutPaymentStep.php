@@ -60,6 +60,11 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
 
     public function render(array $extraParams = array())
     {
+        $isFree = 0 == (float) $this->getCheckoutSession()->getCart()->getOrderTotal(true, Cart::BOTH);
+        $paymentOptions = $this->paymentOptionsFinder->present($isFree);
+
+        $conditionsToApprove = $this->conditionsToApproveFinder->getConditionsToApproveForTemplate();
+
         $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
         $deliveryOptionKey = $this->getCheckoutSession()->getSelectedDeliveryOption();
         if (isset($deliveryOptions[$deliveryOptionKey])) {
@@ -70,12 +75,9 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         unset($selectedDeliveryOption['product_list']);
 
         $assignedVars = array(
-            'payment_options' => $this
-                ->paymentOptionsFinder
-                ->present(),
-            'conditions_to_approve' => $this
-                ->conditionsToApproveFinder
-                ->getConditionsToApproveForTemplate(),
+            'is_free' => $isFree,
+            'payment_options' => $paymentOptions,
+            'conditions_to_approve' => $conditionsToApprove,
             'selected_payment_option' => $this->selected_payment_option,
             'selected_delivery_option' => $selectedDeliveryOption,
             'show_final_summary' => Configuration::get('PS_FINAL_SUMMARY_ENABLED'),
