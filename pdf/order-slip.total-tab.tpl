@@ -81,27 +81,36 @@
 		</tr>
 	{/if}
 
-	<tr class="bold">
-		<td class="grey" width="70%">
-			{if $tax_excluded_display}{l s='Total (Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='Total (Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}
-		</td>
-		<td class="white" width="30%">
-			{if $total_cart_rule}
-				{assign var=total_paid value=0}
-				{if $tax_excluded_display}
-					{$total_paid = $order->total_paid_tax_excl - $total_cart_rule}
-				{else}
-					{$total_paid = $order->total_paid_tax_incl - $total_cart_rule}
-				{/if}
-				- {displayPrice currency=$order->id_currency price=$total_paid}
-			{else}
-				{if $tax_excluded_display}
-					- {displayPrice currency=$order->id_currency price=$order->total_paid_tax_excl}
-				{else}
-					- {displayPrice currency=$order->id_currency price=$order->total_paid_tax_incl}
-				{/if}
-			{/if}
-		</td>
-	</tr>
+  {if $tax_excluded_display}
+    <tr class="bold">
+      <td class="grey" width="70%">
+        {l s='Total (Tax Excl.)' d='Shop.Pdf' pdf='true'}
+      </td>
+      <td class="white" width="30%">
+        {if $total_cart_rule}
+          {assign var=total_paid value=0}
+          {$total_paid = $order->total_paid_tax_excl - $total_cart_rule}
+          - {displayPrice currency=$order->id_currency price=$total_paid}
+        {else}
+          - {displayPrice currency=$order->id_currency price=$order->total_paid_tax_excl}
+        {/if}
+      </td>
+    </tr>
+  {/if}
+
+  <tr class="bold">
+    <td class="grey" width="70%">
+      {l s='Total (Tax Incl.)' d='Shop.Pdf' pdf='true'}
+    </td>
+    <td class="white" width="30%">
+      {if $total_cart_rule}
+        {assign var=total_paid value=0}
+        {$total_paid = $order->total_paid_tax_incl - $total_cart_rule}
+        - {displayPrice currency=$order->id_currency price=$total_paid}
+      {else}
+        - {displayPrice currency=$order->id_currency price=$order->total_paid_tax_incl}
+      {/if}
+    </td>
+  </tr>
 
 </table>

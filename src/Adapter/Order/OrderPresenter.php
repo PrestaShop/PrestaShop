@@ -222,11 +222,12 @@ class OrderPresenter implements PresenterInterface
         $amounts['subtotals'] = $subtotals;
 
         $amounts['totals'] = array();
+        $amount = $this->includeTaxes() ? $order->total_paid : $order->total_paid_tax_excl;
         $amounts['totals']['total'] = array(
             'type' => 'total',
             'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
-            'amount' => $order->total_paid,
-            'value' => $this->priceFormatter->format($order->total_paid, Currency::getCurrencyInstance((int)$order->id_currency)),
+            'amount' => $amount,
+            'value' => $this->priceFormatter->format($amount, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
         $amounts['totals']['total_paid'] = array(
