@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-use Module as ModuleLegacy;
+use Module as LegacyModule;
 
 /**
  * This class is the interface to the legacy Module class.
@@ -193,7 +193,7 @@ class Module implements ModuleInterface
                 // ToDo: Send to log when PR merged
             }
         }
-        $this->disk->set('is_valid', ($this->instance instanceof ModuleLegacy));
+        $this->disk->set('is_valid', ($this->instance instanceof LegacyModule));
 
         return $this->disk->get('is_valid');
     }
@@ -206,7 +206,7 @@ class Module implements ModuleInterface
 
         // If not modified, code used in installer is executed:
         // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
-        ModuleLegacy::updateTranslationsAfterInstall(false);
+        LegacyModule::updateTranslationsAfterInstall(false);
 
         return $this->instance->install();
     }
@@ -292,7 +292,7 @@ class Module implements ModuleInterface
     protected function instanciateLegacyModule()
     {
         require_once _PS_MODULE_DIR_.DIRECTORY_SEPARATOR.$this->attributes->get('name').DIRECTORY_SEPARATOR.$this->attributes->get('name').'.php';
-        $this->instance = ModuleLegacy::getInstanceByName($this->attributes->get('name'));
+        $this->instance = LegacyModule::getInstanceByName($this->attributes->get('name'));
     }
 
     public function get($attribute)

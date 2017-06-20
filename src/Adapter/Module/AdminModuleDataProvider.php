@@ -33,7 +33,7 @@ use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
-use Module;
+use Module as LegacyModule;
 use Context;
 
 /**
@@ -89,7 +89,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function getAllModules()
     {
-        return Module::getModulesOnDisk(true,
+        return LegacyModule::getModulesOnDisk(true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
             (int) Context::getContext()->employee->id
         );
