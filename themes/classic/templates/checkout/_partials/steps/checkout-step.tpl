@@ -36,7 +36,7 @@
       <i class="material-icons done">&#xE876;</i>
       <span class="step-number">{$position}</span>
       {$title}
-      <span class="step-edit text-muted"><i class="material-icons edit">mode_edit</i> {l s='edit' d='Shop.Theme.Actions'}</span>
+      <span class="step-edit text-muted"><i class="material-icons edit">mode_edit</i> {l s='Edit' d='Shop.Theme.Actions'}</span>
     </h1>
 
     <div class="content">
