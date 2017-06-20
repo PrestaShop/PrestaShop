@@ -40,8 +40,8 @@
 				<span class="status disabled {(0 == $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are not automatically updated" d='Admin.International.Feature'}</span>
 				<span class="status enabled {(0 != $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are automatically updated" d='Admin.International.Feature'}</span>
 			</div>
-        {else}
-            <div id="currencyCronjobLiveExchangeRate" class="panel">
+    {else}
+      <div id="currencyCronjobLiveExchangeRate" class="panel">
 				<div class="panel-heading">
 					{l s='Live exchange rates' d='Admin.International.Feature'}
 					<div class="pull-right checkbox titatoggle unchecked-red checkbox-slider--b-flat"></div>
