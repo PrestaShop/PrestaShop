@@ -130,7 +130,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'mapping_value' => 'id_customer',
             'mapping_name' => 'fullname_and_email',
             'placeholder' => $this->translator->trans('All customers', array(), 'Admin.Global'),
-            'template_collection' => '<div class="title col-md-10">%s</div><button type="button" class="btn btn-danger delete"><i class="material-icons">delete</i></button>',
+            'template_collection' => '<div class="media-body"><div class="label">%s</div><i class="material-icons delete">clear</i></div>',
             'limit' => 1,
             'required' => false,
             'label' => $this->translator->trans('Add customer', array(), 'Admin.Catalog.Feature'),
