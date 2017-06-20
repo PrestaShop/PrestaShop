@@ -1968,6 +1968,11 @@
 	    (0, _jquery2['default'])('#checkout-addresses-step').trigger('click');
 	    _prestashop2['default'].emit('editAddress');
 	  });
+	
+	  (0, _jquery2['default'])('#delivery-addresses, #invoice-addresses input[type=radio]').on('click', function () {
+	    (0, _jquery2['default'])('.address-item').removeClass('selected');
+	    (0, _jquery2['default'])('.address-item:has(input[type=radio]:checked)').addClass('selected');
+	  });
 	};
 	
 	module.exports = exports['default'];
