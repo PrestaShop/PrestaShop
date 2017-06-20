@@ -119,9 +119,13 @@ class ModuleCommand extends ContainerAwareCommand
         if ($file) {
             $moduleSelfConfigurator->file($file);
         }
+
+        // Check if validation passed and exit in case of errors
         $errors = $moduleSelfConfigurator->validate();
         if (!empty($errors)) {
+            // Display errors as a list
             $errors = array_map(function($val) { return '- '.$val; }, $errors);
+            // And add a default message at the top
             array_unshift($errors, $this->translator->trans(
                 'Validation of configuration details failed:',
                 array(),
@@ -130,13 +134,12 @@ class ModuleCommand extends ContainerAwareCommand
             $this->displayMessage($errors, 'error');
             return;
         }
+
+        // Actual configuration
         $moduleSelfConfigurator->configure();
-        $message = $this->translator->trans(
-            'Configuration successfully applied.',
-            array(),
-            'Admin.Modules.Notification'
-        );
-        $this->displayMessage($message, 'info');
+        $this->displayMessage(
+            $this->translator->trans('Configuration successfully applied.', array(), 'Admin.Modules.Notification'),
+            'info');
     }
 
     protected function executeGenericModuleAction($action, $moduleName)
