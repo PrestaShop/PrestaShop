@@ -26,7 +26,7 @@
 // Plugins CSS
 
 import 'dropzone/dist/min/dropzone.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 import 'magnific-popup/dist/magnific-popup.css';
 import 'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css';
 import 'PrestaKit/dist/css/jquery.growl.css';
