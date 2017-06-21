@@ -344,7 +344,7 @@ class AdminStockManagementControllerCore extends AdminController
         }
 
         //get currencies list
-        $currencies = Currency::getCurrencies();
+        $currencies = Currency::getCurrencies(false, true, true);
         if (1 < count($currencies)) {
             array_unshift($currencies, '-');
         }
