@@ -175,6 +175,10 @@ class TranslationService {
         }
 
         $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
+
+        if ('EmailsSubject' === $domain) {
+            $theme = 'subject';
+        }
         $dbCatalog = current($translationProvider->getDatabaseCatalogue($theme)->all());
 
         foreach ($defaultCatalog as $key => $message) {
