@@ -310,16 +310,18 @@ class TranslationService {
         $doctrine = $this->container->get('doctrine');
         $entityManager = $doctrine->getManager();
 
-        $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
-            ->findOneBy(array(
-                'lang' => $lang,
-                'domain' => $domain,
-                'key' => $key,
-                'theme' => $theme
-            ));
+        $searchTranslation = array(
+            'lang' => $lang,
+            'domain' => $domain,
+            'key' => $key,
+        );
+        if (!empty($theme)) {
+            $searchTranslation['theme'] = $theme;
+        }
+
+        $translation = $entityManager->getRepository('PrestaShopBundle:Translation')->findOneBy($searchTranslation);
 
         $resetTranslationSuccessfully = false;
-
         if (is_null($translation)) {
             $resetTranslationSuccessfully = true;
         }
