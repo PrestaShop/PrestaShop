@@ -23,58 +23,56 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="col-xs-9 card">
-    <div class="p-x-1 row translations-wrapper">
-      <transition name="fade">
-        <div v-if="principalReady">
-          <div class="col-xs-8 p-t-1" >
-            <h1 class="domain-info">
-              <span>{{ currentDomain }}</span>
-              <span>{{ currentDomainTotalTranslations }}</span>
-              <span v-show="currentDomainTotalMissingTranslations"> - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
-            </h1>
-          </div>
-          <div class="col-xs-4">
-            <PSPagination
-              pageNumber="3"
-              activeMultiPagination="5"
-              :current="currentPagination"
-              :pagesCount="pagesCount"
-              class="pull-xs-right"
-              @pageChanged="onPageChanged"
-            />
-          </div>
-          <form class="col-xs-12" :action="saveAction" method="post" @submit.prevent="saveTranslations">
-            <div class="row">
-              <div class="col-xs-12 m-b-2">
-                <PSButton :primary="true" type="submit" class="pull-xs-right">
-                  {{ trans('button_save') }}
-                </PSButton>
-              </div>
-            </div>
-
-            <TranslationInput
-              v-for="(translation, key) in translationsCatalog"
-              :key="key"
-              :translated="translation"
-              :label="translation.default"
-              :extraInfo="getDomain(translation.tree_domain)">
-            </TranslationInput>
-            <PSButton :primary="true" type="submit" class="pull-xs-right m-t-3">
-              {{ trans('button_save') }}
-            </PSButton>
-          </form>
-          <div class="col-xs-12">
-            <PSPagination
-              :current="currentPagination"
-              :pagesCount="pagesCount"
-              @pageChanged="onPageChanged"
-            />
-          </div>
+  <transition name="fade">
+    <div class="col-xs-9 card" v-if="principalReady">
+      <div class="p-x-1 row translations-wrapper">
+        <div class="col-xs-8 p-t-1" >
+          <h1 class="domain-info">
+            <span>{{ currentDomain }}</span>
+            <span>{{ currentDomainTotalTranslations }}</span>
+            <span v-show="currentDomainTotalMissingTranslations"> - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
+          </h1>
         </div>
-      </transition>
+        <div class="col-xs-4">
+          <PSPagination
+            pageNumber="3"
+            activeMultiPagination="5"
+            :current="currentPagination"
+            :pagesCount="pagesCount"
+            class="pull-xs-right"
+            @pageChanged="onPageChanged"
+          />
+        </div>
+        <form class="col-xs-12" :action="saveAction" method="post" @submit.prevent="saveTranslations">
+          <div class="row">
+            <div class="col-xs-12 m-b-2">
+              <PSButton :primary="true" type="submit" class="pull-xs-right">
+                {{ trans('button_save') }}
+              </PSButton>
+            </div>
+          </div>
+
+          <TranslationInput
+            v-for="(translation, key) in translationsCatalog"
+            :key="key"
+            :translated="translation"
+            :label="translation.default"
+            :extraInfo="getDomain(translation.tree_domain)">
+          </TranslationInput>
+          <PSButton :primary="true" type="submit" class="pull-xs-right m-t-3">
+            {{ trans('button_save') }}
+          </PSButton>
+        </form>
+        <div class="col-xs-12">
+          <PSPagination
+            :current="currentPagination"
+            :pagesCount="pagesCount"
+            @pageChanged="onPageChanged"
+          />
+        </div>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
