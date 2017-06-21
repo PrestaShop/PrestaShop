@@ -27,6 +27,7 @@ import prestashop from 'prestashop';
 
 $(document).ready(() => {
   prestashop.on('updateCart', (event) => {
+    prestashop.cart = event.reason.cart;
     var getCartViewUrl = $('.js-cart').data('refresh-url');
     var requestData = {};
 
@@ -101,7 +102,8 @@ $(document).ready(() => {
           reason: {
             idProduct: resp.id_product,
             idProductAttribute: resp.id_product_attribute,
-            linkAction: 'add-to-cart'
+            linkAction: 'add-to-cart',
+            cart: resp.cart
           },
           resp: resp
         });

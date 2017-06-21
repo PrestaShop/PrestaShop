@@ -1716,6 +1716,7 @@
 	
 	(0, _jquery2['default'])(document).ready(function () {
 	  _prestashop2['default'].on('updateCart', function (event) {
+	    _prestashop2['default'].cart = event.reason.cart;
 	    var getCartViewUrl = (0, _jquery2['default'])('.js-cart').data('refresh-url');
 	    var requestData = {};
 	
@@ -1786,7 +1787,8 @@
 	        reason: {
 	          idProduct: resp.id_product,
 	          idProductAttribute: resp.id_product_attribute,
-	          linkAction: 'add-to-cart'
+	          linkAction: 'add-to-cart',
+	          cart: resp.cart
 	        },
 	        resp: resp
 	      });
