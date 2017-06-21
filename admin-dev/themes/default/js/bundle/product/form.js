@@ -1963,14 +1963,14 @@ var priceCalculation = (function() {
     impactTaxInclude: function (obj) {
       var price = Tools.parseFloatFromString(obj.val());
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
-      if (isNaN(price)) {
-        targetInput.val(0);
-        return;
+      var newPrice = 0;
+
+      if (!isNaN(price)) {
+        var rates = this.getRates();
+        var computation_method = taxElem.find('option:selected').attr('data-computation-method');
+        newPrice = ps_round(addTaxes(price, rates, computation_method), 6);
+        newPrice = truncateDecimals(newPrice, 6);
       }
-      var rates = this.getRates();
-      var computation_method = taxElem.find('option:selected').attr('data-computation-method');
-      var newPrice = ps_round(addTaxes(price, rates, computation_method), 6);
-      newPrice = truncateDecimals(newPrice, 6);
 
       targetInput.val(newPrice);
     },
@@ -1996,14 +1996,14 @@ var priceCalculation = (function() {
     impactTaxExclude: function (obj) {
       var price = Tools.parseFloatFromString(obj.val());
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
-      if (isNaN(price)) {
-        targetInput.val(0);
-        return;
+      var newPrice = 0;
+
+      if (!isNaN(price)) {
+        var rates = this.getRates();
+        var computation_method = taxElem.find('option:selected').attr('data-computation-method');
+        newPrice = removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method);
+        newPrice = truncateDecimals(newPrice, 6);
       }
-      var rates = this.getRates();
-      var computation_method = taxElem.find('option:selected').attr('data-computation-method');
-      var newPrice = removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method);
-      newPrice = truncateDecimals(newPrice, 6);
 
       targetInput.val(newPrice);
     },

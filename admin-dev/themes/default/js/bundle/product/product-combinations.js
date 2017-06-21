@@ -63,6 +63,24 @@ var combinations = (function() {
       finalPriceLabel.html(Number(ps_round(finalPrice, 6)).toFixed(6));
   }
 
+  /**
+   * Returns a reference to the form for a specific combination
+   * @param {String} attributeId
+   * @return {jQuery}
+   */
+  function getCombinationForm(attributeId) {
+    return $('#combination_form_' + attributeId);
+  }
+
+  /**
+   * Returns a reference to the row of a specific combination
+   * @param {String} attributeId
+   * @return {jQuery}
+   */
+  function getCombinationRow(attributeId) {
+    return $('#accordion_combinations #attribute_' + attributeId);
+  }
+
   return {
     'init': function() {
       var showVariationsSelector = '#show_variations_selector input';
@@ -83,14 +101,18 @@ var combinations = (function() {
 
         // when typing a new quantity on the form, update it on the row
         .on('keyup', 'input[id^="combination"][id$="_attribute_quantity"]', function() {
-          var id_attribute = $(this).closest('.combination-form').attr('data');
-          $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-quantity input').val($(this).val());
+          var attributeId = $(this).closest('.combination-form').attr('data');
+          var input = getCombinationRow(attributeId).find('.attribute-quantity input');
+
+          input.val($(this).val());
         })
 
         // when typing a new quantity on the row, update it on the form
         .on('keyup', '.attribute-quantity input', function() {
-          var id_attribute = $(this).closest('.combination').attr('data');
-          $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_quantity"]').val($(this).val());
+          var attributeId = $(this).closest('.combination').attr('data');
+          var input = getCombinationForm(attributeId).find('input[id^="combination"][id$="_attribute_quantity"]');
+
+          input.val($(this).val());
         })
 
         // when typing a new impact on price on the form, update it on the row
@@ -106,8 +128,11 @@ var combinations = (function() {
 
         // when price impact is changed on the row, update it on the form
         .on('change', '.attribute-price input', function() {
-          var id_attribute = $(this).closest('.combination').attr('data');
-          $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_price"]').val($(this).val());
+          var attributeId = $(this).closest('.combination').attr('data');
+          var input = getCombinationForm(attributeId).find('input[id^="combination"][id$="_attribute_price"]');
+
+          input.val($(this).val());
+
           updateFinalPrice($(this).parent().parent().parent());
         })
 
@@ -115,17 +140,19 @@ var combinations = (function() {
         .on('click', 'input.attribute-default', function() {
           var selectedCombination = $(this);
           var combinationRadioButtons = $('input.attribute-default');
-          var id_attribute = $(this).closest('.combination').attr('data');
+          var attributeId = $(this).closest('.combination').attr('data');
 
           combinationRadioButtons.each(function unselect(index) {
             var combination = $(this);
-            if(combination.data('id') !== selectedCombination.data('id')) {
+            if (combination.data('id') !== selectedCombination.data('id')) {
               combination.prop("checked", false);
             }
           });
 
           $('.attribute_default_checkbox').removeAttr('checked');
-          $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_default"]').prop("checked", true);
+          getCombinationForm(attributeId)
+            .find('input[id^="combination"][id$="_attribute_default"]')
+            .prop("checked", true);
         })
 
         // Combinations fields display management
@@ -162,7 +189,7 @@ var combinations = (function() {
               // enable the top header selector if no combination(s) exists
               productTypeSelector.prop('disabled', false);
             }
-          }else {
+          } else {
             // this means we have or we want to have combinations
             // disable the product type selector
             productTypeSelector.prop('disabled', true);
