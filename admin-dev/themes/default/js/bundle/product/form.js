@@ -1741,7 +1741,7 @@ var priceCalculation = (function() {
 
   /**
    * Add taxes to a price
-   * @param {Number} price -Price without tax
+   * @param {Number} price - Price without tax
    * @param {Number[]} rates - Rates to apply
    * @param {Number} computationMethod The computation calculate method
    */
@@ -1822,7 +1822,8 @@ var priceCalculation = (function() {
   }
 
   return {
-    'init': function() {
+
+    init: function () {
       /** on update tax recalculate tax include price */
       taxElem.change(function() {
         if (reTaxElem.val() !== taxElem.val()) {
@@ -1899,10 +1900,22 @@ var priceCalculation = (function() {
 
       $('#form_step2_price, #form_step2_price_ttc').change();
     },
-    'normalizePrice': function (price) {
+
+    /**
+     * Converts a price string into a number
+     * @param {String} price
+     * @return {Number}
+     */
+    normalizePrice: function (price) {
       return Tools.parseFloatFromString(price, true);
     },
-    'addCurrentTax': function (price) {
+
+    /**
+     * Adds taxes to a price
+     * @param {Number} price Price without taxes
+     * @return {Number} Price with added taxes
+     */
+    addCurrentTax: function (price) {
       var rates = this.getRates();
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
       var priceWithTaxes = Number(ps_round(addTaxes(price, rates, computation_method), displayPricePrecision));
@@ -1910,25 +1923,44 @@ var priceCalculation = (function() {
 
       return priceWithTaxes + ecotaxIncluded;
     },
-    'taxInclude': function() {
+
+    /**
+     * Calculates the price with taxes and updates the elements containing it
+     */
+    taxInclude: function () {
       var newPrice = truncateDecimals(this.addCurrentTax(this.normalizePrice(priceHTElem.val())), 6);
 
       priceTTCElem.val(newPrice).change();
       priceTTCShorcutElem.val(newPrice).change();
     },
-    'removeCurrentTax': function (price) {
+
+    /**
+     * Removes taxes from a price
+     * @param {Number} price Price with taxes
+     * @return {Number} Price without taxes
+     */
+    removeCurrentTax: function (price) {
       var rates = this.getRates();
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
 
       return ps_round(removeTaxes(ps_round(price - getEcotaxTaxIncluded(), displayPricePrecision), rates, computation_method), displayPricePrecision);
     },
-    'taxExclude': function() {
+
+    /**
+     * Calculates the price without taxes and updates the elements containing it
+     */
+    taxExclude: function () {
       var newPrice = truncateDecimals(this.removeCurrentTax(this.normalizePrice(priceTTCElem.val())), 6);
 
       priceHTElem.val(newPrice).change();
       priceHTShortcutElem.val(newPrice).change();
     },
-    'impactTaxInclude': function(obj) {
+
+    /**
+     * Calculates and displays the impact on price (including tax) for a combination
+     * @param {jQuery} obj
+     */
+    impactTaxInclude: function (obj) {
       var price = Tools.parseFloatFromString(obj.val());
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
       if (isNaN(price)) {
@@ -1942,7 +1974,12 @@ var priceCalculation = (function() {
 
       targetInput.val(newPrice);
     },
-    'impactFinalPrice': function(obj) {
+
+    /**
+     * Calculates and displays the final price for a combination
+     * @param {jQuery} obj
+     */
+    impactFinalPrice: function (obj) {
       var price = this.normalizePrice(obj.val());
       var finalPrice = obj.closest('div[id^="combination_form_"]').find('.final-price');
       var defaultFinalPrice = finalPrice.attr('data-price');
@@ -1951,7 +1988,12 @@ var priceCalculation = (function() {
 
       finalPrice.html(priceToBeChanged);
     },
-    'impactTaxExclude': function(obj) {
+
+    /**
+     * Calculates and displays the impact on price (excluding tax) for a combination
+     * @param {jQuery} obj
+     */
+    impactTaxExclude: function (obj) {
       var price = Tools.parseFloatFromString(obj.val());
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
       if (isNaN(price)) {
@@ -1967,10 +2009,10 @@ var priceCalculation = (function() {
     },
 
     /**
-     *
+     * Returns the tax rates that apply
      * @return {Number[]}
      */
-    getRates: function() {
+    getRates: function () {
       return taxElem
         .find('option:selected')
         .attr('data-rates')
