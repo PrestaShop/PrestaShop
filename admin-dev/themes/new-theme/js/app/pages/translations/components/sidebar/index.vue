@@ -139,6 +139,16 @@
       font-size: .65rem;
       margin-left: auto;
     }
+    .tree-extra-label-mini {
+      background-color: $danger;
+      color: $white;
+      padding: 0 0.5rem;
+      border-radius: 0.75rem;
+      display: inline-block;
+      font-size: .75rem;
+      height: 1.5rem;
+      margin-left: auto;
+    }
     .tree-label {
       &:hover {
         color: $primary;
