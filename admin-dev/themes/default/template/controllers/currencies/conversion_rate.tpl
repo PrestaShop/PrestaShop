@@ -40,6 +40,15 @@
 				<span class="status disabled {(0 == $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are not automatically updated" d='Admin.International.Feature'}</span>
 				<span class="status enabled {(0 != $PS_ACTIVE_CRONJOB_EXCHANGE_RATE)?'':'hide'}">{l s="The exchange rates are automatically updated" d='Admin.International.Feature'}</span>
 			</div>
+    {else}
+      <div id="currencyCronjobLiveExchangeRate" class="panel">
+				<div class="panel-heading">
+					{l s='Live exchange rates' d='Admin.International.Feature'}
+					<div class="pull-right checkbox titatoggle unchecked-red checkbox-slider--b-flat"></div>
+					<div class="clearfix"></div>
+				</div>
+				<span class="status disabled">{l s='Please install %module_name% before using this feature' sprintf=['%module_name%' => 'cronjobs'] d='Admin.International.Notification'}</span>
+			</div>
 		{/if}
 		<div class="panel">
 			<div class="panel-heading">{l s='Update exchange rates' d='Admin.International.Feature'}</div>
