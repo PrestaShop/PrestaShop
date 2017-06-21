@@ -65,7 +65,7 @@ var combinations = (function() {
 
   return {
     'init': function() {
-      var showVariationsSelector = $('#show_variations_selector input');
+      var showVariationsSelector = '#show_variations_selector input';
       var productTypeSelector = $('#form_step1_type_product');
       var combinationsListSelector = '#accordion_combinations .combination';
       var combinationsList = $(combinationsListSelector);
@@ -74,176 +74,167 @@ var combinations = (function() {
         productTypeSelector.prop('disabled', true);
       }
 
-      /** delete combination */
-      $(document).on('click', '#accordion_combinations .delete', function(e) {
-        e.preventDefault();
-        remove($(this));
-      });
+      $(document)
+        // delete combination
+        .on('click', '#accordion_combinations .delete', function(e) {
+          e.preventDefault();
+          remove($(this));
+        })
 
-      /** on change quantity, update field quantity row */
-      $(document).on('keyup', 'input[id^="combination"][id$="_attribute_quantity"]', function() {
-        var id_attribute = $(this).closest('.combination-form').attr('data');
-        $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-quantity input').val($(this).val());
-      });
+        // when typing a new quantity on the form, update it on the row
+        .on('keyup', 'input[id^="combination"][id$="_attribute_quantity"]', function() {
+          var id_attribute = $(this).closest('.combination-form').attr('data');
+          $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-quantity input').val($(this).val());
+        })
 
-      /** on change shortcut quantity, update form field quantity */
-      $(document).on('keyup', '.attribute-quantity input', function() {
-        var id_attribute = $(this).closest('.combination').attr('data');
-        $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_quantity"]').val($(this).val());
-      });
+        // when typing a new quantity on the row, update it on the form
+        .on('keyup', '.attribute-quantity input', function() {
+          var id_attribute = $(this).closest('.combination').attr('data');
+          $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_quantity"]').val($(this).val());
+        })
 
-      /** on change shortcut impact on price, update form field impact on price */
-      $(document).on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function () {
-        var id_attribute = $(this).closest('.combination-form').attr('data');
-        var input = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price input');
+        // when typing a new impact on price on the form, update it on the row
+        .on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function () {
+          var id_attribute = $(this).closest('.combination-form').attr('data');
+          var input = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price input');
 
-        input.val($(this).val());
+          input.val($(this).val());
 
-        /* force the update of final price */
-        updateFinalPrice($(input.parents('tr')[0]));
-      });
+          /* force the update of final price */
+          updateFinalPrice($(input.parents('tr')[0]));
+        })
 
-      /** on change default attribute, update which combination is the new default */
-      $(document).on('click', 'input.attribute-default', function() {
-        var selectedCombination = $(this);
-        var combinationRadioButtons = $('input.attribute-default');
-        var id_attribute = $(this).closest('.combination').attr('data');
+        // when price impact is changed on the row, update it on the form
+        .on('change', '.attribute-price input', function() {
+          var id_attribute = $(this).closest('.combination').attr('data');
+          $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_price"]').val($(this).val());
+          updateFinalPrice($(this).parent().parent().parent());
+        })
 
-        combinationRadioButtons.each(function unselect(index) {
-          var combination = $(this);
-          if(combination.data('id') !== selectedCombination.data('id')) {
-            combination.prop("checked", false);
+        // on change default attribute, update which combination is the new default
+        .on('click', 'input.attribute-default', function() {
+          var selectedCombination = $(this);
+          var combinationRadioButtons = $('input.attribute-default');
+          var id_attribute = $(this).closest('.combination').attr('data');
+
+          combinationRadioButtons.each(function unselect(index) {
+            var combination = $(this);
+            if(combination.data('id') !== selectedCombination.data('id')) {
+              combination.prop("checked", false);
+            }
+          });
+
+          $('.attribute_default_checkbox').removeAttr('checked');
+          $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_default"]').prop("checked", true);
+        })
+
+        // Combinations fields display management
+        .on('change', showVariationsSelector, function() {
+          displayFieldsManager.refresh();
+          combinationsList = $(combinationsListSelector);
+
+          if ($(this).val() === '0') {
+            //if combination(s) exists, alert user for deleting it
+            if (combinationsList.length > 0) {
+              modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null, {
+                onCancel: function() {
+                  $('#show_variations_selector input[value="1"]').prop('checked', true);
+                  displayFieldsManager.refresh();
+                },
+                onContinue: function() {
+                  $.ajax({
+                    type: 'GET',
+                    url: $('#accordion_combinations').attr('data-action-delete-all').replace(/\/\d+(?=\?.*)/, '/' + $('#form_id_product').val()),
+                    success: function(response) {
+                      combinationsList.remove();
+                      displayFieldsManager.refresh();
+                    },
+                    error: function(response) {
+                      showErrorMessage(jQuery.parseJSON(response.responseText).message);
+                    }
+                  });
+                  // enable the top header selector
+                  // we want to use a "Simple product" without any combinations
+                  productTypeSelector.prop('disabled', false);
+                }
+              }).show();
+            } else {
+              // enable the top header selector if no combination(s) exists
+              productTypeSelector.prop('disabled', false);
+            }
+          }else {
+            // this means we have or we want to have combinations
+            // disable the product type selector
+            productTypeSelector.prop('disabled', true);
           }
-        });
+        })
 
+        // open combination form
+        .on('click', '#accordion_combinations .btn-open', function(e) {
+          e.preventDefault();
+          var contentElem = $($(this).attr('href'));
 
-        $('.attribute_default_checkbox').removeAttr('checked');
-        $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_default"]').prop("checked", true);
-      });
-
-
-      /** on change price on impact, update price on impact form field */
-      $(document).on('change', '.attribute-price input', function() {
-        var id_attribute = $(this).closest('.combination').attr('data');
-        $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_price"]').val($(this).val());
-        updateFinalPrice($(this).parent().parent().parent());
-      });
-
-      /** on change price, update price row */
-      $(document).on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function() {
-        var id_attribute = $(this).closest('.combination-form').attr('data');
-        var attributePrice = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price-display');
-        formatCurrencyCldr(Tools.parseFloatFromString($(this).val(), true), function(result) {
-          attributePrice.html(result);
-        });
-      });
-
-      /** Combinations fields display management */
-      showVariationsSelector.change(function() {
-        displayFieldsManager.refresh();
-        combinationsList = $(combinationsListSelector);
-
-        if ($(this).val() === '0') {
-          //if combination(s) exists, alert user for deleting it
-          if (combinationsList.length > 0) {
-            modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null, {
-              onCancel: function() {
-                $('#show_variations_selector input[value="1"]').prop('checked', true);
-                displayFieldsManager.refresh();
-              },
-              onContinue: function() {
-                $.ajax({
-                  type: 'GET',
-                  url: $('#accordion_combinations').attr('data-action-delete-all').replace(/\/\d+(?=\?.*)/, '/' + $('#form_id_product').val()),
-                  success: function(response) {
-                    combinationsList.remove();
-                    displayFieldsManager.refresh();
-                  },
-                  error: function(response) {
-                    showErrorMessage(jQuery.parseJSON(response.responseText).message);
-                  }
-                });
-                // enable the top header selector
-                // we want to use a "Simple product" without any combinations
-                productTypeSelector.prop('disabled', false);
-              }
-            }).show();
-          } else {
-            // enable the top header selector if no combination(s) exists
-            productTypeSelector.prop('disabled', false);
+          /** create combinations navigation */
+          var navElem = contentElem.find('.nav');
+          var id_attribute = contentElem.attr('data');
+          var prevCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').prev().attr('data');
+          var nextCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').next().attr('data');
+          navElem.find('.prev, .next').hide();
+          if (prevCombinationId) {
+            navElem.find('.prev').attr('data', prevCombinationId).show();
           }
-        }else {
-          // this means we have or we want to have combinations
-          // disable the product type selector
-          productTypeSelector.prop('disabled', true);
-        }
-      });
+          if (nextCombinationId) {
+            navElem.find('.next').attr('data', nextCombinationId).show();
+          }
 
-      /** open combination form */
-      $(document).on('click', '#accordion_combinations .btn-open', function(e) {
-        e.preventDefault();
-        var contentElem = $($(this).attr('href'));
+          /** init combination tax include price */
+          priceCalculation.impactTaxInclude(contentElem.find('.attribute_priceTE'));
 
-        /** create combinations navigation */
-        var navElem = contentElem.find('.nav');
-        var id_attribute = contentElem.attr('data');
-        var prevCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').prev().attr('data');
-        var nextCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').next().attr('data');
-        navElem.find('.prev, .next').hide();
-        if (prevCombinationId) {
-          navElem.find('.prev').attr('data', prevCombinationId).show();
-        }
-        if (nextCombinationId) {
-          navElem.find('.next').attr('data', nextCombinationId).show();
-        }
+          contentElem.insertBefore('#form-nav').removeClass('hide').show();
 
-        /** init combination tax include price */
-        priceCalculation.impactTaxInclude(contentElem.find('.attribute_priceTE'));
+          contentElem.find('.datepicker').datetimepicker({
+            locale: iso_user,
+            format: 'YYYY-MM-DD'
+          });
 
-        contentElem.insertBefore('#form-nav').removeClass('hide').show();
+          function countSelectedProducts() {
+            return $('#combination_form_' + contentElem.attr('data') + ' .img-highlight').length;
+          }
 
-        contentElem.find('.datepicker').datetimepicker({
-          locale: iso_user,
-          format: 'YYYY-MM-DD'
-        });
+          var number = $('#combination_form_' + contentElem.attr('data') + ' .number-of-images'),
+              allProductCombination = $('#combination_form_' + contentElem.attr('data') + ' .product-combination-image').length;
 
-        function countSelectedProducts() {
-          return $('#combination_form_' + contentElem.attr('data') + ' .img-highlight').length;
-        }
-
-        var number = $('#combination_form_' + contentElem.attr('data') + ' .number-of-images'),
-            allProductCombination = $('#combination_form_' + contentElem.attr('data') + ' .product-combination-image').length;
-
-        number.text(countSelectedProducts() + '/' + allProductCombination);
-
-        $(document).on('click','.tabs .product-combination-image', function () {
           number.text(countSelectedProducts() + '/' + allProductCombination);
-        });
 
-        /** Add title on product's combination image */
-        $(function() {
-            $('#combination_form_' + contentElem.attr('data')).find("img").each(function() {
-                title = $(this).attr('src').split('/').pop();
-                $(this).attr('title',title);
-            });
-        });
-        
-        $('#form-nav, #form_content').hide();
-      });
+          $(document).on('click','.tabs .product-combination-image', function () {
+            number.text(countSelectedProducts() + '/' + allProductCombination);
+          });
 
-      /** close combination form */
-      $(document).on('click', '#form .combination-form .btn-back', function(e) {
-        e.preventDefault();
-        $(this).closest('.combination-form').hide();
-        $('#form-nav, #form_content').show();
-      });
+          /** Add title on product's combination image */
+          $(function() {
+              $('#combination_form_' + contentElem.attr('data')).find("img").each(function() {
+                  title = $(this).attr('src').split('/').pop();
+                  $(this).attr('title',title);
+              });
+          });
 
-      /** switch combination form */
-      $(document).on('click', '#form .combination-form .nav a', function(e) {
-        e.preventDefault();
-        $('.combination-form').hide();
-        $('#accordion_combinations .combination[data="' + $(this).attr('data') + '"] .btn-open').click();
-      });
+          $('#form-nav, #form_content').hide();
+        })
+
+        // close combination form
+        .on('click', '#form .combination-form .btn-back', function(e) {
+          e.preventDefault();
+          $(this).closest('.combination-form').hide();
+          $('#form-nav, #form_content').show();
+        })
+
+        // switch combination form
+        .on('click', '#form .combination-form .nav a', function(e) {
+          e.preventDefault();
+          $('.combination-form').hide();
+          $('#accordion_combinations .combination[data="' + $(this).attr('data') + '"] .btn-open').click();
+        })
+      ;
     }
   };
 })();
