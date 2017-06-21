@@ -27,14 +27,14 @@
     <div class="p-x-1 row translations-wrapper">
       <transition name="fade">
         <div v-if="principalReady">
-          <div class="col-xs-6 p-t-1" >
+          <div class="col-xs-8 p-t-1" >
             <h1 class="domain-info">
               <span>{{ currentDomain }}</span>
               <span>{{ currentDomainTotalTranslations }}</span>
               <span v-show="currentDomainTotalMissingTranslations"> - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
             </h1>
           </div>
-          <div class="col-xs-6">
+          <div class="col-xs-4">
             <PSPagination
               pageNumber="3"
               activeMultiPagination="5"
@@ -46,7 +46,7 @@
           </div>
           <form class="col-xs-12" :action="saveAction" method="post" @submit.prevent="saveTranslations">
             <div class="row">
-              <div class="col-xs-12">
+              <div class="col-xs-12 m-b-2">
                 <PSButton :primary="true" type="submit" class="pull-xs-right">
                   {{ trans('button_save') }}
                 </PSButton>
@@ -60,7 +60,7 @@
               :label="translation.default"
               :extraInfo="getDomain(translation.tree_domain)">
             </TranslationInput>
-            <PSButton :primary="true" type="submit" class="pull-xs-right m-t-2">
+            <PSButton :primary="true" type="submit" class="pull-xs-right m-t-3">
               {{ trans('button_save') }}
             </PSButton>
           </form>
