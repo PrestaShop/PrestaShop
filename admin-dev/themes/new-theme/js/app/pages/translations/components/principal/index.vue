@@ -25,7 +25,7 @@
 <template>
   <transition name="fade">
     <div class="col-xs-9 card" v-if="principalReady">
-      <div class="p-x-1 row translations-wrapper">
+      <div class="p-x-1 p-b-1 row translations-wrapper">
         <div class="col-xs-8 p-t-1" >
           <h1 class="domain-info">
             <span>{{ currentDomain }}</span>
@@ -106,13 +106,24 @@
         return this.$store.state.currentDomain;
       },
       currentDomainTotalTranslations() {
-        return this.$store.state.currentDomainTotalTranslations ? `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}` : '';
+        return (this.$store.state.currentDomainTotalTranslations <= 1) ? `- ${this.trans('label_total_domain_singular')}` : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
       },
       currentDomainTotalMissingTranslations() {
         return this.$store.state.currentDomainTotalMissingTranslations;
       },
       currentDomainTotalMissingTranslationsString() {
-        return this.trans('label_missing').replace('%d', this.currentDomainTotalMissingTranslations);
+        let totalMissingTranslationsString = '';
+
+        if (
+          this.currentDomainTotalMissingTranslations
+          && this.currentDomainTotalMissingTranslations === 1
+        ) {
+          totalMissingTranslationsString = this.trans('label_missing_singular');
+        } else if (this.currentDomainTotalMissingTranslations) {
+          totalMissingTranslationsString = this.trans('label_missing').replace('%d', this.currentDomainTotalMissingTranslations);
+        }
+
+        return totalMissingTranslationsString;
       },
     },
     methods: {

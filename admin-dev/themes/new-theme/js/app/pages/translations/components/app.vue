@@ -55,13 +55,13 @@
         return this.$store.getters.isReady;
       },
       totalTranslations() {
-        return this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.totalTranslations);
+        return (this.$store.state.totalTranslations <= 1) ? this.trans('label_total_domain_singular').replace('%nb_translations%', this.$store.state.totalTranslations) : this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.totalTranslations);
       },
       totalMissingTranslations() {
         return this.$store.state.totalMissingTranslations;
       },
       totalMissingTranslationsString() {
-        return this.trans('label_missing').replace('%d', this.totalMissingTranslations);
+        return this.totalMissingTranslations === 1 ? this.trans('label_missing_singular') : this.trans('label_missing').replace('%d', this.totalMissingTranslations);
       },
     },
     methods: {

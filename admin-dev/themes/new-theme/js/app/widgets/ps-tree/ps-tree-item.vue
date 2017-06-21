@@ -76,7 +76,15 @@
         return this.isFolder && this.model.extraLabel;
       },
       getExtraLabel() {
-        return this.translations.extra ? this.translations.extra.replace('%d', this.model.extraLabel) : '';
+        let extraLabel = '';
+
+        if (this.model.extraLabel && this.model.extraLabel === 1) {
+          extraLabel = this.translations.extra_singular;
+        } else if (this.model.extraLabel) {
+          extraLabel = this.translations.extra.replace('%d', this.model.extraLabel);
+        }
+
+        return extraLabel;
       },
       chevron() {
         return !this.isFolder ? 'hidden' : '';

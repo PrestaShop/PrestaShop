@@ -70,6 +70,7 @@
           expand: this.trans('sidebar_expand'),
           reduce: this.trans('sidebar_collapse'),
           extra: this.trans('label_missing'),
+          extra_singular: this.trans('label_missing_singular'),
         };
       },
     },
