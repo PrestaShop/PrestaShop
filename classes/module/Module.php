@@ -2972,65 +2972,41 @@ abstract class ModuleCore
             eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override_remove'.$uniq), implode('', $module_file)));
             $module_class = new ReflectionClass($classname.'Override_remove'.$uniq);
 
-            // Remove methods from override file
-            foreach ($module_class->getMethods() as $method) {
-                if (!$override_class->hasMethod($method->getName())) {
-                    continue;
-                }
+            // Remove module methods from override file
+            foreach ($override_class->getMethods() as $method) {
+                $start_line = $method->getStartLine();
+                $end_line = $method->getEndLine();
 
-                $method = $override_class->getMethod($method->getName());
-                $length = $method->getEndLine() - $method->getStartLine() + 1;
-
-                $module_method = $module_class->getMethod($method->getName());
-                $module_length = $module_method->getEndLine() - $module_method->getStartLine() + 1;
-
-                $override_file_orig = $override_file;
-
-                $orig_content = preg_replace('/\s/', '', implode('', array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
-                $module_content = preg_replace('/\s/', '', implode('', array_splice($module_file, $module_method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
-
-                $replace = true;
-                if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$method->getStartLine() - 5])) {
-                    $override_file[$method->getStartLine() - 6] = $override_file[$method->getStartLine() - 5] = $override_file[$method->getStartLine() - 4] = $override_file[$method->getStartLine() - 3] = $override_file[$method->getStartLine() - 2] = '#--remove--#';
-                    $replace = false;
-                }
-
-                if (md5($module_content) != md5($orig_content) && $replace) {
-                    $override_file = $override_file_orig;
+                if (preg_match('/\* module: ('.$this->name.')$/ism', $override_file[$start_line - 5])) {
+                    $override_file[$start_line - 6] = $override_file[$start_line - 5] = $override_file[$start_line - 4] = $override_file[$start_line - 3] = $override_file[$start_line - 2] = '#--remove--#';
+                    $length = $end_line - $start_line + 1;
+                    $orig_content = preg_replace('/\s/', '', implode('', array_splice($override_file, $start_line - 1, $length, array_pad(array(), $length, '#--remove--#'))));
                 }
             }
 
-            // Remove properties from override file
-            foreach ($module_class->getProperties() as $property) {
-                if (!$override_class->hasProperty($property->getName())) {
-                    continue;
-                }
-
+            // Remove module properties from override file
+            foreach ($override_class->getProperties() as $property) {
                 // Replace the declaration line by #--remove--#
                 foreach ($override_file as $line_number => &$line_content) {
                     if (preg_match('/(public|private|protected)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content)) {
-                        if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 4])) {
+                        if (preg_match('/\* module: ('.$this->name.')$/ism', $override_file[$line_number - 4])) {
                             $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
+                            $line_content = '#--remove--#';
                         }
-                        $line_content = '#--remove--#';
                         break;
                     }
                 }
             }
 
-            // Remove properties from override file
-            foreach ($module_class->getConstants() as $constant => $value) {
-                if (!$override_class->hasConstant($constant)) {
-                    continue;
-                }
-
+            // Remove module constants from override file
+            foreach ($override_class->getConstants() as $constant => $value) {
                 // Replace the declaration line by #--remove--#
                 foreach ($override_file as $line_number => &$line_content) {
                     if (preg_match('/(const)\s+(static\s+)?(\$)?'.$constant.'/i', $line_content)) {
-                        if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 4])) {
+                        if (preg_match('/\* module: ('.$this->name.')$/ism', $override_file[$line_number - 4])) {
                             $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
+                            $line_content = '#--remove--#';
                         }
-                        $line_content = '#--remove--#';
                         break;
                     }
                 }
