@@ -115,16 +115,24 @@ var combinations = (function() {
           input.val($(this).val());
         })
 
-        // when typing a new impact on price on the form, update it on the row
-        .on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function () {
-          var id_attribute = $(this).closest('.combination-form').attr('data');
-          var input = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price input');
+        .on({
+          // when typing a new impact on price on the form, update it on the row
+          'keyup': function () {
+            var attributeId = $(this).closest('.combination-form').attr('data');
+            var input = getCombinationRow(attributeId).find('.attribute-price input');
 
-          input.val($(this).val());
+            input.val($(this).val());
+          },
+          // when impact on price on the form is changed, update final price
+          'change': function () {
+            var attributeId = $(this).closest('.combination-form').attr('data');
+            var input = getCombinationRow(attributeId).find('.attribute-price input');
 
-          /* force the update of final price */
-          updateFinalPrice($(input.parents('tr')[0]));
-        })
+            input.val($(this).val());
+
+            updateFinalPrice($(input.parents('tr')[0]));
+          }
+        }, 'input[id^="combination"][id$="_attribute_price"]')
 
         // when price impact is changed on the row, update it on the form
         .on('change', '.attribute-price input', function() {

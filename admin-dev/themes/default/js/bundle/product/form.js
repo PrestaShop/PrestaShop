@@ -1972,7 +1972,10 @@ var priceCalculation = (function() {
         newPrice = truncateDecimals(newPrice, 6);
       }
 
-      targetInput.val(newPrice);
+      targetInput
+        .val(newPrice)
+        .trigger('change')
+      ;
     },
 
     /**
@@ -2005,7 +2008,10 @@ var priceCalculation = (function() {
         newPrice = truncateDecimals(newPrice, 6);
       }
 
-      targetInput.val(newPrice);
+      targetInput
+        .val(newPrice)
+        .trigger('change')
+      ;
     },
 
     /**
