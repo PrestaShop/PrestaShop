@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <nav class="pull-xs-right m-t-1">
+  <nav class="pull-xs-right m-t-1" v-if="displayPagination">
     <ul class="pagination" :class="{'multi':isMultiPagination}">
       <li v-if="isMultiPagination" class="page-item">
         <button v-show="activeLeftArrow" class="pull-left page-link" @click="prev($event)">
@@ -72,6 +72,9 @@
       },
       pagesToDisplay() {
         return this.multiPagesToDisplay;
+      },
+      displayPagination() {
+        return this.pagesCount > 1;
       },
     },
     methods: {
