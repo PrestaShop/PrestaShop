@@ -29,7 +29,7 @@
     </span>
     <input
       ref = "tags"
-      :placeholder="placeholder"
+      :placeholder="placeholderToDisplay"
       type="text"
       v-model="tag"
       class="input"
@@ -47,7 +47,10 @@
     props: ['tags', 'placeholder'],
     computed: {
       inputSize() {
-        return this.placeholder ? this.placeholder.length : 0;
+        return !this.tags.length && this.placeholder ? this.placeholder.length : 0;
+      },
+      placeholderToDisplay() {
+        return this.tags.length ? '' : this.placeholder;
       },
     },
     methods: {
