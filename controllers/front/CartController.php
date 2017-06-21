@@ -105,11 +105,13 @@ class CartControllerCore extends FrontController
         $productQuantity = $updatedProduct['quantity'];
 
         if (!$this->errors) {
+            $cartPresenter = new CartPresenter();
             $this->ajaxDie(Tools::jsonEncode([
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
                 'quantity' => $productQuantity,
+                'cart' => $cartPresenter->present($this->context->cart),
             ]));
         } else {
             $this->ajaxDie(Tools::jsonEncode([
@@ -294,7 +296,7 @@ class CartControllerCore extends FrontController
                 Tools::redirectAdmin($this->context->link->getProductLink($product));
             }
         }
-        
+
         $qty_to_check = $this->qty;
         $cart_products = $this->context->cart->getProducts();
 
