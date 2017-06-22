@@ -50,6 +50,7 @@
         this.$refs.psTags.add(tag);
       },
       onSearch() {
+        this.$store.dispatch('updateSearch', this.tags);
         this.$emit('search', this.tags);
       },
     },

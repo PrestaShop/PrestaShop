@@ -46,8 +46,10 @@ class InternationalApi extends AbstractApi
             'label_total_domain_singular' => $this->translator->trans('%nb_translations% expression', array(), 'Admin.International.Feature'),
             'link_international' => $this->translator->trans('International', array(), 'Admin.Navigation.Menu'),
             'link_translations' => $this->translator->trans('Translations', array(), 'Admin.Navigation.Menu'),
+            'no_result' => $this->translator->trans('There are no results matching your query "%s".', array(), 'Admin.Navigation.Search'),
             'sidebar_expand' => $this->translator->trans('Expand', array(), 'Admin.Actions'),
             'sidebar_collapse' => $this->translator->trans('Collapse', array(), 'Admin.Actions'),
+            'search_info' => $this->translator->trans('%d results match your query "%s".', array(), 'Admin.Navigation.Search'),
             'search_label' => $this->translator->trans('Search translations', array(), 'Admin.International.Feature'),
             'search_placeholder' => $this->translator->trans('Search a word or expression, e.g.: "Order confirmation"', array(), 'Admin.International.Help'),
         );

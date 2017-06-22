@@ -52,11 +52,17 @@
         if (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined') {
           if (this.domainsTree.length) {
             const domain = this.getFirstDomainToDisplay(this.domainsTree);
-            this.$store.dispatch('getCatalog', { url: domain.dataValue });
-            this.$store.dispatch('updateCurrentDomain', domain);
             EventBus.$emit('reduce');
-            EventBus.$emit('setCurrentElement', domain.full_name);
-            return domain.full_name;
+            this.$store.dispatch('updateCurrentDomain', domain);
+
+            if (domain !== '') {
+              this.$store.dispatch('getCatalog', { url: domain.dataValue });
+              EventBus.$emit('setCurrentElement', domain.full_name);
+              return domain.full_name;
+            }
+
+            this.$store.dispatch('updatePrincipalLoading', false);
+            return '';
           }
         }
 
