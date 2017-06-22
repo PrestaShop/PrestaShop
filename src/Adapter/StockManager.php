@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShopBundle\Service\DataProvider\StockInterface;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopAdapter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use StockAvailable;
 use Db;
@@ -47,7 +48,34 @@ class StockManager implements StockInterface
      */
     public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
     {
-        return $this->newStockAvailable($this->getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
+        $stockAvailable = $this->newStockAvailable($this->getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
+
+        if (!$stockAvailable->id) {
+            $shopAdapter = new ShopAdapter();
+            $stockAvailable->id_product = (int)$product->id;
+            $stockAvailable->id_product_attribute = (int)$id_product_attribute;
+
+            $outOfStock = $this->outOfStock((int)$product->id, $id_shop);
+            $stockAvailable->out_of_stock = (int)$outOfStock;
+
+            if ($id_shop === null) {
+                $shop_group = $shopAdapter->getContextShopGroup();
+            } else {
+                $shop_group = $shopAdapter->ShopGroup((int)$shopAdapter->getGroupFromShop((int)$id_shop));
+            }
+
+            // if quantities are shared between shops of the group
+            if ($shop_group->share_stock) {
+                $stockAvailable->id_shop = 0;
+                $stockAvailable->id_shop_group = (int)$shop_group->id;
+            } else {
+                $stockAvailable->id_shop = (int)$id_shop;
+                $stockAvailable->id_shop_group = 0;
+            }
+            $stockAvailable->add();
+        }
+
+        return $stockAvailable;
     }
 
     /**
@@ -158,5 +186,17 @@ class StockManager implements StockInterface
     public function getStockAvailableIdByProductId($productId, $productAttributeId = null, $shopId = null)
     {
         return StockAvailable::getStockAvailableIdByProductId($productId, $productAttributeId, $shopId);
+    }
+
+    /**
+     * For a given product, get its "out of stock" flag
+     *
+     * @param int $productId
+     * @param int $shopId Optional : gets context if null @see Context::getContext()
+     * @return bool : depends on stock @see $depends_on_stock
+     */
+    public function outOfStock($productId, $shopId = null)
+    {
+        return StockAvailable::outOfStock($productId, $shopId);
     }
 }
