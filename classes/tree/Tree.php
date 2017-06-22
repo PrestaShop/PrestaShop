@@ -387,12 +387,10 @@ class TreeCore
             $bo_theme = 'default';
         }
 
-        $js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
+        $js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js?v=' ._PS_VERSION_;
         if ($this->getContext()->controller->ajax) {
             if (!$this->_no_js) {
-                $html = '<script type="text/javascript">
-                    $(function(){ $.getScript(\''.$js_path.'\'); });
-                </script>';
+                $html = '<script type="text/javascript">$(function(){ $.ajax({url: "' .$js_path . '",cache:true,dataType: "script"})});</script>';
             }
         } else {
             $this->getContext()->controller->addJs($js_path);
