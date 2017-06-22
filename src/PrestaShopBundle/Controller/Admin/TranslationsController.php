@@ -36,6 +36,8 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class TranslationsController extends FrameworkBundleAdminController
 {
+    protected $layoutTitle = 'Translations';
+
     const controller_name = 'ADMINTRANSLATIONS';
 
     // overview method on FrameworkBundleAdminController for all vue-js app

@@ -30,5 +30,7 @@ namespace PrestaShopBundle\Controller\Admin;
  */
 class StockController extends FrameworkBundleAdminController
 {
+    protected $layoutTitle = 'Stock';
+
     // overview method on FrameworkBundleAdminController for all vue-js app
 }

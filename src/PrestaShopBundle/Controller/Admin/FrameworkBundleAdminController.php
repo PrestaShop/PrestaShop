@@ -40,6 +40,8 @@ class FrameworkBundleAdminController extends Controller
 {
     protected $configuration;
 
+    protected $layoutTitle;
+
     /**
      * Constructor
      */
@@ -57,6 +59,7 @@ class FrameworkBundleAdminController extends Controller
     {
         return array(
             'is_shop_context' => (new Context())->isShopContext(),
+            'layoutTitle' => empty($this->layoutTitle) ? '' : $this->container->get('translator')->trans($this->layoutTitle, array(), 'Admin.Navigation.Menu'),
         );
     }
 
