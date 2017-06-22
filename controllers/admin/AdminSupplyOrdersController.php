@@ -1291,13 +1291,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
                                         }
                                     }
 
-                                    // if pending_receipt,
-                                    // or if the order is being canceled,
+                                    // if the order is being canceled,
                                     // or if the order is received completely
                                     // synchronizes StockAvailable
-                                    if (($new_state->pending_receipt && !$new_state->receipt_state) ||
-                                        (($old_state->receipt_state || $old_state->pending_receipt) && $new_state->enclosed && !$new_state->receipt_state) ||
-                                        ($new_state->receipt_state && $new_state->enclosed)) {
+                                    if ((($old_state->receipt_state || $old_state->pending_receipt) && $new_state->enclosed && !$new_state->receipt_state) ||
+                                        ($new_state->receipt_state && $new_state->enclosed)
+                                    ) {
                                         $supply_order_details = $supply_order->getEntries();
                                         $products_done = array();
                                         foreach ($supply_order_details as $supply_order_detail) {
@@ -1520,7 +1519,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
                     if ($res) {
                         $supplier_receipt_history->add();
                         $supply_order_detail->save();
-                        StockAvailable::synchronize($supply_order_detail->id_product);
+                        $shops = $warehouse->getShops();
+                        foreach ($shops as $shop) {
+                            StockAvailable::updateQuantity($supply_order_detail->id_product, $supply_order_detail->id_product_attribute, (int)$quantity, (int)$shop['id_shop']);
+                        }
                     } else {
                         $this->errors[] = Tools::displayError('Something went wrong when setting warehouse on product record');
                     }
