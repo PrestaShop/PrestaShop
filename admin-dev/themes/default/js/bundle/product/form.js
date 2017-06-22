@@ -1098,7 +1098,8 @@ var form = (function() {
                 });
               },
               display: 'label'
-            }]
+            }],
+            minWidth: '768px'
           });
 
           /** Filter suggestion with selected tokens */
