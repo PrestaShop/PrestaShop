@@ -122,7 +122,11 @@ class StockMvt
     private $referer;
 
 
-
+    public function __construct()
+    {
+        $configuration = new Configuration();
+        $this->setIdStockMvtReason($this->getSign() >= 1 ? $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION'));
+    }
 
     /**
      * Get idStockMvt
@@ -227,11 +231,6 @@ class StockMvt
      */
     public function getIdStockMvtReason()
     {
-        if (0 === $this->idStockMvtReason) {
-            $configuration = new Configuration();
-            $this->setIdStockMvtReason($this->getSign() >= 1 ? $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION'));
-        }
-
         return $this->idStockMvtReason;
     }
 
