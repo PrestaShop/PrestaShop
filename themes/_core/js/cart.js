@@ -46,6 +46,8 @@ $(document).ready(() => {
       $('.cart-voucher').replaceWith(resp.cart_voucher);
       $('.cart-overview').replaceWith(resp.cart_detailed);
 
+      $('#product_customization_id').val(0);
+
       $('.js-cart-line-product-quantity').each((index, input) => {
         var $input = $(input);
         $input.attr('value', $input.val());
