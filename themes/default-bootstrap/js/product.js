@@ -217,7 +217,7 @@ $(document).ready(function()
 
 //find a specific price rule, based on pre calculated dom display array
 function findSpecificPrice(){
-	var domData = $("#quantityDiscount table tbody tr").not( ":hidden" );
+	var domData = $("#quantityDiscount table tbody tr.used");
 	var nbProduct = $('#quantity_wanted').val();
 	var newPrice = false;
 
@@ -235,6 +235,7 @@ function findSpecificPrice(){
 			(dataDiscountNextQuantity == -1 && nbProduct >= dataDiscountQuantity)
 		){
 			newPrice = $(this).attr('data-real-discount-value');
+			updateDiscountPrice($(this).attr('data-discount-type'), $(this).attr('data-discount-formatted'), $(this).attr('data-base-Price'));
 			return false;
 		}
 	});
@@ -296,6 +297,7 @@ $(document).on('change', '#quantity_wanted', function(e){
 		if (typeof productHasAttributes != 'undefined' && productHasAttributes){
 			updateDisplay();
 		}else{
+			updateDiscountProduct();
 			$('#our_price_display').text(formatCurrency(parseFloat($('#our_price_display').attr('content')), currencyFormat, currencySign, currencyBlank));
 		}
 	}
@@ -800,6 +802,13 @@ function updatePrice()
 	$('#old_price, #old_price_display, #old_price_display_taxes').hide();
 	$('.price-ecotax').hide();
 	$('.unit-price').hide();
+	// Update the Discount Table after use it
+	if (noTaxForThisProduct || customerGroupWithoutTax) {
+		updateDiscountTable(priceWithDiscountsWithoutTax);
+	}
+	else {
+		updateDiscountTable(priceWithDiscountsWithTax);
+	}
 
 	if (priceWithDiscountsDisplay > 0)
 	{
@@ -866,11 +875,6 @@ function updatePrice()
 		$('#unit_price_display').text(formatCurrency(unit_price * currencyRate, currencyFormat, currencySign, currencyBlank));
 		$('.unit-price').show();
 	}
-
-	if (noTaxForThisProduct || customerGroupWithoutTax)
-		updateDiscountTable(priceWithDiscountsWithoutTax);
-	else
-		updateDiscountTable(priceWithDiscountsWithTax);
 }
 
 //update display of the large image
@@ -903,49 +907,51 @@ function displayImage(domAAroundImgThumb, no_animation)
  * Update display of the discounts table.
  * @param combination Combination ID.
  */
-function displayDiscounts(combination)
-{
+function displayDiscounts(combination) {
 	// Tables & rows selection
 	var quantityDiscountTable = $('#quantityDiscount');
-	var combinationsSpecificQuantityDiscount = $('.quantityDiscount_'+combination, quantityDiscountTable);
+	var combinationsSpecificQuantityDiscount = $('.quantityDiscount_' + combination, quantityDiscountTable);
 	var allQuantityDiscount = $('.quantityDiscount_0', quantityDiscountTable);
 
+	$('tbody tr', quantityDiscountTable).removeClass('used');
 	// If there is some combinations specific quantity discount, show them, else, if there are some
 	// products quantity discount: show them. In case of result, show the category.
 	if (combinationsSpecificQuantityDiscount.length != 0) {
-		$('tbody tr', quantityDiscountTable).hide();
+		$('tbody tr', quantityDiscountTable).not('.quantityDiscount_0').hide();
 		combinationsSpecificQuantityDiscount.show();
 		quantityDiscountTable.show();
-	} else if(allQuantityDiscount.length != 0) {
+		$('tbody tr.quantityDiscount_0', quantityDiscountTable).addClass('used');
+		combinationsSpecificQuantityDiscount.addClass('used');
+	} else if (allQuantityDiscount.length != 0) {
 		allQuantityDiscount.show();
 		$('tbody tr', quantityDiscountTable).not('.quantityDiscount_0').hide();
+		$('tbody tr.quantityDiscount_0', quantityDiscountTable).addClass('used');
 		quantityDiscountTable.show();
 	} else {
 		quantityDiscountTable.hide();
 	}
 }
 
-function updateDiscountTable(newPrice)
-{
-	$('#quantityDiscount tbody tr').each(function(){
+function updateDiscountTable(newPrice) {
+	$('#quantityDiscount tbody tr').each(function () {
 		var type = $(this).data("discount-type");
 		var discount = $(this).data("discount");
 		var quantity = $(this).data("discount-quantity");
 
-		if (type == 'percentage')
-		{
-			var discountedPrice = newPrice * (1 - discount/100);
-			var discountUpTo = newPrice * (discount/100) * quantity;
+		if (type == 'percentage') {
+			var discountedPrice = newPrice * (1 - discount / 100);
+			var discountUpTo = newPrice * (discount / 100) * quantity;
 		}
-		else if (type == 'amount')
-		{
+		else if (type == 'amount') {
 			var discountedPrice = newPrice - discount;
 			var discountUpTo = discount * quantity;
 		}
 
 		if (displayDiscountPrice != 0)
-			$(this).children('td').eq(1).text( formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank) );
+			$(this).children('td').eq(1).text(formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank));
 		$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo * currencyRate, currencyFormat, currencySign, currencyBlank));
+		$(this).attr("data-real-discount-value", formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank));
+		$(this).attr("data-base-price", formatCurrency(newPrice * currencyRate, currencyFormat, currencySign, currencyBlank));
 	});
 }
 
@@ -1179,4 +1185,44 @@ function checkUrl()
 		}
 	}
 	return false;
+}
+
+function updateDiscountPrice(type, discount, price) {
+	$('#reduction_percent').hide();
+	$('#reduction_amount').hide();
+	$('#old_price, #old_price_display').hide();
+	if (type = 'amount') {
+		$('#reduction_amount').show();
+		$('#reduction_amount_display').text(discount);
+
+	}
+	else {
+		$('#reduction_percent').show();
+		$('#reduction_percent_display').text(discount);
+	}
+	$('#old_price, #old_price_display').removeClass('hidden').show();
+	$('#old_price_display .price').text(price);
+}
+
+function updateDiscountProduct() {
+	$('#reduction_percent').hide();
+	$('#reduction_amount').hide();
+	$('#old_price').hide();
+	if (typeof product_specific_price !== 'undefined') {
+		var reduction = product_specific_price.reduction;
+		$('#old_price').show();
+		if (product_specific_price.reduction_type == 'amount') {
+			$('#reduction_amount').show();
+			if (parseInt(product_specific_price.reduction_tax))
+				reduction = reduction;
+			else
+				reduction = reduction * (taxRate / 100 + 1);
+			$('#reduction_amount_display').text(formatCurrency(parseFloat(reduction * -1), currencyFormat, currencySign, currencyBlank));
+		}
+		else {
+			$('#reduction_percent').show();
+			reduction = reduction * 100;
+			$('#reduction_percent').text(parseFloat(reduction * -1) + '%');
+		}
+	}
 }
