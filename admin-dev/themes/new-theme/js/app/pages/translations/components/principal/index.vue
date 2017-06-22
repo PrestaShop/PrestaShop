@@ -35,9 +35,7 @@
         </div>
         <div class="col-xs-4">
           <PSPagination
-            pageNumber="3"
-            activeMultiPagination="5"
-            :current="currentPagination"
+            :currentIndex="currentPagination"
             :pagesCount="pagesCount"
             class="pull-xs-right"
             @pageChanged="onPageChanged"
@@ -65,7 +63,7 @@
         </form>
         <div class="col-xs-12">
           <PSPagination
-            :current="currentPagination"
+            :currentIndex="currentPagination"
             :pagesCount="pagesCount"
             @pageChanged="onPageChanged"
           />
