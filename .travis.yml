@@ -1,6 +1,7 @@
 language: php
 
 addons:
+    chrome: stable
     apt:
         packages:
         - apache2
@@ -32,7 +33,6 @@ before_install:
   - bash travis-scripts/setup-apache.sh
 
   # PrestaShop configuration
-  - cp -Rf .composer/* ~/.composer/ & composer global install;
   - cp tests/parameters.yml.travis app/config/parameters.yml
 
 notifications:
