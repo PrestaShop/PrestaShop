@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use Shop;
+use ShopGroup;
 
 /**
  * This class will provide legacy shop context
@@ -124,5 +125,32 @@ class Context
     public function setAllContext($id)
     {
         Shop::setContext(Shop::CONTEXT_ALL, $id);
+    }
+
+    public function getContextShopGroup()
+    {
+        return Shop::getContextShopGroup();
+    }
+
+    /**
+     * Retrieve group ID of a shop
+     *
+     * @param $shopId
+     * @param bool $asId
+     * @return int
+     */
+    public function getGroupFromShop($shopId, $asId = true)
+    {
+        return Shop::getGroupFromShop($shopId, $asId);
+
+    }
+
+    /**
+     * @param $shopGroupId
+     * @return ShopGroup
+     */
+    public function ShopGroup($shopGroupId)
+    {
+        return new ShopGroup($shopGroupId);
     }
 }
