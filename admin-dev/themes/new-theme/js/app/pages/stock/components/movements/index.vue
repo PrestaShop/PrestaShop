@@ -64,7 +64,7 @@
         </tr>
         <tr v-else-if="emptyMovements">
           <td colspan="7">
-            <PSAlert alertType="ALERT_TYPE_INFO" :hasClose="false">
+            <PSAlert alertType="ALERT_TYPE_WARNING" :hasClose="false">
               {{trans('no_product')}}
             </PSAlert>
           </td>
