@@ -55,11 +55,11 @@
             <form class="row">
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_from')}}</label>
-                <PSDatePicker @dpChange="onDpChange" data-type="sup"/>
+                <PSDatePicker @dpChange="onDpChange"  @reset="onClear" data-type="sup"/>
               </div>
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_to')}}</label>
-                <PSDatePicker @dpChange="onDpChange" data-type="inf" />
+                <PSDatePicker @dpChange="onDpChange" @reset="onClear" data-type="inf" />
               </div>
             </form>
           </div>
@@ -76,10 +76,10 @@
             />
           </div>
         </div>
-        <PSButton type="button" class="pull-right m-y-2 m-x-2" :primary="true" :disabled="disabled" @click="onClick">
+        <!-- <PSButton type="button" class="pull-right m-y-2 m-x-2" :primary="true" :disabled="disabled" @click="onClick">
           <i class="material-icons m-r-1">filter_list</i>
           {{trans('button_apply_advanced_filter')}}
-        </PSButton>
+        </PSButton> -->
       </div>
     </div>
   </div>
@@ -114,7 +114,7 @@
             name: displayName,
           });
           const clone = Object.assign(item, {
-            id_stock_mvt_reason: [item.id_stock_mvt_reason]
+            id_stock_mvt_reason: [item.id_stock_mvt_reason],
           });
 
           return clone.id_stock_mvt_reason.push(movement.id_stock_mvt_reason);
@@ -125,6 +125,11 @@
       },
     },
     methods: {
+      onClear(event) {
+        const type = $(event.currentTarget).data('type');
+        delete this.date_add[type];
+        this.applyFilter();
+      },
       onClick() {
         this.applyFilter();
       },
@@ -135,9 +140,7 @@
           this.categories = list;
         }
         this.disabled = !this.suppliers.length && !this.categories.length;
-        if (!list.length) {
-          this.applyFilter();
-        }
+        this.applyFilter();
       },
       applyFilter() {
         this.$store.dispatch('isLoading');

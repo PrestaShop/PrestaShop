@@ -85,7 +85,7 @@
     }
   }
   .search-form {
-    width: calc(100% - 100px);
+    width: calc(100% - 130px);
     .search-button {
       float: right;
       position: absolute;
