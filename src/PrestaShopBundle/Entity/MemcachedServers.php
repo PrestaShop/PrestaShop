@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * MemcachedServers
  *
- * @ORM\Table(name="memcached_servers")
+ * @ORM\Table()
  * @ORM\Entity
  */
 class MemcachedServers
