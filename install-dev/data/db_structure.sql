@@ -992,12 +992,6 @@ CREATE TABLE `PREFIX_authorization_role` (
   UNIQUE KEY (`slug`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_access` (
-  `id_profile` int(10) unsigned NOT NULL,
-  `id_authorization_role` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_profile`,`id_authorization_role`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_module_access` (
   `id_profile` int(10) unsigned NOT NULL,
   `id_authorization_role` int(10) unsigned NOT NULL,
