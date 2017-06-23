@@ -8,26 +8,6 @@ CREATE TABLE `PREFIX_accessory` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 
-CREATE TABLE `PREFIX_tag` (
-  `id_tag` int(10) unsigned NOT NULL auto_increment,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(32) NOT NULL,
-  PRIMARY KEY (`id_tag`),
-  KEY `tag_name` (`name`),
-  KEY `id_lang` (`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_tag_count` (
-  `id_group` int(10) unsigned NOT NULL DEFAULT 0,
-  `id_tag` int(10) unsigned NOT NULL DEFAULT 0,
-  `id_lang` int(10) unsigned NOT NULL DEFAULT 0,
-  `id_shop` int(11) unsigned NOT NULL DEFAULT 0,
-  `counter` int(10) unsigned NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id_group`, `id_tag`),
-  KEY (`id_group`, `id_lang`, `id_shop`, `counter`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-
 CREATE TABLE `PREFIX_memcached_servers` (
 `id_memcached_server` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `ip` VARCHAR( 254 ) NOT NULL ,
