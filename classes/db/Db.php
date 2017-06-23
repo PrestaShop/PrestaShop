@@ -26,7 +26,7 @@
 /**
  * Class DbCore
  */
-abstract class DbCore
+class DbCore
 {
     /** @var int Constant used by insert() method */
     const INSERT = 1;
@@ -55,7 +55,7 @@ abstract class DbCore
     /** @var bool */
     protected $is_cache_enabled;
 
-    /** @var PDO|mysqli|resource Resource link */
+    /** @var \Doctrine\DBAL\Connection */
     protected $link;
 
     /** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
@@ -96,14 +96,37 @@ abstract class DbCore
     /**
      * Opens a database connection
      *
-     * @return PDO|mysqli|resource
+     * @return \Doctrine\DBAL\Connection
      */
-    abstract public function connect();
+    public function connect()
+    {
+        $this->connectionParams = array(
+            'host' => $this->server,
+            'user' => $this->user,
+            'password' => $this->password,
+            'dbname' => $this->database,
+            'driver' => 'pdo_mysql'
+        );
+
+        if (strpos($this->server, ':')) {
+            list($this->connectionParams['host'], $this->connectionParams['port']) = explode(':', $this->server);
+        }
+
+        $config = new \Doctrine\DBAL\Configuration();
+        $this->link = \Doctrine\DBAL\DriverManager::getConnection($this->connectionParams, $config);
+
+        $this->link->exec('SET SESSION sql_mode = \'\'');
+
+        return $this->link;
+    }
 
     /**
      * Closes database connection
      */
-    abstract public function disconnect();
+    public function disconnect()
+    {
+        $this->link->close();
+    }
 
     /**
      * Execute a query and get result resource
@@ -111,29 +134,41 @@ abstract class DbCore
      * @param string $sql
      * @return PDOStatement|mysqli_result|resource|bool
      */
-    abstract protected function _query($sql);
+     protected function _query($sql)
+     {
+         return $this->link->executeQuery($sql);
+     }
 
     /**
      * Get number of rows in a result
      *
-     * @param mixed $result
+     * @param \Doctrine\DBAL\Driver\Statement $result
      * @return int
      */
-    abstract protected function _numRows($result);
+    protected function _numRows($result)
+    {
+        return $result->rowCount();
+    }
 
     /**
      * Get the ID generated from the previous INSERT operation
      *
      * @return int|string
      */
-    abstract public function Insert_ID();
+    public function Insert_ID()
+    {
+        return $this->link->lastInsertId();
+    }
 
     /**
      * Get number of affected rows in previous database operation
      *
      * @return int
      */
-    abstract public function Affected_Rows();
+    public function Affected_Rows()
+    {
+        return $this->result->rowCount();
+    }
 
     /**
      * Get next row for a query which does not return an array
@@ -141,7 +176,18 @@ abstract class DbCore
      * @param PDOStatement|mysqli_result|resource|bool $result
      * @return array|object|false|null
      */
-    abstract public function nextRow($result = false);
+    public function nextRow($result = false)
+    {
+        if (!$result) {
+            $result = $this->result;
+        }
+
+        if (!is_object($result)) {
+            return false;
+        }
+
+        return $result->fetch();
+    }
 
     /**
      * Get all rows for a query which return an array
@@ -149,14 +195,29 @@ abstract class DbCore
      * @param PDOStatement|mysqli_result|resource|bool|null $result
      * @return array
      */
-    abstract protected function getAll($result = false);
+    protected function getAll($result = false)
+    {
+        if (!$result) {
+            $result = $this->result;
+        }
+
+        if (!is_object($result)) {
+            return false;
+        }
+
+        return $result->fetchAll();
+    }
 
     /**
      * Get database version
      *
      * @return string
      */
-    abstract public function getVersion();
+    public function getVersion()
+    {
+        // ToDo: Check if best answer
+        return $this->getValue('SELECT VERSION()');
+    }
 
     /**
      * Protect string against SQL injections
@@ -164,21 +225,34 @@ abstract class DbCore
      * @param string $str
      * @return string
      */
-    abstract public function _escape($str);
+    public function _escape($str)
+    {
+        $search = array("\\", "\0", "\n", "\r", "\x1a", "'", '"');
+        $replace = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"');
+        return str_replace($search, $replace, $str);    }
 
     /**
      * Returns the text of the error message from previous database operation
      *
      * @return string
      */
-    abstract public function getMsgError();
+    public function getMsgError()
+    {
+        $error = $this->link->errorInfo();
+        return ($error[0] == '00000') ? '' : $error[2];
+    }
 
     /**
      * Returns the number of the error from previous database operation
      *
      * @return int
      */
-    abstract public function getNumberError();
+    public function getNumberError()
+    {
+        // ToDo: check function called, errorCode() should exists
+        $error = $this->link->errorInfo();
+        return isset($error[1]) ? $error[1] : 0;
+    }
 
     /**
      * Sets the current active database on the server that's associated with the specified link identifier.
@@ -187,14 +261,22 @@ abstract class DbCore
      * @param string $db_name
      * @return bool|int
      */
-    abstract public function set_db($db_name);
+    public function set_db($db_name)
+    {
+        // ToDo: To be checked
+        throw new Symfony\Component\Serializer\Exception\UnsupportedException();
+    }
 
     /**
      * Selects best table engine.
      *
      * @return string
      */
-    abstract public function getBestEngine();
+    public function getBestEngine()
+    {
+        // ToDo: Check another answer
+        return 'InnoDB';
+    }
 
     /**
      * Returns database object instance.
@@ -284,18 +366,8 @@ abstract class DbCore
      */
     public static function getClass()
     {
-        $class = '';
-        if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql')) {
-            $class = 'DbPDO';
-        } elseif (extension_loaded('mysqli')) {
-            $class = 'DbMySQLi';
-        }
-
-        if (empty($class)) {
-            throw new PrestaShopException('Cannot select any valid SQL engine.');
-        }
-
-        return $class;
+        // Removed all classes extendint DbCore  so ...
+        return str_replace('Core', '', __CLASS__);
     }
 
     /**
