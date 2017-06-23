@@ -901,21 +901,6 @@ CREATE TABLE `PREFIX_tag_count` (
   KEY (`id_group`, `id_lang`, `id_shop`, `counter`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_tax` (
-  `id_tax` int(10) unsigned NOT NULL auto_increment,
-  `rate` DECIMAL(10, 3) NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_tax`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_tax_lang` (
-  `id_tax` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(32) NOT NULL,
-  PRIMARY KEY (`id_tax`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_timezone` (
 	id_timezone int(10) unsigned NOT NULL auto_increment,
 	name VARCHAR(32) NOT NULL,
@@ -994,31 +979,6 @@ CREATE TABLE `PREFIX_memcached_servers` (
 `ip` VARCHAR( 254 ) NOT NULL ,
 `port` INT(11) UNSIGNED NOT NULL ,
 `weight` INT(11) UNSIGNED NOT NULL
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_tax_rule` (
-  `id_tax_rule` int(11) NOT NULL AUTO_INCREMENT,
-  `id_tax_rules_group` int(11) NOT NULL,
-  `id_country` int(11) NOT NULL,
-  `id_state` int(11) NOT NULL,
-  `zipcode_from` VARCHAR(12) NOT NULL,
-  `zipcode_to` VARCHAR(12) NOT NULL,
-  `id_tax` int(11) NOT NULL,
-  `behavior` int(11) NOT NULL,
-  `description` VARCHAR( 100 ) NOT NULL,
-  PRIMARY KEY (`id_tax_rule`),
-  KEY `id_tax_rules_group` (`id_tax_rules_group`),
-  KEY `id_tax` (`id_tax`),
-  KEY `category_getproducts` ( `id_tax_rules_group` , `id_country` , `id_state` , `zipcode_from` )
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_tax_rules_group` (
-`id_tax_rules_group` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-`name` VARCHAR( 50 ) NOT NULL,
-`active` INT NOT NULL,
-`deleted` TINYINT(1) UNSIGNED NOT NULL,
-`date_add` DATETIME NOT NULL,
-`date_upd` DATETIME NOT NULL
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_log` (
@@ -1110,12 +1070,6 @@ CREATE TABLE `PREFIX_group_shop` (
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_tax_rules_group_shop` (
-	`id_tax_rules_group` INT( 11 ) UNSIGNED NOT NULL,
-	`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-	PRIMARY KEY (`id_tax_rules_group`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_zone_shop` (
 `id_zone` INT( 11 ) UNSIGNED NOT NULL ,
