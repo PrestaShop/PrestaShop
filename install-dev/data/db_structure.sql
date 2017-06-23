@@ -70,49 +70,6 @@ CREATE TABLE `PREFIX_currency` (
   PRIMARY KEY (`id_currency`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_customization` (
-  `id_customization` int(10) unsigned NOT NULL auto_increment,
-  `id_product_attribute` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_address_delivery` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `id_cart` int(10) unsigned NOT NULL,
-  `id_product` int(10) NOT NULL,
-  `quantity` int(10) NOT NULL,
-  `quantity_refunded` INT NOT NULL DEFAULT '0',
-  `quantity_returned` INT NOT NULL DEFAULT '0',
-  `in_cart` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_customization`,`id_cart`,`id_product`, `id_address_delivery`),
-  KEY `id_product_attribute` (`id_product_attribute`),
-  KEY `id_cart_product` (`id_cart`, `id_product`, `id_product_attribute`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_customization_field` (
-  `id_customization_field` int(10) unsigned NOT NULL auto_increment,
-  `id_product` int(10) unsigned NOT NULL,
-  `type` tinyint(1) NOT NULL,
-  `required` tinyint(1) NOT NULL,
-  `is_module` TINYINT(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_customization_field`),
-  KEY `id_product` (`id_product`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_customization_field_lang` (
-  `id_customization_field` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `id_shop` int(10) UNSIGNED NOT NULL DEFAULT '1',
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_customization_field`,`id_lang`, `id_shop`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_customized_data` (
-  `id_customization` int(10) unsigned NOT NULL,
-  `type` tinyint(1) NOT NULL,
-  `index` int(3) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `id_module` int(10) NOT NULL DEFAULT '0',
-  `price` decimal(20,6) NOT NULL DEFAULT '0',
-  `weight` decimal(20,6) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_customization`,`type`,`index`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_date_range` (
   `id_date_range` int(10) unsigned NOT NULL auto_increment,
