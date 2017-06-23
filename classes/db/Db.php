@@ -105,7 +105,8 @@ class DbCore
             'user' => $this->user,
             'password' => $this->password,
             'dbname' => $this->database,
-            'driver' => 'pdo_mysql'
+            'driver' => 'pdo_mysql',
+            'charset' => 'utf8',
         );
 
         if (strpos($this->server, ':')) {
@@ -412,7 +413,6 @@ class DbCore
     public function enableCache()
     {
         $this->is_cache_enabled = true;
-        Cache::getInstance()->flush();
     }
 
     /**
@@ -603,9 +603,6 @@ class DbCore
         $this->result = false;
         $sql = 'DELETE FROM `'.bqSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int)$limit : '');
         $res = $this->query($sql);
-        if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->deleteQuery($sql);
-        }
 
         return (bool)$res;
     }
@@ -623,12 +620,7 @@ class DbCore
             $sql = $sql->build();
         }
 
-        $this->result = $this->query($sql);
-        if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->deleteQuery($sql);
-        }
-
-        return (bool)$this->result;
+        return (bool) $this->query($sql);
     }
 
     /**
@@ -649,14 +641,6 @@ class DbCore
         $this->result = false;
         $this->last_query = $sql;
 
-        if ($use_cache && $this->is_cache_enabled && $array) {
-            $this->last_query_hash = Tools::hashIV($sql);
-            if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
-                $this->last_cached = true;
-                return $result;
-            }
-        }
-
         // This method must be used only with queries which display results
         if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc)\s#i', $sql)) {
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
@@ -676,11 +660,6 @@ class DbCore
             } else {
                 $result = $this->getAll($this->result);
             }
-        }
-
-        $this->last_cached = false;
-        if ($use_cache && $this->is_cache_enabled && $array) {
-            Cache::getInstance()->setQuery($sql, $result);
         }
 
         return $result;
@@ -704,14 +683,6 @@ class DbCore
         $this->result = false;
         $this->last_query = $sql;
 
-        if ($use_cache && $this->is_cache_enabled) {
-            $this->last_query_hash = Tools::hashIV($sql);
-            if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
-                $this->last_cached = true;
-                return $result;
-            }
-        }
-
         $this->result = $this->query($sql);
         if (!$this->result) {
             $result = false;
@@ -719,17 +690,7 @@ class DbCore
             $result = $this->nextRow($this->result);
         }
 
-        $this->last_cached = false;
-
-        if (is_null($result)) {
-            $result = false;
-        }
-
-        if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->setQuery($sql, $result);
-        }
-
-        return $result;
+        return ($result ? $result : false);
     }
 
     /**
@@ -759,14 +720,8 @@ class DbCore
      */
     public function numRows()
     {
-        if (!$this->last_cached && $this->result) {
-            $nrows = $this->_numRows($this->result);
-            if ($this->is_cache_enabled) {
-                Cache::getInstance()->set($this->last_query_hash.'_nrows', $nrows);
-            }
-            return $nrows;
-        } elseif ($this->is_cache_enabled && $this->last_cached) {
-            return Cache::getInstance()->get($this->last_query_hash.'_nrows');
+        if ($this->result) {
+            return $this->_numRows($this->result);
         }
     }
 
@@ -786,9 +741,6 @@ class DbCore
 
         $this->result = false;
         $result = $this->query($sql);
-        if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->deleteQuery($sql);
-        }
 
         if (_PS_DEBUG_SQL_) {
             $this->displayError($sql);
