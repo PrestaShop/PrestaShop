@@ -521,40 +521,6 @@ CREATE TABLE `PREFIX_operating_system` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 
-CREATE TABLE `PREFIX_pack` (
-  `id_product_pack` int(10) unsigned NOT NULL,
-  `id_product_item` int(10) unsigned NOT NULL,
-  `id_product_attribute_item` int(10) unsigned NOT NULL,
-  `quantity` int(10) unsigned NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id_product_pack`, `id_product_item`, `id_product_attribute_item`),
-  KEY `product_item` (`id_product_item`,`id_product_attribute_item`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_page` (
-  `id_page` int(10) unsigned NOT NULL auto_increment,
-  `id_page_type` int(10) unsigned NOT NULL,
-  `id_object` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id_page`),
-  KEY `id_page_type` (`id_page_type`),
-  KEY `id_object` (`id_object`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_page_type` (
-  `id_page_type` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_page_type`),
-  KEY `name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_page_viewed` (
-  `id_page` int(10) unsigned NOT NULL,
-  `id_shop_group` INT UNSIGNED NOT NULL DEFAULT '1',
-  `id_shop` INT UNSIGNED NOT NULL DEFAULT '1',
-  `id_date_range` int(10) unsigned NOT NULL,
-  `counter` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_page`, `id_date_range`, `id_shop`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_profile` (
   `id_profile` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY (`id_profile`)
