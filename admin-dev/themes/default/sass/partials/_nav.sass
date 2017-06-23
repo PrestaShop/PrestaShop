@@ -210,12 +210,11 @@ $min-height: 950px
 			> span
 				display: none
 		@media (max-height: 768px)
-			> ul > li.maintab#subtab-ShopParameters
+			> ul > li.maintab
 				ul.submenu
-					top: -175px!important
-			> ul > li.maintab#subtab-AdminAdvancedParameters
-				ul.submenu
-					top: -250px!important
+					top: 25px!important
+					> li
+						margin-top: -50px
 		> ul > li.maintab:hover
 			width: 250px!important
 			position: relative
