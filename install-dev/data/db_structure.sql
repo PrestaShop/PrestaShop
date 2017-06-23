@@ -1148,44 +1148,6 @@ CREATE TABLE `PREFIX_stock` (
   KEY `id_product_attribute` (`id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_warehouse` (
-`id_warehouse` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-`id_currency` INT(11) UNSIGNED NOT NULL,
-`id_address` INT(11) UNSIGNED NOT NULL,
-`id_employee` INT(11) UNSIGNED NOT NULL,
-`reference` VARCHAR(32) DEFAULT NULL,
-`name` VARCHAR(45) NOT NULL,
-`management_type` ENUM('WA', 'FIFO', 'LIFO') NOT NULL DEFAULT 'WA',
-`deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_warehouse`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_warehouse_product_location` (
-  `id_warehouse_product_location` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_product` int(11) unsigned NOT NULL,
-  `id_product_attribute` int(11) unsigned NOT NULL,
-  `id_warehouse` int(11) unsigned NOT NULL,
-  `location` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`id_warehouse_product_location`),
-  UNIQUE KEY `id_product` (`id_product`,`id_product_attribute`,`id_warehouse`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_warehouse_shop` (
-`id_shop` INT(11) UNSIGNED NOT NULL,
-`id_warehouse` INT(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_warehouse`, `id_shop`),
-  KEY `id_warehouse` (`id_warehouse`),
-  KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_warehouse_carrier` (
-`id_carrier` INT(11) UNSIGNED NOT NULL,
-`id_warehouse` INT(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_warehouse`, `id_carrier`),
-  KEY `id_warehouse` (`id_warehouse`),
-  KEY `id_carrier` (`id_carrier`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_stock_available` (
 `id_stock_available` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `id_product` INT(11) UNSIGNED NOT NULL,
