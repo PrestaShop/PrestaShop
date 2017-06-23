@@ -9,47 +9,6 @@ CREATE TABLE `PREFIX_accessory` (
 
 
 
-CREATE TABLE `PREFIX_hook` (
-  `id_hook` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL,
-  `title` varchar(64) NOT NULL,
-  `description` text,
-  `position` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_hook`),
-  UNIQUE KEY `hook_name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_hook_alias` (
-  `id_hook_alias` int(10) unsigned NOT NULL auto_increment,
-  `alias` varchar(64) NOT NULL,
-  `name` varchar(64) NOT NULL,
-  PRIMARY KEY (`id_hook_alias`),
-  UNIQUE KEY `alias` (`alias`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_hook_module` (
-  `id_module` int(10) unsigned NOT NULL,
-  `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `id_hook` int(10) unsigned NOT NULL,
-  `position` tinyint(2) unsigned NOT NULL,
-  PRIMARY KEY (`id_module`,`id_hook`,`id_shop`),
-  KEY `id_hook` (`id_hook`),
-  KEY `id_module` (`id_module`),
-  KEY `position` (`id_shop`, `position`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_hook_module_exceptions` (
-  `id_hook_module_exceptions` int(10) unsigned NOT NULL auto_increment,
-  `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `id_module` int(10) unsigned NOT NULL,
-  `id_hook` int(10) unsigned NOT NULL,
-  `file_name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_hook_module_exceptions`),
-  KEY `id_module` (`id_module`),
-  KEY `id_hook` (`id_hook`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-
 CREATE TABLE `PREFIX_message` (
   `id_message` int(10) unsigned NOT NULL auto_increment,
   `id_cart` int(10) unsigned DEFAULT NULL,
