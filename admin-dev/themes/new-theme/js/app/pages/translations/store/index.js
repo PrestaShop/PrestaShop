@@ -53,6 +53,7 @@ const state = {
   isReady: false,
   sidebarLoading: true,
   principalLoading: true,
+  searchTags: [],
 };
 
 // getters are functions
@@ -90,6 +91,9 @@ const getters = {
   },
   isReady(rootState) {
     return rootState.isReady;
+  },
+  searchTags(rootState) {
+    return rootState.searchTags;
   },
 };
 

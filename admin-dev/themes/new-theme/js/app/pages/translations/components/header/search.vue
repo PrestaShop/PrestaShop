@@ -23,17 +23,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div id="search" class="col-md-8">
-    <div class="m-b-2">
-      <form class="search-form" @submit.prevent>
-        <label>{{trans('search_label')}}</label>
+  <div id="search" class="col-md-8 m-b-2">
+    <form class="search-form" @submit.prevent>
+      <label>{{trans('search_label')}}</label>
+      <div class="search-group">
         <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" :placeholder="trans('search_placeholder')" />
         <button type="button" class="btn btn-primary search-button" @click="onClick">
           <i class="material-icons">search</i>
           {{trans('button_search')}}
         </button>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -50,6 +50,7 @@
         this.$refs.psTags.add(tag);
       },
       onSearch() {
+        this.$store.dispatch('updateSearch', this.tags);
         this.$emit('search', this.tags);
       },
     },
@@ -75,18 +76,21 @@
       min-height: 35px;
       outline: none;
       border-radius: 0;
+      overflow: hidden;
+      float: left;
+      width: 70%;
     }
   }
   .search-form {
-    width: calc(100% - 100px);
+    .search-group {
+      overflow: hidden;
+    }
     .search-button {
-      float: right;
-      position: absolute;
-      right: 8px;
-      top: 1px;
+      float: left;
       border-radius: 0;
-      margin-top: 28px;
       height:35px;
+      position: absolute;
+      bottom: 0;
     }
   }
 </style>

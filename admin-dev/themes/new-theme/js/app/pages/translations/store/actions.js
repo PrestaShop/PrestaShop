@@ -111,3 +111,11 @@ export const updatePageIndex = ({ commit }, pageIndex) => {
 export const updateCurrentDomain = ({ commit }, currentDomain) => {
   commit(types.SET_CURRENT_DOMAIN, currentDomain);
 };
+
+export const updatePrincipalLoading = ({ commit }, principalLoading) => {
+  commit(types.PRINCIPAL_LOADING, principalLoading);
+};
+
+export const updateSearch = ({ commit }, searchTags) => {
+  commit(types.SEARCH_TAGS, searchTags);
+};

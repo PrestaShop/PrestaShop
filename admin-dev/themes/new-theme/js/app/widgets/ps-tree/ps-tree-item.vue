@@ -31,7 +31,8 @@
       </div>
       <PSCheckbox :ref="model.name" :id="id" :model="model" @checked="onCheck" v-if="hasCheckbox"/>
       <span class="tree-label" :class="{warning: isWarning}">{{model.name}}</span>
-      <span class="tree-extra-label" v-if="displayExtraLabel">{{getExtraLabel}}</span>
+      <span class="tree-extra-label hidden-lg-down" v-if="displayExtraLabel">{{getExtraLabel}}</span>
+      <span class="tree-extra-label-mini hidden-xl-up" v-if="displayExtraLabel">{{this.model.extraLabel}}</span>
     </div>
     <ul v-show="open" v-if="isFolder" class="tree">
       <li v-for="(element, index) in model.children" class="tree-item" :class="{disable: model.disable}">
@@ -75,7 +76,15 @@
         return this.isFolder && this.model.extraLabel;
       },
       getExtraLabel() {
-        return this.translations.extra ? this.translations.extra.replace('%d', this.model.extraLabel) : '';
+        let extraLabel = '';
+
+        if (this.model.extraLabel && this.model.extraLabel === 1) {
+          extraLabel = this.translations.extra_singular;
+        } else if (this.model.extraLabel) {
+          extraLabel = this.translations.extra.replace('%d', this.model.extraLabel);
+        }
+
+        return extraLabel;
       },
       chevron() {
         return !this.isFolder ? 'hidden' : '';

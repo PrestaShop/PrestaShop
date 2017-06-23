@@ -63,4 +63,7 @@ export default {
   [types.PRINCIPAL_LOADING](state, isLoading) {
     state.principalLoading = isLoading;
   },
+  [types.SEARCH_TAGS](state, searchTags) {
+    state.searchTags = searchTags;
+  },
 };

@@ -25,7 +25,7 @@
 <template>
   <div class="form-group">
     <label>{{label}}</label>
-    <textarea class="form-control" v-model="getTranslated" :class="{ missing : isMissing }"></textarea>
+    <textarea class="form-control" rows="2" v-model="getTranslated" :class="{ missing : isMissing }"></textarea>
     <PSButton class="m-t-1 pull-xs-right" :primary="false" ghost @click="resetTranslation">
       {{ trans('button_reset') }}
     </PSButton>

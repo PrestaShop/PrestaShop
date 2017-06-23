@@ -212,7 +212,7 @@ class TranslationController extends ApiController
                 }
 
                 $response[$translation['default']] = $translationService->resetTranslationMessage(
-                    $lang,
+                    $lang->getId(),
                     $translation['domain'],
                     $translation['default'],
                     $translation['theme']

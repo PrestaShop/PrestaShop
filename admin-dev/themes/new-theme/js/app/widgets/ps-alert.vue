@@ -54,7 +54,7 @@
         };
       },
       isInfo() {
-        return this.alertType === 'info';
+        return this.alertType === ALERT_TYPE_INFO;
       },
     },
   };

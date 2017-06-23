@@ -39,6 +39,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         parent::__construct($controllerName, 'new-theme');
 
         $this->title = $title;
+        $this->meta_title = $title;
         $this->display = $displayType;
         $this->bootstrap = true;
         $this->controller_name = $_GET['controller'] = $controllerName;

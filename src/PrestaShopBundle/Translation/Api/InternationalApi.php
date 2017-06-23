@@ -38,12 +38,20 @@ class InternationalApi extends AbstractApi
             'button_save' => $this->translator->trans('Save', array(), 'Admin.Global'),
             'button_search' => $this->translator->trans('Search', array(), 'Admin.Actions'),
             'head_title' => $this->translator->trans('Translations', array(), 'Admin.Navigation.Menu'),
+            /* Missing is plural, always > 1 */
             'label_missing' => $this->translator->trans('%d missing', array(), 'Admin.International.Feature'),
+            'label_missing_singular' => $this->translator->trans('1 missing', array(), 'Admin.International.Feature'),
             'label_total_domain' => $this->translator->trans('%nb_translations% expressions', array(), 'Admin.International.Feature'),
+            /* nb_translations can be 0 or 1 */
+            'label_total_domain_singular' => $this->translator->trans('%nb_translation% expression', array(), 'Admin.International.Feature'),
             'link_international' => $this->translator->trans('International', array(), 'Admin.Navigation.Menu'),
             'link_translations' => $this->translator->trans('Translations', array(), 'Admin.Navigation.Menu'),
+            'no_result' => $this->translator->trans('There are no results matching your query "%s".', array(), 'Admin.Navigation.Search'),
             'sidebar_expand' => $this->translator->trans('Expand', array(), 'Admin.Actions'),
             'sidebar_collapse' => $this->translator->trans('Collapse', array(), 'Admin.Actions'),
+            'search_info' => $this->translator->trans('%d results match your query "%s".', array(), 'Admin.Navigation.Search'),
+            /* %d can be 0 or 1 */
+            'search_info_singular' => $this->translator->trans('%d result matches your query "%s".', array(), 'Admin.Navigation.Search'),
             'search_label' => $this->translator->trans('Search translations', array(), 'Admin.International.Feature'),
             'search_placeholder' => $this->translator->trans('Search a word or expression, e.g.: "Order confirmation"', array(), 'Admin.International.Help'),
         );

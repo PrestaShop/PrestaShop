@@ -52,11 +52,17 @@
         if (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined') {
           if (this.domainsTree.length) {
             const domain = this.getFirstDomainToDisplay(this.domainsTree);
-            this.$store.dispatch('getCatalog', { url: domain.dataValue });
-            this.$store.dispatch('updateCurrentDomain', domain);
             EventBus.$emit('reduce');
-            EventBus.$emit('setCurrentElement', domain.full_name);
-            return domain.full_name;
+            this.$store.dispatch('updateCurrentDomain', domain);
+
+            if (domain !== '') {
+              this.$store.dispatch('getCatalog', { url: domain.dataValue });
+              EventBus.$emit('setCurrentElement', domain.full_name);
+              return domain.full_name;
+            }
+
+            this.$store.dispatch('updatePrincipalLoading', false);
+            return '';
           }
         }
 
@@ -70,6 +76,7 @@
           expand: this.trans('sidebar_expand'),
           reduce: this.trans('sidebar_collapse'),
           extra: this.trans('label_missing'),
+          extra_singular: this.trans('label_missing_singular'),
         };
       },
     },
@@ -137,6 +144,16 @@
       color: $danger;
       text-transform: uppercase;
       font-size: .65rem;
+      margin-left: auto;
+    }
+    .tree-extra-label-mini {
+      background-color: $danger;
+      color: $white;
+      padding: 0 0.5rem;
+      border-radius: 0.75rem;
+      display: inline-block;
+      font-size: .75rem;
+      height: 1.5rem;
       margin-left: auto;
     }
     .tree-label {

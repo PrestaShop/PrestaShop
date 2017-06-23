@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <nav class="pull-xs-right m-t-1">
+  <nav class="pull-xs-right m-t-1" v-if="displayPagination">
     <ul class="pagination" :class="{'multi':isMultiPagination}">
       <li v-if="isMultiPagination" class="page-item">
         <button v-show="activeLeftArrow" class="pull-left page-link" @click="prev($event)">
@@ -59,7 +59,7 @@
 
 <script>
   export default {
-    props: ['pagesCount', 'current'],
+    props: ['pagesCount', 'currentIndex'],
     computed: {
       isMultiPagination() {
         return this.pagesCount > this.multiPagesActivationLimit;
@@ -72,6 +72,9 @@
       },
       pagesToDisplay() {
         return this.multiPagesToDisplay;
+      },
+      displayPagination() {
+        return this.pagesCount > 1;
       },
     },
     methods: {
@@ -90,7 +93,6 @@
         return indexToDisplay || firstIndex || lastIndex;
       },
       changePage(pageIndex) {
-        this.currentIndex = pageIndex;
         this.$emit('pageChanged', pageIndex);
       },
       showFirstDots(index) {
@@ -118,7 +120,6 @@
       },
     },
     data: () => ({
-      currentIndex: 1,
       multiPagesToDisplay: 2,
       multiPagesActivationLimit: 5,
     }),

@@ -30,7 +30,7 @@
       <router-view class="view" @fetch="fetch"></router-view>
     </div>
     <PSPagination
-      :current="currentPagination"
+      :currentIndex="currentPagination"
       :pagesCount="pagesCount"
       @pageChanged="onPageChanged"
     />
