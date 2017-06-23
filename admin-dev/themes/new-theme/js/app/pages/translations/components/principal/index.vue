@@ -113,7 +113,7 @@
         return this.$store.state.currentDomain;
       },
       currentDomainTotalTranslations() {
-        return (this.$store.state.currentDomainTotalTranslations <= 1) ? `- ${this.trans('label_total_domain_singular')}` : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
+        return (this.$store.state.currentDomainTotalTranslations <= 1) ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.totalTranslations)}` : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
       },
       currentDomainTotalMissingTranslations() {
         return this.$store.state.currentDomainTotalMissingTranslations;
@@ -142,7 +142,7 @@
         return this.$store.getters.searchTags.length;
       },
       searchInfo() {
-        return this.trans('search_info').replace('%s', this.$store.getters.searchTags.join(' - ')).replace('%d', this.$store.state.totalTranslations);
+        return (this.$store.state.totalTranslations <= 1) ? this.trans('search_info_singular').replace('%s', this.$store.getters.searchTags.join(' - ')).replace('%d', this.$store.state.totalTranslations) : this.trans('search_info').replace('%s', this.$store.getters.searchTags.join(' - ')).replace('%d', this.$store.state.totalTranslations);
       },
     },
     methods: {
