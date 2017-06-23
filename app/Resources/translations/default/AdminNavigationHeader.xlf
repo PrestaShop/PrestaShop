@@ -48,6 +48,12 @@ File: classes/lang/QuickAccessLang.php:46</note>
   </file>
   <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e5dc8e5afea0a065948622039358de37">
+        <source>New window</source>
+        <target>New window</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:69</note>
+      </trans-unit>
       <trans-unit id="97e7c9a7d06eac006a28bf05467fcc8b">
         <source>Link</source>
         <target>Link</target>
@@ -77,16 +83,6 @@ File: controllers/admin/AdminQuickAccessesController.php:102</note>
         <target>Add new quick access</target>
         <note>Context:
 File: controllers/admin/AdminQuickAccessesController.php:135</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mainmenu/ps_mainmenu.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e5dc8e5afea0a065948622039358de37">
-        <source>New window</source>
-        <target>New window</target>
-        <note>Context:
-File: modules/ps_mainmenu/ps_mainmenu.php:1342</note>
       </trans-unit>
     </body>
   </file>

@@ -114,109 +114,109 @@ File: modules/ps_imageslider/ps_imageslider.php:503</note>
         <source>Slide information</source>
         <target>Slide information</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:726</note>
+File: modules/ps_imageslider/ps_imageslider.php:736</note>
       </trans-unit>
       <trans-unit id="e64df1d7c22b9638f084ce8a4aff3ff3">
         <source>Target URL</source>
         <target>Target URL</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:746</note>
+File: modules/ps_imageslider/ps_imageslider.php:756</note>
       </trans-unit>
       <trans-unit id="272ba7d164aa836995be6319a698be84">
         <source>Caption</source>
         <target>Caption</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:753</note>
+File: modules/ps_imageslider/ps_imageslider.php:763</note>
       </trans-unit>
       <trans-unit id="44877c6aa8e93fa5a91c9361211464fb">
         <source>Speed</source>
         <target>Speed</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:854</note>
+File: modules/ps_imageslider/ps_imageslider.php:864</note>
       </trans-unit>
       <trans-unit id="11cd394e1bd88abe611fd331887f0c74">
         <source>The duration of the transition between two slides.</source>
         <target>The duration of the transition between two slides.</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:858</note>
+File: modules/ps_imageslider/ps_imageslider.php:868</note>
       </trans-unit>
       <trans-unit id="8836d88aaad538c39647aab768d91932">
         <source>Pause on hover</source>
         <target>Pause on hover</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:862</note>
+File: modules/ps_imageslider/ps_imageslider.php:872</note>
       </trans-unit>
       <trans-unit id="448e0fa7b305331385aef516333e1c65">
         <source>Stop sliding when the mouse cursor is over the slideshow.</source>
         <target>Stop sliding when the mouse cursor is over the slideshow.</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:864</note>
+File: modules/ps_imageslider/ps_imageslider.php:874</note>
       </trans-unit>
       <trans-unit id="70ab55fc8ac90620143b01c453be77a3">
         <source>Loop forever</source>
         <target>Loop forever</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:880</note>
+File: modules/ps_imageslider/ps_imageslider.php:890</note>
       </trans-unit>
       <trans-unit id="1072f2a780ebfc87b511a3d0263b5d61">
         <source>Loop or stop after the last slide.</source>
         <target>Loop or stop after the last slide.</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:882</note>
+File: modules/ps_imageslider/ps_imageslider.php:892</note>
       </trans-unit>
       <trans-unit id="5a3489cc067f89b268b6958bffb98ebf">
         <source>Since multiple languages are activated on your shop, please mind to upload your image for each one of them</source>
         <target>Since multiple languages are activated on your shop, please mind to upload your image for each one of them</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:966</note>
+File: modules/ps_imageslider/ps_imageslider.php:976</note>
       </trans-unit>
       <trans-unit id="c8a1ed10db4201b3ae06ea0aa912028d">
         <source>You cannot manage slides items from a "All Shops" or a "Group Shop" context, select directly the shop you want to edit</source>
         <target>You cannot manage slides items from a "All Shops" or a "Group Shop" context, select directly the shop you want to edit</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:974</note>
+File: modules/ps_imageslider/ps_imageslider.php:984</note>
       </trans-unit>
       <trans-unit id="432ed99c2e808d79c96f892807d33325">
         <source>You can only edit this slide from the shop(s) context: %s</source>
         <target>You can only edit this slide from the shop(s) context: %s</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:989</note>
+File: modules/ps_imageslider/ps_imageslider.php:999</note>
       </trans-unit>
       <trans-unit id="6a1ae4ad1018e00dddb16a2ce30a24f6">
         <source>You cannot add slides from a "All Shops" or a "Group Shop" context</source>
         <target>You cannot add slides from a "All Shops" or a "Group Shop" context</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:993</note>
+File: modules/ps_imageslider/ps_imageslider.php:1003</note>
       </trans-unit>
       <trans-unit id="7a5c11dddbb2118d08611a1f0678bb91">
         <source>Unable to get slide shop association information (id_slide: %d)</source>
         <target>Unable to get slide shop association information (id_slide: %d)</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:1001</note>
+File: modules/ps_imageslider/ps_imageslider.php:1011</note>
       </trans-unit>
       <trans-unit id="298b615220606d42b6ac60269df0d321">
         <source>The modifications will be applied to shop: %s</source>
         <target>The modifications will be applied to shop: %s</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:1012</note>
+File: modules/ps_imageslider/ps_imageslider.php:1022</note>
       </trans-unit>
       <trans-unit id="aef3662e6419ddaaa0a31df70e3b6557">
         <source>The modifications will be applied to this group: %s</source>
         <target>The modifications will be applied to this group: %s</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:1014</note>
+File: modules/ps_imageslider/ps_imageslider.php:1024</note>
       </trans-unit>
       <trans-unit id="71063fd397d237e563089c22dd8b69e8">
         <source>The modifications will be applied to all shops and shop groups</source>
         <target>The modifications will be applied to all shops and shop groups</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:1016</note>
+File: modules/ps_imageslider/ps_imageslider.php:1026</note>
       </trans-unit>
       <trans-unit id="6a5aa2542c21debccd82b2e0038c3d1a">
         <source>This slide is shared with other shops! All shops associated to this slide will apply modifications made here</source>
         <target>This slide is shared with other shops! All shops associated to this slide will apply modifications made here</target>
         <note>Context:
-File: modules/ps_imageslider/ps_imageslider.php:1030</note>
+File: modules/ps_imageslider/ps_imageslider.php:1040</note>
       </trans-unit>
     </body>
   </file>

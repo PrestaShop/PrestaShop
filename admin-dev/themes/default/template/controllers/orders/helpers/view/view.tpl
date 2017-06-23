@@ -919,7 +919,7 @@
                   <th></th>
                   <th><span class="title_box ">{l s='Product' d='Admin.Global'}</span></th>
                   <th>
-                    <span class="title_box ">{l s='Price per unit' d='Admin.AdvParameters.Feature'}</span>
+                    <span class="title_box ">{l s='Price per unit' d='Admin.Advparameters.Feature'}</span>
                     <small class="text-muted">{$smarty.capture.TaxMethod}</small>
                   </th>
                   <th class="text-center"><span class="title_box ">{l s='Qty' d='Admin.Orderscustomers.Feature'}</span></th>

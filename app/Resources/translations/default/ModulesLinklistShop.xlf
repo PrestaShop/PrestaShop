@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_linklist/src/LinkBlockRepository.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_linklist/lang/LinkBlockLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="068f80c7519d0528fb08e82137a72131">
         <source>Products</source>
         <target>Products</target>
         <note>Context:
-File: modules/ps_linklist/src/LinkBlockRepository.php:273</note>
+File: modules/ps_linklist/lang/LinkBlockLang.php:40</note>
       </trans-unit>
       <trans-unit id="ebdaa50b843565605176eb40816e77fe">
         <source>Our company</source>
         <target>Our company</target>
         <note>Context:
-File: modules/ps_linklist/src/LinkBlockRepository.php:274</note>
+File: modules/ps_linklist/lang/LinkBlockLang.php:41</note>
       </trans-unit>
     </body>
   </file>

@@ -26,11 +26,11 @@
 {block name="after"}
 {if $use_sync}
 		<div class="panel">
-			<legend>{l s='Sync' d='Admin.OrdersCustomers.Feature'}</legend>
-			<label>{l s='Run sync:' d='Admin.OrdersCustomers.Feature'}</label>
+			<legend>{l s='Sync' d='Admin.Orderscustomers.Feature'}</legend>
+			<label>{l s='Run sync:' d='Admin.Orderscustomers.Feature'}</label>
 			<div class="margin-form">
-				<button class="btn" id="run_sync" onclick="run_sync();">{l s='Run sync' d='Admin.OrdersCustomers.Feature'}</button>
-				<p>{l s='Click to synchronize mail automatically' d='Admin.OrdersCustomers.Feature'}</p>
+				<button class="btn" id="run_sync" onclick="run_sync();">{l s='Run sync' d='Admin.Orderscustomers.Feature'}</button>
+				<p>{l s='Click to synchronize mail automatically' d='Admin.Orderscustomers.Feature'}</p>
 				<div id="ajax_loader"></div>
 				<div class="error" style="display:none" id="ajax_error"></div>
 				<div class="alert" style="display:none" id="ajax_conf"></div>

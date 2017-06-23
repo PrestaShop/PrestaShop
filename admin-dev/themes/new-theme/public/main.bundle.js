@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e5c4fa7d1658e90ad434"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6583719affb4a5febb33"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -631,7 +631,9 @@
 /******/ 		}
 /******/ 	
 /******/ 		hotSetStatus("idle");
-/******/ 		return Promise.resolve(outdatedModules);
+/******/ 		return new Promise(function(resolve) {
+/******/ 			resolve(outdatedModules);
+/******/ 		});
 /******/ 	}
 /******/
 /******/ 	// The module cache
@@ -42633,9 +42635,9 @@ $.magnificPopup.registerModule(RETINA_NS, {
 /* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_RESULT__;/* globals window, exports, define */
+var __WEBPACK_AMD_DEFINE_RESULT__;/* global window, exports, define */
 
-(function(window) {
+!function() {
     'use strict'
 
     var re = {
@@ -42656,22 +42658,22 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* globals window, exports, define */
         sign: /^[\+\-]/
     }
 
-    function sprintf() {
-        var key = arguments[0], cache = sprintf.cache
-        if (!(cache[key])) {
-            cache[key] = sprintf.parse(key)
-        }
-        return sprintf.format.call(null, cache[key], arguments)
+    function sprintf(key) {
+        // `arguments` is not an array, but should be fine for this call
+        return sprintf_format(sprintf_parse(key), arguments)
     }
 
-    sprintf.format = function(parse_tree, argv) {
-        var cursor = 1, tree_length = parse_tree.length, node_type = '', arg, output = [], i, k, match, pad, pad_character, pad_length, is_positive = true, sign = ''
+    function vsprintf(fmt, argv) {
+        return sprintf.apply(null, [fmt].concat(argv || []))
+    }
+
+    function sprintf_format(parse_tree, argv) {
+        var cursor = 1, tree_length = parse_tree.length, arg, output = '', i, k, match, pad, pad_character, pad_length, is_positive, sign
         for (i = 0; i < tree_length; i++) {
-            node_type = get_type(parse_tree[i])
-            if (node_type === 'string') {
-                output[output.length] = parse_tree[i]
+            if (typeof parse_tree[i] === 'string') {
+                output += parse_tree[i]
             }
-            else if (node_type === 'array') {
+            else if (Array.isArray(parse_tree[i])) {
                 match = parse_tree[i] // convenience purposes only
                 if (match[2]) { // keyword argument
                     arg = argv[cursor]
@@ -42689,12 +42691,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* globals window, exports, define */
                     arg = argv[cursor++]
                 }
 
-                if (re.not_type.test(match[8]) && re.not_primitive.test(match[8]) && get_type(arg) == 'function') {
+                if (re.not_type.test(match[8]) && re.not_primitive.test(match[8]) && arg instanceof Function) {
                     arg = arg()
                 }
 
-                if (re.numeric_arg.test(match[8]) && (get_type(arg) != 'number' && isNaN(arg))) {
-                    throw new TypeError(sprintf("[sprintf] expecting number but found %s", get_type(arg)))
+                if (re.numeric_arg.test(match[8]) && (typeof arg !== 'number' && isNaN(arg))) {
+                    throw new TypeError(sprintf('[sprintf] expecting number but found %T', arg))
                 }
 
                 if (re.number.test(match[8])) {
@@ -42704,57 +42706,57 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* globals window, exports, define */
                 switch (match[8]) {
                     case 'b':
                         arg = parseInt(arg, 10).toString(2)
-                    break
+                        break
                     case 'c':
                         arg = String.fromCharCode(parseInt(arg, 10))
-                    break
+                        break
                     case 'd':
                     case 'i':
                         arg = parseInt(arg, 10)
-                    break
+                        break
                     case 'j':
                         arg = JSON.stringify(arg, null, match[6] ? parseInt(match[6]) : 0)
-                    break
+                        break
                     case 'e':
                         arg = match[7] ? parseFloat(arg).toExponential(match[7]) : parseFloat(arg).toExponential()
-                    break
+                        break
                     case 'f':
                         arg = match[7] ? parseFloat(arg).toFixed(match[7]) : parseFloat(arg)
-                    break
+                        break
                     case 'g':
-                        arg = match[7] ? parseFloat(arg).toPrecision(match[7]) : parseFloat(arg)
-                    break
+                        arg = match[7] ? String(Number(arg.toPrecision(match[7]))) : parseFloat(arg)
+                        break
                     case 'o':
-                        arg = arg.toString(8)
-                    break
+                        arg = (parseInt(arg, 10) >>> 0).toString(8)
+                        break
                     case 's':
                         arg = String(arg)
                         arg = (match[7] ? arg.substring(0, match[7]) : arg)
-                    break
+                        break
                     case 't':
                         arg = String(!!arg)
                         arg = (match[7] ? arg.substring(0, match[7]) : arg)
-                    break
+                        break
                     case 'T':
-                        arg = get_type(arg)
+                        arg = Object.prototype.toString.call(arg).slice(8, -1).toLowerCase()
                         arg = (match[7] ? arg.substring(0, match[7]) : arg)
-                    break
+                        break
                     case 'u':
                         arg = parseInt(arg, 10) >>> 0
-                    break
+                        break
                     case 'v':
                         arg = arg.valueOf()
                         arg = (match[7] ? arg.substring(0, match[7]) : arg)
-                    break
+                        break
                     case 'x':
-                        arg = parseInt(arg, 10).toString(16)
-                    break
+                        arg = (parseInt(arg, 10) >>> 0).toString(16)
+                        break
                     case 'X':
-                        arg = parseInt(arg, 10).toString(16).toUpperCase()
-                    break
+                        arg = (parseInt(arg, 10) >>> 0).toString(16).toUpperCase()
+                        break
                 }
                 if (re.json.test(match[8])) {
-                    output[output.length] = arg
+                    output += arg
                 }
                 else {
                     if (re.number.test(match[8]) && (!is_positive || match[3])) {
@@ -42766,45 +42768,49 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* globals window, exports, define */
                     }
                     pad_character = match[4] ? match[4] === '0' ? '0' : match[4].charAt(1) : ' '
                     pad_length = match[6] - (sign + arg).length
-                    pad = match[6] ? (pad_length > 0 ? str_repeat(pad_character, pad_length) : '') : ''
-                    output[output.length] = match[5] ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg)
+                    pad = match[6] ? (pad_length > 0 ? pad_character.repeat(pad_length) : '') : ''
+                    output += match[5] ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg)
                 }
             }
         }
-        return output.join('')
+        return output
     }
 
-    sprintf.cache = Object.create(null)
+    var sprintf_cache = Object.create(null)
 
-    sprintf.parse = function(fmt) {
-        var _fmt = fmt, match = [], parse_tree = [], arg_names = 0
+    function sprintf_parse(fmt) {
+        if (sprintf_cache[fmt]) {
+            return sprintf_cache[fmt]
+        }
+
+        var _fmt = fmt, match, parse_tree = [], arg_names = 0
         while (_fmt) {
             if ((match = re.text.exec(_fmt)) !== null) {
-                parse_tree[parse_tree.length] = match[0]
+                parse_tree.push(match[0])
             }
             else if ((match = re.modulo.exec(_fmt)) !== null) {
-                parse_tree[parse_tree.length] = '%'
+                parse_tree.push('%')
             }
             else if ((match = re.placeholder.exec(_fmt)) !== null) {
                 if (match[2]) {
                     arg_names |= 1
                     var field_list = [], replacement_field = match[2], field_match = []
                     if ((field_match = re.key.exec(replacement_field)) !== null) {
-                        field_list[field_list.length] = field_match[1]
+                        field_list.push(field_match[1])
                         while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
                             if ((field_match = re.key_access.exec(replacement_field)) !== null) {
-                                field_list[field_list.length] = field_match[1]
+                                field_list.push(field_match[1])
                             }
                             else if ((field_match = re.index_access.exec(replacement_field)) !== null) {
-                                field_list[field_list.length] = field_match[1]
+                                field_list.push(field_match[1])
                             }
                             else {
-                                throw new SyntaxError("[sprintf] failed to parse named argument key")
+                                throw new SyntaxError('[sprintf] failed to parse named argument key')
                             }
                         }
                     }
                     else {
-                        throw new SyntaxError("[sprintf] failed to parse named argument key")
+                        throw new SyntaxError('[sprintf] failed to parse named argument key')
                     }
                     match[2] = field_list
                 }
@@ -42812,73 +42818,42 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* globals window, exports, define */
                     arg_names |= 2
                 }
                 if (arg_names === 3) {
-                    throw new Error("[sprintf] mixing positional and named placeholders is not (yet) supported")
+                    throw new Error('[sprintf] mixing positional and named placeholders is not (yet) supported')
                 }
-                parse_tree[parse_tree.length] = match
+                parse_tree.push(match)
             }
             else {
-                throw new SyntaxError("[sprintf] unexpected placeholder")
+                throw new SyntaxError('[sprintf] unexpected placeholder')
             }
             _fmt = _fmt.substring(match[0].length)
         }
-        return parse_tree
-    }
-
-    var vsprintf = function(fmt, argv, _argv) {
-        _argv = (argv || []).slice(0)
-        _argv.splice(0, 0, fmt)
-        return sprintf.apply(null, _argv)
-    }
-
-    /**
-     * helpers
-     */
-    function get_type(variable) {
-        if (typeof variable === 'number') {
-            return 'number'
-        }
-        else if (typeof variable === 'string') {
-            return 'string'
-        }
-        else {
-            return Object.prototype.toString.call(variable).slice(8, -1).toLowerCase()
-        }
-    }
-
-    var preformattedPadding = {
-        '0': ['', '0', '00', '000', '0000', '00000', '000000', '0000000'],
-        ' ': ['', ' ', '  ', '   ', '    ', '     ', '      ', '       '],
-        '_': ['', '_', '__', '___', '____', '_____', '______', '_______'],
-    }
-    function str_repeat(input, multiplier) {
-        if (multiplier >= 0 && multiplier <= 7 && preformattedPadding[input]) {
-            return preformattedPadding[input][multiplier]
-        }
-        return Array(multiplier + 1).join(input)
+        return sprintf_cache[fmt] = parse_tree
     }
 
     /**
      * export to either browser or node.js
      */
+    /* eslint-disable quote-props */
     if (true) {
-        exports.sprintf = sprintf
-        exports.vsprintf = vsprintf
+        exports['sprintf'] = sprintf
+        exports['vsprintf'] = vsprintf
     }
     if (typeof window !== 'undefined') {
-        window.sprintf = sprintf
-        window.vsprintf = vsprintf
+        window['sprintf'] = sprintf
+        window['vsprintf'] = vsprintf
 
         if (true) {
             !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
                 return {
-                    sprintf: sprintf,
-                    vsprintf: vsprintf
+                    'sprintf': sprintf,
+                    'vsprintf': vsprintf
                 }
             }.call(exports, __webpack_require__, exports, module),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
         }
     }
-})(typeof window === 'undefined' ? this : window);
+    /* eslint-enable quote-props */
+}()
 
 
 /***/ }),

@@ -113,7 +113,7 @@
 						<td>{$server.port}</td>
 						<td>{$server.weight}</td>
 						<td>
-							<a class="btn btn-default" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1 d='Admin.Advparameters.Warning'}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove' d='Admin.Actions'}</a>
+							<a class="btn btn-default" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1 d='Admin.Advparameters.Notification'}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove' d='Admin.Actions'}</a>
 						</td>
 					</tr>
 				{/foreach}

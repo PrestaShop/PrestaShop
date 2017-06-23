@@ -8,11 +8,9 @@
         <note>Context:
 File: modules/ps_reminder/ps_reminder.php:75</note>
       </trans-unit>
-      <trans-unit id="a5f0eae15e15d3226dccdaa6b4b6b581">
-        <source>Follow-up with your customers by sending abandonment cart emails
-		    and other reminders.</source>
-        <target>Follow-up with your customers by sending abandonment cart emails
-		    and other reminders.</target>
+      <trans-unit id="889d695cbb3e942d1ca1c883cd0e98e7">
+        <source>Follow-up with your customers by sending abandonment cart emails and other reminders.</source>
+        <target>Follow-up with your customers by sending abandonment cart emails and other reminders.</target>
         <note>Context:
 File: modules/ps_reminder/ps_reminder.php:80</note>
       </trans-unit>
@@ -20,161 +18,145 @@ File: modules/ps_reminder/ps_reminder.php:80</note>
         <source>Settings updated succesfully</source>
         <target>Settings updated succesfully</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:136</note>
+File: modules/ps_reminder/ps_reminder.php:135</note>
       </trans-unit>
       <trans-unit id="003b06dcfe67596f17e3de26e6a436c8">
         <source>Error occurred during settings update</source>
         <target>Error occurred during settings update</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:142</note>
+File: modules/ps_reminder/ps_reminder.php:141</note>
       </trans-unit>
       <trans-unit id="edf9feeab43a7623f6afc152d1ede515">
         <source>Discount for your cancelled cart</source>
         <target>Discount for your cancelled cart</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:222</note>
+File: modules/ps_reminder/ps_reminder.php:221</note>
       </trans-unit>
       <trans-unit id="a053fc9952a7dfc79282eba56ab8ad3a">
         <source>Thank you for your order.</source>
         <target>Thank you for your order.</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:353</note>
+File: modules/ps_reminder/ps_reminder.php:352</note>
       </trans-unit>
       <trans-unit id="7fcd592dd47028c7c1f2d0ce9168a303">
         <source>You are one of our best customers!</source>
         <target>You are one of our best customers!</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:445</note>
+File: modules/ps_reminder/ps_reminder.php:444</note>
       </trans-unit>
       <trans-unit id="c2ab23672d4bb31c7664bf8e854a10f7">
         <source>We miss you!</source>
         <target>We miss you!</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:551</note>
+File: modules/ps_reminder/ps_reminder.php:550</note>
       </trans-unit>
-      <trans-unit id="514de3f679514e3ac4a31e243d752f18">
-        <source>Define the settings and paste the following URL in the crontab,
-			     or call it manually on a daily basis:</source>
-        <target>Define the settings and paste the following URL in the crontab,
-			     or call it manually on a daily basis:</target>
+      <trans-unit id="fba6524bb4f34a4c7d8e84b082fc4ce1">
+        <source>Define the settings and paste the following URL in the crontab, or call it manually on a daily basis:</source>
+        <target>Define the settings and paste the following URL in the crontab, or call it manually on a daily basis:</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:749</note>
+File: modules/ps_reminder/ps_reminder.php:748</note>
       </trans-unit>
       <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
         <source>Information</source>
         <target>Information</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:762</note>
+File: modules/ps_reminder/ps_reminder.php:760</note>
       </trans-unit>
-      <trans-unit id="dc39991835c951202c14fcbabc024224">
-        <source>Four kinds of e-mail alerts are available in order to stay
-				    in touch with your customers!</source>
-        <target>Four kinds of e-mail alerts are available in order to stay
-				    in touch with your customers!</target>
+      <trans-unit id="87b1e57b5e8cd700618b6ae4938a4023">
+        <source>Four kinds of e-mail alerts are available in order to stay in touch with your customers!</source>
+        <target>Four kinds of e-mail alerts are available in order to stay in touch with your customers!</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:769</note>
+File: modules/ps_reminder/ps_reminder.php:767</note>
       </trans-unit>
       <trans-unit id="b547c073d144a57761d1d00d0b9d9f27">
         <source>Cancelled carts</source>
         <target>Cancelled carts</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:781</note>
+File: modules/ps_reminder/ps_reminder.php:778</note>
       </trans-unit>
-      <trans-unit id="82589a257511e31a4efd0d2ac92be725">
-        <source>For each cancelled cart (with no order), generate a
-				    discount and send it to the customer.</source>
-        <target>For each cancelled cart (with no order), generate a
-				    discount and send it to the customer.</target>
+      <trans-unit id="ea9dc62a0ddf4640f019f04a22ab9835">
+        <source>For each cancelled cart (with no order), generate a discount and send it to the customer.</source>
+        <target>For each cancelled cart (with no order), generate a discount and send it to the customer.</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:788</note>
+File: modules/ps_reminder/ps_reminder.php:785</note>
       </trans-unit>
       <trans-unit id="b30690be173bcd4a83df0cd68f89a385">
         <source>Discount amount</source>
         <target>Discount amount</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:1114</note>
+File: modules/ps_reminder/ps_reminder.php:1106</note>
       </trans-unit>
       <trans-unit id="2018945d252b94aeb99b0909f288717c">
         <source>Discount validity</source>
         <target>Discount validity</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:1138</note>
+File: modules/ps_reminder/ps_reminder.php:1130</note>
       </trans-unit>
       <trans-unit id="225e75c29d32392d311f5dc94c792384">
         <source>day(s)</source>
         <target>day(s)</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:1144</note>
+File: modules/ps_reminder/ps_reminder.php:1136</note>
       </trans-unit>
       <trans-unit id="4c5caf3567f8b9ce900fe5973453b68c">
         <source>The next process will send %d e-mail(s).</source>
         <target>The next process will send %d e-mail(s).</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:852</note>
+File: modules/ps_reminder/ps_reminder.php:848</note>
       </trans-unit>
       <trans-unit id="a8b8dbd070a92fb8b17baab71d8d633f">
         <source>Re-order</source>
         <target>Re-order</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:873</note>
+File: modules/ps_reminder/ps_reminder.php:869</note>
       </trans-unit>
-      <trans-unit id="bd8737be73ab247b7499b27a507beb20">
-        <source>For each validated order, generate a discount and send
-				    it to the customer.</source>
-        <target>For each validated order, generate a discount and send
-				    it to the customer.</target>
+      <trans-unit id="895858cf10b8a1750a42875cb9c69092">
+        <source>For each validated order, generate a discount and send it to the customer.</source>
+        <target>For each validated order, generate a discount and send it to the customer.</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:880</note>
+File: modules/ps_reminder/ps_reminder.php:876</note>
       </trans-unit>
       <trans-unit id="f120254f109d626d73ddddeb9cda26e5">
         <source>Next process will send: %d e-mail(s)</source>
         <target>Next process will send: %d e-mail(s)</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:1153</note>
+File: modules/ps_reminder/ps_reminder.php:1145</note>
       </trans-unit>
-      <trans-unit id="00831e3c1d7aa764e38b4dd8396971fd">
-        <source>For each customer raising a threshold, generate a discount
-				    and send it to the customer.</source>
-        <target>For each customer raising a threshold, generate a discount
-				    and send it to the customer.</target>
+      <trans-unit id="a46ad892f7f00e051cc90050ff2e1ddf">
+        <source>For each customer raising a threshold, generate a discount and send it to the customer.</source>
+        <target>For each customer raising a threshold, generate a discount and send it to the customer.</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:972</note>
+File: modules/ps_reminder/ps_reminder.php:967</note>
       </trans-unit>
       <trans-unit id="2a63f555989152ba866b43a1faacd680">
         <source>Threshold</source>
         <target>Threshold</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:1021</note>
+File: modules/ps_reminder/ps_reminder.php:1015</note>
       </trans-unit>
-      <trans-unit id="002a4869e4b4fa4b219f90efcb439689">
-        <source>For each customer who has already placed at least one order
-				     and with no orders since a given duration, generate a
-				     discount and send it to the customer.</source>
-        <target>For each customer who has already placed at least one order
-				     and with no orders since a given duration, generate a
-				     discount and send it to the customer.</target>
+      <trans-unit id="346f38f5b951daec00dcca38364f8359">
+        <source>For each customer who has already placed at least one order and with no orders since a given duration, generate a discount and send it to the customer.</source>
+        <target>For each customer who has already placed at least one order and with no orders since a given duration, generate a discount and send it to the customer.</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:1074</note>
+File: modules/ps_reminder/ps_reminder.php:1068</note>
       </trans-unit>
       <trans-unit id="d82843c16839bfb05827d1912d89c917">
         <source>Since x days</source>
         <target>Since x days</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:1124</note>
+File: modules/ps_reminder/ps_reminder.php:1116</note>
       </trans-unit>
       <trans-unit id="0db377921f4ce762c62526131097968f">
         <source>General</source>
         <target>General</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:1174</note>
+File: modules/ps_reminder/ps_reminder.php:1166</note>
       </trans-unit>
-      <trans-unit id="ae83187f8a46e9158ccc26b2ac0782fb">
-        <source>Delete outdated discounts during each launch to
-						    clean database</source>
-        <target>Delete outdated discounts during each launch to
-						    clean database</target>
+      <trans-unit id="1d52a8fe6cab6930fad9d814a1b0ca4c">
+        <source>Delete outdated discounts during each launch to clean database</source>
+        <target>Delete outdated discounts during each launch to clean database</target>
         <note>Context:
-File: modules/ps_reminder/ps_reminder.php:1185</note>
+File: modules/ps_reminder/ps_reminder.php:1177</note>
       </trans-unit>
     </body>
   </file>

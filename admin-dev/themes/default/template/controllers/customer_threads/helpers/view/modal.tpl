@@ -28,18 +28,18 @@
 		<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h4 class="modal-title">{l s="Forward this discussion" d='Admin.OrdersCustomers.Feature'}</h4>
+			<h4 class="modal-title">{l s="Forward this discussion" d='Admin.Orderscustomers.Feature'}</h4>
 		</div>
 		<div class="modal-body">
 			<div class="row row-margin-bottom">
-				<label class="control-label col-lg-6">{l s='Forward this discussion to an employee:' d='Admin.OrdersCustomers.Feature'}</label>
+				<label class="control-label col-lg-6">{l s='Forward this discussion to an employee:' d='Admin.Orderscustomers.Feature'}</label>
 				<div class="col-lg-3">
 					<select name="id_employee_forward">
 						<option value="-1">{l s='-- Choose --' d='Admin.Actions'}</option>
 						{foreach $employees as $employee}
 							<option value="{$employee.id_employee}"> {Tools::substr($employee.firstname, 0, 1)}. {$employee.lastname}</option>
 						{/foreach}
-						<option value="0">{l s='Someone else' d='Admin.OrdersCustomers.Feature'}</option>
+						<option value="0">{l s='Someone else' d='Admin.Orderscustomers.Feature'}</option>
 					</select>
 				</div>
 			</div>
@@ -51,16 +51,16 @@
 			</div>
 			<div id="message_forward" style="display:none;">
 				<div class="row row-margin-bottom">
-					<label class="control-label col-lg-3">{l s='Comment:' d='Admin.OrdersCustomers.Feature'}</label>
+					<label class="control-label col-lg-3">{l s='Comment:' d='Admin.Orderscustomers.Feature'}</label>
 					<div class="col-lg-7">
-						<textarea name="message_forward" rows="6">{l s='You can add a comment here.' d='Admin.OrdersCustomers.Help'}</textarea>
+						<textarea name="message_forward" rows="6">{l s='You can add a comment here.' d='Admin.Orderscustomers.Help'}</textarea>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">{l s="Close"}</button>
-			<button type="submit" class="btn btn-primary" name="submitForward" disabled="disabled"><i class="icon-mail-forward"></i> {l s="Forward" d='Admin.OrdersCustomers.Feature'}</button>
+			<button type="submit" class="btn btn-primary" name="submitForward" disabled="disabled"><i class="icon-mail-forward"></i> {l s="Forward" d='Admin.Orderscustomers.Feature'}</button>
 		</div>
 		</div>
 	</div>
