@@ -1975,12 +1975,6 @@ PRIMARY KEY (`id_carrier`, `id_shop`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_address_format` (
-  `id_country` int(10) unsigned NOT NULL,
-  `format` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id_country`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_cms_shop` (
 `id_cms` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
