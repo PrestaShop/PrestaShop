@@ -319,7 +319,11 @@ namespace PrestaShopBundle\Install {
             require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
             Context::getContext()->smarty = $smarty;
-            Language::loadLanguages();
+            if(version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
+                Language::loadLanguagesLegacy();
+            } else {
+                Language::loadLanguages();
+            }
 
             $this->translator = Context::getContext()->getTranslator();
         }
@@ -383,7 +387,7 @@ namespace PrestaShopBundle\Install {
 
                 if ($handle = opendir(_PS_INSTALLER_SQL_UPGRADE_DIR_)) {
                     while (false !== ($file = readdir($handle))) {
-                        if ($file != '.' and $file != '..') {
+                        if (!in_array($file, array('.', '..', 'index.php'))) {
                             $upgradeFiles[] = str_replace(".sql", "", $file);
                         }
                     }
@@ -757,7 +761,11 @@ namespace PrestaShopBundle\Install {
                         Language::installEmailsLanguagePack($lang_pack, $errorsLanguage);
 
                         if (empty($errorsLanguage)) {
-                            Language::loadLanguages();
+                            if(version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
+                                Language::loadLanguagesLegacy();
+                            } else {
+                                Language::loadLanguages();
+                            }
 
                             $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
                             $cldrUpdate->fetchLocale(Language::getLocaleByIso($isoCode));
@@ -1180,13 +1188,13 @@ namespace PrestaShopBundle\Install {
                             'database_password' => _LEGACY_DB_PASSWD_,
                             'database_name' => _LEGACY_DB_NAME_,
                             'database_prefix' => _LEGACY_DB_PREFIX_,
-                            'database_engine' => _LEGACY_MYSQL_ENGINE_,
+                            'database_engine' => defined(_LEGACY_MYSQL_ENGINE_) ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
                             'cookie_key' => _LEGACY_COOKIE_KEY_,
                             'cookie_iv' => _LEGACY_COOKIE_IV_,
                             'new_cookie_key' => _LEGACY_NEW_COOKIE_KEY_,
-                            'ps_caching' => _LEGACY_PS_CACHING_SYSTEM_,
-                            'ps_cache_enable' => _LEGACY_PS_CACHE_ENABLED_,
-                            'ps_creation_date' => _LEGACY_PS_CREATION_DATE_,
+                            'ps_caching' => defined(_LEGACY_PS_CACHING_SYSTEM_) ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
+                            'ps_cache_enable' => defined(_LEGACY_PS_CACHE_ENABLED_) ? _LEGACY_PS_CACHE_ENABLED_ : false,
+                            'ps_creation_date' => defined(_LEGACY_PS_CREATION_DATE_) ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
                             'secret' => $secret,
                             'mailer_transport' => 'smtp',
                             'mailer_host' => '127.0.0.1',

@@ -808,11 +808,30 @@ class LanguageCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'lang_shop` ls ON (l.id_lang = ls.id_lang)';
 
         $result = Db::getInstance()->executeS($sql);
+
         foreach ($result as $row) {
-            if (!isset(self::$_LANGUAGES[(int) $row['id_lang']])) {
-                self::$_LANGUAGES[(int) $row['id_lang']] = $row;
+            $idLang = (int) $row['id_lang'];
+
+            if (!isset(self::$_LANGUAGES[$idLang])) {
+                self::$_LANGUAGES[$idLang] = $row;
             }
-            self::$_LANGUAGES[(int) $row['id_lang']]['shops'][(int) $row['id_shop']] = true;
+            self::$_LANGUAGES[$idLang]['shops'][(int) $row['id_shop']] = true;
+        }
+    }
+
+    public static function loadLanguagesLegacy()
+    {
+        self::$_LANGUAGES = array();
+
+        $result = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang`');
+
+        foreach ($result as $row) {
+            $idLang = (int) $row['id_lang'];
+
+            if (!isset(self::$_LANGUAGES[$idLang])) {
+                self::$_LANGUAGES[$idLang] = $row;
+            }
+            self::$_LANGUAGES[$idLang]['shops'][1] = true;
         }
     }
 

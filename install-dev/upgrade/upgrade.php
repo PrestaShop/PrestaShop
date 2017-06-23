@@ -69,7 +69,7 @@ require_once(dirname(__FILE__).'/../init.php');
 Upgrade::migrateSettingsFile();
 require_once(_PS_CONFIG_DIR_.'bootstrap.php');
 
-$logDir = _PS_ROOT_DIR_.'/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/log/';
+$logDir = _PS_ROOT_DIR_.'/app/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
 @mkdir($logDir, 0777, true);
 
 $upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)).'/');
