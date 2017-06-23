@@ -23,58 +23,6 @@ CREATE TABLE `PREFIX_attribute_impact` (
   UNIQUE KEY `id_product` (`id_product`,`id_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_category` (
-  `id_category` int(10) unsigned NOT NULL auto_increment,
-  `id_parent` int(10) unsigned NOT NULL,
-  `id_shop_default` int(10) unsigned NOT NULL DEFAULT 1,
-  `level_depth` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `nleft` int(10) unsigned NOT NULL DEFAULT '0',
-  `nright` int(10) unsigned NOT NULL DEFAULT '0',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  `is_root_category` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_category`),
-  KEY `category_parent` (`id_parent`),
-  KEY `nleftrightactive` (`nleft`, `nright`, `active`),
-  KEY `level_depth` (`level_depth`),
-  KEY `nright` (`nright`),
-  KEY `activenleft` (`active`,`nleft`),
-  KEY `activenright` (`active`,`nright`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_category_group` (
-  `id_category` int(10) unsigned NOT NULL,
-  `id_group` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_category`,`id_group`),
-  KEY `id_category` (`id_category`),
-  KEY `id_group` (`id_group`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_category_lang` (
-  `id_category` int(10) unsigned NOT NULL,
-  `id_shop` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1',
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `description` text,
-  `link_rewrite` varchar(128) NOT NULL,
-  `meta_title` varchar(128) DEFAULT NULL,
-  `meta_keywords` varchar(255) DEFAULT NULL,
-  `meta_description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_category`,`id_shop`, `id_lang`),
-  KEY `category_name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_category_product` (
-  `id_category` int(10) unsigned NOT NULL,
-  `id_product` int(10) unsigned NOT NULL,
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_category`,`id_product`),
-  INDEX (`id_product`),
-  INDEX (`id_category`, `position`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_cms` (
   `id_cms` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_cms_category` int(10) unsigned NOT NULL,
@@ -1999,13 +1947,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_risk_lang` (
   PRIMARY KEY (`id_risk`,`id_lang`),
   KEY `id_risk` (`id_risk`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_category_shop` (
-  `id_category` int(11) NOT NULL,
-  `id_shop` int(11) NOT NULL,
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_category`, `id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_module_preference` (
   `id_module_preference` int(11) NOT NULL auto_increment,
