@@ -7,15 +7,6 @@ CREATE TABLE `PREFIX_accessory` (
   KEY `accessory_product` (`id_product_1`,`id_product_2`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_alias` (
-  `id_alias` int(10) unsigned NOT NULL auto_increment,
-  `alias` varchar(255) NOT NULL,
-  `search` varchar(255) NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_alias`),
-  UNIQUE KEY `alias` (`alias`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_attachment` (
   `id_attachment` int(10) unsigned NOT NULL auto_increment,
   `file` varchar(40) NOT NULL,
