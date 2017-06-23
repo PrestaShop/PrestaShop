@@ -53,6 +53,7 @@
   }
   .thumbnail, .no-img {
       border: $gray-light 1px solid;
+      max-width: 47px;
   }
   .no-img {
     background: white;

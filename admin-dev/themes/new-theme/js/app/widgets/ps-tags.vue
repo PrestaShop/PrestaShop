@@ -66,13 +66,15 @@
         }
       },
       close(index) {
+        const tagName = this.tags[index];
         this.tags.splice(index, 1);
-        this.$emit('tagChange', this.tags[index]);
+        this.$emit('tagChange', tagName);
       },
       remove() {
         if (this.tags.length) {
+          const tagName = this.tags[this.tags.length - 1];
           this.tags.pop();
-          this.$emit('tagChange', this.tag);
+          this.$emit('tagChange', tagName);
         }
       },
       focus() {

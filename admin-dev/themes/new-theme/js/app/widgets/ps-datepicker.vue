@@ -35,10 +35,37 @@
   export default {
     mounted() {
       $(this.$el).datetimepicker({
-        format: 'MM/dd/YYYY',
+        format: 'MM/DD/YYYY',
+        showClear: true,
       }).on('dp.change', (infos) => {
-        this.$emit('dpChange', infos);
+        if (infos.date) {
+          this.$emit('dpChange', infos);
+        } else {
+          this.$emit('reset', infos);
+        }
       });
     },
   };
 </script>
+
+<style lang="sass">
+  @import "~PrestaKit/scss/custom/_variables.scss";
+
+  .date {
+    a[data-action='clear']::before {
+      font-family: 'Material Icons';
+      content: "\E14C";
+      font-size: 20px;
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      margin-left: -10px;
+      color: $gray-dark;
+      cursor:pointer;
+    }
+    .bootstrap-datetimepicker-widget tr td span:hover {
+      background-color: white;
+    }
+  }
+  
+</style>
