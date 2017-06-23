@@ -1597,37 +1597,6 @@ CREATE TABLE `PREFIX_search_word` (
   UNIQUE KEY `id_lang` (`id_lang`,`id_shop`, `word`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_specific_price` (
-	`id_specific_price` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`id_specific_price_rule` INT(11) UNSIGNED NOT NULL,
-	`id_cart` INT(11) UNSIGNED NOT NULL,
-	`id_product` INT UNSIGNED NOT NULL,
-	`id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-	`id_shop_group` INT(11) UNSIGNED NOT NULL,
-	`id_currency` INT UNSIGNED NOT NULL,
-	`id_country` INT UNSIGNED NOT NULL,
-	`id_group` INT UNSIGNED NOT NULL,
-	`id_customer` INT UNSIGNED NOT NULL,
-	`id_product_attribute` INT UNSIGNED NOT NULL,
-	`price` DECIMAL(20, 6) NOT NULL,
-	`from_quantity` mediumint(8) UNSIGNED NOT NULL,
- 	`reduction` DECIMAL(20, 6) NOT NULL,
- 	`reduction_tax` tinyint(1) NOT NULL DEFAULT 1,
-	`reduction_type` ENUM('amount', 'percentage') NOT NULL,
-	`from` DATETIME NOT NULL,
-	`to` DATETIME NOT NULL,
-	PRIMARY KEY (`id_specific_price`),
-	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`),
-	KEY `from_quantity` (`from_quantity`),
-	KEY (`id_specific_price_rule`),
-	KEY (`id_cart`),
-  KEY `id_product_attribute` (`id_product_attribute`),
-  KEY `id_shop` (`id_shop`),
-  KEY `id_customer` (`id_customer`),
-  KEY `from` (`from`),
-  KEY `to` (`to`),
-  UNIQUE KEY `id_product_2` (`id_product`,`id_product_attribute`,`id_customer`,`id_cart`,`from`,`to`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`from_quantity`,`id_specific_price_rule`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_state` (
   `id_state` int(10) unsigned NOT NULL auto_increment,
@@ -1808,14 +1777,6 @@ CREATE TABLE `PREFIX_tax_rules_group` (
 `date_add` DATETIME NOT NULL,
 `date_upd` DATETIME NOT NULL
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_specific_price_priority` (
-	`id_specific_price_priority` INT NOT NULL AUTO_INCREMENT ,
-	`id_product` INT NOT NULL ,
-	`priority` VARCHAR( 80 ) NOT NULL ,
-	PRIMARY KEY ( `id_specific_price_priority` , `id_product` ),
-	UNIQUE KEY `id_product` (`id_product`)
-)  ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_log` (
 	`id_log` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -2178,39 +2139,6 @@ CREATE TABLE `PREFIX_order_carrier` (
   KEY `id_carrier` (`id_carrier`),
   KEY `id_order_invoice` (`id_order_invoice`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_specific_price_rule` (
-	`id_specific_price_rule` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`name` VARCHAR(255) NOT NULL,
-	`id_shop` int(11) unsigned NOT NULL DEFAULT '1',
-	`id_currency` int(10) unsigned NOT NULL,
-	`id_country` int(10) unsigned NOT NULL,
-	`id_group` int(10) unsigned NOT NULL,
-	`from_quantity` mediumint(8) unsigned NOT NULL,
-	`price` DECIMAL(20,6),
-	`reduction` decimal(20,6) NOT NULL,
- 	`reduction_tax` tinyint(1) NOT NULL DEFAULT 1,
-	`reduction_type` enum('amount','percentage') NOT NULL,
-	`from` datetime NOT NULL,
-	`to` datetime NOT NULL,
-	PRIMARY KEY (`id_specific_price_rule`),
-	KEY `id_product` (`id_shop`,`id_currency`,`id_country`,`id_group`,`from_quantity`,`from`,`to`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_specific_price_rule_condition_group` (
-	`id_specific_price_rule_condition_group` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`id_specific_price_rule` INT(11) UNSIGNED NOT NULL,
-	PRIMARY KEY ( `id_specific_price_rule_condition_group`, `id_specific_price_rule` )
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_specific_price_rule_condition` (
-	`id_specific_price_rule_condition` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`id_specific_price_rule_condition_group` INT(11) UNSIGNED NOT NULL,
-	`type` VARCHAR(255) NOT NULL,
-	`value` VARCHAR(255) NOT NULL,
-PRIMARY KEY (`id_specific_price_rule_condition`),
-INDEX (`id_specific_price_rule_condition_group`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_risk` (
   `id_risk` int(11) unsigned NOT NULL AUTO_INCREMENT,
