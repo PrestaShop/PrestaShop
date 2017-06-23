@@ -20,80 +20,6 @@ CREATE TABLE `PREFIX_attribute_impact` (
 
 
 
-CREATE TABLE `PREFIX_contact` (
-  `id_contact` int(10) unsigned NOT NULL auto_increment,
-  `email` varchar(128) NOT NULL,
-  `customer_service` tinyint(1) NOT NULL DEFAULT '0',
-  `position` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_contact`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_contact_lang` (
-  `id_contact` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `description` text,
-  PRIMARY KEY (`id_contact`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_country` (
-  `id_country` int(10) unsigned NOT NULL auto_increment,
-  `id_zone` int(10) unsigned NOT NULL,
-  `id_currency` int(10) unsigned NOT NULL DEFAULT '0',
-  `iso_code` varchar(3) NOT NULL,
-  `call_prefix` int(10) NOT NULL DEFAULT '0',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `contains_states` tinyint(1) NOT NULL DEFAULT '0',
-  `need_identification_number` tinyint(1) NOT NULL DEFAULT '0',
-  `need_zip_code` tinyint(1) NOT NULL DEFAULT '1',
-  `zip_code_format` varchar(12) NOT NULL DEFAULT '',
-  `display_tax_label` BOOLEAN NOT NULL,
-  PRIMARY KEY (`id_country`),
-  KEY `country_iso_code` (`iso_code`),
-  KEY `country_` (`id_zone`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_country_lang` (
-  `id_country` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(64) NOT NULL,
-  PRIMARY KEY (`id_country`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_currency` (
-  `id_currency` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL,
-  `iso_code` varchar(3) NOT NULL DEFAULT '0',
-  `conversion_rate` decimal(13,6) NOT NULL,
-  `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_currency`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-
-CREATE TABLE `PREFIX_date_range` (
-  `id_date_range` int(10) unsigned NOT NULL auto_increment,
-  `time_start` datetime NOT NULL,
-  `time_end` datetime NOT NULL,
-  PRIMARY KEY (`id_date_range`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_delivery` (
-  `id_delivery` int(10) unsigned NOT NULL auto_increment,
-  `id_shop` INT UNSIGNED NULL DEFAULT NULL,
-  `id_shop_group` INT UNSIGNED NULL DEFAULT NULL,
-  `id_carrier` int(10) unsigned NOT NULL,
-  `id_range_price` int(10) unsigned DEFAULT NULL,
-  `id_range_weight` int(10) unsigned DEFAULT NULL,
-  `id_zone` int(10) unsigned NOT NULL,
-  `price` decimal(20,6) NOT NULL,
-  PRIMARY KEY (`id_delivery`),
-  KEY `id_zone` (`id_zone`),
-  KEY `id_carrier` (`id_carrier`,`id_zone`),
-  KEY `id_range_price` (`id_range_price`),
-  KEY `id_range_weight` (`id_range_weight`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_hook` (
   `id_hook` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(64) NOT NULL,
@@ -391,28 +317,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
   UNIQUE KEY `full_shop_url_ssl` (`domain_ssl`, `physical_uri`, `virtual_uri`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_country_shop` (
-`id_country` INT( 11 ) UNSIGNED NOT NULL,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id_country`, `id_shop`),
-  KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-
-CREATE TABLE `PREFIX_currency_shop` (
-`id_currency` INT( 11 ) UNSIGNED NOT NULL,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-`conversion_rate` decimal(13,6) NOT NULL,
-  PRIMARY KEY (`id_currency`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_contact_shop` (
-	`id_contact` INT(11) UNSIGNED NOT NULL,
-	`id_shop` INT(11) UNSIGNED NOT NULL,
-	PRIMARY KEY (`id_contact`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 
 CREATE TABLE `PREFIX_group_shop` (
