@@ -385,7 +385,7 @@ class OrderHistoryCore extends ObjectModel
                     }
                     $order->save();
 
-                    $payment->conversion_rate = 1;
+                    $payment->conversion_rate = ($order ? $order->conversion_rate : 1);
                     $payment->save();
                     Db::getInstance()->execute('
                     INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
