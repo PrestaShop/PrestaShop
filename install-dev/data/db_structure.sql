@@ -18,59 +18,7 @@ CREATE TABLE `PREFIX_attribute_impact` (
   UNIQUE KEY `id_product` (`id_product`,`id_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_cms` (
-  `id_cms` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_cms_category` int(10) unsigned NOT NULL,
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `indexation` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_cms`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_cms_lang` (
-  `id_cms` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
-  `meta_title` varchar(128) NOT NULL,
-  `meta_description` varchar(255) DEFAULT NULL,
-  `meta_keywords` varchar(255) DEFAULT NULL,
-  `content` longtext,
-  `link_rewrite` varchar(128) NOT NULL,
-  PRIMARY KEY (`id_cms`, `id_shop`, `id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_cms_category` (
-  `id_cms_category` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_parent` int(10) unsigned NOT NULL,
-  `level_depth` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_cms_category`),
-  KEY `category_parent` (`id_parent`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_cms_category_lang` (
-  `id_cms_category` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
-  `name` varchar(128) NOT NULL,
-  `description` text,
-  `link_rewrite` varchar(128) NOT NULL,
-  `meta_title` varchar(128) DEFAULT NULL,
-  `meta_keywords` varchar(255) DEFAULT NULL,
-  `meta_description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_cms_category`, `id_shop`, `id_lang`),
-  KEY `category_name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_cms_category_shop` (
-  `id_cms_category` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_shop` INT(11) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id_cms_category`, `id_shop`),
-  KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_contact` (
   `id_contact` int(10) unsigned NOT NULL auto_increment,
@@ -732,12 +680,6 @@ CREATE TABLE `PREFIX_country_shop` (
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_cms_shop` (
-`id_cms` INT( 11 ) UNSIGNED NOT NULL,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id_cms`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_currency_shop` (
 `id_currency` INT( 11 ) UNSIGNED NOT NULL,
@@ -931,20 +873,4 @@ CREATE TABLE `PREFIX_smarty_last_flush` (
   `type` ENUM('compile', 'template'),
   `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`type`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_cms_role` (
-  `id_cms_role` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `id_cms` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id_cms_role`, `id_cms`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
-  `id_cms_role` int(11) unsigned NOT NULL,
-  `id_lang` int(11) unsigned NOT NULL,
-  `id_shop` int(11) unsigned NOT NULL,
-  `name` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`id_cms_role`,`id_lang`, id_shop)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
