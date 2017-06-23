@@ -222,50 +222,6 @@ CREATE TABLE `PREFIX_meta_lang` (
   KEY `id_lang` (`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_module` (
-  `id_module` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `version` VARCHAR(8) NOT NULL,
-  PRIMARY KEY (`id_module`),
-  UNIQUE KEY `name_UNIQUE` (`name`),
-  KEY `name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_module_access` (
-  `id_profile` int(10) unsigned NOT NULL,
-  `id_authorization_role` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_profile`,`id_authorization_role`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_module_country` (
-  `id_module` int(10) unsigned NOT NULL,
-  `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `id_country` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_module`,`id_shop`, `id_country`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_module_currency` (
-  `id_module` int(10) unsigned NOT NULL,
-  `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `id_currency` int(11) NOT NULL,
-  PRIMARY KEY (`id_module`,`id_shop`, `id_currency`),
-  KEY `id_module` (`id_module`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_module_group` (
-  `id_module` int(10) unsigned NOT NULL,
-  `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `id_group` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id_module`,`id_shop`, `id_group`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_module_carrier` (
-  `id_module`INT(10) unsigned NOT NULL,
-  `id_shop`INT(11) unsigned NOT NULL DEFAULT '1',
-  `id_reference` INT(11) NOT NULL,
-  PRIMARY KEY (`id_module`,`id_shop`, `id_reference`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_operating_system` (
   `id_operating_system` int(10) unsigned NOT NULL auto_increment,
@@ -525,13 +481,6 @@ PRIMARY KEY (`id_store`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_module_shop` (
-`id_module` INT( 11 ) UNSIGNED NOT NULL,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-`enable_device` TINYINT(1) NOT NULL DEFAULT  '7',
-PRIMARY KEY (`id_module` , `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_stock_mvt_reason` (
   `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -601,15 +550,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_risk_lang` (
   KEY `id_risk` (`id_risk`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_module_preference` (
-  `id_module_preference` int(11) NOT NULL auto_increment,
-  `id_employee` int(11) NOT NULL,
-  `module` varchar(255) NOT NULL,
-  `interest` tinyint(1) DEFAULT NULL,
-  `favorite` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id_module_preference`),
-  UNIQUE KEY `employee_module` (`id_employee`, `module`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_tab_module_preference` (
   `id_tab_module_preference` int(11) NOT NULL auto_increment,
