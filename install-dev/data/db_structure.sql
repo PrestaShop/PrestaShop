@@ -179,44 +179,6 @@ CREATE TABLE `PREFIX_employee_shop` (
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_feature` (
-  `id_feature` int(10) unsigned NOT NULL auto_increment,
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_feature`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_feature_lang` (
-  `id_feature` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`id_feature`,`id_lang`),
-  KEY (`id_lang`,`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_feature_product` (
-  `id_feature` int(10) unsigned NOT NULL,
-  `id_product` int(10) unsigned NOT NULL,
-  `id_feature_value` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_feature`,`id_product`),
-  KEY `id_feature_value` (`id_feature_value`),
-  KEY `id_product` (`id_product`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_feature_value` (
-  `id_feature_value` int(10) unsigned NOT NULL auto_increment,
-  `id_feature` int(10) unsigned NOT NULL,
-  `custom` tinyint(3) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id_feature_value`),
-  KEY `feature` (`id_feature`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_feature_value_lang` (
-  `id_feature_value` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `value` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_feature_value`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE IF NOT EXISTS `PREFIX_gender` (
   `id_gender` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(1) NOT NULL,
@@ -644,12 +606,6 @@ CREATE TABLE `PREFIX_contact_shop` (
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_feature_shop` (
-`id_feature` INT(11) UNSIGNED NOT NULL,
-`id_shop` INT(11) UNSIGNED NOT NULL ,
-	PRIMARY KEY (`id_feature`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_group_shop` (
 `id_group` INT( 11 ) UNSIGNED NOT NULL,
