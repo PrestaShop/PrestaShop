@@ -7,30 +7,6 @@ CREATE TABLE `PREFIX_accessory` (
   KEY `accessory_product` (`id_product_1`,`id_product_2`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_search_engine` (
-  `id_search_engine` int(10) unsigned NOT NULL auto_increment,
-  `server` varchar(64) NOT NULL,
-  `getvar` varchar(16) NOT NULL,
-  PRIMARY KEY (`id_search_engine`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_search_index` (
-  `id_product` int(11) unsigned NOT NULL,
-  `id_word` int(11) unsigned NOT NULL,
-  `weight` smallint(4) unsigned NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id_word`, `id_product`),
-  KEY `id_product` (`id_product`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_search_word` (
-  `id_word` int(10) unsigned NOT NULL auto_increment,
-  `id_shop` int(11) unsigned NOT NULL DEFAULT 1,
-  `id_lang` int(10) unsigned NOT NULL,
-  `word` varchar(15) NOT NULL,
-  PRIMARY KEY (`id_word`),
-  UNIQUE KEY `id_lang` (`id_lang`,`id_shop`, `word`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
 
 CREATE TABLE `PREFIX_state` (
   `id_state` int(10) unsigned NOT NULL auto_increment,
