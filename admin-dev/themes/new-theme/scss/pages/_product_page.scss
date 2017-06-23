@@ -163,6 +163,17 @@
     display: none;
   }
 
+  .token {
+    background: $brand-primary;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 0;
+    font-weight: lighter;
+    display: inline-block;
+    margin: 2px;
+    min-height: 25px;
+  }
+  
   // Combination generator
   .tokenfield {
     height: auto;

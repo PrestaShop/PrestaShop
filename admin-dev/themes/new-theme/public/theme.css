@@ -9969,6 +9969,15 @@ ul.category-tree {
     margin-bottom: 1.25rem; }
   .product-page .hide {
     display: none; }
+  .product-page .token {
+    background: #25B9D7;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 0;
+    font-weight: lighter;
+    display: inline-block;
+    margin: 2px;
+    min-height: 25px; }
   .product-page .tokenfield {
     height: auto;
     padding-bottom: 0; }
