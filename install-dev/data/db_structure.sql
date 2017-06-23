@@ -8,26 +8,6 @@ CREATE TABLE `PREFIX_accessory` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 
-
-CREATE TABLE `PREFIX_supplier` (
-  `id_supplier` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_supplier`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_supplier_lang` (
-  `id_supplier` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `description` text,
-  `meta_title` varchar(128) DEFAULT NULL,
-  `meta_keywords` varchar(255) DEFAULT NULL,
-  `meta_description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_supplier`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_tag` (
   `id_tag` int(10) unsigned NOT NULL auto_increment,
   `id_lang` int(10) unsigned NOT NULL,
@@ -65,14 +45,6 @@ CREATE TABLE `PREFIX_group_shop` (
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-
-
-CREATE TABLE `PREFIX_supplier_shop` (
-`id_supplier` INT( 11 ) UNSIGNED NOT NULL,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-PRIMARY KEY (`id_supplier`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 
 
