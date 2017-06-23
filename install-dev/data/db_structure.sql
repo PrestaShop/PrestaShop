@@ -686,13 +686,6 @@ CREATE TABLE `PREFIX_tag_count` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 
-CREATE TABLE `PREFIX_zone` (
-  `id_zone` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_zone`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_store` (
   `id_store` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_country` int(10) unsigned NOT NULL,
@@ -819,13 +812,6 @@ CREATE TABLE `PREFIX_group_shop` (
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-
-CREATE TABLE `PREFIX_zone_shop` (
-`id_zone` INT( 11 ) UNSIGNED NOT NULL ,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
-	PRIMARY KEY (`id_zone`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_manufacturer_shop` (
 `id_manufacturer` INT( 11 ) UNSIGNED NOT NULL ,
