@@ -229,26 +229,7 @@ CREATE TABLE `PREFIX_memcached_servers` (
 `weight` INT(11) UNSIGNED NOT NULL
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_log` (
-	`id_log` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`severity` tinyint(1) NOT NULL,
-	`error_code` int(11) DEFAULT NULL,
-	`message` text NOT NULL,
-	`object_type` varchar(32) DEFAULT NULL,
-	`object_id` int(10) unsigned DEFAULT NULL,
-	`id_employee` int(10) unsigned DEFAULT NULL,
-	`date_add` datetime NOT NULL,
-	`date_upd` datetime NOT NULL,
-	PRIMARY KEY (`id_log`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_import_match` (
-  `id_import_match` int(10) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `match` text NOT NULL,
-  `skip` int(2) NOT NULL,
-  PRIMARY KEY (`id_import_match`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
   `id_shop_url` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -369,41 +350,3 @@ CREATE TABLE `PREFIX_tab_module_preference` (
   PRIMARY KEY (`id_tab_module_preference`),
   UNIQUE KEY `employee_module` (`id_employee`, `id_tab`, `module`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_smarty_cache` (
-  `id_smarty_cache` char(40) NOT NULL,
-  `name` char(40) NOT NULL,
-  `cache_id` varchar(254) DEFAULT NULL,
-  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `content` longtext NOT NULL,
-  PRIMARY KEY (`id_smarty_cache`),
-  KEY `name` (`name`),
-  KEY `cache_id` (`cache_id`),
-  KEY `modified` (`modified`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
-  `id_mail` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `recipient` varchar(126) NOT NULL,
-  `template` varchar(62) NOT NULL,
-  `subject` varchar(254) NOT NULL,
-  `id_lang` int(11) unsigned NOT NULL,
-  `date_add` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_mail`),
-  KEY `recipient` (`recipient`(10))
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_smarty_lazy_cache` (
-  `template_hash` varchar(32) NOT NULL DEFAULT '',
-  `cache_id` varchar(255) NOT NULL DEFAULT '',
-  `compile_id` varchar(32) NOT NULL DEFAULT '',
-  `filepath` varchar(255) NOT NULL DEFAULT '',
-  `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`template_hash`, `cache_id`, `compile_id`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_smarty_last_flush` (
-  `type` ENUM('compile', 'template'),
-  `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`type`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
