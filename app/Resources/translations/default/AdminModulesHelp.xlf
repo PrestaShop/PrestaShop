@@ -6,49 +6,23 @@
         <source>Click here to log in.</source>
         <target>Click here to log in.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:811</note>
+File: controllers/admin/AdminModulesController.php:810</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9e3c05bc84491dcd2464d72fae22e6b6">
-        <source>Search modules: keyword, name, author...</source>
-        <target>Search modules: keyword, name, author...</target>
+      <trans-unit id="5117b40edade2ab3a4f738db0542ca03">
+        <source>These modules require your attention: you need to take some action to ensure they are fully operational.</source>
+        <target>These modules require your attention: you need to take some action to ensure they are fully operational.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig:51</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:55</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
-        <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
-        <target>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</target>
+      <trans-unit id="94fcfae9285e19b611afe17a8565a394">
+        <source>Update these modules to enjoy their latest versions.</source>
+        <target>Update these modules to enjoy their latest versions.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:54</note>
-      </trans-unit>
-      <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
-        <source>Your module will be installed right after that.</source>
-        <target>Your module will be installed right after that.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:55</note>
-      </trans-unit>
-      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
-        <source>What happened?</source>
-        <target>What happened?</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:75</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="677b5abd7f9265257543a0f7258bc477">
-        <source>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</source>
-        <target>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:32</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:65</note>
       </trans-unit>
     </body>
   </file>
@@ -98,6 +72,48 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/tab-module-line
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="677b5abd7f9265257543a0f7258bc477">
+        <source>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</source>
+        <target>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9e3c05bc84491dcd2464d72fae22e6b6">
+        <source>Search modules: keyword, name, author...</source>
+        <target>Search modules: keyword, name, author...</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig:51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
+        <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
+        <target>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:54</note>
+      </trans-unit>
+      <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
+        <source>Your module will be installed right after that.</source>
+        <target>Your module will be installed right after that.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:55</note>
+      </trans-unit>
+      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
+        <source>What happened?</source>
+        <target>What happened?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:75</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bc27dd5e1ea3b9ff33ff2871f2224bd2">
@@ -117,22 +133,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:95</not
         <target>Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme.</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:106</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5117b40edade2ab3a4f738db0542ca03">
-        <source>These modules require your attention: you need to take some action to ensure they are fully operational.</source>
-        <target>These modules require your attention: you need to take some action to ensure they are fully operational.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:55</note>
-      </trans-unit>
-      <trans-unit id="94fcfae9285e19b611afe17a8565a394">
-        <source>Update these modules to enjoy their latest versions.</source>
-        <target>Update these modules to enjoy their latest versions.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:65</note>
       </trans-unit>
     </body>
   </file>

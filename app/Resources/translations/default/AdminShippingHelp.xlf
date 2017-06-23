@@ -228,4 +228,70 @@ File: controllers/admin/AdminShippingController.php:111</note>
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="401c8f6635d231c5360f31ce548c4462">
+        <source>Your online store needs to have a proper carrier registered in PrestaShop as soon as you start shipping your products. This means sending yours parcels using your local postal service, or having a contract with a private carrier which in turn will ship your parcels to your customers. In order to have PrestaShop suggest the most adequate carrier to your customers during their order checkout process, you need to register all the carriers with which you have chosen to work.</source>
+        <target>Your online store needs to have a proper carrier registered in PrestaShop as soon as you start shipping your products. This means sending yours parcels using your local postal service, or having a contract with a private carrier which in turn will ship your parcels to your customers. In order to have PrestaShop suggest the most adequate carrier to your customers during their order checkout process, you need to register all the carriers with which you have chosen to work.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="c751fd51e685dd8c071f8535be0d0d8f">
+        <source>PrestaShop comes with a number of carrier modules that you can activate. You can also buy carrier modules on the PrestaShop Addons marketplace. Recommended modules are listed below: install the module that matches your carrier, and configure it!</source>
+        <target>PrestaShop comes with a number of carrier modules that you can activate. You can also buy carrier modules on the PrestaShop Addons marketplace. Recommended modules are listed below: install the module that matches your carrier, and configure it!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="5bacfd2dc472feddb875fc29134b03bb">
+        <source>If there is no existing module for your carrier, then you can register that carrier by hand using the information that it can provide you: shipping rates, regional zones, size and weight limits, etc. Click on the "Add new carrier" button below to open the Carrier Wizard, which will help you register a new carrier in a few steps.</source>
+        <target>If there is no existing module for your carrier, then you can register that carrier by hand using the information that it can provide you: shipping rates, regional zones, size and weight limits, etc. Click on the "Add new carrier" button below to open the Carrier Wizard, which will help you register a new carrier in a few steps.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="12a118b904361ef7a25365b2ff29cfa9">
+        <source>Note: DO NOT register a new carrier if there already exists a module for it! Using a module will be much faster and more accurate!</source>
+        <target>Note: DO NOT register a new carrier if there already exists a module for it! Using a module will be much faster and more accurate!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl:33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fb2ea703b13d059f6b7ea5da806021df">
+        <source>Format:</source>
+        <target>Format:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl:57</note>
+      </trans-unit>
+      <trans-unit id="b908c2f34052b5276e0bf50f0e042211">
+        <source>Filesize:</source>
+        <target>Filesize:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl:57</note>
+      </trans-unit>
+      <trans-unit id="2f972dbb48435d9b8087d7e3c22daa09">
+        <source>MB max.</source>
+        <target>MB max.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl:57</note>
+      </trans-unit>
+      <trans-unit id="c32587b909ccc2187659ca665dbb06be">
+        <source>Current size:</source>
+        <target>Current size:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/logo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5e543256c480ac577d30f76f9120eb74">
+        <source>undefined</source>
+        <target>undefined</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/logo.tpl:39</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>
