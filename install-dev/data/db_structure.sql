@@ -685,17 +685,6 @@ CREATE TABLE `PREFIX_tag_count` (
   KEY (`id_group`, `id_lang`, `id_shop`, `counter`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_timezone` (
-	id_timezone int(10) unsigned NOT NULL auto_increment,
-	name VARCHAR(32) NOT NULL,
-	PRIMARY KEY (`id_timezone`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_web_browser` (
-  `id_web_browser` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`id_web_browser`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_zone` (
   `id_zone` int(10) unsigned NOT NULL auto_increment,
@@ -725,30 +714,6 @@ CREATE TABLE `PREFIX_store` (
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_store`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_webservice_account` (
-  `id_webservice_account` int(11) NOT NULL AUTO_INCREMENT,
-  `key` varchar(32) NOT NULL,
-  `description` text NULL,
-  `class_name` VARCHAR( 50 ) NOT NULL DEFAULT 'WebserviceRequest',
-  `is_module` TINYINT( 2 ) NOT NULL DEFAULT '0',
-  `module_name` VARCHAR( 50 ) NULL DEFAULT NULL,
-  `active` tinyint(2) NOT NULL,
-  PRIMARY KEY (`id_webservice_account`),
-  KEY `key` (`key`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_webservice_permission` (
-  `id_webservice_permission` int(11) NOT NULL AUTO_INCREMENT,
-  `resource` varchar(50) NOT NULL,
-  `method` enum('GET','POST','PUT','DELETE','HEAD') NOT NULL,
-  `id_webservice_account` int(11) NOT NULL,
-  PRIMARY KEY (`id_webservice_permission`),
-  UNIQUE KEY `resource_2` (`resource`,`method`,`id_webservice_account`),
-  KEY `resource` (`resource`),
-  KEY `method` (`method`),
-  KEY `id_webservice_account` (`id_webservice_account`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_required_field` (
   `id_required_field` int(11) NOT NULL AUTO_INCREMENT,
@@ -888,13 +853,6 @@ CREATE TABLE `PREFIX_module_shop` (
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 `enable_device` TINYINT(1) NOT NULL DEFAULT  '7',
 PRIMARY KEY (`id_module` , `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_webservice_account_shop` (
-`id_webservice_account` INT( 11 ) UNSIGNED NOT NULL,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-PRIMARY KEY (`id_webservice_account` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
