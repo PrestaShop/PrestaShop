@@ -51,7 +51,7 @@
 			<thead>
 				<tr>
 					<th>{l s='Reference' d='Admin.Global'}</th>
-					<th>{l s='Product name' d='Admin.catalog.Feature'}</th>
+					<th>{l s='Product name' d='Admin.Catalog.Feature'}</th>
 					<th class="text-center">{l s='Quantity' d='Admin.Global'}</th>
 					<th class="text-center">{l s='Action' d='Admin.Global'}</th>
 				</tr>

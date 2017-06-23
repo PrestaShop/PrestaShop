@@ -28,6 +28,6 @@
       <option value="{$module->name}" {if isset($smarty.post.payment_module_name) && $module->name == $smarty.post.payment_module_name}selected="selected"{/if}>{$module->displayName}</option>
     {/foreach}
   {else}
-      <option value="{l s='Back office order' d='Admin.OrdersCustomers.Feature'}">{l s='Back office order' d='Admin.Orderscustomers.Feature'}</option>
+      <option value="{l s='Back office order' d='Admin.Orderscustomers.Feature'}">{l s='Back office order' d='Admin.Orderscustomers.Feature'}</option>
   {/if}
 </select>
