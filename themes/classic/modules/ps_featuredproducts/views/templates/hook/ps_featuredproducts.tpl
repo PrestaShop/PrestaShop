@@ -26,7 +26,7 @@
   <h1 class="h1 products-section-title text-uppercase">
     {l s='Popular Products' d='Shop.Theme.Catalog'}
   </h1>
-  <div class="products">
+  <div class="products row">
     {foreach from=$products item="product"}
       {include file="catalog/_partials/miniatures/product.tpl" product=$product}
     {/foreach}
