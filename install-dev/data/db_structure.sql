@@ -23,48 +23,6 @@ CREATE TABLE `PREFIX_attribute_impact` (
   UNIQUE KEY `id_product` (`id_product`,`id_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_carrier` (
-  `id_carrier` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_reference` int(10) unsigned NOT NULL,
-  `id_tax_rules_group` int(10) unsigned DEFAULT '0',
-  `name` varchar(64) NOT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `shipping_handling` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `range_behavior` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `is_module` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `is_free` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `shipping_external` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `need_range` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `external_module_name` varchar(64) DEFAULT NULL,
-  `shipping_method` int(2) NOT NULL DEFAULT '0',
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  `max_width` int(10) DEFAULT '0',
-  `max_height` int(10)  DEFAULT '0',
-  `max_depth` int(10)  DEFAULT '0',
-  `max_weight` DECIMAL(20,6) DEFAULT '0',
-  `grade` int(10)  DEFAULT '0',
-  PRIMARY KEY (`id_carrier`),
-  KEY `deleted` (`deleted`,`active`),
-  KEY `id_tax_rules_group` (`id_tax_rules_group`),
-  KEY `reference` (`id_reference`, `deleted`, `active`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_carrier_lang` (
-  `id_carrier` int(10) unsigned NOT NULL,
-  `id_shop` int(11) unsigned NOT NULL DEFAULT '1',
-  `id_lang` int(10) unsigned NOT NULL,
-  `delay` varchar(512) DEFAULT NULL,
-  PRIMARY KEY (`id_lang`,`id_shop`, `id_carrier`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_carrier_zone` (
-  `id_carrier` int(10) unsigned NOT NULL,
-  `id_zone` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_carrier`,`id_zone`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_cart` (
   `id_cart` int(10) unsigned NOT NULL auto_increment,
   `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
@@ -1758,12 +1716,6 @@ CREATE TABLE `PREFIX_zone` (
   PRIMARY KEY (`id_zone`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_carrier_group` (
-  `id_carrier` int(10) unsigned NOT NULL,
-  `id_group` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_carrier`,`id_group`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_store` (
   `id_store` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_country` int(10) unsigned NOT NULL,
@@ -1905,13 +1857,6 @@ CREATE TABLE `PREFIX_country_shop` (
 `id_country` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
   PRIMARY KEY (`id_country`, `id_shop`),
-  KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_carrier_shop` (
-`id_carrier` INT( 11 ) UNSIGNED NOT NULL ,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
-PRIMARY KEY (`id_carrier`, `id_shop`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
@@ -2306,13 +2251,6 @@ CREATE TABLE `PREFIX_tab_module_preference` (
   `module` varchar(255) NOT NULL,
   PRIMARY KEY (`id_tab_module_preference`),
   UNIQUE KEY `employee_module` (`id_employee`, `id_tab`, `module`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
- CREATE TABLE `PREFIX_carrier_tax_rules_group_shop` (
-	`id_carrier` int( 11 ) unsigned NOT NULL,
-	`id_tax_rules_group` int(11) unsigned NOT NULL,
-	`id_shop` int(11) unsigned NOT NULL,
-	PRIMARY KEY (`id_carrier`, `id_tax_rules_group`, `id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_order_invoice_payment` (
