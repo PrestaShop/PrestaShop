@@ -8,17 +8,6 @@ CREATE TABLE `PREFIX_accessory` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 
-CREATE TABLE `PREFIX_attribute_impact` (
-  `id_attribute_impact` int(10) unsigned NOT NULL auto_increment,
-  `id_product` int(11) unsigned NOT NULL,
-  `id_attribute` int(11) unsigned NOT NULL,
-  `weight` DECIMAL(20,6) NOT NULL,
-  `price` decimal(17,2) NOT NULL,
-  PRIMARY KEY (`id_attribute_impact`),
-  UNIQUE KEY `id_product` (`id_product`,`id_attribute`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-
 
 CREATE TABLE `PREFIX_hook` (
   `id_hook` int(10) unsigned NOT NULL auto_increment,
