@@ -7,11 +7,6 @@ CREATE TABLE `PREFIX_accessory` (
   KEY `accessory_product` (`id_product_1`,`id_product_2`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_product_attachment` (
-  `id_product` int(10) unsigned NOT NULL,
-  `id_attachment` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_product`,`id_attachment`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_attribute_impact` (
   `id_attribute_impact` int(10) unsigned NOT NULL auto_increment,
@@ -492,20 +487,6 @@ CREATE TABLE `PREFIX_group_reduction` (
 	UNIQUE KEY(`id_group`, `id_category`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_product_group_reduction_cache` (
-	`id_product` INT UNSIGNED NOT NULL,
-	`id_group` INT UNSIGNED NOT NULL,
-	`reduction` DECIMAL(4, 3) NOT NULL,
-	PRIMARY KEY (`id_product`, `id_group`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_carrier` (
-  `id_product` int(10) unsigned NOT NULL,
-  `id_carrier_reference` int(10) unsigned NOT NULL,
-  `id_shop` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_product`, `id_carrier_reference`, `id_shop`)
-) ENGINE = ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_guest` (
   `id_guest` int(10) unsigned NOT NULL auto_increment,
   `id_operating_system` int(10) unsigned DEFAULT NULL,
@@ -750,213 +731,6 @@ CREATE TABLE `PREFIX_page_viewed` (
   `id_date_range` int(10) unsigned NOT NULL,
   `counter` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_page`, `id_date_range`, `id_shop`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-
-CREATE TABLE `PREFIX_product` (
-  `id_product` int(10) unsigned NOT NULL auto_increment,
-  `id_supplier` int(10) unsigned DEFAULT NULL,
-  `id_manufacturer` int(10) unsigned DEFAULT NULL,
-  `id_category_default` int(10) unsigned DEFAULT NULL,
-  `id_shop_default` int(10) unsigned NOT NULL DEFAULT 1,
-  `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
-  `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `online_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `ean13` varchar(13) DEFAULT NULL,
-  `isbn` varchar(32) DEFAULT NULL,
-  `upc` varchar(12) DEFAULT NULL,
-  `ecotax` decimal(17,6) NOT NULL DEFAULT '0.00',
-  `quantity` int(10) NOT NULL DEFAULT '0',
-  `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
-  `price` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `wholesale_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `unity` varchar(255) DEFAULT NULL,
-  `unit_price_ratio` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `additional_shipping_cost` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `reference` varchar(32) DEFAULT NULL,
-  `supplier_reference` varchar(32) DEFAULT NULL,
-  `location` varchar(64) DEFAULT NULL,
-  `width` DECIMAL(20, 6) NOT NULL DEFAULT '0',
-  `height` DECIMAL(20, 6) NOT NULL DEFAULT '0',
-  `depth` DECIMAL(20, 6) NOT NULL DEFAULT '0',
-  `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0',
-  `out_of_stock` int(10) unsigned NOT NULL DEFAULT '2',
-  `quantity_discount` tinyint(1) DEFAULT '0',
-  `customizable` tinyint(2) NOT NULL DEFAULT '0',
-  `uploadable_files` tinyint(4) NOT NULL DEFAULT '0',
-  `text_fields` tinyint(4) NOT NULL DEFAULT '0',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `redirect_type` ENUM('','404','301-product','302-product','301-category','302-category') NOT NULL DEFAULT '',
-  `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
-  `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
-  `available_date` date DEFAULT NULL,
-  `show_condition` tinyint(1) NOT NULL DEFAULT '0',
-  `condition` ENUM('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
-  `show_price` tinyint(1) NOT NULL DEFAULT '1',
-  `indexed` tinyint(1) NOT NULL DEFAULT '0',
-  `visibility` ENUM('both', 'catalog', 'search', 'none') NOT NULL DEFAULT 'both',
-  `cache_is_pack` tinyint(1) NOT NULL DEFAULT '0',
-  `cache_has_attachments` tinyint(1) NOT NULL DEFAULT '0',
-  `is_virtual` tinyint(1) NOT NULL DEFAULT '0',
-  `cache_default_attribute` int(10) unsigned DEFAULT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
-  `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
-  `state` int(11) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_product`),
-  KEY `product_supplier` (`id_supplier`),
-  KEY `product_manufacturer` (`id_manufacturer`, `id_product`),
-  KEY `id_category_default` (`id_category_default`),
-  KEY `indexed` (`indexed`),
-  KEY `date_add` (`date_add`),
-  KEY `state` (`state`, `date_upd`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
-  `id_product` int(10) unsigned NOT NULL,
-  `id_shop` int(10) unsigned NOT NULL,
-  `id_category_default` int(10) unsigned DEFAULT NULL,
-  `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
-  `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `online_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `ecotax` decimal(17,6) NOT NULL DEFAULT '0.000000',
-  `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
-  `price` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `wholesale_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `unity` varchar(255) DEFAULT NULL,
-  `unit_price_ratio` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `additional_shipping_cost` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `customizable` tinyint(2) NOT NULL DEFAULT '0',
-  `uploadable_files` tinyint(4) NOT NULL DEFAULT '0',
-  `text_fields` tinyint(4) NOT NULL DEFAULT '0',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `redirect_type` ENUM('','404','301-product','302-product','301-category','302-category') NOT NULL DEFAULT '',
-  `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
-  `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
-  `available_date` date DEFAULT NULL,
-  `show_condition` tinyint(1) NOT NULL DEFAULT '1',
-  `condition` enum('new','used','refurbished') NOT NULL DEFAULT 'new',
-  `show_price` tinyint(1) NOT NULL DEFAULT '1',
-  `indexed` tinyint(1) NOT NULL DEFAULT '0',
-  `visibility` enum('both','catalog','search','none') NOT NULL DEFAULT 'both',
-  `cache_default_attribute` int(10) unsigned DEFAULT NULL,
-  `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
-  PRIMARY KEY (`id_product`, `id_shop`),
-  KEY `id_category_default` (`id_category_default`),
-  KEY `date_add` (`date_add` , `active` , `visibility`),
-  KEY `indexed` (`indexed`, `active`, `id_product`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_attribute` (
-  `id_product_attribute` int(10) unsigned NOT NULL auto_increment,
-  `id_product` int(10) unsigned NOT NULL,
-  `reference` varchar(32) DEFAULT NULL,
-  `supplier_reference` varchar(32) DEFAULT NULL,
-  `location` varchar(64) DEFAULT NULL,
-  `ean13` varchar(13) DEFAULT NULL,
-  `isbn` varchar(32) DEFAULT NULL,
-  `upc` varchar(12) DEFAULT NULL,
-  `wholesale_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `price` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `ecotax` decimal(17,6) NOT NULL DEFAULT '0.00',
-  `quantity` int(10) NOT NULL DEFAULT '0',
-  `weight` DECIMAL(20,6) NOT NULL DEFAULT '0',
-  `unit_price_impact` DECIMAL(20,6) NOT NULL DEFAULT '0.00',
-  `default_on` tinyint(1) unsigned NULL DEFAULT NULL,
-  `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
-  `available_date` date DEFAULT NULL,
-  PRIMARY KEY (`id_product_attribute`),
-  KEY `product_attribute_product` (`id_product`),
-  KEY `reference` (`reference`),
-  KEY `supplier_reference` (`supplier_reference`),
-  UNIQUE KEY `product_default` (`id_product`,`default_on`),
-  KEY `id_product_id_product_attribute` (`id_product_attribute` , `id_product`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_attribute_shop` (
-  `id_product` int(10) unsigned NOT NULL,
-  `id_product_attribute` int(10) unsigned NOT NULL,
-  `id_shop` int(10) unsigned NOT NULL,
-  `wholesale_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `price` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `ecotax` decimal(17,6) NOT NULL DEFAULT '0.00',
-  `weight` DECIMAL(20,6) NOT NULL DEFAULT '0',
-  `unit_price_impact` DECIMAL(20,6) NOT NULL DEFAULT '0.00',
-  `default_on` tinyint(1) unsigned NULL DEFAULT NULL,
-  `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
-  `available_date` date DEFAULT NULL,
-  PRIMARY KEY (`id_product_attribute`, `id_shop`),
-  UNIQUE KEY `id_product` (`id_product`, `id_shop`, `default_on`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_attribute_combination` (
-  `id_attribute` int(10) unsigned NOT NULL,
-  `id_product_attribute` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_attribute`,`id_product_attribute`),
-  KEY `id_product_attribute` (`id_product_attribute`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_attribute_image` (
-  `id_product_attribute` int(10) unsigned NOT NULL,
-  `id_image` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_product_attribute`,`id_image`),
-  KEY `id_image` (`id_image`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_download` (
-  `id_product_download` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_product` int(10) unsigned NOT NULL,
-  `display_filename` varchar(255) DEFAULT NULL,
-  `filename` varchar(255) DEFAULT NULL,
-  `date_add` datetime NOT NULL,
-  `date_expiration` datetime DEFAULT NULL,
-  `nb_days_accessible` int(10) unsigned DEFAULT NULL,
-  `nb_downloadable` int(10) unsigned DEFAULT '1',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `is_shareable` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_product_download`),
-  KEY `product_active` (`id_product`,`active`),
-  UNIQUE KEY `id_product` (`id_product`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_lang` (
-  `id_product` int(10) unsigned NOT NULL,
-  `id_shop` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1',
-  `id_lang` int(10) unsigned NOT NULL,
-  `description` text,
-  `description_short` text,
-  `link_rewrite` varchar(128) NOT NULL,
-  `meta_description` varchar(255) DEFAULT NULL,
-  `meta_keywords` varchar(255) DEFAULT NULL,
-  `meta_title` varchar(128) DEFAULT NULL,
-  `name` varchar(128) NOT NULL,
-  `available_now` varchar(255) DEFAULT NULL,
-  `available_later` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_product`, `id_shop` , `id_lang`),
-  KEY `id_lang` (`id_lang`),
-  KEY `name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_sale` (
-  `id_product` int(10) unsigned NOT NULL,
-  `quantity` int(10) unsigned NOT NULL DEFAULT '0',
-  `sale_nbr` int(10) unsigned NOT NULL DEFAULT '0',
-  `date_upd` date DEFAULT NULL,
-  PRIMARY KEY (`id_product`),
-  KEY `quantity` (`quantity`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_tag` (
-  `id_product` int(10) unsigned NOT NULL,
-  `id_tag` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_product`,`id_tag`),
-  KEY `id_tag` (`id_tag`),
-  KEY `id_lang` (`id_lang`,`id_tag`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_profile` (
@@ -1220,13 +994,6 @@ CREATE TABLE `PREFIX_memcached_servers` (
 `ip` VARCHAR( 254 ) NOT NULL ,
 `port` INT(11) UNSIGNED NOT NULL ,
 `weight` INT(11) UNSIGNED NOT NULL
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_country_tax` (
-  `id_product` int(11) NOT NULL,
-  `id_country` int(11) NOT NULL,
-  `id_tax` int(11) NOT NULL,
-  PRIMARY KEY (`id_product`,`id_country`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_tax_rule` (
@@ -1585,19 +1352,6 @@ CREATE TABLE `PREFIX_supply_order_receipt_history` (
   PRIMARY KEY (`id_supply_order_receipt_history`),
   KEY `id_supply_order_detail` (`id_supply_order_detail`),
   KEY `id_supply_order_state` (`id_supply_order_state`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_product_supplier` (
-  `id_product_supplier` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_product` int(11) UNSIGNED NOT NULL,
-  `id_product_attribute` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `id_supplier` int(11) UNSIGNED NOT NULL,
-  `product_supplier_reference` varchar(32) DEFAULT NULL,
-  `product_supplier_price_te` decimal(20,6) NOT NULL DEFAULT '0.000000',
-  `id_currency` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id_product_supplier`),
-  UNIQUE KEY `id_product` (`id_product`,`id_product_attribute`,`id_supplier`),
-  KEY `id_supplier` (`id_supplier`,`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_risk` (
