@@ -109,14 +109,12 @@ class Database extends AbstractInstall
 
     public function createDatabase($server, $database, $login, $password, $dropit = false)
     {
-        $class = '\\'.Db::getClass();
-        return call_user_func(array($class, 'createDatabase'), $server, $login, $password, $database, $dropit);
+        return Db::createDatabase($server, $login, $password, $database, $dropit);
     }
 
     public function getBestEngine($server, $database, $login, $password)
     {
-        $class = '\\'.Db::getClass();
-        $instance = new $class($server, $login, $password, $database, true);
+        $instance = new Db($server, $login, $password, $database, true);
         $engine = $instance->getBestEngine();
         unset($instance);
         return $engine;

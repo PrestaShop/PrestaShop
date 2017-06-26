@@ -23,6 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use Doctrine\DBAL\Configuration as DBALConfiguration;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\DriverManager;
+
 /**
  * Class DbCore
  */
@@ -94,6 +99,32 @@ class DbCore
     protected $last_cached;
 
     /**
+     * Instantiates a database connection
+     *
+     * @param string $server Server address
+     * @param string $user User login
+     * @param string $password User password
+     * @param string $database Database name
+     * @param bool $connect If false, don't connect in constructor (since 1.5.0.1)
+     */
+    public function __construct($server, $user, $password, $database, $connect = true)
+    {
+        $this->server = $server;
+        $this->user = $user;
+        $this->password = $password;
+        $this->database = $database;
+        $this->is_cache_enabled = (defined('_PS_CACHE_ENABLED_')) ? _PS_CACHE_ENABLED_ : false;
+
+        if (!defined('_PS_DEBUG_SQL_')) {
+            define('_PS_DEBUG_SQL_', false);
+        }
+
+        if ($connect) {
+            $this->connect();
+        }
+    }
+
+    /**
      * Opens a database connection
      *
      * @return \Doctrine\DBAL\Connection
@@ -104,17 +135,21 @@ class DbCore
             'host' => $this->server,
             'user' => $this->user,
             'password' => $this->password,
-            'dbname' => $this->database,
             'driver' => 'pdo_mysql',
             'charset' => 'utf8',
+            'server_version' => '5.5',
         );
 
         if (strpos($this->server, ':')) {
             list($this->connectionParams['host'], $this->connectionParams['port']) = explode(':', $this->server);
         }
 
-        $config = new \Doctrine\DBAL\Configuration();
-        $this->link = \Doctrine\DBAL\DriverManager::getConnection($this->connectionParams, $config);
+        if ($this->database) {
+            $this->connectionParams['dbname'] = $this->database;
+        }
+
+        $config = new DBALConfiguration();
+        $this->link = DriverManager::getConnection($this->connectionParams, $config);
 
         $this->link->exec('SET SESSION sql_mode = \'\'');
 
@@ -269,17 +304,6 @@ class DbCore
     }
 
     /**
-     * Selects best table engine.
-     *
-     * @return string
-     */
-    public function getBestEngine()
-    {
-        // ToDo: Check another answer
-        return 'InnoDB';
-    }
-
-    /**
      * Returns database object instance.
      *
      * @param bool $master Decides whether the connection to be returned by the master server or the slave server
@@ -369,32 +393,6 @@ class DbCore
     {
         // Removed all classes extendint DbCore  so ...
         return str_replace('Core', '', __CLASS__);
-    }
-
-    /**
-     * Instantiates a database connection
-     *
-     * @param string $server Server address
-     * @param string $user User login
-     * @param string $password User password
-     * @param string $database Database name
-     * @param bool $connect If false, don't connect in constructor (since 1.5.0.1)
-     */
-    public function __construct($server, $user, $password, $database, $connect = true)
-    {
-        $this->server = $server;
-        $this->user = $user;
-        $this->password = $password;
-        $this->database = $database;
-        $this->is_cache_enabled = (defined('_PS_CACHE_ENABLED_')) ? _PS_CACHE_ENABLED_ : false;
-
-        if (!defined('_PS_DEBUG_SQL_')) {
-            define('_PS_DEBUG_SQL_', false);
-        }
-
-        if ($connect) {
-            $this->connect();
-        }
     }
 
     /**
@@ -801,48 +799,13 @@ class DbCore
     }
 
     /**
-     * Try a connection to the database
+     * Get used link instance
      *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
-     * @param bool $new_db_link
-     * @param string|bool $engine
-     * @param int $timeout
-     * @return int Error code or 0 if connection was successful
+     * @return PDO|mysqli|resource Resource
      */
-    public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
+    public function getLink()
     {
-        return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $new_db_link, $engine, $timeout));
-    }
-
-    /**
-     * Try a connection to the database and set names to UTF-8
-     *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @return bool
-     */
-    public static function checkEncoding($server, $user, $pwd)
-    {
-        return call_user_func_array(array(Db::getClass(), 'tryUTF8'), array($server, $user, $pwd));
-    }
-
-    /**
-     * Try a connection to the database and check if at least one table with same prefix exists
-     *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
-     * @param string $prefix Tables prefix
-     * @return bool
-     */
-    public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
-    {
-        return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
+        return $this->link;
     }
 
     /**
@@ -858,9 +821,117 @@ class DbCore
      */
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
-        return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
+        try {
+            $link = new self($server, $user, $pwd, $db, true);
+        } catch (DBALException $e) {
+            return false;
+        }
+        if ($engine === null) {
+            $engine = 'MyISAM';
+        }
+        $result = $link->query('
+		CREATE TABLE `'.$prefix.'test` (
+			`test` tinyint(1) unsigned NOT NULL
+		) ENGINE='.$engine);
+        if (!$result) {
+            $error = $link->errorInfo();
+            return $error[2];
+        }
+        $link->query('DROP TABLE `'.$prefix.'test`');
+        return true;
+    }
+    
+    /**
+     * Try a connection to the database
+     *
+     * @param string $server Server address
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
+     * @param string $db Database name
+     * @param bool $new_db_link
+     * @param string|bool $engine
+     * @param int $timeout
+     * @return int Error code or 0 if connection was successful
+     */
+    public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
+    {
+        return self::tryToConnect($server, $user, $pwd, $db);
     }
 
+    /**
+     * Try a connection to the database
+     *
+     * @see Db::checkConnection()
+     * @param string $server Server address
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
+     * @param string $db Database name
+     * @param bool $newDbLink
+     * @param string|bool $engine
+     * @param int $timeout
+     * @return int Error code or 0 if connection was successful
+     */
+    public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
+    {
+        try {
+            $link = new self($server, $user, $pwd, $db, true);
+        } catch (DBALException $e) {
+            return ($e->getCode() == 1049 || (defined('HHVM_VERSION') && $e->getCode() == 42000)) ? 2 : 1;
+        }
+        unset($link);
+        return 0;
+    }
+    /**
+     * Selects best table engine.
+     *
+     * @return string
+     */
+    public function getBestEngine()
+    {
+        $value = 'InnoDB';
+        $sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+        $result = $this->link->query($sql);
+        if (!$result) {
+            $value = 'MyISAM';
+        }else {
+            $row = $result->fetch();
+            if (!$row || strtolower($row['Value']) != 'yes') {
+                $value = 'MyISAM';
+            }
+        }
+        /* MySQL >= 5.6 */
+        $sql = 'SHOW ENGINES';
+        $result = $this->link->query($sql);
+        while ($row = $result->fetch()) {
+            if ($row['Engine'] == 'InnoDB') {
+                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
+                    $value = 'InnoDB';
+                }
+                break;
+            }
+        }
+        return $value;
+    }
+    /**
+     * Try a connection to the database and set names to UTF-8
+     *
+     * @see Db::checkEncoding()
+     * @param string $server Server address
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
+     * @return bool
+     */
+    public static function tryUTF8($server, $user, $pwd)
+    {
+        try {
+            $link = new self($server, $user, $pwd, null, true);
+        } catch (DBALException $e) {
+            return false;
+        }
+        $result = $link->exec('SET NAMES \'utf8\'');
+        unset($link);
+        return ($result === false) ? false : true;
+    }
     /**
      * Checks if auto increment value and offset is 1
      *
@@ -871,16 +942,38 @@ class DbCore
      */
     public static function checkAutoIncrement($server, $user, $pwd)
     {
-        return call_user_func_array(array(Db::getClass(), 'checkAutoIncrement'), array($server, $user, $pwd));
+        try {
+            $link = new self($server, $user, $pwd, null, true);
+        } catch (DBALException $e) {
+            return false;
+        }
+        $ret = (bool)(($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch()) && $row['aii'] == 1);
+        $ret &= (bool)(($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch()) && $row['aio'] == 1);
+        unset($link);
+        return $ret;
     }
 
     /**
-     * Get used link instance
+     * Tries to connect and create a new database
      *
-     * @return PDO|mysqli|resource Resource
+     * @param string $host
+     * @param string $user
+     * @param string $password
+     * @param string $dbname
+     * @param bool $dropit If true, drops the created database.
+     * @return bool|int
      */
-    public function getLink()
+    public static function createDatabase($server, $user, $pwd, $dbname, $dropit = false)
     {
-        return $this->link;
+        try {
+            $link = new self($server, $user, $pwd, $dbname, true);
+        } catch (DBALException $e) {
+            return false;
+        }
+        $success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
+        if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false)) {
+            return true;
+        }
+        return $success;
     }
 }
